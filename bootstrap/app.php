@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use App\Http\Controllers\HealthController;
+use App\Http\Middleware\EnsureUserHasRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+
+        $middleware->alias([
+            'role' => EnsureUserHasRole::class,
+        ]);
 
         $middleware->web(append: [
             HandleAppearance::class,

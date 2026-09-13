@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Organization;
+use App\Models\User;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -32,6 +36,13 @@ class AppServiceProvider extends ServiceProvider
     protected function configureDefaults(): void
     {
         Date::use(CarbonImmutable::class);
+
+        Model::shouldBeStrict(! app()->isProduction());
+
+        Relation::enforceMorphMap([
+            'user' => User::class,
+            'organization' => Organization::class,
+        ]);
 
         DB::prohibitDestructiveCommands(
             app()->isProduction(),
