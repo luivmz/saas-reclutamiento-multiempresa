@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Tenancy;
 
+use App\Enums\ApplicationStatus;
 use App\Enums\JobRequestStatus;
+use App\Models\Application;
 use App\Enums\VacancyStatus;
 use App\Models\JobRequest;
 use App\Models\Organization;
@@ -70,6 +72,19 @@ class CrossTenantAccessTest extends TestCase
         $this->actingAs($hrB)->post(route('vacancies.publish', $vacancy))->assertNotFound();
 
         $this->assertSame(VacancyStatus::Draft, $vacancy->fresh()->status);
+    }
+
+    public function test_hr_of_other_organization_cannot_list_view_or_move_applications(): void
+    {
+        $vacancy = Vacancy::factory()->for($this->orgA)->configured()->published()->create();
+        $application = Application::factory()->for($vacancy)->create();
+        $hrB = User::factory()->hr($this->orgB)->create();
+
+        $this->actingAs($hrB)->get(route('vacancies.applications.index', $vacancy))->assertNotFound();
+        $this->actingAs($hrB)->get(route('applications.show', $application))->assertNotFound();
+        $this->actingAs($hrB)->post(route('applications.shortlist', $application))->assertNotFound();
+
+        $this->assertSame(ApplicationStatus::Submitted, $application->fresh()->status);
     }
 
     public function test_hr_cannot_create_vacancy_from_another_organization_request(): void

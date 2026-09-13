@@ -89,6 +89,8 @@ class VacancyPublicationTest extends TestCase
             ->get(route('vacancies.show', $vacancy))
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('vacancies/show')
+                ->where('vacancy.code', $vacancy->code)
+                ->has('vacancy.criteria', 3)
                 ->where('validation.publishable', false)
                 ->has('validation.issues', 1));
     }

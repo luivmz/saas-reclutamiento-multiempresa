@@ -24,6 +24,18 @@ export function formatDateTime(value?: string | null): string {
     return value ? dateTimeFormatter.format(parse(value)) : '—';
 }
 
+export function formatFileSize(bytes: number): string {
+    if (bytes < 1024) {
+        return `${bytes} B`;
+    }
+
+    if (bytes < 1024 * 1024) {
+        return `${Math.round(bytes / 1024)} KB`;
+    }
+
+    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
 export function formatNumber(value: number | null | undefined, digits = 2): string {
     if (value === null || value === undefined) {
         return '—';

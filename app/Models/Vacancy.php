@@ -108,6 +108,14 @@ class Vacancy extends Model
     }
 
     /**
+     * @return HasMany<Application, $this>
+     */
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class);
+    }
+
+    /**
      * @return BelongsTo<User, $this>
      */
     public function creator(): BelongsTo

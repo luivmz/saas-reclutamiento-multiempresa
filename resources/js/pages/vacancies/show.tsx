@@ -5,8 +5,10 @@ import {
     ListChecks,
     Pencil,
     Rocket,
+    Users,
     XCircle,
 } from 'lucide-react';
+import VacancyApplicationController from '@/actions/App/Http/Controllers/Applications/VacancyApplicationController';
 import JobRequestController from '@/actions/App/Http/Controllers/JobRequests/JobRequestController';
 import VacancyController from '@/actions/App/Http/Controllers/Vacancies/VacancyController';
 import VacancyPublicationController from '@/actions/App/Http/Controllers/Vacancies/VacancyPublicationController';
@@ -71,6 +73,14 @@ export default function ShowVacancy({ vacancy, validation, can }: Props) {
                                         </Button>
                                     )}
                                 </Form>
+                            )}
+                            {!isDraft && (
+                                <Button variant="outline" asChild>
+                                    <Link href={VacancyApplicationController(vacancy.id)} data-cy="vacancy-applications">
+                                        <Users />
+                                        Postulaciones ({vacancy.applications_count ?? 0})
+                                    </Link>
+                                </Button>
                             )}
                             {vacancy.status.value === 'publicada' && (
                                 <Button variant="outline" asChild>
