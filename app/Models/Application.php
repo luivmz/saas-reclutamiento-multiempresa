@@ -68,6 +68,22 @@ class Application extends Model
     }
 
     /**
+     * @return HasMany<Evaluation, $this>
+     */
+    public function evaluations(): HasMany
+    {
+        return $this->hasMany(Evaluation::class);
+    }
+
+    /**
+     * @return HasMany<Interview, $this>
+     */
+    public function interviews(): HasMany
+    {
+        return $this->hasMany(Interview::class);
+    }
+
+    /**
      * @return HasMany<ApplicationStageHistory, $this>
      */
     public function stageHistories(): HasMany

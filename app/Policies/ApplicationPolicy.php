@@ -32,4 +32,9 @@ class ApplicationPolicy
     {
         return $user->hasRole(UserRole::HumanResources) && $user->sharesOrganizationWith($application);
     }
+
+    public function scheduleAssessment(User $user, Application $application): bool
+    {
+        return $user->hasRole(UserRole::HumanResources) && $user->sharesOrganizationWith($application);
+    }
 }

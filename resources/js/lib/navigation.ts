@@ -1,6 +1,7 @@
 import {
     Bell,
     Briefcase,
+    ClipboardCheck,
     ClipboardList,
     FilePlus2,
     FileUser,
@@ -8,6 +9,7 @@ import {
     LayoutGrid,
     Send,
 } from 'lucide-react';
+import AssessmentAssignmentController from '@/actions/App/Http/Controllers/Assessments/AssessmentAssignmentController';
 import CandidateApplicationController from '@/actions/App/Http/Controllers/Candidates/CandidateApplicationController';
 import CandidateProfileController from '@/actions/App/Http/Controllers/Candidates/CandidateProfileController';
 import JobRequestController from '@/actions/App/Http/Controllers/JobRequests/JobRequestController';
@@ -131,7 +133,22 @@ export function navigationFor(
                 portal,
             ];
         case 'evaluador':
-            return [general(unread), portal];
+            return [
+                general(unread),
+                {
+                    label: 'Evaluación',
+                    items: [
+                        {
+                            title: 'Mis evaluaciones',
+                            href: AssessmentAssignmentController(),
+                            icon: ClipboardCheck,
+                            cy: 'assessments',
+                            description: 'Registre puntajes y observaciones de las sesiones asignadas (RF-19).',
+                        },
+                    ],
+                },
+                portal,
+            ];
         case 'postulante':
             return [
                 general(unread),

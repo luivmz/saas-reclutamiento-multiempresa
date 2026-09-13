@@ -3,6 +3,10 @@
 use App\Http\Controllers\Applications\ApplicationController;
 use App\Http\Controllers\Applications\ApplicationStageController;
 use App\Http\Controllers\Applications\VacancyApplicationController;
+use App\Http\Controllers\Assessments\AssessmentAssignmentController;
+use App\Http\Controllers\Assessments\AssessmentScheduleController;
+use App\Http\Controllers\Assessments\EvaluationController;
+use App\Http\Controllers\Assessments\InterviewController;
 use App\Http\Controllers\Candidates\ApplyController;
 use App\Http\Controllers\Candidates\CandidateApplicationController;
 use App\Http\Controllers\Candidates\CandidateCvController;
@@ -77,6 +81,17 @@ Route::middleware(['auth'])->group(function () {
             Route::post('descartar', 'discard')->name('discard');
             Route::post('etapa', 'change')->name('stage');
         });
+
+    // RF-16 a RF-19
+    Route::post('postulaciones/{application}/evaluaciones', [AssessmentScheduleController::class, 'evaluation'])->name('applications.evaluations.store');
+    Route::post('postulaciones/{application}/entrevistas', [AssessmentScheduleController::class, 'interview'])->name('applications.interviews.store');
+
+    Route::get('mis-evaluaciones', AssessmentAssignmentController::class)->middleware('role:evaluador')->name('assessments.index');
+
+    Route::get('evaluaciones/{evaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
+    Route::post('evaluaciones/{evaluation}/resultados', [EvaluationController::class, 'recordResult'])->name('evaluations.results.store');
+    Route::get('entrevistas/{interview}', [InterviewController::class, 'show'])->name('interviews.show');
+    Route::post('entrevistas/{interview}/resultados', [InterviewController::class, 'recordResult'])->name('interviews.results.store');
 });
 
 require __DIR__.'/settings.php';
