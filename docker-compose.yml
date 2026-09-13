@@ -69,15 +69,20 @@ services:
     image: cypress/included:15.3.0
     profiles: ["e2e"]
     working_dir: /e2e
+    # Extra arguments are appended, e.g. `npm run cy:run -- --spec cypress/e2e/e2e-01-login.cy.js`.
+    entrypoint: ["cypress", "run", "--config-file", "cypress.config.cjs", "--browser", "electron"]
     environment:
       CYPRESS_baseUrl: http://app:8000
+      CYPRESS_E2E_TOKEN: ${E2E_TOKEN:-}
     volumes:
       - ./cypress:/e2e/cypress
       - ./cypress.config.cjs:/e2e/cypress.config.cjs:ro
-    command: ["--config-file", "cypress.config.cjs", "--browser", "electron"]
     depends_on:
       app:
         condition: service_healthy
+      # Notifications are queued; the worker must be running for the notification assertions.
+      queue:
+        condition: service_started
 
 volumes:
   pgdata:

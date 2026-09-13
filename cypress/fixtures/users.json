@@ -1,0 +1,14 @@
+{
+    "requester": "solicitante@andino.test",
+    "hr": "rrhh@andino.test",
+    "approver": "direccion@andino.test",
+    "evaluator": "evaluador@andino.test",
+    "candidate": "postulante5@correo.test",
+    "candidateSubmitted": "postulante1@correo.test",
+    "candidateComplete": "postulante3@correo.test",
+    "candidateRankingFirst": "postulante4@correo.test",
+    "candidateRankingSecond": "postulante5@correo.test",
+    "candidateNew": "postulante.nuevo@correo.test",
+    "hrOrgB": "rrhh@demob.test",
+    "approverOrgB": "direccion@demob.test"
+}

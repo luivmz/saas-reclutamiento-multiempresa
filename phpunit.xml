@@ -33,5 +33,7 @@
         <env force="true" name="PULSE_ENABLED" value="false"/>
         <env force="true" name="TELESCOPE_ENABLED" value="false"/>
         <env force="true" name="NIGHTWATCH_ENABLED" value="false"/>
+        <env force="true" name="E2E_ENABLED" value="false"/>
+        <env force="true" name="E2E_TOKEN" value=""/>
     </php>
 </phpunit>
