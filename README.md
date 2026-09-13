@@ -119,5 +119,6 @@ Todos los datos son ficticios. No se afirma cumplimiento legal ni certificación
 
 - **Fases completadas:**
   - 0 a 10: implementación de RF-01 a RF-27, frontend, E2E y Docker.
-  - 11: documentación final (en revisión).
-- **Pendiente:** Fase 12 (QA final, integración en `main` y publicación del repositorio).
+  - 11: documentación final.
+  - 12: QA final, con veredicto **APTO PARA PUBLICACIÓN** (`docs/final-report/qa-final-report.md`).
+- **Pendiente:** cierre Git y publicación del repositorio, bajo revisión humana.

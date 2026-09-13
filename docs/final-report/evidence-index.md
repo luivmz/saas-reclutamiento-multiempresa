@@ -20,6 +20,8 @@ Estado de cada evidencia:
 | Arquitectura | Diseño, clases, estados, secuencias, UI y ERD | `docs/final-report/06-diseno-sistema.md` | Repositorio |
 | Arquitectura | Stack y arquitectura tecnológica | `docs/final-report/07-arquitectura-tecnologica.md` | Repositorio |
 | Arquitectura | Diagramas UML PowerDesigner (postulación, evaluación, selección, despliegue) | `Diagramas/PD/*.oom` (carpeta del curso) | Externa |
+| Diagramas | Informes escritos de los 9 diagramas (BPMN AS-IS/TO-BE, casos de uso, arquitectura, clases, secuencias, despliegue) | `docs/final-report/diagram-reports/` | Repositorio |
+| QA | Informe QA final y checklist de entrega | `docs/final-report/qa-final-report.md`, `docs/final-report/delivery-checklist.md` | Repositorio |
 | Código | Backend (controladores, servicios, Policies, modelos, *enums*, notificaciones) | `app/` | Repositorio |
 | Código | Esquema de base de datos | `database/migrations/` (17) | Repositorio |
 | Código | Datos demo ficticios | `database/seeders/DemoSeeder.php`, `docs/demo-users.md` | Repositorio |

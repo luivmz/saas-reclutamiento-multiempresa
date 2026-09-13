@@ -1,19 +1,19 @@
 # Progreso del proyecto
 
-Última actualización: 2026-09-13 · Rama actual: `feature/final-documentation`
+Última actualización: 2026-09-13 · Rama actual: `release/qa-final`
 
 ## Fases
 
 | Fase | Estado |
 |---|---|
-| 0 a 9 | ✅ Completadas e integradas en `develop` |
-| 10 — Docker y portabilidad | ✅ Integrada en `develop` (`02c2505`, merge `--no-ff` de `ff524e6`) |
-| 11 — Documentación final | ✅ Completada en `feature/final-documentation` (**pendiente de revisión; no fusionada en `develop`**) |
-| 12 — QA final | ❌ Pendiente |
+| 0 a 10 | ✅ Completadas e integradas en `develop` |
+| 11 — Documentación final | ✅ Integrada en `develop` (`904ce72`, merge `--no-ff` de `49b7f33`) |
+| 12 — QA final y auditoría de entrega | ✅ Completada en `release/qa-final` (**pendiente de revisión humana**) — veredicto: **APTO PARA PUBLICACIÓN** |
+| Cierre Git + publicación en GitHub | ❌ Pendiente, bajo revisión humana |
 
-**RF-01 a RF-27 constituyen la línea base funcional completa.** La Fase 11 solo modificó documentación (Markdown): no cambió código, configuración, reglas de negocio ni RF.
+**RF-01 a RF-27 constituyen la línea base funcional completa.** La Fase 12 no cambió código, configuración, reglas de negocio ni RF: solo documentación.
 
-## Reglas de negocio vigentes de la Fase 6 (aprobadas; sin cambios)
+## Reglas de negocio vigentes (aprobadas; sin cambios)
 
 1. Registrar la decisión final no cambia por sí sola el estado de ninguna postulación.
 2. El candidato elegido puede no ser el primero del ranking.
@@ -22,54 +22,46 @@
 5. Las demás postulaciones activas pasan a «no seleccionado» al cerrar la vacante, no antes.
 6. RF-25 implementa solo el cierre con selección.
 
-## Fase 11 — lo realizado
+## Fase 12 — resultados reales del QA final
 
-- **Integración de la Fase 10:** merge en `develop` (`02c2505`).
-- **Verificación posterior al merge:** PHPUnit **244 pruebas: 236 passed, 8 skipped, 0 failed**. Por suite: Unit 62 passed (85 assertions) y Feature 174 passed + 8 skipped (989 assertions), 1074 assertions en total.
-- **Auditoría documental:**
-  - Fuera del repositorio solo existen 4 diagramas UML de PowerDesigner (`Diagramas/PD/*.oom`).
-  - No existen BPMN AS-IS/TO-BE, casos de uso ni documentos F4/F5/F6.
-  - No se encontró NRC 30180 ni tecnologías inexistentes presentadas como implementadas.
-- **Informe final (`docs/final-report/`):** 14 capítulos (`01` a `14`), además de `traceability-master.md`, `evidence-index.md`, `technical-summary.md` y `demo-script.md`.
-- **Matriz maestra:** RF-01 a RF-27, con actor, backend, frontend, PHPUnit y Cypress verificados contra el código; clases citadas y 106 métodos `test_rfNN_*` comprobados.
-- **Diagramas:** se referenciaron los `.oom` y se documentaron sus discrepancias con la implementación final:
-  - la secuencia de selección no separa la decisión humana (RF-23), la selección (RF-24) y el cierre (RF-25);
-  - el diagrama de despliegue incluye S3, que no existe.
-- **Diagramas nuevos derivados del código** (Mermaid): arquitectura, clases, estados, secuencia de decisión → selección → cierre, ERD y flujo TO-BE implementado. El flujo TO-BE se rotula explícitamente como no-BPMN.
-- **Otros archivos:**
-  - `README.md` completo: proyecto, universidad, integrantes, arquitectura, stack, instalación, usuarios demo, pruebas, estructura, comandos, documentación, seguridad y estado.
-  - Referencia a la matriz maestra en `docs/rf-implementation-matrix.md`.
-- **Validación documental:**
-  - 0 enlaces relativos rotos y todas las rutas citadas existen.
-  - Versiones leídas de `composer.lock`, `npm ls` y contenedores; hashes leídos de `git log`.
-  - Sin secretos en la documentación.
-
-## Cifras usadas en la documentación
-
-| Fuente | Cifra |
+| Verificación | Resultado |
 |---|---|
-| PHPUnit | 244 pruebas · 236 passed · 0 failed · 8 skipped · 1074 assertions (Unit 62 / Feature 174 + 8) |
-| Cypress | 14 specs · 43 tests · 43/43 (instalación limpia 03:26, entorno principal 03:34); Fase 9: 40/40 ×2 |
-| Validación manual | Recorrido visual 10/10 (49 capturas) · flujo 12/12 |
-| RF | 27/27 implementados, con PHPUnit y ejercidos por Cypress |
-| Defectos | 13 registrados / 13 cerrados (Crítica 2 · Alta 5 · Media 4 · Baja 2) |
-| Cobertura de código | No medida |
+| RF-01 a RF-27 | 27/27 ✅ (rutas, código, Policies, páginas, PHPUnit y Cypress verificados) |
+| PHPUnit | 244 pruebas · 236 passed · **0 failed** · 8 skipped · 1074 assertions · 32,25 s |
+| Cypress | 14 specs · 43/43 · **0 failed** · 0 skipped · 03:32 · Electron 136 |
+| `npm run build` | Correcto |
+| `npx tsc --noEmit` | 0 errores |
+| Migraciones | 17 aplicadas, 0 pendientes (normal y E2E) |
+| Datos demo | 2 organizaciones, 16 usuarios `.test`, 7 CV PDF ficticios |
+| Smoke | `/health` 200 (base de datos y Redis ok), `/login` 200, `/empleos` 200, `/dashboard` → login sin sesión, `/__e2e/reset` 404 en el entorno normal |
+| *Healthchecks* | `app`, `queue`, `postgres`, `redis`, `app-e2e` y `queue-e2e` *healthy* |
+| Secretos | Ninguno versionado (`.env`, `.env.e2e`, logs, *dumps*, CV privados: 0) |
+| Defectos nuevos | Ninguno |
 
-## Pendientes documentales (antes de la entrega)
+## Documentos creados o actualizados en la Fase 12
 
-1. Anexar los BPMN AS-IS y TO-BE (no están en el repositorio).
-2. Contrastar el catálogo de casos de uso derivado con la práctica de casos de uso del equipo.
-3. Validar el AS-IS preliminar con RR. HH./Administración, o mantenerlo rotulado como preliminar.
-4. Seleccionar las capturas de pantalla para el informe (las actuales son locales y no están versionadas).
-5. Completar las fechas de consulta de las referencias.
-6. Actualizar o anotar los diagramas UML de selección y despliegue.
+- `docs/final-report/diagram-reports/01` a `09`: informes escritos de los diagramas (sin recrear gráficos ni editar los `.oom`).
+- `docs/final-report/delivery-checklist.md` (con «GitHub publicado» sin marcar).
+- `docs/final-report/qa-final-report.md` (veredicto y justificación).
+- Resultados del QA final en los capítulos 12 y 13 y en `docs/testing/cypress-e2e.md`.
+- Referencias con fecha de consulta (13 de septiembre de 2026).
+- Enlaces a los informes de diagramas en `evidence-index.md` y en los capítulos 6 y 14.
+- Estado del README.
+
+## Pendientes (equipo)
+
+1. Anexar los BPMN AS-IS y TO-BE originales y los documentos previos de casos de uso.
+2. Seleccionar o recapturar las capturas del informe, incluidas Cypress y Docker.
+3. Actualizar gráficamente los diagramas de selección y despliegue (opcional).
 
 ## Git
 
-- Rama: `feature/final-documentation` (desde `develop` en `02c2505`).
-- Sin push, sin remoto, sin tag. **No fusionar en `develop` hasta la revisión del equipo.**
+- Rama: `release/qa-final` (desde `develop` en `904ce72`). Ramas `main`, `develop` y `feature/*` preservadas.
+- Sin remoto, sin push, sin *tag*, sin merge a `main`.
 
-## Siguiente tarea exacta para retomar
+## Siguiente paso (bajo revisión humana)
 
-1. Revisión de la Fase 11; si se aprueba, merge `--no-ff` de `feature/final-documentation` a `develop`.
-2. Fase 12 (QA final) según el plan maestro, no iniciada. Incluye la integración en `main` y la publicación en GitHub tras la revisión final.
+Cierre Git y publicación en GitHub:
+1. Integrar `release/qa-final` en `develop` y luego en `main`.
+2. Crear el *tag* de versión.
+3. Crear el remoto y hacer `push`.

@@ -79,6 +79,7 @@ Un spec ordenado en el que cada `it` es un traspaso entre roles; se justifica po
 | Fase 9, suite completa, 2.ª | 13 | 40 | 40 | 0 | 0 | 03:56 |
 | Fase 10, instalación limpia | 14 | 43 | 43 | 0 | 0 | 03:26 |
 | Fase 10, entorno principal | 14 | 43 | 43 | 0 | 0 | 03:34 |
+| Fase 12, QA final (entorno principal) | 14 | 43 | 43 | 0 | 0 | 03:32 |
 
 - **Defectos de la aplicación encontrados por la suite:** ninguno.
 - **Tests corregidos por expectativas erróneas:** 2 (E2E-04 y E2E-10).

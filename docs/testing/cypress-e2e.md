@@ -180,7 +180,9 @@ Las dos corridas completas pasaron sin reintentos: no se observó flakiness.
 | Instalación limpia | Clon nuevo del repositorio, volúmenes nuevos (`-p reclutamiento-clean`) | 14 | 43 | 43 | 0 | 0 | 03:26 |
 | Entorno principal | `app-e2e` y `queue-e2e` junto al entorno de desarrollo | 14 | 43 | 43 | 0 | 0 | 03:34 |
 
-Ambas corridas usaron Cypress 15.3.0 y Electron 136 headless, sin reintentos. `e2e-00-app-dates` (3 tests) se agregó en esta fase.
+Ambas corridas usaron Cypress 15.3.0 y Electron 136 headless, sin reintentos.
+
+**QA final (Fase 12, 2026-09-13):** suite completa en el entorno principal: 14 specs · 43/43 · 0 failed · 0 skipped · 03:32 · Electron 136. `e2e-00-app-dates` (3 tests) se agregó en esta fase.
 
 **Aislamiento verificado con datos:**
 - En la instalación limpia, la base de desarrollo conservó el seed intacto (11 requerimientos, 5 vacantes) mientras la E2E recibió los datos de las pruebas.

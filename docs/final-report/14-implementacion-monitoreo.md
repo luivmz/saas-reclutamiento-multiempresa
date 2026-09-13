@@ -85,21 +85,21 @@ docker compose exec app php artisan migrate:fresh --seed --force    # datos demo
 
 # Referencias
 
-Solo fuentes oficiales o de uso estándar para la tecnología y las normas empleadas. Las fechas de consulta deben completarse al preparar la versión final del informe.
+Solo fuentes oficiales o de uso estándar para la tecnología y las normas empleadas. En las fuentes en línea se indica la fecha de consulta; no se agregan DOI, autores ni fechas de publicación que no correspondan.
 
 - Beck, K. (2003). *Test-driven development: By example*. Addison-Wesley.
-- Chacon, S., & Straub, B. (2014). *Pro Git* (2.ª ed.). Apress. https://git-scm.com/book
-- Cypress.io. (s. f.). *Cypress documentation*. https://docs.cypress.io
-- Docker Inc. (s. f.). *Docker Compose documentation*. https://docs.docker.com/compose/
-- Inertia.js. (s. f.). *Inertia.js documentation*. https://inertiajs.com
-- International Organization for Standardization. (2023). *ISO/IEC 25010:2023. Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — Product quality model*. https://www.iso.org/standard/78176.html
-- Laravel. (s. f.). *Laravel documentation (13.x)*. https://laravel.com/docs/13.x
-- Meta Open Source. (s. f.). *React documentation*. https://react.dev
-- OWASP Foundation. (s. f.). *OWASP Top Ten*. https://owasp.org/www-project-top-ten/
-- PHPUnit. (s. f.). *PHPUnit manual*. https://docs.phpunit.de
-- PostgreSQL Global Development Group. (s. f.). *PostgreSQL 17 documentation*. https://www.postgresql.org/docs/17/
-- Redis Ltd. (s. f.). *Redis documentation*. https://redis.io/docs/
-- Tailwind Labs. (s. f.). *Tailwind CSS documentation*. https://tailwindcss.com/docs
+- Chacon, S., & Straub, B. (2014). *Pro Git* (2.ª ed.). Apress. Recuperado el 13 de septiembre de 2026, de https://git-scm.com/book
+- Cypress.io. (s. f.). *Cypress documentation*. Recuperado el 13 de septiembre de 2026, de https://docs.cypress.io
+- Docker Inc. (s. f.). *Docker Compose documentation*. Recuperado el 13 de septiembre de 2026, de https://docs.docker.com/compose/
+- Inertia.js. (s. f.). *Inertia.js documentation*. Recuperado el 13 de septiembre de 2026, de https://inertiajs.com
+- International Organization for Standardization. (2023). *ISO/IEC 25010:2023. Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — Product quality model*. Recuperado el 13 de septiembre de 2026, de https://www.iso.org/standard/78176.html
+- Laravel. (s. f.). *Laravel documentation (13.x)*. Recuperado el 13 de septiembre de 2026, de https://laravel.com/docs/13.x
+- Meta Open Source. (s. f.). *React documentation*. Recuperado el 13 de septiembre de 2026, de https://react.dev
+- OWASP Foundation. (s. f.). *OWASP Top Ten*. Recuperado el 13 de septiembre de 2026, de https://owasp.org/www-project-top-ten/
+- PHPUnit. (s. f.). *PHPUnit manual*. Recuperado el 13 de septiembre de 2026, de https://docs.phpunit.de
+- PostgreSQL Global Development Group. (s. f.). *PostgreSQL 17 documentation*. Recuperado el 13 de septiembre de 2026, de https://www.postgresql.org/docs/17/
+- Redis Ltd. (s. f.). *Redis documentation*. Recuperado el 13 de septiembre de 2026, de https://redis.io/docs/
+- Tailwind Labs. (s. f.). *Tailwind CSS documentation*. Recuperado el 13 de septiembre de 2026, de https://tailwindcss.com/docs
 
 # Índice de anexos
 
@@ -120,3 +120,5 @@ Rutas y estado de cada evidencia: [evidence-index.md](evidence-index.md).
 | K | Historial Git | [09-control-versiones.md](09-control-versiones.md) | Disponible |
 | L | Defectos y supuestos | `docs/defects.md`, `docs/assumptions.md` | Disponible |
 | M | Validación manual en navegador | `docs/manual-smoke-test.md` (las capturas son locales y no están versionadas) | Documento disponible; capturas pendientes de seleccionar |
+| N | Informes escritos de diagramas | [diagram-reports/](diagram-reports/01-bpmn-as-is-report.md) (01 a 09) | Disponible (Fase 12) |
+| O | QA final y checklist de entrega | [qa-final-report.md](qa-final-report.md), [delivery-checklist.md](delivery-checklist.md) | Disponible (Fase 12) |

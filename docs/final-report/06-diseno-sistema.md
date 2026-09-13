@@ -143,7 +143,7 @@ stateDiagram-v2
 
 ### Diagramas UML disponibles y correspondencia con la implementación
 
-Los diagramas del equipo están fuera del repositorio, en la carpeta del curso: `Diagramas/PD/*.oom` (PowerDesigner). Se revisaron frente al código final.
+Los diagramas del equipo están fuera del repositorio, en la carpeta del curso: `Diagramas/PD/*.oom` (PowerDesigner). Se revisaron frente al código final. Los informes escritos completos de cada diagrama (propósito, relación con RF e implementación, diferencias y estado para entrega) están en [`diagram-reports/`](diagram-reports/06-application-sequence-report.md).
 
 | Diagrama | Contenido | Correspondencia con la implementación |
 |---|---|---|
