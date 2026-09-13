@@ -1,6 +1,15 @@
 # Capítulo 13. Métricas de calidad
 
-Todas las métricas provienen de ejecuciones reales. La última verificación es de la Fase 11: PHPUnit sobre `develop` (`02c2505`), separado por suites.
+Todas las métricas provienen de ejecuciones reales. **Última verificación: QA final de la Fase 12 (2026-09-13, rama `release/qa-final`, base `904ce72`).**
+
+| Verificación QA final | Resultado |
+|---|---|
+| PHPUnit completo | 244 pruebas · 236 superadas · 0 fallidas · 8 omitidas · 1074 aserciones · 32,25 s |
+| Cypress completo (entorno E2E aislado) | 14 specs · 43 tests · 43 superados · 0 fallidos · 0 omitidos · 03:32 · Electron 136 |
+| `npm run build` | Correcto (19,90 s) |
+| `npx tsc --noEmit` | 0 errores |
+| Migraciones | 17 aplicadas, 0 pendientes (entornos normal y E2E) |
+| Cobertura porcentual de código | **No medida** |
 
 ## 13.1 Pruebas PHPUnit
 
@@ -31,6 +40,7 @@ Todas las métricas provienen de ejecuciones reales. La última verificación es
 | 8 | 233 | 225 | 8 | 0 | 1045 |
 | 9 | 240 | 232 | 8 | 0 | 1064 |
 | 10 | 244 | 236 | 8 | 0 | 1074 |
+| 12 (QA final) | 244 | 236 | 8 | 0 | 1074 |
 
 En las fases 2 a 4 el total se calcula como superadas + omitidas, porque las aserciones no se registraron (`docs/tdd-evidence.md`).
 
@@ -42,7 +52,7 @@ En las fases 2 a 4 el total se calcula como superadas + omitidas, porque las ase
 | Tests | **43** |
 | Superados / fallidos / omitidos (última corrida) | **43 / 0 / 0** |
 | Tasa de aprobación | **100 %** |
-| Corridas completas consecutivas en verde | 2 en la Fase 9 (40/40) y 2 en la Fase 10 (43/43: instalación limpia y entorno principal) |
+| Corridas completas consecutivas en verde | 2 en la Fase 9 (40/40), 2 en la Fase 10 (43/43: instalación limpia y entorno principal) y 1 en el QA final de la Fase 12 (43/43, 03:32) |
 | Reintentos automáticos | 0 (deshabilitados) |
 | Duración de la suite | 03:26 a 04:01 según la corrida |
 | Navegador | Electron 136 (*headless*) |
