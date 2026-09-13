@@ -65,3 +65,20 @@ Cierre Git y publicación en GitHub:
 1. Integrar `release/qa-final` en `develop` y luego en `main`.
 2. Crear el *tag* de versión.
 3. Crear el remoto y hacer `push`.
+
+## Publicación (completada)
+
+Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempresa: `main` (rama por defecto), `develop`, `release/qa-final` y las 10 ramas `feature/*`, más el tag `v1.0.0-academic` (`9a946c2`).
+
+## Post-publicación — Corrección CI GitHub Actions
+
+- **Problema:** el workflow heredado `.github/workflows/tests.yml` fallaba en GitHub Actions durante `composer install`.
+- **Causa:** usaba PHP 8.3, mientras Symfony 8.1 (bloqueado en `composer.lock`) requiere PHP ≥ 8.4.1. Además, ejecutaba comandos del *starter kit* (`composer setup`, `composer ci:check`: PHPStan, Pint, *lint*) ajenos a la validación del proyecto. Por separado, `composer.lock` tenía un `content-hash` desincronizado desde el *bootstrap*.
+- **Solución:**
+  - Workflow con PHP 8.4, Node 22.23.2 y PostgreSQL 17.11.
+  - Pasos: `composer install`, `npm ci`, `npm run build`, `npx tsc --noEmit` y `php artisan test`, con variables ficticias de CI y sin Redis (no requerido).
+  - `composer update --lock`: solo cambió el `content-hash`, sin variar versiones.
+  - Rama `fix/github-actions-ci`, commit `05e6fb1`; merges `c83f232` (`main`) y `7b1b7ef` (`develop`).
+- **Workflow verde:** ejecuciones `34787563815` (rama de corrección), `34787861775` (`main`) y `34787885835` (`develop`), todas **success**.
+- **Sin cambios funcionales:** no cambiaron RF, reglas, código de la aplicación ni Docker. El tag `v1.0.0-academic` se conserva.
+- **Detalle:** `docs/final-report/post-publication-ci-fix.md`.

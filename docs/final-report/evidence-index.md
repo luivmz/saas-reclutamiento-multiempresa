@@ -22,6 +22,9 @@ Estado de cada evidencia:
 | Arquitectura | Diagramas UML PowerDesigner (postulación, evaluación, selección, despliegue) | `Diagramas/PD/*.oom` (carpeta del curso) | Externa |
 | Diagramas | Informes escritos de los 9 diagramas (BPMN AS-IS/TO-BE, casos de uso, arquitectura, clases, secuencias, despliegue) | `docs/final-report/diagram-reports/` | Repositorio |
 | QA | Informe QA final y checklist de entrega | `docs/final-report/qa-final-report.md`, `docs/final-report/delivery-checklist.md` | Repositorio |
+| CI | Corrección post-publicación de GitHub Actions (causa, cambios, lock, evidencia) | `docs/final-report/post-publication-ci-fix.md` | Repositorio |
+| CI | Workflow corregido (PHP 8.4, Node 22, PostgreSQL 17; build, TypeScript, PHPUnit) | `.github/workflows/tests.yml` | Repositorio |
+| CI | Ejecuciones exitosas de GitHub Actions (`34787563815`, `34787861775`, `34787885835`) | https://github.com/luivmz/saas-reclutamiento-multiempresa/actions | Externa (GitHub) |
 | Código | Backend (controladores, servicios, Policies, modelos, *enums*, notificaciones) | `app/` | Repositorio |
 | Código | Esquema de base de datos | `database/migrations/` (17) | Repositorio |
 | Código | Datos demo ficticios | `database/seeders/DemoSeeder.php`, `docs/demo-users.md` | Repositorio |
