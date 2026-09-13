@@ -2,7 +2,9 @@
 
 Estado al cierre de la Fase 9 (2026-09-13, rama `feature/cypress-e2e`). Solo información verificada. La columna "Test" se refiere a PHPUnit. La cobertura E2E de Cypress se resume en la tabla siguiente y se detalla en `docs/testing/cypress-e2e.md`.
 
-**Cobertura E2E (Cypress 15.3.0, Electron 136):** 13 specs y 40 tests. Pasaron 40/40 en dos corridas completas consecutivas.
+**Cobertura E2E (Cypress 15.3.0, Electron 136):**
+- **Fase 9:** 13 specs y 40 tests; pasaron 40/40 en dos corridas completas consecutivas.
+- **Fase 10:** se agregó el spec de soporte `e2e-00` (14 specs, 43 tests) y la suite corre en el entorno aislado `app-e2e`. Pasó 43/43 en una instalación limpia y 43/43 en el entorno principal. Sin cambios en los RF.
 
 | E2E | RF cubiertos |
 |---|---|

@@ -8,7 +8,7 @@ Suite formal, versionada y reproducible de pruebas end-to-end. **Complementa** a
 |---|---|
 | Cypress | **15.3.0** (imagen oficial `cypress/included:15.3.0`) |
 | Navegador | **Electron 136 (headless)** |
-| Ejecución | Servicio `cypress` de Docker Compose (perfil `e2e`) contra `http://app:8000` |
+| Ejecución | Servicio `cypress` de Docker Compose (perfil `e2e`) contra el entorno aislado `http://app-e2e:8000` (desde la Fase 10; ver `docs/docker.md`) |
 | Reintentos | Ninguno (`retries: 0`): un fallo intermitente se investiga, no se oculta |
 | Aislamiento | `testIsolation: true` (cookies y almacenamiento limpios entre tests) |
 | Evidencia | Capturas solo en fallos (`cypress/screenshots`, ignorado por Git); sin video |
@@ -20,53 +20,60 @@ No se agregan dependencias npm a la aplicación: Cypress se ejecuta desde su ima
 
 | Archivo | Propósito |
 |---|---|
-| `cypress.config.cjs` | Configuración. `baseUrl` por defecto `http://localhost:8000`, sobrescrita por `CYPRESS_baseUrl` en Docker. Lee el token de `CYPRESS_E2E_TOKEN` o, para `cypress open` en el host, de `E2E_TOKEN` en `.env`. |
-| `docker-compose.yml` → servicio `cypress` | Imagen fijada, `entrypoint` `cypress run --browser electron` (admite `--spec`), `CYPRESS_E2E_TOKEN: ${E2E_TOKEN:-}` y dependencia de `app` (healthy) y `queue` (en ejecución). |
-| `package.json` | Scripts `e2e:reset`, `cy:run` y `cy:open`. |
-| `config/e2e.php` | `E2E_ENABLED` (por defecto `false`) y `E2E_TOKEN`. |
+| `cypress.config.cjs` | Configuración. `baseUrl` por defecto `http://localhost:8001` (`app-e2e` publicado en el host), sobrescrita por `CYPRESS_baseUrl=http://app-e2e:8000` en Docker. El token se lee de `CYPRESS_E2E_TOKEN` o `E2E_TOKEN` (inyectado desde `.env.e2e`) o, para `cypress open` en el host, desde `.env.e2e`. Zona horaria de fechas: `APP_TIMEZONE=America/Lima`. |
+| `docker-compose.yml` → servicios `app-e2e`, `queue-e2e`, `cypress` (perfil `e2e`) | Entorno aislado con `APP_ENV=e2e`. `cypress` usa la imagen fijada, `entrypoint` `cypress run --browser electron` (admite `--spec`), `env_file: .env.e2e` y depende de `app-e2e` y `queue-e2e` (healthy). |
+| `package.json` | Scripts `e2e:setup`, `e2e:up`, `e2e:reset`, `cy:run` y `cy:open`. |
+| `config/e2e.php` | `E2E_ENABLED` (por defecto `false`), `E2E_TOKEN` y `E2E_DATABASE` (por defecto `reclutamiento_e2e`). |
 
-### Variables necesarias (solo en el `.env` local, nunca versionadas)
+### Variables necesarias (solo en `.env.e2e`, nunca versionado)
+
+`npm run e2e:setup` crea `.env.e2e` desde `.env.e2e.example` con `APP_KEY` y `E2E_TOKEN` aleatorios, sin mostrarlos:
 
 ```dotenv
+APP_ENV=e2e
+DB_DATABASE=reclutamiento_e2e
 E2E_ENABLED=true
-E2E_TOKEN=<cadena aleatoria larga>
+E2E_TOKEN=<generado>
+E2E_DATABASE=reclutamiento_e2e
 ```
 
-`.env.example` las deja desactivadas y vacías. La contraseña de los usuarios demo (`password`, ficticia, ver `docs/demo-users.md`) está en la configuración de Cypress como `DEMO_PASSWORD`.
+El entorno normal (`.env`) mantiene `E2E_ENABLED=false`, por lo que ahí los endpoints responden 404. La contraseña de los usuarios demo (`password`, ficticia, ver `docs/demo-users.md`) está en la configuración de Cypress como `DEMO_PASSWORD`.
 
 ## 3. Preparación y reset de datos
 
-Cada spec empieza desde un **estado conocido** que genera `DemoSeeder` (`docs/demo-users.md`).
+Cada spec empieza desde un **estado conocido** que genera `DemoSeeder` (`docs/demo-users.md`), en la base aislada `reclutamiento_e2e`.
 
 - **`php artisan e2e:reset`** (`npm run e2e:reset`) ejecuta `migrate:fresh --seed`, vacía la cola y limpia la caché (incluidos los contadores de intentos de login). En producción se niega a ejecutarse.
 - **`POST /__e2e/reset`** es el mismo reset expuesto para Cypress (`cy.resetDatabase()`).
 - **`GET /__e2e/queue`** devuelve los trabajos pendientes en la cola, para `cy.waitForQueue()`.
 
-Seguridad de los endpoints (`EnsureE2eSupportEnabled`, cubierta por `tests/Feature/Testing/E2eSupportTest.php`, 7 pruebas):
+Seguridad de los endpoints (`EnsureE2eSupportEnabled` y `E2eEnvironment`, cubiertas por `tests/Feature/Testing/E2eSupportTest.php` y `E2eEnvironmentTest.php`, 11 pruebas):
 
 - Responden **404** si `E2E_ENABLED` está desactivado o el entorno es producción.
 - Responden **403** sin cabecera `X-E2E-Token` o con un token incorrecto (comparación con `hash_equals`).
+- El reset responde **409** (o el comando falla, o el servicio lanza una excepción) si la base activa no es exactamente `E2E_DATABASE` (DEF-13).
 - Se registran fuera del grupo `web`, por lo que no usan sesión ni CSRF.
 
-**Advertencia:** el reset borra la base de desarrollo, que se usa como base de demostración. Al terminar, esta queda en el estado del `DemoSeeder` más lo que haya creado el último spec.
+Desde la Fase 10 el reset **ya no afecta** la base de desarrollo y demostración (`reclutamiento`): la suite usa `app-e2e` con `reclutamiento_e2e` y bases Redis propias (DB 2 y 3).
 
 ### Colas y notificaciones
 
-Las notificaciones son `ShouldQueue` y las procesa el servicio `queue` (worker Redis), que debe estar en ejecución. Antes de afirmar sobre notificaciones, los specs llaman a `cy.waitForQueue()`. Este comando consulta el tamaño real de la cola cada 250 ms, hasta 40 veces, y falla con un mensaje explícito si no se vacía. No hay esperas fijas.
+Las notificaciones son `ShouldQueue` y las procesa el servicio `queue-e2e` (worker Redis del entorno aislado), del que depende el servicio `cypress`. Antes de afirmar sobre notificaciones, los specs llaman a `cy.waitForQueue()`. Este comando consulta el tamaño real de la cola cada 250 ms, hasta 40 veces, y falla con un mensaje explícito si no se vacía. No hay esperas fijas.
 
 ## 4. Estructura
 
 ```text
 cypress.config.cjs
 cypress/
-├── e2e/                      13 specs (*.cy.js)
+├── e2e/                      14 specs (*.cy.js): e2e-00 de soporte y E2E-01 a E2E-13
 ├── fixtures/
 │   ├── users.json            correos de usuarios demo por rol (ficticios)
 │   ├── demo.json             IDs y nombres que genera DemoSeeder
 │   └── cv-ficticio.pdf       CV PDF ficticio para la carga
 └── support/
     ├── e2e.js
-    └── commands.js           comandos personalizados
+    ├── commands.js           comandos personalizados
+    └── dates.js              appDate(): fechas en la zona horaria de la aplicación (DEF-12)
 ```
 
 Comandos personalizados (solo los que evitan duplicación):
@@ -89,6 +96,7 @@ Reglas seguidas:
 
 | ID | Spec | Propósito | RF | Tests |
 |---|---|---|---|---|
+| Soporte | `e2e-00-app-dates.cy.js` | Verifica `appDate()`: con un instante fijo de las 21:30 en Lima (ya día siguiente en UTC), las fechas usadas por los specs siguen `America/Lima`. No accede a la aplicación. | DEF-12 | 3 |
 | E2E-01 | `e2e-01-login.cy.js` | Login real de los 5 roles, con menú visible y oculto según el rol. Negativo: credenciales inválidas. | RF-08 y roles | 6 |
 | E2E-02 | `e2e-02-register-job-request.cy.js` | El área solicitante registra y envía un requerimiento. Negativo: formulario vacío que no crea registros. | RF-01, RF-02 | 2 |
 | E2E-03 | `e2e-03-approve-job-request.cy.js` | El aprobador aprueba un requerimiento validado. Negativo: rechazo sin motivo. | RF-03, RF-04 | 2 |
@@ -103,7 +111,7 @@ Reglas seguidas:
 | E2E-12 | `e2e-12-negative-rules.cy.js` | Rol sin permiso (403); postulación a vacante cerrada (404 en el portal, 422 al postular); decisión por RR. HH. o evaluador (403); selección y cierre después del cierre (422). | RF-10, RF-23 a RF-25 | 4 |
 | E2E-13 | `e2e-13-full-recruitment-flow.cy.js` | Flujo integral: requerimiento → aprobación → vacante → publicación → postulación → preselección → evaluación → entrevista → ranking (sin decisión automática) → decisión humana → selección → cierre → notificación → auditoría. | RF-01 a RF-27 | 12 |
 
-**Total: 13 specs, 40 tests.**
+**Total: 14 specs y 43 tests** desde la Fase 10 (en la Fase 9 eran 13 specs y 40 tests, sin `e2e-00`).
 
 ### Decisiones de diseño
 
@@ -115,16 +123,18 @@ Reglas seguidas:
 ## 6. Comandos
 
 ```powershell
-# Requisitos: Docker Desktop en ejecución, E2E_ENABLED=true y E2E_TOKEN en .env
-docker compose up -d --wait                 # app healthy, postgres, redis y queue
-
+# Requisito: Docker Desktop en ejecución. cy:run crea .env.e2e si falta y levanta app-e2e y queue-e2e.
 npm run cy:run                              # suite completa (headless, Electron, en Docker)
 npm run cy:run -- --spec "cypress/e2e/e2e-10-*.cy.js"   # un spec
-npm run e2e:reset                           # reset manual al estado demo
+npm run e2e:setup                           # solo crear .env.e2e (APP_KEY y E2E_TOKEN aleatorios)
+npm run e2e:up                              # solo levantar app-e2e y queue-e2e
+npm run e2e:reset                           # reset manual de la base E2E (reclutamiento_e2e)
 npm run cy:open                             # Cypress interactivo en el host (npx cypress@15.3.0)
 ```
 
-Para `cy:open`, el host necesita Node y descarga el binario de Cypress la primera vez. Apunta a `http://localhost:8000` y lee el token desde `.env`. **`cy:open` no se ejecutó durante la Fase 9** (solo se usó `cy:run` en Docker).
+Sin npm en el host: `docker compose run --rm --no-deps --entrypoint sh app docker/php/init-e2e-env.sh` y luego `docker compose --profile e2e run --rm cypress`.
+
+Para `cy:open`, el host necesita Node y descarga el binario de Cypress la primera vez. Apunta a `http://localhost:8001` (`app-e2e`) y lee el token desde `.env.e2e`. **`cy:open` no se ejecutó durante la Fase 9** (solo se usó `cy:run` en Docker).
 
 ## 7. Resultados reales
 
@@ -163,6 +173,19 @@ Cypress 15.3.0 · Electron 136 (headless) · **13 specs · 40 tests · 40 passed
 
 Las dos corridas completas pasaron sin reintentos: no se observó flakiness.
 
+### Fase 10: entorno E2E aislado
+
+| Corrida | Entorno | Specs | Tests | Passed | Failed | Skipped | Duración |
+|---|---|---|---|---|---|---|---|
+| Instalación limpia | Clon nuevo del repositorio, volúmenes nuevos (`-p reclutamiento-clean`) | 14 | 43 | 43 | 0 | 0 | 03:26 |
+| Entorno principal | `app-e2e` y `queue-e2e` junto al entorno de desarrollo | 14 | 43 | 43 | 0 | 0 | 03:34 |
+
+Ambas corridas usaron Cypress 15.3.0 y Electron 136 headless, sin reintentos. `e2e-00-app-dates` (3 tests) se agregó en esta fase.
+
+**Aislamiento verificado con datos:**
+- En la instalación limpia, la base de desarrollo conservó el seed intacto (11 requerimientos, 5 vacantes) mientras la E2E recibió los datos de las pruebas.
+- En el entorno principal, la base de desarrollo tenía 12 requerimientos, 6 vacantes y 16 usuarios antes de la suite y los mismos valores después.
+
 ### Defectos
 
 - **Defectos reales de la aplicación encontrados por la suite: ninguno.**
@@ -172,10 +195,12 @@ Las dos corridas completas pasaron sin reintentos: no se observó flakiness.
 
 ## 8. Limitaciones conocidas
 
-- **Base compartida:** el reset usa la base de desarrollo/demostración; no hay una base E2E separada. Separarla requiere cambios de Docker previstos para la Fase 10.
+- **Resueltas en la Fase 10:**
+  - La base compartida con desarrollo (DEF-13): ahora hay entorno aislado `app-e2e` con `reclutamiento_e2e`.
+  - Las fechas en UTC (DEF-12): ahora se usa `appDate()` en `America/Lima`.
+- **Almacenamiento compartido:** los CV que se cargan en las pruebas se guardan en el mismo `storage/app/private` que el entorno normal (nombres UUID, sin colisiones), y el reset no los borra (A-35).
 - **Un solo navegador:** solo se ejecutó Electron 136; Chrome, Firefox y Edge no se probaron.
-- **Worker obligatorio:** las aserciones de notificaciones requieren el servicio `queue` en ejecución.
-- **Fechas en UTC:** los specs calculan fechas con la hora UTC del contenedor de Cypress, mientras la aplicación usa `America/Lima`. Entre las 19:00 y las 24:00 de Lima la fecha UTC ya es el día siguiente, lo que podría afectar la fecha de inicio de postulaciones en E2E-04 y E2E-13. **Riesgo no observado** (las corridas se hicieron fuera de esa franja); queda pendiente calcular las fechas en `America/Lima`.
+- **Worker obligatorio:** las aserciones de notificaciones requieren `queue-e2e` en ejecución (dependencia declarada del servicio `cypress`).
 - **Rango de puntajes:** en E2E-07 lo impide la validación nativa del navegador (`max`). El rechazo en el servidor está cubierto por PHPUnit (`ScoreSheetValidatorTest`).
 - **Duración:** cada reset tarda unos 6 s, por lo que la suite completa dura unos 4 min en serie.
 - **Ruido en logs:** los mensajes `dbus` de Electron dentro del contenedor no afectan los resultados.
