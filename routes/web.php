@@ -4,6 +4,7 @@ use App\Http\Controllers\Applications\ApplicationController;
 use App\Http\Controllers\Applications\ApplicationStageController;
 use App\Http\Controllers\Applications\VacancyApplicationController;
 use App\Http\Controllers\Assessments\AssessmentAssignmentController;
+use App\Http\Controllers\Audit\AuditLogController;
 use App\Http\Controllers\Assessments\AssessmentScheduleController;
 use App\Http\Controllers\Assessments\EvaluationController;
 use App\Http\Controllers\Assessments\InterviewController;
@@ -102,6 +103,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('vacantes/{vacancy}/decision', FinalDecisionController::class)->name('vacancies.decision.store');
     Route::post('vacantes/{vacancy}/seleccion', SelectionRegistrationController::class)->name('vacancies.selection.store');
     Route::post('vacantes/{vacancy}/cerrar', VacancyClosureController::class)->name('vacancies.close');
+
+    // RF-27 (solo lectura)
+    Route::get('auditoria', [AuditLogController::class, 'index'])->name('audit.index');
 });
 
 require __DIR__.'/settings.php';

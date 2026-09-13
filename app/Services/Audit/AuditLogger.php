@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class AuditLogger
 {
-    private const SENSITIVE_KEY_PATTERN = '/password|token|secret|remember|cv_content|file_contents/i';
+    private const SENSITIVE_KEY_PATTERN = '/password|token|secret|remember|cookie|authorization|api[_-]?key|cv_content|file_contents/i';
 
     public function __construct(
         private readonly AuthFactory $auth,

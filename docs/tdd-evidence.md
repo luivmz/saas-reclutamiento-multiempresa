@@ -62,4 +62,19 @@ Pruebas nuevas de la fase: **51** (`RankingServiceTest` 14, `RankingComparisonTe
 
 Evidencia específica de que el ranking no selecciona: `RankingComparisonTest::test_rf23_calculating_the_ranking_never_selects_a_candidate` calcula el ranking (servicio y dos vistas) y verifica que no cambian estados, historiales, decisiones ni auditoría de selección; `FinalDecisionTest::test_rf23_approver_records_the_final_decision_for_a_ranked_finalist` verifica que incluso la decisión humana no cambia el estado hasta RF-24.
 
+## Fase 7 — RF-26 y RF-27
+
+Pruebas nuevas de la fase: **19** (`ProcessResultNotificationTest` 8, `AuditTrailTest` 5, `AuditLogViewTest` 6).
+
+| Bloque | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| A + B + C (RF-26) | RED | `tests/Feature/Notifications/ProcessResultNotificationTest.php` | **6 failed, 2 passed (37 assertions)**: no se enviaba ninguna notificación de resultado y `Undefined constant App\Enums\AuditAction::ProcessResultNotified`. Las 2 que pasaron (`no_final_result_is_sent_before_the_vacancy_is_closed`, `only_candidates_of_the_closed_vacancy_are_notified`) solo contienen aserciones negativas y pasaban porque aún no se notificaba nada; se conservan como guardas de regresión |
+| D + E + F (RF-27) | RED | `tests/Feature/Audit/AuditTrailTest.php`, `tests/Feature/Audit/AuditLogViewTest.php` | **10 failed, 1 passed**: `Undefined constant …ProcessResultNotified`; `DB::table('audit_logs')->update()/delete()` no lanzaba excepción (DEF-07); `cookie`/`authorization`/`api_key` se almacenaban (DEF-08); no existía ruta de consulta; `Route [audit.index] not defined` (6). Pasó `deleting_a_user_keeps_the_audit_record_without_the_actor_reference` (comportamiento previo de la FK `nullOnDelete`) |
+| Todos | GREEN (1.er intento) | Notificaciones + auditoría + `VacancyClosureTest` | **2 failed, 26 passed (246 assertions)**, ambos errores de diseño de las pruebas nuevas: (1) el patrón `/justificaci/` coincidía con una observación legítima de RR. HH. («Precisar la justificación.»); se reemplazó por el texto exacto de la justificación de la decisión; (2) `assertSame` sobre metadatos `jsonb` fallaba por el orden de claves que reordena PostgreSQL; se usa `assertEquals` más `assertArrayNotHasKey` por cada clave sensible |
+| Todos | GREEN | `ProcessResultNotificationTest`, `AuditTrailTest`, `AuditLogViewTest` | **19 passed (238 assertions)** |
+| Regresión | — | Pruebas que usan notificaciones (`tests/Feature/Notifications`, `JobRequests`, `Applications`, `Assessments`) | **53 passed (300 assertions)** |
+| Regresión | — | `tests/Feature/Audit` (incluye `AuditLoggerTest`) | **15 passed (184 assertions)** |
+| Regresión | — | Pruebas cross-tenant (`--filter` por organización ajena/foránea en toda la suite) | **16 passed (65 assertions)** |
+| Suite completa | — | `php artisan test` | **230 pruebas: 222 passed, 8 skipped, 0 failed (1017 assertions)** |
+
 Los 8 skipped corresponden a pruebas del starter kit para funciones de Fortify desactivadas (verificación de correo, etc.).
