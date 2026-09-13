@@ -154,8 +154,9 @@ class InterviewTest extends TestCase
     {
         $interview = Interview::factory()->forApplication(Application::factory()->for($this->vacancy)->inInterview()->create())->assignedTo($this->evaluator)->create();
         $foreign = User::factory()->evaluator(Organization::factory()->create())->create();
+        $payload = $this->resultPayload();
 
         $this->actingAs($foreign)->get(route('interviews.show', $interview))->assertNotFound();
-        $this->actingAs($foreign)->post(route('interviews.results.store', $interview), $this->resultPayload())->assertNotFound();
+        $this->actingAs($foreign)->post(route('interviews.results.store', $interview), $payload)->assertNotFound();
     }
 }

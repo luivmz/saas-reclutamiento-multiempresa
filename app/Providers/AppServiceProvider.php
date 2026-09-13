@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Models\Application;
 use App\Models\CandidateDocument;
 use App\Models\CandidateProfile;
+use App\Models\Evaluation;
+use App\Models\Interview;
 use App\Models\JobRequest;
 use App\Models\Organization;
 use App\Models\User;
@@ -57,6 +59,8 @@ class AppServiceProvider extends ServiceProvider
             'candidate_profile' => CandidateProfile::class,
             'candidate_document' => CandidateDocument::class,
             'application' => Application::class,
+            'evaluation' => Evaluation::class,
+            'interview' => Interview::class,
         ]);
 
         Route::resourceVerbs(['create' => 'crear', 'edit' => 'editar']);

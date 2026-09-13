@@ -115,6 +115,37 @@ export type JobApplication = {
     cv?: DocumentSummary | null;
 };
 
+export type AssessmentAssignment = {
+    key: string;
+    id: number;
+    kind: Presented;
+    title: string;
+    candidate: string;
+    vacancy: string;
+    scheduled_at: string;
+    modality: string;
+    location: string;
+    status: Presented;
+    url: string;
+};
+
+export type AssessmentSummary = {
+    id: number;
+    kind: Presented;
+    title: string;
+    status: Presented;
+    scheduled_at: string;
+    duration_minutes: number | null;
+    modality: Presented;
+    location: string;
+    instructions: string | null;
+    observations: string | null;
+    outcome: Presented | null;
+    completed_at: string | null;
+    evaluator?: string;
+    results?: { criterion: string; score: number; max_score: number; comment: string | null }[];
+};
+
 export type AppNotification = {
     id: string;
     kind: string | null;

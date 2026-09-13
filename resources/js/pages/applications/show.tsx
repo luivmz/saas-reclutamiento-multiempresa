@@ -19,16 +19,20 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { formatDateTime, formatFileSize } from '@/lib/format';
-import type { JobApplication, Presented, StatusHistoryEntry } from '@/types';
+import { AssessmentPanel } from '@/components/assessments/assessment-panel';
+import type { SchedulingOptions } from '@/components/assessments/assessment-panel';
+import type { AssessmentSummary, JobApplication, Presented, StatusHistoryEntry } from '@/types';
 
 type Props = {
     application: JobApplication;
     history: StatusHistoryEntry[];
     stageOptions: Presented[];
-    can: { changeStage: boolean };
+    assessments: { evaluations: AssessmentSummary[]; interviews: AssessmentSummary[] };
+    scheduling: SchedulingOptions;
+    can: { changeStage: boolean; scheduleEvaluation: boolean; scheduleInterview: boolean };
 };
 
-export default function ApplicationShow({ application, history, stageOptions, can }: Props) {
+export default function ApplicationShow({ application, history, stageOptions, assessments, scheduling, can }: Props) {
     const profile = application.candidate?.profile;
     const canShortlist = stageOptions.some((option) => option.value === 'preseleccionado');
     const canDiscard = stageOptions.some((option) => option.value === 'descartado');
@@ -188,6 +192,14 @@ export default function ApplicationShow({ application, history, stageOptions, ca
                                 </CardContent>
                             </Card>
                         )}
+
+                        <AssessmentPanel
+                            applicationId={application.id}
+                            evaluations={assessments.evaluations}
+                            interviews={assessments.interviews}
+                            scheduling={scheduling}
+                            can={{ scheduleEvaluation: can.scheduleEvaluation, scheduleInterview: can.scheduleInterview }}
+                        />
                     </div>
 
                     <Card className="h-fit">

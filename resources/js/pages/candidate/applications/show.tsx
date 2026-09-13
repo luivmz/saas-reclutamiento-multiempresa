@@ -17,12 +17,25 @@ import type { JobApplication, Presented } from '@/types';
 
 type TimelineEntry = { id: number; to: Presented; created_at: string };
 
+type Convocation = {
+    key: string;
+    title: string;
+    scheduled_at: string;
+    duration_minutes: number | null;
+    modality: string;
+    location: string;
+    instructions: string | null;
+    status: Presented;
+};
+
 export default function MyApplicationShow({
     application,
     timeline,
+    convocations,
 }: {
     application: JobApplication;
     timeline: TimelineEntry[];
+    convocations: Convocation[];
 }) {
     return (
         <>
@@ -86,6 +99,34 @@ export default function MyApplicationShow({
                         </CardContent>
                     </Card>
                 </div>
+                <Card data-cy="candidate-convocations">
+                    <CardHeader>
+                        <CardTitle>Convocatorias</CardTitle>
+                        <CardDescription>Evaluaciones y entrevistas a las que ha sido convocado(a).</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        {convocations.length === 0 ? (
+                            <p className="text-muted-foreground text-sm">Aún no tiene convocatorias para esta postulación.</p>
+                        ) : (
+                            convocations.map((convocation) => (
+                                <div key={convocation.key} className="space-y-1 rounded-lg border p-4 text-sm" data-cy="convocation-item">
+                                    <div className="flex flex-wrap items-center justify-between gap-2">
+                                        <p className="font-medium">{convocation.title}</p>
+                                        <StatusBadge status={convocation.status} />
+                                    </div>
+                                    <p>
+                                        {formatDateTime(convocation.scheduled_at)}
+                                        {convocation.duration_minutes ? ` · ${convocation.duration_minutes} min` : ''}
+                                    </p>
+                                    <p className="text-muted-foreground">
+                                        {convocation.modality} · {convocation.location}
+                                    </p>
+                                    {convocation.instructions && <p className="text-muted-foreground">Indicaciones: {convocation.instructions}</p>}
+                                </div>
+                            ))
+                        )}
+                    </CardContent>
+                </Card>
             </PageContainer>
         </>
     );

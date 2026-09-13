@@ -41,6 +41,22 @@ class EvaluationCriterion extends Model
         ];
     }
 
+    /**
+     * @return array<int, CriterionDefinition> keyed by criterion id
+     */
+    public static function definitionsFor(int $vacancyId, CriterionStage $stage): array
+    {
+        return static::query()
+            ->withoutGlobalScopes()
+            ->where('vacancy_id', $vacancyId)
+            ->where('stage', $stage)
+            ->orderBy('position')
+            ->orderBy('id')
+            ->get()
+            ->mapWithKeys(fn (self $criterion) => [$criterion->id => $criterion->toDefinition()])
+            ->all();
+    }
+
     public function toDefinition(): CriterionDefinition
     {
         return new CriterionDefinition($this->name, $this->stage, $this->weight, $this->min_score, $this->max_score);

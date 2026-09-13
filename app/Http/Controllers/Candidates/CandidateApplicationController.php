@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ApplicationResource;
 use App\Models\Application;
 use App\Models\ApplicationStageHistory;
+use App\Models\Evaluation;
+use App\Models\Interview;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -31,7 +33,7 @@ class CandidateApplicationController extends Controller
     {
         Gate::authorize('view', $application);
 
-        $application->load([...$this->vacancyRelations(), 'stageHistories']);
+        $application->load([...$this->vacancyRelations(), 'stageHistories', 'evaluations', 'interviews']);
 
         return Inertia::render('candidate/applications/show', [
             'application' => new ApplicationResource($application),
@@ -40,7 +42,30 @@ class CandidateApplicationController extends Controller
                 'to' => $history->to_status->present(),
                 'created_at' => $history->created_at->toIso8601String(),
             ]),
+            // RF-17: convocations only; scores, observations and outcomes are never exposed to the candidate (A-21).
+            'convocations' => $application->evaluations
+                ->map(fn (Evaluation $evaluation) => $this->convocation($evaluation, 'evaluacion', $evaluation->type->label()))
+                ->concat($application->interviews->map(fn (Interview $interview) => $this->convocation($interview, 'entrevista', 'Entrevista personal')))
+                ->sortBy('scheduled_at')
+                ->values(),
         ]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function convocation(Evaluation|Interview $session, string $kind, string $title): array
+    {
+        return [
+            'key' => $kind.'-'.$session->id,
+            'title' => $title,
+            'scheduled_at' => $session->scheduled_at->toIso8601String(),
+            'duration_minutes' => $session->duration_minutes,
+            'modality' => $session->modality->label(),
+            'location' => $session->location,
+            'instructions' => $session->instructions,
+            'status' => $session->status->present(),
+        ];
     }
 
     /**
