@@ -108,6 +108,14 @@ class Vacancy extends Model
     }
 
     /**
+     * @return HasOne<SelectionDecision, $this>
+     */
+    public function selectionDecision(): HasOne
+    {
+        return $this->hasOne(SelectionDecision::class);
+    }
+
+    /**
      * @return HasMany<Application, $this>
      */
     public function applications(): HasMany
@@ -121,6 +129,14 @@ class Vacancy extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function closer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by');
     }
 
     /**

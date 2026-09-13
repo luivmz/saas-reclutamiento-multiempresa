@@ -39,4 +39,27 @@ Solo se registran ejecuciones reales de `php artisan test` realizadas dentro del
 | Regresión | `tests/Feature/Tenancy`, `RoleMiddlewareTest`, `tests/Feature/Applications`, `tests/Feature/Candidates` | **35 passed (146 assertions)** |
 | Suite completa | `php artisan test` | **152 passed, 8 skipped, 0 failed (532 assertions)** |
 
+## Fase 6 — RF-20 a RF-25
+
+Pruebas nuevas de la fase: **51** (`RankingServiceTest` 14, `RankingComparisonTest` 8, `FinalDecisionTest` 10, `SelectionRegistrationTest` 7, `VacancyClosureTest` 5, 6 casos nuevos en `ApplicationStatusTest` y 1 en `CrossTenantAccessTest`).
+
+| Bloque | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| A + B (RF-20, RF-21) | RED | `tests/Unit/Ranking/RankingServiceTest.php` (14) | Fallidas: `Class "App\Services\Ranking\RankingService" not found`, `Class "App\Services\Ranking\CandidateScores" not found` |
+| A (RF-20) | RED | `CrossTenantAccessTest::test_rf20_hr_of_other_organization_cannot_modify_vacancy_criteria` | 1 failed: la respuesta sí era 404, pero la prueba leía los criterios con el usuario de la organización B autenticado (el scope de tenant devolvía vacío). Error de diseño de la prueba; se corrigió para leer sin scope |
+| A + B | GREEN | `tests/Unit/Ranking` + prueba cross-tenant | **14 passed (32 assertions)** y **1 passed (3 assertions)** |
+| C (RF-21, RF-22) | RED | `tests/Feature/Selection/RankingComparisonTest.php` | **8 failed (0 assertions)**: `Route [vacancies.comparison] not defined` |
+| C | GREEN | `tests/Unit/Ranking` + `RankingComparisonTest` | **22 passed (113 assertions)** |
+| C | REFACTOR | `EvaluationCriterion::definitionsFor()` con etapa opcional (sin duplicar consultas); limpieza de una asignación sobrante en `RankingPresenter` | Sin cambios de resultado |
+| D (RF-23) | RED | `tests/Feature/Selection/FinalDecisionTest.php` | **10 failed (0 assertions)** |
+| D | GREEN | `FinalDecisionTest` + `RankingComparisonTest` | **18 passed (123 assertions)** |
+| E (RF-24) | RED | `tests/Feature/Selection/SelectionRegistrationTest.php` | **7 failed (7 assertions)**: `Route [vacancies.selection.store] not defined` (las 7 aserciones corresponden al registro previo de la decisión, que ya funcionaba) |
+| E | GREEN | `SelectionRegistrationTest` + regresión `ApplicationReviewTest` | **17 passed (95 assertions)** |
+| F (RF-25) | RED | `VacancyClosureTest` + `ApplicationStatusTest` | **9 failed, 17 passed (29 assertions)**: `Route [vacancies.close] not defined` (5) y 4 transiciones hacia `no_seleccionado` no permitidas |
+| F | GREEN | `tests/Unit/Ranking`, `tests/Unit/Enums`, `tests/Feature/Selection` | **78 passed (273 assertions)** |
+| Regresión | — | `tests/Feature/Tenancy`, `RoleMiddlewareTest`, `tests/Feature/Applications`, `tests/Feature/Assessments`, `tests/Feature/Vacancies` | **57 passed (268 assertions)** |
+| Suite completa | — | `php artisan test` | **211 pruebas: 203 passed, 8 skipped, 0 failed (779 assertions)** |
+
+Evidencia específica de que el ranking no selecciona: `RankingComparisonTest::test_rf23_calculating_the_ranking_never_selects_a_candidate` calcula el ranking (servicio y dos vistas) y verifica que no cambian estados, historiales, decisiones ni auditoría de selección; `FinalDecisionTest::test_rf23_approver_records_the_final_decision_for_a_ranked_finalist` verifica que incluso la decisión humana no cambia el estado hasta RF-24.
+
 Los 8 skipped corresponden a pruebas del starter kit para funciones de Fortify desactivadas (verificación de correo, etc.).

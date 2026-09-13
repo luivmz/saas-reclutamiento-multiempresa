@@ -27,6 +27,12 @@ class ApplicationStatusTest extends TestCase
             'seleccionado → descartado' => [ApplicationStatus::Selected, ApplicationStatus::Discarded, false],
             'descartado → preseleccionado' => [ApplicationStatus::Discarded, ApplicationStatus::Shortlisted, false],
             'no_seleccionado → finalista' => [ApplicationStatus::NotSelected, ApplicationStatus::Finalist, false],
+            'rf25 cierre: postulado → no_seleccionado' => [ApplicationStatus::Submitted, ApplicationStatus::NotSelected, true],
+            'rf25 cierre: preseleccionado → no_seleccionado' => [ApplicationStatus::Shortlisted, ApplicationStatus::NotSelected, true],
+            'rf25 cierre: en_evaluacion → no_seleccionado' => [ApplicationStatus::Evaluation, ApplicationStatus::NotSelected, true],
+            'rf25 cierre: en_entrevista → no_seleccionado' => [ApplicationStatus::Interview, ApplicationStatus::NotSelected, true],
+            'descartado → no_seleccionado' => [ApplicationStatus::Discarded, ApplicationStatus::NotSelected, false],
+            'rf24 solo finalista → seleccionado: en_entrevista → seleccionado' => [ApplicationStatus::Interview, ApplicationStatus::Selected, false],
         ];
     }
 

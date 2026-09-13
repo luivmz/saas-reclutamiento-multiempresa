@@ -5,10 +5,12 @@ import {
     ListChecks,
     Pencil,
     Rocket,
+    Scale,
     Users,
     XCircle,
 } from 'lucide-react';
 import VacancyApplicationController from '@/actions/App/Http/Controllers/Applications/VacancyApplicationController';
+import VacancyComparisonController from '@/actions/App/Http/Controllers/Selection/VacancyComparisonController';
 import JobRequestController from '@/actions/App/Http/Controllers/JobRequests/JobRequestController';
 import VacancyController from '@/actions/App/Http/Controllers/Vacancies/VacancyController';
 import VacancyPublicationController from '@/actions/App/Http/Controllers/Vacancies/VacancyPublicationController';
@@ -73,6 +75,14 @@ export default function ShowVacancy({ vacancy, validation, can }: Props) {
                                         </Button>
                                     )}
                                 </Form>
+                            )}
+                            {!isDraft && (
+                                <Button variant="outline" asChild>
+                                    <Link href={VacancyComparisonController(vacancy.id)} data-cy="vacancy-comparison">
+                                        <Scale />
+                                        Comparación y ranking
+                                    </Link>
+                                </Button>
                             )}
                             {!isDraft && (
                                 <Button variant="outline" asChild>

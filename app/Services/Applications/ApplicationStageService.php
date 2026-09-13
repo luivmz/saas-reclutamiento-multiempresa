@@ -8,6 +8,7 @@ use App\Exceptions\BusinessRuleException;
 use App\Exceptions\InvalidStateTransition;
 use App\Models\Application;
 use App\Models\ApplicationStageHistory;
+use App\Models\SelectionDecision;
 use App\Models\User;
 use App\Models\Vacancy;
 use App\Notifications\ApplicationStageChangedNotification;
@@ -35,6 +36,10 @@ class ApplicationStageService
     {
         if (! $target->isManualTarget()) {
             throw new BusinessRuleException('Esta etapa solo se asigna al registrar la selección o al cerrar el proceso.', 'status');
+        }
+
+        if (SelectionDecision::query()->withoutGlobalScopes()->where('vacancy_id', $application->vacancy_id)->exists()) {
+            throw new BusinessRuleException('La decisión final ya fue registrada; no se permiten cambios manuales de etapa en esta convocatoria.');
         }
 
         return $this->transition($application, $target, $hr, $comment);

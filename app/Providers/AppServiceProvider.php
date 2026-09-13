@@ -9,6 +9,7 @@ use App\Models\Evaluation;
 use App\Models\Interview;
 use App\Models\JobRequest;
 use App\Models\Organization;
+use App\Models\SelectionDecision;
 use App\Models\User;
 use App\Models\Vacancy;
 use App\Services\Evaluation\WeightingValidator;
@@ -61,6 +62,7 @@ class AppServiceProvider extends ServiceProvider
             'application' => Application::class,
             'evaluation' => Evaluation::class,
             'interview' => Interview::class,
+            'selection_decision' => SelectionDecision::class,
         ]);
 
         Route::resourceVerbs(['create' => 'crear', 'edit' => 'editar']);

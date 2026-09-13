@@ -23,10 +23,10 @@ enum ApplicationStatus: string
     public function allowedTransitions(): array
     {
         return match ($this) {
-            self::Submitted => [self::Shortlisted, self::Discarded],
-            self::Shortlisted => [self::Evaluation, self::Interview, self::Discarded],
-            self::Evaluation => [self::Interview, self::Finalist, self::Discarded],
-            self::Interview => [self::Finalist, self::Discarded],
+            self::Submitted => [self::Shortlisted, self::Discarded, self::NotSelected],
+            self::Shortlisted => [self::Evaluation, self::Interview, self::Discarded, self::NotSelected],
+            self::Evaluation => [self::Interview, self::Finalist, self::Discarded, self::NotSelected],
+            self::Interview => [self::Finalist, self::Discarded, self::NotSelected],
             self::Finalist => [self::Selected, self::NotSelected, self::Discarded],
             self::Selected, self::NotSelected, self::Discarded => [],
         };
