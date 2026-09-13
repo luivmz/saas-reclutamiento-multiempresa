@@ -1,6 +1,6 @@
 # Progreso del proyecto
 
-Última actualización: 2026-09-13 · Rama actual: `feature/evaluations-interviews`
+Última actualización: 2026-09-13 · Rama actual: `feature/ranking-selection-closure`
 
 ## Fases
 
@@ -11,66 +11,66 @@
 | 2 — Tenancy, roles, seguridad base, auditoría base | ✅ Completada |
 | 3 — RF-01 a RF-07 | ✅ Completada |
 | 4 — RF-08 a RF-15 | ✅ Completada |
-| 5 — RF-16 a RF-19 | ✅ Completada (commit de cierre en `feature/evaluations-interviews`, pendiente de merge a `develop`) |
-| 6 a 12 | ❌ Pendientes |
+| 5 — RF-16 a RF-19 | ✅ Completada e integrada en `develop` (merge `40eda7d`) |
+| 6 — RF-20 a RF-25 | ✅ Completada en `feature/ranking-selection-closure` (**pendiente de revisión; no fusionada en `develop`**) |
+| 7 a 12 | ❌ Pendientes |
 
-## Fase 5 — lo realizado
+## Fase 6 — lo realizado
 
-- **Validación de puntajes:** `app/Services/Assessments/ScoreSheetValidator.php` (puro, testeable; rangos, puntajes faltantes o no numéricos, criterios ajenos a la etapa).
-- **Programación (RF-16, RF-18):** `AssessmentScheduler`
-  - Evaluador de la misma organización, fecha futura y etapas permitidas.
-  - Avance automático de la postulación a `en_evaluacion` / `en_entrevista`.
-  - Auditoría `evaluacion.programada` / `entrevista.programada`.
-- **Convocatoria (RF-17):** `AssessmentConvocationNotification` al postulante y `AssessmentAssignedNotification` al evaluador (canal `database` + `mail` con driver `log`); `invitation_sent_at`.
-- **Registro de resultados (RF-19):** `AssessmentResultRecorder`
-  - Solo el evaluador asignado registra, una única vez, con todos los criterios de la etapa dentro de su rango.
-  - La entrevista exige resultado y observaciones.
-  - El registro se bloquea si la vacante está cerrada.
-  - Auditoría `*.resultado_registrado`.
-- **Autorización:** `EvaluationPolicy`, `InterviewPolicy`, `ApplicationPolicy::scheduleAssessment` y `CandidateDocumentPolicy` (el evaluador asignado puede descargar el CV).
-- **Frontend:**
-  - `assessments/index` («Mis evaluaciones» del evaluador) y `assessments/show` (hoja de puntajes).
-  - Panel de programación y resultados en `applications/show`.
-  - Convocatorias en `candidate/applications/show`, sin puntajes.
-  - Menú del rol evaluador.
-- **Supuestos:** A-16 a A-22. **Defectos:** DEF-06.
+- **RF-20:** reutiliza `WeightingValidator` y `ScoreSheetValidator` (sin duplicarlos).
+  - `RankingService` rechaza configuración de pesos inválida, puntajes fuera de rango, criterios ajenos a la vacante y postulaciones duplicadas.
+  - La comparación muestra el error en lugar de un ranking.
+- **RF-21:** `RankingService`, servicio de dominio puro y determinista, sin persistencia ni efectos sobre estados.
+  - Fórmula normalizada por rango y ponderación (A-24).
+  - Candidatos incompletos listados aparte (A-25).
+  - Empates marcados y no desempatados (A-26).
+  - `VacancyRankingBuilder` usa solo postulaciones de la vacante y de su organización, sin descartados y con resultados de sesiones realizadas (A-23).
+- **RF-22:** página `selection/comparison` con criterios, ponderaciones, promedios, aportes por criterio, total, posición y empates, más la fórmula visible y el aviso de decisión humana.
+- **RF-23:** `FinalDecisionService`.
+  - Solo el Aprobador registra la decisión, con confirmación humana explícita y justificación.
+  - Exige un candidato finalista con resultados completos; puede elegir a alguien que no sea el primero.
+  - Una única decisión, inmutable y auditada.
+  - **No cambia estados.**
+- **RF-24:** `SelectionRegistrationService` (RR. HH.) aplica la decisión: finalista → seleccionado, con historial y auditoría.
+  - Un índice único parcial en PostgreSQL impide un segundo seleccionado.
+  - Tras la decisión se bloquean cambios manuales de etapa (A-28).
+- **RF-25:** `VacancyClosureService` (RR. HH.) cierra con selección registrada.
+  - Las postulaciones activas restantes pasan a `no_seleccionado`.
+  - Registra fecha, responsable, tipo de cierre, notas y auditoría.
+  - Cierre sin selección **no implementado** (sin TO-BE, A-30).
+  - Una vacante cerrada bloquea postulación, programación, resultados, decisión, selección y nuevo cierre.
+- **Supuestos:** A-23 a A-30. **Defectos de producto:** ninguno nuevo (los errores encontrados eran de diseño de pruebas; ver `docs/tdd-evidence.md`).
 
 ## Estado de RF
 
 | Estado | RF |
 |---|---|
-| ✅ Implementado (backend + frontend + PHPUnit) | RF-01 a RF-19 |
-| ⚠️ Parcial | RF-20 (pesos al configurar/publicar y rangos de puntajes al registrar; falta su uso previo al ranking), RF-27 (auditoría activa en RF-01 a RF-19; falta vista de consulta y eventos de fases 6–7) |
-| ❌ Pendiente | RF-21, RF-22, RF-23, RF-24, RF-25, RF-26 |
+| ✅ Implementado (backend + frontend + PHPUnit) | RF-01 a RF-25 (RF-25 sin cierre «desierta», A-30) |
+| ⚠️ Parcial | RF-27 (auditoría activa en RF-01 a RF-25; falta vista de consulta) |
+| ❌ Pendiente | RF-26 |
 
 ## Pruebas ejecutadas (resultados reales)
 
-- Fase 5: RED inicial **23 failed (0 assertions)** → GREEN **23 passed (99 assertions)**.
-- Autorización / cross-tenant / aplicaciones / postulantes: **35 passed (146 assertions)**.
-- Suite completa PHPUnit: **160 pruebas: 152 passed, 8 skipped, 0 failed (532 assertions)**.
+- Fase 6: 51 pruebas nuevas; RED por bloque y GREEN final de `tests/Unit/Ranking`, `tests/Unit/Enums`, `tests/Feature/Selection`: **78 passed (273 assertions)**.
+- Regresión relacionada (tenancy, roles, postulaciones, evaluaciones, vacantes): **57 passed (268 assertions)**.
+- Suite completa PHPUnit: **211 pruebas: 203 passed, 8 skipped, 0 failed (779 assertions)**.
 - `npm run build`: OK. `npx tsc --noEmit`: 0 errores.
 - Cypress: **no configurado aún**. No hay cobertura medida.
-- La UI nueva **no se verificó en un navegador** en esta sesión (solo build, tipos y pruebas de backend con aserciones Inertia).
+- **Pendiente de validación manual en navegador:** UI de las Fases 5 y 6 (`assessments/*`, panel de sesiones en el expediente, convocatorias del postulante, `selection/comparison`). Se revisará en la fase de validación integral/frontend.
 
 Detalle en `docs/tdd-evidence.md`.
 
-## Migraciones de la Fase 5
+## Migraciones de la Fase 6
 
-- `2026_09_13_000009_create_evaluations_table.php` (`evaluations`, `evaluation_results`)
-- `2026_09_13_000010_create_interviews_table.php` (`interviews`, `interview_results`)
+- `2026_09_13_000011_create_selection_decisions_table.php` (`selection_decisions` e índice único parcial `applications_one_selected_per_vacancy`)
 
 ## Git
 
-- Rama: `feature/evaluations-interviews`.
-- Commits de la Fase 5: `3e66623` (pruebas RED, checkpoint) y el commit `feat: implement evaluations and interviews`.
-- Sin push. Pendiente: merge `--no-ff` a `develop`.
+- Rama: `feature/ranking-selection-closure` (creada desde `develop` en `40eda7d`).
+- Sin push. **No fusionar en `develop` hasta la revisión del equipo.**
 
 ## Siguiente tarea exacta para retomar
 
-1. `docker compose up -d` y confirmar `http://localhost:8000/health`.
-2. Merge de `feature/evaluations-interviews` a `develop` y crear `feature/ranking-selection`.
-3. Fase 6 (RF-20 a RF-25), empezando por pruebas RED de `RankingService`:
-   - Ranking determinista, explicable y sin efectos sobre estados.
-   - Normalización por rango y ponderación.
-   - Empates y candidatos con resultados incompletos.
-   - No se selecciona automáticamente.
+1. Revisión de la Fase 6 por el equipo; si se aprueba, merge `--no-ff` de `feature/ranking-selection-closure` a `develop`.
+2. Fase 7: RF-26 (notificar resultado y cierre al postulante) y cierre de RF-27 (vista de consulta de auditoría).
+3. Posteriormente: seeders de demostración, Cypress (E2E-01 a E2E-10) y validación manual de la UI de las Fases 5 y 6.

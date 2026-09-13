@@ -87,6 +87,22 @@ class CrossTenantAccessTest extends TestCase
         $this->assertSame(ApplicationStatus::Submitted, $application->fresh()->status);
     }
 
+    public function test_rf20_hr_of_other_organization_cannot_modify_vacancy_criteria(): void
+    {
+        $vacancy = Vacancy::factory()->for($this->orgA)->configured()->create();
+        $weights = $vacancy->criteria()->withoutGlobalScopes()->pluck('weight')->all();
+
+        $this->actingAs(User::factory()->hr($this->orgB)->create())
+            ->put(route('vacancies.update', $vacancy), [
+                'title' => 'Intento cruzado',
+                'criteria' => [['name' => 'Único', 'stage' => 'evaluacion', 'weight' => 100, 'min_score' => 0, 'max_score' => 20]],
+            ])
+            ->assertNotFound();
+
+        $this->assertSame($weights, $vacancy->criteria()->withoutGlobalScopes()->pluck('weight')->all());
+        $this->assertNotSame('Intento cruzado', $vacancy->fresh()->title);
+    }
+
     public function test_hr_cannot_create_vacancy_from_another_organization_request(): void
     {
         $jobRequest = JobRequest::factory()->for($this->orgA)->approved()->create();

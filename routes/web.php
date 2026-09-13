@@ -16,6 +16,10 @@ use App\Http\Controllers\JobRequests\JobRequestController;
 use App\Http\Controllers\JobRequests\JobRequestTransitionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublicVacancyController;
+use App\Http\Controllers\Selection\FinalDecisionController;
+use App\Http\Controllers\Selection\SelectionRegistrationController;
+use App\Http\Controllers\Selection\VacancyClosureController;
+use App\Http\Controllers\Selection\VacancyComparisonController;
 use App\Http\Controllers\Vacancies\VacancyController;
 use App\Http\Controllers\Vacancies\VacancyPublicationController;
 use Illuminate\Support\Facades\Route;
@@ -92,6 +96,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('evaluaciones/{evaluation}/resultados', [EvaluationController::class, 'recordResult'])->name('evaluations.results.store');
     Route::get('entrevistas/{interview}', [InterviewController::class, 'show'])->name('interviews.show');
     Route::post('entrevistas/{interview}/resultados', [InterviewController::class, 'recordResult'])->name('interviews.results.store');
+
+    // RF-20 a RF-25
+    Route::get('vacantes/{vacancy}/comparacion', VacancyComparisonController::class)->name('vacancies.comparison');
+    Route::post('vacantes/{vacancy}/decision', FinalDecisionController::class)->name('vacancies.decision.store');
+    Route::post('vacantes/{vacancy}/seleccion', SelectionRegistrationController::class)->name('vacancies.selection.store');
+    Route::post('vacantes/{vacancy}/cerrar', VacancyClosureController::class)->name('vacancies.close');
 });
 
 require __DIR__.'/settings.php';

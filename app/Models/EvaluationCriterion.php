@@ -44,12 +44,12 @@ class EvaluationCriterion extends Model
     /**
      * @return array<int, CriterionDefinition> keyed by criterion id
      */
-    public static function definitionsFor(int $vacancyId, CriterionStage $stage): array
+    public static function definitionsFor(int $vacancyId, ?CriterionStage $stage = null): array
     {
         return static::query()
             ->withoutGlobalScopes()
             ->where('vacancy_id', $vacancyId)
-            ->where('stage', $stage)
+            ->when($stage, fn ($query) => $query->where('stage', $stage))
             ->orderBy('position')
             ->orderBy('id')
             ->get()
