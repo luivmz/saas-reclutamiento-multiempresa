@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\JobRequest;
 use App\Models\Organization;
 use App\Models\User;
+use App\Models\Vacancy;
+use App\Services\Evaluation\WeightingValidator;
+use Illuminate\Support\Facades\Route;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -19,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(WeightingValidator::class, fn () => new WeightingValidator(config('recruitment.weights.required_total')));
     }
 
     /**
@@ -42,7 +46,11 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
             'user' => User::class,
             'organization' => Organization::class,
+            'job_request' => JobRequest::class,
+            'vacancy' => Vacancy::class,
         ]);
+
+        Route::resourceVerbs(['create' => 'crear', 'edit' => 'editar']);
 
         DB::prohibitDestructiveCommands(
             app()->isProduction(),
