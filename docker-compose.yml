@@ -1,49 +1,68 @@
 name: reclutamiento
 
-x-app: &app
+# Shared definition of the PHP containers (app, queue and their E2E counterparts). See docs/docker.md.
+x-php: &php
   build:
     context: .
     dockerfile: docker/php/Dockerfile
   image: reclutamiento-php:dev
+  restart: unless-stopped
   volumes:
     - .:/var/www/html
     - vendor:/var/www/html/vendor
     - node_modules:/var/www/html/node_modules
-  depends_on:
-    postgres:
-      condition: service_healthy
-    redis:
-      condition: service_healthy
+
+# Ready only when Laravel answers /health (database and Redis reachable).
+x-web-healthcheck: &web-healthcheck
+  test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+  interval: 10s
+  timeout: 5s
+  retries: 30
+  start_period: 240s
+
+# The worker process is alive and can reach its Redis queue with the same configuration as the app.
+x-queue-healthcheck: &queue-healthcheck
+  test: ["CMD-SHELL", "grep -qa queue:work /proc/1/cmdline && php artisan queue:monitor redis:default --max=1000000 > /dev/null"]
+  interval: 30s
+  timeout: 15s
+  retries: 5
+  start_period: 30s
+
+x-queue-command: &queue-command
+  ["php", "artisan", "queue:work", "redis", "--tries=3", "--sleep=1", "--max-time=3600", "--verbose"]
 
 services:
   app:
-    <<: *app
+    <<: *php
     entrypoint: ["sh", "/var/www/html/docker/php/entrypoint.sh"]
     command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
     ports:
       - "${APP_PORT:-8000}:8000"
-    healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-      start_period: 240s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck: *web-healthcheck
 
   queue:
-    <<: *app
-    command: ["php", "artisan", "queue:work", "redis", "--tries=3", "--sleep=1", "--verbose"]
+    <<: *php
+    command: *queue-command
     depends_on:
       app:
         condition: service_healthy
+    healthcheck: *queue-healthcheck
 
   postgres:
-    image: postgres:17-alpine
+    image: postgres:17.11-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_DATABASE:-reclutamiento}
       POSTGRES_USER: ${DB_USERNAME:-reclutamiento}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+    # Loopback only: reachable from this PC (DB tools), not from the network.
     ports:
-      - "${FORWARD_DB_PORT:-5432}:5432"
+      - "127.0.0.1:${FORWARD_DB_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
@@ -54,9 +73,10 @@ services:
       retries: 20
 
   redis:
-    image: redis:7-alpine
+    image: redis:7.4.11-alpine
+    restart: unless-stopped
     ports:
-      - "${FORWARD_REDIS_PORT:-6379}:6379"
+      - "127.0.0.1:${FORWARD_REDIS_PORT:-6379}:6379"
     volumes:
       - redisdata:/data
     healthcheck:
@@ -65,6 +85,33 @@ services:
       timeout: 3s
       retries: 20
 
+  # --- E2E profile: isolated app (APP_ENV=e2e loads .env.e2e: database reclutamiento_e2e, Redis DB 2/3) ---
+  app-e2e:
+    <<: *php
+    profiles: ["e2e"]
+    entrypoint: ["sh", "/var/www/html/docker/php/entrypoint.sh"]
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+    environment:
+      APP_ENV: e2e
+    ports:
+      - "127.0.0.1:${E2E_APP_PORT:-8001}:8000"
+    depends_on:
+      # Waits for app, which installs the shared vendor/ and node_modules/ volumes and builds the assets.
+      app:
+        condition: service_healthy
+    healthcheck: *web-healthcheck
+
+  queue-e2e:
+    <<: *php
+    profiles: ["e2e"]
+    command: *queue-command
+    environment:
+      APP_ENV: e2e
+    depends_on:
+      app-e2e:
+        condition: service_healthy
+    healthcheck: *queue-healthcheck
+
   cypress:
     image: cypress/included:15.3.0
     profiles: ["e2e"]
@@ -72,17 +119,19 @@ services:
     # Extra arguments are appended, e.g. `npm run cy:run -- --spec cypress/e2e/e2e-01-login.cy.js`.
     entrypoint: ["cypress", "run", "--config-file", "cypress.config.cjs", "--browser", "electron"]
     environment:
-      CYPRESS_baseUrl: http://app:8000
-      CYPRESS_E2E_TOKEN: ${E2E_TOKEN:-}
+      CYPRESS_baseUrl: http://app-e2e:8000
+    # Provides E2E_TOKEN; created by `npm run e2e:setup`.
+    env_file:
+      - path: .env.e2e
+        required: false
     volumes:
       - ./cypress:/e2e/cypress
       - ./cypress.config.cjs:/e2e/cypress.config.cjs:ro
     depends_on:
-      app:
+      app-e2e:
         condition: service_healthy
-      # Notifications are queued; the worker must be running for the notification assertions.
-      queue:
-        condition: service_started
+      queue-e2e:
+        condition: service_healthy
 
 volumes:
   pgdata:

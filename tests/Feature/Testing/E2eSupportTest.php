@@ -7,7 +7,8 @@ use Mockery\MockInterface;
 use Tests\TestCase;
 
 /**
- * The E2E reset endpoints must be inert unless explicitly enabled outside production and called with the token.
+ * The E2E reset endpoints must be inert unless explicitly enabled outside production and called with the token,
+ * and must never reset a database that is not the dedicated E2E database.
  */
 class E2eSupportTest extends TestCase
 {
@@ -50,12 +51,28 @@ class E2eSupportTest extends TestCase
 
     public function test_reset_endpoint_restores_the_known_demo_state(): void
     {
-        $this->mock(E2eEnvironment::class, fn (MockInterface $mock) => $mock->shouldReceive('reset')->once());
+        $this->mock(E2eEnvironment::class, function (MockInterface $mock): void {
+            $mock->shouldReceive('usesE2eDatabase')->andReturn(true);
+            $mock->shouldReceive('reset')->once();
+        });
         $this->enable();
 
         $this->postJson('/__e2e/reset', [], ['X-E2E-Token' => self::TOKEN])
             ->assertOk()
             ->assertJson(['reset' => true]);
+    }
+
+    public function test_reset_endpoint_refuses_when_the_active_database_is_not_the_e2e_database(): void
+    {
+        $this->mock(E2eEnvironment::class, function (MockInterface $mock): void {
+            $mock->shouldReceive('usesE2eDatabase')->andReturn(false);
+            $mock->shouldNotReceive('reset');
+        });
+        $this->enable();
+
+        $this->postJson('/__e2e/reset', [], ['X-E2E-Token' => self::TOKEN])
+            ->assertStatus(409)
+            ->assertJson(['reset' => false]);
     }
 
     public function test_queue_endpoint_reports_pending_jobs(): void
@@ -68,11 +85,24 @@ class E2eSupportTest extends TestCase
             ->assertExactJson(['pending' => 3]);
     }
 
-    public function test_reset_command_runs_outside_production(): void
+    public function test_reset_command_runs_against_the_e2e_database(): void
     {
-        $this->mock(E2eEnvironment::class, fn (MockInterface $mock) => $mock->shouldReceive('reset')->once());
+        $this->mock(E2eEnvironment::class, function (MockInterface $mock): void {
+            $mock->shouldReceive('usesE2eDatabase')->andReturn(true);
+            $mock->shouldReceive('reset')->once();
+        });
 
         $this->artisan('e2e:reset')->assertSuccessful();
+    }
+
+    public function test_reset_command_refuses_a_database_that_is_not_the_e2e_database(): void
+    {
+        $this->mock(E2eEnvironment::class, function (MockInterface $mock): void {
+            $mock->shouldReceive('usesE2eDatabase')->andReturn(false);
+            $mock->shouldNotReceive('reset');
+        });
+
+        $this->artisan('e2e:reset')->assertFailed();
     }
 
     public function test_reset_command_refuses_to_run_in_production(): void

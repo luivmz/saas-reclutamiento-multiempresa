@@ -1,5 +1,7 @@
-const today = () => new Date().toISOString().slice(0, 10);
-const inDays = (days) => new Date(Date.now() + days * 86400000).toISOString().slice(0, 10);
+import { appDate } from '../support/dates';
+
+const today = () => appDate(0);
+const inDays = (days) => appDate(days);
 
 describe('E2E-04 · RR. HH. configura y publica una vacante (RF-05 a RF-07)', () => {
     beforeEach(() => {

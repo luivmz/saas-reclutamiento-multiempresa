@@ -1,12 +1,13 @@
-// Cypress E2E suite configuration. See docs/testing/cypress-e2e.md.
+// Cypress E2E suite configuration. See docs/testing/cypress-e2e.md and docs/docker.md.
 const fs = require('fs');
 const path = require('path');
 
-// Token for the guarded /__e2e/* endpoints: CYPRESS_E2E_TOKEN (Docker) or, for `cypress open` on the host, E2E_TOKEN in .env.
-function tokenFromDotEnv() {
+// Token for the guarded /__e2e/* endpoints of the isolated E2E app: CYPRESS_E2E_TOKEN or E2E_TOKEN (Docker, from
+// .env.e2e) or, for `cypress open` on the host, E2E_TOKEN read from .env.e2e.
+function tokenFromEnvFile(file) {
     try {
         const line = fs
-            .readFileSync(path.join(__dirname, '.env'), 'utf8')
+            .readFileSync(path.join(__dirname, file), 'utf8')
             .split(/\r?\n/)
             .find((entry) => entry.startsWith('E2E_TOKEN='));
 
@@ -18,8 +19,8 @@ function tokenFromDotEnv() {
 
 module.exports = {
     e2e: {
-        // Overridden by CYPRESS_baseUrl (http://app:8000 inside Docker Compose).
-        baseUrl: 'http://localhost:8000',
+        // app-e2e published on the host; overridden by CYPRESS_baseUrl (http://app-e2e:8000 inside Docker Compose).
+        baseUrl: 'http://localhost:8001',
         specPattern: 'cypress/e2e/**/*.cy.js',
         supportFile: 'cypress/support/e2e.js',
         fixturesFolder: 'cypress/fixtures',
@@ -35,8 +36,9 @@ module.exports = {
         // No automatic retries: an intermittent failure must be investigated, not hidden.
         retries: { runMode: 0, openMode: 0 },
         env: {
+            APP_TIMEZONE: 'America/Lima',
             DEMO_PASSWORD: 'password',
-            E2E_TOKEN: process.env.CYPRESS_E2E_TOKEN || tokenFromDotEnv(),
+            E2E_TOKEN: process.env.CYPRESS_E2E_TOKEN || process.env.E2E_TOKEN || tokenFromEnvFile('.env.e2e'),
         },
     },
 };

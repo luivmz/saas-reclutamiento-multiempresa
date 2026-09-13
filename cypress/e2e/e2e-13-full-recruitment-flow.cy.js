@@ -1,3 +1,5 @@
+import { appDate } from '../support/dates';
+
 // Full process in one ordered scenario: each `it` is a role handoff and passes identifiers to the next one.
 // A single reset in `before` is deliberate: the steps are inherently sequential, and splitting them into
 // independent specs would duplicate the whole setup. A failure stops at the exact step that broke.
@@ -5,7 +7,7 @@ const TITLE = 'Docente de Ciencias - Flujo integral E2E';
 const CANDIDATE = 'Gabriela Nueva (ficticia)';
 const state = {};
 
-const inDays = (days) => new Date(Date.now() + days * 86400000).toISOString().slice(0, 10);
+const inDays = (days) => appDate(days);
 
 const recordPendingSession = (kind, score) => {
     cy.visit('/mis-evaluaciones');
