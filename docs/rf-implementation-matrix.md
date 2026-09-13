@@ -1,6 +1,24 @@
 # Matriz de implementación de RF
 
-Estado al cierre de la Fase 8 (2026-09-13, rama `feature/frontend-integral`). Solo información verificada. "Test" se refiere a PHPUnit; la suite E2E de Cypress aún no está configurada.
+Estado al cierre de la Fase 9 (2026-09-13, rama `feature/cypress-e2e`). Solo información verificada. La columna "Test" se refiere a PHPUnit. La cobertura E2E de Cypress se resume en la tabla siguiente y se detalla en `docs/testing/cypress-e2e.md`.
+
+**Cobertura E2E (Cypress 15.3.0, Electron 136):** 13 specs y 40 tests. Pasaron 40/40 en dos corridas completas consecutivas.
+
+| E2E | RF cubiertos |
+|---|---|
+| E2E-01 | RF-08 (acceso por rol, login inválido) |
+| E2E-02 | RF-01, RF-02 |
+| E2E-03 | RF-03, RF-04 |
+| E2E-04 | RF-05, RF-06, RF-07, RF-20 |
+| E2E-05 | RF-08, RF-09, RF-10, RF-11 |
+| E2E-06 | RF-12, RF-13, RF-14, RF-15 |
+| E2E-07 | RF-19, RF-20 |
+| E2E-08 | RF-21, RF-22 (el ranking no selecciona) |
+| E2E-09 | RF-23 |
+| E2E-10 | RF-24, RF-25, RF-26 |
+| E2E-11 | Aislamiento multiempresa, RF-27 |
+| E2E-12 | RF-10, RF-23, RF-24, RF-25 (negativos) |
+| E2E-13 | RF-01 a RF-27 (flujo integral) |
 
 **Validación en navegador (Fase 8):** RF-01 a RF-27 se recorrieron por la interfaz con los roles reales en un flujo integral de 12 pasos (12/12 OK) y en un recorrido visual por rol (10/10 OK, 49 capturas). Ver `docs/manual-smoke-test.md`. Las correcciones de interfaz afectan la presentación de fechas (DEF-09), el detalle de RF-27 (DEF-10) y los avatares (DEF-11), sin cambios en reglas de negocio.
 

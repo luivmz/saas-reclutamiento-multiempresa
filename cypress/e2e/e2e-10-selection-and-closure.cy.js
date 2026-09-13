@@ -43,6 +43,7 @@ describe('E2E-10 · RR. HH. registra la selección y cierra el proceso (RF-24 a 
 
         cy.loginAs('candidateRankingSecond');
         cy.visit('/notificaciones');
-        cy.dataCy('notification-item').first().should('contain', vacancy.title).and('contain', 'no seleccionado');
+        // RF-26 wording for the other finalists: "...en esta oportunidad no ha sido seleccionado(a)."
+        cy.dataCy('notification-item').first().should('contain', vacancy.title).and('contain', 'no ha sido seleccionado(a)');
     });
 });
