@@ -124,6 +124,36 @@ class AuditLogViewTest extends TestCase
                 ->where('filters.accion', AuditAction::JobRequestCreated->value));
     }
 
+    public function test_rf27_details_show_readable_labels_and_local_dates_instead_of_raw_values(): void
+    {
+        $vacancy = Vacancy::factory()->for($this->orgA)->configured()->published()->create(['code' => 'VAC-2026-0102']);
+        $this->record(AuditAction::JobRequestValidated, $this->jobRequestA, $this->hrA, ['from' => 'enviado', 'to' => 'validado']);
+        $this->record(AuditAction::VacancyClosed, $vacancy, $this->hrA, ['closure_type' => 'con_seleccion']);
+        $this->record(AuditAction::EvaluationScheduled, $vacancy, $this->hrA, ['type' => 'clase_modelo', 'scheduled_at' => '2026-09-14T15:00:00+00:00']);
+        Auth::logout();
+
+        $this->actingAs($this->approverA)
+            ->get(route('audit.index', ['accion' => AuditAction::JobRequestValidated->value]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('logs.data.0.details', fn ($d) => collect($d)->pluck('value', 'label')->all() === [
+                    'Estado anterior' => 'Enviado a RR. HH.',
+                    'Estado nuevo' => 'Validado por RR. HH.',
+                ]));
+
+        $this->actingAs($this->approverA)
+            ->get(route('audit.index', ['accion' => AuditAction::VacancyClosed->value]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('logs.data.0.details', fn ($d) => collect($d)->pluck('value', 'label')->get('Tipo de cierre') === 'Cerrada con selección'));
+
+        $this->actingAs($this->approverA)
+            ->get(route('audit.index', ['accion' => AuditAction::EvaluationScheduled->value]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('logs.data.0.details', fn ($d) => collect($d)->pluck('value', 'label')->only(['Tipo', 'Fecha programada'])->all() === [
+                    'Tipo' => 'Clase modelo',
+                    'Fecha programada' => '14/09/2026 10:00',
+                ]));
+    }
+
     public function test_rf27_view_shows_only_a_safe_summary(): void
     {
         $this->actingAs($this->approverA)

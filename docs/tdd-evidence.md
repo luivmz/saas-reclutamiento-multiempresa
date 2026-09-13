@@ -78,3 +78,19 @@ Pruebas nuevas de la fase: **19** (`ProcessResultNotificationTest` 8, `AuditTrai
 | Suite completa | — | `php artisan test` | **230 pruebas: 222 passed, 8 skipped, 0 failed (1017 assertions)** |
 
 Los 8 skipped corresponden a pruebas del starter kit para funciones de Fortify desactivadas (verificación de correo, etc.).
+
+## Fase 8 — Frontend integral
+
+Los defectos se detectaron en la validación en navegador (`docs/manual-smoke-test.md`). En cada uno: reproducción en capturas, prueba en RED, corrección y GREEN.
+
+Pruebas nuevas de la fase: **3**.
+
+| Defecto | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| DEF-09, DEF-10 | RED | `tests/Feature/Frontend/AppTimezoneTest.php` (primera versión, que verificaba una prop compartida `timezone`), `AuditLogViewTest::test_rf27_details_show_readable_labels_and_local_dates_instead_of_raw_values` | **3 failed (22 assertions)**: `Property [timezone] does not exist` (2); el detalle de auditoría devolvía `enviado`, `validado`, `con_seleccion`, `clase_modelo` y la fecha ISO en UTC |
+| DEF-09 | Rediseño | `AppTimezoneTest` | La zona horaria se expone con `<meta name="app-timezone">` en la vista raíz, en lugar de una prop de Inertia. Así `lib/format.ts` la lee al cargar el módulo, antes del primer render. La prueba se ajustó a ese contrato y siguió en RED hasta agregar la etiqueta. |
+| DEF-09, DEF-10 | GREEN | `AppTimezoneTest`, `AuditLogViewTest` | **9 passed (103 assertions)** |
+| DEF-11 | — | Sin prueba automatizada (no hay Vitest en el alcance) | Verificado en las capturas posteriores: «EÑ», «RH», «JS», «LP» |
+| Regresión | — | `php artisan test` | **233 pruebas: 225 passed, 8 skipped, 0 failed (1045 assertions)** |
+| Build | — | `npm run build`, `npx tsc --noEmit` | OK, 0 errores |
+| Navegador | — | Recorrido visual por rol / flujo integral | **10/10 (49 capturas) / 12/12** |

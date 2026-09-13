@@ -1,6 +1,8 @@
 # Matriz de implementación de RF
 
-Estado al cierre de la Fase 7 (2026-09-13, rama `feature/notifications-audit`). Solo información verificada. "Test" se refiere a PHPUnit; Cypress aún no está configurado.
+Estado al cierre de la Fase 8 (2026-09-13, rama `feature/frontend-integral`). Solo información verificada. "Test" se refiere a PHPUnit; la suite E2E de Cypress aún no está configurada.
+
+**Validación en navegador (Fase 8):** RF-01 a RF-27 se recorrieron por la interfaz con los roles reales en un flujo integral de 12 pasos (12/12 OK) y en un recorrido visual por rol (10/10 OK, 49 capturas). Ver `docs/manual-smoke-test.md`. Las correcciones de interfaz afectan la presentación de fechas (DEF-09), el detalle de RF-27 (DEF-10) y los avatares (DEF-11), sin cambios en reglas de negocio.
 
 | RF | Nombre | Backend | Frontend | Test | Estado |
 |---|---|---|---|---|---|
@@ -30,6 +32,6 @@ Estado al cierre de la Fase 7 (2026-09-13, rama `feature/notifications-audit`). 
 | RF-24 | Registrar selección del candidato | `SelectionRegistrationService`, `VacancyPolicy::registerSelection`, índice único parcial `applications_one_selected_per_vacancy` | Botón «Registrar selección» en `selection/comparison` | `SelectionRegistrationTest` | Implementado |
 | RF-25 | Cerrar vacante o convocatoria | `VacancyClosureService`, `CloseVacancyRequest`, `VacancyPolicy::close` (cierre con selección; sin selección no implementado, A-30) | Panel «Cerrar convocatoria» y resumen de cierre en `selection/comparison` | `VacancyClosureTest`, `ApplicationStatusTest` | Implementado (cierre sin selección no disponible por falta de TO-BE) |
 | RF-26 | Notificar resultado y cierre | `ProcessResultNotification` (database + mail log) enviada por `VacancyClosureService` solo al cerrar; auditoría `proceso.resultado_notificado` | `notifications/index` del postulante | `ProcessResultNotificationTest` | Implementado |
-| RF-27 | Generar registro de auditoría | `AuditLogger` (redacción ampliada), `audit_logs` de solo inserción (trigger PostgreSQL), 23 acciones de negocio auditadas, `AuditLogPolicy`, `AuditLogController`, `AuditLogResource` (resumen seguro) | `audit/index` (Aprobador / Dirección) | `AuditLoggerTest`, `AuditTrailTest`, `AuditLogViewTest`, `OrganizationScopeTest` | Implementado |
+| RF-27 | Generar registro de auditoría | `AuditLogger` (redacción ampliada), `audit_logs` de solo inserción (trigger PostgreSQL), 23 acciones de negocio auditadas, `AuditLogPolicy`, `AuditLogController`, `AuditLogResource` (resumen seguro con etiquetas legibles y fechas locales, DEF-10) | `audit/index` (Aprobador / Dirección) | `AuditLoggerTest`, `AuditTrailTest`, `AuditLogViewTest`, `OrganizationScopeTest` | Implementado |
 
 **RF-01 a RF-27 constituyen la línea base funcional completa del proyecto.** No se han agregado RF fuera de esta línea base.

@@ -91,7 +91,7 @@ export default function AuditIndex({ logs, actions, filters }: Props) {
                                                     <dl className="grid gap-0.5">
                                                         {log.details.map((detail) => (
                                                             <div key={detail.label} className="flex gap-1.5">
-                                                                <dt className="text-muted-foreground">{detail.label}:</dt>
+                                                                <dt className="text-muted-foreground whitespace-nowrap">{detail.label}:</dt>
                                                                 <dd>{detail.value}</dd>
                                                             </div>
                                                         ))}

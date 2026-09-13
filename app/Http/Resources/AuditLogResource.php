@@ -2,7 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\ApplicationStatus;
+use App\Enums\EvaluationType;
+use App\Enums\InterviewOutcome;
+use App\Enums\JobRequestStatus;
+use App\Enums\VacancyClosureType;
 use App\Models\AuditLog;
+use Carbon\CarbonImmutable;
+use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -82,10 +89,42 @@ class AuditLogResource extends JsonResource
 
             $details[] = [
                 'label' => $label,
-                'value' => is_array($value) ? implode(', ', array_map('strval', $value)) : (string) $value,
+                'value' => $this->presentValue($key, $value),
             ];
         }
 
         return $details;
+    }
+
+    /**
+     * Stored metadata keeps raw enum values and UTC timestamps; the view shows labels and local dates.
+     */
+    private function presentValue(string $key, mixed $value): string
+    {
+        if (is_array($value)) {
+            return implode(', ', array_map('strval', $value));
+        }
+
+        if ($key === 'scheduled_at') {
+            try {
+                return CarbonImmutable::parse((string) $value)->setTimezone(config('app.timezone'))->format('d/m/Y H:i');
+            } catch (InvalidFormatException) {
+                return (string) $value;
+            }
+        }
+
+        $enum = match ($key) {
+            'from', 'to' => match ($this->auditable_type) {
+                'job_request' => JobRequestStatus::class,
+                'application' => ApplicationStatus::class,
+                default => null,
+            },
+            'type' => EvaluationType::class,
+            'outcome' => InterviewOutcome::class,
+            'closure_type' => VacancyClosureType::class,
+            default => null,
+        };
+
+        return ($enum !== null && is_string($value) ? $enum::tryFrom($value)?->label() : null) ?? (string) $value;
     }
 }
