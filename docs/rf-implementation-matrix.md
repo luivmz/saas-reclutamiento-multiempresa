@@ -24,6 +24,8 @@ Estado al cierre de la Fase 9 (2026-09-13, rama `feature/cypress-e2e`). Solo inf
 
 **Validación en navegador (Fase 8):** RF-01 a RF-27 se recorrieron por la interfaz con los roles reales en un flujo integral de 12 pasos (12/12 OK) y en un recorrido visual por rol (10/10 OK, 49 capturas). Ver `docs/manual-smoke-test.md`. Las correcciones de interfaz afectan la presentación de fechas (DEF-09), el detalle de RF-27 (DEF-10) y los avatares (DEF-11), sin cambios en reglas de negocio.
 
+La trazabilidad consolidada para el informe final, con actor, PHPUnit y Cypress por RF, está en `docs/final-report/traceability-master.md` (Fase 11).
+
 | RF | Nombre | Backend | Frontend | Test | Estado |
 |---|---|---|---|---|---|
 | RF-01 | Registrar requerimiento de personal | `JobRequestWorkflow::register` | `job-requests/create` | `JobRequestWorkflowTest` | Implementado |
