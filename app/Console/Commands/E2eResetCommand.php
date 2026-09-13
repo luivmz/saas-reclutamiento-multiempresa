@@ -9,7 +9,7 @@ class E2eResetCommand extends Command
 {
     protected $signature = 'e2e:reset';
 
-    protected $description = 'Restore the demo database to the known state used by the Cypress E2E suite (drops all data)';
+    protected $description = 'Restore the dedicated E2E database to the known demo state used by the Cypress suite (drops all data)';
 
     public function handle(E2eEnvironment $environment): int
     {
@@ -19,8 +19,14 @@ class E2eResetCommand extends Command
             return self::FAILURE;
         }
 
+        if (! $environment->usesE2eDatabase()) {
+            $this->error('e2e:reset rechazado: la base activa no es la base E2E configurada (E2E_DATABASE). Use el servicio app-e2e.');
+
+            return self::FAILURE;
+        }
+
         $environment->reset();
-        $this->info('Base de datos restablecida con los datos de demostración.');
+        $this->info('Base de datos E2E restablecida con los datos de demostración.');
 
         return self::SUCCESS;
     }

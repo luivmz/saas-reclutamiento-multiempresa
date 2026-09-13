@@ -13,6 +13,13 @@ class E2eController extends Controller
 {
     public function reset(E2eEnvironment $environment): JsonResponse
     {
+        if (! $environment->usesE2eDatabase()) {
+            return response()->json([
+                'reset' => false,
+                'message' => 'La base de datos activa no es la base E2E configurada (E2E_DATABASE).',
+            ], 409);
+        }
+
         $environment->reset();
 
         return response()->json(['reset' => true]);
