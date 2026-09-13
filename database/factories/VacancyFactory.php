@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\ContractType;
 use App\Enums\CriterionStage;
 use App\Enums\UserRole;
+use App\Enums\VacancyClosureType;
 use App\Enums\VacancyStatus;
 use App\Models\EvaluationCriterion;
 use App\Models\JobProfile;
@@ -78,5 +79,15 @@ class VacancyFactory extends Factory
     public function published(): static
     {
         return $this->state(fn () => ['status' => VacancyStatus::Published, 'published_at' => now()]);
+    }
+
+    public function closed(VacancyClosureType $type = VacancyClosureType::Deserted): static
+    {
+        return $this->state(fn () => [
+            'status' => VacancyStatus::Closed,
+            'published_at' => now()->subDays(20),
+            'closed_at' => now(),
+            'closure_type' => $type,
+        ]);
     }
 }

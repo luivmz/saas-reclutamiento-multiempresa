@@ -15,8 +15,8 @@ import { navigationFor } from '@/lib/navigation';
 import { dashboard } from '@/routes';
 
 export function AppSidebar() {
-    const { auth } = usePage().props;
-    const groups = navigationFor(auth.user?.role);
+    const { auth, notifications } = usePage().props;
+    const groups = navigationFor(auth.user?.role, notifications?.unread ?? 0);
 
     return (
         <Sidebar collapsible="icon" variant="inset">

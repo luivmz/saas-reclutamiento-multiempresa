@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Application;
+use App\Models\CandidateDocument;
+use App\Models\CandidateProfile;
 use App\Models\JobRequest;
 use App\Models\Organization;
 use App\Models\User;
@@ -11,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -43,11 +47,16 @@ class AppServiceProvider extends ServiceProvider
 
         Model::shouldBeStrict(! app()->isProduction());
 
+        JsonResource::withoutWrapping();
+
         Relation::enforceMorphMap([
             'user' => User::class,
             'organization' => Organization::class,
             'job_request' => JobRequest::class,
             'vacancy' => Vacancy::class,
+            'candidate_profile' => CandidateProfile::class,
+            'candidate_document' => CandidateDocument::class,
+            'application' => Application::class,
         ]);
 
         Route::resourceVerbs(['create' => 'crear', 'edit' => 'editar']);

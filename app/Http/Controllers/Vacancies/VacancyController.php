@@ -36,6 +36,7 @@ class VacancyController extends Controller
 
         $vacancies = Vacancy::query()
             ->with('jobRequest:id,code,area,headcount')
+            ->withCount('applications')
             ->when($status, fn ($query) => $query->where('status', $status))
             ->latest()
             ->paginate(15)
@@ -93,7 +94,7 @@ class VacancyController extends Controller
     {
         Gate::authorize('view', $vacancy);
 
-        $vacancy->load(['jobRequest:id,code,area,headcount,status', 'profile', 'criteria']);
+        $vacancy->load(['jobRequest:id,code,area,headcount,status', 'profile', 'criteria'])->loadCount('applications');
         $issues = $vacancy->status === VacancyStatus::Draft ? $validator->issues($vacancy) : [];
 
         return Inertia::render('vacancies/show', [

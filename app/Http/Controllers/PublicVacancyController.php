@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\VacancyResource;
+use App\Models\Application;
+use App\Models\CandidateProfile;
 use App\Models\Scopes\OrganizationScope;
+use App\Models\User;
 use App\Models\Vacancy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -32,7 +35,7 @@ class PublicVacancyController extends Controller
         ]);
     }
 
-    public function show(int $vacancy): Response
+    public function show(Request $request, int $vacancy): Response
     {
         $model = $this->publishedVacancies()
             ->with(['organization:id,name', 'profile', 'criteria'])
@@ -40,7 +43,34 @@ class PublicVacancyController extends Controller
 
         return Inertia::render('jobs/show', [
             'vacancy' => new VacancyResource($model),
+            'candidate' => $this->candidateContext($request->user(), $model),
         ]);
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function candidateContext(?User $user, Vacancy $vacancy): ?array
+    {
+        if ($user === null || ! $user->isCandidate()) {
+            return null;
+        }
+
+        $profile = CandidateProfile::query()->with('latestCv')->where('user_id', $user->id)->first();
+        $application = Application::query()
+            ->withoutGlobalScopes()
+            ->where('vacancy_id', $vacancy->id)
+            ->where('candidate_id', $user->id)
+            ->first();
+
+        return [
+            'profileComplete' => $profile?->isComplete() ?? false,
+            'hasCv' => $profile?->latestCv !== null,
+            'application' => $application === null ? null : [
+                'id' => $application->id,
+                'status' => $application->status->present(),
+            ],
+        ];
     }
 
     /**

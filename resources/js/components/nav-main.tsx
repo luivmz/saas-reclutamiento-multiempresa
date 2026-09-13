@@ -36,6 +36,14 @@ export function NavMain({
                             >
                                 {item.icon && <item.icon />}
                                 <span>{item.title}</span>
+                                {item.badge ? (
+                                    <span
+                                        className="bg-primary text-primary-foreground ml-auto rounded-full px-1.5 text-[10px] leading-4 font-semibold"
+                                        data-cy={`nav-badge-${item.cy}`}
+                                    >
+                                        {item.badge}
+                                    </span>
+                                ) : null}
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

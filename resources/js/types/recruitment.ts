@@ -76,6 +76,55 @@ export type JobProfile = {
     competencies: string;
 };
 
+export type CandidateProfileData = {
+    phone: string | null;
+    city: string | null;
+    education_level: Presented | null;
+    professional_title: string | null;
+    years_of_experience: number | null;
+    summary: string | null;
+};
+
+export type DocumentSummary = {
+    id: number;
+    original_name: string;
+    size_bytes: number;
+    uploaded_at: string;
+    download_url: string;
+};
+
+export type JobApplication = {
+    id: number;
+    code: string;
+    status: Presented;
+    applied_at: string;
+    stage_changed_at: string | null;
+    vacancy?: {
+        id: number;
+        code: string;
+        title: string;
+        status: Presented;
+        organization: string | null;
+    };
+    candidate?: {
+        id: number;
+        name: string;
+        email: string;
+        profile: CandidateProfileData | null;
+    };
+    cv?: DocumentSummary | null;
+};
+
+export type AppNotification = {
+    id: string;
+    kind: string | null;
+    title: string;
+    message: string;
+    url: string | null;
+    read_at: string | null;
+    created_at: string;
+};
+
 export type Vacancy = {
     id: number;
     code: string;
