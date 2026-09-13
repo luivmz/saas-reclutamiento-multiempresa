@@ -1,10 +1,16 @@
 name: tests
 
+# Mirrors the validated project runtime (Docker: PHP 8.4.25, Node 22.23.2, PostgreSQL 17.11).
+# Cypress E2E is validated separately through Docker (docs/testing/cypress-e2e.md).
 on:
   push:
     branches:
       - main
+      - develop
+      - 'release/**'
+      - 'fix/**'
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,26 +19,69 @@ jobs:
   ci:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:17.11-alpine
+        env:
+          POSTGRES_DB: reclutamiento_testing
+          POSTGRES_USER: reclutamiento
+          POSTGRES_PASSWORD: ci-testing-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U reclutamiento -d reclutamiento_testing"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    # Fictitious CI-only values. phpunit.xml forces the testing database, array cache/session and sync queue,
+    # so Redis is not required by the test suite.
+    env:
+      APP_ENV: testing
+      APP_DEBUG: 'false'
+      APP_TIMEZONE: America/Lima
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: '5432'
+      DB_USERNAME: reclutamiento
+      DB_PASSWORD: ci-testing-only
+
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: Setup PHP
+      - name: Setup PHP 8.4
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
+          extensions: mbstring, dom, fileinfo, intl, bcmath, zip, pdo_pgsql, pgsql
           tools: composer:v2
           coverage: none
 
-      - name: Setup Node
+      - name: Setup Node 22
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: '22'
+          node-version: '22.23.2'
+          cache: npm
 
-      - name: Setup Application
-        run: composer setup
+      - name: Install PHP dependencies (composer.lock)
+        run: composer install --no-interaction --prefer-dist --no-progress
 
-      - name: Run CI Checks
-        run: composer ci:check
+      - name: Prepare application environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate --ansi
+
+      - name: Install Node dependencies (package-lock.json)
+        run: npm ci --no-audit --no-fund
+
+      - name: Build frontend (generates Wayfinder route types)
+        run: npm run build
+
+      - name: TypeScript
+        run: npx tsc --noEmit
+
+      - name: PHPUnit
+        run: php artisan test
