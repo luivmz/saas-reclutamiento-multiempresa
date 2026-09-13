@@ -14,8 +14,10 @@
 /cypress/videos
 /cypress/screenshots
 /cypress/downloads
+/cypress/results
 .DS_Store
 .env
+.env.e2e
 .env.backup
 .env.production
 .phpactor.json

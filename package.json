@@ -8,7 +8,13 @@
         "dev": "vp dev",
         "check": "vp check",
         "check:fix": "vp check --fix",
-        "types:check": "tsc --noEmit"
+        "types:check": "tsc --noEmit",
+        "demo:reset": "docker compose exec -T app php artisan migrate:fresh --seed --force",
+        "e2e:setup": "docker compose run --rm --no-deps --entrypoint sh app docker/php/init-e2e-env.sh",
+        "e2e:up": "docker compose --profile e2e up -d --wait app-e2e queue-e2e",
+        "e2e:reset": "docker compose --profile e2e exec -T app-e2e php artisan e2e:reset",
+        "cy:run": "npm run e2e:setup && docker compose --profile e2e run --rm cypress",
+        "cy:open": "npm run e2e:setup && npm run e2e:up && npx --yes cypress@15.3.0 open --e2e --config-file cypress.config.cjs"
     },
     "dependencies": {
         "@inertiajs/react": "^3.0.0",

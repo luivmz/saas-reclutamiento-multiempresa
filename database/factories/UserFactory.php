@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -25,6 +27,8 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'organization_id' => null,
+            'role' => UserRole::Candidate,
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
@@ -34,6 +38,36 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
         ];
+    }
+
+    public function candidate(): static
+    {
+        return $this->state(fn () => ['role' => UserRole::Candidate, 'organization_id' => null]);
+    }
+
+    public function requester(Organization $organization): static
+    {
+        return $this->staff(UserRole::Requester, $organization);
+    }
+
+    public function hr(Organization $organization): static
+    {
+        return $this->staff(UserRole::HumanResources, $organization);
+    }
+
+    public function approver(Organization $organization): static
+    {
+        return $this->staff(UserRole::Approver, $organization);
+    }
+
+    public function evaluator(Organization $organization): static
+    {
+        return $this->staff(UserRole::Evaluator, $organization);
+    }
+
+    private function staff(UserRole $role, Organization $organization): static
+    {
+        return $this->state(fn () => ['role' => $role, 'organization_id' => $organization->id]);
     }
 
     /**

@@ -1,0 +1,96 @@
+# Evidencia de TDD (RED → GREEN → REFACTOR)
+
+Solo se registran ejecuciones reales de `php artisan test` realizadas dentro del contenedor `app` (PostgreSQL `reclutamiento_testing`). Las salidas de las fases 2–4 se observaron en la terminal durante el desarrollo; no se guardaron como archivos.
+
+## Fase 2 — Tenancy, roles y auditoría base
+
+| Paso | Pruebas | Resultado real |
+|---|---|---|
+| RED | `OrganizationScopeTest`, `AuditLoggerTest`, `RoleMiddlewareTest`, `CandidateRegistrationTest` (14) | 14 fallidas: `Class "App\Models\Organization" not found`, `Class "App\Enums\UserRole" not found`, `Class "App\Models\AuditLog" not found` |
+| GREEN (1.er intento) | Suite completa | 1 fallida: la prueba de inmutabilidad asignaba un valor inválido al enum (`ValueError`); era un error de la prueba, se corrigió |
+| GREEN | `tests/Feature/Tenancy/OrganizationScopeTest.php`, `tests/Feature/Audit`, `tests/Feature/Auth` | 31 passed, 8 skipped |
+
+## Fase 3 — RF-01 a RF-07
+
+| Paso | Pruebas | Resultado real |
+|---|---|---|
+| RED | `JobRequestStatusTest`, `WeightingValidatorTest`, `JobRequestWorkflowTest`, `VacancyPublicationTest`, `CrossTenantAccessTest` | Fallidas: `Class "App\Enums\JobRequestStatus" not found`, `Class "App\Services\Evaluation\WeightingValidator" not found`, `Class "App\Models\JobRequest" not found` |
+| GREEN (intermedio) | Mismas pruebas | 6 fallidas → corrección de 2 errores de prueba, `withoutVite()` y DEF-03 → 47 passed, 3 fallidas por páginas Inertia inexistentes |
+| GREEN | Suite completa tras crear las páginas | 91 passed, 8 skipped |
+
+## Fase 4 — RF-08 a RF-15
+
+| Paso | Pruebas | Resultado real |
+|---|---|---|
+| RED | `ApplicationStatusTest`, `CandidateProfileTest`, `ApplyToVacancyTest`, `ApplicationReviewTest` | Fallidas: `Class "App\Enums\ApplicationStatus" not found`, `Route [candidate.profile.update] not defined` |
+| GREEN (intermedio) | Suite completa | 128 passed, 1 fallida (`Property [application.id] does not exist`) → DEF-05 |
+| GREEN | Suite completa | 129 passed, 8 skipped |
+
+## Fase 5 — RF-16 a RF-19
+
+| Paso | Pruebas | Resultado real |
+|---|---|---|
+| RED (checkpoint `3e66623`, re-ejecutado al retomar) | `tests/Unit/Assessments` (5) + `tests/Feature/Assessments` (18) | **23 failed (0 assertions)**: `Class "App\Services\Assessments\ScoreSheetValidator" not found`, `RouteNotFoundException` |
+| GREEN unitario | `tests/Unit/Assessments/ScoreSheetValidatorTest.php` | **5 passed (8 assertions)** |
+| GREEN feature (1.er intento) | Unit + Feature de Fase 5 | Proceso PHP terminado prematuramente en `test_assigned_evaluator_records_evaluation_scores` → DEF-06 |
+| GREEN feature (2.º intento) | Unit + Feature de Fase 5 | 22 passed, 1 failed: `ModelNotFoundException` en `InterviewTest::test_evaluator_of_another_organization_cannot_access_the_interview` — la prueba construía el payload después de autenticar al evaluador de otra organización (error de la prueba, no del código); se construye antes |
+| GREEN | Unit + Feature de Fase 5 | **23 passed (99 assertions)** |
+| REFACTOR | Reglas de etapas centralizadas en `AssessmentScheduler::acceptsEvaluation/acceptsInterview`; resumen de sesión compartido en `AssessmentSessionPresenter`; UI de programación y convocatorias | Fase 5: **23 passed (99 assertions)** |
+| Regresión | `tests/Feature/Tenancy`, `RoleMiddlewareTest`, `tests/Feature/Applications`, `tests/Feature/Candidates` | **35 passed (146 assertions)** |
+| Suite completa | `php artisan test` | **152 passed, 8 skipped, 0 failed (532 assertions)** |
+
+## Fase 6 — RF-20 a RF-25
+
+Pruebas nuevas de la fase: **51** (`RankingServiceTest` 14, `RankingComparisonTest` 8, `FinalDecisionTest` 10, `SelectionRegistrationTest` 7, `VacancyClosureTest` 5, 6 casos nuevos en `ApplicationStatusTest` y 1 en `CrossTenantAccessTest`).
+
+| Bloque | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| A + B (RF-20, RF-21) | RED | `tests/Unit/Ranking/RankingServiceTest.php` (14) | Fallidas: `Class "App\Services\Ranking\RankingService" not found`, `Class "App\Services\Ranking\CandidateScores" not found` |
+| A (RF-20) | RED | `CrossTenantAccessTest::test_rf20_hr_of_other_organization_cannot_modify_vacancy_criteria` | 1 failed: la respuesta sí era 404, pero la prueba leía los criterios con el usuario de la organización B autenticado (el scope de tenant devolvía vacío). Error de diseño de la prueba; se corrigió para leer sin scope |
+| A + B | GREEN | `tests/Unit/Ranking` + prueba cross-tenant | **14 passed (32 assertions)** y **1 passed (3 assertions)** |
+| C (RF-21, RF-22) | RED | `tests/Feature/Selection/RankingComparisonTest.php` | **8 failed (0 assertions)**: `Route [vacancies.comparison] not defined` |
+| C | GREEN | `tests/Unit/Ranking` + `RankingComparisonTest` | **22 passed (113 assertions)** |
+| C | REFACTOR | `EvaluationCriterion::definitionsFor()` con etapa opcional (sin duplicar consultas); limpieza de una asignación sobrante en `RankingPresenter` | Sin cambios de resultado |
+| D (RF-23) | RED | `tests/Feature/Selection/FinalDecisionTest.php` | **10 failed (0 assertions)** |
+| D | GREEN | `FinalDecisionTest` + `RankingComparisonTest` | **18 passed (123 assertions)** |
+| E (RF-24) | RED | `tests/Feature/Selection/SelectionRegistrationTest.php` | **7 failed (7 assertions)**: `Route [vacancies.selection.store] not defined` (las 7 aserciones corresponden al registro previo de la decisión, que ya funcionaba) |
+| E | GREEN | `SelectionRegistrationTest` + regresión `ApplicationReviewTest` | **17 passed (95 assertions)** |
+| F (RF-25) | RED | `VacancyClosureTest` + `ApplicationStatusTest` | **9 failed, 17 passed (29 assertions)**: `Route [vacancies.close] not defined` (5) y 4 transiciones hacia `no_seleccionado` no permitidas |
+| F | GREEN | `tests/Unit/Ranking`, `tests/Unit/Enums`, `tests/Feature/Selection` | **78 passed (273 assertions)** |
+| Regresión | — | `tests/Feature/Tenancy`, `RoleMiddlewareTest`, `tests/Feature/Applications`, `tests/Feature/Assessments`, `tests/Feature/Vacancies` | **57 passed (268 assertions)** |
+| Suite completa | — | `php artisan test` | **211 pruebas: 203 passed, 8 skipped, 0 failed (779 assertions)** |
+
+Evidencia específica de que el ranking no selecciona: `RankingComparisonTest::test_rf23_calculating_the_ranking_never_selects_a_candidate` calcula el ranking (servicio y dos vistas) y verifica que no cambian estados, historiales, decisiones ni auditoría de selección; `FinalDecisionTest::test_rf23_approver_records_the_final_decision_for_a_ranked_finalist` verifica que incluso la decisión humana no cambia el estado hasta RF-24.
+
+## Fase 7 — RF-26 y RF-27
+
+Pruebas nuevas de la fase: **19** (`ProcessResultNotificationTest` 8, `AuditTrailTest` 5, `AuditLogViewTest` 6).
+
+| Bloque | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| A + B + C (RF-26) | RED | `tests/Feature/Notifications/ProcessResultNotificationTest.php` | **6 failed, 2 passed (37 assertions)**: no se enviaba ninguna notificación de resultado y `Undefined constant App\Enums\AuditAction::ProcessResultNotified`. Las 2 que pasaron (`no_final_result_is_sent_before_the_vacancy_is_closed`, `only_candidates_of_the_closed_vacancy_are_notified`) solo contienen aserciones negativas y pasaban porque aún no se notificaba nada; se conservan como guardas de regresión |
+| D + E + F (RF-27) | RED | `tests/Feature/Audit/AuditTrailTest.php`, `tests/Feature/Audit/AuditLogViewTest.php` | **10 failed, 1 passed**: `Undefined constant …ProcessResultNotified`; `DB::table('audit_logs')->update()/delete()` no lanzaba excepción (DEF-07); `cookie`/`authorization`/`api_key` se almacenaban (DEF-08); no existía ruta de consulta; `Route [audit.index] not defined` (6). Pasó `deleting_a_user_keeps_the_audit_record_without_the_actor_reference` (comportamiento previo de la FK `nullOnDelete`) |
+| Todos | GREEN (1.er intento) | Notificaciones + auditoría + `VacancyClosureTest` | **2 failed, 26 passed (246 assertions)**, ambos errores de diseño de las pruebas nuevas: (1) el patrón `/justificaci/` coincidía con una observación legítima de RR. HH. («Precisar la justificación.»); se reemplazó por el texto exacto de la justificación de la decisión; (2) `assertSame` sobre metadatos `jsonb` fallaba por el orden de claves que reordena PostgreSQL; se usa `assertEquals` más `assertArrayNotHasKey` por cada clave sensible |
+| Todos | GREEN | `ProcessResultNotificationTest`, `AuditTrailTest`, `AuditLogViewTest` | **19 passed (238 assertions)** |
+| Regresión | — | Pruebas que usan notificaciones (`tests/Feature/Notifications`, `JobRequests`, `Applications`, `Assessments`) | **53 passed (300 assertions)** |
+| Regresión | — | `tests/Feature/Audit` (incluye `AuditLoggerTest`) | **15 passed (184 assertions)** |
+| Regresión | — | Pruebas cross-tenant (`--filter` por organización ajena/foránea en toda la suite) | **16 passed (65 assertions)** |
+| Suite completa | — | `php artisan test` | **230 pruebas: 222 passed, 8 skipped, 0 failed (1017 assertions)** |
+
+Los 8 skipped corresponden a pruebas del starter kit para funciones de Fortify desactivadas (verificación de correo, etc.).
+
+## Fase 8 — Frontend integral
+
+Los defectos se detectaron en la validación en navegador (`docs/manual-smoke-test.md`). En cada uno: reproducción en capturas, prueba en RED, corrección y GREEN.
+
+Pruebas nuevas de la fase: **3**.
+
+| Defecto | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| DEF-09, DEF-10 | RED | `tests/Feature/Frontend/AppTimezoneTest.php` (primera versión, que verificaba una prop compartida `timezone`), `AuditLogViewTest::test_rf27_details_show_readable_labels_and_local_dates_instead_of_raw_values` | **3 failed (22 assertions)**: `Property [timezone] does not exist` (2); el detalle de auditoría devolvía `enviado`, `validado`, `con_seleccion`, `clase_modelo` y la fecha ISO en UTC |
+| DEF-09 | Rediseño | `AppTimezoneTest` | La zona horaria se expone con `<meta name="app-timezone">` en la vista raíz, en lugar de una prop de Inertia. Así `lib/format.ts` la lee al cargar el módulo, antes del primer render. La prueba se ajustó a ese contrato y siguió en RED hasta agregar la etiqueta. |
+| DEF-09, DEF-10 | GREEN | `AppTimezoneTest`, `AuditLogViewTest` | **9 passed (103 assertions)** |
+| DEF-11 | — | Sin prueba automatizada (no hay Vitest en el alcance) | Verificado en las capturas posteriores: «EÑ», «RH», «JS», «LP» |
+| Regresión | — | `php artisan test` | **233 pruebas: 225 passed, 8 skipped, 0 failed (1045 assertions)** |
+| Build | — | `npm run build`, `npx tsc --noEmit` | OK, 0 errores |
+| Navegador | — | Recorrido visual por rol / flujo integral | **10/10 (49 capturas) / 12/12** |
