@@ -8,7 +8,10 @@
         "dev": "vp dev",
         "check": "vp check",
         "check:fix": "vp check --fix",
-        "types:check": "tsc --noEmit"
+        "types:check": "tsc --noEmit",
+        "e2e:reset": "docker compose exec -T app php artisan e2e:reset",
+        "cy:run": "docker compose --profile e2e run --rm cypress",
+        "cy:open": "npx --yes cypress@15.3.0 open --e2e --config-file cypress.config.cjs"
     },
     "dependencies": {
         "@inertiajs/react": "^3.0.0",

@@ -1,0 +1,25 @@
+{
+    "_comment": "Identifiers produced by DemoSeeder after e2e:reset (migrate:fresh --seed). See docs/demo-users.md.",
+    "requests": {
+        "validated": { "id": 4, "title": "Docente de Matemática - Secundaria" },
+        "approvedWithoutVacancy": { "id": 6, "title": "Docente de Religión" },
+        "orgB": { "id": 11 }
+    },
+    "vacancies": {
+        "draft": { "id": 1, "title": "Docente de Inglés - Primaria" },
+        "published": { "id": 2, "title": "Docente de Comunicación - Secundaria" },
+        "ranking": { "id": 3, "title": "Auxiliar de Educación Inicial" },
+        "closed": { "id": 4, "title": "Coordinador(a) de Tutoría" },
+        "orgB": { "id": 5, "title": "Asistente Administrativo (Demo B)" }
+    },
+    "applications": {
+        "submitted": { "id": 1, "candidate": "Andrea Poma (ficticia)" },
+        "rankingFirst": { "id": 4, "candidate": "Diego Mendoza (ficticio)", "total": "85.5" },
+        "rankingSecond": { "id": 5, "candidate": "Estela Ñahui (ficticia)", "total": "83.5" },
+        "rankingThird": { "id": 6, "candidate": "Fabio Llanos (ficticio)", "total": "68.5" },
+        "orgB": { "id": 10 }
+    },
+    "evaluations": {
+        "pending": { "id": 1, "candidate": "Claudia Vilca (ficticia)" }
+    }
+}

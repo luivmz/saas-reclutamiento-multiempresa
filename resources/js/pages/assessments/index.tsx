@@ -44,7 +44,7 @@ export default function AssessmentAssignments({
                                 </thead>
                                 <tbody className="divide-y">
                                     {assignments.map((assignment) => (
-                                        <tr key={assignment.key} className="hover:bg-muted/40" data-cy="assignment-row" data-kind={assignment.kind.value}>
+                                        <tr key={assignment.key} className="hover:bg-muted/40" data-cy="assignment-row" data-kind={assignment.kind.value} data-status={assignment.status.value}>
                                             <td className="px-4 py-3">
                                                 <p className="font-medium">{assignment.title}</p>
                                                 <StatusBadge status={assignment.kind} className="mt-1" />
