@@ -35,6 +35,7 @@ enum AuditAction: string
 
     case SelectionDecisionRecorded = 'seleccion.decision_registrada';
     case CandidateSelected = 'seleccion.candidato_registrado';
+    case ProcessResultNotified = 'proceso.resultado_notificado';
 
     public function label(): string
     {
@@ -61,6 +62,7 @@ enum AuditAction: string
             self::InterviewResultRecorded => 'Resultado de entrevista registrado',
             self::SelectionDecisionRecorded => 'Decisión final registrada',
             self::CandidateSelected => 'Selección de candidato registrada',
+            self::ProcessResultNotified => 'Resultado final notificado a postulantes',
         };
     }
 

@@ -8,7 +8,9 @@ import {
     Globe,
     LayoutGrid,
     Send,
+    ShieldCheck,
 } from 'lucide-react';
+import AuditLogController from '@/actions/App/Http/Controllers/Audit/AuditLogController';
 import AssessmentAssignmentController from '@/actions/App/Http/Controllers/Assessments/AssessmentAssignmentController';
 import CandidateApplicationController from '@/actions/App/Http/Controllers/Candidates/CandidateApplicationController';
 import CandidateProfileController from '@/actions/App/Http/Controllers/Candidates/CandidateProfileController';
@@ -127,6 +129,13 @@ export function navigationFor(
                             icon: Briefcase,
                             cy: 'vacancies',
                             description: 'Consulte las vacantes y los procesos en curso.',
+                        },
+                        {
+                            title: 'Auditoría',
+                            href: AuditLogController.index(),
+                            icon: ShieldCheck,
+                            cy: 'audit',
+                            description: 'Consulte el registro de acciones críticas de su organización (RF-27).',
                         },
                     ],
                 },
