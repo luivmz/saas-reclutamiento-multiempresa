@@ -1,0 +1,86 @@
+name: reclutamiento
+
+x-app: &app
+  build:
+    context: .
+    dockerfile: docker/php/Dockerfile
+  image: reclutamiento-php:dev
+  volumes:
+    - .:/var/www/html
+    - vendor:/var/www/html/vendor
+    - node_modules:/var/www/html/node_modules
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
+services:
+  app:
+    <<: *app
+    entrypoint: ["sh", "/var/www/html/docker/php/entrypoint.sh"]
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 240s
+
+  queue:
+    <<: *app
+    command: ["php", "artisan", "queue:work", "redis", "--tries=3", "--sleep=1", "--verbose"]
+    depends_on:
+      app:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-reclutamiento}
+      POSTGRES_USER: ${DB_USERNAME:-reclutamiento}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+    ports:
+      - "${FORWARD_DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-reclutamiento} -d ${DB_DATABASE:-reclutamiento}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "${FORWARD_REDIS_PORT:-6379}:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  cypress:
+    image: cypress/included:15.3.0
+    profiles: ["e2e"]
+    working_dir: /e2e
+    environment:
+      CYPRESS_baseUrl: http://app:8000
+    volumes:
+      - ./cypress:/e2e/cypress
+      - ./cypress.config.cjs:/e2e/cypress.config.cjs:ro
+    command: ["--config-file", "cypress.config.cjs", "--browser", "electron"]
+    depends_on:
+      app:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  redisdata:
+  vendor:
+  node_modules:

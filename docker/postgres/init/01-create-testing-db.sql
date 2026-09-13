@@ -1,0 +1,1 @@
+CREATE DATABASE reclutamiento_testing;
