@@ -54,4 +54,5 @@ Verificado en el QA final (Fase 12, 2026-09-13, rama `release/qa-final`). Detall
 
 ## Publicación
 
-- [ ] GitHub publicado
+- [x] GitHub publicado (https://github.com/luivmz/saas-reclutamiento-multiempresa: `main`, `develop`, `release/qa-final`, `feature/*` y tag `v1.0.0-academic`)
+- [x] GitHub Actions validado (workflow `tests` en verde en `main` y `develop` tras la corrección post-publicación: [post-publication-ci-fix.md](post-publication-ci-fix.md))

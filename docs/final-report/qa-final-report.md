@@ -262,3 +262,13 @@ Duración estimada: unos 11 minutos (8 minutos omitiendo los pasos opcionales). 
 - **ningún secreto versionado**.
 
 Los pendientes identificados son **evidencias académicas externas** (BPMN originales, casos de uso previos, capturas) y mejoras futuras declaradas. No afectan a la integridad, seguridad ni reproducibilidad del repositorio. Deben completarse en el informe académico antes de la entrega formal.
+
+---
+
+## Nota de seguimiento post-publicación (CI)
+
+- **El QA funcional original permanece válido.** Las métricas y el veredicto de este informe no cambian.
+- **Incidencia de CI.** Tras publicar, el workflow heredado del *starter kit* (`.github/workflows/tests.yml`) fallaba en GitHub Actions: usaba PHP 8.3, incompatible con Symfony 8.1 (PHP ≥ 8.4.1), y ejecutaba comandos ajenos a la validación del proyecto.
+- **Corrección posterior.** Se alineó con PHP 8.4, Node 22.23.2 y PostgreSQL 17.11, con los pasos `composer install`, `npm ci`, `npm run build`, `npx tsc --noEmit` y `php artisan test`. En `composer.lock` solo se recalculó el `content-hash`, sin cambiar versiones.
+- **Sin cambios en la aplicación:** no se tocaron código, RF, reglas de negocio ni Docker.
+- **Evidencia:** GitHub Actions quedó en verde en `fix/github-actions-ci` (`34787563815`), `main` (`34787861775`) y `develop` (`34787885835`). Detalle en [post-publication-ci-fix.md](post-publication-ci-fix.md).
