@@ -12,12 +12,13 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import sys
 from calendar import monthrange
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Final
 
 import numpy as np
 import pandas as pd
@@ -29,6 +30,7 @@ from recruitment_ml.config import (
     validate_academic_profile,
 )
 from recruitment_ml.schema import (
+    ABLATION_REQUIRED_IN_15B,
     DATASET_COLUMNS,
     INTEGER_COLUMNS,
     MODEL_READY_FEATURES,
@@ -38,6 +40,7 @@ from recruitment_ml.schema import (
 )
 from recruitment_ml.synthetic.distributions import centered_effect
 from recruitment_ml.synthetic.timeline import (
+    TZ,
     OrganizationProfile,
     ProcessTimeline,
     resolve_closure,
@@ -45,7 +48,21 @@ from recruitment_ml.synthetic.timeline import (
     start_of_day,
 )
 
-__all__ = ["SyntheticDataset", "build_dataset", "main"]
+__all__ = [
+    "SyntheticDataset",
+    "build_dataset",
+    "build_export_manifest",
+    "censoring_comparison",
+    "main",
+    "MODE_FULL",
+    "MODE_MODEL_READY",
+]
+
+
+#: Modos de exportacion. Cada uno tiene su propia huella: el hash anunciado
+#: debe corresponder siempre al frame realmente exportado.
+MODE_FULL: Final[str] = "full"
+MODE_MODEL_READY: Final[str] = "model-ready"
 
 
 @dataclass(frozen=True)
@@ -64,6 +81,22 @@ class SyntheticDataset:
         """
         completed = self.frame[self.frame["observation_status"] == STATUS_COMPLETED]
         return completed.reset_index(drop=True)
+
+    def frame_for(self, mode: str) -> pd.DataFrame:
+        """Frame correspondiente a un modo de exportacion."""
+        if mode == MODE_FULL:
+            return self.frame
+        if mode == MODE_MODEL_READY:
+            return self.model_ready()
+        raise ValueError(f"modo de exportacion desconocido: {mode!r}")
+
+    def fingerprint_for(self, mode: str) -> str:
+        """Huella del frame que corresponde a ese modo."""
+        if mode == MODE_FULL:
+            return str(self.manifest["dataset_fingerprint"])
+        if mode == MODE_MODEL_READY:
+            return str(self.manifest["model_ready_fingerprint"])
+        raise ValueError(f"modo de exportacion desconocido: {mode!r}")
 
     def feature_matrix(self) -> pd.DataFrame:
         """Matriz X: solo las features model-ready del contrato."""
@@ -263,6 +296,45 @@ def dataset_fingerprint(frame: pd.DataFrame) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def censoring_comparison(frame: pd.DataFrame) -> dict[str, Any]:
+    """Compara censurados contra completados feature a feature.
+
+    La censura de este generador es **informativa por diseno**: depende de las
+    condiciones operacionales del proceso. Reportarla no es un adorno, es el
+    material con el que 15B tendra que evaluar el sesgo de seleccion.
+
+    Se usa la diferencia de medias estandarizada (SMD), que es comparable entre
+    features con escalas distintas.
+    """
+    censored = frame[frame["observation_status"] == STATUS_CENSORED]
+    completed = frame[frame["observation_status"] == STATUS_COMPLETED]
+    if censored.empty or completed.empty:
+        return {"available": False, "reason": "un grupo esta vacio"}
+
+    differences: dict[str, float] = {}
+    for column in MODEL_READY_FEATURES:
+        left = censored[column].astype(float)
+        right = completed[column].astype(float)
+        pooled = float(np.sqrt((left.var(ddof=0) + right.var(ddof=0)) / 2.0))
+        if pooled == 0.0:
+            differences[column] = 0.0
+            continue
+        differences[column] = round(float((left.mean() - right.mean()) / pooled), 6)
+
+    ranked = sorted(differences.items(), key=lambda item: -abs(item[1]))
+    return {
+        "available": True,
+        "censored_rows": int(len(censored)),
+        "completed_rows": int(len(completed)),
+        "standardised_mean_differences": differences,
+        "largest_absolute_smd": {"feature": ranked[0][0], "smd": ranked[0][1]},
+        "interpretation": (
+            "Censura sinteticamente informativa: depende de condiciones operacionales "
+            "simuladas. No es evidencia institucional."
+        ),
+    }
+
+
 def _build_manifest(
     config: SyntheticConfig,
     frame: pd.DataFrame,
@@ -277,20 +349,26 @@ def _build_manifest(
 
     return {
         "dataset_version": config.dataset_version,
+        "schema_version": config.feature_contract_version,
         "feature_contract_version": config.feature_contract_version,
         "seed": config.seed,
+        "rows_requested": int(config.rows),
         "config_fingerprint": config.fingerprint(),
         "dataset_fingerprint": dataset_fingerprint(frame),
+        "model_ready_fingerprint": dataset_fingerprint(completed.reset_index(drop=True)),
         "rows_generated": int(len(frame)),
         "rows_model_ready": int(len(completed)),
         "censored_total": censored_total,
         "censored_stalled": censored_stalled,
         "censored_observation_window": censored_window,
         "censoring_ratio": round(censored_total / max(len(frame), 1), 6),
+        "censoring_mechanism": "informative-by-design",
+        "censoring_comparison": censoring_comparison(frame),
         "prevalence": None if np.isnan(prevalence) else round(prevalence, 6),
         "prevalence_target": [config.prevalence_min, config.prevalence_max],
         "observation_end": observation_end.isoformat(),
         "model_ready_features": list(MODEL_READY_FEATURES),
+        "ablation_required_in_15b": list(ABLATION_REQUIRED_IN_15B),
         "academic_profile_deviations": validate_academic_profile(config),
         "tool": "recruitment_ml.synthetic.generator",
         "data_nature": "synthetic",
@@ -336,26 +414,59 @@ def main(argv: list[str] | None = None) -> int:
         for item in deviations:
             print(f"  - {item}", file=sys.stderr)
 
-    frame = dataset.model_ready() if args.model_ready else dataset.frame
+    mode = MODE_MODEL_READY if args.model_ready else MODE_FULL
+    frame = dataset.frame_for(mode)
+    export_manifest = build_export_manifest(dataset, mode)
+
     if args.output is not None:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         frame.to_csv(args.output, index=False, lineterminator="\n")
+        manifest_path = args.output.with_suffix(args.output.suffix + ".manifest.json")
+        manifest_path.write_text(
+            json.dumps(export_manifest, indent=2, ensure_ascii=False, sort_keys=True),
+            encoding="utf-8",
+        )
         print(f"dataset escrito en {args.output}")
+        print(f"manifiesto escrito en {manifest_path}")
 
+    # La huella anunciada es siempre la del frame realmente exportado.
     for key in (
         "dataset_version",
+        "dataset_mode",
         "seed",
+        "rows_requested",
+        "rows_exported",
         "config_fingerprint",
         "dataset_fingerprint",
-        "rows_generated",
-        "rows_model_ready",
         "censored_total",
         "censoring_ratio",
         "prevalence",
     ):
-        print(f"{key}: {dataset.manifest[key]}")
-    print(f"validity_notice: {dataset.manifest['validity_notice']}")
+        print(f"{key}: {export_manifest[key]}")
+    print(f"validity_notice: {export_manifest['validity_notice']}")
     return 0
+
+
+def build_export_manifest(dataset: SyntheticDataset, mode: str) -> dict[str, Any]:
+    """Manifiesto del frame exportado, no del dataset completo.
+
+    `dataset_fingerprint` corresponde exactamente a lo que se escribe en disco:
+    anunciar la huella del dataset completo al exportar solo las filas
+    etiquetadas seria una afirmacion falsa sobre el archivo entregado.
+
+    `generated_at` se incluye como metadato operativo y **no** forma parte de
+    ninguna huella: la parte cientifica del manifiesto es reproducible.
+    """
+    frame = dataset.frame_for(mode)
+    manifest = dict(dataset.manifest)
+    manifest["dataset_mode"] = mode
+    manifest["rows_exported"] = int(len(frame))
+    manifest["dataset_fingerprint"] = dataset.fingerprint_for(mode)
+    manifest["full_dataset_fingerprint"] = str(dataset.manifest["dataset_fingerprint"])
+    manifest["model_ready_fingerprint"] = str(dataset.manifest["model_ready_fingerprint"])
+    manifest["generated_at"] = datetime.now(tz=TZ).isoformat()
+    manifest["generated_at_note"] = "metadato operativo; excluido de toda huella reproducible"
+    return manifest
 
 
 if __name__ == "__main__":  # pragma: no cover - entrada de linea de comandos

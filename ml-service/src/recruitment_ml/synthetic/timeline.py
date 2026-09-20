@@ -1,11 +1,24 @@
 """Simulacion event-first de un proceso de seleccion sintetico.
 
-El orden importa y es el aprobado en la Fase 14: primero se construye una
-cronologia de eventos, despues se corta en el checkpoint para derivar las
-features, y solo al final se compara el cierre real contra el plazo objetivo
-para obtener la etiqueta.
+El orden importa y es el aprobado en la Fase 14: primero se planifica, despues
+se construye una cronologia de eventos, luego se corta en el checkpoint para
+derivar las features, y solo al final se compara el cierre real contra el plazo
+objetivo para obtener la etiqueta.
 
 En ningun punto se calcula la etiqueta a partir del vector de features.
+
+Semantica del historial de etapas
+---------------------------------
+Se modela la del dominio real, verificada en el codigo:
+
+- `ApplicationService::apply()` crea **un** `ApplicationStageHistory` inicial
+  (`null -> postulado`) en el mismo instante que `applied_at`
+  (`app/Services/Applications/ApplicationService.php:60-67`);
+- `ApplicationStageService::transition()` crea **uno** por cada cambio de etapa
+  posterior (`app/Services/Applications/ApplicationStageService.php:71`).
+
+Por eso cada postulacion anterior al checkpoint aporta al menos un evento de
+historial, y las transiciones posteriores se suman.
 """
 
 from __future__ import annotations
@@ -70,6 +83,25 @@ class LatentFactors:
     period_effect: float
 
 
+@dataclass(frozen=True)
+class ProcessPlan:
+    """Parametros fijados al registrar el requerimiento, antes de publicar.
+
+    Existe para que el orden del codigo coincida con el orden conceptual: todo
+    lo que decide el plazo objetivo se sortea aqui, antes de que ocurra
+    cualquier evento operacional.
+    """
+
+    lead_days: int
+    opening_offset_days: int
+    window_days: int
+    days_after_close: int
+    positions: int
+    criteria_count: int
+    stage_count: int
+    records_opening_date: bool
+
+
 @dataclass
 class Session:
     """Evaluacion o entrevista sintetica.
@@ -106,6 +138,7 @@ class ProcessTimeline:
     stage_events: list[datetime] = field(default_factory=list)
     shortlisted_before_checkpoint: int = 0
     stalled: bool = False
+    stall_probability: float = 0.0
     closed_at: datetime | None = None
     concurrent_open_vacancies_count: int = 0
 
@@ -149,6 +182,9 @@ class ProcessTimeline:
                 candidates.append(session.completed_at)
         return max(candidates)
 
+    def days_since_last_event(self) -> int:
+        return (self.checkpoint_at.date() - self.last_operational_event().date()).days
+
     def features(self) -> dict[str, int]:
         """Vector operacional del contrato, calculado solo con el pasado."""
         evaluations_scheduled = self._sessions_scheduled(self.evaluations)
@@ -172,9 +208,7 @@ class ProcessTimeline:
             "interviews_completed_count": interviews_completed,
             "interviews_overdue_pending_count": self._sessions_overdue_pending(self.interviews),
             "stage_transition_count": sum(1 for t in self.stage_events if t <= self.checkpoint_at),
-            "days_since_last_operational_event": (
-                self.checkpoint_at.date() - self.last_operational_event().date()
-            ).days,
+            "days_since_last_operational_event": self.days_since_last_event(),
             "concurrent_open_vacancies_count": self.concurrent_open_vacancies_count,
             "days_remaining_to_target": (self.target_completion_at - self.checkpoint_at).days,
             "configured_stage_count": self.stage_count,
@@ -198,6 +232,28 @@ class ProcessTimeline:
         return pending, overdue, unprocessed
 
 
+def plan_process(rng: np.random.Generator, config: SyntheticConfig) -> ProcessPlan:
+    """Sortea los parametros de planificacion, en el momento de la solicitud.
+
+    Todo lo que determina el plazo objetivo se decide aqui, antes de publicar y
+    antes de que exista cualquier evento operacional.
+    """
+    return ProcessPlan(
+        lead_days=gamma_days(rng, shape=3.0, scale=3.0, minimum=1),
+        # Desfase entre publicar la convocatoria y abrir postulaciones. Que sea
+        # frecuentemente positivo rompe la identidad exacta
+        # `elapsed = application_window_days + 1`, que de otro modo se cumpliria
+        # en todas las filas.
+        opening_offset_days=0 if bernoulli(rng, 0.30) else 1 + truncated_poisson_count(rng, mean=2.2, maximum=9),
+        window_days=gamma_days(rng, shape=4.0, scale=4.0, minimum=3),
+        days_after_close=4 + gamma_days(rng, shape=5.0, scale=9.0, minimum=0),
+        positions=bounded_choice(rng, (1, 2, 3, 4), (0.62, 0.24, 0.09, 0.05)),
+        criteria_count=3 + truncated_poisson_count(rng, mean=2.2, maximum=5),
+        stage_count=2 if bernoulli(rng, 0.82) else 1,
+        records_opening_date=not bernoulli(rng, config.null_opens_at_rate),
+    )
+
+
 def simulate_process(
     rng: np.random.Generator,
     config: SyntheticConfig,
@@ -209,37 +265,30 @@ def simulate_process(
 ) -> ProcessTimeline:
     """Construye la cronologia completa de un proceso.
 
-    El plazo objetivo se fija al registrar el requerimiento, antes de publicar,
-    y no vuelve a tocarse.
+    Orden conceptual y de codigo: planificacion -> plazo objetivo -> publicacion
+    -> ventana de postulaciones -> checkpoint -> eventos -> desenlace.
     """
-    # 1. Solicitud del requerimiento.
+    # 1. Planificacion del requerimiento.
     requested_at = start_of_day(request_day) + timedelta(hours=int(rng.integers(8, 18)))
+    plan = plan_process(rng, config)
 
-    # 2. Configuracion de la vacante, conocida antes de publicar.
-    positions = bounded_choice(rng, (1, 2, 3, 4), (0.62, 0.24, 0.09, 0.05))
-    criteria_count = 3 + truncated_poisson_count(rng, mean=2.2, maximum=5)
-    stage_count = 2 if bernoulli(rng, 0.82) else 1
-    window_days = gamma_days(rng, shape=4.0, scale=4.0, minimum=3)
-
-    # 3. Publicacion.
-    lead_days = gamma_days(rng, shape=3.0, scale=3.0, minimum=1)
-    published_day = request_day + timedelta(days=lead_days)
-    published_at = start_of_day(published_day) + timedelta(hours=int(rng.integers(8, 18)))
-
-    # 4. Ventana de postulaciones. `opens_at` puede ser nulo, como en el esquema real.
-    opens_at: date | None = None if bernoulli(rng, config.null_opens_at_rate) else published_day
-    opening_day = opens_at if opens_at is not None else published_day
-    closes_at = opening_day + timedelta(days=window_days)
-
-    # 5. Checkpoint: inicio del dia siguiente al cierre de postulaciones.
+    # 2. Calendario planificado, derivado de parametros ya fijados.
+    published_day = request_day + timedelta(days=plan.lead_days)
+    opening_day = published_day + timedelta(days=plan.opening_offset_days)
+    closes_at = opening_day + timedelta(days=plan.window_days)
     checkpoint_at = start_of_day(closes_at + timedelta(days=1))
 
-    # 6. Plazo objetivo, fijado al registrar el requerimiento.
-    days_after_close = 4 + gamma_days(rng, shape=5.0, scale=9.0, minimum=0)
-    target_completion_at = end_of_day(closes_at + timedelta(days=days_after_close))
+    # 3. Plazo objetivo: se fija ahora, al registrar el requerimiento, y es
+    #    inmutable. Depende solo de parametros de planificacion, nunca de lo
+    #    que ocurra despues.
+    target_completion_at = end_of_day(closes_at + timedelta(days=plan.days_after_close))
     target_set_at = requested_at
 
-    # 7. Factores latentes.
+    # 4. Publicacion efectiva.
+    published_at = start_of_day(published_day) + timedelta(hours=int(rng.integers(8, 18)))
+    opens_at: date | None = opening_day if plan.records_opening_date else None
+
+    # 5. Factores latentes.
     latent = LatentFactors(
         operational_capacity=organization.capacity * centered_effect(rng, 0.18),
         coordination_friction=organization.friction_base
@@ -260,29 +309,34 @@ def simulate_process(
         checkpoint_at=checkpoint_at,
         target_set_at=target_set_at,
         target_completion_at=target_completion_at,
-        positions=positions,
-        criteria_count=criteria_count,
-        stage_count=stage_count,
+        positions=plan.positions,
+        criteria_count=plan.criteria_count,
+        stage_count=plan.stage_count,
         latent=latent,
     )
 
-    # 8. Llegada de postulaciones dentro de la ventana.
+    # 6. Llegada de postulaciones dentro de la ventana.
     expected_applications = (
-        6.5 * organization.volume_scale * (1.0 + 0.45 * (positions - 1)) * period_effect
+        6.5 * organization.volume_scale * (1.0 + 0.45 * (plan.positions - 1)) * period_effect
     )
     application_count = negative_binomial_count(rng, mean=expected_applications, dispersion=2.0)
-    window_span = max(1, (closes_at - opening_day).days)
+    window_span = max(1, plan.window_days)
     for _ in range(application_count):
         offset_days = int(rng.integers(0, window_span + 1))
         applied_at = start_of_day(opening_day + timedelta(days=offset_days)) + timedelta(
             hours=int(rng.integers(7, 23))
         )
-        if applied_at < published_at:
-            applied_at = published_at + timedelta(hours=1)
         timeline.application_times.append(applied_at)
     timeline.application_times.sort()
 
-    # 9. Tramitacion operativa mientras la ventana sigue abierta.
+    # 7. Historial inicial `null -> postulado`.
+    #
+    #    Cada postulacion crea exactamente una fila de historial en el mismo
+    #    instante que `applied_at`. Es un evento del dominio, no un ajuste del
+    #    contador: por eso se registra aqui y no sumando despues.
+    timeline.stage_events.extend(timeline.application_times)
+
+    # 8. Tramitacion operativa mientras la ventana sigue abierta.
     throughput = float(
         np.clip(latent.operational_capacity / (latent.coordination_friction * latent.random_shock), 0.25, 2.2)
     )
@@ -293,6 +347,7 @@ def simulate_process(
     for applied_at in timeline.application_times:
         if not bernoulli(rng, shortlist_probability):
             continue
+        # Transicion `postulado -> preseleccionado`.
         shortlisted_at = applied_at + timedelta(
             days=lognormal_days(rng, median=3.0, sigma=0.7, minimum=1)
         )
@@ -303,21 +358,32 @@ def simulate_process(
 
         if not bernoulli(rng, schedule_probability):
             continue
-        evaluation = _make_session(rng, origin=shortlisted_at, completion_probability=completion_probability)
+
+        # Transicion `preseleccionado -> en_evaluacion` y programacion de la sesion.
+        moved_to_evaluation_at = shortlisted_at + timedelta(
+            days=lognormal_days(rng, median=1.0, sigma=0.5, minimum=1)
+        )
+        timeline.stage_events.append(moved_to_evaluation_at)
+        evaluation = _make_session(
+            rng, origin=moved_to_evaluation_at, completion_probability=completion_probability
+        )
         timeline.evaluations.append(evaluation)
-        timeline.stage_events.append(evaluation.created_at)
 
         completed_before_checkpoint = (
             evaluation.completed_at is not None and evaluation.completed_at <= checkpoint_at
         )
         if completed_before_checkpoint and bernoulli(rng, schedule_probability * 0.7):
+            # Transicion `en_evaluacion -> en_entrevista` y programacion.
+            moved_to_interview_at = evaluation.completed_at + timedelta(
+                days=lognormal_days(rng, median=1.0, sigma=0.5, minimum=1)
+            )
+            timeline.stage_events.append(moved_to_interview_at)
             interview = _make_session(
                 rng,
-                origin=evaluation.completed_at,
+                origin=moved_to_interview_at,
                 completion_probability=completion_probability * 0.85,
             )
             timeline.interviews.append(interview)
-            timeline.stage_events.append(interview.created_at)
 
     timeline.stage_events.sort()
     return timeline
@@ -335,6 +401,35 @@ def _make_session(
     return Session(created_at=created_at, scheduled_at=scheduled_at, completed_at=completed_at)
 
 
+def stall_probability(config: SyntheticConfig, timeline: ProcessTimeline) -> float:
+    """Probabilidad de que el proceso quede estancado y nunca cierre.
+
+    La censura es **informativa por diseno**: depende de las condiciones
+    operacionales del proceso, no de un sorteo independiente. Se construye en
+    escala logit alrededor de `stall_rate`, de modo que la tasa media se
+    mantiene cerca del valor configurado pero los procesos con mas friccion,
+    mas presion, menos capacidad o mas inactividad tienen mas riesgo.
+
+    La probabilidad se acota lejos de 0 y de 1: la censura nunca es
+    determinista, y sigue existiendo solapamiento entre censurados y
+    completados.
+
+    Es una decision de simulacion academica, no una observacion institucional.
+    """
+    base = float(np.clip(config.stall_rate, 1e-4, 0.9))
+    logit = float(np.log(base / (1.0 - base)))
+
+    latent = timeline.latent
+    logit += 0.85 * float(np.log(max(latent.coordination_friction, 1e-3)))
+    logit += 0.55 * float(np.log(max(latent.workload_pressure, 1e-3)))
+    logit -= 0.70 * float(np.log(max(latent.operational_capacity, 1e-3)))
+    logit += 0.30 * float(np.log(max(latent.random_shock, 1e-3)))
+    logit += 0.035 * float(timeline.days_since_last_event())
+
+    probability = 1.0 / (1.0 + np.exp(-logit))
+    return float(np.clip(probability, 0.005, 0.60))
+
+
 def resolve_closure(
     rng: np.random.Generator, config: SyntheticConfig, timeline: ProcessTimeline
 ) -> None:
@@ -344,15 +439,12 @@ def resolve_closure(
     y de un ruido irreducible. Por eso dos procesos con features identicas
     pueden terminar dentro y fuera de plazo.
     """
-    if bernoulli(rng, config.stall_rate):
+    timeline.stall_probability = stall_probability(config, timeline)
+    if bernoulli(rng, timeline.stall_probability):
         timeline.stalled = True
         timeline.closed_at = None
         return
 
-    # Coeficientes calibrados para que la configuracion por defecto
-    # (`delay_pressure=1.0`) situe la prevalencia en el centro de la banda
-    # aprobada 25-40 %. La calibracion es estructural: ajusta el proceso, no
-    # filtra etiquetas ni remuestrea el resultado.
     pending, overdue, unprocessed = timeline.pending_workload()
     base_days = (
         9.25

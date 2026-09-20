@@ -12,6 +12,7 @@ import pytest
 
 from recruitment_ml.schema import (
     ABLATION_FEATURES,
+    ABLATION_REQUIRED_IN_15B,
     AUXILIARY_COLUMNS,
     CORE_FEATURES,
     DATASET_COLUMNS,
@@ -23,8 +24,14 @@ from recruitment_ml.schema import (
     STATUS_COMPLETED,
     TARGET_COLUMN,
     is_forbidden_column,
+    tokenize_column,
 )
-from recruitment_ml.synthetic.validators import check_columns, check_ranges, check_uniqueness
+from recruitment_ml.synthetic.validators import (
+    check_columns,
+    check_ranges,
+    check_uniqueness,
+    validate_dataset,
+)
 
 
 def test_columns_match_the_contract_exactly(frame: pd.DataFrame) -> None:
@@ -61,10 +68,60 @@ def test_no_latent_factor_is_exported(frame: pd.DataFrame) -> None:
         "genero",
         "required_by",
         "target_completion_at",
+        # Variantes conceptuales exigidas por la auditoria
+        "final_result",
+        "selection_decision",
+        "total_duration_days",
+        "candidate_document_id",
+        "ranking_position",
+        "vacancy_closed_at",
+        "evaluator_phone",
+        "postulante_dni",
+        "applicant_scores",
+        # Otras convenciones de nombre
+        "candidateEmail",
+        "CandidateScore",
+        "candidate.email",
+        "candidate-email",
     ],
 )
 def test_known_offenders_are_detected(column: str) -> None:
     assert is_forbidden_column(column)
+
+
+@pytest.mark.parametrize(
+    "column",
+    [
+        # Falsos positivos clasicos de una busqueda por subcadena:
+        # "filename" contiene "name", "coverage" y "management" contienen "age".
+        "filename",
+        "coverage_ratio",
+        "management_latency",
+        "average_queue_days",
+        "stage_transition_count",
+        "concurrent_open_vacancies_count",
+        "days_remaining_to_target",
+        "observation_status",
+        "publication_channel",
+        "criteria_weight_total",
+    ],
+)
+def test_legitimate_operational_names_are_allowed(column: str) -> None:
+    """Un guardian con demasiados falsos positivos acaba desactivandose."""
+    assert not is_forbidden_column(column)
+
+
+@pytest.mark.parametrize(
+    ("column", "expected"),
+    [
+        ("candidate_email", ["candidate", "email"]),
+        ("candidateEmail", ["candidate", "Email"]),
+        ("days_remaining_to_target", ["days", "remaining", "to", "target"]),
+        ("coverage_ratio", ["coverage", "ratio"]),
+    ],
+)
+def test_tokenizer_splits_names_consistently(column: str, expected: list[str]) -> None:
+    assert tokenize_column(column) == expected
 
 
 @pytest.mark.parametrize("column", list(DATASET_COLUMNS))
@@ -177,3 +234,78 @@ def test_validator_detects_a_non_positive_remaining_horizon(frame: pd.DataFrame)
     corrupted.loc[0, "days_remaining_to_target"] = 0
 
     assert any("days_remaining_to_target" in problem for problem in check_ranges(corrupted))
+
+
+def test_validator_detects_a_missing_column(frame: pd.DataFrame) -> None:
+    corrupted = frame.drop(columns=["positions_count"])
+
+    assert any("columnas inesperadas" in problem for problem in check_columns(corrupted))
+
+
+def test_validator_detects_a_wrong_target_dtype(frame: pd.DataFrame) -> None:
+    corrupted = frame.copy()
+    corrupted[TARGET_COLUMN] = corrupted[TARGET_COLUMN].astype("float64")
+
+    assert any("Int64" in problem for problem in check_columns(corrupted))
+
+
+def test_validator_detects_nan_in_a_contractual_column(frame: pd.DataFrame) -> None:
+    corrupted = frame.copy()
+    corrupted["positions_count"] = corrupted["positions_count"].astype("float64")
+    corrupted.loc[0, "positions_count"] = float("nan")
+
+    assert any("NaN" in problem for problem in check_ranges(corrupted))
+
+
+def test_validator_detects_an_impossible_position_count(frame: pd.DataFrame) -> None:
+    corrupted = frame.copy()
+    corrupted.loc[0, "positions_count"] = 0
+
+    assert any("positions_count" in problem for problem in check_ranges(corrupted))
+
+
+def test_validator_detects_too_many_configured_stages(frame: pd.DataFrame) -> None:
+    """El CHECK real solo admite `evaluacion` e `entrevista`."""
+    corrupted = frame.copy()
+    corrupted.loc[0, "configured_stage_count"] = 5
+
+    assert any("configured_stage_count" in problem for problem in check_ranges(corrupted))
+
+
+def test_validator_detects_an_invalid_observation_status(frame: pd.DataFrame) -> None:
+    from recruitment_ml.synthetic.validators import check_censoring
+
+    corrupted = frame.copy()
+    corrupted.loc[0, "observation_status"] = "unknown"
+
+    assert any("inesperados" in problem for problem in check_censoring(corrupted))
+
+
+def test_validator_reports_a_manifest_that_does_not_declare_synthetic_data(dataset) -> None:
+    from dataclasses import replace as dataclass_replace
+
+    tampered_manifest = dict(dataset.manifest)
+    tampered_manifest["data_nature"] = "real"
+    tampered = dataclass_replace(dataset, manifest=tampered_manifest)
+
+    report = validate_dataset(tampered)
+    assert any("sinteticos" in problem for problem in report.issues)
+
+
+def test_validator_reports_an_incomplete_manifest(dataset) -> None:
+    from dataclasses import replace as dataclass_replace
+
+    tampered_manifest = dict(dataset.manifest)
+    tampered_manifest["dataset_fingerprint"] = ""
+    tampered = dataclass_replace(dataset, manifest=tampered_manifest)
+
+    report = validate_dataset(tampered)
+    assert any("manifiesto incompleto" in problem for problem in report.issues)
+
+
+def test_ablation_obligations_are_declared_for_15b() -> None:
+    """15B debe comparar el modelo con y sin estas features."""
+    assert "concurrent_open_vacancies_count" in ABLATION_REQUIRED_IN_15B
+    assert "elapsed_days_since_publication" in ABLATION_REQUIRED_IN_15B
+    for feature in ABLATION_REQUIRED_IN_15B:
+        assert feature in DATASET_COLUMNS

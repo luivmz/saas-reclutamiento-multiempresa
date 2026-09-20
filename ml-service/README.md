@@ -11,8 +11,8 @@ Componente Python del experimento académico de **riesgo operacional de retraso*
 | Estructura del paquete y configuración reproducible | Entrenamiento de modelos (15B) |
 | Generador sintético *event-first* | Split temporal, calibración y métricas (15B) |
 | Contrato de columnas y validaciones | scikit-learn, joblib, artefactos de modelo (15B) |
-| Suite de pruebas (116) | FastAPI, `/v1/predict`, `/health` (15C) |
-| CLI de generación | Docker del ML e integración con Laravel (15C/16) |
+| Suite de pruebas (182) | FastAPI, `/v1/predict`, `/health` (15C) |
+| CLI con manifiesto de linaje | Docker del ML e integración con Laravel (15C/16) |
 
 El modelo analiza **el proceso**, nunca a una persona. No puntúa, ordena, recomienda ni descarta postulantes.
 
@@ -40,6 +40,8 @@ Requiere Python ≥ 3.12. Dependencias fijadas: `numpy==2.1.3`, `pandas==2.2.3`,
 ```
 
 Opciones: `--rows`, `--seed`, `--organizations`, `--months`, `--output`, `--model-ready` (exporta solo las filas etiquetadas).
+
+Cada exportación escribe además `<output>.manifest.json` con su linaje. **La huella anunciada es siempre la del frame realmente escrito**: en modo `model-ready` el hash corresponde a las filas etiquetadas, no al dataset completo. El manifiesto incluye ambas (`dataset_fingerprint` del modo exportado y `full_dataset_fingerprint` / `model_ready_fingerprint`), y `generated_at` queda fuera de toda huella para que la parte científica sea reproducible.
 
 **La salida nunca se versiona.** `artifacts/` y todo `*.csv`, `*.parquet`, `*.pkl`, `*.joblib` dentro de `ml-service/` están en `.gitignore`.
 
@@ -88,19 +90,27 @@ El orden no es negociable: **la etiqueta nunca se calcula a partir del vector de
 
 Los factores latentes (`operational_capacity`, `coordination_friction`, `workload_pressure`, `random_shock`, `period_effect`) existen solo en memoria y **nunca se exportan**. Son la causa común que hace que features y desenlace covaríen sin que el target sea una función de las features.
 
+### Historial de etapas
+
+Se modela la semántica real, verificada en el código: `ApplicationService::apply()` crea **un** `ApplicationStageHistory` inicial (`null → postulado`) en el mismo instante que `applied_at`, y `ApplicationStageService::transition()` crea **uno** por cada cambio posterior. Por eso toda postulación anterior al checkpoint aporta al menos un evento, y `stage_transition_count` nunca puede ser menor que `applications_received_count`.
+
 ## Features
 
 15 columnas model-ready: las 14 del núcleo del contrato más `days_remaining_to_target`.
 
-`evaluations_pending_count` e `interviews_pending_count` se generan como **auxiliares** para validar la identidad `pending = scheduled − completed`, pero quedan fuera de X por ser colinealidad exacta. `configured_stage_count` queda marcada como **ablation**: su cardinalidad máxima real es 2.
+`evaluations_pending_count` e `interviews_pending_count` se generan como **auxiliares** para validar la identidad `pending = scheduled − completed`, pero quedan fuera de X por ser colinealidad exacta.
 
-Las variables prohibidas están en `schema.py` y las comprueba `is_forbidden_column`, por nombre exacto **y** por fragmento: `evaluation_score` o `vacancy_closed_at` quedan bloqueadas igual que `score` o `closed_at`.
+`ABLATION_REQUIRED_IN_15B` declara las features que 15B **debe** comparar entrenando con y sin ellas: `concurrent_open_vacancies_count` (crece con el calendario), `configured_stage_count` (cardinalidad máxima 2) y `elapsed_days_since_publication` (casi colineal con la ventana por construcción del checkpoint).
+
+Las variables prohibidas están en `schema.py` y las comprueba `is_forbidden_column`, **por token completo y no por subcadena**: `evaluation_score` queda bloqueada por el token `score`, mientras `coverage_ratio`, `management_latency` y `filename` pasan, porque una búsqueda de subcadenas los bloquearía por contener «age» o «name».
 
 ## Censura
 
 Un proceso estancado **nunca cierra**, porque cerrar exige decisión y selección humanas. Esos procesos se marcan `observation_status = "censored"`, su etiqueta queda `NA` y **no entran** en el conjunto supervisado. No se les asigna `0` ni `1` bajo ninguna circunstancia.
 
-El manifiesto reporta `censored_total`, `censored_stalled`, `censored_observation_window` y `censoring_ratio`. La tasa se configura con `stall_rate`.
+La censura es **informativa por diseño**: la probabilidad de estancamiento se construye en escala logit alrededor de `stall_rate` y depende de la fricción de coordinación, la presión de carga, la capacidad operativa, el shock y los días sin actividad. Está acotada a `[0.005, 0.60]`, de modo que nunca es determinista y siempre existe solapamiento entre censurados y completados. **Es una decisión de simulación académica, no una observación institucional.**
+
+El manifiesto reporta `censored_total`, `censored_stalled`, `censored_observation_window`, `censoring_ratio`, `censoring_mechanism` y `censoring_comparison`, esta última con las diferencias de medias estandarizadas (SMD) entre censurados y completados.
 
 ## Pruebas
 
@@ -109,12 +119,14 @@ El manifiesto reporta `censored_total`, `censored_stalled`, `censored_observatio
 .venv/Scripts/python.exe -m pytest --cov=recruitment_ml --cov-report=term-missing
 ```
 
-116 pruebas, 95 % de cobertura. Cubren reproducibilidad, esquema, integridad temporal, ausencia de fuga, censura, prevalencia, drift, multiempresa, configuración inválida y CLI. Incluyen **pruebas negativas**: corrompen el dataset a propósito y exigen que cada validador se dispare.
+182 pruebas, 97 % de cobertura. Cubren reproducibilidad, huellas por modo de exportación, manifiesto, esquema, semántica del historial de etapas, integridad temporal, ausencia de fuga, censura informativa, prevalencia, drift, multiempresa, configuración inválida y CLI. Incluyen **pruebas negativas**: corrompen el dataset a propósito y exigen que cada validador se dispare.
 
 ## Limitaciones conocidas
 
 1. **Los datos son sintéticos.** Un buen resultado demostraría que el método es correcto, no que funcionaría en la institución del caso de estudio.
 2. **`target_completion_at` no existe en Laravel.** Está aprobado conceptualmente; su implementación es `GAP-01`. Mientras siga abierta, `days_remaining_to_target` no es computable en producción y **el modelo no es desplegable** aunque el experimento tenga éxito.
-3. **`concurrent_open_vacancies_count` crece con el tiempo**, en parte porque los procesos estancados permanecen abiertos indefinidamente. Es fiel al dominio real (no existe cancelación, A-22) y produce un drift intencionado, pero la correlación de la feature con el calendario (≈0.64 en el dataset de referencia) debe tenerse presente al interpretar el split temporal.
-4. **Las distribuciones son supuestos académicos**, no estadísticas observadas de ninguna institución.
-5. **La prevalencia está calibrada estructuralmente**, ajustando el proceso y nunca filtrando etiquetas ni remuestreando.
+3. **`concurrent_open_vacancies_count` crece con el calendario** (Pearson 0.685, Spearman 0.708 frente al tiempo en el dataset de referencia), en buena parte porque los procesos estancados permanecen abiertos indefinidamente: su correlación con la censura acumulada es 0.685. Es fiel al dominio real, donde no existe cancelación (A-22), y produce el drift buscado, pero **15B debe comparar el modelo con y sin esta feature**.
+4. **`elapsed_days_since_publication` y `application_window_days` quedan casi colineales** (Pearson 0.972). La identidad exacta universal se eliminó generando un desfase entre publicación y apertura de postulaciones, pero la redundancia residual es estructural: el checkpoint se define como `closes_at + 1`. Donde `opens_at` es nulo la identidad es definicional, por la propia regla de respaldo del contrato.
+5. **Las distribuciones son supuestos académicos**, no estadísticas observadas de ninguna institución.
+6. **La prevalencia está calibrada estructuralmente**, ajustando el proceso y nunca filtrando etiquetas ni remuestreando.
+7. **La censura es informativa por diseño**, no MCAR. 15B debe evaluar el sesgo de selección, no solo declararlo.

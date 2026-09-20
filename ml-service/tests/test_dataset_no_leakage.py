@@ -6,13 +6,16 @@ conclusiones falsas: es el modo de fallo mas peligroso de todo el experimento.
 
 from __future__ import annotations
 
+from copy import deepcopy
+from dataclasses import replace
 from datetime import timedelta
 
 import numpy as np
 import pandas as pd
 
 from recruitment_ml.schema import MODEL_READY_FEATURES, STATUS_CENSORED, STATUS_COMPLETED, TARGET_COLUMN
-from recruitment_ml.synthetic.timeline import ProcessTimeline, Session
+from recruitment_ml.synthetic.generator import build_dataset
+from recruitment_ml.synthetic.timeline import ProcessTimeline, Session, stall_probability
 from recruitment_ml.synthetic.validators import SUSPICIOUS_CORRELATION, check_censoring, check_leakage_signals
 
 
@@ -173,3 +176,84 @@ def test_censoring_guard_detects_an_unlabelled_completed_row(frame: pd.DataFrame
 
     problems = check_censoring(corrupted)
     assert any("completados sin etiqueta" in problem for problem in problems)
+
+
+# --- MEDIUM-03: la censura es informativa, no MCAR ni determinista --------
+
+
+def test_stall_probability_depends_on_operational_conditions(
+    config, timelines: list[ProcessTimeline]
+) -> None:
+    """Mas friccion y menos capacidad deben elevar el riesgo de estancamiento."""
+    easy = deepcopy(timelines[0])
+    hard = deepcopy(timelines[0])
+    easy.latent = replace(
+        easy.latent, coordination_friction=0.6, operational_capacity=1.6, workload_pressure=0.5
+    )
+    hard.latent = replace(
+        hard.latent, coordination_friction=1.7, operational_capacity=0.7, workload_pressure=2.5
+    )
+
+    assert stall_probability(config, hard) > stall_probability(config, easy), (
+        "la censura debe depender de las condiciones operacionales"
+    )
+
+
+def test_stall_probability_rises_with_inactivity(config, timelines: list[ProcessTimeline]) -> None:
+    active = deepcopy(timelines[0])
+    idle = deepcopy(timelines[0])
+    idle.application_times.clear()
+    idle.stage_events.clear()
+    idle.evaluations.clear()
+    idle.interviews.clear()
+
+    assert stall_probability(config, idle) >= stall_probability(config, active)
+
+
+def test_stall_probability_is_never_deterministic(
+    config, timelines: list[ProcessTimeline]
+) -> None:
+    """Ningun proceso puede tener censura garantizada ni imposible."""
+    probabilities = [stall_probability(config, timeline) for timeline in timelines]
+
+    assert all(0.0 < value < 1.0 for value in probabilities)
+    assert max(probabilities) <= 0.60
+    assert min(probabilities) >= 0.005
+
+
+def test_censored_and_completed_differ_without_separating_perfectly(dataset) -> None:
+    """Debe haber diferencia medible y, a la vez, solapamiento amplio."""
+    comparison = dataset.manifest["censoring_comparison"]
+    assert comparison["available"]
+
+    differences = comparison["standardised_mean_differences"]
+    largest = max(abs(value) for value in differences.values())
+
+    assert largest > 0.05, "la censura seria practicamente MCAR"
+    assert largest < 1.5, "una separacion tan grande delataria censura casi determinista"
+    assert dataset.manifest["censoring_mechanism"] == "informative-by-design"
+
+
+def test_censored_and_completed_overlap_in_the_feature_space(frame: pd.DataFrame) -> None:
+    censored = frame[frame["observation_status"] == STATUS_CENSORED]
+    completed = frame[frame["observation_status"] == STATUS_COMPLETED]
+
+    for column in ("days_since_last_operational_event", "applications_received_count"):
+        low = max(censored[column].min(), completed[column].min())
+        high = min(censored[column].max(), completed[column].max())
+        assert low <= high, f"{column}: los rangos no se solapan"
+
+
+def test_censoring_is_reproducible(dataset) -> None:
+    repeated = build_dataset(dataset.config)
+
+    assert repeated.manifest["censored_total"] == dataset.manifest["censored_total"]
+    assert repeated.manifest["censoring_ratio"] == dataset.manifest["censoring_ratio"]
+    pd.testing.assert_series_equal(
+        repeated.frame["observation_status"], dataset.frame["observation_status"]
+    )
+
+
+def test_censoring_ratio_stays_in_a_reasonable_range(dataset) -> None:
+    ratio = dataset.manifest["censoring_ratio"]
+    assert 0.01 < ratio < 0.30, f"tasa de censura fuera de rango razonable: {ratio}"

@@ -7,6 +7,7 @@ prohibida. Los validadores y las pruebas leen de aqui, no de listas duplicadas.
 
 from __future__ import annotations
 
+import re
 from typing import Final
 
 #: ML-FEAT-01, 03..06, 08, 09, 11..13, 15..18. Nucleo aprobado y computable hoy
@@ -94,80 +95,142 @@ FORBIDDEN_COLUMNS: Final[tuple[str, ...]] = (
     "target_completion_at",
 )
 
-#: Fragmentos prohibidos: cualquier columna que los contenga delata identidad,
-#: atributo sensible, proxy socioeconomico, contenido textual o resultado sobre
-#: una persona.
-FORBIDDEN_TOKENS: Final[tuple[str, ...]] = (
-    "nombre",
-    "apellido",
-    "name",
-    "dni",
-    "email",
-    "correo",
-    "phone",
-    "telefono",
-    "address",
-    "direccion",
-    "photo",
-    "foto",
-    "age",
-    "edad",
-    "birth",
-    "nacimiento",
-    "gender",
-    "genero",
-    "sexo",
-    "nationality",
-    "nacionalidad",
-    "marital",
-    "civil",
-    "race",
-    "raza",
-    "ethnic",
-    "etnia",
-    "religion",
-    "sexual",
-    "health",
-    "salud",
-    "disab",
-    "discapacidad",
-    "ideolog",
-    "union",
-    "sindical",
-    "biometric",
-    "biometr",
-    "university",
-    "universidad",
-    "school",
-    "cv",
-    "resume",
-    "embedding",
-    "comment",
-    "comentario",
-    "text",
-    "candidate",
-    "postulante",
-    "selected",
-    "seleccion",
-    "decision",
-    # Resultados sobre personas y datos posteriores al checkpoint. Van como
-    # fragmento y no solo como nombre exacto: `evaluation_score` o
-    # `vacancy_closed_at` deben quedar bloqueados igual que `score` o
-    # `closed_at`.
-    "score",
-    "puntaje",
-    "rank",
-    "outcome",
-    "closed",
-    "closure",
-    "justification",
-    "justificacion",
-    "observation",
-    "observacion",
+#: Palabras prohibidas, comparadas **por token** y no por subcadena.
+#:
+#: La distincion importa: buscar la subcadena "age" bloquearia `coverage_ratio`
+#: y `management_latency`, y buscar "name" bloquearia `filename`. Tokenizando
+#: por separadores y comparando palabras completas, `evaluation_score` queda
+#: bloqueada por el token "score" mientras `coverage_ratio` pasa.
+FORBIDDEN_WORDS: Final[frozenset[str]] = frozenset(
+    {
+        # Identidad y contacto
+        "nombre",
+        "nombres",
+        "apellido",
+        "apellidos",
+        "name",
+        "names",
+        "fullname",
+        "firstname",
+        "lastname",
+        "dni",
+        "email",
+        "correo",
+        "mail",
+        "phone",
+        "telefono",
+        "address",
+        "direccion",
+        "photo",
+        "foto",
+        # Atributos demograficos y sensibles
+        "age",
+        "edad",
+        "birth",
+        "birthdate",
+        "nacimiento",
+        "gender",
+        "genero",
+        "sexo",
+        "sex",
+        "nationality",
+        "nacionalidad",
+        "marital",
+        "race",
+        "raza",
+        "ethnic",
+        "ethnicity",
+        "etnia",
+        "religion",
+        "sexual",
+        "health",
+        "salud",
+        "disability",
+        "discapacidad",
+        "ideology",
+        "ideologia",
+        "sindical",
+        "biometric",
+        "biometrico",
+        # Proxies socioeconomicos
+        "university",
+        "universidad",
+        "school",
+        "colegio",
+        # Contenido textual
+        "cv",
+        "resume",
+        "curriculum",
+        "embedding",
+        "embeddings",
+        "comment",
+        "comentario",
+        "observations",
+        "observaciones",
+        "justification",
+        "justificacion",
+        "text",
+        "texto",
+        # Personas y resultados sobre personas
+        "candidate",
+        "candidato",
+        "postulante",
+        "applicant",
+        "evaluator",
+        "user",
+        "selected",
+        "selection",
+        "seleccion",
+        "seleccionado",
+        "decision",
+        "score",
+        "scores",
+        "puntaje",
+        "rank",
+        "ranking",
+        "outcome",
+        "result",
+        "results",
+        "resultado",
+        "final",
+        "finalist",
+        # Datos posteriores al checkpoint
+        "closed",
+        "closure",
+        "cierre",
+        "duration",
+        "duracion",
+        "document",
+        "documento",
+    }
 )
+
+#: Prefijos/sufijos legitimos que nunca deben tokenizarse como prohibidos.
+#: `days_remaining_to_target` contiene "target" y es una feature valida: una
+#: diferencia de dias conocida en el checkpoint, no el plazo en si.
+ALLOWED_WORDS: Final[frozenset[str]] = frozenset({"target", "status", "count", "days"})
 
 #: Columnas que forman la matriz X del modelo.
 MODEL_READY_FEATURES: Final[tuple[str, ...]] = CORE_FEATURES + CONDITIONAL_FEATURES
+
+#: Features que se conservan en X pero cuya contribucion **debe** compararse en
+#: 15B entrenando con y sin ellas.
+#:
+#: `concurrent_open_vacancies_count` crece con el calendario porque los procesos
+#: estancados permanecen abiertos indefinidamente, fiel al dominio real donde no
+#: existe cancelacion (A-22). Es informativa, pero 15B tiene que demostrar que
+#: el modelo no esta aprendiendo simplemente el paso del tiempo.
+#: `elapsed_days_since_publication` y `application_window_days` quedan casi
+#: colineales por construccion del checkpoint: al definirse como `closes_at + 1`,
+#: el tiempo transcurrido desde la publicacion es la ventana mas el desfase entre
+#: publicar y abrir postulaciones. La identidad exacta se elimino generando ese
+#: desfase, pero la correlacion residual sigue siendo alta y es una propiedad del
+#: diseno aprobado, no un defecto del generador.
+ABLATION_REQUIRED_IN_15B: Final[tuple[str, ...]] = (
+    "concurrent_open_vacancies_count",
+    "configured_stage_count",
+    "elapsed_days_since_publication",
+)
 
 #: Orden canonico de columnas del dataset exportado.
 DATASET_COLUMNS: Final[tuple[str, ...]] = (
@@ -189,17 +252,41 @@ STATUS_COMPLETED: Final[str] = "completed"
 STATUS_CENSORED: Final[str] = "censored"
 
 
+def tokenize_column(column: str) -> list[str]:
+    """Descompone un nombre de columna en palabras comparables.
+
+    Separa por guiones, guiones bajos, puntos, espacios y por los limites de
+    camelCase, y normaliza a minusculas. `candidateEmail`, `candidate_email` y
+    `Candidate.Email` producen los mismos tokens.
+    """
+    spaced = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", column)
+    return [token for token in re.split(r"[^A-Za-z0-9]+", spaced) if token]
+
+
+def _is_forbidden_word(token: str) -> bool:
+    """True si el token es una palabra prohibida, admitiendo plural simple."""
+    lowered = token.lower()
+    if lowered in ALLOWED_WORDS:
+        return False
+    if lowered in FORBIDDEN_WORDS:
+        return True
+    # Plural regular: `scores` -> `score`, `candidates` -> `candidate`.
+    if len(lowered) > 3 and lowered.endswith("s") and lowered[:-1] in FORBIDDEN_WORDS:
+        return True
+    return False
+
+
 def is_forbidden_column(column: str) -> bool:
     """True si el nombre de columna viola el contrato de features.
 
-    La comprobacion es por nombre exacto y por fragmento, porque una columna
-    prohibida puede colarse con un nombre derivado.
+    Se comprueba por nombre exacto y por **token completo**, no por subcadena:
+    `coverage_ratio`, `management_latency` y `filename` son nombres
+    operacionales legitimos que una busqueda de subcadenas bloquearia por
+    contener "age" o "name".
     """
     lowered = column.lower()
     if lowered in {c.lower() for c in FORBIDDEN_COLUMNS}:
         return True
-    # `days_remaining_to_target` es legitima aunque contenga "target": es una
-    # diferencia de dias conocida en el checkpoint, no el plazo en si.
     if lowered in {c.lower() for c in DATASET_COLUMNS}:
         return False
-    return any(token in lowered for token in FORBIDDEN_TOKENS)
+    return any(_is_forbidden_word(token) for token in tokenize_column(column))
