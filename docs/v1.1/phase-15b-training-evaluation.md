@@ -26,7 +26,7 @@ Sin oversampling, undersampling, SMOTE ni reetiquetado. `class_weight` se compar
 
 ## 2. Partición temporal 70/15/15
 
-Ordenada por `checkpoint_at`, con desempate determinista por `vacancy_id`.
+Ordenada por `checkpoint_at`. **Los empates de timestamp se resuelven de forma determinista por `vacancy_id`**, de modo que un mismo instante puede aparecer a ambos lados de una frontera: el corte es por posición tras un orden determinista, **no por desigualdad estricta de tiempo fila a fila**, y el resultado no afirma lo contrario. No hay fuga demostrada por esta causa y el diseño no se modificó.
 
 | Partición | n | Prevalencia | Orgs | Desde | Hasta |
 |---|---|---|---|---|---|
@@ -40,9 +40,22 @@ La prevalencia sube de train a validation/test: es el drift moderado que el gene
 
 ## 3. Conjunto de prueba sellado
 
-`SealedTestSet` solo entrega sus filas cuando existe un `ExperimentFreeze` con `is_frozen=True`. Intentarlo antes lanza `SealedTestSetError`. Cada apertura queda contada y el resultado reporta `test_reveal_count`.
+`SealedTestSet` es una **garantía de protocolo de software**, no una barrera criptográfica ni una prueba histórica. Entrega sus filas solo cuando recibe un `ExperimentFreeze` que:
 
-**En la ejecución de referencia, `test_reveal_count = 1`.** `describe()` sí está disponible antes del freeze, porque documentar la partición es legítimo; entrenar con ella no.
+1. es del tipo del dominio — un objeto cualquiera con `is_frozen=True` **no** sirve;
+2. declara la versión de contrato vigente;
+3. **fue persistido y recargado desde disco** (`source_path` no nulo);
+4. conserva su integridad: el contenido coincide con `freeze_fingerprint`;
+5. corresponde a **este** dataset y a **esta** partición (`dataset_fingerprint` y `split_signature`);
+6. está completo: features, modelo, umbral y regla presentes.
+
+Cualquier fallo lanza `SealedTestSetError`.
+
+**Lo que `describe()` ya no expone.** Antes de revelar, devuelve solo `n`, organizaciones y el periodo, con `labels_disclosed: false`. **No informa de la prevalencia ni del número de positivos**: documentar el tamaño de la partición es legítimo, conocer su distribución de clases antes de congelar el protocolo no lo es. Tras el reveal, sí los incluye.
+
+Las filas viven en un atributo con *name mangling*, no en un campo público. **Esto reduce las rutas accidentales de acceso; no las hace imposibles.** Quien tenga acceso al proceso puede leer el atributo privado, y no se afirma lo contrario.
+
+**`test_reveal_count` cuenta las aperturas de esta instancia en esta ejecución.** No es un registro histórico y **no demuestra** cuántas veces se observó el conjunto de prueba a lo largo del proyecto. El resultado lo declara explícitamente en `test_reveal_count_scope`.
 
 ## 4. Modelos y configuraciones
 
@@ -89,11 +102,13 @@ La Fase 14 prohibió fijar un umbral arbitrario y **no aprobó ninguna cifra** d
 
 | Campo | Valor |
 |---|---|
-| Umbral seleccionado | **0.167942** |
+| **Umbral seleccionado (valor exacto)** | **`0.1679418172266036`** |
 | Suelo de precision / recall | 0.4500 / 0.342857 |
 | Umbrales elegibles | 554 de 830 |
 | Precision / Recall / F2 en validation | 0.5169 / 0.9206 / 0.7963 |
 | `floor_satisfied` | `true` |
+
+**El umbral se persiste con toda su precisión.** Una versión redondeada a seis decimales (`0.167942`) cambia la clasificación de observaciones en la frontera y las métricas dejan de reproducirse. El freeze guarda el `float` exacto en `threshold`; `threshold_display` existe solo para lectura humana y **nunca** debe usarse para inferir.
 
 ### Por qué la regla cambió durante la fase
 
@@ -101,7 +116,13 @@ La primera versión solo ponía un suelo de precision y después maximizaba reca
 
 La regla se corrigió a «dominar al baseline en ambos ejes y después maximizar F2», que conserva la orientación al recall sin degenerar. La tasa de alerta bajó a 67.6 % en validation.
 
-**Divulgación de procedimiento:** la corrección se decidió a partir de una observación **de validation** (la tasa de alerta). Una primera ejecución completa ya había impreso la AP de test; como **AP es invariante al umbral**, esa cifra no pudo influir en la elección. Ninguna métrica de test dependiente del umbral fue inspeccionada antes de la corrección. Se documenta para que la auditoría pueda verificarlo.
+### Contaminación procedimental menor
+
+La corrección se decidió a partir de una observación **de validation** (la tasa de alerta). Pero una primera ejecución completa ya había impreso la AP de test antes de cerrar la versión final de la regla.
+
+Se clasifica como **MINOR PROCEDURAL CONTAMINATION** y queda registrada en las limitaciones conocidas del propio freeze. AP es invariante al umbral, y ninguna métrica de test dependiente del umbral se inspeccionó antes de la corrección, así que el efecto sobre la decisión es nulo por construcción.
+
+Aun así, **este conjunto no puede describirse como *pristine holdout* ni como *never seen holdout***. Se denomina **holdout de evaluación final con contaminación procedimental menor documentada**.
 
 ## 7. Calibración
 
@@ -115,20 +136,39 @@ Ajustada con `CalibratedClassifierCV(method='sigmoid', cv=5)` **solo sobre train
 
 **Decisión: no se adopta la calibración.** La regla exige mejorar Brier **y** ECE sin perder más de 0.01 de AP; aquí el ECE empeora. El modelo sin calibrar ya está bien calibrado (ECE 0.026 en validation, 0.041 en test).
 
-## 8. Freeze
+**Nota para fases futuras.** La calibración se evaluó con `StratifiedKFold` aleatorio dentro de train. Como fue rechazada, no forma parte del modelo final y no se reentrenó nada por este motivo. Si alguna fase posterior la reconsidera, sería preferible usar **folds temporales** en lugar de validación cruzada aleatoria, para no mezclar periodos dentro del ajuste.
 
-Registrado **antes** de abrir el test, en `docs/v1.1/ml/phase-15b-experiment-freeze.json`:
+## 8. Freeze: protocolo previo al test
 
-- conjunto de features: `core` (15 features);
-- modelo: `logistic_regression`, `C=10.0`, `class_weight=None`;
-- preprocesamiento: `StandardScaler` dentro del `Pipeline`;
-- calibración: no;
-- umbral: 0.167942, con su regla;
-- semilla: 20260920;
-- huellas del dataset y de la configuración;
-- métricas de validation;
-- decisión de ablations;
-- **criterios del veredicto**, fijados antes de ver el test.
+El orden lo impone el código, no una convención: **el protocolo se escribe en disco, se recarga y se verifica antes de que exista ningún número de test.**
+
+```
+selección con train/validation
+  → construir freeze  → persist_freeze(ruta)   ← el artefacto ya existe en disco
+  → load_freeze(ruta) → verificar integridad
+  → sealed_test.reveal(freeze_recargado)       ← recién aquí se abre el test
+  → evaluar test → artefacto de resultados separado
+```
+
+El freeze que abre el conjunto de prueba es **el recargado desde disco**, de modo que el artefacto versionado es literalmente el que autorizó la revelación.
+
+### Contenido del protocolo
+
+`docs/v1.1/ml/phase-15b-experiment-freeze.json` — huella `1aff7c539dee99d17a7c8bf7c8204339ada8b069d220ade84d734412269ca2fa`:
+
+`schema_version` · `experiment_id` · `seed` · `dataset_fingerprint` · `config_fingerprint` · `split_signature` · `split_definition` · `feature_set` y `features` (15) · `excluded_features` · `ablation_feature_sets` · `preprocessing` · `model_family` y `model_params` · **`threshold` exacto** y `threshold_rule` · `threshold_selection` · `calibration_decision` · `validation_metrics` · `validation_baselines` · `ablation_conclusions` · `verdict_rule` · **`known_limitations`** · `frozen_at` · `freeze_fingerprint`.
+
+### Lo que el freeze NO contiene
+
+**Ningún resultado de test.** El campo `contains_test_results` lo declara explícitamente y una prueba verifica que ninguna clave del protocolo aloje métricas medidas sobre el test.
+
+### La huella
+
+Se calcula sobre el protocolo **excluyendo `frozen_at` y la propia huella**. Así es reproducible entre ejecuciones —dos corridas con la misma configuración producen la misma huella— y a la vez detecta cualquier alteración: cambiar el modelo, el umbral o las features rompe la verificación, y un archivo manipulado es rechazado al cargarse.
+
+## 8bis. Resultados post-test, en artefacto separado
+
+`docs/v1.1/ml/phase-15b-test-results.json` contiene las métricas de test, los baselines, el análisis por organización, la estabilidad temporal, el veredicto y las limitaciones. **Referencia `freeze_fingerprint`**: la dependencia va de resultados a protocolo, nunca al revés.
 
 ## 9. Resultado final en test
 
@@ -164,7 +204,7 @@ Con la configuración seleccionada, sin reajustar hiperparámetros, evaluadas en
 
 **Lectura:**
 
-- **`concurrent_open_vacancies_count`**: quitarla degrada AP en 0.0100. Aporta señal moderada y queda **por debajo** de la tolerancia de 0.02 fijada antes del freeze, así que no se declara dependencia de atajo temporal. Aun así es la feature con mayor efecto y la que más conviene vigilar.
+- **`concurrent_open_vacancies_count`**: quitarla degrada AP en **0.0100** (0.7574 → 0.7474). La dependencia observada es **pequeña o moderada en este experimento**. Se reporta de forma **descriptiva**: no existe ningún umbral preregistrado en la Fase 14 que convierta esta diferencia en un criterio de aprobación, y **no se usa como criterio de gate**. Sigue siendo la feature con mayor efecto y la que más conviene vigilar por su correlación con el calendario.
 - **`elapsed_days_since_publication`**: quitarla no degrada nada (−0.0002). **El modelo no depende de ella**, lo que resuelve la preocupación por su colinealidad con `application_window_days` (Pearson 0.972): su peso es intercambiable, no imprescindible.
 - **`configured_stage_count`**: añadirla no mejora (−0.0004). **Se mantiene fuera del núcleo.**
 
@@ -223,26 +263,32 @@ Intercepto −1.2317.
 
 Criterios fijados **antes** de abrir el test, todos comparativos:
 
+Criterios comparativos, todos anclados en un baseline y **fijados en el freeze antes de abrir el test**:
+
 | Criterio | Resultado |
 |---|---|
-| AP(test) > AP(test) del dummy | ✅ 0.7691 > 0.3807 |
-| AP(test) > AP(test) del baseline operacional | ✅ 0.7691 > 0.4252 |
-| Brier Skill Score(test) > 0 | ✅ 0.3413 |
+| AP(test) por encima de la del dummy | ✅ 0.7691 > 0.3807 |
+| AP(test) por encima de la del baseline operacional | ✅ 0.7691 > 0.4252 |
+| Brier Skill Score(test) positivo | ✅ 0.3413 |
 | Margen sobre el baseline preservado | ✅ 0.3439 en test frente a 0.3537 en validation |
-| No dependiente de proxy temporal | ✅ ablation de concurrency −0.0100, por debajo de la tolerancia 0.02 |
+| Persisten limitaciones conocidas | ✅ sí → el veredicto **no** puede ser GO a secas |
 
-### **PREDICTIVE GO**
+### **PREDICTIVE GO WITH LIMITATIONS**
 
-El modelo supera con holgura a ambos baselines, está razonablemente calibrado, es estable en el tiempo y no depende de una feature proxy del calendario.
+El modelo supera con holgura a ambos baselines, está razonablemente calibrado y es estable en el tiempo. **Las limitaciones conocidas, registradas en el freeze antes de ver el test, degradan el veredicto de GO a GO CON LIMITACIONES**; no es un matiz de redacción, es la regla `limitations_downgrade_the_verdict` del protocolo.
 
-### Limitaciones que acompañan al GO
+### Limitaciones
 
-1. **Tasa de alerta alta:** 73.5 % en test. Con recall 0.933 y precision 0.484, el punto de operación marca tres de cada cuatro procesos. Es consecuencia directa de una regla recall-oriented, y **es el principal problema de diseño para la interfaz de 15C**.
-2. **F2 poco discriminante en este régimen:** el dummy «alertar sobre todo» obtiene F2 0.7545 frente al 0.7871 del modelo. La comparación significativa es la AP (0.769 vs 0.381), no F2.
-3. **Datos sintéticos:** el resultado demuestra que el método es correcto, no que funcionaría en el Colegio Andino de Huancayo.
-4. **Heterogeneidad por organización:** AP entre 0.476 y 0.840.
-5. **Censura informativa:** sesgo de selección hacia procesos terminados.
-6. **Colinealidad:** los coeficientes no son interpretables como importancia relativa.
+1. **Tasa de alerta alta:** 73.5 % en test. Con recall 0.933 y precision 0.484, el punto de operación marca tres de cada cuatro procesos. Es el principal problema de diseño para la interfaz de 15C.
+2. **F2 solo mejora modestamente sobre «alertar siempre»:** el dummy obtiene F2 0.7545 frente al 0.7871 del modelo. La comparación significativa es la AP (0.769 vs 0.381), no F2.
+3. **Heterogeneidad alta por organización sintética:** AP entre 0.476 y 0.840.
+4. **La organización 1 es débil y con muestra pequeña:** AP 0.476 con n=67 y prevalencia 0.239. No debe sobreinterpretarse.
+5. **Censura informativa:** sesgo de selección hacia procesos que cerraron.
+6. **Datos 100 % sintéticos:** el resultado demuestra método, no validez institucional.
+7. **Colinealidad fuerte:** los coeficientes no son interpretables como importancia relativa.
+8. **`concurrent_open_vacancies_count` como posible proxy temporal:** correlaciona 0.685 con el calendario; su ablation cuesta 0.0100 de AP.
+9. **MINOR PROCEDURAL CONTAMINATION:** la AP de test se observó antes de cerrar la versión final de la regla de umbral (§6).
+10. **`GAP-01` abierto** y **sin validez institucional**: el modelo **no es desplegable**.
 
 ### **GAP-01 y despliegue**
 
@@ -256,7 +302,7 @@ Semilla `20260920` en dataset, split, modelos y calibración. Dos ejecuciones co
 
 ## 17. Pruebas
 
-**264 pruebas, 0 fallos, 97 % de cobertura** (las 182 de 15A siguen pasando; 82 nuevas).
+**285 pruebas, 0 fallos, 97 % de cobertura** (las 182 de 15A siguen pasando; 103 nuevas de 15B).
 
 | Archivo nuevo | Pruebas | Garantía |
 |---|---|---|
@@ -267,6 +313,7 @@ Semilla `20260920` en dataset, split, modelos y calibración. Dos ejecuciones co
 | `test_threshold_selection.py` | 10 | Regla relativa, sin degenerar, determinista |
 | `test_temporal_split.py` | 9 | Cronología, sin solapamiento, censurados fuera |
 | `test_ablation.py` | 9 | Las tres obligaciones de la auditoría cubiertas |
+| `test_freeze_contract.py` | 16 | Persistencia previa al reveal, integridad, rechazo de freeze inválido y **reconstrucción de predicciones desde el artefacto** |
 
 ## 18. Qué NO se implementó
 

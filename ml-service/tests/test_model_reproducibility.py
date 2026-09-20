@@ -110,7 +110,10 @@ def test_whole_experiment_is_reproducible() -> None:
     second = run_experiment(rows=800, include_optional_model=False).to_dict()
 
     assert first["dataset"]["model_ready_fingerprint"] == second["dataset"]["model_ready_fingerprint"]
-    assert first["freeze"] == second["freeze"]
+    # `frozen_at` es metadato operativo y varia entre ejecuciones; la huella
+    # del protocolo, que lo excluye, debe ser identica.
+    assert first["freeze"]["freeze_fingerprint"] == second["freeze"]["freeze_fingerprint"]
+    assert first["freeze"]["threshold"] == second["freeze"]["threshold"]
     assert first["test"] == second["test"]
     assert first["verdict"]["decision"] == second["verdict"]["decision"]
 

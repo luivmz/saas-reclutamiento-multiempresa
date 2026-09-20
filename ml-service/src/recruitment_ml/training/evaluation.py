@@ -44,7 +44,10 @@ def evaluate_predictions(
     metrics: dict[str, Any] = {
         "n": int(len(y_true)),
         "prevalence": round(prevalence, 6),
-        "threshold": round(float(threshold), 6),
+        # El umbral se conserva con toda su precision: redondearlo cambiaria
+        # clasificaciones en la frontera y las metricas dejarian de reproducirse.
+        "threshold": float(threshold),
+        "threshold_display": round(float(threshold), 6),
         "average_precision": round(float(average_precision_score(y_true, y_score)), 6),
         "roc_auc": round(float(roc_auc_score(y_true, y_score)), 6),
         "precision": round(float(precision_score(y_true, y_pred, zero_division=0)), 6),

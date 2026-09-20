@@ -153,7 +153,8 @@
       "recall": 1.0,
       "reference_rate": 0.303641,
       "roc_auc": 0.5,
-      "threshold": 0.167942
+      "threshold": 0.1679418172266036,
+      "threshold_display": 0.167942
     },
     "operational": {
       "accuracy": 0.616867,
@@ -197,7 +198,8 @@
       "recall": 0.386076,
       "reference_rate": 0.303641,
       "roc_auc": 0.572415,
-      "threshold": 0.5
+      "threshold": 0.5,
+      "threshold_display": 0.5
     }
   },
   "calibration": {
@@ -273,25 +275,71 @@
   "feature_importance": {
     "family": "logistic_regression",
     "intercept": -1.231699,
-    "interpretation_warning": "Los coeficientes y las importancias son descriptivos. No son causalidad. elapsed_days_since_publication y application_window_days estan casi colineales (Pearson 0.972), asi que su reparto de peso es inestable y no debe leerse como importancia relativa real.",
-    "standardised_coefficients": {
-      "application_window_days": 0.097834,
-      "applications_received_count": 2.690491,
-      "concurrent_open_vacancies_count": 0.24673,
-      "configured_criteria_count": 0.118137,
-      "days_remaining_to_target": -1.421545,
-      "days_since_last_operational_event": -0.06052,
-      "elapsed_days_since_publication": 0.07926,
-      "evaluations_completed_count": -0.38146,
-      "evaluations_overdue_pending_count": 0.308026,
-      "evaluations_scheduled_count": 0.517031,
-      "interviews_completed_count": -0.033784,
-      "interviews_overdue_pending_count": 0.044965,
-      "interviews_scheduled_count": 0.172799,
-      "positions_count": 0.113131,
-      "stage_transition_count": -2.384208
-    }
+    "interpretation_warning": "Los coeficientes y las importancias son descriptivos. No son causalidad. elapsed_days_since_publication y application_window_days estan casi colineales (Pearson 0.972), y applications_received_count y stage_transition_count lo estan por construccion, asi que el reparto de peso es inestable y no debe leerse como importancia relativa real.",
+    "standardised_coefficients_ranked": [
+      {
+        "coefficient": 2.690491,
+        "feature": "applications_received_count"
+      },
+      {
+        "coefficient": -2.384208,
+        "feature": "stage_transition_count"
+      },
+      {
+        "coefficient": -1.421545,
+        "feature": "days_remaining_to_target"
+      },
+      {
+        "coefficient": 0.517031,
+        "feature": "evaluations_scheduled_count"
+      },
+      {
+        "coefficient": -0.38146,
+        "feature": "evaluations_completed_count"
+      },
+      {
+        "coefficient": 0.308026,
+        "feature": "evaluations_overdue_pending_count"
+      },
+      {
+        "coefficient": 0.24673,
+        "feature": "concurrent_open_vacancies_count"
+      },
+      {
+        "coefficient": 0.172799,
+        "feature": "interviews_scheduled_count"
+      },
+      {
+        "coefficient": 0.118137,
+        "feature": "configured_criteria_count"
+      },
+      {
+        "coefficient": 0.113131,
+        "feature": "positions_count"
+      },
+      {
+        "coefficient": 0.097834,
+        "feature": "application_window_days"
+      },
+      {
+        "coefficient": 0.07926,
+        "feature": "elapsed_days_since_publication"
+      },
+      {
+        "coefficient": -0.06052,
+        "feature": "days_since_last_operational_event"
+      },
+      {
+        "coefficient": 0.044965,
+        "feature": "interviews_overdue_pending_count"
+      },
+      {
+        "coefficient": -0.033784,
+        "feature": "interviews_completed_count"
+      }
+    ]
   },
+  "freeze_fingerprint": "1aff7c539dee99d17a7c8bf7c8204339ada8b069d220ade84d734412269ca2fa",
   "organizations_test": {
     "1": {
       "average_precision": 0.476215,
@@ -350,6 +398,7 @@
   },
   "split": {
     "boundaries": {
+      "boundary_note": "Un mismo checkpoint_at puede aparecer a ambos lados de una frontera; el corte es por posicion tras un orden determinista, no por desigualdad estricta de tiempo.",
       "test_first_checkpoint": "2026-02-04T05:00:00+00:00",
       "total_rows": 5533,
       "train_end_index": 3873,
@@ -358,14 +407,16 @@
       "validation_first_checkpoint": "2025-08-07T05:00:00+00:00",
       "validation_last_checkpoint": "2026-02-04T05:00:00+00:00"
     },
-    "ordering": "checkpoint_at ascendente, desempate determinista por vacancy_id",
+    "ordering": "checkpoint_at ascendente. Los empates de timestamp se resuelven de forma determinista por vacancy_id, de modo que la frontera entre particiones puede contener el mismo instante en ambos lados; no se afirma desigualdad estricta fila a fila.",
     "ratios": {
       "test": 0.15,
       "train": 0.7,
       "validation": 0.15
     },
+    "signature": "c5e6028f3eb6ec8943a621f510e8d3521a0911bcf4ce8f5e186396b2ce943295",
     "test": {
       "end": "2026-08-22T05:00:00+00:00",
+      "labels_disclosed": true,
       "n": 830,
       "organizations": 6,
       "positives": 316,
@@ -516,7 +567,8 @@
     "recall": 0.933544,
     "reference_rate": 0.303641,
     "roc_auc": 0.833922,
-    "threshold": 0.167942
+    "threshold": 0.1679418172266036,
+    "threshold_display": 0.167942
   },
   "threshold": {
     "candidates_considered": 830,
@@ -529,7 +581,8 @@
     "recall_floor": 0.342857,
     "rule": "Referencia = precision y recall del baseline operacional en validation. Elegibles: umbrales que no empeoran ninguno de los dos ejes (precision >= precision_floor y recall >= recall_floor). Entre ellos se elige el de mayor F2; desempate por mayor recall y luego por umbral menor. Si ninguno domina al baseline, se elige el de mayor F2 sobre toda la curva y se marca floor_satisfied=false.",
     "selected_on": "validation",
-    "threshold": 0.167942
+    "threshold": 0.1679418172266036,
+    "threshold_display": 0.167942
   },
   "validation_metrics": {
     "accuracy": 0.643373,
@@ -629,7 +682,8 @@
     "recall": 0.920635,
     "reference_rate": 0.303641,
     "roc_auc": 0.8261,
-    "threshold": 0.167942
+    "threshold": 0.1679418172266036,
+    "threshold_display": 0.167942
   },
   "validity_notice": "Entrenado y evaluado exclusivamente con datos sinteticos. Cientificamente aceptable no equivale a desplegable: GAP-01 sigue abierto y el modelo no puede integrarse en Laravel.",
   "verdict": {
@@ -637,27 +691,39 @@
       "beats_dummy": true,
       "beats_operational": true,
       "margin_preserved": true,
-      "not_proxy_dependent": true,
       "positive_brier_skill": true
     },
-    "criteria": {
-      "limitation_if_margin_halves": "si el margen de AP sobre el baseline operacional en test cae por debajo de la mitad del margen en validation, se declara GO CON LIMITACIONES",
-      "limitation_if_proxy_dependent": "si quitar concurrent_open_vacancies_count degrada AP en mas de 0.02 respecto del conjunto core en validation, se declara GO CON LIMITACIONES por riesgo de atajo temporal. El 0.02 es una tolerancia de sensibilidad sobre una diferencia, declarada antes del freeze; no es un objetivo de desempeno",
-      "must_beat_dummy_ap": "AP(test) del modelo > AP(test) del baseline trivial",
-      "must_beat_operational_ap": "AP(test) del modelo > AP(test) del baseline operacional",
-      "must_have_positive_bss": "Brier Skill Score(test) > 0 frente al predictor constante de train"
+    "concurrency_ablation": {
+      "average_precision_delta_vs_core": -0.009998,
+      "reading": "la dependencia observada de concurrent_open_vacancies_count es pequena o moderada en este experimento; no se preregistro ningun umbral que la convierta en criterio de aprobacion",
+      "reported_as": "descriptivo, no criterio de gate"
     },
-    "decision": "PREDICTIVE GO",
+    "criteria": {
+      "limitation_if_margin_halves": "si el margen de AP sobre el baseline operacional en test cae por debajo de la mitad del margen en validation, se anota como limitacion",
+      "limitations_downgrade_the_verdict": "si se cumplen los criterios comparativos pero persisten limitaciones conocidas, el veredicto es GO CON LIMITACIONES, no GO a secas",
+      "must_beat_dummy_ap": "AP(test) del modelo por encima de AP(test) del baseline trivial",
+      "must_beat_operational_ap": "AP(test) del modelo por encima de AP(test) del baseline operacional",
+      "must_have_positive_bss": "Brier Skill Score(test) positivo frente al predictor constante de train"
+    },
+    "decision": "PREDICTIVE GO WITH LIMITATIONS",
     "deployment_note": "Cientificamente aceptable no equivale a desplegable. GAP-01 sigue abierto: target_completion_at no existe en Laravel, RF-29 continua como candidato y no se autoriza integracion ni servicio HTTP.",
     "evidence": {
       "brier_skill_score_test": 0.341319,
-      "concurrency_ablation_delta": -0.009998,
       "dummy_ap_test": 0.380723,
       "margin_test": 0.343878,
       "margin_validation": 0.353699,
       "model_ap_test": 0.769082,
       "operational_ap_test": 0.425204
     },
-    "limitations": []
+    "limitations": [
+      "Datos exclusivamente sinteticos: el resultado demuestra metodo, no validez institucional.",
+      "Censura informativa por diseno: el conjunto supervisado esta sesgado hacia procesos que cerraron.",
+      "Colinealidad fuerte entre features (elapsed/window y applications/stage_transitions): los coeficientes no son interpretables como importancia relativa.",
+      "concurrent_open_vacancies_count correlaciona con el calendario y puede actuar como proxy temporal.",
+      "Heterogeneidad esperada entre organizaciones sinteticas.",
+      "CONTAMINACION PROCEDIMENTAL MENOR: durante el desarrollo de 15B se observo la AP de test antes de cerrar la version final de la regla de umbral. AP es invariante al umbral y ninguna metrica de test dependiente del umbral se inspecciono antes de esa correccion, pero el holdout no puede describirse como intacto.",
+      "GAP-01 abierto: days_remaining_to_target no es computable en Laravel, asi que el modelo no es desplegable aunque sea cientificamente aceptable.",
+      "Tasa de alerta en test 0.735 con el umbral congelado: el punto de operacion marca una fraccion alta de los procesos."
+    ]
   }
 }

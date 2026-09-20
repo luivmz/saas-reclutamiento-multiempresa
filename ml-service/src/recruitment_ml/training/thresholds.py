@@ -53,7 +53,10 @@ class ThresholdDecision:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "threshold": round(float(self.threshold), 6),
+            # Precision completa: el valor redondeado es solo para lectura y
+            # nunca debe usarse para inferir.
+            "threshold": float(self.threshold),
+            "threshold_display": round(float(self.threshold), 6),
             "precision": round(float(self.precision), 6),
             "recall": round(float(self.recall), 6),
             "f2": round(float(self.f2), 6),

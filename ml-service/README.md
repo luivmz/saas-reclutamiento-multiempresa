@@ -12,7 +12,7 @@ Componente Python del experimento académico de **riesgo operacional de retraso*
 | Generador sintético *event-first* (15A) | Docker del ML (15C) |
 | Contrato de columnas y validaciones | Cliente Laravel y contrato HTTP (15C/16) |
 | Entrenamiento, evaluación y ablations (15B) | Persistencia de artefactos de modelo |
-| Suite de pruebas (264) | Despliegue: bloqueado mientras `GAP-01` siga abierto |
+| Suite de pruebas (285) | Despliegue: bloqueado mientras `GAP-01` siga abierto |
 | CLI de generación y CLI de experimento | |
 
 El modelo analiza **el proceso**, nunca a una persona. No puntúa, ordena, recomienda ni descarta postulantes.
@@ -71,7 +71,7 @@ Opciones: `--rows`, `--seed`, `--output-dir` (artefactos completos, ignorados po
 
 El orden es estricto y lo impone el código: dataset → split temporal → selección con train/validation → umbral con validation → calibración con train → ablations → **freeze** → apertura del test **una sola vez** → veredicto. `SealedTestSet` lanza `SealedTestSetError` si se intenta abrir el conjunto de prueba sin un `ExperimentFreeze`.
 
-Resultado de referencia: **Logistic Regression**, AP test **0.769** frente a 0.381 del dummy y 0.425 del baseline operacional, **PREDICTIVE GO** con limitaciones. Detalle en [`docs/v1.1/phase-15b-training-evaluation.md`](../docs/v1.1/phase-15b-training-evaluation.md).
+Resultado de referencia: **Logistic Regression**, AP test **0.769** frente a 0.381 del dummy y 0.425 del baseline operacional, **PREDICTIVE GO WITH LIMITATIONS**. Detalle en [`docs/v1.1/phase-15b-training-evaluation.md`](../docs/v1.1/phase-15b-training-evaluation.md).
 
 ## Estructura
 
@@ -96,7 +96,7 @@ ml-service/
 │       ├── calibration.py      calibración ajustada solo con train
 │       ├── ablation.py         las tres ablations obligatorias
 │       └── experiment.py       orquestación, freeze y CLI
-├── tests/                      264 pruebas
+├── tests/                      285 pruebas
 └── artifacts/                  salida local, ignorada por Git
 ```
 
@@ -144,7 +144,7 @@ El manifiesto reporta `censored_total`, `censored_stalled`, `censored_observatio
 .venv/Scripts/python.exe -m pytest --cov=recruitment_ml --cov-report=term-missing
 ```
 
-264 pruebas, 97 % de cobertura.
+285 pruebas, 97 % de cobertura.
 
 ## Limitaciones conocidas
 

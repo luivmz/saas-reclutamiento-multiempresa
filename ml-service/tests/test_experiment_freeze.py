@@ -11,14 +11,16 @@ import json
 
 import pytest
 
+from dataclasses import replace
+
 from recruitment_ml.training.experiment import (
     VERDICT_CRITERIA,
     VERDICT_GO,
     VERDICT_GO_LIMITED,
     VERDICT_NO_GO,
-    ExperimentFreeze,
     main,
 )
+from recruitment_ml.training.freeze import ExperimentFreeze
 from recruitment_ml.training.split import SealedTestSetError
 
 
@@ -31,15 +33,17 @@ def test_freeze_records_everything_needed_to_reproduce(experiment_result) -> Non
         "model_family",
         "model_params",
         "preprocessing",
-        "calibrated",
+        "calibration_decision",
         "threshold",
         "threshold_rule",
         "seed",
         "dataset_fingerprint",
         "config_fingerprint",
         "validation_metrics",
-        "ablation_decision",
-        "verdict_criteria",
+        "ablation_conclusions",
+        "verdict_rule",
+        "known_limitations",
+        "freeze_fingerprint",
     ):
         assert key in freeze, key
 
@@ -73,28 +77,20 @@ def test_a_sealed_test_set_refuses_an_unfrozen_record(temporal_split) -> None:
         temporal_split.sealed_test.reveal(Pretender())
 
 
-def test_a_frozen_record_opens_the_test_set(training_frame) -> None:
+def test_a_persisted_freeze_opens_the_test_set(tmp_path, training_frame, experiment_result) -> None:
+    """La llave es el artefacto en disco, no un objeto construido al vuelo."""
+    from recruitment_ml.training.freeze import load_freeze, persist_freeze
     from recruitment_ml.training.split import build_temporal_split
 
-    split = build_temporal_split(training_frame)
-    freeze = ExperimentFreeze(
-        feature_set="core",
-        features=[],
-        model_family="logistic_regression",
-        model_params={},
-        preprocessing="scaler",
-        calibrated=False,
-        threshold=0.5,
-        threshold_rule="regla",
-        seed=20260920,
-        dataset_fingerprint="x",
-        config_fingerprint="y",
-        validation_metrics={},
-        ablation_decision={},
-    )
+    fingerprint = experiment_result.dataset["model_ready_fingerprint"]
+    split = build_temporal_split(training_frame, dataset_fingerprint=fingerprint)
+    aligned = replace(
+        experiment_result.freeze_object, split_signature=split.signature
+    ).with_fingerprint()
+    path = persist_freeze(aligned, tmp_path / "freeze.json")
 
     assert split.sealed_test.reveal_count == 0
-    revealed = split.sealed_test.reveal(freeze)
+    revealed = split.sealed_test.reveal(load_freeze(path))
     assert len(revealed) == len(split.sealed_test)
     assert split.sealed_test.reveal_count == 1
 
@@ -109,14 +105,20 @@ def test_the_threshold_used_on_test_is_the_frozen_one(experiment_result) -> None
 def test_verdict_criteria_are_comparative_not_invented(experiment_result) -> None:
     """La Fase 14 prohibio cifras absolutas de AP, recall o precision."""
     payload = experiment_result.to_dict()
-    criteria = payload["freeze"]["verdict_criteria"]
+    criteria = payload["freeze"]["verdict_rule"]
 
     assert criteria == VERDICT_CRITERIA
     for text in criteria.values():
         # Cada criterio se ancla en una comparacion, no en una cifra objetivo.
         assert any(
             word in text
-            for word in ("baseline", "validation", "predictor constante", "tolerancia")
+            for word in (
+                "baseline",
+                "validation",
+                "predictor constante",
+                "tolerancia",
+                "limitaciones conocidas",
+            )
         ), text
     # Ningun criterio puede exigir un desempeno absoluto: la Fase 14 lo prohibio.
     combined = " ".join(criteria.values())

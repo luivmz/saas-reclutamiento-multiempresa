@@ -18,7 +18,7 @@
 | Curso | Pruebas y Calidad de Software, NRC 28607, Universidad Continental |
 | Docente | Dr. Maglioni Arana Caparachin |
 | Revisión y aprobación | Auditoría científica de Codex **pendiente** |
-| Evidencia | [`phase-15b-experiment-freeze.json`](phase-15b-experiment-freeze.json) · [`phase-15b-results-summary.json`](phase-15b-results-summary.json) · [`../phase-15b-training-evaluation.md`](../phase-15b-training-evaluation.md) |
+| Evidencia | **Protocolo pre-test:** [`phase-15b-experiment-freeze.json`](phase-15b-experiment-freeze.json) (huella `1aff7c539dee99d1…`) · **Resultados post-test:** [`phase-15b-test-results.json`](phase-15b-test-results.json) · [`phase-15b-results-summary.json`](phase-15b-results-summary.json) · [`../phase-15b-training-evaluation.md`](../phase-15b-training-evaluation.md) |
 
 ## Propósito
 
@@ -48,13 +48,13 @@ delayed = 0  si  vacancies.closed_at <= target_completion_at
 | Campo | Valor |
 |---|---|
 | Origen | **Sintético**, generado a partir de la estructura del proceso |
-| Versión | `synthetic-v1` *(no generado)* |
-| Volumen | 6 000 observaciones propuestas |
+| Versión | `synthetic-v1` |
+| Volumen | 6 000 generadas · 5 533 model-ready · 467 censuradas excluidas |
 | Periodo simulado | ≥ 36 meses |
 | Organizaciones | 4 – 8, totalmente ficticias |
 | Seed | `20260920` |
 | Datos reales o PII | **Ninguno.** No se obtienen ni se usan |
-| Hash del dataset | `PENDIENTE DE MEDICIÓN` |
+| Hash del dataset (model-ready) | `d94fe60d941be87580c71c3a72155b59a0b3a38071ad619ecd986bf607f1b2ae` |
 
 ## Features
 
@@ -64,7 +64,7 @@ delayed = 0  si  vacancies.closed_at <= target_completion_at
 
 ## Partición
 
-Bloques temporales 70 / 15 / 15 ordenados por `checkpoint_at`, con desempate determinista por `vacancy_id`. **Test se abrió exactamente una vez**, tras el freeze.
+Bloques temporales 70 / 15 / 15 ordenados por `checkpoint_at`. Los empates de timestamp se resuelven de forma determinista por `vacancy_id`, así que un mismo instante puede aparecer a ambos lados de una frontera: **no se afirma desigualdad estricta fila a fila**. El conjunto de prueba se abrió una vez **en esta ejecución**, tras persistir el freeze; ese contador no es un registro histórico.
 
 | Partición | n | Prevalencia | Periodo |
 |---|---|---|---|
@@ -112,7 +112,7 @@ Medidas sobre **test**, con la configuración congelada. Prevalencia de test 0.3
 | Método evaluado | `sigmoid` con `CalibratedClassifierCV(cv=5)`, ajustado **solo en train** |
 | Decisión | **No se adopta**: mejora Brier (0.1614 → 0.1611) pero empeora ECE (0.0259 → 0.0275) |
 | Calibración del modelo final | Sin calibrar; ECE 0.0259 en validation y 0.0413 en test |
-| Umbral operativo | **0.167942**, elegido **solo con validation** |
+| Umbral operativo (valor exacto) | **`0.1679418172266036`**, elegido **solo con validation**. Se persiste sin redondear: `0.167942` cambiaría clasificaciones en la frontera |
 | Regla del umbral | Dominar al baseline operacional en precision **y** recall; entre los elegibles, mayor F2; desempate por recall y luego por umbral menor |
 | Suelos (del baseline, no inventados) | precision ≥ 0.4500 · recall ≥ 0.342857 |
 | `t_high` / `t_medium` | **No definidos**: siguen sin existir metas aprobadas de precision/recall |
@@ -128,15 +128,16 @@ Medidas sobre **test**, con la configuración congelada. Prevalencia de test 0.3
 6. **Tasa de alerta alta.** En el umbral elegido el modelo marca el **73.5 %** de los procesos de test (recall 0.934, precision 0.484). Es consecuencia directa de una regla recall-oriented y constituye el principal problema de diseño para la interfaz de 15C.
 7. **F2 poco discriminante en este régimen.** Un predictor que alerta sobre todo obtiene F2 0.7545 frente al 0.7871 del modelo. La comparación significativa es la AP (0.769 frente a 0.381), no F2.
 8. **Heterogeneidad entre organizaciones sintéticas.** AP entre 0.476 (n=67) y 0.840. La organización con peor desempeño tiene pocos casos y su estimación es ruidosa; no debe sobreinterpretarse.
-9. **Censura informativa medida.** Mayor \|SMD\| 0.2298 en `days_since_last_operational_event`. La censura contextual por ventana es comparable (train 0.074, validation 0.087, test 0.086).
-10. **Coeficientes no interpretables como importancia.** `applications_received_count` (+2.69) y `stage_transition_count` (−2.38) están fuertemente correlacionados por construcción, igual que `elapsed_days_since_publication` y `application_window_days` (Pearson 0.972). El reparto de peso entre features colineales es inestable.
-11. **Deriva temporal presente pero no degradante.** La AP sube de train (0.699) a test (0.769) porque la prevalencia también sube; el ROC-AUC se mantiene estable en 0.83.
+9. **MINOR PROCEDURAL CONTAMINATION.** La AP de test se observó antes de cerrar la versión final de la regla de umbral. AP es invariante al umbral y ninguna métrica dependiente de él se inspeccionó antes, pero este holdout **no** puede describirse como intacto.
+10. **Censura informativa medida.** Mayor \|SMD\| 0.2298 en `days_since_last_operational_event`. La censura contextual por ventana es comparable (train 0.074, validation 0.087, test 0.086).
+11. **Coeficientes no interpretables como importancia.** `applications_received_count` (+2.69) y `stage_transition_count` (−2.38) están fuertemente correlacionados por construcción, igual que `elapsed_days_since_publication` y `application_window_days` (Pearson 0.972). El reparto de peso entre features colineales es inestable.
+12. **Deriva temporal presente pero no degradante.** La AP sube de train (0.699) a test (0.769) porque la prevalencia también sube; el ROC-AUC se mantiene estable en 0.83.
 
 ## Ablations verificadas
 
 | Feature | Efecto al quitarla (ΔAP en validation) | Lectura |
 |---|---|---|
-| `concurrent_open_vacancies_count` | **−0.0100** | Señal moderada; por debajo de la tolerancia 0.02, no se declara dependencia de proxy temporal |
+| `concurrent_open_vacancies_count` | **−0.0100** | Dependencia pequeña o moderada en este experimento. Se reporta de forma descriptiva: no es criterio de gate ni hay umbral preregistrado |
 | `elapsed_days_since_publication` | **−0.0002** | El modelo **no** depende de ella pese a su colinealidad |
 | `configured_stage_count` (al añadirla) | **−0.0004** | No aporta; se mantiene fuera del núcleo |
 
@@ -178,6 +179,10 @@ Laravel es el sistema de registro. El servicio de inferencia es opcional y sin e
 
 ## Veredicto de la Fase 15B
 
-**PREDICTIVE GO**, con las limitaciones de la sección anterior. Criterios comparativos fijados antes de abrir el test: supera al dummy (0.769 > 0.381), supera al baseline operacional (0.769 > 0.425), Brier Skill Score positivo (0.341), margen preservado (0.344 en test frente a 0.354 en validation) y sin dependencia de proxy temporal.
+**PREDICTIVE GO WITH LIMITATIONS**, con las limitaciones de la sección anterior. Criterios comparativos fijados antes de abrir el test: supera al dummy (0.769 > 0.381), supera al baseline operacional (0.769 > 0.425), Brier Skill Score positivo (0.341), margen preservado (0.344 en test frente a 0.354 en validation) y limitaciones conocidas que degradan el veredicto de GO a GO CON LIMITACIONES.
 
 **Prohibición de despliegue mientras `GAP-01` siga abierto.** `days_remaining_to_target` —tercera feature por peso— no es computable en Laravel, así que el modelo no puede integrarse. RF-29 sigue siendo candidato.
+
+## Nota sobre calibración futura
+
+La calibración se evaluó con `StratifiedKFold` aleatorio dentro de train y **fue rechazada**, así que no forma parte del modelo final. Si una fase posterior la reconsidera, sería preferible usar **folds temporales** en lugar de validación cruzada aleatoria, para no mezclar periodos dentro del ajuste de calibración.
