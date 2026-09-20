@@ -1,0 +1,146 @@
+{
+  "ablation_decision": {
+    "concurrent_open_vacancies_count": "quitarla degrada AP levemente (delta=-0.0100): aporta senal moderada",
+    "configured_stage_count": "anadirla no mejora AP (delta=-0.0004): se mantiene fuera del nucleo",
+    "elapsed_days_since_publication": "quitarla no degrada AP (delta=-0.0002): el modelo no depende de ella"
+  },
+  "calibrated": false,
+  "config_fingerprint": "4107a60ede323da2bc834128e449628f8c05a797ccf623cbfdfc3b93408b72df",
+  "dataset_fingerprint": "d94fe60d941be87580c71c3a72155b59a0b3a38071ad619ecd986bf607f1b2ae",
+  "feature_set": "core",
+  "features": [
+    "elapsed_days_since_publication",
+    "application_window_days",
+    "positions_count",
+    "applications_received_count",
+    "configured_criteria_count",
+    "evaluations_scheduled_count",
+    "evaluations_completed_count",
+    "evaluations_overdue_pending_count",
+    "interviews_scheduled_count",
+    "interviews_completed_count",
+    "interviews_overdue_pending_count",
+    "stage_transition_count",
+    "days_since_last_operational_event",
+    "concurrent_open_vacancies_count",
+    "days_remaining_to_target"
+  ],
+  "is_frozen": true,
+  "model_family": "logistic_regression",
+  "model_params": {
+    "C": 10.0,
+    "class_weight": null
+  },
+  "note": "Registro congelado antes de abrir el conjunto de prueba. Ninguna decision posterior puede basarse en test.",
+  "preprocessing": "StandardScaler dentro del Pipeline (solo para regresion logistica)",
+  "seed": 20260920,
+  "threshold": 0.167942,
+  "threshold_rule": "Referencia = precision y recall del baseline operacional en validation. Elegibles: umbrales que no empeoran ninguno de los dos ejes (precision >= precision_floor y recall >= recall_floor). Entre ellos se elige el de mayor F2; desempate por mayor recall y luego por umbral menor. Si ninguno domina al baseline, se elige el de mayor F2 sobre toda la curva y se marca floor_satisfied=false.",
+  "validation_metrics": {
+    "accuracy": 0.643373,
+    "alert_rate": 0.675904,
+    "average_precision": 0.757382,
+    "balanced_accuracy": 0.697211,
+    "brier": 0.161408,
+    "brier_reference": 0.241241,
+    "brier_skill_score": 0.330926,
+    "calibration": {
+      "bins": [
+        {
+          "bin_lower": 0.0,
+          "bin_upper": 0.1,
+          "count": 170,
+          "mean_predicted": 0.049789,
+          "observed_rate": 0.076471
+        },
+        {
+          "bin_lower": 0.1,
+          "bin_upper": 0.2,
+          "count": 133,
+          "mean_predicted": 0.146601,
+          "observed_rate": 0.142857
+        },
+        {
+          "bin_lower": 0.2,
+          "bin_upper": 0.3,
+          "count": 89,
+          "mean_predicted": 0.252602,
+          "observed_rate": 0.247191
+        },
+        {
+          "bin_lower": 0.3,
+          "bin_upper": 0.4,
+          "count": 94,
+          "mean_predicted": 0.346919,
+          "observed_rate": 0.351064
+        },
+        {
+          "bin_lower": 0.4,
+          "bin_upper": 0.5,
+          "count": 56,
+          "mean_predicted": 0.453893,
+          "observed_rate": 0.482143
+        },
+        {
+          "bin_lower": 0.5,
+          "bin_upper": 0.6,
+          "count": 70,
+          "mean_predicted": 0.547288,
+          "observed_rate": 0.471429
+        },
+        {
+          "bin_lower": 0.6,
+          "bin_upper": 0.7,
+          "count": 69,
+          "mean_predicted": 0.650204,
+          "observed_rate": 0.608696
+        },
+        {
+          "bin_lower": 0.7,
+          "bin_upper": 0.8,
+          "count": 56,
+          "mean_predicted": 0.752723,
+          "observed_rate": 0.803571
+        },
+        {
+          "bin_lower": 0.8,
+          "bin_upper": 0.9,
+          "count": 57,
+          "mean_predicted": 0.847652,
+          "observed_rate": 0.859649
+        },
+        {
+          "bin_lower": 0.9,
+          "bin_upper": 1.0,
+          "count": 36,
+          "mean_predicted": 0.952307,
+          "observed_rate": 0.888889
+        }
+      ],
+      "expected_calibration_error": 0.025874,
+      "maximum_calibration_error": 0.075859
+    },
+    "confusion_matrix": {
+      "fn": 25,
+      "fp": 271,
+      "tn": 244,
+      "tp": 290
+    },
+    "f1": 0.6621,
+    "f2": 0.796266,
+    "n": 830,
+    "precision": 0.516934,
+    "prevalence": 0.379518,
+    "recall": 0.920635,
+    "reference_rate": 0.303641,
+    "roc_auc": 0.8261,
+    "threshold": 0.167942
+  },
+  "verdict_criteria": {
+    "limitation_if_margin_halves": "si el margen de AP sobre el baseline operacional en test cae por debajo de la mitad del margen en validation, se declara GO CON LIMITACIONES",
+    "limitation_if_proxy_dependent": "si quitar concurrent_open_vacancies_count degrada AP en mas de 0.02 respecto del conjunto core en validation, se declara GO CON LIMITACIONES por riesgo de atajo temporal. El 0.02 es una tolerancia de sensibilidad sobre una diferencia, declarada antes del freeze; no es un objetivo de desempeno",
+    "must_beat_dummy_ap": "AP(test) del modelo > AP(test) del baseline trivial",
+    "must_beat_operational_ap": "AP(test) del modelo > AP(test) del baseline operacional",
+    "must_have_positive_bss": "Brier Skill Score(test) > 0 frente al predictor constante de train"
+  }
+}

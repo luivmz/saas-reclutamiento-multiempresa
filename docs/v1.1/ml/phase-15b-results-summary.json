@@ -1,0 +1,663 @@
+{
+  "ablation_interpretation": {
+    "concurrent_open_vacancies_count": "quitarla degrada AP levemente (delta=-0.0100): aporta senal moderada",
+    "configured_stage_count": "anadirla no mejora AP (delta=-0.0004): se mantiene fuera del nucleo",
+    "elapsed_days_since_publication": "quitarla no degrada AP (delta=-0.0002): el modelo no depende de ella"
+  },
+  "ablations": {
+    "core": {
+      "average_precision": 0.757382,
+      "average_precision_delta_vs_core": 0.0,
+      "brier": 0.161408,
+      "expected_calibration_error": 0.025874,
+      "f2": 0.796266,
+      "features": [
+        "elapsed_days_since_publication",
+        "application_window_days",
+        "positions_count",
+        "applications_received_count",
+        "configured_criteria_count",
+        "evaluations_scheduled_count",
+        "evaluations_completed_count",
+        "evaluations_overdue_pending_count",
+        "interviews_scheduled_count",
+        "interviews_completed_count",
+        "interviews_overdue_pending_count",
+        "stage_transition_count",
+        "days_since_last_operational_event",
+        "concurrent_open_vacancies_count",
+        "days_remaining_to_target"
+      ],
+      "n_features": 15,
+      "precision": 0.516934,
+      "recall": 0.920635,
+      "roc_auc": 0.8261
+    },
+    "core_plus_configured_stage_count": {
+      "average_precision": 0.756997,
+      "average_precision_delta_vs_core": -0.000385,
+      "brier": 0.161635,
+      "expected_calibration_error": 0.03203,
+      "f2": 0.791781,
+      "features": [
+        "elapsed_days_since_publication",
+        "application_window_days",
+        "positions_count",
+        "applications_received_count",
+        "configured_criteria_count",
+        "evaluations_scheduled_count",
+        "evaluations_completed_count",
+        "evaluations_overdue_pending_count",
+        "interviews_scheduled_count",
+        "interviews_completed_count",
+        "interviews_overdue_pending_count",
+        "stage_transition_count",
+        "days_since_last_operational_event",
+        "concurrent_open_vacancies_count",
+        "days_remaining_to_target",
+        "configured_stage_count"
+      ],
+      "n_features": 16,
+      "precision": 0.511504,
+      "recall": 0.91746,
+      "roc_auc": 0.826013
+    },
+    "core_without_concurrency": {
+      "average_precision": 0.747384,
+      "average_precision_delta_vs_core": -0.009998,
+      "brier": 0.16536,
+      "expected_calibration_error": 0.051755,
+      "f2": 0.786959,
+      "features": [
+        "elapsed_days_since_publication",
+        "application_window_days",
+        "positions_count",
+        "applications_received_count",
+        "configured_criteria_count",
+        "evaluations_scheduled_count",
+        "evaluations_completed_count",
+        "evaluations_overdue_pending_count",
+        "interviews_scheduled_count",
+        "interviews_completed_count",
+        "interviews_overdue_pending_count",
+        "stage_transition_count",
+        "days_since_last_operational_event",
+        "days_remaining_to_target"
+      ],
+      "n_features": 14,
+      "precision": 0.539499,
+      "recall": 0.888889,
+      "roc_auc": 0.82393
+    },
+    "core_without_elapsed": {
+      "average_precision": 0.757183,
+      "average_precision_delta_vs_core": -0.000199,
+      "brier": 0.161471,
+      "expected_calibration_error": 0.025324,
+      "f2": 0.789474,
+      "features": [
+        "application_window_days",
+        "positions_count",
+        "applications_received_count",
+        "configured_criteria_count",
+        "evaluations_scheduled_count",
+        "evaluations_completed_count",
+        "evaluations_overdue_pending_count",
+        "interviews_scheduled_count",
+        "interviews_completed_count",
+        "interviews_overdue_pending_count",
+        "stage_transition_count",
+        "days_since_last_operational_event",
+        "concurrent_open_vacancies_count",
+        "days_remaining_to_target"
+      ],
+      "n_features": 14,
+      "precision": 0.510638,
+      "recall": 0.914286,
+      "roc_auc": 0.826149
+    }
+  },
+  "baselines_test": {
+    "dummy_prior": {
+      "accuracy": 0.380723,
+      "alert_rate": 1.0,
+      "average_precision": 0.380723,
+      "balanced_accuracy": 0.5,
+      "brier": 0.241715,
+      "brier_reference": 0.241715,
+      "brier_skill_score": 0.0,
+      "calibration": {
+        "bins": [
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.4,
+            "count": 830,
+            "mean_predicted": 0.303641,
+            "observed_rate": 0.380723
+          }
+        ],
+        "expected_calibration_error": 0.077082,
+        "maximum_calibration_error": 0.077082
+      },
+      "confusion_matrix": {
+        "fn": 0,
+        "fp": 514,
+        "tn": 0,
+        "tp": 316
+      },
+      "f1": 0.551483,
+      "f2": 0.754537,
+      "n": 830,
+      "precision": 0.380723,
+      "prevalence": 0.380723,
+      "recall": 1.0,
+      "reference_rate": 0.303641,
+      "roc_auc": 0.5,
+      "threshold": 0.167942
+    },
+    "operational": {
+      "accuracy": 0.616867,
+      "alert_rate": 0.296386,
+      "average_precision": 0.425204,
+      "balanced_accuracy": 0.572415,
+      "brier": 0.383133,
+      "brier_reference": 0.241715,
+      "brier_skill_score": -0.585061,
+      "calibration": {
+        "bins": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.1,
+            "count": 584,
+            "mean_predicted": 0.0,
+            "observed_rate": 0.332192
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 1.0,
+            "count": 246,
+            "mean_predicted": 1.0,
+            "observed_rate": 0.495935
+          }
+        ],
+        "expected_calibration_error": 0.383133,
+        "maximum_calibration_error": 0.504065
+      },
+      "confusion_matrix": {
+        "fn": 194,
+        "fp": 124,
+        "tn": 390,
+        "tp": 122
+      },
+      "f1": 0.434164,
+      "f2": 0.403974,
+      "n": 830,
+      "precision": 0.495935,
+      "prevalence": 0.380723,
+      "recall": 0.386076,
+      "reference_rate": 0.303641,
+      "roc_auc": 0.572415,
+      "threshold": 0.5
+    }
+  },
+  "calibration": {
+    "adopt_calibration": false,
+    "average_precision_loss": -0.000738,
+    "brier_calibrated": 0.161148,
+    "brier_gain": 0.00026,
+    "brier_uncalibrated": 0.161408,
+    "decision_rule": "adoptar si mejora Brier y ECE y la perdida de AP no supera 0.01",
+    "ece_calibrated": 0.027528,
+    "ece_gain": -0.001654,
+    "ece_uncalibrated": 0.025874,
+    "fitted_on": "train (validacion cruzada interna)",
+    "folds": 5,
+    "method": "sigmoid"
+  },
+  "censoring": {
+    "contextual_by_window": {
+      "test_window": {
+        "censored": 78,
+        "censoring_rate": 0.086283,
+        "n_total": 904
+      },
+      "train_window": {
+        "censored": 310,
+        "censoring_rate": 0.073986,
+        "n_total": 4190
+      },
+      "validation_window": {
+        "censored": 79,
+        "censoring_rate": 0.087196,
+        "n_total": 906
+      }
+    },
+    "dataset_censoring_ratio": 0.077833,
+    "excluded_from_supervised_training": true,
+    "labels_never_imputed": true,
+    "largest_absolute_smd": {
+      "feature": "days_since_last_operational_event",
+      "smd": 0.229762
+    },
+    "limitation": "La censura es informativa por diseno: los procesos estancados nunca cierran. El conjunto supervisado esta sesgado hacia procesos que terminaron, y ese sesgo acompana a toda conclusion.",
+    "mechanism": "informative-by-design",
+    "standardised_mean_differences": {
+      "application_window_days": 0.111007,
+      "applications_received_count": -0.08012,
+      "concurrent_open_vacancies_count": 0.130413,
+      "configured_criteria_count": -0.070093,
+      "days_remaining_to_target": -0.019233,
+      "days_since_last_operational_event": 0.229762,
+      "elapsed_days_since_publication": 0.109043,
+      "evaluations_completed_count": -0.106695,
+      "evaluations_overdue_pending_count": 0.037869,
+      "evaluations_scheduled_count": -0.107588,
+      "interviews_completed_count": -0.02102,
+      "interviews_overdue_pending_count": -0.103939,
+      "interviews_scheduled_count": -0.16773,
+      "positions_count": -0.009717,
+      "stage_transition_count": -0.095528
+    }
+  },
+  "configurations_evaluated": 22,
+  "dataset": {
+    "censored_total": 467,
+    "config_fingerprint": "4107a60ede323da2bc834128e449628f8c05a797ccf623cbfdfc3b93408b72df",
+    "full_fingerprint": "be7906347a0a6fb0b44b6be103b7f30ae64d4201983b592a70e0c17ba9ad76e1",
+    "model_ready_fingerprint": "d94fe60d941be87580c71c3a72155b59a0b3a38071ad619ecd986bf607f1b2ae",
+    "prevalence": 0.326586,
+    "rows_model_ready": 5533,
+    "rows_requested": 6000,
+    "seed": 20260920
+  },
+  "feature_importance": {
+    "family": "logistic_regression",
+    "intercept": -1.231699,
+    "interpretation_warning": "Los coeficientes y las importancias son descriptivos. No son causalidad. elapsed_days_since_publication y application_window_days estan casi colineales (Pearson 0.972), asi que su reparto de peso es inestable y no debe leerse como importancia relativa real.",
+    "standardised_coefficients": {
+      "application_window_days": 0.097834,
+      "applications_received_count": 2.690491,
+      "concurrent_open_vacancies_count": 0.24673,
+      "configured_criteria_count": 0.118137,
+      "days_remaining_to_target": -1.421545,
+      "days_since_last_operational_event": -0.06052,
+      "elapsed_days_since_publication": 0.07926,
+      "evaluations_completed_count": -0.38146,
+      "evaluations_overdue_pending_count": 0.308026,
+      "evaluations_scheduled_count": 0.517031,
+      "interviews_completed_count": -0.033784,
+      "interviews_overdue_pending_count": 0.044965,
+      "interviews_scheduled_count": 0.172799,
+      "positions_count": 0.113131,
+      "stage_transition_count": -2.384208
+    }
+  },
+  "organizations_test": {
+    "1": {
+      "average_precision": 0.476215,
+      "n": 67,
+      "precision": 0.25641,
+      "prevalence": 0.238806,
+      "recall": 0.625
+    },
+    "2": {
+      "average_precision": 0.803763,
+      "n": 144,
+      "precision": 0.53,
+      "prevalence": 0.381944,
+      "recall": 0.963636
+    },
+    "3": {
+      "average_precision": 0.699447,
+      "n": 137,
+      "precision": 0.420455,
+      "prevalence": 0.291971,
+      "recall": 0.925
+    },
+    "4": {
+      "average_precision": 0.781966,
+      "n": 180,
+      "precision": 0.375,
+      "prevalence": 0.288889,
+      "recall": 0.980769
+    },
+    "5": {
+      "average_precision": 0.814091,
+      "n": 93,
+      "precision": 0.651515,
+      "prevalence": 0.526882,
+      "recall": 0.877551
+    },
+    "6": {
+      "average_precision": 0.840457,
+      "n": 209,
+      "precision": 0.558011,
+      "prevalence": 0.497608,
+      "recall": 0.971154
+    }
+  },
+  "phase": "15B",
+  "selected_model": {
+    "best_available_average_precision": 0.757382,
+    "equivalence_margin": 0.005,
+    "family": "logistic_regression",
+    "params": {
+      "C": 10.0,
+      "class_weight": null
+    },
+    "simpler_model_preferred": false,
+    "validation_average_precision": 0.757382
+  },
+  "split": {
+    "boundaries": {
+      "test_first_checkpoint": "2026-02-04T05:00:00+00:00",
+      "total_rows": 5533,
+      "train_end_index": 3873,
+      "train_last_checkpoint": "2025-08-07T05:00:00+00:00",
+      "validation_end_index": 4703,
+      "validation_first_checkpoint": "2025-08-07T05:00:00+00:00",
+      "validation_last_checkpoint": "2026-02-04T05:00:00+00:00"
+    },
+    "ordering": "checkpoint_at ascendente, desempate determinista por vacancy_id",
+    "ratios": {
+      "test": 0.15,
+      "train": 0.7,
+      "validation": 0.15
+    },
+    "test": {
+      "end": "2026-08-22T05:00:00+00:00",
+      "n": 830,
+      "organizations": 6,
+      "positives": 316,
+      "prevalence": 0.380723,
+      "start": "2026-02-04T05:00:00+00:00"
+    },
+    "train": {
+      "end": "2025-08-07T05:00:00+00:00",
+      "n": 3873,
+      "organizations": 6,
+      "positives": 1176,
+      "prevalence": 0.303641,
+      "start": "2023-01-18T05:00:00+00:00"
+    },
+    "validation": {
+      "end": "2026-02-04T05:00:00+00:00",
+      "n": 830,
+      "organizations": 6,
+      "positives": 315,
+      "prevalence": 0.379518,
+      "start": "2025-08-07T05:00:00+00:00"
+    }
+  },
+  "temporal_stability": {
+    "test": {
+      "average_precision": 0.769082,
+      "brier": 0.159213,
+      "f2": 0.787086,
+      "precision": 0.483607,
+      "prevalence": 0.380723,
+      "recall": 0.933544,
+      "roc_auc": 0.833922
+    },
+    "train": {
+      "average_precision": 0.69885,
+      "brier": 0.146726,
+      "f2": 0.741579,
+      "precision": 0.443692,
+      "prevalence": 0.303641,
+      "recall": 0.891156,
+      "roc_auc": 0.829905
+    },
+    "validation": {
+      "average_precision": 0.757382,
+      "brier": 0.161408,
+      "f2": 0.796266,
+      "precision": 0.516934,
+      "prevalence": 0.379518,
+      "recall": 0.920635,
+      "roc_auc": 0.8261
+    }
+  },
+  "test_metrics": {
+    "accuracy": 0.595181,
+    "alert_rate": 0.73494,
+    "average_precision": 0.769082,
+    "balanced_accuracy": 0.660352,
+    "brier": 0.159213,
+    "brier_reference": 0.241715,
+    "brier_skill_score": 0.341319,
+    "calibration": {
+      "bins": [
+        {
+          "bin_lower": 0.0,
+          "bin_upper": 0.1,
+          "count": 144,
+          "mean_predicted": 0.045315,
+          "observed_rate": 0.076389
+        },
+        {
+          "bin_lower": 0.1,
+          "bin_upper": 0.2,
+          "count": 107,
+          "mean_predicted": 0.149583,
+          "observed_rate": 0.130841
+        },
+        {
+          "bin_lower": 0.2,
+          "bin_upper": 0.3,
+          "count": 95,
+          "mean_predicted": 0.24639,
+          "observed_rate": 0.178947
+        },
+        {
+          "bin_lower": 0.3,
+          "bin_upper": 0.4,
+          "count": 86,
+          "mean_predicted": 0.346452,
+          "observed_rate": 0.232558
+        },
+        {
+          "bin_lower": 0.4,
+          "bin_upper": 0.5,
+          "count": 101,
+          "mean_predicted": 0.447638,
+          "observed_rate": 0.405941
+        },
+        {
+          "bin_lower": 0.5,
+          "bin_upper": 0.6,
+          "count": 80,
+          "mean_predicted": 0.54463,
+          "observed_rate": 0.5625
+        },
+        {
+          "bin_lower": 0.6,
+          "bin_upper": 0.7,
+          "count": 62,
+          "mean_predicted": 0.640754,
+          "observed_rate": 0.66129
+        },
+        {
+          "bin_lower": 0.7,
+          "bin_upper": 0.8,
+          "count": 64,
+          "mean_predicted": 0.750197,
+          "observed_rate": 0.71875
+        },
+        {
+          "bin_lower": 0.8,
+          "bin_upper": 0.9,
+          "count": 50,
+          "mean_predicted": 0.849663,
+          "observed_rate": 0.82
+        },
+        {
+          "bin_lower": 0.9,
+          "bin_upper": 1.0,
+          "count": 41,
+          "mean_predicted": 0.9464,
+          "observed_rate": 0.97561
+        }
+      ],
+      "expected_calibration_error": 0.041313,
+      "maximum_calibration_error": 0.113893
+    },
+    "confusion_matrix": {
+      "fn": 21,
+      "fp": 315,
+      "tn": 199,
+      "tp": 295
+    },
+    "f1": 0.637149,
+    "f2": 0.787086,
+    "n": 830,
+    "precision": 0.483607,
+    "prevalence": 0.380723,
+    "recall": 0.933544,
+    "reference_rate": 0.303641,
+    "roc_auc": 0.833922,
+    "threshold": 0.167942
+  },
+  "threshold": {
+    "candidates_considered": 830,
+    "eligible_thresholds": 554,
+    "f2": 0.796266,
+    "floor_satisfied": true,
+    "precision": 0.516934,
+    "precision_floor": 0.45,
+    "recall": 0.920635,
+    "recall_floor": 0.342857,
+    "rule": "Referencia = precision y recall del baseline operacional en validation. Elegibles: umbrales que no empeoran ninguno de los dos ejes (precision >= precision_floor y recall >= recall_floor). Entre ellos se elige el de mayor F2; desempate por mayor recall y luego por umbral menor. Si ninguno domina al baseline, se elige el de mayor F2 sobre toda la curva y se marca floor_satisfied=false.",
+    "selected_on": "validation",
+    "threshold": 0.167942
+  },
+  "validation_metrics": {
+    "accuracy": 0.643373,
+    "alert_rate": 0.675904,
+    "average_precision": 0.757382,
+    "balanced_accuracy": 0.697211,
+    "brier": 0.161408,
+    "brier_reference": 0.241241,
+    "brier_skill_score": 0.330926,
+    "calibration": {
+      "bins": [
+        {
+          "bin_lower": 0.0,
+          "bin_upper": 0.1,
+          "count": 170,
+          "mean_predicted": 0.049789,
+          "observed_rate": 0.076471
+        },
+        {
+          "bin_lower": 0.1,
+          "bin_upper": 0.2,
+          "count": 133,
+          "mean_predicted": 0.146601,
+          "observed_rate": 0.142857
+        },
+        {
+          "bin_lower": 0.2,
+          "bin_upper": 0.3,
+          "count": 89,
+          "mean_predicted": 0.252602,
+          "observed_rate": 0.247191
+        },
+        {
+          "bin_lower": 0.3,
+          "bin_upper": 0.4,
+          "count": 94,
+          "mean_predicted": 0.346919,
+          "observed_rate": 0.351064
+        },
+        {
+          "bin_lower": 0.4,
+          "bin_upper": 0.5,
+          "count": 56,
+          "mean_predicted": 0.453893,
+          "observed_rate": 0.482143
+        },
+        {
+          "bin_lower": 0.5,
+          "bin_upper": 0.6,
+          "count": 70,
+          "mean_predicted": 0.547288,
+          "observed_rate": 0.471429
+        },
+        {
+          "bin_lower": 0.6,
+          "bin_upper": 0.7,
+          "count": 69,
+          "mean_predicted": 0.650204,
+          "observed_rate": 0.608696
+        },
+        {
+          "bin_lower": 0.7,
+          "bin_upper": 0.8,
+          "count": 56,
+          "mean_predicted": 0.752723,
+          "observed_rate": 0.803571
+        },
+        {
+          "bin_lower": 0.8,
+          "bin_upper": 0.9,
+          "count": 57,
+          "mean_predicted": 0.847652,
+          "observed_rate": 0.859649
+        },
+        {
+          "bin_lower": 0.9,
+          "bin_upper": 1.0,
+          "count": 36,
+          "mean_predicted": 0.952307,
+          "observed_rate": 0.888889
+        }
+      ],
+      "expected_calibration_error": 0.025874,
+      "maximum_calibration_error": 0.075859
+    },
+    "confusion_matrix": {
+      "fn": 25,
+      "fp": 271,
+      "tn": 244,
+      "tp": 290
+    },
+    "f1": 0.6621,
+    "f2": 0.796266,
+    "n": 830,
+    "precision": 0.516934,
+    "prevalence": 0.379518,
+    "recall": 0.920635,
+    "reference_rate": 0.303641,
+    "roc_auc": 0.8261,
+    "threshold": 0.167942
+  },
+  "validity_notice": "Entrenado y evaluado exclusivamente con datos sinteticos. Cientificamente aceptable no equivale a desplegable: GAP-01 sigue abierto y el modelo no puede integrarse en Laravel.",
+  "verdict": {
+    "checks": {
+      "beats_dummy": true,
+      "beats_operational": true,
+      "margin_preserved": true,
+      "not_proxy_dependent": true,
+      "positive_brier_skill": true
+    },
+    "criteria": {
+      "limitation_if_margin_halves": "si el margen de AP sobre el baseline operacional en test cae por debajo de la mitad del margen en validation, se declara GO CON LIMITACIONES",
+      "limitation_if_proxy_dependent": "si quitar concurrent_open_vacancies_count degrada AP en mas de 0.02 respecto del conjunto core en validation, se declara GO CON LIMITACIONES por riesgo de atajo temporal. El 0.02 es una tolerancia de sensibilidad sobre una diferencia, declarada antes del freeze; no es un objetivo de desempeno",
+      "must_beat_dummy_ap": "AP(test) del modelo > AP(test) del baseline trivial",
+      "must_beat_operational_ap": "AP(test) del modelo > AP(test) del baseline operacional",
+      "must_have_positive_bss": "Brier Skill Score(test) > 0 frente al predictor constante de train"
+    },
+    "decision": "PREDICTIVE GO",
+    "deployment_note": "Cientificamente aceptable no equivale a desplegable. GAP-01 sigue abierto: target_completion_at no existe en Laravel, RF-29 continua como candidato y no se autoriza integracion ni servicio HTTP.",
+    "evidence": {
+      "brier_skill_score_test": 0.341319,
+      "concurrency_ablation_delta": -0.009998,
+      "dummy_ap_test": 0.380723,
+      "margin_test": 0.343878,
+      "margin_validation": 0.353699,
+      "model_ap_test": 0.769082,
+      "operational_ap_test": 0.425204
+    },
+    "limitations": []
+  }
+}

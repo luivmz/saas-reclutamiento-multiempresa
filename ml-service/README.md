@@ -1,4 +1,4 @@
-# ml-service — generador de dataset sintético (Fase 15A)
+# ml-service — generador sintético y experimento de ML (Fases 15A y 15B)
 
 Componente Python del experimento académico de **riesgo operacional de retraso** de un proceso de selección. Implementa lo aprobado en la Fase 14 y **nada más**.
 
@@ -6,13 +6,14 @@ Componente Python del experimento académico de **riesgo operacional de retraso*
 
 ## Qué hay aquí y qué no
 
-| Implementado en 15A | No implementado todavía |
+| Implementado (15A + 15B) | No implementado todavía |
 |---|---|
-| Estructura del paquete y configuración reproducible | Entrenamiento de modelos (15B) |
-| Generador sintético *event-first* | Split temporal, calibración y métricas (15B) |
-| Contrato de columnas y validaciones | scikit-learn, joblib, artefactos de modelo (15B) |
-| Suite de pruebas (182) | FastAPI, `/v1/predict`, `/health` (15C) |
-| CLI con manifiesto de linaje | Docker del ML e integración con Laravel (15C/16) |
+| Estructura del paquete y configuración reproducible | FastAPI, `/v1/predict`, `/health` (15C) |
+| Generador sintético *event-first* (15A) | Docker del ML (15C) |
+| Contrato de columnas y validaciones | Cliente Laravel y contrato HTTP (15C/16) |
+| Entrenamiento, evaluación y ablations (15B) | Persistencia de artefactos de modelo |
+| Suite de pruebas (264) | Despliegue: bloqueado mientras `GAP-01` siga abierto |
+| CLI de generación y CLI de experimento | |
 
 El modelo analiza **el proceso**, nunca a una persona. No puntúa, ordena, recomienda ni descarta postulantes.
 
@@ -27,7 +28,7 @@ python -m venv .venv
 # .venv/bin/python -m pip install -e ".[dev]"         # macOS / Linux
 ```
 
-Requiere Python ≥ 3.12. Dependencias fijadas: `numpy==2.1.3`, `pandas==2.2.3`, `pydantic==2.9.2`, `tzdata==2024.2`; desarrollo: `pytest==8.3.3`, `pytest-cov==5.0.0`.
+Requiere Python ≥ 3.12. Dependencias fijadas: `numpy==2.1.3`, `pandas==2.2.3`, `pydantic==2.9.2`, `tzdata==2024.2`, `scikit-learn==1.9.1`, `scipy==1.18.1`, `joblib==1.6.0`; desarrollo: `pytest==8.3.3`, `pytest-cov==5.0.0`.
 
 `tzdata` no es opcional en Windows: sin ella `zoneinfo` no resuelve `America/Lima`, y toda la cronología depende de esa zona.
 
@@ -58,6 +59,20 @@ X = dataset.feature_matrix()           # solo features model-ready
 y = dataset.model_ready()["delayed"]   # sin censurados
 ```
 
+## Experimento de entrenamiento (15B)
+
+```bash
+.venv/Scripts/python.exe -m recruitment_ml.training.experiment \
+    --rows 6000 --seed 20260920 \
+    --output-dir artifacts/phase-15b --evidence-dir ../docs/v1.1/ml
+```
+
+Opciones: `--rows`, `--seed`, `--output-dir` (artefactos completos, ignorados por Git), `--evidence-dir` (evidencia reducida y versionable), `--skip-optional-model`.
+
+El orden es estricto y lo impone el código: dataset → split temporal → selección con train/validation → umbral con validation → calibración con train → ablations → **freeze** → apertura del test **una sola vez** → veredicto. `SealedTestSet` lanza `SealedTestSetError` si se intenta abrir el conjunto de prueba sin un `ExperimentFreeze`.
+
+Resultado de referencia: **Logistic Regression**, AP test **0.769** frente a 0.381 del dummy y 0.425 del baseline operacional, **PREDICTIVE GO** con limitaciones. Detalle en [`docs/v1.1/phase-15b-training-evaluation.md`](../docs/v1.1/phase-15b-training-evaluation.md).
+
 ## Estructura
 
 ```
@@ -66,12 +81,22 @@ ml-service/
 ├── src/recruitment_ml/
 │   ├── config.py               SyntheticConfig: toda constante vive aquí
 │   ├── schema.py               contrato de columnas y prohibiciones
-│   └── synthetic/
-│       ├── distributions.py    familias de distribución con su justificación
-│       ├── timeline.py         simulación event-first de un proceso
-│       ├── generator.py        orquestación, manifiesto y CLI
-│       └── validators.py       las 20 validaciones aprobadas
-├── tests/                      116 pruebas
+│   ├── synthetic/              generación del dataset (15A)
+│   │   ├── distributions.py    familias de distribución con su justificación
+│   │   ├── timeline.py         simulación event-first de un proceso
+│   │   ├── generator.py        orquestación, manifiesto y CLI
+│   │   └── validators.py       las 20 validaciones aprobadas
+│   └── training/               entrenamiento y evaluación (15B)
+│       ├── split.py            partición temporal y conjunto sellado
+│       ├── preprocessing.py    conjuntos de features y matrices
+│       ├── baselines.py        dummy y regla operacional
+│       ├── models.py           familias y rejillas de hiperparámetros
+│       ├── evaluation.py       métricas y calibración observada
+│       ├── thresholds.py       regla de umbral relativa al baseline
+│       ├── calibration.py      calibración ajustada solo con train
+│       ├── ablation.py         las tres ablations obligatorias
+│       └── experiment.py       orquestación, freeze y CLI
+├── tests/                      264 pruebas
 └── artifacts/                  salida local, ignorada por Git
 ```
 
@@ -119,7 +144,7 @@ El manifiesto reporta `censored_total`, `censored_stalled`, `censored_observatio
 .venv/Scripts/python.exe -m pytest --cov=recruitment_ml --cov-report=term-missing
 ```
 
-182 pruebas, 97 % de cobertura. Cubren reproducibilidad, huellas por modo de exportación, manifiesto, esquema, semántica del historial de etapas, integridad temporal, ausencia de fuga, censura informativa, prevalencia, drift, multiempresa, configuración inválida y CLI. Incluyen **pruebas negativas**: corrompen el dataset a propósito y exigen que cada validador se dispare.
+264 pruebas, 97 % de cobertura.
 
 ## Limitaciones conocidas
 

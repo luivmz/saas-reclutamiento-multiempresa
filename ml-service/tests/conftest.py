@@ -41,6 +41,33 @@ def model_ready(dataset: SyntheticDataset):
     return dataset.model_ready()
 
 
+#: Tamano de los experimentos de la suite de 15B. Mas pequeno que el
+#: entregable academico (6 000) para que las pruebas sean rapidas, y suficiente
+#: para que las invariantes experimentales se sostengan.
+TRAINING_ROWS = 2_000
+
+
+@pytest.fixture(scope="session")
+def training_frame(config: SyntheticConfig):
+    """Frame model-ready del generador de 15A, fuente unica para 15B."""
+    return build_dataset(SyntheticConfig(rows=TRAINING_ROWS)).model_ready()
+
+
+@pytest.fixture(scope="session")
+def temporal_split(training_frame):
+    from recruitment_ml.training.split import build_temporal_split
+
+    return build_temporal_split(training_frame)
+
+
+@pytest.fixture(scope="session")
+def experiment_result():
+    """Experimento completo, ejecutado una sola vez por sesion."""
+    from recruitment_ml.training.experiment import run_experiment
+
+    return run_experiment(rows=TRAINING_ROWS, include_optional_model=False)
+
+
 @pytest.fixture(scope="session")
 def timelines(config: SyntheticConfig) -> list[ProcessTimeline]:
     """Cronologias completas, para verificar invariantes que no se exportan.

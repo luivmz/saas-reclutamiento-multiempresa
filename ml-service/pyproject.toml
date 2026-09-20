@@ -12,6 +12,12 @@ dependencies = [
     "pandas==2.2.3",
     "pydantic==2.9.2",
     "tzdata==2024.2",
+    # Fase 15B: entrenamiento y evaluacion. Version verificada en el entorno,
+    # no supuesta. scipy y joblib son dependencias transitivas de sklearn y se
+    # fijan para que el experimento sea reproducible.
+    "scikit-learn==1.9.1",
+    "scipy==1.18.1",
+    "joblib==1.6.0",
 ]
 
 [project.optional-dependencies]
