@@ -44,9 +44,16 @@ class SealedTestSetError(RuntimeError):
 class SealedTestSet:
     """Conjunto de prueba que solo se abre con un freeze persistido y valido."""
 
-    def __init__(self, frame: pd.DataFrame, dataset_fingerprint: str, split_signature: str) -> None:
+    def __init__(
+        self,
+        frame: pd.DataFrame,
+        dataset_fingerprint: str,
+        split_signature: str,
+        config_fingerprint: str = "",
+    ) -> None:
         self.__frame = frame
         self.dataset_fingerprint = dataset_fingerprint
+        self.config_fingerprint = config_fingerprint
         self.split_signature = split_signature
         #: Aperturas en **esta instancia y esta ejecucion**. No es un registro
         #: historico: no demuestra cuantas veces se observo el test a lo largo
@@ -101,7 +108,12 @@ class SealedTestSet:
     def reveal(self, freeze: Any) -> pd.DataFrame:
         """Entrega las filas de prueba. Exige un freeze valido y persistido."""
         try:
-            validate_freeze_for_split(freeze, self.dataset_fingerprint, self.split_signature)
+            validate_freeze_for_split(
+                freeze,
+                dataset_fingerprint=self.dataset_fingerprint,
+                split_signature=self.split_signature,
+                config_fingerprint=self.config_fingerprint or None,
+            )
         except FreezeValidationError as error:
             raise SealedTestSetError(
                 f"no se puede abrir el conjunto de prueba: {error}"
@@ -156,7 +168,9 @@ def summarise_partition(frame: pd.DataFrame) -> dict[str, Any]:
     }
 
 
-def build_temporal_split(frame: pd.DataFrame, dataset_fingerprint: str = "") -> TemporalSplit:
+def build_temporal_split(
+    frame: pd.DataFrame, dataset_fingerprint: str = "", config_fingerprint: str = ""
+) -> TemporalSplit:
     """Ordena por checkpoint y corta 70/15/15 respetando la cronologia.
 
     Solo entran filas etiquetadas: los procesos censurados no forman parte del
@@ -205,7 +219,10 @@ def build_temporal_split(frame: pd.DataFrame, dataset_fingerprint: str = "") -> 
         train=train,
         validation=validation,
         sealed_test=SealedTestSet(
-            frame=test, dataset_fingerprint=dataset_fingerprint, split_signature=signature
+            frame=test,
+            dataset_fingerprint=dataset_fingerprint,
+            split_signature=signature,
+            config_fingerprint=config_fingerprint,
         ),
         signature=signature,
         boundaries=boundaries,

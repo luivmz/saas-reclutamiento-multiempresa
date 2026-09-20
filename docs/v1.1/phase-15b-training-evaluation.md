@@ -51,6 +51,12 @@ La prevalencia sube de train a validation/test: es el drift moderado que el gene
 
 Cualquier fallo lanza `SealedTestSetError`.
 
+**Validación del `source_path`.** Declarar una ruta no prueba nada: se exige que **exista**, que sea un **archivo regular**, que pueda **cargarse** y que el registro recargado tenga **la misma huella**. Un objeto construido en memoria con `source_path="archivo-que-no-existe.json"` no abre el test.
+
+**Enlace a la configuración.** Además del dataset y la partición, el freeze debe corresponder al `config_fingerprint` del generador. Un protocolo internamente íntegro pero de otra configuración se rechaza.
+
+**Contenido científico efectivo.** No basta con que la clave exista: `threshold_selection`, `calibration_decision`, `validation_metrics`, `validation_baselines`, `ablation_conclusions`, `verdict_rule` y `known_limitations` deben tener contenido; `validation_metrics` debe incluir la métrica primaria, y el umbral debe estar en el rango (0, 1).
+
 **Lo que `describe()` ya no expone.** Antes de revelar, devuelve solo `n`, organizaciones y el periodo, con `labels_disclosed: false`. **No informa de la prevalencia ni del número de positivos**: documentar el tamaño de la partición es legítimo, conocer su distribución de clases antes de congelar el protocolo no lo es. Tras el reveal, sí los incluye.
 
 Las filas viven en un atributo con *name mangling*, no en un campo público. **Esto reduce las rutas accidentales de acceso; no las hace imposibles.** Quien tenga acceso al proceso puede leer el atributo privado, y no se afirma lo contrario.
@@ -120,7 +126,9 @@ La regla se corrigió a «dominar al baseline en ambos ejes y después maximizar
 
 La corrección se decidió a partir de una observación **de validation** (la tasa de alerta). Pero una primera ejecución completa ya había impreso la AP de test antes de cerrar la versión final de la regla.
 
-Se clasifica como **MINOR PROCEDURAL CONTAMINATION** y queda registrada en las limitaciones conocidas del propio freeze. AP es invariante al umbral, y ninguna métrica de test dependiente del umbral se inspeccionó antes de la corrección, así que el efecto sobre la decisión es nulo por construcción.
+Se clasifica como **MINOR PROCEDURAL CONTAMINATION** y queda registrada en las limitaciones conocidas del propio freeze.
+
+AP es invariante al umbral y ninguna métrica de test dependiente de él se inspeccionó antes de la corrección. **No se encontró evidencia de un efecto material sobre la selección del modelo ni sobre el punto de operación, aunque no puede descartarse una influencia indirecta.**
 
 Aun así, **este conjunto no puede describirse como *pristine holdout* ni como *never seen holdout***. Se denomina **holdout de evaluación final con contaminación procedimental menor documentada**.
 
@@ -154,7 +162,7 @@ El freeze que abre el conjunto de prueba es **el recargado desde disco**, de mod
 
 ### Contenido del protocolo
 
-`docs/v1.1/ml/phase-15b-experiment-freeze.json` — huella `1aff7c539dee99d17a7c8bf7c8204339ada8b069d220ade84d734412269ca2fa`:
+`docs/v1.1/ml/phase-15b-experiment-freeze.json` — huella `ec8e89cd408b8f5d4256a840b2455ee3034a41ad682e9dd2077f328aa6a72253`:
 
 `schema_version` · `experiment_id` · `seed` · `dataset_fingerprint` · `config_fingerprint` · `split_signature` · `split_definition` · `feature_set` y `features` (15) · `excluded_features` · `ablation_feature_sets` · `preprocessing` · `model_family` y `model_params` · **`threshold` exacto** y `threshold_rule` · `threshold_selection` · `calibration_decision` · `validation_metrics` · `validation_baselines` · `ablation_conclusions` · `verdict_rule` · **`known_limitations`** · `frozen_at` · `freeze_fingerprint`.
 
@@ -172,7 +180,7 @@ Se calcula sobre el protocolo **excluyendo `frozen_at` y la propia huella**. As�
 
 ## 9. Resultado final en test
 
-Evaluado **una sola vez**, con todo congelado.
+Evaluado **una vez en esta ejecución corregida**, con todo congelado. `test_reveal_count` es un contador local de la instancia actual, **no evidencia histórica absoluta**.
 
 | Métrica | Validation | **Test** |
 |---|---|---|
@@ -204,7 +212,7 @@ Con la configuración seleccionada, sin reajustar hiperparámetros, evaluadas en
 
 **Lectura:**
 
-- **`concurrent_open_vacancies_count`**: quitarla degrada AP en **0.0100** (0.7574 → 0.7474). La dependencia observada es **pequeña o moderada en este experimento**. Se reporta de forma **descriptiva**: no existe ningún umbral preregistrado en la Fase 14 que convierta esta diferencia en un criterio de aprobación, y **no se usa como criterio de gate**. Sigue siendo la feature con mayor efecto y la que más conviene vigilar por su correlación con el calendario.
+- **`concurrent_open_vacancies_count`**: quitarla cambia AP en **−0.0100** (−1.32 % relativo: 0.7574 → 0.7474). Se reporta de forma **puramente descriptiva**, con magnitud absoluta y relativa: el código **ya no aplica ningún corte rígido** para clasificar la dependencia como «pequeña» o «apreciable», porque la Fase 14 no preregistró ningún umbral y cualquier categoría sería una heurística inventada a posteriori. **No es criterio de gate.** Sigue siendo la feature con mayor efecto y la que más conviene vigilar por su correlación con el calendario.
 - **`elapsed_days_since_publication`**: quitarla no degrada nada (−0.0002). **El modelo no depende de ella**, lo que resuelve la preocupación por su colinealidad con `application_window_days` (Pearson 0.972): su peso es intercambiable, no imprescindible.
 - **`configured_stage_count`**: añadirla no mejora (−0.0004). **Se mantiene fuera del núcleo.**
 
@@ -302,7 +310,7 @@ Semilla `20260920` en dataset, split, modelos y calibración. Dos ejecuciones co
 
 ## 17. Pruebas
 
-**285 pruebas, 0 fallos, 97 % de cobertura** (las 182 de 15A siguen pasando; 103 nuevas de 15B).
+**305 pruebas, 0 fallos, 97 % de cobertura** (las 182 de 15A siguen pasando; 123 de 15B).
 
 | Archivo nuevo | Pruebas | Garantía |
 |---|---|---|
@@ -313,7 +321,7 @@ Semilla `20260920` en dataset, split, modelos y calibración. Dos ejecuciones co
 | `test_threshold_selection.py` | 10 | Regla relativa, sin degenerar, determinista |
 | `test_temporal_split.py` | 9 | Cronología, sin solapamiento, censurados fuera |
 | `test_ablation.py` | 9 | Las tres obligaciones de la auditoría cubiertas |
-| `test_freeze_contract.py` | 16 | Persistencia previa al reveal, integridad, rechazo de freeze inválido y **reconstrucción de predicciones desde el artefacto** |
+| `test_freeze_contract.py` | 38 | Persistencia previa al reveal, integridad, **enlace a la configuración**, **`source_path` real**, **secciones científicas no vacías**, y reconstrucción de predicciones desde el artefacto |
 
 ## 18. Qué NO se implementó
 

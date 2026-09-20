@@ -1,8 +1,8 @@
 {
   "ablation_interpretation": {
-    "concurrent_open_vacancies_count": "quitarla degrada AP levemente (delta=-0.0100): aporta senal moderada",
-    "configured_stage_count": "anadirla no mejora AP (delta=-0.0004): se mantiene fuera del nucleo",
-    "elapsed_days_since_publication": "quitarla no degrada AP (delta=-0.0002): el modelo no depende de ella"
+    "concurrent_open_vacancies_count": "quitarla cambia AP en -0.0100 (-1.32 % relativo): 0.7574 -> 0.7474. Cifra descriptiva; no existe umbral preregistrado que la convierta en criterio.",
+    "configured_stage_count": "anadirla cambia AP en -0.0004 (-0.05 % relativo): 0.7574 -> 0.7570. Se mantiene como ablation experimental; cifra descriptiva, sin umbral preregistrado.",
+    "elapsed_days_since_publication": "quitarla cambia AP en -0.0002 (-0.03 % relativo): 0.7574 -> 0.7572. Cifra descriptiva; no existe umbral preregistrado que la convierta en criterio."
   },
   "ablations": {
     "core": {
@@ -339,7 +339,7 @@
       }
     ]
   },
-  "freeze_fingerprint": "1aff7c539dee99d17a7c8bf7c8204339ada8b069d220ade84d734412269ca2fa",
+  "freeze_fingerprint": "ec8e89cd408b8f5d4256a840b2455ee3034a41ad682e9dd2077f328aa6a72253",
   "organizations_test": {
     "1": {
       "average_precision": 0.476215,

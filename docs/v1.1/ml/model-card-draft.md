@@ -18,7 +18,7 @@
 | Curso | Pruebas y Calidad de Software, NRC 28607, Universidad Continental |
 | Docente | Dr. Maglioni Arana Caparachin |
 | Revisión y aprobación | Auditoría científica de Codex **pendiente** |
-| Evidencia | **Protocolo pre-test:** [`phase-15b-experiment-freeze.json`](phase-15b-experiment-freeze.json) (huella `1aff7c539dee99d1…`) · **Resultados post-test:** [`phase-15b-test-results.json`](phase-15b-test-results.json) · [`phase-15b-results-summary.json`](phase-15b-results-summary.json) · [`../phase-15b-training-evaluation.md`](../phase-15b-training-evaluation.md) |
+| Evidencia | **Protocolo pre-test:** [`phase-15b-experiment-freeze.json`](phase-15b-experiment-freeze.json) (huella `ec8e89cd408b8f5d…`) · **Resultados post-test:** [`phase-15b-test-results.json`](phase-15b-test-results.json) · [`phase-15b-results-summary.json`](phase-15b-results-summary.json) · [`../phase-15b-training-evaluation.md`](../phase-15b-training-evaluation.md) |
 
 ## Propósito
 
@@ -64,7 +64,7 @@ delayed = 0  si  vacancies.closed_at <= target_completion_at
 
 ## Partición
 
-Bloques temporales 70 / 15 / 15 ordenados por `checkpoint_at`. Los empates de timestamp se resuelven de forma determinista por `vacancy_id`, así que un mismo instante puede aparecer a ambos lados de una frontera: **no se afirma desigualdad estricta fila a fila**. El conjunto de prueba se abrió una vez **en esta ejecución**, tras persistir el freeze; ese contador no es un registro histórico.
+Bloques temporales 70 / 15 / 15 ordenados por `checkpoint_at`. Los empates de timestamp se resuelven de forma determinista por `vacancy_id`, así que un mismo instante puede aparecer a ambos lados de una frontera: **no se afirma desigualdad estricta fila a fila**. El conjunto de prueba se abrió una vez **en esta ejecución corregida**, tras persistir el freeze. `test_reveal_count` es un contador local de la instancia actual, **no evidencia histórica absoluta**.
 
 | Partición | n | Prevalencia | Periodo |
 |---|---|---|---|
@@ -128,7 +128,7 @@ Medidas sobre **test**, con la configuración congelada. Prevalencia de test 0.3
 6. **Tasa de alerta alta.** En el umbral elegido el modelo marca el **73.5 %** de los procesos de test (recall 0.934, precision 0.484). Es consecuencia directa de una regla recall-oriented y constituye el principal problema de diseño para la interfaz de 15C.
 7. **F2 poco discriminante en este régimen.** Un predictor que alerta sobre todo obtiene F2 0.7545 frente al 0.7871 del modelo. La comparación significativa es la AP (0.769 frente a 0.381), no F2.
 8. **Heterogeneidad entre organizaciones sintéticas.** AP entre 0.476 (n=67) y 0.840. La organización con peor desempeño tiene pocos casos y su estimación es ruidosa; no debe sobreinterpretarse.
-9. **MINOR PROCEDURAL CONTAMINATION.** La AP de test se observó antes de cerrar la versión final de la regla de umbral. AP es invariante al umbral y ninguna métrica dependiente de él se inspeccionó antes, pero este holdout **no** puede describirse como intacto.
+9. **MINOR PROCEDURAL CONTAMINATION.** La AP de test se observó antes de cerrar la versión final de la regla de umbral. AP es invariante al umbral y ninguna métrica dependiente de él se inspeccionó antes. No se encontró evidencia de un efecto material sobre la selección del modelo ni sobre el punto de operación, **aunque no puede descartarse una influencia indirecta**; este holdout **no** puede describirse como intacto.
 10. **Censura informativa medida.** Mayor \|SMD\| 0.2298 en `days_since_last_operational_event`. La censura contextual por ventana es comparable (train 0.074, validation 0.087, test 0.086).
 11. **Coeficientes no interpretables como importancia.** `applications_received_count` (+2.69) y `stage_transition_count` (−2.38) están fuertemente correlacionados por construcción, igual que `elapsed_days_since_publication` y `application_window_days` (Pearson 0.972). El reparto de peso entre features colineales es inestable.
 12. **Deriva temporal presente pero no degradante.** La AP sube de train (0.699) a test (0.769) porque la prevalencia también sube; el ROC-AUC se mantiene estable en 0.83.

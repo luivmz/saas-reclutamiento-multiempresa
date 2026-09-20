@@ -165,22 +165,33 @@ def test_reveal_rejects_a_freeze_from_another_split(tmp_path: Path, experiment_r
         split.sealed_test.reveal(load_freeze(path))
 
 
-def test_incomplete_freeze_is_rejected(experiment_result) -> None:
+def test_incomplete_freeze_is_rejected(tmp_path: Path, experiment_result) -> None:
+    """Sin features declaradas el protocolo no documenta el experimento."""
     empty_features = replace(experiment_result.freeze_object, features=[]).with_fingerprint()
+    persist_freeze(empty_features, tmp_path / "freeze.json")
+    loaded = load_freeze(tmp_path / "freeze.json")
 
     with pytest.raises(FreezeValidationError, match="features"):
         validate_freeze_for_split(
-            empty_features,
-            empty_features.dataset_fingerprint,
-            empty_features.split_signature,
+            loaded,
+            dataset_fingerprint=loaded.dataset_fingerprint,
+            split_signature=loaded.split_signature,
+            config_fingerprint=loaded.config_fingerprint,
         )
 
 
-def test_incompatible_schema_version_is_rejected(experiment_result) -> None:
+def test_incompatible_schema_version_is_rejected(tmp_path: Path, experiment_result) -> None:
     old = replace(experiment_result.freeze_object, schema_version="15a.0").with_fingerprint()
+    path = persist_freeze(old, tmp_path / "freeze.json")
 
     with pytest.raises(FreezeValidationError, match="contrato"):
-        validate_freeze_for_split(old, old.dataset_fingerprint, old.split_signature)
+        validate_freeze_for_split(
+            ExperimentFreeze.from_dict(
+                __import__("json").loads(path.read_text(encoding="utf-8")), source_path=str(path)
+            ),
+            dataset_fingerprint=old.dataset_fingerprint,
+            split_signature=old.split_signature,
+        )
 
 
 # --- reconstrucción desde el artefacto persistido --------------------------
@@ -299,3 +310,159 @@ def test_the_persisted_freeze_is_the_one_that_opened_the_test(tmp_path: Path) ->
     assert on_disk.freeze_fingerprint == result.freeze_object.freeze_fingerprint
     assert result.freeze_object.source_path == str(path)
     assert result.to_dict()["split"]["test_reveal_count"] == 1
+
+
+# --- huecos residuales cerrados en la correccion final ---------------------
+#
+# Codex verifico que `validate_freeze_for_split` todavia aceptaba un freeze con
+# config_fingerprint incorrecto, con source_path inexistente y con secciones
+# cientificas vacias. Cada caso se prueba ahora **a nivel del flujo real de
+# reveal**, no solo llamando al validador.
+
+
+@pytest.fixture
+def aligned_split(training_frame, experiment_result):
+    """Particion alineada con el freeze de referencia: el caso que SI funciona."""
+    freeze = experiment_result.freeze_object
+    split = build_temporal_split(
+        training_frame,
+        dataset_fingerprint=freeze.dataset_fingerprint,
+        config_fingerprint=freeze.config_fingerprint,
+    )
+    return split, replace(freeze, split_signature=split.signature).with_fingerprint()
+
+
+def test_an_aligned_and_persisted_freeze_is_accepted(tmp_path: Path, aligned_split) -> None:
+    """Control positivo: sin el, las pruebas negativas no demuestran nada."""
+    split, freeze = aligned_split
+    path = persist_freeze(freeze, tmp_path / "freeze.json")
+
+    revealed = split.sealed_test.reveal(load_freeze(path))
+
+    assert len(revealed) == len(split.sealed_test)
+    assert split.sealed_test.reveal_count == 1
+
+
+def test_reveal_rejects_a_wrong_config_fingerprint(tmp_path: Path, aligned_split) -> None:
+    """La huella interna se regenera: no basta con la deteccion de manipulacion.
+
+    El freeze es internamente coherente e integro; lo que falla es que no
+    pertenece a la configuracion del generador que produjo esta particion.
+    """
+    split, freeze = aligned_split
+    wrong = replace(freeze, config_fingerprint="0" * 64).with_fingerprint()
+    assert wrong.is_intact(), "la huella debe regenerarse para aislar el fallo de config"
+    path = persist_freeze(wrong, tmp_path / "freeze.json")
+
+    with pytest.raises(SealedTestSetError, match="otra configuracion"):
+        split.sealed_test.reveal(load_freeze(path))
+    assert split.sealed_test.reveal_count == 0
+
+
+def test_reveal_rejects_a_nonexistent_source_path(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    phantom = replace(freeze, source_path=str(tmp_path / "no-existe.json"))
+
+    with pytest.raises(SealedTestSetError, match="no existe"):
+        split.sealed_test.reveal(phantom)
+    assert split.sealed_test.reveal_count == 0
+
+
+def test_reveal_rejects_a_source_path_pointing_to_a_directory(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    directory = tmp_path / "carpeta"
+    directory.mkdir()
+    as_directory = replace(freeze, source_path=str(directory))
+
+    with pytest.raises(SealedTestSetError, match="no es un archivo regular"):
+        split.sealed_test.reveal(as_directory)
+    assert split.sealed_test.reveal_count == 0
+
+
+def test_reveal_rejects_a_source_path_holding_a_different_freeze(
+    tmp_path: Path, aligned_split
+) -> None:
+    """La ruta existe y es legible, pero contiene otro protocolo."""
+    split, freeze = aligned_split
+    other = replace(freeze, experiment_id="otro-experimento").with_fingerprint()
+    decoy = persist_freeze(other, tmp_path / "otro.json")
+    mismatched = replace(freeze, source_path=str(decoy))
+
+    with pytest.raises(SealedTestSetError, match="un freeze distinto"):
+        split.sealed_test.reveal(mismatched)
+    assert split.sealed_test.reveal_count == 0
+
+
+def test_reveal_rejects_a_tampered_source_file(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    path = persist_freeze(freeze, tmp_path / "freeze.json")
+    loaded = load_freeze(path)
+
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["model_family"] = "random_forest"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(SealedTestSetError, match="alterado"):
+        split.sealed_test.reveal(loaded)
+    assert split.sealed_test.reveal_count == 0
+
+
+@pytest.mark.parametrize(
+    "section",
+    [
+        "threshold_selection",
+        "calibration_decision",
+        "validation_metrics",
+        "validation_baselines",
+        "ablation_conclusions",
+        "verdict_rule",
+        "known_limitations",
+    ],
+)
+def test_reveal_rejects_an_empty_scientific_section(
+    tmp_path: Path, aligned_split, section: str
+) -> None:
+    """Que la clave exista no basta: un protocolo vacio no documenta nada."""
+    split, freeze = aligned_split
+    empty = [] if section == "known_limitations" else {}
+    gutted = replace(freeze, **{section: empty}).with_fingerprint()
+    path = persist_freeze(gutted, tmp_path / "freeze.json")
+
+    with pytest.raises(SealedTestSetError, match=f"seccion cientifica vacia.*{section}"):
+        split.sealed_test.reveal(load_freeze(path))
+    assert split.sealed_test.reveal_count == 0
+
+
+def test_reveal_rejects_validation_metrics_without_the_primary_metric(
+    tmp_path: Path, aligned_split
+) -> None:
+    split, freeze = aligned_split
+    without_ap = {k: v for k, v in freeze.validation_metrics.items() if k != "average_precision"}
+    gutted = replace(freeze, validation_metrics=without_ap).with_fingerprint()
+    path = persist_freeze(gutted, tmp_path / "freeze.json")
+
+    with pytest.raises(SealedTestSetError, match="metrica primaria"):
+        split.sealed_test.reveal(load_freeze(path))
+
+
+@pytest.mark.parametrize(
+    "field_name", ["feature_set", "model_family", "threshold_rule", "preprocessing", "experiment_id"]
+)
+def test_reveal_rejects_an_empty_scalar_field(
+    tmp_path: Path, aligned_split, field_name: str
+) -> None:
+    split, freeze = aligned_split
+    gutted = replace(freeze, **{field_name: ""}).with_fingerprint()
+    path = persist_freeze(gutted, tmp_path / "freeze.json")
+
+    with pytest.raises(SealedTestSetError, match=f"{field_name} vacio"):
+        split.sealed_test.reveal(load_freeze(path))
+
+
+def test_reveal_rejects_an_out_of_range_threshold(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    invalid = replace(freeze, threshold=1.5).with_fingerprint()
+    path = persist_freeze(invalid, tmp_path / "freeze.json")
+
+    with pytest.raises(SealedTestSetError, match="rango valido"):
+        split.sealed_test.reveal(load_freeze(path))

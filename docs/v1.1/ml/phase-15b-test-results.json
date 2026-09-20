@@ -341,9 +341,9 @@
     ]
   },
   "dataset_fingerprint": "d94fe60d941be87580c71c3a72155b59a0b3a38071ad619ecd986bf607f1b2ae",
-  "evaluated_at": "2026-09-20T16:04:43.543283-05:00",
+  "evaluated_at": "2026-09-20T16:39:47.639298-05:00",
   "experiment_id": "phase-15b-20260920-6000",
-  "freeze_fingerprint": "1aff7c539dee99d17a7c8bf7c8204339ada8b069d220ade84d734412269ca2fa",
+  "freeze_fingerprint": "ec8e89cd408b8f5d4256a840b2455ee3034a41ad682e9dd2077f328aa6a72253",
   "limitations": [
     "Datos exclusivamente sinteticos: el resultado demuestra metodo, no validez institucional.",
     "Censura informativa por diseno: el conjunto supervisado esta sesgado hacia procesos que cerraron.",

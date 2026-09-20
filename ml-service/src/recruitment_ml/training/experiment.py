@@ -196,8 +196,13 @@ def _run(
     dataset = build_dataset(config)
     frame = dataset.model_ready()
     dataset_fingerprint = str(dataset.manifest["model_ready_fingerprint"])
+    config_fingerprint = str(dataset.manifest["config_fingerprint"])
 
-    split = build_temporal_split(frame, dataset_fingerprint=dataset_fingerprint)
+    split = build_temporal_split(
+        frame,
+        dataset_fingerprint=dataset_fingerprint,
+        config_fingerprint=config_fingerprint,
+    )
     train, validation = split.train, split.validation
     y_train = build_target(train)
     y_validation = build_target(validation)
@@ -277,7 +282,7 @@ def _run(
         experiment_id=f"phase-15b-{seed}-{rows}",
         seed=seed,
         dataset_fingerprint=dataset_fingerprint,
-        config_fingerprint=str(dataset.manifest["config_fingerprint"]),
+        config_fingerprint=config_fingerprint,
         split_signature=split.signature,
         split_definition={
             "ratios": {"train": 0.70, "validation": 0.15, "test": 0.15},

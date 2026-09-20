@@ -158,14 +158,110 @@ def load_freeze(path: Path) -> ExperimentFreeze:
     return freeze
 
 
+#: Secciones cientificas que deben existir **y tener contenido**.
+#:
+#: Comprobar que la clave existe no basta: un freeze con `validation_metrics`
+#: vacio no documenta nada y no puede autorizar la apertura del test.
+REQUIRED_SCIENTIFIC_SECTIONS = (
+    "threshold_selection",
+    "calibration_decision",
+    "validation_metrics",
+    "validation_baselines",
+    "ablation_conclusions",
+    "verdict_rule",
+    "known_limitations",
+)
+
+#: Campos escalares que no pueden quedar vacios.
+REQUIRED_SCALAR_FIELDS = (
+    "feature_set",
+    "model_family",
+    "threshold_rule",
+    "preprocessing",
+    "experiment_id",
+    "dataset_fingerprint",
+    "config_fingerprint",
+    "split_signature",
+)
+
+
+def _validate_source_file(freeze: ExperimentFreeze) -> None:
+    """Comprueba que el freeze proviene de un archivo real y coincidente.
+
+    Declarar una ruta no es prueba de nada: se exige que exista, que sea un
+    archivo regular, que pueda cargarse y que el registro recargado tenga la
+    misma huella. Un objeto construido en memoria con una ruta inventada no
+    abre el conjunto de prueba.
+    """
+    if freeze.source_path is None:
+        raise FreezeValidationError(
+            "el freeze debe haberse persistido y recargado desde disco antes de revelar el test"
+        )
+
+    path = Path(freeze.source_path)
+    if not path.exists():
+        raise FreezeValidationError(
+            f"source_path no existe: {freeze.source_path!r}; el freeze no fue persistido"
+        )
+    if not path.is_file():
+        raise FreezeValidationError(
+            f"source_path no es un archivo regular: {freeze.source_path!r}"
+        )
+
+    reloaded = load_freeze(path)
+    if reloaded.freeze_fingerprint != freeze.freeze_fingerprint:
+        raise FreezeValidationError(
+            "el archivo de source_path contiene un freeze distinto: "
+            f"{reloaded.freeze_fingerprint!r} != {freeze.freeze_fingerprint!r}"
+        )
+
+
+def _validate_scientific_content(freeze: ExperimentFreeze) -> None:
+    """Valida que el protocolo documenta de verdad lo que dice documentar."""
+    for name in REQUIRED_SCALAR_FIELDS:
+        if not getattr(freeze, name):
+            raise FreezeValidationError(f"el freeze esta incompleto: {name} vacio o ausente")
+
+    if not freeze.features:
+        raise FreezeValidationError("el freeze esta incompleto: no declara features")
+    if not freeze.model_params and freeze.model_params != {}:  # pragma: no cover - defensivo
+        raise FreezeValidationError("el freeze esta incompleto: model_params ausente")
+    if freeze.model_params is None:
+        raise FreezeValidationError("el freeze esta incompleto: model_params ausente")
+    if not isinstance(freeze.threshold, float) or not 0.0 < freeze.threshold < 1.0:
+        raise FreezeValidationError(
+            f"umbral fuera del rango valido (0, 1): {freeze.threshold!r}"
+        )
+
+    for section in REQUIRED_SCIENTIFIC_SECTIONS:
+        value = getattr(freeze, section)
+        if value is None or len(value) == 0:
+            raise FreezeValidationError(
+                f"seccion cientifica vacia o ausente: {section}. Un protocolo sin ella "
+                "no documenta el experimento y no puede autorizar la apertura del test"
+            )
+
+    if "average_precision" not in freeze.validation_metrics:
+        raise FreezeValidationError(
+            "validation_metrics no contiene la metrica primaria (average_precision)"
+        )
+    if "threshold" not in freeze.threshold_selection:
+        raise FreezeValidationError("threshold_selection no documenta el umbral elegido")
+
+
 def validate_freeze_for_split(
-    freeze: Any, dataset_fingerprint: str, split_signature: str
+    freeze: Any,
+    dataset_fingerprint: str,
+    split_signature: str,
+    config_fingerprint: str | None = None,
 ) -> ExperimentFreeze:
     """Valida un freeze antes de permitir el acceso al conjunto de prueba.
 
-    No basta con un objeto que declare `is_frozen=True`: se exige el tipo del
-    dominio, integridad de la huella, procedencia de disco y correspondencia
-    con el dataset y la particion concretos.
+    No basta con un objeto que declare `is_frozen=True`. Se exige el tipo del
+    dominio, la version del contrato, integridad de la huella, **procedencia de
+    un archivo real y coincidente**, correspondencia con el dataset, la
+    configuracion y la particion concretos, y **contenido cientifico efectivo**
+    en cada seccion obligatoria.
     """
     if not isinstance(freeze, ExperimentFreeze):
         raise FreezeValidationError(
@@ -177,31 +273,28 @@ def validate_freeze_for_split(
         raise FreezeValidationError(
             f"version de contrato incompatible: {freeze.schema_version!r} != {FREEZE_SCHEMA_VERSION!r}"
         )
-    if freeze.source_path is None:
-        raise FreezeValidationError(
-            "el freeze debe haberse persistido y recargado desde disco antes de revelar el test"
-        )
     if not freeze.is_intact():
         raise FreezeValidationError("la huella del freeze no coincide con su contenido")
+
+    _validate_source_file(freeze)
+
     if freeze.dataset_fingerprint != dataset_fingerprint:
         raise FreezeValidationError(
             "el freeze corresponde a otro dataset: "
             f"{freeze.dataset_fingerprint!r} != {dataset_fingerprint!r}"
+        )
+    if config_fingerprint is not None and freeze.config_fingerprint != config_fingerprint:
+        raise FreezeValidationError(
+            "el freeze corresponde a otra configuracion del generador: "
+            f"{freeze.config_fingerprint!r} != {config_fingerprint!r}"
         )
     if freeze.split_signature != split_signature:
         raise FreezeValidationError(
             "el freeze corresponde a otra particion temporal: "
             f"{freeze.split_signature!r} != {split_signature!r}"
         )
-    for name, value in (
-        ("feature_set", freeze.feature_set),
-        ("model_family", freeze.model_family),
-        ("threshold_rule", freeze.threshold_rule),
-    ):
-        if not value:
-            raise FreezeValidationError(f"el freeze esta incompleto: falta {name}")
-    if not freeze.features:
-        raise FreezeValidationError("el freeze esta incompleto: no declara features")
+
+    _validate_scientific_content(freeze)
     return freeze
 
 

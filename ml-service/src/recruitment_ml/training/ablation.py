@@ -95,7 +95,14 @@ def run_ablations(
 
 
 def _interpret(results: dict[str, Any]) -> dict[str, str]:
-    """Lectura textual de las diferencias, sin atribuir causalidad."""
+    """Lectura descriptiva de las diferencias, sin atribuir causalidad.
+
+    **No hay cortes rigidos.** La Fase 14 no preregistro ningun umbral que
+    convierta una diferencia de AP en un criterio de aprobacion, asi que aqui
+    se reportan la magnitud absoluta y la relativa y se deja la lectura al
+    lector. Cualquier categoria del tipo "pequena" o "apreciable" seria una
+    heuristica inventada a posteriori.
+    """
     core = results[FEATURE_SET_CORE]["average_precision"]
     readings: dict[str, str] = {}
 
@@ -104,27 +111,19 @@ def _interpret(results: dict[str, Any]) -> dict[str, str]:
         (FEATURE_SET_NO_ELAPSED, "elapsed_days_since_publication"),
     ):
         delta = results[feature_set]["average_precision"] - core
-        if delta >= -0.005:
-            readings[label] = (
-                f"quitarla no degrada AP (delta={delta:+.4f}): el modelo no depende de ella"
-            )
-        elif delta >= -0.02:
-            readings[label] = (
-                f"quitarla degrada AP levemente (delta={delta:+.4f}): aporta senal moderada"
-            )
-        else:
-            readings[label] = (
-                f"quitarla degrada AP de forma apreciable (delta={delta:+.4f}): el modelo "
-                "se apoya en ella y conviene vigilar el riesgo de atajo temporal"
-            )
+        relative = (delta / core * 100.0) if core else float("nan")
+        readings[label] = (
+            f"quitarla cambia AP en {delta:+.4f} ({relative:+.2f} % relativo): "
+            f"{core:.4f} -> {results[feature_set]['average_precision']:.4f}. "
+            "Cifra descriptiva; no existe umbral preregistrado que la convierta en criterio."
+        )
 
-    delta_stage = results[FEATURE_SET_WITH_STAGE_COUNT]["average_precision"] - core
-    if delta_stage <= 0.005:
-        readings["configured_stage_count"] = (
-            f"anadirla no mejora AP (delta={delta_stage:+.4f}): se mantiene fuera del nucleo"
-        )
-    else:
-        readings["configured_stage_count"] = (
-            f"anadirla mejora AP (delta={delta_stage:+.4f}): merece revision en fases futuras"
-        )
+    with_stage = results[FEATURE_SET_WITH_STAGE_COUNT]["average_precision"]
+    delta_stage = with_stage - core
+    relative_stage = (delta_stage / core * 100.0) if core else float("nan")
+    readings["configured_stage_count"] = (
+        f"anadirla cambia AP en {delta_stage:+.4f} ({relative_stage:+.2f} % relativo): "
+        f"{core:.4f} -> {with_stage:.4f}. Se mantiene como ablation experimental; "
+        "cifra descriptiva, sin umbral preregistrado."
+    )
     return readings

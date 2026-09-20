@@ -97,7 +97,12 @@ def test_interpretation_covers_the_three_audited_features(ablation_report) -> No
         "configured_stage_count",
     ):
         assert feature in interpretation
-        assert "delta=" in interpretation[feature]
+        # La lectura es descriptiva: magnitud absoluta y relativa, sin cortes rigidos.
+        assert "cambia AP en" in interpretation[feature]
+        assert "% relativo" in interpretation[feature]
+        assert "sin umbral preregistrado" in interpretation[feature] or (
+            "no existe umbral preregistrado" in interpretation[feature]
+        )
 
 
 def test_experiment_reports_the_ablation_table(experiment_result) -> None:
