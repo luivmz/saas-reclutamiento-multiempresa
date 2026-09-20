@@ -2,6 +2,8 @@
 
 **Estado: borrador de planificación.** Nada de este documento está aprobado. Sirve para que el equipo decida, no para autorizar trabajo.
 
+> **Actualización del 20 de septiembre de 2026 (Fase 14).** El equipo aprobó doce decisiones sobre el **experimento de ML**, pero **ningún requerimiento**: RF-28 a RF-31 y los RNF **siguen siendo candidatos** y no entran al baseline de v1.1 (decisión 11). Se añadió la brecha `GAP-01` —necesidad de un plazo operacional explícito, aprobada conceptualmente y sin implementar— y cinco RNF candidatos con numeración provisional. Detalle en [`ml/requirements-and-traceability-plan.md`](ml/requirements-and-traceability-plan.md); registro de decisiones en [`phase-14-ml-definition.md` §4](phase-14-ml-definition.md).
+
 Leyenda:
 
 - **Verificado** — comprobado en el repositorio o en una ejecución real.
@@ -23,7 +25,7 @@ Numeración **provisional**: estos identificadores solo se fijan cuando el equip
 | Candidato | Descripción | Estado | Riesgo principal |
 |---|---|---|---|
 | RF-28 (cand.) | Panel operativo de seguimiento de convocatorias: etapas, tiempos y cuellos de botella, sin datos de personas | Propuesta | Puede confundirse con evaluación de candidatos si el diseño no es explícito |
-| RF-29 (cand.) | Estimación informativa de riesgo de demora de una convocatoria | Pendiente de decisión | Depende por completo de `ml-feasibility.md`; sin no-go superado, no existe |
+| RF-29 (cand.) | Estimación informativa de riesgo de demora de una convocatoria | Pendiente de decisión | Depende por completo de `ml-feasibility.md`; sin no-go superado, no existe. **Fase 14:** especificado en detalle y **bloqueado** por `ML-DECISION-01` (semántica del plazo objetivo) |
 | RF-30 (cand.) | Exportación de reportes operativos del proceso (PDF/CSV) para el informe académico | Propuesta | Riesgo de incluir datos personales si no se filtra por diseño |
 | RF-31 (cand.) | Portal público de vacantes con presentación visual mejorada | Propuesta | Alcance visual que puede desbordar hacia rediseño general |
 
@@ -71,3 +73,14 @@ Se expresa el **riesgo de retraso**, no una duración exacta: el proyecto no tie
 6. ¿Qué entregables exige la próxima evaluación del curso y con qué fecha?
 
 Ninguna implementación de v1.1 debe comenzar antes de responder 1 y 6.
+
+### Añadidas por la Fase 14
+
+7. ~~`ML-DECISION-01` — fuente y semántica de `target_completion_at`~~ → **Resuelta el 20/09/2026** (decisión 3): `required_by` descartado; plazo explícito aprobado conceptualmente; implementación en `GAP-01`.
+8. ~~Metas de precision y recall~~ → **Política aprobada** (decisión 8); las **cifras** se determinan experimentalmente en la Fase 15 y se documentan.
+9. ~~Contrato de features y estrategia de dataset~~ → **Aprobados** (decisiones 4 y 9).
+10. **¿Se autoriza, por separado, crear código Python e instalar dependencias en la Fase 15?** → **PENDIENTE.** Es la única condición que falta del gate científico.
+11. **¿Cuándo y cómo se resuelve `GAP-01`?** → **PENDIENTE.** Bloquea la integración del modelo en Laravel, aunque no el experimento.
+12. **¿Pasan RF-28 y RF-29 al baseline de v1.1?** → **PENDIENTE.** La decisión 11 los mantiene como candidatos.
+
+Las dos compuertas —científica y de integración— están detalladas en [`phase-14-ml-definition.md` §8](phase-14-ml-definition.md).

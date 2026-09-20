@@ -2,6 +2,10 @@
 
 **Estado: estudio de viabilidad. No se ha implementado nada, no se ha entrenado ningún modelo y no existe ningún dataset.** Este documento describe qué tendría que ser cierto para que el servicio exista.
 
+> **Actualización del 20 de septiembre de 2026 (Fase 14).** Este estudio sigue vigente y no se reescribe. La Fase 14 lo llevó de estudio de viabilidad a **especificación formal aprobada**: el equipo tomó doce decisiones que fijan problema, unidad, checkpoint, target, dataset, partición, modelos, métrica, política de umbrales, features, censura y criterios de no-go. Punto de entrada: [`phase-14-ml-definition.md`](phase-14-ml-definition.md).
+>
+> **Conclusión operativa:** el experimento **puede** ejecutarse sobre datos sintéticos, pero `job_requests.required_by` **no** se reinterpreta como plazo objetivo. La necesidad de un `target_completion_at` explícito queda aprobada conceptualmente y su implementación registrada como `GAP-01`. Eso separa dos compuertas: el **gate científico**, cumplido salvo la autorización para crear código Python, y el **gate de integración Laravel**, **bloqueado** hasta resolver `GAP-01`.
+
 ## 1. Qué se propone predecir
 
 El **comportamiento del proceso de reclutamiento**, cuya unidad de análisis es la convocatoria o la etapa, nunca el postulante:
@@ -69,11 +73,28 @@ Etiqueta explícita de "estimación", incertidumbre visible, origen del dato, av
 
 ## 8. Estado actual
 
-| Elemento | Estado |
+| Elemento | Estado al 20 de septiembre de 2026 |
 |---|---|
-| Decisión de explorar el servicio | **Pendiente** |
+| Decisión de explorar el servicio | **Aprobada** (decisión 1) |
+| Especificación formal del experimento | **Existe y está aprobada** — ver [`phase-14-ml-definition.md`](phase-14-ml-definition.md) |
+| Semántica del plazo objetivo (`ML-DECISION-01`) | **Resuelta** — `required_by` descartado; `target_completion_at` aprobado conceptualmente |
+| Implementación del plazo (`GAP-01`) | **Abierta — bloquea la integración, no el experimento** |
+| Autorización para código Python y dependencias | **Pendiente** — única condición que falta del gate científico |
 | Dataset | No existe |
 | Modelo | No existe |
 | Servicio FastAPI | No existe |
 | Cliente en Laravel | No existe |
 | Dependencias añadidas | Ninguna |
+
+### Dónde continúa este estudio
+
+| Tema | Documento de la Fase 14 |
+|---|---|
+| Problema, unidad, checkpoint, target, fuga | [`ml/problem-definition.md`](ml/problem-definition.md) |
+| Features incluidas, excluidas y prohibidas | [`ml/feature-contract.md`](ml/feature-contract.md) |
+| Dataset sintético reproducible | [`ml/dataset-specification.md`](ml/dataset-specification.md) |
+| Split, baselines, métricas, aceptación y no-go | [`ml/evaluation-plan.md`](ml/evaluation-plan.md) |
+| Ética y supervisión humana | [`ml/ethics-and-human-oversight.md`](ml/ethics-and-human-oversight.md) |
+| Borrador de model card | [`ml/model-card-draft.md`](ml/model-card-draft.md) |
+| Contrato conceptual de API | [`ml/api-contract-draft.md`](ml/api-contract-draft.md) |
+| Decisión de arquitectura | [`architecture-decisions/ADR-004-ml-problem-definition.md`](architecture-decisions/ADR-004-ml-problem-definition.md) |

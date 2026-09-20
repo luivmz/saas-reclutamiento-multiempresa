@@ -12,6 +12,18 @@ Alcance de la revisión realizada: se inventariaron los 40 documentos existentes
 | `docs/final-report/delivery-checklist.md` · `qa-final-report.md` | Cierre | Declaran el cierre de v1.0. Siguen siendo correctos **para v1.0**. | No tocar. v1.1 tendrá sus propios documentos de cierre |
 | `README.md` | Estado del proyecto | No menciona `CLAUDE.md` ni las skills del proyecto | Añadir un enlace breve cuando v1.1 se apruebe |
 
+### Divergencias registradas por la Fase 14 (20/09/2026)
+
+Ninguno de estos documentos se modificó. Se anota la evolución, no se corrige el pasado.
+
+| Documento | Qué dice | Qué es cierto ahora | Acción propuesta |
+|---|---|---|---|
+| `CLAUDE.md` § Estado actual | «`main` y `develop` tienen el mismo contenido» | Dejó de ser literalmente cierto al integrar la Fase 13 solo en `develop` (`95c5b8b` frente a `4563c69` en `main`). `main` sigue siendo la v1.0 publicada, que es lo correcto | Revisar la frase cuando v1.1 se integre en `main`; no antes |
+| `docs/v1.1/phase-13-master-plan.md` §6 | Registra permisos locales amplios como hallazgo, incluido `PowerShell(Remove-Item *)` | El hallazgo **se resolvió** el 20/09/2026: `.claude/settings.local.json` pasó a 21 reglas de solo lectura en `allow`, 41 en `ask` y 19 en `deny`. El archivo no se versiona | Ninguna. El plan de la Fase 13 es un documento histórico y conserva el hallazgo tal como se observó |
+| Baseline del prompt de la Fase 14 | Anticipaba `PROMPT_FASE_13_CLAUDE_CODE.md` sin rastrear | El archivo ya no existe en el repositorio; el árbol estaba limpio al iniciar la fase | Ninguna. Registrado en `phase-14-ml-definition.md` §3 |
+| `docs/v1.1/ml-feasibility.md` (Fase 13) | Planteaba el servicio de riesgo como estudio abierto, con el plazo objetivo sin resolver | La Fase 14 lo especificó y el equipo aprobó doce decisiones; `ML-DECISION-01` quedó resuelta y apareció `GAP-01` | Ya actualizado con una nota de evolución al inicio; el cuerpo del estudio se conserva |
+| `docs/v1.1/scope-preliminary.md` (Fase 13) | Listaba seis decisiones pendientes | Tres se resolvieron el 20/09/2026; quedan tres nuevas, incluida `GAP-01` | Ya actualizado; las resueltas se tacharon en lugar de borrarse |
+
 ## 2. Por verificar antes de tocar nada
 
 | Documento | Qué revisar |
@@ -25,6 +37,12 @@ Alcance de la revisión realizada: se inventariaron los 40 documentos existentes
 Cada verificación que se ejecute debe anotar aquí su resultado real, incluido "sin divergencias".
 
 ## 3. Formato 09
+
+**Entrada de la Fase 14:** existen candidatos revisados (RF-28 a RF-31), una brecha funcional (`GAP-01`, plazo operacional de cierre) y cinco RNF candidatos adicionales con numeración provisional, todos en [`ml/requirements-and-traceability-plan.md`](ml/requirements-and-traceability-plan.md).
+
+**Decisión 11 del 20/09/2026:** ningún RF candidato pasa al baseline de v1.1. El Formato 09 **no se toca todavía**.
+
+**Cuando `GAP-01` se aborde**, el plazo operacional explícito necesitará entrada propia en el Formato 09: no es una columna técnica sino una capacidad funcional nueva, con actor, momento de captura y regla de inmutabilidad. **No se le reserva número de RF por anticipado.**
 
 El Formato 09 se actualiza **solo** cuando el equipo apruebe requerimientos de v1.1. Regla: RF-01 a RF-27 conservan su número y su redacción; los nuevos se agregan al final desde RF-28 y no se renumera nada. Si un candidato de `scope-preliminary.md` se descarta, su número provisional se libera y no se reutiliza en ese mismo ciclo.
 
