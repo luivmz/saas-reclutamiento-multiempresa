@@ -27,6 +27,8 @@ class VacancyResource extends JsonResource
             'positions' => $this->positions,
             'opens_at' => $this->opens_at?->toDateString(),
             'closes_at' => $this->closes_at?->toDateString(),
+            // GAP-01: plazo objetivo de cierre del proceso.
+            'target_completion_at' => $this->target_completion_at?->toIso8601String(),
             'status' => $this->status->present(),
             'published_at' => $this->published_at?->toIso8601String(),
             'closed_at' => $this->closed_at?->toIso8601String(),

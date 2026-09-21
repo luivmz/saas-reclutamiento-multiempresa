@@ -29,6 +29,7 @@ use Illuminate\Support\Carbon;
  * @property int $positions
  * @property Carbon|null $opens_at
  * @property Carbon|null $closes_at
+ * @property Carbon|null $target_completion_at
  * @property VacancyStatus $status
  * @property int $created_by
  * @property int|null $published_by
@@ -41,7 +42,7 @@ use Illuminate\Support\Carbon;
  * @property-read JobProfile|null $profile
  * @property-read \Illuminate\Database\Eloquent\Collection<int, EvaluationCriterion> $criteria
  */
-#[Fillable(['title', 'summary', 'location', 'contract_type', 'positions', 'opens_at', 'closes_at'])]
+#[Fillable(['title', 'summary', 'location', 'contract_type', 'positions', 'opens_at', 'closes_at', 'target_completion_at'])]
 class Vacancy extends Model
 {
     /** @use HasFactory<VacancyFactory> */
@@ -56,9 +57,23 @@ class Vacancy extends Model
             'positions' => 'integer',
             'opens_at' => 'date',
             'closes_at' => 'date',
+            'target_completion_at' => 'datetime',
             'published_at' => 'datetime',
             'closed_at' => 'datetime',
         ];
+    }
+
+    /**
+     * GAP-01: el plazo objetivo solo puede fijarse o cambiarse en borrador.
+     *
+     * Congelarlo al publicar es lo que hace utilizable a `ML-FEAT-02`: si el
+     * plazo pudiera moverse durante el proceso, la feature filtraría
+     * información del desenlace -- se correría la meta cada vez que el proceso
+     * se retrasara -- y el contrato de features la prohibiría.
+     */
+    public function targetCompletionIsEditable(): bool
+    {
+        return $this->status === VacancyStatus::Draft;
     }
 
     /**

@@ -166,6 +166,8 @@ export type Vacancy = {
     positions: number;
     opens_at: string | null;
     closes_at: string | null;
+    /** GAP-01: plazo objetivo de cierre del proceso. */
+    target_completion_at: string | null;
     status: Presented;
     published_at: string | null;
     closed_at: string | null;

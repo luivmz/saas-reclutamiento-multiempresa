@@ -37,6 +37,11 @@ class VacancyFormRequest extends FormRequest
             'positions' => ['required', 'integer', 'min:1', 'max:50'],
             'opens_at' => ['nullable', 'date'],
             'closes_at' => ['nullable', 'date', 'after_or_equal:opens_at'],
+            // GAP-01: plazo objetivo de cierre del proceso. Opcional -- sin el
+            // la vacante funciona igual, solo se queda sin estimacion de
+            // riesgo -- y siempre posterior al cierre de postulaciones, igual
+            // que el CHECK de la tabla.
+            'target_completion_at' => ['nullable', 'date', 'after:closes_at'],
             'profile' => ['required', 'array'],
             'profile.education' => ['required', 'string', 'max:200'],
             'profile.experience' => ['required', 'string', 'max:200'],
@@ -56,7 +61,7 @@ class VacancyFormRequest extends FormRequest
      */
     public function vacancyAttributes(): array
     {
-        return $this->safe()->only(['title', 'summary', 'location', 'contract_type', 'positions', 'opens_at', 'closes_at']);
+        return $this->safe()->only(['title', 'summary', 'location', 'contract_type', 'positions', 'opens_at', 'closes_at', 'target_completion_at']);
     }
 
     /**
@@ -89,6 +94,7 @@ class VacancyFormRequest extends FormRequest
             'positions' => 'plazas',
             'opens_at' => 'inicio de postulaciones',
             'closes_at' => 'cierre de postulaciones',
+            'target_completion_at' => 'plazo objetivo de cierre del proceso',
             'profile.education' => 'formación académica',
             'profile.experience' => 'experiencia',
             'profile.functions' => 'funciones',
