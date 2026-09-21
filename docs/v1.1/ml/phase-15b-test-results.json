@@ -1,0 +1,631 @@
+{
+  "baselines": {
+    "dummy_prior": {
+      "accuracy": 0.380723,
+      "alert_rate": 1.0,
+      "average_precision": 0.380723,
+      "balanced_accuracy": 0.5,
+      "brier": 0.241715,
+      "brier_reference": 0.241715,
+      "brier_skill_score": 0.0,
+      "calibration": {
+        "bins": [
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.4,
+            "count": 830,
+            "mean_predicted": 0.303641,
+            "observed_rate": 0.380723
+          }
+        ],
+        "expected_calibration_error": 0.077082,
+        "maximum_calibration_error": 0.077082
+      },
+      "confusion_matrix": {
+        "fn": 0,
+        "fp": 514,
+        "tn": 0,
+        "tp": 316
+      },
+      "f1": 0.551483,
+      "f2": 0.754537,
+      "n": 830,
+      "precision": 0.380723,
+      "prevalence": 0.380723,
+      "recall": 1.0,
+      "reference_rate": 0.303641,
+      "roc_auc": 0.5,
+      "threshold": 0.1679418172266036,
+      "threshold_display": 0.167942
+    },
+    "operational": {
+      "accuracy": 0.616867,
+      "alert_rate": 0.296386,
+      "average_precision": 0.425204,
+      "balanced_accuracy": 0.572415,
+      "brier": 0.383133,
+      "brier_reference": 0.241715,
+      "brier_skill_score": -0.585061,
+      "calibration": {
+        "bins": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.1,
+            "count": 584,
+            "mean_predicted": 0.0,
+            "observed_rate": 0.332192
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 1.0,
+            "count": 246,
+            "mean_predicted": 1.0,
+            "observed_rate": 0.495935
+          }
+        ],
+        "expected_calibration_error": 0.383133,
+        "maximum_calibration_error": 0.504065
+      },
+      "confusion_matrix": {
+        "fn": 194,
+        "fp": 124,
+        "tn": 390,
+        "tp": 122
+      },
+      "f1": 0.434164,
+      "f2": 0.403974,
+      "n": 830,
+      "precision": 0.495935,
+      "prevalence": 0.380723,
+      "recall": 0.386076,
+      "reference_rate": 0.303641,
+      "roc_auc": 0.572415,
+      "threshold": 0.5,
+      "threshold_display": 0.5
+    }
+  },
+  "curves": {
+    "test_precision_recall": [
+      {
+        "precision": 0.380723,
+        "recall": 1.0,
+        "threshold": 0.001054
+      },
+      {
+        "precision": 0.395729,
+        "recall": 0.996835,
+        "threshold": 0.015907
+      },
+      {
+        "precision": 0.411301,
+        "recall": 0.990506,
+        "threshold": 0.040006
+      },
+      {
+        "precision": 0.429161,
+        "recall": 0.987342,
+        "threshold": 0.065744
+      },
+      {
+        "precision": 0.445087,
+        "recall": 0.974684,
+        "threshold": 0.097216
+      },
+      {
+        "precision": 0.458967,
+        "recall": 0.955696,
+        "threshold": 0.125492
+      },
+      {
+        "precision": 0.47512,
+        "recall": 0.936709,
+        "threshold": 0.156215
+      },
+      {
+        "precision": 0.497453,
+        "recall": 0.927215,
+        "threshold": 0.190344
+      },
+      {
+        "precision": 0.516245,
+        "recall": 0.905063,
+        "threshold": 0.225857
+      },
+      {
+        "precision": 0.536538,
+        "recall": 0.882911,
+        "threshold": 0.256532
+      },
+      {
+        "precision": 0.564948,
+        "recall": 0.867089,
+        "threshold": 0.298515
+      },
+      {
+        "precision": 0.596452,
+        "recall": 0.851266,
+        "threshold": 0.328721
+      },
+      {
+        "precision": 0.620192,
+        "recall": 0.816456,
+        "threshold": 0.375837
+      },
+      {
+        "precision": 0.648294,
+        "recall": 0.781646,
+        "threshold": 0.415104
+      },
+      {
+        "precision": 0.674352,
+        "recall": 0.740506,
+        "threshold": 0.444924
+      },
+      {
+        "precision": 0.705128,
+        "recall": 0.696203,
+        "threshold": 0.484037
+      },
+      {
+        "precision": 0.748201,
+        "recall": 0.658228,
+        "threshold": 0.519217
+      },
+      {
+        "precision": 0.753086,
+        "recall": 0.579114,
+        "threshold": 0.560643
+      },
+      {
+        "precision": 0.77512,
+        "recall": 0.512658,
+        "threshold": 0.607446
+      },
+      {
+        "precision": 0.804598,
+        "recall": 0.443038,
+        "threshold": 0.660678
+      },
+      {
+        "precision": 0.835714,
+        "recall": 0.370253,
+        "threshold": 0.719261
+      },
+      {
+        "precision": 0.866667,
+        "recall": 0.287975,
+        "threshold": 0.785177
+      },
+      {
+        "precision": 0.915493,
+        "recall": 0.205696,
+        "threshold": 0.848038
+      },
+      {
+        "precision": 0.972222,
+        "recall": 0.110759,
+        "threshold": 0.907672
+      },
+      {
+        "precision": 1.0,
+        "recall": 0.003165,
+        "threshold": 0.99996
+      }
+    ],
+    "validation_precision_recall": [
+      {
+        "precision": 0.379518,
+        "recall": 1.0,
+        "threshold": 0.001088
+      },
+      {
+        "precision": 0.39196,
+        "recall": 0.990476,
+        "threshold": 0.018229
+      },
+      {
+        "precision": 0.407359,
+        "recall": 0.984127,
+        "threshold": 0.037924
+      },
+      {
+        "precision": 0.42641,
+        "recall": 0.984127,
+        "threshold": 0.062367
+      },
+      {
+        "precision": 0.442197,
+        "recall": 0.971429,
+        "threshold": 0.083809
+      },
+      {
+        "precision": 0.458967,
+        "recall": 0.95873,
+        "threshold": 0.101271
+      },
+      {
+        "precision": 0.473515,
+        "recall": 0.936508,
+        "threshold": 0.123251
+      },
+      {
+        "precision": 0.497453,
+        "recall": 0.930159,
+        "threshold": 0.145607
+      },
+      {
+        "precision": 0.519856,
+        "recall": 0.914286,
+        "threshold": 0.174585
+      },
+      {
+        "precision": 0.542308,
+        "recall": 0.895238,
+        "threshold": 0.209855
+      },
+      {
+        "precision": 0.562887,
+        "recall": 0.866667,
+        "threshold": 0.255598
+      },
+      {
+        "precision": 0.592018,
+        "recall": 0.847619,
+        "threshold": 0.283013
+      },
+      {
+        "precision": 0.608173,
+        "recall": 0.803175,
+        "threshold": 0.323058
+      },
+      {
+        "precision": 0.635171,
+        "recall": 0.768254,
+        "threshold": 0.358784
+      },
+      {
+        "precision": 0.657061,
+        "recall": 0.72381,
+        "threshold": 0.395438
+      },
+      {
+        "precision": 0.673077,
+        "recall": 0.666667,
+        "threshold": 0.460279
+      },
+      {
+        "precision": 0.701439,
+        "recall": 0.619048,
+        "threshold": 0.512343
+      },
+      {
+        "precision": 0.740741,
+        "recall": 0.571429,
+        "threshold": 0.567551
+      },
+      {
+        "precision": 0.77512,
+        "recall": 0.514286,
+        "threshold": 0.62162
+      },
+      {
+        "precision": 0.810345,
+        "recall": 0.447619,
+        "threshold": 0.662086
+      },
+      {
+        "precision": 0.857143,
+        "recall": 0.380952,
+        "threshold": 0.717748
+      },
+      {
+        "precision": 0.866667,
+        "recall": 0.288889,
+        "threshold": 0.781433
+      },
+      {
+        "precision": 0.873239,
+        "recall": 0.196825,
+        "threshold": 0.83394
+      },
+      {
+        "precision": 0.888889,
+        "recall": 0.101587,
+        "threshold": 0.906162
+      },
+      {
+        "precision": 1.0,
+        "recall": 0.003175,
+        "threshold": 0.998122
+      }
+    ]
+  },
+  "dataset_fingerprint": "d94fe60d941be87580c71c3a72155b59a0b3a38071ad619ecd986bf607f1b2ae",
+  "evaluated_at": "2026-09-20T20:06:16.481762-05:00",
+  "experiment_id": "phase-15b-20260920-6000",
+  "freeze_fingerprint": "9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2",
+  "limitations": [
+    "Datos exclusivamente sinteticos: el resultado demuestra metodo, no validez institucional.",
+    "Censura informativa por diseno: el conjunto supervisado esta sesgado hacia procesos que cerraron.",
+    "Colinealidad fuerte entre features (elapsed/window y applications/stage_transitions): los coeficientes no son interpretables como importancia relativa.",
+    "concurrent_open_vacancies_count correlaciona con el calendario y puede actuar como proxy temporal.",
+    "Heterogeneidad esperada entre organizaciones sinteticas.",
+    "Tasa de alerta elevada en el punto de operacion elegido: la regla de umbral prioriza recall sobre precision y en validation marca una fraccion alta de los procesos. El coste de revisar cada alerta no esta modelado, asi que la carga operativa real es desconocida.",
+    "CONTAMINACION PROCEDIMENTAL MENOR: durante el desarrollo de 15B se observo la AP de test antes de cerrar la version final de la regla de umbral. AP es invariante al umbral y ninguna metrica de test dependiente del umbral se inspecciono antes de esa correccion, pero el holdout no puede describirse como intacto.",
+    "GAP-01 abierto: days_remaining_to_target no es computable en Laravel, asi que el modelo no es desplegable aunque sea cientificamente aceptable."
+  ],
+  "metrics": {
+    "accuracy": 0.595181,
+    "alert_rate": 0.73494,
+    "average_precision": 0.769082,
+    "balanced_accuracy": 0.660352,
+    "brier": 0.159213,
+    "brier_reference": 0.241715,
+    "brier_skill_score": 0.341319,
+    "calibration": {
+      "bins": [
+        {
+          "bin_lower": 0.0,
+          "bin_upper": 0.1,
+          "count": 144,
+          "mean_predicted": 0.045315,
+          "observed_rate": 0.076389
+        },
+        {
+          "bin_lower": 0.1,
+          "bin_upper": 0.2,
+          "count": 107,
+          "mean_predicted": 0.149583,
+          "observed_rate": 0.130841
+        },
+        {
+          "bin_lower": 0.2,
+          "bin_upper": 0.3,
+          "count": 95,
+          "mean_predicted": 0.24639,
+          "observed_rate": 0.178947
+        },
+        {
+          "bin_lower": 0.3,
+          "bin_upper": 0.4,
+          "count": 86,
+          "mean_predicted": 0.346452,
+          "observed_rate": 0.232558
+        },
+        {
+          "bin_lower": 0.4,
+          "bin_upper": 0.5,
+          "count": 101,
+          "mean_predicted": 0.447638,
+          "observed_rate": 0.405941
+        },
+        {
+          "bin_lower": 0.5,
+          "bin_upper": 0.6,
+          "count": 80,
+          "mean_predicted": 0.54463,
+          "observed_rate": 0.5625
+        },
+        {
+          "bin_lower": 0.6,
+          "bin_upper": 0.7,
+          "count": 62,
+          "mean_predicted": 0.640754,
+          "observed_rate": 0.66129
+        },
+        {
+          "bin_lower": 0.7,
+          "bin_upper": 0.8,
+          "count": 64,
+          "mean_predicted": 0.750197,
+          "observed_rate": 0.71875
+        },
+        {
+          "bin_lower": 0.8,
+          "bin_upper": 0.9,
+          "count": 50,
+          "mean_predicted": 0.849663,
+          "observed_rate": 0.82
+        },
+        {
+          "bin_lower": 0.9,
+          "bin_upper": 1.0,
+          "count": 41,
+          "mean_predicted": 0.9464,
+          "observed_rate": 0.97561
+        }
+      ],
+      "expected_calibration_error": 0.041313,
+      "maximum_calibration_error": 0.113893
+    },
+    "confusion_matrix": {
+      "fn": 21,
+      "fp": 315,
+      "tn": 199,
+      "tp": 295
+    },
+    "f1": 0.637149,
+    "f2": 0.787086,
+    "n": 830,
+    "precision": 0.483607,
+    "prevalence": 0.380723,
+    "recall": 0.933544,
+    "reference_rate": 0.303641,
+    "roc_auc": 0.833922,
+    "threshold": 0.1679418172266036,
+    "threshold_display": 0.167942
+  },
+  "note": "Resultados obtenidos tras revelar el conjunto de prueba con el protocolo congelado identificado por freeze_fingerprint.",
+  "organizations": {
+    "1": {
+      "average_precision": 0.476215,
+      "n": 67,
+      "precision": 0.25641,
+      "prevalence": 0.238806,
+      "recall": 0.625
+    },
+    "2": {
+      "average_precision": 0.803763,
+      "n": 144,
+      "precision": 0.53,
+      "prevalence": 0.381944,
+      "recall": 0.963636
+    },
+    "3": {
+      "average_precision": 0.699447,
+      "n": 137,
+      "precision": 0.420455,
+      "prevalence": 0.291971,
+      "recall": 0.925
+    },
+    "4": {
+      "average_precision": 0.781966,
+      "n": 180,
+      "precision": 0.375,
+      "prevalence": 0.288889,
+      "recall": 0.980769
+    },
+    "5": {
+      "average_precision": 0.814091,
+      "n": 93,
+      "precision": 0.651515,
+      "prevalence": 0.526882,
+      "recall": 0.877551
+    },
+    "6": {
+      "average_precision": 0.840457,
+      "n": 209,
+      "precision": 0.558011,
+      "prevalence": 0.497608,
+      "recall": 0.971154
+    }
+  },
+  "references_freeze": true,
+  "schema_version": "15b.1",
+  "temporal_stability": {
+    "by_partition": {
+      "test": {
+        "average_precision": 0.769082,
+        "brier": 0.159213,
+        "f2": 0.787086,
+        "precision": 0.483607,
+        "prevalence": 0.380723,
+        "recall": 0.933544,
+        "roc_auc": 0.833922
+      },
+      "train": {
+        "average_precision": 0.69885,
+        "brier": 0.146726,
+        "f2": 0.741579,
+        "precision": 0.443692,
+        "prevalence": 0.303641,
+        "recall": 0.891156,
+        "roc_auc": 0.829905
+      },
+      "validation": {
+        "average_precision": 0.757382,
+        "brier": 0.161408,
+        "f2": 0.796266,
+        "precision": 0.516934,
+        "prevalence": 0.379518,
+        "recall": 0.920635,
+        "roc_auc": 0.8261
+      }
+    },
+    "by_year": {
+      "test": {
+        "2026": {
+          "average_precision": 0.769082,
+          "n": 830,
+          "precision": 0.483607,
+          "prevalence": 0.380723,
+          "recall": 0.933544
+        }
+      },
+      "train": {
+        "2023": {
+          "average_precision": 0.693762,
+          "n": 1323,
+          "precision": 0.442953,
+          "prevalence": 0.280423,
+          "recall": 0.889488
+        },
+        "2024": {
+          "average_precision": 0.695192,
+          "n": 1570,
+          "precision": 0.436992,
+          "prevalence": 0.308917,
+          "recall": 0.886598
+        },
+        "2025": {
+          "average_precision": 0.712596,
+          "n": 980,
+          "precision": 0.454976,
+          "prevalence": 0.326531,
+          "recall": 0.9
+        }
+      },
+      "validation": {
+        "2025": {
+          "average_precision": 0.752662,
+          "n": 670,
+          "precision": 0.509934,
+          "prevalence": 0.373134,
+          "recall": 0.924
+        },
+        "2026": {
+          "average_precision": 0.785918,
+          "n": 160,
+          "precision": 0.546296,
+          "prevalence": 0.40625,
+          "recall": 0.907692
+        }
+      }
+    },
+    "validation_to_test_ap_delta": 0.0117
+  },
+  "threshold": 0.1679418172266036,
+  "threshold_display": 0.167942,
+  "verdict": {
+    "checks": {
+      "beats_dummy": true,
+      "beats_operational": true,
+      "margin_preserved": true,
+      "positive_brier_skill": true
+    },
+    "concurrency_ablation": {
+      "average_precision_delta_vs_core": -0.009998,
+      "reading": "la dependencia observada de concurrent_open_vacancies_count es pequena o moderada en este experimento; no se preregistro ningun umbral que la convierta en criterio de aprobacion",
+      "reported_as": "descriptivo, no criterio de gate"
+    },
+    "criteria": {
+      "limitation_if_margin_halves": "si el margen de AP sobre el baseline operacional en test cae por debajo de la mitad del margen en validation, se anota como limitacion",
+      "limitations_downgrade_the_verdict": "si se cumplen los criterios comparativos pero persisten limitaciones conocidas, el veredicto es GO CON LIMITACIONES, no GO a secas",
+      "must_beat_dummy_ap": "AP(test) del modelo por encima de AP(test) del baseline trivial",
+      "must_beat_operational_ap": "AP(test) del modelo por encima de AP(test) del baseline operacional",
+      "must_have_positive_bss": "Brier Skill Score(test) positivo frente al predictor constante de train",
+      "not_deployable_while_gap_01_open": "ningun veredicto favorable autoriza despliegue mientras GAP-01 siga abierto: target_completion_at no existe en Laravel, asi que days_remaining_to_target no es computable en produccion y el modelo no puede servirse"
+    },
+    "decision": "PREDICTIVE GO WITH LIMITATIONS",
+    "deployment_note": "Cientificamente aceptable no equivale a desplegable. GAP-01 sigue abierto: target_completion_at no existe en Laravel, RF-29 continua como candidato y no se autoriza integracion ni servicio HTTP.",
+    "evidence": {
+      "brier_skill_score_test": 0.341319,
+      "dummy_ap_test": 0.380723,
+      "margin_test": 0.343878,
+      "margin_validation": 0.353699,
+      "model_ap_test": 0.769082,
+      "operational_ap_test": 0.425204
+    },
+    "limitations": [
+      "Datos exclusivamente sinteticos: el resultado demuestra metodo, no validez institucional.",
+      "Censura informativa por diseno: el conjunto supervisado esta sesgado hacia procesos que cerraron.",
+      "Colinealidad fuerte entre features (elapsed/window y applications/stage_transitions): los coeficientes no son interpretables como importancia relativa.",
+      "concurrent_open_vacancies_count correlaciona con el calendario y puede actuar como proxy temporal.",
+      "Heterogeneidad esperada entre organizaciones sinteticas.",
+      "Tasa de alerta elevada en el punto de operacion elegido: la regla de umbral prioriza recall sobre precision y en validation marca una fraccion alta de los procesos. El coste de revisar cada alerta no esta modelado, asi que la carga operativa real es desconocida.",
+      "CONTAMINACION PROCEDIMENTAL MENOR: durante el desarrollo de 15B se observo la AP de test antes de cerrar la version final de la regla de umbral. AP es invariante al umbral y ninguna metrica de test dependiente del umbral se inspecciono antes de esa correccion, pero el holdout no puede describirse como intacto.",
+      "GAP-01 abierto: days_remaining_to_target no es computable en Laravel, asi que el modelo no es desplegable aunque sea cientificamente aceptable.",
+      "Tasa de alerta en test 0.735 con el umbral congelado: el punto de operacion marca una fraccion alta de los procesos."
+    ]
+  }
+}

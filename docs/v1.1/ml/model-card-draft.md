@@ -1,8 +1,8 @@
-# Model card — BORRADOR
+# Model card — EXPERIMENTAL
 
-**Estado del documento: `draft`. No existe modelo. Ninguna métrica ha sido medida.**
+**Estado: `experimental`.** El modelo existe y fue evaluado en la Fase 15B sobre **datos exclusivamente sintéticos**. Las métricas de este documento provienen de una ejecución real y reproducible, no de metas ni ejemplos.
 
-Los campos marcados `PENDIENTE DE MEDICIÓN` se completan solo con resultados de una ejecución real. Rellenarlos con metas, ejemplos o valores plausibles invalidaría el documento.
+> **Científicamente aceptable no equivale a desplegable.** `GAP-01` sigue abierto y el modelo **no puede integrarse ni desplegarse**.
 
 ---
 
@@ -10,14 +10,15 @@ Los campos marcados `PENDIENTE DE MEDICIÓN` se completan solo con resultados de
 
 | Campo | Valor |
 |---|---|
-| Nombre | *(pendiente)* — propuesto: `process-delay-risk` |
-| Versión del modelo | *(no existe)* |
-| Estado | **`draft`** — ni `experimental` ni `no-go`: la fase previa aún no se ejecutó |
+| Nombre | `process-delay-risk` |
+| Versión del modelo | `0.1.0-experimental` (Fase 15B) |
+| Estado | **`experimental`** — evaluado y aceptado científicamente, **no desplegable** |
 | Fecha de esta versión | 20 de septiembre de 2026 |
 | Propietario académico | Equipo del proyecto: Coronacion Meza Fredy, Peña Arroyo Anthony, Vila Meza Luis Antonio |
 | Curso | Pruebas y Calidad de Software, NRC 28607, Universidad Continental |
 | Docente | Dr. Maglioni Arana Caparachin |
-| Revisión y aprobación | **PENDIENTE** — requiere la compuerta de `phase-14-ml-definition.md` §Gate |
+| Revisión y aprobación | Auditoría científica de Codex **pendiente** |
+| Evidencia | **Protocolo pre-test:** [`phase-15b-experiment-freeze.json`](phase-15b-experiment-freeze.json) (huella `9ee1843055e75d40…`) · **Resultados post-test:** [`phase-15b-test-results.json`](phase-15b-test-results.json) · [`phase-15b-results-summary.json`](phase-15b-results-summary.json) · [`../phase-15b-training-evaluation.md`](../phase-15b-training-evaluation.md) |
 
 ## Propósito
 
@@ -47,13 +48,13 @@ delayed = 0  si  vacancies.closed_at <= target_completion_at
 | Campo | Valor |
 |---|---|
 | Origen | **Sintético**, generado a partir de la estructura del proceso |
-| Versión | `synthetic-v1` *(no generado)* |
-| Volumen | 6 000 observaciones propuestas |
+| Versión | `synthetic-v1` |
+| Volumen | 6 000 generadas · 5 533 model-ready · 467 censuradas excluidas |
 | Periodo simulado | ≥ 36 meses |
 | Organizaciones | 4 – 8, totalmente ficticias |
 | Seed | `20260920` |
 | Datos reales o PII | **Ninguno.** No se obtienen ni se usan |
-| Hash del dataset | `PENDIENTE DE MEDICIÓN` |
+| Hash del dataset (model-ready) | `d94fe60d941be87580c71c3a72155b59a0b3a38071ad619ecd986bf607f1b2ae` |
 
 ## Features
 
@@ -63,42 +64,58 @@ delayed = 0  si  vacancies.closed_at <= target_completion_at
 
 ## Partición
 
-Bloques temporales 70 / 15 / 15 ordenados por `checkpoint_at`. Test se usa una sola vez. Sin split aleatorio. Detalle: [`evaluation-plan.md` §1](evaluation-plan.md).
+Bloques temporales 70 / 15 / 15 ordenados por `checkpoint_at`. Los empates de timestamp se resuelven de forma determinista por `vacancy_id`, así que un mismo instante puede aparecer a ambos lados de una frontera: **no se afirma desigualdad estricta fila a fila**. El conjunto de prueba se abrió una vez **en esta ejecución corregida**, tras persistir el freeze. `test_reveal_count` es un contador local de la instancia actual, **no evidencia histórica absoluta**.
+
+| Partición | n | Prevalencia | Periodo |
+|---|---|---|---|
+| Train | 3 873 | 0.3036 | 2023-01-18 → 2025-08-07 |
+| Validation | 830 | 0.3795 | 2025-08-07 → 2026-02-04 |
+| Test | 830 | 0.3807 | 2026-02-04 → 2026-08-22 |
 
 ## Baselines y modelo
 
-| Rol | Definición | Estado |
-|---|---|---|
-| Baseline trivial | Clase mayoritaria + predictor constante de prevalencia | No ejecutado |
-| Baseline operacional | Regla de backlog y días sin actividad, con umbrales fijados en train | No ejecutado |
-| Primer modelo | Logistic Regression con preprocesamiento reproducible | No entrenado |
-| Comparación | Decision Tree, Random Forest; HistGradientBoosting opcional | No entrenados |
+**22 configuraciones** evaluadas en validation.
+
+| Rol | Definición | AP validation | AP test |
+|---|---|---|---|
+| Baseline trivial | `DummyClassifier(strategy='prior')` | 0.3795 | 0.3807 |
+| Baseline operacional | Backlog vencido ≥ 1 **o** ≥ 10 días sin actividad (k=1, d=10, fijos) | 0.4037 | 0.4252 |
+| **Modelo seleccionado** | **Logistic Regression**, `C=10.0`, `class_weight=None`, con `StandardScaler` | **0.7574** | **0.7691** |
+| Comparación | HistGradientBoosting 0.7466 · Random Forest 0.7314 · Decision Tree 0.6914 | — | — |
+
+La regresión logística fue a la vez la más simple y la de mayor AP.
 
 ## Métricas
 
+Medidas sobre **test**, con la configuración congelada. Prevalencia de test 0.3807.
+
 | Métrica | Valor |
 |---|---|
-| Average Precision (primaria) | `PENDIENTE DE MEDICIÓN` |
-| Precision / Recall / F1 al umbral | `PENDIENTE DE MEDICIÓN` |
-| F2 | `PENDIENTE DE MEDICIÓN` |
-| Matriz de confusión | `PENDIENTE DE MEDICIÓN` |
-| Balanced accuracy | `PENDIENTE DE MEDICIÓN` |
-| ROC-AUC (contexto) | `PENDIENTE DE MEDICIÓN` |
-| Brier score | `PENDIENTE DE MEDICIÓN` |
-| Brier Skill Score | `PENDIENTE DE MEDICIÓN` |
-| Prevalencia por bloque | `PENDIENTE DE MEDICIÓN` |
-| Métricas por periodo y organización | `PENDIENTE DE MEDICIÓN` |
-| Intervalo bootstrap pareado vs. baseline | `PENDIENTE DE MEDICIÓN` |
+| **Average Precision (primaria)** | **0.769082** |
+| Precision / Recall / F1 al umbral | 0.483607 / 0.933544 / 0.637149 |
+| F2 | 0.787086 |
+| Matriz de confusión | tp 295, fp 315, fn 21, tn 199 |
+| Balanced accuracy | 0.660352 |
+| ROC-AUC (contexto) | 0.833922 |
+| Brier score | 0.159213 |
+| Brier Skill Score | 0.341319 |
+| ECE / MCE | 0.041313 / 0.113893 |
+| Tasa de alerta | 0.734940 |
+| Prevalencia por bloque | train 0.3036 · validation 0.3795 · test 0.3807 |
+| AP por organización (test) | 0.476 – 0.840 según organización sintética |
+| Intervalo bootstrap pareado vs. baseline | `PENDIENTE DE MEDICIÓN` — no ejecutado en 15B |
 
 ## Calibración y umbrales
 
 | Campo | Valor |
 |---|---|
-| Método de calibración | `PENDIENTE` — sigmoid como primera opción; isotónica solo con muestra suficiente |
-| Curva de confiabilidad | `PENDIENTE DE MEDICIÓN` |
-| `t_high` | `PENDIENTE` — requiere meta de precision aprobada |
-| `t_medium` | `PENDIENTE` — requiere meta de recall aprobada |
-| Versión de umbrales | *(no existe)* |
+| Método evaluado | `sigmoid` con `CalibratedClassifierCV(cv=5)`, ajustado **solo en train** |
+| Decisión | **No se adopta**: mejora Brier (0.1614 → 0.1611) pero empeora ECE (0.0259 → 0.0275) |
+| Calibración del modelo final | Sin calibrar; ECE 0.0259 en validation y 0.0413 en test |
+| Umbral operativo (valor exacto) | **`0.1679418172266036`**, elegido **solo con validation**. Se persiste sin redondear: `0.167942` cambiaría clasificaciones en la frontera |
+| Regla del umbral | Dominar al baseline operacional en precision **y** recall; entre los elegibles, mayor F2; desempate por recall y luego por umbral menor |
+| Suelos (del baseline, no inventados) | precision ≥ 0.4500 · recall ≥ 0.342857 |
+| `t_high` / `t_medium` | **No definidos**: siguen sin existir metas aprobadas de precision/recall |
 | Comportamiento sin metas aprobadas | Devolver solo probabilidad; `risk_level = null` |
 
 ## Limitaciones
@@ -108,6 +125,21 @@ Bloques temporales 70 / 15 / 15 ordenados por `checkpoint_at`. Test se usa una s
 3. **El plazo objetivo no existe en el sistema.** Está aprobado conceptualmente, pero `GAP-01` sigue abierta: una de las quince features utilizables (`ML-FEAT-02`) **no es computable en Laravel hoy**. El modelo no es desplegable hasta resolverlo.
 4. **Alcance temporal.** Una sola observación por proceso, en un único checkpoint.
 5. **Sin validación externa.** Ninguna comparación contra datos reales es posible ni está prevista.
+6. **Tasa de alerta alta.** En el umbral elegido el modelo marca el **73.5 %** de los procesos de test (recall 0.934, precision 0.484). Es consecuencia directa de una regla recall-oriented y constituye el principal problema de diseño para la interfaz de 15C. Era **conocida antes de abrir el test** —la tasa en validation ya era 0.676— y figura como limitación en el freeze; el coste de revisar cada alerta no está modelado.
+7. **F2 poco discriminante en este régimen.** Un predictor que alerta sobre todo obtiene F2 0.7545 frente al 0.7871 del modelo. La comparación significativa es la AP (0.769 frente a 0.381), no F2.
+8. **Heterogeneidad entre organizaciones sintéticas.** AP entre 0.476 (n=67) y 0.840. La organización con peor desempeño tiene pocos casos y su estimación es ruidosa; no debe sobreinterpretarse.
+9. **MINOR PROCEDURAL CONTAMINATION.** La AP de test se observó antes de cerrar la versión final de la regla de umbral. AP es invariante al umbral y ninguna métrica dependiente de él se inspeccionó antes. No se encontró evidencia de un efecto material sobre la selección del modelo ni sobre el punto de operación, **aunque no puede descartarse una influencia indirecta**; este holdout **no** puede describirse como intacto.
+10. **Censura informativa medida.** Mayor \|SMD\| 0.2298 en `days_since_last_operational_event`. La censura contextual por ventana es comparable (train 0.074, validation 0.087, test 0.086).
+11. **Coeficientes no interpretables como importancia.** `applications_received_count` (+2.69) y `stage_transition_count` (−2.38) están fuertemente correlacionados por construcción, igual que `elapsed_days_since_publication` y `application_window_days` (Pearson 0.972). El reparto de peso entre features colineales es inestable.
+12. **Deriva temporal presente pero no degradante.** La AP sube de train (0.699) a test (0.769) porque la prevalencia también sube; el ROC-AUC se mantiene estable en 0.83.
+
+## Ablations verificadas
+
+| Feature | Efecto al quitarla (ΔAP en validation) | Lectura |
+|---|---|---|
+| `concurrent_open_vacancies_count` | **−0.0100** | Dependencia pequeña o moderada en este experimento. Se reporta de forma descriptiva: no es criterio de gate ni hay umbral preregistrado |
+| `elapsed_days_since_publication` | **−0.0002** | El modelo **no** depende de ella pese a su colinealidad |
+| `configured_stage_count` (al añadirla) | **−0.0004** | No aporta; se mantiene fuera del núcleo |
 
 ## Usos permitidos
 
@@ -137,8 +169,20 @@ Laravel es el sistema de registro. El servicio de inferencia es opcional y sin e
 
 | Campo | Valor |
 |---|---|
-| Hash del artefacto | `PENDIENTE DE MEDICIÓN` |
-| Hash del dataset | `PENDIENTE DE MEDICIÓN` |
-| Hash de la configuración | `PENDIENTE DE MEDICIÓN` |
+| Hash del artefacto | *(no aplica)* — en 15B no se persiste ningún binario de modelo |
+| Hash del dataset (model-ready) | `d94fe60d941be87580c71c3a72155b59a0b3a38071ad619ecd986bf607f1b2ae` |
+| Hash de la configuración | `4107a60ede323da2bc834128e449628f8c05a797ccf623cbfdfc3b93408b72df` |
 | Versión del contrato de features | `feature-contract.md`, Fase 14 |
-| Versiones de librerías | `PENDIENTE` |
+| Semilla | `20260920` (dataset, split, modelos y calibración) |
+| Versiones de librerías | Python 3.12.5 · scikit-learn 1.9.1 · numpy 2.1.3 · pandas 2.2.3 · scipy 1.18.1 · joblib 1.6.0 |
+| Reproducibilidad | Dos ejecuciones completas produjeron huellas, freeze, métricas de test y veredicto idénticos |
+
+## Veredicto de la Fase 15B
+
+**PREDICTIVE GO WITH LIMITATIONS**, con las limitaciones de la sección anterior. Criterios comparativos fijados antes de abrir el test: supera al dummy (0.769 > 0.381), supera al baseline operacional (0.769 > 0.425), Brier Skill Score positivo (0.341), margen preservado (0.344 en test frente a 0.354 en validation), limitaciones conocidas que degradan el veredicto de GO a GO CON LIMITACIONES y **la regla, también congelada, de que ningún veredicto favorable autoriza despliegue mientras `GAP-01` siga abierto**.
+
+**Prohibición de despliegue mientras `GAP-01` siga abierto.** `days_remaining_to_target` —tercera feature por peso— no es computable en Laravel, así que el modelo no puede integrarse. RF-29 sigue siendo candidato.
+
+## Nota sobre calibración futura
+
+La calibración se evaluó con `StratifiedKFold` aleatorio dentro de train y **fue rechazada**, así que no forma parte del modelo final. Si una fase posterior la reconsidera, sería preferible usar **folds temporales** en lugar de validación cruzada aleatoria, para no mezclar periodos dentro del ajuste de calibración.
