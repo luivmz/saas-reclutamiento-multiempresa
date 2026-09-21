@@ -22,6 +22,7 @@ use App\Http\Controllers\Selection\SelectionRegistrationController;
 use App\Http\Controllers\Selection\VacancyClosureController;
 use App\Http\Controllers\Selection\VacancyComparisonController;
 use App\Http\Controllers\Vacancies\VacancyController;
+use App\Http\Controllers\Vacancies\VacancyOperationalRiskController;
 use App\Http\Controllers\Vacancies\VacancyPublicationController;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +63,10 @@ Route::middleware(['auth'])->group(function () {
         ->names('vacancies');
 
     Route::post('vacantes/{vacancy}/publicar', VacancyPublicationController::class)->name('vacancies.publish');
+
+    // Fase 16: riesgo operacional del proceso. Experimental, informativo y
+    // limitado a RR. HH. y Aprobador de la misma organizacion.
+    Route::get('vacantes/{vacancy}/riesgo-operacional', VacancyOperationalRiskController::class)->name('vacancies.operational-risk');
 
     // RF-08 a RF-11 (postulante)
     Route::post('empleos/{vacancy}/postular', ApplyController::class)->whereNumber('vacancy')->name('jobs.apply');

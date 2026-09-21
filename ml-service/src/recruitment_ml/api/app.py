@@ -4,19 +4,19 @@ Cadena completa prevista:
 
     React/Inertia -> Laravel -> HTTP interno -> FastAPI -> scikit-learn
 
-**En 15C solo existe el tramo `FastAPI -> scikit-learn`.** Laravel no consume
-este servicio todavia; eso es Fase 16. Y aunque lo consumiera, `GAP-01` sigue
-abierto: `target_completion_at` no existe en Laravel, asi que
-`days_remaining_to_target` no es computable en produccion. El servicio es
-**experimental** y no esta autorizado para despliegue.
+Desde la Fase 16 Laravel consume este servicio por red interna, con un token
+compartido (ver `security.py`), y `GAP-01` quedo resuelto del lado de Laravel:
+`vacancies.target_completion_at` ya existe, asi que `days_remaining_to_target`
+es computable. Aun asi el servicio **sigue siendo experimental**: el modelo se
+valido solo con datos sinteticos y ninguna respuesta decide nada.
 
 Lo que el servicio no hace, y no debe hacer: no toca la base de datos de
-Laravel, no autentica usuarios, no ordena candidatos, no decide nada y no
-almacena peticiones ni predicciones.
+Laravel, no autentica usuarios finales -- ese boundary es Laravel --, no ordena
+candidatos, no decide nada y no almacena peticiones ni predicciones.
 
 Arranque local:
 
-    uvicorn recruitment_ml.api.app:app --host 127.0.0.1 --port 8001
+    uvicorn recruitment_ml.api.app:app --host 127.0.0.1 --port 8008
 """
 
 from __future__ import annotations
@@ -37,6 +37,7 @@ from recruitment_ml.api.schemas import (
     PredictionResponse,
     assert_schema_matches_contract,
 )
+from recruitment_ml.api.security import authentication_enabled, require_internal_token
 from recruitment_ml.serving.loader import ArtifactUnavailableError, load_predictor
 from recruitment_ml.serving.metadata import DEPLOYMENT_STATUS, ServiceMetadata
 from recruitment_ml.serving.predictor import RiskPredictor
@@ -69,6 +70,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     un contenedor en bucle de reinicio. Las rutas que necesitan el modelo
     responden 503.
     """
+    if not authentication_enabled():
+        LOGGER.warning(
+            "sin token de servicio configurado: /v1/* queda abierto en esta red. "
+            "Admisible en desarrollo local; no exponer el servicio fuera de localhost."
+        )
+
     state: ModelState = app.state.model_state
     try:
         state.set_ready(load_predictor())
@@ -125,7 +132,8 @@ def _register_routes(app: FastAPI) -> None:
     @app.get(
         "/v1/model-info",
         response_model=ModelInfoResponse,
-        responses={503: {"model": ErrorResponse}},
+        dependencies=[Depends(require_internal_token)],
+        responses={401: {"model": ErrorResponse}, 503: {"model": ErrorResponse}},
         summary="Metadatos tecnicos del modelo servido",
         tags=["modelo"],
     )
@@ -141,7 +149,12 @@ def _register_routes(app: FastAPI) -> None:
     @app.post(
         "/v1/predict",
         response_model=PredictionResponse,
-        responses={503: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
+        dependencies=[Depends(require_internal_token)],
+        responses={
+            401: {"model": ErrorResponse},
+            503: {"model": ErrorResponse},
+            500: {"model": ErrorResponse},
+        },
         summary="Riesgo operacional de un proceso de vacante",
         tags=["modelo"],
     )

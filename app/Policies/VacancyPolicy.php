@@ -38,6 +38,19 @@ class VacancyPolicy
         return $this->view($user, $vacancy);
     }
 
+    /**
+     * Riesgo operacional del proceso (Fase 16).
+     *
+     * Mismo alcance que ver la vacante: RR. HH. y Aprobador de la **misma**
+     * organización. Un postulante nunca lo ve, y no porque se le oculte una
+     * puntuación suya -- el modelo no puntúa personas --, sino porque es
+     * información de gestión interna del proceso.
+     */
+    public function viewOperationalRisk(User $user, Vacancy $vacancy): bool
+    {
+        return $this->view($user, $vacancy);
+    }
+
     public function decide(User $user, Vacancy $vacancy): bool
     {
         return $user->hasRole(UserRole::Approver) && $user->sharesOrganizationWith($vacancy);
