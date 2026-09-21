@@ -99,6 +99,11 @@ VERDICT_CRITERIA = {
         "si se cumplen los criterios comparativos pero persisten limitaciones conocidas, "
         "el veredicto es GO CON LIMITACIONES, no GO a secas"
     ),
+    "not_deployable_while_gap_01_open": (
+        "ningun veredicto favorable autoriza despliegue mientras GAP-01 siga abierto: "
+        "target_completion_at no existe en Laravel, asi que days_remaining_to_target no es "
+        "computable en produccion y el modelo no puede servirse"
+    ),
 }
 
 #: Limitaciones conocidas **antes** de mirar el test. Forman parte del protocolo
@@ -110,6 +115,9 @@ KNOWN_LIMITATIONS = [
     "los coeficientes no son interpretables como importancia relativa.",
     "concurrent_open_vacancies_count correlaciona con el calendario y puede actuar como proxy temporal.",
     "Heterogeneidad esperada entre organizaciones sinteticas.",
+    "Tasa de alerta elevada en el punto de operacion elegido: la regla de umbral prioriza "
+    "recall sobre precision y en validation marca una fraccion alta de los procesos. El coste "
+    "de revisar cada alerta no esta modelado, asi que la carga operativa real es desconocida.",
     "CONTAMINACION PROCEDIMENTAL MENOR: durante el desarrollo de 15B se observo la AP de test "
     "antes de cerrar la version final de la regla de umbral. AP es invariante al umbral y "
     "ninguna metrica de test dependiente del umbral se inspecciono antes de esa correccion, "

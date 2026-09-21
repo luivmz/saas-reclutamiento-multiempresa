@@ -46,16 +46,16 @@ La prevalencia sube de train a validation/test: es el drift moderado que el gene
 2. declara la versión de contrato vigente;
 3. **fue persistido y recargado desde disco** (`source_path` no nulo);
 4. conserva su integridad: el contenido coincide con `freeze_fingerprint`;
-5. corresponde a **este** dataset y a **esta** partición (`dataset_fingerprint` y `split_signature`);
+5. corresponde a **este** dataset, a **esta** configuración del generador y a **esta** partición (`dataset_fingerprint`, `config_fingerprint` y `split_signature`, las tres obligatorias);
 6. está completo: features, modelo, umbral y regla presentes.
 
 Cualquier fallo lanza `SealedTestSetError`.
 
 **Validación del `source_path`.** Declarar una ruta no prueba nada: se exige que **exista**, que sea un **archivo regular**, que pueda **cargarse** y que el registro recargado tenga **la misma huella**. Un objeto construido en memoria con `source_path="archivo-que-no-existe.json"` no abre el test.
 
-**Enlace a la configuración.** Además del dataset y la partición, el freeze debe corresponder al `config_fingerprint` del generador. Un protocolo internamente íntegro pero de otra configuración se rechaza.
+**Enlace obligatorio a la configuración.** `config_fingerprint` dejó de tener valor por defecto: `build_temporal_split()`, `SealedTestSet` y `validate_freeze_for_split()` lo exigen, con formato sha256, y `reveal()` ya no lo convierte en `None`. **No existe ruta pública que construya una partición sellada sin declararlo.** Un protocolo internamente íntegro —incluso con su huella regenerada— pero de otra configuración se rechaza.
 
-**Contenido científico efectivo.** No basta con que la clave exista: `threshold_selection`, `calibration_decision`, `validation_metrics`, `validation_baselines`, `ablation_conclusions`, `verdict_rule` y `known_limitations` deben tener contenido; `validation_metrics` debe incluir la métrica primaria, y el umbral debe estar en el rango (0, 1).
+**Contenido científico efectivo.** No basta con que la clave exista, y tampoco con que no esté vacía: `{"placeholder": true}` no está vacío y no documenta nada. Las siete secciones tienen un contrato propio, detallado en §8. Entre otras cosas, el umbral documentado debe ser **idéntico** al congelado, el test **no puede** figurar como fuente de selección, las métricas deben ser finitas —ni `NaN` ni infinitos—, los dos baselines deben estar, y `known_limitations` debe **cubrir** los temas conocidos del experimento.
 
 **Lo que `describe()` ya no expone.** Antes de revelar, devuelve solo `n`, organizaciones y el periodo, con `labels_disclosed: false`. **No informa de la prevalencia ni del número de positivos**: documentar el tamaño de la partición es legítimo, conocer su distribución de clases antes de congelar el protocolo no lo es. Tras el reveal, sí los incluye.
 
@@ -162,7 +162,7 @@ El freeze que abre el conjunto de prueba es **el recargado desde disco**, de mod
 
 ### Contenido del protocolo
 
-`docs/v1.1/ml/phase-15b-experiment-freeze.json` — huella `ec8e89cd408b8f5d4256a840b2455ee3034a41ad682e9dd2077f328aa6a72253`:
+`docs/v1.1/ml/phase-15b-experiment-freeze.json` — huella `9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2`:
 
 `schema_version` · `experiment_id` · `seed` · `dataset_fingerprint` · `config_fingerprint` · `split_signature` · `split_definition` · `feature_set` y `features` (15) · `excluded_features` · `ablation_feature_sets` · `preprocessing` · `model_family` y `model_params` · **`threshold` exacto** y `threshold_rule` · `threshold_selection` · `calibration_decision` · `validation_metrics` · `validation_baselines` · `ablation_conclusions` · `verdict_rule` · **`known_limitations`** · `frozen_at` · `freeze_fingerprint`.
 
@@ -170,9 +170,27 @@ El freeze que abre el conjunto de prueba es **el recargado desde disco**, de mod
 
 **Ningún resultado de test.** El campo `contains_test_results` lo declara explícitamente y una prueba verifica que ninguna clave del protocolo aloje métricas medidas sobre el test.
 
+### Qué debe contener cada sección para abrir el test
+
+Que una clave exista, y ni siquiera que no esté vacía, autoriza nada: `{"placeholder": true}` no está vacío y no documenta el experimento. Cada sección tiene un contrato propio, verificado antes de revelar el conjunto de prueba:
+
+| Sección | Se exige |
+|---|---|
+| `threshold_selection` | umbral presente, numérico, **idéntico** al congelado; regla declarada; `selected_on` = validation, y **el test no puede figurar como fuente** |
+| `calibration_decision` | `adopt_calibration` booleano, método, criterio, Brier y ECE de ambas variantes, `fitted_on` = train; coherencia con el pipeline final |
+| `validation_metrics` | AP, ROC-AUC, precision, recall, F1, F2, balanced accuracy, Brier y tasa de alerta, todas **finitas**; umbral igual al congelado; matriz de confusión con conteos enteros |
+| `validation_baselines` | los **dos** baselines, cada uno con AP, precision, recall y Brier numéricos |
+| `ablation_conclusions` | las tres features señaladas por la auditoría de 15A, cada una con una cifra medible |
+| `verdict_rule` | superar el dummy, superar el operacional, BSS positivo, las limitaciones degradan el veredicto y **GAP-01 bloquea el despliegue** |
+| `known_limitations` | lista de textos no vacíos que **cubra** datos sintéticos, tasa de alerta, heterogeneidad, censura informativa, colinealidad, contaminación procedimental y GAP-01 |
+
+Las tres huellas —dataset, configuración del generador y partición— son **argumentos obligatorios**: no existe ruta pública que construya una partición o abra el test sin declararlas, y deben tener formato sha256.
+
 ### La huella
 
 Se calcula sobre el protocolo **excluyendo `frozen_at` y la propia huella**. Así es reproducible entre ejecuciones —dos corridas con la misma configuración producen la misma huella— y a la vez detecta cualquier alteración: cambiar el modelo, el umbral o las features rompe la verificación, y un archivo manipulado es rechazado al cargarse.
+
+**Por qué cambió la huella respecto de la corrección anterior** (`ec8e89cd…` → `9ee18430…`). Al exigir contenido verificable en cada sección, dos huecos del protocolo quedaron a la vista y se completaron: `verdict_rule` no declaraba que GAP-01 bloquea el despliegue —lo decía el informe, no el artefacto— y `known_limitations` no recogía la tasa de alerta del punto de operación, conocida en validation desde antes del test. Ambas incorporaciones son **anteriores al test** y documentales. **No cambió ninguna decisión científica**: mismo modelo, mismos hiperparámetros, mismo umbral exacto, mismas features, misma semilla y mismas métricas de validation y de test.
 
 ## 8bis. Resultados post-test, en artefacto separado
 
@@ -310,7 +328,7 @@ Semilla `20260920` en dataset, split, modelos y calibración. Dos ejecuciones co
 
 ## 17. Pruebas
 
-**305 pruebas, 0 fallos, 97 % de cobertura** (las 182 de 15A siguen pasando; 123 de 15B).
+**383 pruebas, 0 fallos, 0 avisos, 98 % de cobertura** (las 182 de 15A siguen pasando; 201 de 15B). `freeze.py` y `split.py` quedan al 100 %.
 
 | Archivo nuevo | Pruebas | Garantía |
 |---|---|---|
@@ -319,9 +337,11 @@ Semilla `20260920` en dataset, split, modelos y calibración. Dos ejecuciones co
 | `test_model_reproducibility.py` | 13 | Determinismo por familia y del experimento completo |
 | `test_metrics.py` | 10 | Métricas contra valores calculados a mano |
 | `test_threshold_selection.py` | 10 | Regla relativa, sin degenerar, determinista |
-| `test_temporal_split.py` | 9 | Cronología, sin solapamiento, censurados fuera |
+| `test_temporal_split.py` | 20 | Cronología, sin solapamiento, censurados fuera, **huellas obligatorias** |
 | `test_ablation.py` | 9 | Las tres obligaciones de la auditoría cubiertas |
-| `test_freeze_contract.py` | 38 | Persistencia previa al reveal, integridad, **enlace a la configuración**, **`source_path` real**, **secciones científicas no vacías**, y reconstrucción de predicciones desde el artefacto |
+| `test_freeze_contract.py` | 108 | Persistencia previa al reveal, integridad, **enlace obligatorio a la configuración**, **`source_path` real**, **validación semántica de las siete secciones**, y reconstrucción de predicciones desde el artefacto |
+
+Cada prueba negativa del contrato llega hasta `reveal()` —no se queda en el validador— y comprueba que `reveal_count` sigue en 0. El control positivo (`test_the_official_freeze_still_passes_every_section_validator`) impide que el endurecimiento degenere en rechazarlo todo.
 
 ## 18. Qué NO se implementó
 

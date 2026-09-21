@@ -77,13 +77,14 @@ def test_a_sealed_test_set_refuses_an_unfrozen_record(temporal_split) -> None:
         temporal_split.sealed_test.reveal(Pretender())
 
 
-def test_a_persisted_freeze_opens_the_test_set(tmp_path, training_frame, experiment_result) -> None:
+def test_a_persisted_freeze_opens_the_test_set(
+    tmp_path, training_frame, training_fingerprints, experiment_result
+) -> None:
     """La llave es el artefacto en disco, no un objeto construido al vuelo."""
     from recruitment_ml.training.freeze import load_freeze, persist_freeze
     from recruitment_ml.training.split import build_temporal_split
 
-    fingerprint = experiment_result.dataset["model_ready_fingerprint"]
-    split = build_temporal_split(training_frame, dataset_fingerprint=fingerprint)
+    split = build_temporal_split(training_frame, **training_fingerprints)
     aligned = replace(
         experiment_result.freeze_object, split_signature=split.signature
     ).with_fingerprint()
@@ -109,7 +110,8 @@ def test_verdict_criteria_are_comparative_not_invented(experiment_result) -> Non
 
     assert criteria == VERDICT_CRITERIA
     for text in criteria.values():
-        # Cada criterio se ancla en una comparacion, no en una cifra objetivo.
+        # Cada criterio se ancla en una comparacion o en un bloqueo declarado,
+        # nunca en una cifra objetivo.
         assert any(
             word in text
             for word in (
@@ -118,6 +120,7 @@ def test_verdict_criteria_are_comparative_not_invented(experiment_result) -> Non
                 "predictor constante",
                 "tolerancia",
                 "limitaciones conocidas",
+                "GAP-01",
             )
         ), text
     # Ningun criterio puede exigir un desempeno absoluto: la Fase 14 lo prohibio.

@@ -48,16 +48,36 @@ TRAINING_ROWS = 2_000
 
 
 @pytest.fixture(scope="session")
-def training_frame(config: SyntheticConfig):
-    """Frame model-ready del generador de 15A, fuente unica para 15B."""
-    return build_dataset(SyntheticConfig(rows=TRAINING_ROWS)).model_ready()
+def training_dataset() -> SyntheticDataset:
+    """Dataset de 15A que alimenta la suite de 15B, con su manifiesto."""
+    return build_dataset(SyntheticConfig(rows=TRAINING_ROWS))
 
 
 @pytest.fixture(scope="session")
-def temporal_split(training_frame):
+def training_frame(training_dataset: SyntheticDataset):
+    """Frame model-ready del generador de 15A, fuente unica para 15B."""
+    return training_dataset.model_ready()
+
+
+@pytest.fixture(scope="session")
+def training_fingerprints(training_dataset: SyntheticDataset) -> dict[str, str]:
+    """Huellas reales del dataset y de la configuracion que lo produjo.
+
+    La particion ya no acepta huellas vacias, asi que las pruebas usan las del
+    manifiesto: el enlace que se valida en produccion es el mismo que se ejercita
+    en la suite.
+    """
+    return {
+        "dataset_fingerprint": str(training_dataset.manifest["model_ready_fingerprint"]),
+        "config_fingerprint": str(training_dataset.manifest["config_fingerprint"]),
+    }
+
+
+@pytest.fixture(scope="session")
+def temporal_split(training_frame, training_fingerprints):
     from recruitment_ml.training.split import build_temporal_split
 
-    return build_temporal_split(training_frame)
+    return build_temporal_split(training_frame, **training_fingerprints)
 
 
 @pytest.fixture(scope="session")

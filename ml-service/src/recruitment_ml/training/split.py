@@ -14,7 +14,9 @@ y obliga a que abrir el test sea un acto deliberado y registrado:
 - antes de revelar, `describe()` **no expone etiquetas**: ni prevalencia ni
   numero de positivos;
 - `reveal()` exige un `ExperimentFreeze` valido, integro y **cargado desde
-  disco**, que ademas corresponda a este dataset y a esta particion.
+  disco**, que ademas corresponda a este dataset, a esta configuracion del
+  generador y a esta particion; las tres huellas son obligatorias y no admiten
+  valor por defecto.
 
 Nada de esto impide que alguien con acceso al proceso lea el atributo privado.
 No se afirma lo contrario.
@@ -29,7 +31,11 @@ from typing import Any
 import pandas as pd
 
 from recruitment_ml.schema import STATUS_COMPLETED, TARGET_COLUMN
-from recruitment_ml.training.freeze import FreezeValidationError, validate_freeze_for_split
+from recruitment_ml.training.freeze import (
+    FreezeValidationError,
+    require_fingerprint,
+    validate_freeze_for_split,
+)
 
 #: Proporciones aprobadas en la Fase 14 (decision 5).
 TRAIN_RATIO = 0.70
@@ -49,12 +55,15 @@ class SealedTestSet:
         frame: pd.DataFrame,
         dataset_fingerprint: str,
         split_signature: str,
-        config_fingerprint: str = "",
+        config_fingerprint: str,
     ) -> None:
+        #: Las tres huellas son obligatorias y se validan aqui: no existe forma
+        #: publica de construir un conjunto sellado sin enlace efectivo al
+        #: dataset, a la configuracion del generador y a la particion.
         self.__frame = frame
-        self.dataset_fingerprint = dataset_fingerprint
-        self.config_fingerprint = config_fingerprint
-        self.split_signature = split_signature
+        self.dataset_fingerprint = require_fingerprint(dataset_fingerprint, "dataset_fingerprint")
+        self.config_fingerprint = require_fingerprint(config_fingerprint, "config_fingerprint")
+        self.split_signature = require_fingerprint(split_signature, "split_signature")
         #: Aperturas en **esta instancia y esta ejecucion**. No es un registro
         #: historico: no demuestra cuantas veces se observo el test a lo largo
         #: del proyecto.
@@ -112,7 +121,7 @@ class SealedTestSet:
                 freeze,
                 dataset_fingerprint=self.dataset_fingerprint,
                 split_signature=self.split_signature,
-                config_fingerprint=self.config_fingerprint or None,
+                config_fingerprint=self.config_fingerprint,
             )
         except FreezeValidationError as error:
             raise SealedTestSetError(
@@ -169,13 +178,21 @@ def summarise_partition(frame: pd.DataFrame) -> dict[str, Any]:
 
 
 def build_temporal_split(
-    frame: pd.DataFrame, dataset_fingerprint: str = "", config_fingerprint: str = ""
+    frame: pd.DataFrame, dataset_fingerprint: str, config_fingerprint: str
 ) -> TemporalSplit:
     """Ordena por checkpoint y corta 70/15/15 respetando la cronologia.
 
     Solo entran filas etiquetadas: los procesos censurados no forman parte del
     conjunto supervisado y no se les asigna etiqueta artificial.
+
+    Ambas huellas son **obligatorias**. Antes tenian un valor por defecto vacio
+    y esa comodidad permitia construir una particion sin enlace real con la
+    configuracion que la produjo, de modo que la comprobacion posterior del
+    freeze se saltaba sin que nadie lo notara.
     """
+    dataset_fingerprint = require_fingerprint(dataset_fingerprint, "dataset_fingerprint")
+    config_fingerprint = require_fingerprint(config_fingerprint, "config_fingerprint")
+
     if "observation_status" in frame.columns:
         labelled = frame[frame["observation_status"] == STATUS_COMPLETED]
     else:  # pragma: no cover - el dataset siempre trae la columna

@@ -10,6 +10,7 @@ Responde a los hallazgos MEDIUM-01 y MEDIUM-02 de la auditoría científica:
 
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import replace
 from pathlib import Path
@@ -18,16 +19,24 @@ import numpy as np
 import pytest
 
 from recruitment_ml.training.evaluation import evaluate_predictions
+from recruitment_ml.schema import ABLATION_REQUIRED_IN_15B
 from recruitment_ml.training.freeze import (
     FREEZE_SCHEMA_VERSION,
+    REQUIRED_VERDICT_RULE_KEYS,
     ExperimentFreeze,
     FreezeValidationError,
     load_freeze,
     persist_freeze,
     validate_freeze_for_split,
+    validate_known_limitations,
 )
 from recruitment_ml.training.preprocessing import build_matrix, build_target
 from recruitment_ml.training.split import SealedTestSetError, build_temporal_split
+
+#: Huella con formato valido que no pertenece a este experimento. Tiene que ser
+#: sha256 bien formada: el contrato rechaza cualquier otra cosa por formato, y
+#: entonces la prueba no demostraria el fallo de correspondencia que busca.
+OTHER_FINGERPRINT = hashlib.sha256(b"otro-experimento").hexdigest()
 
 
 # --- estructura y huella del freeze ----------------------------------------
@@ -134,19 +143,25 @@ def test_reveal_rejects_an_arbitrary_object_claiming_to_be_frozen(temporal_split
         temporal_split.sealed_test.reveal(Pretender())
 
 
-def test_reveal_rejects_a_freeze_that_was_never_persisted(experiment_result, training_frame) -> None:
+def test_reveal_rejects_a_freeze_that_was_never_persisted(
+    experiment_result, training_frame, training_fingerprints
+) -> None:
     """El protocolo debe venir de disco: construirlo al vuelo no autoriza nada."""
-    split = build_temporal_split(
-        training_frame, dataset_fingerprint=experiment_result.dataset["model_ready_fingerprint"]
-    )
+    split = build_temporal_split(training_frame, **training_fingerprints)
     in_memory = replace(experiment_result.freeze_object, source_path=None)
 
     with pytest.raises(SealedTestSetError, match="persistido"):
         split.sealed_test.reveal(in_memory)
 
 
-def test_reveal_rejects_a_freeze_from_another_dataset(tmp_path: Path, experiment_result, training_frame) -> None:
-    split = build_temporal_split(training_frame, dataset_fingerprint="otro-dataset")
+def test_reveal_rejects_a_freeze_from_another_dataset(
+    tmp_path: Path, experiment_result, training_frame, training_fingerprints
+) -> None:
+    split = build_temporal_split(
+        training_frame,
+        dataset_fingerprint=OTHER_FINGERPRINT,
+        config_fingerprint=training_fingerprints["config_fingerprint"],
+    )
     path = tmp_path / "freeze.json"
     persist_freeze(experiment_result.freeze_object, path)
 
@@ -154,10 +169,13 @@ def test_reveal_rejects_a_freeze_from_another_dataset(tmp_path: Path, experiment
         split.sealed_test.reveal(load_freeze(path))
 
 
-def test_reveal_rejects_a_freeze_from_another_split(tmp_path: Path, experiment_result, training_frame) -> None:
-    fingerprint = experiment_result.dataset["model_ready_fingerprint"]
-    split = build_temporal_split(training_frame, dataset_fingerprint=fingerprint)
-    mismatched = replace(experiment_result.freeze_object, split_signature="otra-particion").with_fingerprint()
+def test_reveal_rejects_a_freeze_from_another_split(
+    tmp_path: Path, experiment_result, training_frame, training_fingerprints
+) -> None:
+    split = build_temporal_split(training_frame, **training_fingerprints)
+    mismatched = replace(
+        experiment_result.freeze_object, split_signature=OTHER_FINGERPRINT
+    ).with_fingerprint()
     path = tmp_path / "freeze.json"
     persist_freeze(mismatched, path)
 
@@ -191,6 +209,7 @@ def test_incompatible_schema_version_is_rejected(tmp_path: Path, experiment_resu
             ),
             dataset_fingerprint=old.dataset_fingerprint,
             split_signature=old.split_signature,
+            config_fingerprint=old.config_fingerprint,
         )
 
 
@@ -332,6 +351,11 @@ def aligned_split(training_frame, experiment_result):
     return split, replace(freeze, split_signature=split.signature).with_fingerprint()
 
 
+def _gutted(freeze, **fields):
+    """Freeze internamente coherente pero con una seccion degradada."""
+    return replace(freeze, **fields).with_fingerprint()
+
+
 def test_an_aligned_and_persisted_freeze_is_accepted(tmp_path: Path, aligned_split) -> None:
     """Control positivo: sin el, las pruebas negativas no demuestran nada."""
     split, freeze = aligned_split
@@ -350,7 +374,7 @@ def test_reveal_rejects_a_wrong_config_fingerprint(tmp_path: Path, aligned_split
     pertenece a la configuracion del generador que produjo esta particion.
     """
     split, freeze = aligned_split
-    wrong = replace(freeze, config_fingerprint="0" * 64).with_fingerprint()
+    wrong = replace(freeze, config_fingerprint=OTHER_FINGERPRINT).with_fingerprint()
     assert wrong.is_intact(), "la huella debe regenerarse para aislar el fallo de config"
     path = persist_freeze(wrong, tmp_path / "freeze.json")
 
@@ -466,3 +490,591 @@ def test_reveal_rejects_an_out_of_range_threshold(tmp_path: Path, aligned_split)
 
     with pytest.raises(SealedTestSetError, match="rango valido"):
         split.sealed_test.reveal(load_freeze(path))
+
+# --- validacion semantica de las secciones cientificas ---------------------
+#
+# Codex verifico que un diccionario con contenido arbitrario -- el caso limite
+# es `{"placeholder": true}` -- pasaba la comprobacion de "no vacio" y abria el
+# test. Cada seccion tiene ahora un contrato propio, y se prueba a nivel del
+# flujo real de reveal, no llamando al validador por separado.
+
+PLACEHOLDER = {"placeholder": True}
+
+
+def _reveal_must_fail(split, freeze, tmp_path: Path, message: str) -> None:
+    """Persiste el freeze degradado y comprueba que no abre el test."""
+    path = persist_freeze(freeze, tmp_path / "freeze.json")
+    with pytest.raises(SealedTestSetError, match=message):
+        split.sealed_test.reveal(load_freeze(path))
+    assert split.sealed_test.reveal_count == 0
+
+
+# threshold_selection ------------------------------------------------------
+
+
+def test_reveal_rejects_a_placeholder_threshold_selection(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, threshold_selection=dict(PLACEHOLDER)),
+        tmp_path,
+        "threshold_selection no documenta threshold",
+    )
+
+
+def test_reveal_rejects_a_threshold_selection_without_the_threshold(
+    tmp_path: Path, aligned_split
+) -> None:
+    split, freeze = aligned_split
+    without = {k: v for k, v in freeze.threshold_selection.items() if k != "threshold"}
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, threshold_selection=without),
+        tmp_path,
+        "threshold_selection no documenta threshold",
+    )
+
+
+def test_reveal_rejects_a_threshold_selection_with_a_different_threshold(
+    tmp_path: Path, aligned_split
+) -> None:
+    """Documentar un umbral distinto del congelado rompe la trazabilidad."""
+    split, freeze = aligned_split
+    shifted = dict(freeze.threshold_selection)
+    shifted["threshold"] = float(freeze.threshold) + 0.01
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, threshold_selection=shifted),
+        tmp_path,
+        "no coincide con el umbral congelado",
+    )
+
+
+def test_reveal_rejects_a_threshold_chosen_on_test(tmp_path: Path, aligned_split) -> None:
+    """Elegir el umbral con el holdout seria la contaminacion que 15B evita."""
+    split, freeze = aligned_split
+    leaked = dict(freeze.threshold_selection)
+    leaked["selected_on"] = "test"
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, threshold_selection=leaked),
+        tmp_path,
+        "declara el test como fuente de seleccion",
+    )
+
+
+def test_reveal_rejects_a_threshold_selection_without_a_rule(
+    tmp_path: Path, aligned_split
+) -> None:
+    split, freeze = aligned_split
+    ruleless = dict(freeze.threshold_selection)
+    ruleless["rule"] = "   "
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, threshold_selection=ruleless),
+        tmp_path,
+        "threshold_selection.rule",
+    )
+
+
+# calibration_decision -----------------------------------------------------
+
+
+def test_reveal_rejects_a_placeholder_calibration_decision(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, calibration_decision=dict(PLACEHOLDER)),
+        tmp_path,
+        "adopt_calibration debe ser booleano",
+    )
+
+
+@pytest.mark.parametrize(
+    "missing", ["method", "decision_rule", "fitted_on", "brier_calibrated", "ece_uncalibrated"]
+)
+def test_reveal_rejects_an_incomplete_calibration_decision(
+    tmp_path: Path, aligned_split, missing: str
+) -> None:
+    split, freeze = aligned_split
+    incomplete = {k: v for k, v in freeze.calibration_decision.items() if k != missing}
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, calibration_decision=incomplete),
+        tmp_path,
+        f"calibration_decision.*{missing}",
+    )
+
+
+def test_reveal_rejects_a_calibration_fitted_outside_train(tmp_path: Path, aligned_split) -> None:
+    """Ajustarla con validation contaminaria la eleccion del umbral."""
+    split, freeze = aligned_split
+    leaked = dict(freeze.calibration_decision)
+    leaked["fitted_on"] = "validation"
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, calibration_decision=leaked),
+        tmp_path,
+        "fitted_on debe declarar",
+    )
+
+
+def test_the_official_freeze_does_not_adopt_calibration(experiment_result) -> None:
+    """El modelo final no adopta calibracion, y el protocolo lo refleja."""
+    decision = experiment_result.freeze_object.calibration_decision
+
+    assert decision["adopt_calibration"] is False
+    assert decision["method"] == "sigmoid"
+    assert "train" in decision["fitted_on"]
+
+
+# validation_metrics -------------------------------------------------------
+
+
+def test_reveal_rejects_a_placeholder_validation_metrics(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_metrics=dict(PLACEHOLDER)),
+        tmp_path,
+        "metrica primaria",
+    )
+
+
+def test_reveal_rejects_validation_metrics_with_only_the_primary_metric(
+    tmp_path: Path, aligned_split
+) -> None:
+    """AP sola no describe el punto de operacion que el test debe reproducir."""
+    split, freeze = aligned_split
+    only_ap = {"average_precision": freeze.validation_metrics["average_precision"]}
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_metrics=only_ap),
+        tmp_path,
+        "validation_metrics no documenta",
+    )
+
+
+@pytest.mark.parametrize(
+    "metric",
+    ["roc_auc", "precision", "recall", "f1", "f2", "balanced_accuracy", "brier", "alert_rate"],
+)
+def test_reveal_rejects_validation_metrics_missing_a_metric(
+    tmp_path: Path, aligned_split, metric: str
+) -> None:
+    split, freeze = aligned_split
+    incomplete = {k: v for k, v in freeze.validation_metrics.items() if k != metric}
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_metrics=incomplete),
+        tmp_path,
+        f"validation_metrics no documenta {metric}",
+    )
+
+
+def test_reveal_rejects_a_nan_validation_metric(tmp_path: Path, aligned_split) -> None:
+    """NaN sobrevive al JSON, pero no es una metrica: es una comparacion imposible."""
+    split, freeze = aligned_split
+    broken = dict(freeze.validation_metrics)
+    broken["recall"] = float("nan")
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_metrics=broken),
+        tmp_path,
+        "no es un numero finito",
+    )
+
+
+def test_reveal_rejects_validation_metrics_computed_with_another_threshold(
+    tmp_path: Path, aligned_split
+) -> None:
+    split, freeze = aligned_split
+    shifted = dict(freeze.validation_metrics)
+    shifted["threshold"] = float(freeze.threshold) + 0.05
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_metrics=shifted),
+        tmp_path,
+        "se calcularon con otro umbral",
+    )
+
+
+def test_reveal_rejects_a_broken_confusion_matrix(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    broken = dict(freeze.validation_metrics)
+    broken["confusion_matrix"] = dict(broken["confusion_matrix"], tp="muchos")
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_metrics=broken),
+        tmp_path,
+        "no es un conteo entero",
+    )
+
+
+# validation_baselines -----------------------------------------------------
+
+
+def test_reveal_rejects_placeholder_validation_baselines(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_baselines=dict(PLACEHOLDER)),
+        tmp_path,
+        "no documenta el baseline",
+    )
+
+
+@pytest.mark.parametrize("baseline", ["dummy_prior", "operational"])
+def test_reveal_rejects_validation_baselines_missing_one(
+    tmp_path: Path, aligned_split, baseline: str
+) -> None:
+    """El veredicto es comparativo: sin los dos baselines no hay con que comparar."""
+    split, freeze = aligned_split
+    incomplete = {k: v for k, v in freeze.validation_baselines.items() if k != baseline}
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_baselines=incomplete),
+        tmp_path,
+        f"no documenta el baseline {baseline}",
+    )
+
+
+def test_reveal_rejects_a_baseline_without_its_metrics(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    hollow = dict(freeze.validation_baselines)
+    hollow["operational"] = {"nota": "pendiente"}
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_baselines=hollow),
+        tmp_path,
+        "validation_baselines.operational no documenta",
+    )
+
+
+# ablation_conclusions -----------------------------------------------------
+
+
+def test_reveal_rejects_placeholder_ablation_conclusions(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, ablation_conclusions=dict(PLACEHOLDER)),
+        tmp_path,
+        "ablation_conclusions no documenta",
+    )
+
+
+@pytest.mark.parametrize("feature", list(ABLATION_REQUIRED_IN_15B))
+def test_reveal_rejects_ablation_conclusions_missing_a_required_feature(
+    tmp_path: Path, aligned_split, feature: str
+) -> None:
+    """Las tres features senaladas por la auditoria de 15A no son opcionales."""
+    split, freeze = aligned_split
+    incomplete = {k: v for k, v in freeze.ablation_conclusions.items() if k != feature}
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, ablation_conclusions=incomplete),
+        tmp_path,
+        f"ablation_conclusions no documenta {feature}",
+    )
+
+
+def test_reveal_rejects_an_ablation_reading_without_a_number(
+    tmp_path: Path, aligned_split
+) -> None:
+    """Una lectura sin cifra no es una conclusion verificable."""
+    split, freeze = aligned_split
+    vague = dict(freeze.ablation_conclusions)
+    vague["concurrent_open_vacancies_count"] = "sin cambios relevantes"
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, ablation_conclusions=vague),
+        tmp_path,
+        "no reporta ninguna diferencia medible",
+    )
+
+
+# verdict_rule -------------------------------------------------------------
+
+
+def test_reveal_rejects_a_placeholder_verdict_rule(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, verdict_rule=dict(PLACEHOLDER)),
+        tmp_path,
+        "verdict_rule",
+    )
+
+
+@pytest.mark.parametrize("key", list(REQUIRED_VERDICT_RULE_KEYS))
+def test_reveal_rejects_a_verdict_rule_missing_a_criterion(
+    tmp_path: Path, aligned_split, key: str
+) -> None:
+    """Un veredicto cuya regla no estaba declarada antes no significa nada."""
+    split, freeze = aligned_split
+    incomplete = {k: v for k, v in freeze.verdict_rule.items() if k != key}
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, verdict_rule=incomplete),
+        tmp_path,
+        f"verdict_rule.{key}",
+    )
+
+
+def test_the_official_verdict_rule_blocks_deployment_while_gap_01_is_open(
+    experiment_result,
+) -> None:
+    rule = experiment_result.freeze_object.verdict_rule
+
+    assert "GAP-01" in rule["not_deployable_while_gap_01_open"]
+    assert "GO CON LIMITACIONES" in rule["limitations_downgrade_the_verdict"]
+
+
+# known_limitations --------------------------------------------------------
+
+
+@pytest.mark.parametrize("limitations", [[""], ["   "], ["texto valido", "  "]])
+def test_reveal_rejects_blank_known_limitations(
+    tmp_path: Path, aligned_split, limitations: list[str]
+) -> None:
+    split, freeze = aligned_split
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, known_limitations=limitations),
+        tmp_path,
+        "esta vacia o no es texto",
+    )
+
+
+@pytest.mark.parametrize(
+    ("marker", "topic"),
+    [
+        ("sintetic", "datos sinteticos"),
+        ("tasa de alerta", "tasa de alerta"),
+        ("heterogeneidad", "heterogeneidad entre organizaciones"),
+        ("censura", "censura informativa"),
+        ("colinealidad", "colinealidad"),
+        ("contaminacion", "contaminacion procedimental"),
+        ("GAP-01", "GAP-01 / no desplegable"),
+    ],
+)
+def test_reveal_rejects_known_limitations_missing_a_key_topic(
+    tmp_path: Path, aligned_split, marker: str, topic: str
+) -> None:
+    """Se comprueba la cobertura tematica, no la redaccion exacta."""
+    split, freeze = aligned_split
+    survivors = [item for item in freeze.known_limitations if marker.lower() not in item.lower()]
+    assert len(survivors) < len(freeze.known_limitations), f"{marker} no aparece en el freeze"
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, known_limitations=survivors),
+        tmp_path,
+        f"no cubre limitaciones conocidas del experimento: {topic}",
+    )
+
+
+def test_the_official_freeze_covers_every_required_limitation(experiment_result) -> None:
+    """Control positivo de la cobertura: el protocolo real las declara todas."""
+    validate_known_limitations(experiment_result.freeze_object)
+
+    text = " | ".join(experiment_result.freeze_object.known_limitations).lower()
+    for marker in ("sintetic", "tasa de alerta", "censura", "colinealidad", "gap-01"):
+        assert marker in text
+
+
+# caso positivo despues de endurecer el contrato ---------------------------
+
+
+def test_the_official_freeze_still_passes_every_section_validator(
+    tmp_path: Path, aligned_split
+) -> None:
+    """Sin esto, las pruebas negativas solo demostrarian que todo se rechaza."""
+    split, freeze = aligned_split
+    path = persist_freeze(freeze, tmp_path / "freeze.json")
+    loaded = load_freeze(path)
+
+    validated = validate_freeze_for_split(
+        loaded,
+        dataset_fingerprint=split.sealed_test.dataset_fingerprint,
+        split_signature=split.signature,
+        config_fingerprint=split.sealed_test.config_fingerprint,
+    )
+
+    assert validated.freeze_fingerprint == freeze.freeze_fingerprint
+    assert len(split.sealed_test.reveal(loaded)) == len(split.sealed_test)
+
+
+def test_validate_freeze_for_split_requires_the_config_fingerprint(
+    tmp_path: Path, aligned_split
+) -> None:
+    """Omitir el argumento ya no es posible: dejo de tener valor por defecto."""
+    split, freeze = aligned_split
+    path = persist_freeze(freeze, tmp_path / "freeze.json")
+    loaded = load_freeze(path)
+
+    with pytest.raises(TypeError, match="config_fingerprint"):
+        validate_freeze_for_split(
+            loaded,
+            dataset_fingerprint=split.sealed_test.dataset_fingerprint,
+            split_signature=split.signature,
+        )
+
+
+@pytest.mark.parametrize("invalid", ["", "   ", "no-es-una-huella", None])
+def test_validate_freeze_for_split_rejects_an_invalid_config_fingerprint(
+    tmp_path: Path, aligned_split, invalid
+) -> None:
+    split, freeze = aligned_split
+    path = persist_freeze(freeze, tmp_path / "freeze.json")
+    loaded = load_freeze(path)
+
+    with pytest.raises(FreezeValidationError, match="config_fingerprint"):
+        validate_freeze_for_split(
+            loaded,
+            dataset_fingerprint=split.sealed_test.dataset_fingerprint,
+            split_signature=split.signature,
+            config_fingerprint=invalid,
+        )
+
+
+# --- ramas restantes del contrato -----------------------------------------
+#
+# Reglas que ninguna prueba anterior ejercitaba. Son contrato real: si no se
+# prueban, nadie sabria que dejaron de aplicarse.
+
+
+def _validated(split, freeze):
+    return validate_freeze_for_split(
+        freeze,
+        dataset_fingerprint=split.sealed_test.dataset_fingerprint,
+        split_signature=split.signature,
+        config_fingerprint=split.sealed_test.config_fingerprint,
+    )
+
+
+def test_reveal_rejects_a_threshold_selection_without_validation_as_source(
+    tmp_path: Path, aligned_split
+) -> None:
+    """Ni test ni una fuente indefinida: el umbral se elige con validation."""
+    split, freeze = aligned_split
+    vague = dict(freeze.threshold_selection)
+    vague["selected_on"] = "conjunto de desarrollo"
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, threshold_selection=vague),
+        tmp_path,
+        "debe declarar validation como fuente",
+    )
+
+
+def test_reveal_rejects_an_adopted_calibration_of_unknown_method(
+    tmp_path: Path, aligned_split
+) -> None:
+    split, freeze = aligned_split
+    exotic = dict(freeze.calibration_decision, adopt_calibration=True, method="a-ojo")
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, calibration_decision=exotic),
+        tmp_path,
+        "metodo desconocido",
+    )
+
+
+def test_reveal_rejects_a_calibration_decision_incoherent_with_the_pipeline(
+    tmp_path: Path, aligned_split
+) -> None:
+    """El protocolo no puede decir que no calibra y describir un modelo calibrado."""
+    split, freeze = aligned_split
+    contradictory = _gutted(
+        freeze, preprocessing="StandardScaler y salida calibrada con sigmoid"
+    )
+    _reveal_must_fail(
+        split,
+        contradictory,
+        tmp_path,
+        "el preprocesamiento declara una",
+    )
+
+
+def test_reveal_rejects_a_section_that_is_not_an_object(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_metrics=["average_precision", 0.75]),
+        tmp_path,
+        "debe ser un objeto con contenido",
+    )
+
+
+def test_reveal_rejects_a_metric_that_is_not_numeric(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    textual = dict(freeze.validation_metrics, recall="alto")
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_metrics=textual),
+        tmp_path,
+        "no es un valor numerico",
+    )
+
+
+def test_reveal_rejects_known_limitations_that_are_not_a_list(
+    tmp_path: Path, aligned_split
+) -> None:
+    split, freeze = aligned_split
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, known_limitations={"limitacion": "una sola"}),
+        tmp_path,
+        "known_limitations debe ser una lista",
+    )
+
+
+def test_reveal_rejects_a_freeze_without_model_params(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, model_params=None),
+        tmp_path,
+        "model_params ausente",
+    )
+
+
+def test_an_unfrozen_record_is_rejected(aligned_split) -> None:
+    """`is_frozen=False` describe un protocolo todavia abierto."""
+    split, freeze = aligned_split
+
+    with pytest.raises(FreezeValidationError, match="no esta congelado"):
+        _validated(split, _gutted(freeze, is_frozen=False))
+
+
+def test_a_stale_fingerprint_is_rejected(aligned_split) -> None:
+    """Modificar el contenido sin recalcular la huella es la deteccion basica."""
+    split, freeze = aligned_split
+    stale = replace(freeze, model_family="random_forest")
+
+    assert not stale.is_intact()
+    with pytest.raises(FreezeValidationError, match="no coincide con su contenido"):
+        _validated(split, stale)
+
+
+def test_reveal_rejects_an_infinite_validation_metric(tmp_path: Path, aligned_split) -> None:
+    """Infinity tambien sobrevive al JSON, y tampoco es una metrica comparable."""
+    split, freeze = aligned_split
+    broken = dict(freeze.validation_metrics, brier=float("inf"))
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, validation_metrics=broken),
+        tmp_path,
+        "no es un numero finito",
+    )
+
+
+def test_reveal_rejects_a_non_string_limitation(tmp_path: Path, aligned_split) -> None:
+    split, freeze = aligned_split
+    _reveal_must_fail(
+        split,
+        _gutted(freeze, known_limitations=[42]),
+        tmp_path,
+        "esta vacia o no es texto",
+    )

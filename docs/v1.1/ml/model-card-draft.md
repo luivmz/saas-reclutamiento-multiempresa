@@ -18,7 +18,7 @@
 | Curso | Pruebas y Calidad de Software, NRC 28607, Universidad Continental |
 | Docente | Dr. Maglioni Arana Caparachin |
 | Revisión y aprobación | Auditoría científica de Codex **pendiente** |
-| Evidencia | **Protocolo pre-test:** [`phase-15b-experiment-freeze.json`](phase-15b-experiment-freeze.json) (huella `ec8e89cd408b8f5d…`) · **Resultados post-test:** [`phase-15b-test-results.json`](phase-15b-test-results.json) · [`phase-15b-results-summary.json`](phase-15b-results-summary.json) · [`../phase-15b-training-evaluation.md`](../phase-15b-training-evaluation.md) |
+| Evidencia | **Protocolo pre-test:** [`phase-15b-experiment-freeze.json`](phase-15b-experiment-freeze.json) (huella `9ee1843055e75d40…`) · **Resultados post-test:** [`phase-15b-test-results.json`](phase-15b-test-results.json) · [`phase-15b-results-summary.json`](phase-15b-results-summary.json) · [`../phase-15b-training-evaluation.md`](../phase-15b-training-evaluation.md) |
 
 ## Propósito
 
@@ -125,7 +125,7 @@ Medidas sobre **test**, con la configuración congelada. Prevalencia de test 0.3
 3. **El plazo objetivo no existe en el sistema.** Está aprobado conceptualmente, pero `GAP-01` sigue abierta: una de las quince features utilizables (`ML-FEAT-02`) **no es computable en Laravel hoy**. El modelo no es desplegable hasta resolverlo.
 4. **Alcance temporal.** Una sola observación por proceso, en un único checkpoint.
 5. **Sin validación externa.** Ninguna comparación contra datos reales es posible ni está prevista.
-6. **Tasa de alerta alta.** En el umbral elegido el modelo marca el **73.5 %** de los procesos de test (recall 0.934, precision 0.484). Es consecuencia directa de una regla recall-oriented y constituye el principal problema de diseño para la interfaz de 15C.
+6. **Tasa de alerta alta.** En el umbral elegido el modelo marca el **73.5 %** de los procesos de test (recall 0.934, precision 0.484). Es consecuencia directa de una regla recall-oriented y constituye el principal problema de diseño para la interfaz de 15C. Era **conocida antes de abrir el test** —la tasa en validation ya era 0.676— y figura como limitación en el freeze; el coste de revisar cada alerta no está modelado.
 7. **F2 poco discriminante en este régimen.** Un predictor que alerta sobre todo obtiene F2 0.7545 frente al 0.7871 del modelo. La comparación significativa es la AP (0.769 frente a 0.381), no F2.
 8. **Heterogeneidad entre organizaciones sintéticas.** AP entre 0.476 (n=67) y 0.840. La organización con peor desempeño tiene pocos casos y su estimación es ruidosa; no debe sobreinterpretarse.
 9. **MINOR PROCEDURAL CONTAMINATION.** La AP de test se observó antes de cerrar la versión final de la regla de umbral. AP es invariante al umbral y ninguna métrica dependiente de él se inspeccionó antes. No se encontró evidencia de un efecto material sobre la selección del modelo ni sobre el punto de operación, **aunque no puede descartarse una influencia indirecta**; este holdout **no** puede describirse como intacto.
@@ -179,7 +179,7 @@ Laravel es el sistema de registro. El servicio de inferencia es opcional y sin e
 
 ## Veredicto de la Fase 15B
 
-**PREDICTIVE GO WITH LIMITATIONS**, con las limitaciones de la sección anterior. Criterios comparativos fijados antes de abrir el test: supera al dummy (0.769 > 0.381), supera al baseline operacional (0.769 > 0.425), Brier Skill Score positivo (0.341), margen preservado (0.344 en test frente a 0.354 en validation) y limitaciones conocidas que degradan el veredicto de GO a GO CON LIMITACIONES.
+**PREDICTIVE GO WITH LIMITATIONS**, con las limitaciones de la sección anterior. Criterios comparativos fijados antes de abrir el test: supera al dummy (0.769 > 0.381), supera al baseline operacional (0.769 > 0.425), Brier Skill Score positivo (0.341), margen preservado (0.344 en test frente a 0.354 en validation), limitaciones conocidas que degradan el veredicto de GO a GO CON LIMITACIONES y **la regla, también congelada, de que ningún veredicto favorable autoriza despliegue mientras `GAP-01` siga abierto**.
 
 **Prohibición de despliegue mientras `GAP-01` siga abierto.** `days_remaining_to_target` —tercera feature por peso— no es computable en Laravel, así que el modelo no puede integrarse. RF-29 sigue siendo candidato.
 

@@ -339,7 +339,7 @@
       }
     ]
   },
-  "freeze_fingerprint": "ec8e89cd408b8f5d4256a840b2455ee3034a41ad682e9dd2077f328aa6a72253",
+  "freeze_fingerprint": "9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2",
   "organizations_test": {
     "1": {
       "average_precision": 0.476215,
@@ -703,7 +703,8 @@
       "limitations_downgrade_the_verdict": "si se cumplen los criterios comparativos pero persisten limitaciones conocidas, el veredicto es GO CON LIMITACIONES, no GO a secas",
       "must_beat_dummy_ap": "AP(test) del modelo por encima de AP(test) del baseline trivial",
       "must_beat_operational_ap": "AP(test) del modelo por encima de AP(test) del baseline operacional",
-      "must_have_positive_bss": "Brier Skill Score(test) positivo frente al predictor constante de train"
+      "must_have_positive_bss": "Brier Skill Score(test) positivo frente al predictor constante de train",
+      "not_deployable_while_gap_01_open": "ningun veredicto favorable autoriza despliegue mientras GAP-01 siga abierto: target_completion_at no existe en Laravel, asi que days_remaining_to_target no es computable en produccion y el modelo no puede servirse"
     },
     "decision": "PREDICTIVE GO WITH LIMITATIONS",
     "deployment_note": "Cientificamente aceptable no equivale a desplegable. GAP-01 sigue abierto: target_completion_at no existe en Laravel, RF-29 continua como candidato y no se autoriza integracion ni servicio HTTP.",
@@ -721,6 +722,7 @@
       "Colinealidad fuerte entre features (elapsed/window y applications/stage_transitions): los coeficientes no son interpretables como importancia relativa.",
       "concurrent_open_vacancies_count correlaciona con el calendario y puede actuar como proxy temporal.",
       "Heterogeneidad esperada entre organizaciones sinteticas.",
+      "Tasa de alerta elevada en el punto de operacion elegido: la regla de umbral prioriza recall sobre precision y en validation marca una fraccion alta de los procesos. El coste de revisar cada alerta no esta modelado, asi que la carga operativa real es desconocida.",
       "CONTAMINACION PROCEDIMENTAL MENOR: durante el desarrollo de 15B se observo la AP de test antes de cerrar la version final de la regla de umbral. AP es invariante al umbral y ninguna metrica de test dependiente del umbral se inspecciono antes de esa correccion, pero el holdout no puede describirse como intacto.",
       "GAP-01 abierto: days_remaining_to_target no es computable en Laravel, asi que el modelo no es desplegable aunque sea cientificamente aceptable.",
       "Tasa de alerta en test 0.735 con el umbral congelado: el punto de operacion marca una fraccion alta de los procesos."

@@ -10,9 +10,11 @@ import pandas as pd
 import pytest
 
 from recruitment_ml.schema import STATUS_CENSORED, TARGET_COLUMN
+from recruitment_ml.training.freeze import FreezeValidationError
 from recruitment_ml.training.split import (
     TRAIN_RATIO,
     VALIDATION_RATIO,
+    SealedTestSet,
     build_temporal_split,
 )
 
@@ -60,9 +62,11 @@ def test_every_labelled_row_lands_in_exactly_one_partition(temporal_split, train
     assert total == len(labelled)
 
 
-def test_censored_processes_never_enter_the_split(training_frame) -> None:
+def test_censored_processes_never_enter_the_split(
+    training_frame, training_fingerprints
+) -> None:
     """Los censurados no reciben etiqueta y no forman parte del supervisado."""
-    split = build_temporal_split(training_frame.copy())
+    split = build_temporal_split(training_frame.copy(), **training_fingerprints)
 
     for partition in (split.train, split.validation):
         assert (partition["observation_status"] != STATUS_CENSORED).all()
@@ -74,9 +78,9 @@ def test_censored_processes_never_enter_the_split(training_frame) -> None:
     assert len(split.train) + len(split.validation) + len(split.sealed_test) == len(labelled)
 
 
-def test_split_is_deterministic(training_frame) -> None:
-    first = build_temporal_split(training_frame)
-    second = build_temporal_split(training_frame)
+def test_split_is_deterministic(training_frame, training_fingerprints) -> None:
+    first = build_temporal_split(training_frame, **training_fingerprints)
+    second = build_temporal_split(training_frame, **training_fingerprints)
 
     pd.testing.assert_frame_equal(first.train, second.train)
     pd.testing.assert_frame_equal(first.validation, second.validation)
@@ -127,7 +131,71 @@ def test_reveal_count_is_scoped_to_the_current_run(temporal_split) -> None:
     assert "no es un registro historico" in summary["test_reveal_count_scope"]
 
 
-def test_an_unlabelled_frame_is_rejected(training_frame) -> None:
+def test_an_unlabelled_frame_is_rejected(training_frame, training_fingerprints) -> None:
     empty = training_frame.iloc[0:0]
     with pytest.raises(ValueError):
-        build_temporal_split(empty)
+        build_temporal_split(empty, **training_fingerprints)
+
+
+# --- enlace obligatorio con la configuracion del generador -----------------
+#
+# Antes ambas huellas tenian valor por defecto vacio. Esa comodidad permitia
+# construir una particion sin enlace real con la configuracion que la produjo,
+# y la comprobacion posterior del freeze se saltaba sin que nadie lo notara.
+
+
+def test_the_split_cannot_be_built_without_a_config_fingerprint(
+    training_frame, training_fingerprints
+) -> None:
+    """Omitirlo es un error de firma, no un valor por defecto silencioso."""
+    with pytest.raises(TypeError, match="config_fingerprint"):
+        build_temporal_split(
+            training_frame, dataset_fingerprint=training_fingerprints["dataset_fingerprint"]
+        )
+
+
+@pytest.mark.parametrize("empty", ["", "   "])
+def test_an_empty_config_fingerprint_is_rejected(
+    training_frame, training_fingerprints, empty: str
+) -> None:
+    with pytest.raises(FreezeValidationError, match="config_fingerprint"):
+        build_temporal_split(
+            training_frame,
+            dataset_fingerprint=training_fingerprints["dataset_fingerprint"],
+            config_fingerprint=empty,
+        )
+
+
+def test_an_empty_dataset_fingerprint_is_rejected(
+    training_frame, training_fingerprints
+) -> None:
+    with pytest.raises(FreezeValidationError, match="dataset_fingerprint"):
+        build_temporal_split(
+            training_frame,
+            dataset_fingerprint="",
+            config_fingerprint=training_fingerprints["config_fingerprint"],
+        )
+
+
+@pytest.mark.parametrize("malformed", ["no-es-una-huella", "ABC" * 21 + "D", "a" * 63])
+def test_a_malformed_fingerprint_is_rejected(
+    training_frame, training_fingerprints, malformed: str
+) -> None:
+    """El proyecto solo usa sha256 hexadecimal; cualquier otra cosa es un error."""
+    with pytest.raises(FreezeValidationError, match="sha256"):
+        build_temporal_split(
+            training_frame,
+            dataset_fingerprint=training_fingerprints["dataset_fingerprint"],
+            config_fingerprint=malformed,
+        )
+
+
+def test_a_sealed_test_set_cannot_be_built_without_a_valid_config(temporal_split) -> None:
+    """Tampoco por la puerta de atras: el constructor valida las tres huellas."""
+    with pytest.raises(FreezeValidationError, match="config_fingerprint"):
+        SealedTestSet(
+            frame=temporal_split.train,
+            dataset_fingerprint=temporal_split.sealed_test.dataset_fingerprint,
+            split_signature=temporal_split.signature,
+            config_fingerprint="",
+        )
