@@ -79,20 +79,41 @@ Tres reglas gobiernan el archivo entero:
 
 `OperationalRiskFeatures` rechaza cualquier conjunto que no sea exactamente esas 15 claves, así que un identificador no puede colarse ni por descuido.
 
-## 4. Alcance del modelo: cuándo Laravel **no** pregunta
+## 4. El checkpoint: cuándo y con qué datos se pregunta
 
-El experimento observó siempre el mismo instante: el día siguiente al cierre de postulaciones. Preguntar en otro punto es extrapolar, y un número obtenido así aparentaría un rigor que no tiene. `OperationalRiskService` devuelve el panel descriptivo, sin llamar al servicio, cuando:
+### El instante de observación no es «ahora»
+
+El experimento de la Fase 15B observó **siempre** el mismo punto:
+
+```
+checkpoint = inicio del día siguiente a closes_at, en America/Lima
+```
+
+(`ml-service/src/recruitment_ml/synthetic/timeline.py:279`). Todas las features del dataset se derivaron del historial truncado ahí, y la especificación lo fija como invariante: «cero eventos posteriores al checkpoint incorporados a cualquier feature».
+
+**`OperationalRiskService::checkpointFor()` reproduce ese instante y el vector se construye ahí**, no en el momento de la consulta. Inferir con `now()` produciría un vector que el modelo nunca vio —más postulaciones, más sesiones, más días transcurridos— y devolvería un número con apariencia de rigor.
+
+La consecuencia práctica es comprobable: **el vector de una vacante es fijo**. Consultar hoy y dentro de un mes da exactamente el mismo resultado, aunque entretanto lleguen postulaciones. En el smoke de integración, una vacante con 9 postulaciones en la tabla sigue enviando `applications_received_count: 4`, que es lo que había en el checkpoint.
+
+### Cuándo Laravel **no** pregunta
+
+Que el vector sea fijo no significa que preguntar tenga sentido siempre. `OperationalRiskService` devuelve el panel descriptivo, **sin llamar al servicio**, cuando:
 
 | Situación | `reason` |
 |---|---|
 | La vacante no está publicada | `vacancy_not_published` |
+| No hay fecha de cierre, así que no hay checkpoint | `missing_application_close` |
 | No hay `target_completion_at` | `missing_target_completion_at` |
-| Las postulaciones siguen abiertas | `application_window_still_open` |
-| El plazo objetivo ya venció | `target_completion_reached` |
+| El checkpoint todavía no llegó | `checkpoint_not_reached` |
+| La vacante ya está cerrada: el desenlace se conoce | `vacancy_already_closed` |
+| El plazo no sobrevive al checkpoint | `target_before_checkpoint` |
+| Consulta tardía: el plazo ya venció | `query_after_target` |
 
-El último merece explicación: el contrato del servicio exige `days_remaining_to_target ≥ 1`, y **el valor no se recorta a uno**. Un plazo vencido describe un proceso que el modelo nunca vio, porque el dataset solo contiene plazos futuros. Falsear el número aquí fabricaría exactamente la feature que justifica toda la integración.
+Tres de esas merecen explicación:
 
-Es una restricción deliberada, revisable si una fase futura entrena con checkpoints múltiples.
+- **`vacancy_already_closed`**: presentar una «estimación» de algo resuelto sería engañoso.
+- **`query_after_target`**: pasado el plazo, la pregunta «¿se retrasará?» ya la responde el calendario, no un modelo.
+- **`target_before_checkpoint`**: el contrato del servicio exige `days_remaining_to_target ≥ 1` en el checkpoint, y **el valor no se recorta**. Un plazo que no sobrevive al punto de observación describe un proceso que el modelo nunca vio, porque el dataset solo contiene plazos posteriores al checkpoint. Falsear el número fabricaría exactamente la feature que justifica toda la integración.
 
 ## 5. Cliente HTTP
 
@@ -102,15 +123,20 @@ Es una restricción deliberada, revisable si una fase futura entrena con checkpo
 
 Que el servicio conteste `200` no significa que esté sirviendo el modelo auditado. Antes de aceptar una predicción se comprueba:
 
-- presencia de `risk_score`, `risk_flag`, `threshold`, `model_version` y `freeze_fingerprint`;
-- `risk_score` numérico, finito y en **[0, 1]**;
+**Todo se valida antes de castear.** `(float) ['a']` vale `1.0` y `(string) 42` vale `"42"`: castear primero convertiría una respuesta absurda en una cifra plausible, que es justo lo que no puede pasar con un número que se va a mostrar a alguien.
+
+- presencia de `risk_score`, `risk_flag`, `threshold`, `model_version`, `freeze_fingerprint` y `status`;
+- `risk_score` **de tipo numérico** (no cadena), finito y en **[0, 1]**;
 - `risk_flag` booleano de verdad;
+- `threshold` numérico y finito;
+- `model_version`, `freeze_fingerprint` y `status` **cadenas no vacías**;
 - **`freeze_fingerprint` idéntica** a `9ee18430…`, comparada con `hash_equals`;
+- **`model_version` idéntico** a `phase-15b-20260920-6000`: una huella correcta con otra versión sería una respuesta incoherente, y se comprueban las dos;
 - **`threshold` idéntico** a `0.1679418172266036` — su versión redondeada se rechaza, porque clasifica distinto en la frontera;
 - `status` sigue siendo `experimental`;
 - coherencia interna: `risk_flag == (risk_score >= threshold)`.
 
-Cualquier discrepancia descarta la respuesta y el panel cae a `unavailable`.
+Cualquier discrepancia descarta la respuesta y el panel cae a `unavailable`, con `risk_score`, `risk_flag` y `threshold` nulos.
 
 ### Modos de fallo
 
@@ -156,7 +182,7 @@ Cuando no hay predicción, `risk_score`, `risk_flag` y `threshold` son **nulos**
 - comparación en **tiempo constante** (`hmac.compare_digest`), para que la latencia no filtre cuántos caracteres son correctos;
 - protege `/v1/predict` y `/v1/model-info`;
 - **`/health` queda abierto**: es una sonda de vida que devuelve estado, si hay modelo y la versión del componente — ni rutas, ni huellas, ni nada del experimento. Pedirle token complicaría los chequeos del despliegue sin proteger nada;
-- sin variable definida la autenticación queda desactivada, admisible en desarrollo local, y el arranque lo **avisa en el log** para que nadie lo confunda con estar protegido.
+- **falla cerrado.** Sin variable definida, `/v1/predict` y `/v1/model-info` responden **503** y el arranque lo registra como error. Olvidar la variable en un despliegue no puede dejar `/v1/*` accesible a quien llegue: un servicio mal configurado es un servicio que no atiende, no uno público. El 503 —y no un 401— es deliberado: el problema está en el servicio, no en las credenciales de quien llama, y un 401 le haría buscar el fallo donde no está.
 
 Nada de esto convierte al servicio en publicable: sigue siendo experimental y debe permanecer en localhost o red interna.
 
@@ -187,7 +213,9 @@ Ninguna. La integración se mantiene simple y correcta; cachear una estimación 
 
 `resources/js/components/vacancies/operational-risk-card.tsx`, en la ficha de una vacante ya publicada.
 
-Muestra: disponibilidad, distintivo **Experimental**, porcentaje de riesgo cuando lo hay, la señal, un mensaje humano, el momento de consulta y el recordatorio de que la decisión final es humana.
+**El plazo objetivo se captura desde el formulario de vacantes.** `vacancy-form.tsx` incluye un campo `datetime-local` opcional, con ayuda en línea, `min` derivado de `closes_at` y el aviso de que no podrá modificarse una vez publicada la vacante. Sin ese campo, `GAP-01` quedaría resuelto en la base de datos y sin forma de alimentarlo; hay una prueba que comprueba que el campo existe en el componente.
+
+La tarjeta de riesgo muestra: disponibilidad, distintivo **Experimental**, porcentaje de riesgo cuando lo hay, la señal, un mensaje humano, el momento de consulta y el recordatorio de que la decisión final es humana.
 
 **No muestra**, y no debe: ranking de candidatos, puntuación de personas, recomendación automática, causalidad, «debe contratar» o «debe descartar».
 
@@ -208,6 +236,7 @@ La tasa de alerta del modelo es del **73.5 %** en el conjunto de prueba. Present
 | `ML_SERVICE_TOKEN` | vacío | Secreto; nunca un valor real en el repositorio |
 | `ML_EXPECTED_FREEZE_FINGERPRINT` | `9ee18430…` | Identidad del experimento aprobado |
 | `ML_EXPECTED_THRESHOLD` | `0.1679418172266036` | Umbral exacto |
+| `ML_EXPECTED_MODEL_VERSION` | `phase-15b-20260920-6000` | Identificador del experimento que debe responder |
 
 ## 11. Comandos
 
@@ -233,16 +262,16 @@ Para que Laravel llame al servicio, en `.env`: `ML_SERVICE_ENABLED=true`, `ML_SE
 
 ## 12. Pruebas
 
-**Laravel: 321 pruebas, 0 fallos** (236 previas + 85 nuevas + 8 saltadas). **Python: 527, 0 fallos, 0 avisos, 98 % de cobertura** (506 de la Fase 15 + 21 de autenticación).
+**Laravel: 366 pruebas, 0 fallos** (236 previas + 130 nuevas + 8 saltadas). **Python: 530, 0 fallos, 0 avisos, 98 % de cobertura** (506 de la Fase 15 + 24 de autenticación).
 
 | Archivo | Pruebas | Garantía |
 |---|---|---|
-| `tests/Feature/Ml/TargetCompletionTest.php` | 11 | GAP-01: esquema, `CHECK`, cast, validación, inmutabilidad tras publicar, auditoría, multiempresa |
+| `tests/Feature/Ml/TargetCompletionTest.php` | 16 | GAP-01: esquema, `CHECK`, cast, validación, inmutabilidad tras publicar, auditoría, multiempresa y **captura desde el formulario** |
 | `tests/Feature/Ml/OperationalRiskFeatureBuilderTest.php` | 19 | Las 15 features exactas, valores, truncado al checkpoint, **sin PII**, `outcome` nunca leído, scoping sin sesión |
-| `tests/Feature/Ml/MlRiskClientTest.php` | 31 | Éxito, timeout, conexión, 401/422/500/503, JSON inválido, huella y umbral incorrectos, score fuera de rango, reintentos |
-| `tests/Feature/Ml/OperationalRiskServiceTest.php` | 12 | Predicción, los cuatro fallbacks, servicio caído, respuesta incompatible, tono neutro |
+| `tests/Feature/Ml/MlRiskClientTest.php` | 64 | Éxito, timeout, conexión, 401/422/500/503, JSON inválido, huella, umbral y **`model_version` incorrectos**, **tipos erróneos en cada campo**, score fuera de rango, reintentos |
+| `tests/Feature/Ml/OperationalRiskServiceTest.php` | 19 | **Checkpoint correcto**, **eventos posteriores que no mueven el vector**, los siete fallbacks, consulta tardía, vacante cerrada, servicio caído, tono neutro |
 | `tests/Feature/Ml/VacancyOperationalRiskRouteTest.php` | 12 | Autorización por rol, cross-tenant, contenido de la respuesta, sin fugas |
-| `ml-service/tests/test_api_security.py` | 21 | Token obligatorio, comparación constante, `/health` abierto, sin eco del secreto |
+| `ml-service/tests/test_api_security.py` | 24 | Token obligatorio, **fail-closed sin configurar**, comparación constante, `/health` abierto, sin eco del secreto |
 
 ### Smoke de integración real
 
@@ -250,10 +279,13 @@ Ejecutado con FastAPI en `0.0.0.0:8008` y Laravel en Docker, con token:
 
 | Caso | Resultado |
 |---|---|
-| Servicio disponible | `predictive_available`, score 0.6209, huella y umbral verificados |
+| Token válido, consulta elegible | `predictive_available`, checkpoint `2026-09-12`, huella y `model_version` verificados |
+| Eventos posteriores al checkpoint | **Vector idéntico**: 4 postulaciones en el vector con 9 en la tabla |
+| Consulta tardía | `descriptive_only`, `query_after_target` |
 | Sin `target_completion_at` | `descriptive_only`, score `null` — no se inventa |
-| Huella incompatible | `unavailable`, `incompatible_contract`, respuesta descartada |
-| Servicio apagado | `unavailable`, `connection_failed`, flujo intacto |
+| `model_version` incompatible | `unavailable`, `incompatible_contract`, respuesta descartada |
+| Sin token en Laravel | `unavailable`; FastAPI responde 401 y el flujo sigue intacto |
+| Sin token en FastAPI | `/v1/*` responde **503**; `/health` sigue contestando |
 | Tenant incorrecto | Policy niega y la vacante ajena no es visible |
 
 ## 13. RF-29
@@ -270,7 +302,7 @@ Ejecutado con FastAPI en `0.0.0.0:8008` y Laravel en Docker, con token:
 ## 14. Limitaciones
 
 1. **Validación solo sintética.** Es la limitación dominante y no la resuelve ninguna integración.
-2. **Checkpoint único.** El modelo observa el proceso tras el cierre de postulaciones; antes de eso, Laravel no pregunta.
+2. **Checkpoint único.** El modelo observa el proceso el día siguiente al cierre de postulaciones y **solo ahí**. Fuera de esa ventana Laravel no pregunta, y dentro de ella la estimación es la misma sin importar cuándo se consulte: el vector está congelado en ese instante. Un modelo con checkpoints múltiples daría seguimiento continuo; este no.
 3. **Tasa de alerta alta.** El punto de operación marca tres de cada cuatro procesos en test. El coste de revisar cada señal no está modelado.
 4. **Un solo tenant de entrenamiento.** El dataset es sintético y sus organizaciones son ficticias; la heterogeneidad observada (AP 0.476–0.840) sugiere que el desempeño por organización puede variar bastante.
 5. **Sin caché ni cola.** Cada consulta es una llamada sincrónica de hasta 3 s. Con volumen alto habría que revisarlo.
