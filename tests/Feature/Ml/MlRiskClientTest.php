@@ -28,6 +28,8 @@ class MlRiskClientTest extends TestCase
 
     private const THRESHOLD = 0.1679418172266036;
 
+    private const MODEL_VERSION = 'phase-15b-20260920-6000';
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -38,6 +40,7 @@ class MlRiskClientTest extends TestCase
         config()->set('ml.internal_token', null);
         config()->set('ml.expected_freeze_fingerprint', self::FINGERPRINT);
         config()->set('ml.expected_threshold', self::THRESHOLD);
+        config()->set('ml.expected_model_version', self::MODEL_VERSION);
     }
 
     private function features(): OperationalRiskFeatures
@@ -55,7 +58,7 @@ class MlRiskClientTest extends TestCase
             'risk_score' => 0.42,
             'risk_flag' => true,
             'threshold' => self::THRESHOLD,
-            'model_version' => 'phase-15b-20260920-6000',
+            'model_version' => self::MODEL_VERSION,
             'freeze_fingerprint' => self::FINGERPRINT,
             'status' => 'experimental',
         ], $overrides);
@@ -301,6 +304,131 @@ class MlRiskClientTest extends TestCase
         Http::fake(['*/v1/predict' => Http::response($body)]);
 
         $this->assertSame(MlRiskClient::REASON_INCOMPATIBLE, $this->client()->predict($this->features())->reason);
+    }
+
+    // -- identidad del modelo ----------------------------------------------
+
+    public function test_an_empty_model_version_is_rejected(): void
+    {
+        Http::fake(['*/v1/predict' => Http::response($this->validBody(['model_version' => '']))]);
+
+        $this->assertSame(MlRiskClient::REASON_INCOMPATIBLE, $this->client()->predict($this->features())->reason);
+    }
+
+    public function test_a_blank_model_version_is_rejected(): void
+    {
+        Http::fake(['*/v1/predict' => Http::response($this->validBody(['model_version' => '   ']))]);
+
+        $this->assertSame(MlRiskClient::REASON_INCOMPATIBLE, $this->client()->predict($this->features())->reason);
+    }
+
+    public function test_a_different_model_version_is_rejected(): void
+    {
+        /* Huella correcta y versión distinta es una respuesta incoherente: el
+           servicio estaría diciendo dos cosas a la vez. */
+        Http::fake(['*/v1/predict' => Http::response($this->validBody([
+            'model_version' => 'phase-15b-20260920-1000',
+        ]))]);
+
+        $this->assertSame(MlRiskClient::REASON_INCOMPATIBLE, $this->client()->predict($this->features())->reason);
+    }
+
+    /**
+     * @return array<string, array{mixed}>
+     */
+    public static function nonStringValues(): array
+    {
+        return [
+            'numero' => [42],
+            'decimal' => [1.5],
+            'booleano' => [true],
+            'nulo' => [null],
+            'array' => [['phase-15b']],
+            'objeto' => [['version' => 'phase-15b']],
+        ];
+    }
+
+    #[DataProvider('nonStringValues')]
+    public function test_a_non_string_model_version_is_rejected(mixed $value): void
+    {
+        /* Sin comprobar el tipo, `(string) 42` valdría "42" y una respuesta
+           absurda se convertiría en una cifra plausible. */
+        Http::fake(['*/v1/predict' => Http::response($this->validBody(['model_version' => $value]))]);
+
+        $assessment = $this->client()->predict($this->features());
+
+        $this->assertSame(MlRiskClient::REASON_INCOMPATIBLE, $assessment->reason);
+        $this->assertNull($assessment->score);
+        $this->assertNull($assessment->flag);
+        $this->assertNull($assessment->threshold);
+    }
+
+    #[DataProvider('nonStringValues')]
+    public function test_a_non_string_fingerprint_is_rejected(mixed $value): void
+    {
+        Http::fake(['*/v1/predict' => Http::response($this->validBody(['freeze_fingerprint' => $value]))]);
+
+        $this->assertSame(MlRiskClient::REASON_INCOMPATIBLE, $this->client()->predict($this->features())->reason);
+    }
+
+    #[DataProvider('nonStringValues')]
+    public function test_a_non_string_status_is_rejected(mixed $value): void
+    {
+        Http::fake(['*/v1/predict' => Http::response($this->validBody(['status' => $value]))]);
+
+        $this->assertSame(MlRiskClient::REASON_INCOMPATIBLE, $this->client()->predict($this->features())->reason);
+    }
+
+    /**
+     * @return array<string, array{mixed}>
+     */
+    public static function nonNumericValues(): array
+    {
+        return [
+            'texto' => ['0.42'],
+            'array' => [[0.42]],
+            'objeto' => [['valor' => 0.42]],
+            'booleano' => [true],
+            'nulo' => [null],
+        ];
+    }
+
+    #[DataProvider('nonNumericValues')]
+    public function test_a_non_numeric_score_is_rejected(mixed $value): void
+    {
+        /* Una cadena numérica tampoco pasa: el servicio devuelve JSON, y en
+           JSON un número es un número. */
+        Http::fake(['*/v1/predict' => Http::response($this->validBody(['risk_score' => $value]))]);
+
+        $this->assertSame(MlRiskClient::REASON_INCOMPATIBLE, $this->client()->predict($this->features())->reason);
+    }
+
+    #[DataProvider('nonNumericValues')]
+    public function test_a_non_numeric_threshold_is_rejected(mixed $value): void
+    {
+        Http::fake(['*/v1/predict' => Http::response($this->validBody(['threshold' => $value]))]);
+
+        $this->assertSame(MlRiskClient::REASON_INCOMPATIBLE, $this->client()->predict($this->features())->reason);
+    }
+
+    public function test_a_missing_status_is_rejected(): void
+    {
+        $body = $this->validBody();
+        unset($body['status']);
+        Http::fake(['*/v1/predict' => Http::response($body)]);
+
+        $this->assertSame(MlRiskClient::REASON_INCOMPATIBLE, $this->client()->predict($this->features())->reason);
+    }
+
+    public function test_the_valid_response_is_still_accepted(): void
+    {
+        /* Control positivo: el endurecimiento no puede rechazarlo todo. */
+        Http::fake(['*/v1/predict' => Http::response($this->validBody())]);
+
+        $assessment = $this->client()->predict($this->features());
+
+        $this->assertTrue($assessment->isPredictive());
+        $this->assertSame(self::MODEL_VERSION, $assessment->modelVersion);
     }
 
     // -- reintentos ---------------------------------------------------------

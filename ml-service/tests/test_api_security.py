@@ -14,6 +14,7 @@ from fastapi.testclient import TestClient
 
 from recruitment_ml.api.app import create_app
 from recruitment_ml.api.security import (
+    MISCONFIGURED_MESSAGE,
     TOKEN_ENV,
     TOKEN_HEADER,
     authentication_enabled,
@@ -40,8 +41,8 @@ def protected_client(monkeypatch, built_artifact) -> TestClient:
 
 
 @pytest.fixture
-def open_client(monkeypatch, built_artifact) -> TestClient:
-    """Servicio sin token configurado: el modo de desarrollo local."""
+def unconfigured_client(monkeypatch, built_artifact) -> TestClient:
+    """Servicio con modelo cargado pero SIN token configurado."""
     directory, _, _ = built_artifact
     monkeypatch.setenv(ARTIFACT_DIR_ENV, str(directory))
     monkeypatch.delenv(TOKEN_ENV, raising=False)
@@ -156,25 +157,61 @@ def test_health_stays_open(protected_client: TestClient) -> None:
     assert body["model_ready"] is True
 
 
-# --- desarrollo local sin token -------------------------------------------
+# --- sin token configurado: falla cerrado ---------------------------------
+#
+# Olvidar la variable en un despliegue no puede dejar `/v1/*` accesible a quien
+# llegue. El servicio se cierra y lo dice; el modelo no responde hasta que haya
+# credencial.
 
 
-def test_without_a_configured_token_the_service_stays_open(
-    open_client: TestClient, payload
+def test_without_a_configured_token_the_model_routes_are_closed(
+    unconfigured_client: TestClient, payload
 ) -> None:
-    """El modo de desarrollo sigue funcionando sin cabeceras."""
-    assert open_client.post("/v1/predict", json=payload).status_code == 200
-    assert open_client.get("/v1/model-info").status_code == 200
+    for response in (
+        unconfigured_client.post("/v1/predict", json=payload),
+        unconfigured_client.get("/v1/model-info"),
+    ):
+        assert response.status_code == 503
+        assert response.json()["detail"] == MISCONFIGURED_MESSAGE
 
 
-def test_an_unnecessary_token_is_ignored_when_auth_is_off(
-    open_client: TestClient, payload
+def test_a_token_in_the_header_does_not_open_an_unconfigured_service(
+    unconfigured_client: TestClient, payload
 ) -> None:
-    response = open_client.post(
-        "/v1/predict", json=payload, headers={TOKEN_HEADER: "sobra"}
+    """Enviar una cabecera no suple la configuracion que falta."""
+    response = unconfigured_client.post(
+        "/v1/predict", json=payload, headers={TOKEN_HEADER: "cualquier-cosa"}
     )
 
+    assert response.status_code == 503
+
+
+def test_the_closed_response_reveals_no_configuration_detail(
+    unconfigured_client: TestClient, payload
+) -> None:
+    body = unconfigured_client.post("/v1/predict", json=payload).text
+
+    for leak in (TOKEN_ENV, "Traceback", "site-packages", "artifacts"):
+        assert leak not in body
+
+
+def test_health_still_answers_without_a_configured_token(
+    unconfigured_client: TestClient,
+) -> None:
+    """La sonda de vida sigue util aunque el modelo no atienda."""
+    response = unconfigured_client.get("/health")
+
     assert response.status_code == 200
+    assert response.json()["model_ready"] is True
+
+
+def test_a_blank_token_also_closes_the_service(monkeypatch, built_artifact, payload) -> None:
+    directory, _, _ = built_artifact
+    monkeypatch.setenv(ARTIFACT_DIR_ENV, str(directory))
+    monkeypatch.setenv(TOKEN_ENV, "   ")
+
+    with TestClient(create_app()) as client:
+        assert client.post("/v1/predict", json=payload).status_code == 503
 
 
 # --- documentacion ---------------------------------------------------------

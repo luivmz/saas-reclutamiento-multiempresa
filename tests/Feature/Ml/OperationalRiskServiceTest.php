@@ -2,13 +2,17 @@
 
 namespace Tests\Feature\Ml;
 
+use App\Models\Application;
 use App\Models\Organization;
+use App\Models\User;
 use App\Models\Vacancy;
 use App\Services\Ml\MlRiskClient;
+use App\Services\Ml\OperationalRiskFeatures;
 use App\Services\Ml\OperationalRiskService;
 use App\Services\Ml\RiskAvailability;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -58,6 +62,23 @@ class OperationalRiskServiceTest extends TestCase
             'published_at' => now()->subDays(42),
             'target_completion_at' => now()->addDays(20)->setTime(18, 0),
         ], $attributes));
+    }
+
+    /**
+     * Payload de la última petición enviada al servicio.
+     *
+     * @return array<string, int>
+     */
+    private function sentPayload(): array
+    {
+        $captured = [];
+        Http::assertSent(function (Request $request) use (&$captured): bool {
+            $captured = $request->data();
+
+            return true;
+        });
+
+        return $captured;
     }
 
     private function fakeSuccess(float $score = 0.42): void
@@ -140,20 +161,21 @@ class OperationalRiskServiceTest extends TestCase
         Http::fake();
 
         $vacancy = $this->assessableVacancy([
+            'opens_at' => now()->subDays(70)->startOfDay(),
             'closes_at' => now()->subDays(40)->startOfDay(),
             'target_completion_at' => now()->subDays(5),
         ]);
 
         $assessment = $this->service()->assess($vacancy);
 
-        $this->assertSame(OperationalRiskService::REASON_TARGET_REACHED, $assessment->reason);
+        $this->assertSame(OperationalRiskService::REASON_QUERY_AFTER_TARGET, $assessment->reason);
         Http::assertNothingSent();
     }
 
-    public function test_an_open_application_window_falls_back(): void
+    public function test_before_the_checkpoint_there_is_no_prediction(): void
     {
-        /* El modelo observa el proceso tras el cierre; antes, el vector cae
-           fuera de lo que vio en entrenamiento. */
+        /* El modelo observa el proceso el día siguiente al cierre; antes, ese
+           punto todavía no existe. */
         Http::fake();
 
         $vacancy = $this->assessableVacancy([
@@ -163,7 +185,133 @@ class OperationalRiskServiceTest extends TestCase
 
         $assessment = $this->service()->assess($vacancy);
 
-        $this->assertSame(OperationalRiskService::REASON_WINDOW_OPEN, $assessment->reason);
+        $this->assertSame(OperationalRiskService::REASON_CHECKPOINT_NOT_REACHED, $assessment->reason);
+        Http::assertNothingSent();
+    }
+
+    public function test_the_checkpoint_is_the_day_after_the_application_close(): void
+    {
+        $vacancy = $this->assessableVacancy(['closes_at' => now()->subDays(10)->startOfDay()]);
+
+        $checkpoint = $this->service()->checkpointFor($vacancy);
+
+        $this->assertSame(
+            now()->subDays(9)->startOfDay()->toDateTimeString(),
+            $checkpoint->toDateTimeString()
+        );
+        $this->assertSame(config('app.timezone'), $checkpoint->timezoneName);
+    }
+
+    public function test_a_vacancy_without_a_close_date_has_no_checkpoint(): void
+    {
+        Http::fake();
+        $vacancy = $this->assessableVacancy(['opens_at' => null, 'closes_at' => null]);
+
+        $this->assertNull($this->service()->checkpointFor($vacancy));
+        $this->assertSame(
+            OperationalRiskService::REASON_MISSING_CLOSE,
+            $this->service()->assess($vacancy)->reason
+        );
+        Http::assertNothingSent();
+    }
+
+    public function test_events_after_the_checkpoint_do_not_change_the_vector(): void
+    {
+        /* La garantía central de la Fase 15A: «cero eventos posteriores al
+           checkpoint incorporados a cualquier feature». Si el vector cambiara
+           con el paso de los días, dos consultas darían respuestas distintas
+           sobre el mismo proceso observado en el mismo punto. */
+        $this->fakeSuccess();
+        $vacancy = $this->assessableVacancy();
+
+        $this->service()->assess($vacancy);
+        $before = $this->sentPayload();
+
+        // Actividad posterior al checkpoint: seis postulaciones de hoy.
+        for ($index = 0; $index < 6; $index++) {
+            Application::factory()->create([
+                'organization_id' => $vacancy->organization_id,
+                'vacancy_id' => $vacancy->id,
+                'candidate_id' => User::factory()->candidate()->create()->id,
+                'applied_at' => now(),
+            ]);
+        }
+
+        $this->fakeSuccess();
+        $this->service()->assess($vacancy->fresh());
+
+        $this->assertSame($before, $this->sentPayload());
+    }
+
+    public function test_the_eligible_case_sends_the_fifteen_features(): void
+    {
+        $this->fakeSuccess();
+        $vacancy = $this->assessableVacancy();
+        Application::factory()->create([
+            'organization_id' => $vacancy->organization_id,
+            'vacancy_id' => $vacancy->id,
+            'candidate_id' => User::factory()->candidate()->create()->id,
+            'applied_at' => now()->subDays(20),
+        ]);
+
+        $assessment = $this->service()->assess($vacancy);
+        $payload = $this->sentPayload();
+
+        $this->assertTrue($assessment->isPredictive());
+        $this->assertSame(OperationalRiskFeatures::NAMES, array_keys($payload));
+        $this->assertSame(1, $payload['applications_received_count']);
+        // El plazo se mide desde el checkpoint (cierre + 1 día), no desde hoy.
+        $this->assertSame(29, $payload['days_remaining_to_target']);
+    }
+
+    public function test_a_closed_vacancy_gets_no_late_prediction(): void
+    {
+        /* El desenlace ya se conoce: presentar una «estimación» de algo
+           resuelto sería engañoso. */
+        Http::fake();
+
+        $vacancy = $this->assessableVacancy(['closed_at' => now()->subDay()]);
+
+        $this->assertSame(
+            OperationalRiskService::REASON_VACANCY_CLOSED,
+            $this->service()->assess($vacancy)->reason
+        );
+        Http::assertNothingSent();
+    }
+
+    public function test_a_late_query_gets_no_prediction(): void
+    {
+        Http::fake();
+
+        $vacancy = $this->assessableVacancy([
+            'closes_at' => now()->subDays(60)->startOfDay(),
+            'opens_at' => now()->subDays(90)->startOfDay(),
+            'published_at' => now()->subDays(92),
+            'target_completion_at' => now()->subDays(10),
+        ]);
+
+        $this->assertSame(
+            OperationalRiskService::REASON_QUERY_AFTER_TARGET,
+            $this->service()->assess($vacancy)->reason
+        );
+        Http::assertNothingSent();
+    }
+
+    public function test_a_target_that_does_not_survive_the_checkpoint_is_out_of_scope(): void
+    {
+        /* El contrato exige `days_remaining_to_target >= 1` en el checkpoint, y
+           el valor no se recorta. */
+        Http::fake();
+
+        $vacancy = $this->assessableVacancy([
+            'closes_at' => now()->subDays(10)->startOfDay(),
+            'target_completion_at' => now()->subDays(9)->startOfDay()->addHours(6),
+        ]);
+
+        $this->assertSame(
+            OperationalRiskService::REASON_TARGET_BEFORE_CHECKPOINT,
+            $this->service()->assess($vacancy)->reason
+        );
         Http::assertNothingSent();
     }
 

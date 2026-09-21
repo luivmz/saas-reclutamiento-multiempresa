@@ -13,6 +13,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -200,6 +201,83 @@ class TargetCompletionTest extends TestCase
 
         $this->assertArrayHasKey('target_completion_at', $log->metadata);
         $this->assertNotNull($log->metadata['target_completion_at']);
+    }
+
+    // -- formulario ---------------------------------------------------------
+
+    public function test_the_edit_form_receives_the_current_target(): void
+    {
+        $vacancy = Vacancy::factory()
+            ->for($this->organization)
+            ->configured()
+            ->withTargetCompletion()
+            ->create();
+
+        $this->actingAs($this->hr)
+            ->get(route('vacancies.edit', $vacancy))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('vacancies/edit')
+                ->where('vacancy.target_completion_at', $vacancy->target_completion_at->toIso8601String())
+            );
+    }
+
+    public function test_the_edit_form_receives_null_when_there_is_no_target(): void
+    {
+        /* Las vacantes anteriores a GAP-01 no traen plazo, y el formulario debe
+           reflejarlo en vez de inventar uno. */
+        $vacancy = Vacancy::factory()->for($this->organization)->configured()->create();
+
+        $this->actingAs($this->hr)
+            ->get(route('vacancies.edit', $vacancy))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('vacancy.target_completion_at', null)
+            );
+    }
+
+    public function test_the_detail_view_exposes_the_target(): void
+    {
+        $vacancy = Vacancy::factory()
+            ->for($this->organization)
+            ->configured()
+            ->withTargetCompletion()
+            ->create();
+
+        $this->actingAs($this->hr)
+            ->get(route('vacancies.show', $vacancy))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('vacancies/show')
+                ->has('vacancy.target_completion_at')
+            );
+    }
+
+    public function test_the_form_component_offers_the_field(): void
+    {
+        /* El campo tiene que existir en el formulario: sin el, GAP-01 quedaria
+           resuelto en la base y sin forma de capturarlo. */
+        $form = file_get_contents(resource_path('js/components/vacancies/vacancy-form.tsx'));
+
+        $this->assertStringContainsString('target_completion_at', $form);
+        $this->assertStringContainsString('vacancy-target-completion-at', $form);
+        $this->assertStringContainsString('datetime-local', $form);
+    }
+
+    public function test_an_update_in_draft_can_change_the_target(): void
+    {
+        $vacancy = Vacancy::factory()
+            ->for($this->organization)
+            ->configured()
+            ->withTargetCompletion()
+            ->create();
+        $nuevo = now()->addDays(90)->setTime(12, 0);
+
+        $this->actingAs($this->hr)
+            ->put(route('vacancies.update', $vacancy), $this->payload($vacancy->jobRequest, [
+                'target_completion_at' => $nuevo->toIso8601String(),
+            ]))
+            ->assertRedirect()
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame($nuevo->toDateString(), $vacancy->fresh()->target_completion_at->toDateString());
     }
 
     // -- multiempresa -------------------------------------------------------
