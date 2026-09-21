@@ -71,9 +71,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     responden 503.
     """
     if not authentication_enabled():
-        LOGGER.warning(
-            "sin token de servicio configurado: /v1/* queda abierto en esta red. "
-            "Admisible en desarrollo local; no exponer el servicio fuera de localhost."
+        LOGGER.error(
+            "sin token de servicio configurado: /v1/* respondera 503. "
+            "Define RECRUITMENT_ML_INTERNAL_TOKEN para habilitar el modelo."
         )
 
     state: ModelState = app.state.model_state

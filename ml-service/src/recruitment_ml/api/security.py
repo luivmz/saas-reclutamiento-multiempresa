@@ -8,9 +8,11 @@ autenticar aqui -- el boundary de aplicacion sigue siendo Laravel.
 Tres decisiones:
 
 - **El token vive solo en el entorno.** Nunca en el codigo ni en el
-  repositorio. Sin variable definida la autenticacion queda desactivada, que es
-  lo razonable en desarrollo local; el arranque lo deja anotado en el log para
-  que nadie lo confunda con estar protegido.
+  repositorio.
+- **Sin token configurado el servicio se cierra, no se abre.** Es la diferencia
+  entre fallar cerrado y fallar abierto: olvidar la variable en un despliegue
+  no puede dejar `/v1/*` accesible a quien llegue. `/v1/predict` y
+  `/v1/model-info` responden 503 hasta que haya credencial.
 - **La comparacion es en tiempo constante.** `hmac.compare_digest` evita que el
   tiempo de respuesta filtre cuantos caracteres del token son correctos.
 - **`/health` queda abierto.** Es una sonda de vida: responde si el proceso
@@ -39,6 +41,10 @@ TOKEN_ENV = "RECRUITMENT_ML_INTERNAL_TOKEN"
 TOKEN_HEADER = "X-Internal-Token"
 
 UNAUTHORIZED_MESSAGE = "Credencial de servicio ausente o invalida."
+MISCONFIGURED_MESSAGE = (
+    "El servicio no tiene credencial de servicio configurada y no atiende "
+    "peticiones al modelo."
+)
 
 
 def configured_token() -> str | None:
@@ -56,12 +62,24 @@ def require_internal_token(
 ) -> None:
     """Exige el token compartido en las rutas del modelo.
 
-    Sin token configurado no comprueba nada: el servicio queda abierto en la
-    red donde este, que es lo que ocurre hoy en desarrollo.
+    **Falla cerrado.** Si no hay token configurado, el servicio no atiende:
+    responde 503 en lugar de quedar abierto. Un despliegue al que se le olvido
+    la variable es un servicio mal configurado, no un servicio publico, y la
+    diferencia entre ambas lecturas la decide este `if`.
+
+    El 503 es deliberado: el problema esta en el servicio, no en las
+    credenciales de quien llama, y un 401 le haria buscar el fallo donde no
+    esta.
     """
     expected = configured_token()
     if expected is None:
-        return
+        LOGGER.error(
+            "peticion al modelo rechazada: falta %s, el servicio no atiende", TOKEN_ENV
+        )
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=MISCONFIGURED_MESSAGE,
+        )
 
     if x_internal_token is None or not hmac.compare_digest(x_internal_token, expected):
         # Ni el valor recibido ni el esperado llegan al log: uno es un secreto
