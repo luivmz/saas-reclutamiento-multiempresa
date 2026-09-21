@@ -51,9 +51,13 @@ TITLE = "Servicio experimental de riesgo operacional"
 DESCRIPTION = (
     "Estima la probabilidad de retraso operacional de un proceso de vacante. "
     "No evalua, puntua ni clasifica personas, y ninguna respuesta constituye una "
-    "decision: la decision final es humana (RF-23). Servicio EXPERIMENTAL, sin "
-    "autorizacion de despliegue mientras GAP-01 siga abierto. No debe exponerse "
-    "fuera de localhost o de la red interna."
+    "decision: la decision final es humana (RF-23). "
+    "GAP-01 quedo RESUELTO TECNICAMENTE en la Fase 16: "
+    "vacancies.target_completion_at existe en Laravel y days_remaining_to_target "
+    "es computable. Resolver la brecha tecnica NO equivale a validacion "
+    "institucional: el modelo se entreno y evaluo solo con datos sinteticos, asi "
+    "que el servicio sigue siendo EXPERIMENTAL y no esta autorizado para "
+    "produccion. No debe exponerse fuera de localhost o de la red interna."
 )
 
 # Si alguien anade o quita un campo del esquema, el servicio falla al

@@ -154,8 +154,11 @@ def test_service_metadata_states_the_limits(built_artifact) -> None:
 
     assert service.verdict == VERDICT == "PREDICTIVE GO WITH LIMITATIONS"
     assert service.deployment_status == DEPLOYMENT_STATUS == "experimental"
-    assert service.gap_01_open is True
+    # GAP-01 quedo resuelto tecnicamente en la Fase 16; lo que sostiene el
+    # caracter experimental es la falta de validacion institucional.
+    assert service.gap_01_open is False
     assert "GAP-01" in service.gap_01_note
+    assert "institucional" in service.gap_01_note
     assert "no evalua" in service.risk_score_meaning.lower()
     assert "revision humana" in service.risk_flag_meaning.lower()
 
