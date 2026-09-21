@@ -14,7 +14,7 @@ Componente Python del experimento académico de **riesgo operacional de retraso*
 | Entrenamiento, evaluación y ablations (15B) | Docker del servicio, Redis, colas y jobs |
 | Servicio FastAPI experimental: `/health`, `/v1/model-info`, `/v1/predict` (15C) | Artefactos de modelo versionados: se reconstruyen, no se guardan |
 | Reconstrucción reproducible del artefacto desde el freeze (15C) | Despliegue: bloqueado mientras `GAP-01` siga abierto |
-| Suite de pruebas (502) | |
+| Suite de pruebas (506) | |
 | CLI de generación, de experimento y de artefacto | |
 
 El modelo analiza **el proceso**, nunca a una persona. No puntúa, ordena, recomienda ni descarta postulantes.
@@ -79,7 +79,7 @@ Resultado de referencia: **Logistic Regression**, AP test **0.769** frente a 0.3
 
 > **No es producción.** Laravel **no** consume este servicio todavía —eso es Fase 16— y `GAP-01` sigue abierto: `target_completion_at` no existe en Laravel, así que `days_remaining_to_target` no es computable ahí. `/v1/predict` **no está autorizado para integración productiva**.
 
-El modelo **no se versiona**: se reconstruye a partir del protocolo congelado —que debe ser **el aprobado**, no solo uno íntegro—, verificando que el dataset, la configuración y la partición regenerados son los del experimento. El builder registra el **SHA-256 del binario**; el loader lo comprueba **antes de deserializar** y después valida que el objeto cargado *es* el pipeline congelado (pasos, clases e hiperparámetros), no cualquier estimador con `predict_proba`.
+El modelo **no se versiona**: se reconstruye a partir del protocolo congelado —que debe ser **el aprobado**, no solo uno íntegro—, verificando que el dataset, la configuración y la partición regenerados son los del experimento. El builder registra el **SHA-256 del binario**; el loader lo comprueba **antes de deserializar** y después valida que el objeto cargado *es* el pipeline congelado —pasos, clases, hiperparámetros y **estado de entrenamiento de cada componente**—, no cualquier estimador con `predict_proba`.
 
 > `joblib.load` no es seguro frente a entradas no confiables: deserializa con `pickle`. Solo se cargan artefactos **locales generados por el builder**.
 
@@ -132,7 +132,7 @@ ml-service/
 │       ├── schemas.py          contrato de entrada y salida
 │       ├── dependencies.py     estado del modelo en el proceso
 │       └── errors.py           errores traducidos a respuestas seguras
-├── tests/                      502 pruebas
+├── tests/                      506 pruebas
 └── artifacts/                  salida local, ignorada por Git
 ```
 
@@ -180,7 +180,7 @@ El manifiesto reporta `censored_total`, `censored_stalled`, `censored_observatio
 .venv/Scripts/python.exe -m pytest --cov=recruitment_ml --cov-report=term-missing
 ```
 
-502 pruebas, 0 avisos, 98 % de cobertura.
+506 pruebas, 0 avisos, 98 % de cobertura.
 
 ## Limitaciones conocidas
 

@@ -94,9 +94,12 @@ Cargar un `.joblib` y confiar en él sería el error que la Fase 15B pasó tres 
 5. las versiones de `scikit-learn`, `numpy` y `joblib` son las del entorno actual;
 6. **el SHA-256 del binario coincide con el declarado** — antes de deserializar;
 7. ya cargado, el objeto **es** el pipeline congelado: `Pipeline` de scikit-learn, mismos pasos y mismas clases (`StandardScaler`, `LogisticRegression`) y **los mismos parámetros** que un pipeline de referencia construido con la familia y los hiperparámetros del freeze — lo que cubre `C=10.0`, `class_weight=None`, `solver`, `max_iter` y `random_state` sin duplicar literales;
-8. está ajustado sobre las 15 features congeladas, **en ese orden** (`n_features_in_`, `feature_names_in_`).
+8. **cada componente con estado está entrenado**: `check_is_fitted` sobre el `StandardScaler`, sobre la `LogisticRegression` y sobre el pipeline completo;
+9. está ajustado sobre las 15 features congeladas, **en ese orden** (`n_features_in_`, `feature_names_in_`).
 
 Exigir solo que el objeto tenga `predict_proba` dejaría pasar cualquier estimador; un `RandomForestClassifier` lo tiene. La comparación se hace contra la estructura real.
+
+**Por qué no basta con `n_features_in_`.** En un `Pipeline` ese atributo —y `feature_names_in_`— delegan en el **primer** paso. Un artefacto con el `StandardScaler` ajustado y la regresión logística sin entrenar los expone igual, pasaría la comprobación de features, el servicio se declararía listo y `/v1/predict` fallaría en la primera petición. Por eso se comprueba cada paso por separado, y el pipeline al final: `check_is_fitted` sobre el pipeline delega en el **último** paso, así que por sí solo tampoco detectaría el caso inverso —estimador entrenado y scaler sin ajustar—.
 
 Si algo falla, **el servicio no finge estar listo**: sigue vivo, lo declara en `/health` y las rutas que necesitan el modelo responden 503.
 
@@ -240,12 +243,12 @@ curl -X POST http://127.0.0.1:8001/v1/predict \
 
 ## 15. Pruebas
 
-**502 pruebas, 0 fallos, 0 avisos, 98 % de cobertura.** Las 388 de 15A y 15B siguen pasando; 114 son nuevas. Los módulos `api/` y `serving/` quedan al 100 %, salvo `build_artifact.py` (90 %: ramas defensivas de incoherencia entre dataset y freeze) y `loader.py` (99 %).
+**506 pruebas, 0 fallos, 0 avisos, 98 % de cobertura.** Las 388 de 15A y 15B siguen pasando; 118 son nuevas. Los módulos `api/` y `serving/` quedan al 100 %, salvo `build_artifact.py` (90 %: ramas defensivas de incoherencia entre dataset y freeze).
 
 | Archivo nuevo | Pruebas | Garantía |
 |---|---|---|
 | `test_api_service.py` | 53 | Endpoints extremo a extremo: health, metadata, predicción, validación y rangos del contrato, identificadores y atributos personales rechazados, 503 sin modelo, 500 sin traza, OpenAPI, sin CORS |
-| `test_serving_artifact.py` | 53 | Construcción desde el freeze aprobado, digest, metadatos, carga verificada, **validación estructural del pipeline**, estimadores sustituidos, mismatches de configuración, hiperparámetros y versiones, determinismo y orden de features |
+| `test_serving_artifact.py` | 57 | Construcción desde el freeze aprobado, digest, metadatos, carga verificada, **validación estructural y de estado de entrenamiento**, pipelines a medio ajustar, estimadores sustituidos, mismatches de configuración, hiperparámetros y versiones, determinismo y orden de features |
 | `test_serving_cli.py` | 8 | Comando de construcción, rechazo de un freeze no aprobado, digest registrado y guarda del esquema |
 
 Las pruebas de API atraviesan la aplicación entera con `TestClient`: probar las funciones sueltas dejaría fuera precisamente lo que puede fallar en un servicio.

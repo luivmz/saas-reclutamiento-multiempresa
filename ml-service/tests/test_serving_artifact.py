@@ -403,8 +403,109 @@ def test_an_unfitted_pipeline_is_rejected(tmp_path: Path, built_artifact, freeze
         tmp_path, build_pipeline("logistic_regression", dict(metadata.model_params)), metadata
     )
 
-    with pytest.raises(ArtifactUnavailableError, match="no esta ajustado"):
+    with pytest.raises(ArtifactUnavailableError, match="no esta completamente ajustado"):
         load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_a_pipeline_with_only_the_scaler_fitted_is_rejected(
+    tmp_path: Path, built_artifact, freeze_path
+) -> None:
+    """El hueco que cerro este hotfix.
+
+    Con el `StandardScaler` ajustado, el pipeline ya expone `n_features_in_` y
+    `feature_names_in_` -- ambos delegan en el **primer** paso --, asi que las
+    comprobaciones de features pasaban y el servicio se declaraba listo. La
+    regresion logistica seguia sin entrenar y `/v1/predict` fallaba en la
+    primera peticion.
+
+    El digest y los metadatos son correctos a proposito: lo que rechaza el
+    artefacto es el estado de entrenamiento incompleto.
+    """
+    from recruitment_ml.training.models import build_pipeline
+
+    _, metadata, _ = built_artifact
+    half_fitted = build_pipeline("logistic_regression", dict(metadata.model_params))
+    half_fitted.named_steps["scaler"].fit(_dummy_frame(metadata.feature_order))
+
+    # Precondiciones: el artefacto es coherente en todo lo demas.
+    assert half_fitted.n_features_in_ == len(metadata.feature_order)
+    assert list(half_fitted.feature_names_in_) == metadata.feature_order
+
+    _substitute(tmp_path, half_fitted, metadata)
+    assert (
+        ArtifactMetadata.read(metadata_path(tmp_path)).artifact_sha256
+        == file_digest(artifact_path(tmp_path))
+    ), "el digest debe ser valido para que el fallo sea el estado de entrenamiento"
+
+    with pytest.raises(ArtifactUnavailableError, match="no esta completamente ajustado") as failure:
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+    assert "LogisticRegression" in str(failure.value)
+
+
+def test_a_pipeline_with_only_the_final_estimator_fitted_is_rejected(
+    tmp_path: Path, built_artifact, freeze_path
+) -> None:
+    """El caso inverso, que `check_is_fitted` sobre el pipeline no detecta.
+
+    `check_is_fitted(pipeline)` delega en el **ultimo** paso, asi que un
+    estimador final entrenado lo satisface aunque el scaler no lo este. Por eso
+    se comprueba cada paso por separado.
+    """
+    from sklearn.exceptions import NotFittedError
+    from sklearn.utils.validation import check_is_fitted
+
+    from recruitment_ml.training.models import build_pipeline
+
+    _, metadata, _ = built_artifact
+    inverted = build_pipeline("logistic_regression", dict(metadata.model_params))
+    frame = _dummy_frame(metadata.feature_order)
+    inverted.named_steps["model"].fit(frame, [0, 1] * 4)
+
+    check_is_fitted(inverted)  # el pipeline "parece" ajustado
+    with pytest.raises(NotFittedError):
+        check_is_fitted(inverted.named_steps["scaler"])
+
+    _substitute(tmp_path, inverted, metadata)
+
+    with pytest.raises(ArtifactUnavailableError, match="no esta completamente ajustado") as failure:
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+    assert "StandardScaler" in str(failure.value)
+
+
+def test_the_official_artifact_is_fully_fitted(built_artifact, freeze_path) -> None:
+    """Control positivo: el pipeline real pasa las tres comprobaciones."""
+    from sklearn.utils.validation import check_is_fitted
+
+    directory, _, _ = built_artifact
+    predictor = load_predictor(directory, freeze_path=freeze_path)
+
+    check_is_fitted(predictor.pipeline)
+    check_is_fitted(predictor.pipeline.named_steps["scaler"])
+    check_is_fitted(predictor.pipeline.named_steps["model"])
+
+
+def test_a_partially_fitted_artifact_never_reports_a_ready_model(
+    monkeypatch, tmp_path: Path, built_artifact, sample_features
+) -> None:
+    """Y el servicio no lo anuncia como listo: 503, no un 500 en la primera peticion."""
+    from fastapi.testclient import TestClient
+
+    from recruitment_ml.api.app import create_app
+    from recruitment_ml.serving.paths import ARTIFACT_DIR_ENV
+    from recruitment_ml.training.models import build_pipeline
+
+    _, metadata, _ = built_artifact
+    half_fitted = build_pipeline("logistic_regression", dict(metadata.model_params))
+    half_fitted.named_steps["scaler"].fit(_dummy_frame(metadata.feature_order))
+    _substitute(tmp_path, half_fitted, metadata)
+    monkeypatch.setenv(ARTIFACT_DIR_ENV, str(tmp_path))
+
+    payload = {name: int(value) for name, value in sample_features.items()}
+    with TestClient(create_app()) as client:
+        assert client.get("/health").json()["model_ready"] is False
+        assert client.post("/v1/predict", json=payload).status_code == 503
 
 
 def test_the_official_artifact_passes_the_structural_check(built_artifact, freeze_path) -> None:

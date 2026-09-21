@@ -33,7 +33,9 @@ from pathlib import Path
 from typing import Any
 
 import joblib
+from sklearn.exceptions import NotFittedError
 from sklearn.pipeline import Pipeline
+from sklearn.utils.validation import check_is_fitted
 
 from recruitment_ml.serving.metadata import (
     APPROVED_FREEZE_FINGERPRINT,
@@ -237,21 +239,55 @@ def _assert_pipeline_structure(
                 f"el paso {name!r} del pipeline no tiene los parametros congelados: {differing}"
             )
 
+    _assert_pipeline_is_fitted(pipeline)
     _assert_fitted_on_the_frozen_features(pipeline, metadata)
+
+
+def _assert_pipeline_is_fitted(pipeline: Pipeline) -> None:
+    """Todos los componentes con estado deben estar entrenados.
+
+    `n_features_in_` y `feature_names_in_` **no bastan**: en un `Pipeline`
+    delegan en el **primer** paso, asi que un `StandardScaler` ajustado los
+    expone aunque la regresion logistica siga sin entrenar. Un artefacto asi
+    pasaria la comprobacion de features, el servicio se declararia listo y
+    `/v1/predict` fallaria en la primera peticion.
+
+    Se comprueban **cada paso por separado y despues el pipeline**:
+    `check_is_fitted` sobre el pipeline delega en el ultimo paso, de modo que
+    por si solo no detectaria el caso inverso -- estimador final entrenado y
+    scaler sin ajustar. Los pasos van primero para que el mensaje senale el
+    componente concreto y no el contenedor.
+    """
+    targets: list[tuple[str, Any]] = [
+        (f"el paso {name!r}", step) for name, step in pipeline.steps
+    ]
+    targets.append(("el pipeline", pipeline))
+
+    for label, component in targets:
+        try:
+            check_is_fitted(component)
+        except NotFittedError as error:
+            raise ArtifactUnavailableError(
+                "el artefacto no esta completamente ajustado: "
+                f"{label} ({type(component).__name__}) no esta entrenado"
+            ) from error
 
 
 def _assert_fitted_on_the_frozen_features(
     pipeline: Pipeline, metadata: ArtifactMetadata
 ) -> None:
-    """El pipeline debe estar ajustado sobre las features congeladas."""
+    """El pipeline debe estar ajustado sobre las features congeladas.
+
+    Se llama **despues** de `_assert_pipeline_is_fitted`, asi que
+    `n_features_in_` existe con seguridad; `feature_names_in_` no, porque
+    ajustar con un array de NumPy no lo deja escrito.
+    """
     expected = list(metadata.feature_order)
 
-    n_features = getattr(pipeline, "n_features_in_", None)
-    if n_features is None:
-        raise ArtifactUnavailableError("el artefacto no esta ajustado: no expone n_features_in_")
-    if int(n_features) != len(expected):
+    n_features = int(pipeline.n_features_in_)
+    if n_features != len(expected):
         raise ArtifactUnavailableError(
-            f"el artefacto se ajusto con {int(n_features)} features y el protocolo declara "
+            f"el artefacto se ajusto con {n_features} features y el protocolo declara "
             f"{len(expected)}"
         )
 
