@@ -1,4 +1,4 @@
-# ml-service — generador sintético y experimento de ML (Fases 15A y 15B)
+# ml-service — generador sintético, experimento de ML y servicio (Fases 15A, 15B y 15C)
 
 Componente Python del experimento académico de **riesgo operacional de retraso** de un proceso de selección. Implementa lo aprobado en la Fase 14 y **nada más**.
 
@@ -6,14 +6,16 @@ Componente Python del experimento académico de **riesgo operacional de retraso*
 
 ## Qué hay aquí y qué no
 
-| Implementado (15A + 15B) | No implementado todavía |
+| Implementado (15A + 15B + 15C) | No implementado todavía |
 |---|---|
-| Estructura del paquete y configuración reproducible | FastAPI, `/v1/predict`, `/health` (15C) |
-| Generador sintético *event-first* (15A) | Docker del ML (15C) |
-| Contrato de columnas y validaciones | Cliente Laravel y contrato HTTP (15C/16) |
-| Entrenamiento, evaluación y ablations (15B) | Persistencia de artefactos de modelo |
-| Suite de pruebas (388) | Despliegue: bloqueado mientras `GAP-01` siga abierto |
-| CLI de generación y CLI de experimento | |
+| Estructura del paquete y configuración reproducible | Cliente HTTP en Laravel y contrato de integración (16) |
+| Generador sintético *event-first* (15A) | Autenticación servicio-a-servicio (16) |
+| Contrato de columnas y validaciones | UI de React sobre el servicio (16) |
+| Entrenamiento, evaluación y ablations (15B) | Docker del servicio, Redis, colas y jobs |
+| Servicio FastAPI experimental: `/health`, `/v1/model-info`, `/v1/predict` (15C) | Artefactos de modelo versionados: se reconstruyen, no se guardan |
+| Reconstrucción reproducible del artefacto desde el freeze (15C) | Despliegue: bloqueado mientras `GAP-01` siga abierto |
+| Suite de pruebas (480) | |
+| CLI de generación, de experimento y de artefacto | |
 
 El modelo analiza **el proceso**, nunca a una persona. No puntúa, ordena, recomienda ni descarta postulantes.
 
@@ -73,6 +75,27 @@ El orden es estricto y lo impone el código: dataset → split temporal → sele
 
 Resultado de referencia: **Logistic Regression**, AP test **0.769** frente a 0.381 del dummy y 0.425 del baseline operacional, **PREDICTIVE GO WITH LIMITATIONS**. Detalle en [`docs/v1.1/phase-15b-training-evaluation.md`](../docs/v1.1/phase-15b-training-evaluation.md).
 
+## Servicio experimental (15C)
+
+> **No es producción.** Laravel **no** consume este servicio todavía —eso es Fase 16— y `GAP-01` sigue abierto: `target_completion_at` no existe en Laravel, así que `days_remaining_to_target` no es computable ahí. `/v1/predict` **no está autorizado para integración productiva**.
+
+El modelo **no se versiona**: se reconstruye a partir del protocolo congelado, verificando que el dataset, la configuración y la partición regenerados son los del experimento.
+
+```bash
+.venv/Scripts/python.exe -m recruitment_ml.serving.build_artifact
+.venv/Scripts/python.exe -m uvicorn recruitment_ml.api.app:app --host 127.0.0.1 --port 8001
+```
+
+| Endpoint | Devuelve |
+|---|---|
+| `GET /health` | Proceso vivo y, por separado, si el modelo está listo |
+| `GET /v1/model-info` | Familia, huella del freeze, umbral exacto, orden de features, veredicto y `GAP-01` |
+| `POST /v1/predict` | `risk_score`, `risk_flag`, umbral congelado y versión del modelo |
+
+`risk_score` es la probabilidad estimada de **retraso operacional del proceso**: no evalúa, puntúa ni clasifica personas. `risk_flag` es `risk_score >= threshold`, una señal para revisión humana — nunca una decisión, un descarte ni un ranking (RF-23).
+
+El payload acepta **exactamente** las 15 features model-ready y nada más: un `candidate_id`, un correo o una edad se rechazan con 422. El servicio no debe exponerse públicamente: `127.0.0.1` o red interna. Detalle en [`docs/v1.1/phase-15c-fastapi-service.md`](../docs/v1.1/phase-15c-fastapi-service.md).
+
 ## Estructura
 
 ```
@@ -96,7 +119,18 @@ ml-service/
 │       ├── calibration.py      calibración ajustada solo con train
 │       ├── ablation.py         las tres ablations obligatorias
 │       └── experiment.py       orquestación, freeze y CLI
-├── tests/                      388 pruebas
+│   ├── serving/                artefacto servido (15C)
+│   │   ├── build_artifact.py   reconstrucción del modelo desde el freeze
+│   │   ├── loader.py           carga verificada contra el protocolo congelado
+│   │   ├── metadata.py         metadatos del artefacto y del servicio
+│   │   ├── paths.py            rutas del artefacto local y del freeze
+│   │   └── predictor.py        inferencia sin estado
+│   └── api/                    servicio FastAPI experimental (15C)
+│       ├── app.py              aplicación, lifespan y rutas
+│       ├── schemas.py          contrato de entrada y salida
+│       ├── dependencies.py     estado del modelo en el proceso
+│       └── errors.py           errores traducidos a respuestas seguras
+├── tests/                      480 pruebas
 └── artifacts/                  salida local, ignorada por Git
 ```
 
@@ -144,7 +178,7 @@ El manifiesto reporta `censored_total`, `censored_stalled`, `censored_observatio
 .venv/Scripts/python.exe -m pytest --cov=recruitment_ml --cov-report=term-missing
 ```
 
-388 pruebas, 98 % de cobertura.
+480 pruebas, 0 avisos, 98 % de cobertura.
 
 ## Limitaciones conocidas
 

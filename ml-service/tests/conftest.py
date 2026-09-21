@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -116,3 +118,38 @@ def timelines(config: SyntheticConfig) -> list[ProcessTimeline]:
         resolve_closure(rng, config, timeline)
         built.append(timeline)
     return built
+
+
+# --- Fase 15C: artefacto servido y cliente de la API -----------------------
+#
+# El artefacto se construye **una vez por sesion** en un directorio temporal:
+# reconstruirlo por prueba costaria minutos, y usar el de `artifacts/` haria
+# que la suite dependiera de un paso manual previo.
+
+
+@pytest.fixture(scope="session")
+def freeze_path() -> Path:
+    """Protocolo congelado de la Fase 15B, versionado en `docs/`."""
+    from recruitment_ml.serving.paths import DEFAULT_FREEZE_PATH
+
+    assert DEFAULT_FREEZE_PATH.is_file(), f"falta el freeze en {DEFAULT_FREEZE_PATH}"
+    return DEFAULT_FREEZE_PATH
+
+
+@pytest.fixture(scope="session")
+def built_artifact(tmp_path_factory, freeze_path):
+    """Artefacto reconstruido desde el freeze, con sus metadatos y el freeze."""
+    from recruitment_ml.serving.build_artifact import build
+    from recruitment_ml.training.freeze import load_freeze
+
+    directory = tmp_path_factory.mktemp("model-artifact")
+    metadata = build(freeze_path=freeze_path, output_dir=directory, rows=6_000)
+    return directory, metadata, load_freeze(freeze_path)
+
+
+@pytest.fixture(scope="session")
+def sample_features() -> dict[str, float]:
+    """Proceso ficticio, en un orden distinto del canonico a proposito."""
+    from recruitment_ml.api.schemas import json_schema_example
+
+    return {name: float(value) for name, value in json_schema_example().items()}

@@ -18,12 +18,18 @@ dependencies = [
     "scikit-learn==1.9.1",
     "scipy==1.18.1",
     "joblib==1.6.0",
+    # Fase 15C: servicio HTTP experimental. Solo el minimo para servir el
+    # modelo; el consumidor sera Laravel en la Fase 16, no un navegador.
+    "fastapi==0.115.6",
+    "uvicorn==0.34.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest==8.3.3",
     "pytest-cov==5.0.0",
+    # TestClient de FastAPI se apoya en httpx.
+    "httpx==0.28.1",
 ]
 
 [tool.setuptools.packages.find]
@@ -32,6 +38,14 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+filterwarnings = [
+    "error",
+    # `starlette.testclient` usa el alias antiguo `anyio.abc.BlockingPortal` al
+    # importarse. Es codigo de terceros y no hay forma de evitarlo desde aqui,
+    # asi que se silencia ese aviso concreto y solo ese: el resto sigue siendo
+    # error.
+    "ignore:The anyio.abc.BlockingPortal alias is deprecated:DeprecationWarning",
+]
 
 [tool.coverage.run]
 source = ["recruitment_ml"]
