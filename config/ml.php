@@ -62,4 +62,10 @@ return [
     ),
     'expected_threshold' => (float) env('ML_EXPECTED_THRESHOLD', 0.1679418172266036),
 
+    /*
+    | Identificador del experimento que debe responder. Una huella correcta con
+    | otro `model_version` sería incoherente, así que se comprueban los dos.
+    */
+    'expected_model_version' => env('ML_EXPECTED_MODEL_VERSION', 'phase-15b-20260920-6000'),
+
 ];

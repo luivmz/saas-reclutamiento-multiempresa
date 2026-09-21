@@ -191,17 +191,24 @@ class MlRiskClient
      *
      * Devuelve la categoría del problema, o `null` si la respuesta es válida.
      *
+     * **Todo se valida antes de castear.** `(float) ['a']` vale 1.0 y
+     * `(string) 42` vale "42": castear primero convertiría una respuesta
+     * absurda en una cifra plausible, que es justo lo que no puede pasar con
+     * un número que se va a mostrar a alguien.
+     *
      * @param  array<mixed>  $body
      */
     private function contractViolation(array $body): ?string
     {
-        foreach (['risk_score', 'risk_flag', 'threshold', 'model_version', 'freeze_fingerprint'] as $key) {
+        foreach (['risk_score', 'risk_flag', 'threshold', 'model_version', 'freeze_fingerprint', 'status'] as $key) {
             if (! array_key_exists($key, $body)) {
                 return "missing:{$key}";
             }
         }
 
-        if (! is_numeric($body['risk_score'])) {
+        // -- tipos --------------------------------------------------------
+
+        if (! is_int($body['risk_score']) && ! is_float($body['risk_score'])) {
             return 'score_not_numeric';
         }
 
@@ -214,9 +221,23 @@ class MlRiskClient
             return 'flag_not_boolean';
         }
 
-        if (! is_numeric($body['threshold'])) {
+        if (! is_int($body['threshold']) && ! is_float($body['threshold'])) {
             return 'threshold_not_numeric';
         }
+        if (! is_finite((float) $body['threshold'])) {
+            return 'threshold_not_finite';
+        }
+
+        foreach (['model_version', 'freeze_fingerprint', 'status'] as $key) {
+            if (! is_string($body[$key])) {
+                return "{$key}_not_string";
+            }
+            if (trim($body[$key]) === '') {
+                return "{$key}_empty";
+            }
+        }
+
+        // -- identidad del experimento -------------------------------------
 
         // El umbral debe ser el exacto de la Fase 15B. Se compara con una
         // tolerancia mínima porque viaja por JSON, no porque se admita otro.
@@ -226,18 +247,23 @@ class MlRiskClient
         }
 
         $expectedFingerprint = (string) config('ml.expected_freeze_fingerprint');
-        if (! hash_equals($expectedFingerprint, (string) $body['freeze_fingerprint'])) {
+        if (! hash_equals($expectedFingerprint, $body['freeze_fingerprint'])) {
             return 'fingerprint_mismatch';
+        }
+
+        $expectedVersion = (string) config('ml.expected_model_version');
+        if ($expectedVersion !== '' && ! hash_equals($expectedVersion, $body['model_version'])) {
+            return 'model_version_mismatch';
         }
 
         // La respuesta debe seguir declarándose experimental. Si algún día deja
         // de hacerlo, es que el servicio cambió de contrato sin avisar.
-        if (($body['status'] ?? null) !== 'experimental') {
+        if ($body['status'] !== 'experimental') {
             return 'status_not_experimental';
         }
 
         // Coherencia interna: la bandera es el umbral aplicado al score.
-        if ((bool) $body['risk_flag'] !== ($score >= (float) $body['threshold'])) {
+        if ($body['risk_flag'] !== ($score >= (float) $body['threshold'])) {
             return 'flag_inconsistent_with_threshold';
         }
 

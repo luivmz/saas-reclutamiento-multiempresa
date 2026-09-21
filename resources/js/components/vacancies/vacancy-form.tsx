@@ -52,6 +52,8 @@ export type VacancyFormData = {
     positions: string;
     opens_at: string;
     closes_at: string;
+    /** GAP-01: plazo objetivo de cierre del proceso (datetime-local). */
+    target_completion_at: string;
     profile: ProfileInput;
     criteria: CriterionInput[];
 };
@@ -76,6 +78,9 @@ export function initialVacancyData(
             positions: String(vacancy.positions),
             opens_at: vacancy.opens_at ?? '',
             closes_at: vacancy.closes_at ?? '',
+            // El backend lo entrega en ISO 8601; el input datetime-local necesita
+            // `YYYY-MM-DDTHH:mm`, sin zona.
+            target_completion_at: vacancy.target_completion_at?.slice(0, 16) ?? '',
             profile: {
                 education: vacancy.profile?.education ?? '',
                 experience: vacancy.profile?.experience ?? '',
@@ -101,6 +106,7 @@ export function initialVacancyData(
         positions: jobRequest ? String(jobRequest.headcount) : '1',
         opens_at: '',
         closes_at: '',
+        target_completion_at: '',
         profile: { education: '', experience: '', functions: '', competencies: '' },
         criteria: suggestedCriteria,
     };
@@ -223,6 +229,21 @@ export function VacancyForm({
                             <Input id="closes_at" type="date" value={form.data.closes_at} onChange={(e) => setField('closes_at', e.target.value)} data-cy="vacancy-closes-at" />
                         </FormField>
                     </div>
+                    <FormField
+                        label="Plazo objetivo del proceso (opcional)"
+                        htmlFor="target_completion_at"
+                        error={errors.target_completion_at}
+                        hint="Fecha límite para cerrar la selección. Debe ser posterior al cierre de postulaciones y no podrá modificarse una vez publicada la vacante."
+                    >
+                        <Input
+                            id="target_completion_at"
+                            type="datetime-local"
+                            min={form.data.closes_at ? `${form.data.closes_at}T00:01` : undefined}
+                            value={form.data.target_completion_at}
+                            onChange={(e) => setField('target_completion_at', e.target.value)}
+                            data-cy="vacancy-target-completion-at"
+                        />
+                    </FormField>
                 </CardContent>
             </Card>
 
