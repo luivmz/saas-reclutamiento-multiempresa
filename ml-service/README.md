@@ -12,7 +12,7 @@ Componente Python del experimento académico de **riesgo operacional de retraso*
 | Generador sintético *event-first* (15A) | Docker del ML (15C) |
 | Contrato de columnas y validaciones | Cliente Laravel y contrato HTTP (15C/16) |
 | Entrenamiento, evaluación y ablations (15B) | Persistencia de artefactos de modelo |
-| Suite de pruebas (383) | Despliegue: bloqueado mientras `GAP-01` siga abierto |
+| Suite de pruebas (388) | Despliegue: bloqueado mientras `GAP-01` siga abierto |
 | CLI de generación y CLI de experimento | |
 
 El modelo analiza **el proceso**, nunca a una persona. No puntúa, ordena, recomienda ni descarta postulantes.
@@ -96,7 +96,7 @@ ml-service/
 │       ├── calibration.py      calibración ajustada solo con train
 │       ├── ablation.py         las tres ablations obligatorias
 │       └── experiment.py       orquestación, freeze y CLI
-├── tests/                      383 pruebas
+├── tests/                      388 pruebas
 └── artifacts/                  salida local, ignorada por Git
 ```
 
@@ -144,7 +144,7 @@ El manifiesto reporta `censored_total`, `censored_stalled`, `censored_observatio
 .venv/Scripts/python.exe -m pytest --cov=recruitment_ml --cov-report=term-missing
 ```
 
-383 pruebas, 98 % de cobertura.
+388 pruebas, 98 % de cobertura.
 
 ## Limitaciones conocidas
 

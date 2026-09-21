@@ -226,6 +226,7 @@ REQUIRED_LIMITATION_TOPICS = (
     ("datos sinteticos", ("sintetic",)),
     ("tasa de alerta", ("tasa de alerta", "alert rate", "alert_rate")),
     ("heterogeneidad entre organizaciones", ("heterogeneidad",)),
+    ("concurrency como posible proxy temporal", ("proxy temporal", "concurrent_open_vacancies_count")),
     ("censura informativa", ("censura",)),
     ("colinealidad", ("colinealidad",)),
     ("contaminacion procedimental", ("contaminacion",)),
@@ -331,7 +332,14 @@ def validate_threshold_selection(freeze: ExperimentFreeze) -> None:
 
 
 def validate_calibration_decision(freeze: ExperimentFreeze) -> None:
-    """La decision de calibrar debe ser explicita y sostenida por numeros."""
+    """La decision de calibrar debe ser explicita, negativa y sostenida por numeros.
+
+    El protocolo de 15B es el del **modelo sin calibrar**: la calibracion se
+    evaluo y se rechazo porque empeoraba el ECE. Un freeze que declare
+    `adopt_calibration=True` describe otro modelo distinto del que produjo estas
+    metricas, asi que no puede abrir este conjunto de prueba, por mucho que el
+    metodo declarado sea uno conocido.
+    """
     section = _require_mapping(freeze.calibration_decision, "calibration_decision")
 
     adopted = section.get("adopt_calibration")
@@ -340,7 +348,13 @@ def validate_calibration_decision(freeze: ExperimentFreeze) -> None:
             "calibration_decision.adopt_calibration debe ser booleano; "
             f"recibido {section.get('adopt_calibration')!r}"
         )
-    method = _require_text(section, "method", "calibration_decision")
+    if adopted:
+        raise FreezeValidationError(
+            "calibration_decision declara adopt_calibration=True, pero el protocolo de 15B "
+            "corresponde al modelo sin calibrar: el freeze describiria un modelo distinto "
+            "del que produjo las metricas congeladas"
+        )
+    _require_text(section, "method", "calibration_decision")
     _require_text(section, "decision_rule", "calibration_decision")
     for key in ("brier_uncalibrated", "brier_calibrated", "ece_uncalibrated", "ece_calibrated"):
         _require_number(section, key, "calibration_decision")
@@ -352,11 +366,7 @@ def validate_calibration_decision(freeze: ExperimentFreeze) -> None:
             f"train: {fitted_on!r}"
         )
 
-    if adopted and _fold(method) not in {"sigmoid", "isotonic"}:
-        raise FreezeValidationError(
-            f"calibration_decision adopta una calibracion de metodo desconocido: {method!r}"
-        )
-    if not adopted and "calibrad" in _fold(freeze.preprocessing):
+    if "calibrad" in _fold(freeze.preprocessing):
         raise FreezeValidationError(
             "calibration_decision no adopta calibracion pero el preprocesamiento declara una: "
             f"{freeze.preprocessing!r}"

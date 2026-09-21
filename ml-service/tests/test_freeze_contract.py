@@ -853,6 +853,7 @@ def test_reveal_rejects_blank_known_limitations(
         ("sintetic", "datos sinteticos"),
         ("tasa de alerta", "tasa de alerta"),
         ("heterogeneidad", "heterogeneidad entre organizaciones"),
+        ("concurrent_open_vacancies_count", "concurrency como posible proxy temporal"),
         ("censura", "censura informativa"),
         ("colinealidad", "colinealidad"),
         ("contaminacion", "contaminacion procedimental"),
@@ -968,16 +969,32 @@ def test_reveal_rejects_a_threshold_selection_without_validation_as_source(
     )
 
 
-def test_reveal_rejects_an_adopted_calibration_of_unknown_method(
-    tmp_path: Path, aligned_split
+def test_reveal_rejects_a_freeze_that_adopts_calibration(tmp_path: Path, aligned_split) -> None:
+    """El protocolo de 15B es el del modelo sin calibrar.
+
+    Declarar `adopt_calibration=True` describe otro modelo, distinto del que
+    produjo las metricas congeladas, aunque el metodo sea uno conocido y el
+    freeze sea internamente integro.
+    """
+    split, freeze = aligned_split
+    calibrated = dict(freeze.calibration_decision, adopt_calibration=True, method="sigmoid")
+    adopting = _gutted(freeze, calibration_decision=calibrated)
+
+    assert adopting.is_intact(), "la huella debe regenerarse para aislar el fallo de calibracion"
+    _reveal_must_fail(split, adopting, tmp_path, "modelo sin calibrar")
+
+
+@pytest.mark.parametrize("method", ["sigmoid", "isotonic", "a-ojo"])
+def test_no_calibration_method_rescues_an_adopting_freeze(
+    tmp_path: Path, aligned_split, method: str
 ) -> None:
     split, freeze = aligned_split
-    exotic = dict(freeze.calibration_decision, adopt_calibration=True, method="a-ojo")
+    calibrated = dict(freeze.calibration_decision, adopt_calibration=True, method=method)
     _reveal_must_fail(
         split,
-        _gutted(freeze, calibration_decision=exotic),
+        _gutted(freeze, calibration_decision=calibrated),
         tmp_path,
-        "metodo desconocido",
+        "modelo sin calibrar",
     )
 
 
@@ -1078,3 +1095,25 @@ def test_reveal_rejects_a_non_string_limitation(tmp_path: Path, aligned_split) -
         tmp_path,
         "esta vacia o no es texto",
     )
+
+
+def test_reveal_rejects_a_freeze_without_the_concurrency_proxy_limitation(
+    tmp_path: Path, aligned_split
+) -> None:
+    """La ablation de 15A la senalo: no puede desaparecer del protocolo.
+
+    `concurrent_open_vacancies_count` correlaciona con el calendario, asi que
+    puede estar midiendo el paso del tiempo y no carga operativa. Un freeze que
+    calle ese riesgo no documenta el experimento.
+    """
+    split, freeze = aligned_split
+    survivors = [
+        item
+        for item in freeze.known_limitations
+        if "concurrent_open_vacancies_count" not in item and "proxy temporal" not in item
+    ]
+    assert len(survivors) == len(freeze.known_limitations) - 1
+
+    without = _gutted(freeze, known_limitations=survivors)
+    assert without.is_intact(), "la huella debe regenerarse para aislar el fallo de cobertura"
+    _reveal_must_fail(split, without, tmp_path, "concurrency como posible proxy temporal")

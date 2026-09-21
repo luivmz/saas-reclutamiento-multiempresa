@@ -55,7 +55,7 @@ Cualquier fallo lanza `SealedTestSetError`.
 
 **Enlace obligatorio a la configuración.** `config_fingerprint` dejó de tener valor por defecto: `build_temporal_split()`, `SealedTestSet` y `validate_freeze_for_split()` lo exigen, con formato sha256, y `reveal()` ya no lo convierte en `None`. **No existe ruta pública que construya una partición sellada sin declararlo.** Un protocolo internamente íntegro —incluso con su huella regenerada— pero de otra configuración se rechaza.
 
-**Contenido científico efectivo.** No basta con que la clave exista, y tampoco con que no esté vacía: `{"placeholder": true}` no está vacío y no documenta nada. Las siete secciones tienen un contrato propio, detallado en §8. Entre otras cosas, el umbral documentado debe ser **idéntico** al congelado, el test **no puede** figurar como fuente de selección, las métricas deben ser finitas —ni `NaN` ni infinitos—, los dos baselines deben estar, y `known_limitations` debe **cubrir** los temas conocidos del experimento.
+**Contenido científico efectivo.** No basta con que la clave exista, y tampoco con que no esté vacía: `{"placeholder": true}` no está vacío y no documenta nada. Las siete secciones tienen un contrato propio, detallado en §8. Entre otras cosas, el umbral documentado debe ser **idéntico** al congelado, el test **no puede** figurar como fuente de selección, las métricas deben ser finitas —ni `NaN` ni infinitos—, los dos baselines deben estar, la calibración debe seguir **no adoptada**, y `known_limitations` debe **cubrir** los ocho temas conocidos del experimento.
 
 **Lo que `describe()` ya no expone.** Antes de revelar, devuelve solo `n`, organizaciones y el periodo, con `labels_disclosed: false`. **No informa de la prevalencia ni del número de positivos**: documentar el tamaño de la partición es legítimo, conocer su distribución de clases antes de congelar el protocolo no lo es. Tras el reveal, sí los incluye.
 
@@ -177,12 +177,12 @@ Que una clave exista, y ni siquiera que no esté vacía, autoriza nada: `{"place
 | Sección | Se exige |
 |---|---|
 | `threshold_selection` | umbral presente, numérico, **idéntico** al congelado; regla declarada; `selected_on` = validation, y **el test no puede figurar como fuente** |
-| `calibration_decision` | `adopt_calibration` booleano, método, criterio, Brier y ECE de ambas variantes, `fitted_on` = train; coherencia con el pipeline final |
+| `calibration_decision` | `adopt_calibration` **booleano y `false`** —este protocolo es el del modelo sin calibrar—, método, criterio, Brier y ECE de ambas variantes, `fitted_on` = train; coherencia con el pipeline final |
 | `validation_metrics` | AP, ROC-AUC, precision, recall, F1, F2, balanced accuracy, Brier y tasa de alerta, todas **finitas**; umbral igual al congelado; matriz de confusión con conteos enteros |
 | `validation_baselines` | los **dos** baselines, cada uno con AP, precision, recall y Brier numéricos |
 | `ablation_conclusions` | las tres features señaladas por la auditoría de 15A, cada una con una cifra medible |
 | `verdict_rule` | superar el dummy, superar el operacional, BSS positivo, las limitaciones degradan el veredicto y **GAP-01 bloquea el despliegue** |
-| `known_limitations` | lista de textos no vacíos que **cubra** datos sintéticos, tasa de alerta, heterogeneidad, censura informativa, colinealidad, contaminación procedimental y GAP-01 |
+| `known_limitations` | lista de textos no vacíos que **cubra** datos sintéticos, tasa de alerta, heterogeneidad, **`concurrent_open_vacancies_count` como posible proxy temporal**, censura informativa, colinealidad, contaminación procedimental y GAP-01 |
 
 Las tres huellas —dataset, configuración del generador y partición— son **argumentos obligatorios**: no existe ruta pública que construya una partición o abra el test sin declararlas, y deben tener formato sha256.
 
@@ -328,7 +328,7 @@ Semilla `20260920` en dataset, split, modelos y calibración. Dos ejecuciones co
 
 ## 17. Pruebas
 
-**383 pruebas, 0 fallos, 0 avisos, 98 % de cobertura** (las 182 de 15A siguen pasando; 201 de 15B). `freeze.py` y `split.py` quedan al 100 %.
+**388 pruebas, 0 fallos, 0 avisos, 98 % de cobertura** (las 182 de 15A siguen pasando; 206 de 15B). `freeze.py` y `split.py` quedan al 100 %.
 
 | Archivo nuevo | Pruebas | Garantía |
 |---|---|---|
@@ -339,7 +339,7 @@ Semilla `20260920` en dataset, split, modelos y calibración. Dos ejecuciones co
 | `test_threshold_selection.py` | 10 | Regla relativa, sin degenerar, determinista |
 | `test_temporal_split.py` | 20 | Cronología, sin solapamiento, censurados fuera, **huellas obligatorias** |
 | `test_ablation.py` | 9 | Las tres obligaciones de la auditoría cubiertas |
-| `test_freeze_contract.py` | 108 | Persistencia previa al reveal, integridad, **enlace obligatorio a la configuración**, **`source_path` real**, **validación semántica de las siete secciones**, y reconstrucción de predicciones desde el artefacto |
+| `test_freeze_contract.py` | 113 | Persistencia previa al reveal, integridad, **enlace obligatorio a la configuración**, **`source_path` real**, **validación semántica de las siete secciones** (incluidas la no adopción de calibración y la cobertura del proxy temporal), y reconstrucción de predicciones desde el artefacto |
 
 Cada prueba negativa del contrato llega hasta `reveal()` —no se queda en el validador— y comprueba que `reveal_count` sigue en 0. El control positivo (`test_the_official_freeze_still_passes_every_section_validator`) impide que el endurecimiento degenere en rechazarlo todo.
 
