@@ -264,6 +264,8 @@ Para que Laravel llame al servicio, en `.env`: `ML_SERVICE_ENABLED=true`, `ML_SE
 
 **Laravel: 366 pruebas, 0 fallos** (236 previas + 130 nuevas + 8 saltadas). **Python: 530, 0 fallos, 0 avisos, 98 % de cobertura** (506 de la Fase 15 + 24 de autenticación).
 
+> Cifras al cierre de la Fase 16. La Fase 17 añadió validación y las elevó a 402 y 532; ver [`phase-17-ml-validation.md`](phase-17-ml-validation.md).
+
 | Archivo | Pruebas | Garantía |
 |---|---|---|
 | `tests/Feature/Ml/TargetCompletionTest.php` | 16 | GAP-01: esquema, `CHECK`, cast, validación, inmutabilidad tras publicar, auditoría, multiempresa y **captura desde el formulario** |
