@@ -34,8 +34,10 @@ import joblib
 
 from recruitment_ml.config import SyntheticConfig
 from recruitment_ml.serving.metadata import (
+    APPROVED_FREEZE_FINGERPRINT,
     ARTIFACT_SCHEMA_VERSION,
     ArtifactMetadata,
+    file_digest,
     library_versions,
 )
 from recruitment_ml.serving.paths import (
@@ -102,6 +104,11 @@ def build(
     pipeline = build_pipeline(freeze.model_family, freeze.model_params)
     pipeline.fit(X_train, y_train)
 
+    output = Path(output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    binary = artifact_path(output)
+    joblib.dump(pipeline, binary)
+
     metadata = ArtifactMetadata(
         schema_version=ARTIFACT_SCHEMA_VERSION,
         experiment_id=freeze.experiment_id,
@@ -118,12 +125,11 @@ def build(
         rows=int(rows),
         n_train=int(len(train)),
         built_at=datetime.now().astimezone().isoformat(),
+        # El digest se calcula sobre el archivo ya escrito, no sobre el objeto
+        # en memoria: lo que el loader va a leer es el archivo.
+        artifact_sha256=file_digest(binary),
         library_versions=library_versions(),
     )
-
-    output = Path(output_dir)
-    output.mkdir(parents=True, exist_ok=True)
-    joblib.dump(pipeline, artifact_path(output))
     metadata.write(metadata_path(output))
     return metadata
 
@@ -132,6 +138,15 @@ def _assert_reproduces(freeze: ExperimentFreeze, rows: int) -> None:
     """Comprobaciones baratas antes de gastar minutos generando el dataset."""
     if not freeze.is_intact():
         raise ArtifactBuildError("el freeze fue alterado: no se reconstruye nada a partir de el")
+    if freeze.freeze_fingerprint != APPROVED_FREEZE_FINGERPRINT:
+        # La integridad solo demuestra coherencia interna. Cambiar C=10 por
+        # C=1 y recalcular la huella produce un freeze perfectamente integro
+        # que describe otro experimento; este servicio sirve uno concreto.
+        raise ArtifactBuildError(
+            "el freeze no es el aprobado en la Fase 15B: "
+            f"{freeze.freeze_fingerprint!r} != {APPROVED_FREEZE_FINGERPRINT!r}. "
+            "Servir otro experimento exige una fase que lo apruebe."
+        )
     expected_id = f"phase-15b-{freeze.seed}-{rows}"
     if freeze.experiment_id != expected_id:
         raise ArtifactBuildError(
@@ -168,6 +183,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"metadatos            : {metadata_path(args.output_dir)}")
     print(f"experiment_id        : {metadata.experiment_id}")
     print(f"freeze fingerprint   : {metadata.freeze_fingerprint}")
+    print(f"artifact sha256      : {metadata.artifact_sha256}")
     print(f"umbral exacto        : {metadata.threshold!r}")
     print(f"features             : {len(metadata.feature_order)}")
     print(f"filas de train       : {metadata.n_train}")

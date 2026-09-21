@@ -65,12 +65,23 @@ class PredictionRequest(BaseModel):
     )
 
     elapsed_days_since_publication: int = Field(
-        ge=0, le=MAX_DAYS, description="Dias transcurridos desde la publicacion de la vacante."
+        gt=0,
+        le=MAX_DAYS,
+        description=(
+            "Dias transcurridos desde la publicacion de la vacante. Estrictamente "
+            "positivo (ML-FEAT-01): el checkpoint es posterior al cierre de postulaciones."
+        ),
     )
     application_window_days: int = Field(
         ge=0, le=MAX_DAYS, description="Duracion de la ventana de postulacion, en dias."
     )
-    positions_count: int = _COUNT
+    positions_count: int = Field(
+        ge=1,
+        description=(
+            "Plazas de la vacante. Minimo 1 (ML-FEAT-04): la tabla real lo impone "
+            "con CHECK (positions >= 1)."
+        ),
+    )
     applications_received_count: int = _COUNT
     configured_criteria_count: int = _COUNT
     evaluations_scheduled_count: int = _COUNT

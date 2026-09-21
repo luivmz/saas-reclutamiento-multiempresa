@@ -8,6 +8,7 @@ fe.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from dataclasses import asdict, dataclass, field
@@ -16,7 +17,23 @@ from typing import Any
 
 #: Version del contrato de metadatos del artefacto. Cambiarla invalida los
 #: artefactos anteriores a proposito: el loader los rechaza.
-ARTIFACT_SCHEMA_VERSION = "15c.1"
+ARTIFACT_SCHEMA_VERSION = "15c.2"
+
+#: Huella del **unico** protocolo aprobado en la Fase 15B.
+#:
+#: El freeze ya se valida por integridad, pero eso solo demuestra que un
+#: registro es coherente consigo mismo: alguien puede cambiar `C=10` por `C=1`,
+#: recalcular la huella y obtener un freeze perfectamente integro que describe
+#: otro experimento. Fijar aqui la huella aprobada convierte "integro" en "es
+#: este". Cambiar este valor exige una fase que apruebe otro experimento.
+APPROVED_FREEZE_FINGERPRINT = (
+    "9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2"
+)
+
+#: Bibliotecas cuya version condiciona el comportamiento de la inferencia.
+#: Un pipeline serializado por otra version de scikit-learn puede deserializar
+#: sin error y predecir distinto.
+CRITICAL_LIBRARIES = ("scikit-learn", "numpy", "joblib")
 
 #: Veredicto cientifico de la Fase 15B. No se reinterpreta aqui.
 VERDICT = "PREDICTIVE GO WITH LIMITATIONS"
@@ -65,6 +82,9 @@ class ArtifactMetadata:
     rows: int
     n_train: int
     built_at: str
+    #: SHA-256 del `.joblib`, calculado tras escribirlo. Permite detectar que
+    #: el binario cambio sin que cambiaran sus metadatos.
+    artifact_sha256: str = ""
     library_versions: dict[str, str] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -145,6 +165,19 @@ class ServiceMetadata:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+def file_digest(path: Path) -> str:
+    """SHA-256 de un archivo, leido por bloques.
+
+    El artefacto ronda las decenas de kilobytes, pero leerlo por bloques
+    mantiene la funcion utilizable si algun dia crece.
+    """
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for block in iter(lambda: handle.read(65_536), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def library_versions() -> dict[str, str]:

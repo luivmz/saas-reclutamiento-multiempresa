@@ -8,6 +8,7 @@ comprobar que lo que se carga es efectivamente eso.
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
 
 import joblib
@@ -16,16 +17,39 @@ import pytest
 from recruitment_ml.serving.build_artifact import ArtifactBuildError, build
 from recruitment_ml.serving.loader import ArtifactUnavailableError, load_predictor
 from recruitment_ml.serving.metadata import (
+    APPROVED_FREEZE_FINGERPRINT,
     ARTIFACT_SCHEMA_VERSION,
+    CRITICAL_LIBRARIES,
     DEPLOYMENT_STATUS,
     VERDICT,
     ArtifactMetadata,
     ServiceMetadata,
+    file_digest,
     library_versions,
 )
 from recruitment_ml.serving.paths import artifact_path, metadata_path
 from recruitment_ml.serving.predictor import PredictionError
 from recruitment_ml.training.freeze import load_freeze
+
+
+
+def _clone_artifact(directory: Path, target: Path) -> None:
+    """Copia el binario **byte a byte**, para que su digest siga siendo valido."""
+    artifact_path(target).parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(artifact_path(directory), artifact_path(target))
+
+
+def _rewrite_metadata(metadata: ArtifactMetadata, target: Path, **changes) -> None:
+    """Escribe unos metadatos alterados junto al binario copiado."""
+    payload = dict(metadata.to_dict(), **changes)
+    payload.pop("threshold_display", None)
+    ArtifactMetadata.from_dict(payload).write(metadata_path(target))
+
+
+def _degraded_copy(directory: Path, metadata: ArtifactMetadata, target: Path, **changes) -> None:
+    """Artefacto valido con unos metadatos que ya no lo describen."""
+    _clone_artifact(directory, target)
+    _rewrite_metadata(metadata, target, **changes)
 
 
 # --- construccion ----------------------------------------------------------
@@ -164,7 +188,7 @@ def test_a_missing_artifact_is_reported(tmp_path: Path, freeze_path) -> None:
 def test_an_artifact_without_metadata_is_rejected(tmp_path: Path, built_artifact, freeze_path) -> None:
     """Sin metadatos no puede saberse de que experimento salio el binario."""
     directory, _, _ = built_artifact
-    joblib.dump(joblib.load(artifact_path(directory)), artifact_path(tmp_path))
+    _clone_artifact(directory, tmp_path)
 
     with pytest.raises(ArtifactUnavailableError, match="no trae metadatos"):
         load_predictor(tmp_path, freeze_path=freeze_path)
@@ -177,28 +201,35 @@ def test_an_artifact_without_metadata_is_rejected(tmp_path: Path, built_artifact
         ("model_family", "random_forest", "model_family"),
         ("experiment_id", "otro-experimento", "experiment_id"),
         ("dataset_fingerprint", "0" * 64, "dataset_fingerprint"),
+        ("config_fingerprint", "0" * 64, "config_fingerprint"),
+        ("preprocessing", "sin escalado", "preprocessing"),
+        ("feature_set", "core_without_elapsed", "feature_set"),
     ],
 )
 def test_an_artifact_that_does_not_match_the_freeze_is_rejected(
     tmp_path: Path, built_artifact, freeze_path, field_name: str, value: str, message: str
 ) -> None:
+    """Cada campo del protocolo se contrasta, no solo la huella."""
     directory, metadata, _ = built_artifact
-    joblib.dump(joblib.load(artifact_path(directory)), artifact_path(tmp_path))
-    payload = dict(metadata.to_dict(), **{field_name: value})
-    payload.pop("threshold_display", None)
-    ArtifactMetadata.from_dict(payload).write(metadata_path(tmp_path))
+    _degraded_copy(directory, metadata, tmp_path, **{field_name: value})
 
     with pytest.raises(ArtifactUnavailableError, match=message):
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_altered_hyperparameters_are_rejected(tmp_path: Path, built_artifact, freeze_path) -> None:
+    """C=1 no es el modelo que 15B selecciono, aunque la familia coincida."""
+    directory, metadata, _ = built_artifact
+    _degraded_copy(directory, metadata, tmp_path, model_params={"C": 1.0, "class_weight": None})
+
+    with pytest.raises(ArtifactUnavailableError, match="hiperparametros del artefacto"):
         load_predictor(tmp_path, freeze_path=freeze_path)
 
 
 def test_a_threshold_mismatch_is_rejected(tmp_path: Path, built_artifact, freeze_path) -> None:
     """Otro umbral clasifica distinto: no es el modelo que 15B aprobo."""
     directory, metadata, _ = built_artifact
-    joblib.dump(joblib.load(artifact_path(directory)), artifact_path(tmp_path))
-    payload = dict(metadata.to_dict(), threshold=0.5)
-    payload.pop("threshold_display", None)
-    ArtifactMetadata.from_dict(payload).write(metadata_path(tmp_path))
+    _degraded_copy(directory, metadata, tmp_path, threshold=0.5)
 
     with pytest.raises(ArtifactUnavailableError, match="umbral del artefacto"):
         load_predictor(tmp_path, freeze_path=freeze_path)
@@ -207,21 +238,191 @@ def test_a_threshold_mismatch_is_rejected(tmp_path: Path, built_artifact, freeze
 def test_a_feature_order_mismatch_is_rejected(tmp_path: Path, built_artifact, freeze_path) -> None:
     """El orden importa: la matriz dejaria de ser la que se entreno."""
     directory, metadata, _ = built_artifact
-    joblib.dump(joblib.load(artifact_path(directory)), artifact_path(tmp_path))
-    reordered = list(reversed(metadata.feature_order))
-    payload = dict(metadata.to_dict(), feature_order=reordered)
-    payload.pop("threshold_display", None)
-    ArtifactMetadata.from_dict(payload).write(metadata_path(tmp_path))
+    _degraded_copy(
+        directory, metadata, tmp_path, feature_order=list(reversed(metadata.feature_order))
+    )
 
     with pytest.raises(ArtifactUnavailableError, match="orden de features"):
         load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+@pytest.mark.parametrize("library", list(CRITICAL_LIBRARIES))
+def test_altered_library_versions_are_rejected(
+    tmp_path: Path, built_artifact, freeze_path, library: str
+) -> None:
+    """Deserializar con otra version puede predecir distinto sin fallar."""
+    directory, metadata, _ = built_artifact
+    versions = dict(metadata.library_versions, **{library: "0.0.0"})
+    _degraded_copy(directory, metadata, tmp_path, library_versions=versions)
+
+    with pytest.raises(ArtifactUnavailableError, match=f"otra version de {library}"):
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_a_wrong_digest_is_rejected(tmp_path: Path, built_artifact, freeze_path) -> None:
+    """El binario debe ser el que el builder escribio."""
+    directory, metadata, _ = built_artifact
+    _degraded_copy(directory, metadata, tmp_path, artifact_sha256="0" * 64)
+
+    with pytest.raises(ArtifactUnavailableError, match="digest del artefacto"):
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_metadata_without_a_digest_is_rejected(tmp_path: Path, built_artifact, freeze_path) -> None:
+    directory, metadata, _ = built_artifact
+    _degraded_copy(directory, metadata, tmp_path, artifact_sha256="")
+
+    with pytest.raises(ArtifactUnavailableError, match="no declaran artifact_sha256"):
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_a_freeze_that_is_not_the_approved_one_is_rejected(
+    tmp_path: Path, built_artifact, freeze_path
+) -> None:
+    """Integro no es lo mismo que aprobado.
+
+    Este freeze se recalculo correctamente, asi que `load_freeze` lo acepta;
+    lo que falla es que describe otro experimento.
+    """
+    from dataclasses import replace
+
+    from recruitment_ml.training.freeze import persist_freeze
+
+    directory, _, freeze = built_artifact
+    other = replace(freeze, model_params={"C": 1.0, "class_weight": None}).with_fingerprint()
+    assert other.is_intact()
+    assert other.freeze_fingerprint != APPROVED_FREEZE_FINGERPRINT
+    path = persist_freeze(other, tmp_path / "freeze.json")
+
+    with pytest.raises(ArtifactUnavailableError, match="no es el aprobado"):
+        load_predictor(directory, freeze_path=path)
+
+
+# --- estructura real del objeto cargado -----------------------------------
+#
+# Exigir solo `predict_proba` dejaria pasar cualquier estimador con ese metodo.
+# En estas pruebas el digest se recalcula a proposito para que el artefacto
+# llegue a cargarse: asi lo que rechaza es la validacion estructural, no el
+# hash.
+
+
+def _substitute(target: Path, estimator, metadata: ArtifactMetadata) -> None:
+    joblib.dump(estimator, artifact_path(target))
+    _rewrite_metadata(metadata, target, artifact_sha256=file_digest(artifact_path(target)))
+
+
+def _dummy_frame(columns: list[str], rows: int = 8):
+    import numpy as np
+    import pandas as pd
+
+    return pd.DataFrame(
+        np.random.default_rng(0).random((rows, len(columns))), columns=columns
+    )
+
+
+def test_a_substituted_estimator_with_predict_proba_is_rejected(
+    tmp_path: Path, built_artifact, freeze_path
+) -> None:
+    """Un bosque tiene `predict_proba` y no es el pipeline congelado."""
+    from sklearn.ensemble import RandomForestClassifier
+
+    _, metadata, _ = built_artifact
+    intruder = RandomForestClassifier(n_estimators=2, random_state=0)
+    intruder.fit(_dummy_frame(metadata.feature_order), [0, 1] * 4)
+    _substitute(tmp_path, intruder, metadata)
+
+    with pytest.raises(ArtifactUnavailableError, match="no es un Pipeline"):
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_a_pipeline_with_another_scaler_is_rejected(
+    tmp_path: Path, built_artifact, freeze_path
+) -> None:
+    """Mismo tipo de objeto, otra estructura interna."""
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.pipeline import Pipeline
+    from sklearn.preprocessing import MinMaxScaler
+
+    _, metadata, _ = built_artifact
+    impostor = Pipeline([("scaler", MinMaxScaler()), ("model", LogisticRegression())])
+    impostor.fit(_dummy_frame(metadata.feature_order), [0, 1] * 4)
+    _substitute(tmp_path, impostor, metadata)
+
+    with pytest.raises(ArtifactUnavailableError, match="estructura del pipeline"):
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_a_pipeline_with_other_hyperparameters_is_rejected(
+    tmp_path: Path, built_artifact, freeze_path
+) -> None:
+    """La estructura coincide, pero `C` no: se compara parametro a parametro."""
+    from recruitment_ml.training.models import build_pipeline
+
+    _, metadata, _ = built_artifact
+    impostor = build_pipeline("logistic_regression", {"C": 1.0, "class_weight": None})
+    impostor.fit(_dummy_frame(metadata.feature_order), [0, 1] * 4)
+    _substitute(tmp_path, impostor, metadata)
+
+    with pytest.raises(ArtifactUnavailableError, match="parametros congelados"):
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_a_pipeline_fitted_on_other_features_is_rejected(
+    tmp_path: Path, built_artifact, freeze_path
+) -> None:
+    from recruitment_ml.training.models import build_pipeline
+
+    _, metadata, _ = built_artifact
+    impostor = build_pipeline("logistic_regression", dict(metadata.model_params))
+    impostor.fit(_dummy_frame(["a", "b", "c"]), [0, 1] * 4)
+    _substitute(tmp_path, impostor, metadata)
+
+    with pytest.raises(ArtifactUnavailableError, match="features"):
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_a_pipeline_fitted_on_a_different_feature_order_is_rejected(
+    tmp_path: Path, built_artifact, freeze_path
+) -> None:
+    from recruitment_ml.training.models import build_pipeline
+
+    _, metadata, _ = built_artifact
+    impostor = build_pipeline("logistic_regression", dict(metadata.model_params))
+    impostor.fit(_dummy_frame(list(reversed(metadata.feature_order))), [0, 1] * 4)
+    _substitute(tmp_path, impostor, metadata)
+
+    with pytest.raises(ArtifactUnavailableError, match="otro orden de features"):
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_an_unfitted_pipeline_is_rejected(tmp_path: Path, built_artifact, freeze_path) -> None:
+    from recruitment_ml.training.models import build_pipeline
+
+    _, metadata, _ = built_artifact
+    _substitute(
+        tmp_path, build_pipeline("logistic_regression", dict(metadata.model_params)), metadata
+    )
+
+    with pytest.raises(ArtifactUnavailableError, match="no esta ajustado"):
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_the_official_artifact_passes_the_structural_check(built_artifact, freeze_path) -> None:
+    """Control positivo: el endurecimiento no puede rechazarlo todo."""
+    directory, metadata, _ = built_artifact
+    predictor = load_predictor(directory, freeze_path=freeze_path)
+
+    assert predictor.metadata.artifact_sha256 == metadata.artifact_sha256
+    assert list(predictor.pipeline.feature_names_in_) == metadata.feature_order
+    assert predictor.pipeline.named_steps["model"].C == 10.0
+    assert predictor.pipeline.named_steps["model"].class_weight is None
 
 
 def test_an_incompatible_schema_version_is_rejected(
     tmp_path: Path, built_artifact, freeze_path
 ) -> None:
     directory, metadata, _ = built_artifact
-    joblib.dump(joblib.load(artifact_path(directory)), artifact_path(tmp_path))
+    _clone_artifact(directory, tmp_path)
     payload = dict(metadata.to_dict(), schema_version="15b.0")
     payload.pop("threshold_display", None)
     ArtifactMetadata.from_dict(payload).write(metadata_path(tmp_path))
@@ -231,29 +432,44 @@ def test_an_incompatible_schema_version_is_rejected(
 
 
 def test_a_corrupted_artifact_is_rejected(tmp_path: Path, built_artifact, freeze_path) -> None:
+    """El digest lo detecta **antes** de deserializar: nada llega a ejecutarse."""
     directory, metadata, _ = built_artifact
     artifact_path(tmp_path).parent.mkdir(parents=True, exist_ok=True)
     artifact_path(tmp_path).write_bytes(b"esto no es un modelo")
     metadata.write(metadata_path(tmp_path))
 
+    with pytest.raises(ArtifactUnavailableError, match="digest del artefacto"):
+        load_predictor(tmp_path, freeze_path=freeze_path)
+
+
+def test_an_unreadable_binary_with_a_matching_digest_is_rejected(
+    tmp_path: Path, built_artifact, freeze_path
+) -> None:
+    """Y si alguien actualiza tambien el digest, falla al deserializar."""
+    _, metadata, _ = built_artifact
+    artifact_path(tmp_path).parent.mkdir(parents=True, exist_ok=True)
+    artifact_path(tmp_path).write_bytes(b"esto no es un modelo")
+    _rewrite_metadata(metadata, tmp_path, artifact_sha256=file_digest(artifact_path(tmp_path)))
+
     with pytest.raises(ArtifactUnavailableError, match="no pudo cargarse"):
         load_predictor(tmp_path, freeze_path=freeze_path)
 
 
-def test_an_object_without_predict_proba_is_rejected(
+def test_an_object_that_is_not_a_pipeline_is_rejected(
     tmp_path: Path, built_artifact, freeze_path
 ) -> None:
-    directory, metadata, _ = built_artifact
+    """Con el digest correcto llega a cargarse, y ahi se comprueba que **es**."""
+    _, metadata, _ = built_artifact
     joblib.dump({"no": "soy un pipeline"}, artifact_path(tmp_path))
-    metadata.write(metadata_path(tmp_path))
+    _rewrite_metadata(metadata, tmp_path, artifact_sha256=file_digest(artifact_path(tmp_path)))
 
-    with pytest.raises(ArtifactUnavailableError, match="predict_proba"):
+    with pytest.raises(ArtifactUnavailableError, match="no es un Pipeline"):
         load_predictor(tmp_path, freeze_path=freeze_path)
 
 
 def test_unreadable_metadata_is_rejected(tmp_path: Path, built_artifact, freeze_path) -> None:
     directory, _, _ = built_artifact
-    joblib.dump(joblib.load(artifact_path(directory)), artifact_path(tmp_path))
+    _clone_artifact(directory, tmp_path)
     metadata_path(tmp_path).write_text("{ esto no es json", encoding="utf-8")
 
     with pytest.raises(ArtifactUnavailableError):
@@ -348,3 +564,21 @@ def test_the_flag_uses_the_exact_threshold(built_artifact, freeze_path) -> None:
 
     assert predictor.threshold == metadata.threshold
     assert repr(predictor.threshold) == repr(0.1679418172266036)
+
+
+def test_a_pipeline_fitted_without_feature_names_is_rejected(
+    tmp_path: Path, built_artifact, freeze_path
+) -> None:
+    """Ajustar con un array pierde los nombres, y el orden deja de ser auditable."""
+    import numpy as np
+
+    from recruitment_ml.training.models import build_pipeline
+
+    _, metadata, _ = built_artifact
+    impostor = build_pipeline("logistic_regression", dict(metadata.model_params))
+    impostor.fit(np.random.default_rng(0).random((8, len(metadata.feature_order))), [0, 1] * 4)
+    assert not hasattr(impostor, "feature_names_in_")
+    _substitute(tmp_path, impostor, metadata)
+
+    with pytest.raises(ArtifactUnavailableError, match="no conserva los nombres"):
+        load_predictor(tmp_path, freeze_path=freeze_path)

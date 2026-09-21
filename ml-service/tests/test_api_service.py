@@ -14,9 +14,9 @@ Dos garantias reciben atencion especial:
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
 
-import joblib
 import pytest
 from fastapi.testclient import TestClient
 
@@ -266,6 +266,22 @@ def test_nan_and_infinity_are_rejected(client: TestClient, payload, literal: str
     assert response.status_code == 422
 
 
+def test_a_vacancy_without_positions_is_rejected(client: TestClient, payload) -> None:
+    """ML-FEAT-04: la tabla real impone CHECK (positions >= 1)."""
+    response = client.post("/v1/predict", json=dict(payload, positions_count=0))
+
+    assert response.status_code == 422
+    assert "positions_count" in response.text
+
+
+def test_a_zero_elapsed_since_publication_is_rejected(client: TestClient, payload) -> None:
+    """ML-FEAT-01: el checkpoint es posterior al cierre, asi que el dominio es > 0."""
+    response = client.post("/v1/predict", json=dict(payload, elapsed_days_since_publication=0))
+
+    assert response.status_code == 422
+    assert "elapsed_days_since_publication" in response.text
+
+
 def test_a_negative_count_is_rejected(client: TestClient, payload) -> None:
     response = client.post("/v1/predict", json=dict(payload, applications_received_count=-1))
 
@@ -320,7 +336,10 @@ def test_an_incompatible_artifact_keeps_the_service_unready(
 ) -> None:
     """Un artefacto que no corresponde al freeze no habilita el servicio."""
     directory, metadata, _ = built_artifact
-    joblib.dump(joblib.load(artifact_path(directory)), artifact_path(tmp_path))
+    # Copia byte a byte: el digest sigue siendo valido, asi que lo que falla
+    # es la correspondencia con el freeze y no la integridad del binario.
+    artifact_path(tmp_path).parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(artifact_path(directory), artifact_path(tmp_path))
     corrupted = dict(metadata.to_dict(), freeze_fingerprint="0" * 64)
     corrupted.pop("threshold_display", None)
     ArtifactMetadata.from_dict(corrupted).write(metadata_path(tmp_path))

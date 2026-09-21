@@ -56,14 +56,17 @@ python -m recruitment_ml.serving.build_artifact
 
 El comando:
 
-1. lee `docs/v1.1/ml/phase-15b-experiment-freeze.json` y comprueba su integridad;
+1. lee `docs/v1.1/ml/phase-15b-experiment-freeze.json`, comprueba su integridad y **exige que su huella sea la aprobada** (`9ee18430…`);
 2. regenera el dataset sintético con la semilla y las filas del experimento;
 3. **verifica que `model_ready_fingerprint` y `config_fingerprint` coinciden** con los del freeze — si no, el modelo no sería el mismo;
 4. rehace la partición temporal y comprueba también su firma;
 5. toma **solo `train`** y ajusta `StandardScaler` + `LogisticRegression` con los hiperparámetros congelados;
-6. escribe el artefacto y sus metadatos.
+6. escribe el artefacto y sus metadatos;
+7. calcula el **SHA-256 del binario ya escrito** y lo guarda en los metadatos.
 
 No elige modelo, no ajusta hiperparámetros, no toca el umbral y **no abre el conjunto de prueba**: servir un modelo no es motivo para volver a mirarlo.
+
+**Integridad no es lo mismo que aprobación.** Un freeze con `C=1` y la huella recalculada es perfectamente coherente consigo mismo y describe otro experimento. Por eso la huella aprobada está fijada en el código (`APPROVED_FREEZE_FINGERPRINT`): servir otro experimento exige una fase que lo apruebe.
 
 | Salida | Ruta | Versionado |
 |---|---|---|
@@ -76,24 +79,36 @@ No elige modelo, no ajusta hiperparámetros, no toca el umbral y **no abre el co
 
 El binario por sí solo no dice de qué experimento salió. Los metadatos son el puente entre el `.joblib` local y el freeze versionado:
 
-`schema_version` (`15c.1`) · `experiment_id` · `freeze_fingerprint` · `dataset_fingerprint` · `config_fingerprint` · `model_family` y `model_params` · `preprocessing` · `feature_set` y `feature_order` · **`threshold` exacto** · `seed` · `rows` · `n_train` · `built_at` · `library_versions`.
+`schema_version` (`15c.2`) · `experiment_id` · `freeze_fingerprint` · `dataset_fingerprint` · `config_fingerprint` · `model_family` y `model_params` · `preprocessing` · `feature_set` y `feature_order` · **`threshold` exacto** · `seed` · `rows` · `n_train` · `built_at` · **`artifact_sha256`** · `library_versions`.
 
-Las versiones de biblioteca se registran porque un artefacto serializado por una versión de scikit-learn y cargado por otra puede comportarse de forma distinta.
+`artifact_sha256` es el digest del `.joblib` tal y como quedó en disco. Las versiones de biblioteca se registran porque un artefacto serializado por una versión de scikit-learn y cargado por otra puede deserializar sin error y predecir distinto.
 
 ## 6. Carga verificada
 
-Cargar un `.joblib` y confiar en él sería el error que la Fase 15B pasó tres correcciones evitando en el freeze. El loader aplica el mismo criterio y **rechaza** si:
+Cargar un `.joblib` y confiar en él sería el error que la Fase 15B pasó tres correcciones evitando en el freeze. El loader aplica el mismo criterio, **en este orden**:
 
-- falta el artefacto o faltan sus metadatos;
-- los metadatos son ilegibles, incompletos o traen campos desconocidos;
-- `schema_version` no es el vigente;
-- `freeze_fingerprint`, `experiment_id`, `model_family`, `dataset_fingerprint` o `feature_set` no coinciden con el freeze;
-- el umbral no es el congelado;
-- el orden de features no es el del conjunto congelado, o no coincide con el declarado en el freeze;
-- el binario está corrupto o el objeto cargado no expone `predict_proba`;
-- el freeze falta o fue alterado.
+1. el artefacto y sus metadatos existen, son legibles y no traen campos desconocidos;
+2. `schema_version` es el vigente;
+3. el freeze existe, es íntegro y **es el aprobado**;
+4. los metadatos corresponden al freeze: `freeze_fingerprint`, `experiment_id`, `model_family`, `dataset_fingerprint`, **`config_fingerprint`**, `feature_set`, **`preprocessing`**, **`model_params`**, umbral exacto y orden de features;
+5. las versiones de `scikit-learn`, `numpy` y `joblib` son las del entorno actual;
+6. **el SHA-256 del binario coincide con el declarado** — antes de deserializar;
+7. ya cargado, el objeto **es** el pipeline congelado: `Pipeline` de scikit-learn, mismos pasos y mismas clases (`StandardScaler`, `LogisticRegression`) y **los mismos parámetros** que un pipeline de referencia construido con la familia y los hiperparámetros del freeze — lo que cubre `C=10.0`, `class_weight=None`, `solver`, `max_iter` y `random_state` sin duplicar literales;
+8. está ajustado sobre las 15 features congeladas, **en ese orden** (`n_features_in_`, `feature_names_in_`).
+
+Exigir solo que el objeto tenga `predict_proba` dejaría pasar cualquier estimador; un `RandomForestClassifier` lo tiene. La comparación se hace contra la estructura real.
 
 Si algo falla, **el servicio no finge estar listo**: sigue vivo, lo declara en `/health` y las rutas que necesitan el modelo responden 503.
+
+### joblib y la confianza
+
+**`joblib.load` no es seguro frente a entradas no confiables**: deserializa con `pickle`, y un archivo malicioso ejecuta código al cargarse. Ninguna comprobación de este módulo cambia ese hecho, y el digest **no** convierte a joblib en un formato seguro.
+
+Lo que sí está garantizado, y conviene no confundir con protección frente a un atacante:
+
+- **solo se cargan artefactos locales producidos por el builder** — nunca archivos recibidos de terceros, descargados ni subidos por un cliente;
+- el digest se comprueba **antes** de deserializar, así que un binario sustituido o corrompido se detecta **sin ejecutarlo**;
+- el digest vive en los metadatos, en el mismo directorio: detecta que el binario cambió por su cuenta —una copia a medias, una sustitución, una corrupción—, **no** a quien pueda reescribir ambos archivos. Contra eso, la protección real es de dónde viene el artefacto, no su hash.
 
 ## 7. Endpoints
 
@@ -141,7 +156,15 @@ Dos decisiones del esquema, ambas deliberadas:
 - **`extra="forbid"`.** Un campo de más no es un descuido inocente: es la vía por la que entrarían `vacancy_id`, `candidate_id`, un correo o una edad. Rechazar lo desconocido convierte el contrato de features en una **frontera efectiva** y no en una recomendación.
 - **`strict=True`.** En modo laxo Pydantic convertiría `"12"` en `12` y `3.5` en `3`. Las features son conteos y diferencias de días enteras; aceptar una cadena o un decimal silenciaría un error del cliente.
 
-Los límites **provienen del contrato sintético aprobado**, no de supuestos institucionales: enteros no negativos, `days_remaining_to_target ≥ 1` porque el plazo es posterior al checkpoint, y un tope para los campos en días derivado del periodo máximo que admite `SyntheticConfig` (180 meses).
+Los límites **provienen del contrato de features**, no de supuestos institucionales:
+
+| Feature | Dominio | Origen |
+|---|---|---|
+| `positions_count` | `≥ 1` | ML-FEAT-04; la tabla real lo impone con `CHECK (positions >= 1)` |
+| `elapsed_days_since_publication` | `> 0` | ML-FEAT-01; el checkpoint es posterior al cierre de postulaciones |
+| `days_remaining_to_target` | `≥ 1` | ML-FEAT-02; el plazo es posterior al checkpoint |
+| Resto de conteos | `≥ 0` | conteos operacionales |
+| Campos en días | `≤ 5580` | periodo máximo que admite `SyntheticConfig` (180 meses) |
 
 Se rechazan con **422**: campos faltantes, campos desconocidos, identificadores, atributos personales o de resultado, tipos incorrectos, decimales donde van enteros, `NaN`, `Infinity`, negativos y valores fuera de rango.
 
@@ -217,13 +240,13 @@ curl -X POST http://127.0.0.1:8001/v1/predict \
 
 ## 15. Pruebas
 
-**480 pruebas, 0 fallos, 0 avisos, 98 % de cobertura.** Las 388 anteriores siguen pasando; 92 son nuevas. Los módulos `api/` y `serving/` quedan al 100 %, salvo `build_artifact.py` (90 %: ramas defensivas de incoherencia entre dataset y freeze).
+**502 pruebas, 0 fallos, 0 avisos, 98 % de cobertura.** Las 388 de 15A y 15B siguen pasando; 114 son nuevas. Los módulos `api/` y `serving/` quedan al 100 %, salvo `build_artifact.py` (90 %: ramas defensivas de incoherencia entre dataset y freeze) y `loader.py` (99 %).
 
 | Archivo nuevo | Pruebas | Garantía |
 |---|---|---|
-| `test_api_service.py` | 51 | Endpoints extremo a extremo: health, metadata, predicción, validación, identificadores y atributos personales rechazados, 503 sin modelo, 500 sin traza, OpenAPI, sin CORS |
-| `test_serving_artifact.py` | 34 | Construcción derivada del freeze, metadatos, carga verificada, mismatches, artefacto corrupto, determinismo, orden de features |
-| `test_serving_cli.py` | 7 | Comando de construcción, guarda del esquema y ramas restantes |
+| `test_api_service.py` | 53 | Endpoints extremo a extremo: health, metadata, predicción, validación y rangos del contrato, identificadores y atributos personales rechazados, 503 sin modelo, 500 sin traza, OpenAPI, sin CORS |
+| `test_serving_artifact.py` | 53 | Construcción desde el freeze aprobado, digest, metadatos, carga verificada, **validación estructural del pipeline**, estimadores sustituidos, mismatches de configuración, hiperparámetros y versiones, determinismo y orden de features |
+| `test_serving_cli.py` | 8 | Comando de construcción, rechazo de un freeze no aprobado, digest registrado y guarda del esquema |
 
 Las pruebas de API atraviesan la aplicación entera con `TestClient`: probar las funciones sueltas dejaría fuera precisamente lo que puede fallar en un servicio.
 

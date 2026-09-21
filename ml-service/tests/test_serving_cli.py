@@ -14,8 +14,11 @@ import pytest
 
 from recruitment_ml.api.schemas import PredictionRequest, assert_schema_matches_contract
 from recruitment_ml.serving.build_artifact import main
-from recruitment_ml.serving.loader import ArtifactUnavailableError, load_predictor
-from recruitment_ml.serving.metadata import ArtifactMetadata
+from recruitment_ml.serving.metadata import (
+    APPROVED_FREEZE_FINGERPRINT,
+    ArtifactMetadata,
+    file_digest,
+)
 from recruitment_ml.serving.paths import artifact_path, metadata_path
 from recruitment_ml.serving.predictor import PredictionError, RiskPredictor
 from recruitment_ml.training.freeze import persist_freeze
@@ -74,28 +77,37 @@ def test_the_schema_guard_detects_a_divergence(monkeypatch) -> None:
 # --- ramas restantes del loader y del predictor ---------------------------
 
 
-def test_a_freeze_declaring_another_feature_order_is_rejected(
-    tmp_path: Path, built_artifact
+def test_the_builder_rejects_a_freeze_that_is_not_the_approved_one(
+    tmp_path: Path, built_artifact, capsys
 ) -> None:
-    """El freeze y el conjunto de features deben decir lo mismo.
+    """Integro no es lo mismo que aprobado.
 
-    Aqui el artefacto declara la misma huella que el freeze manipulado, asi que
-    pasa las comprobaciones anteriores: lo que falla es que ese freeze lista
-    sus features en un orden distinto del que define su propio `feature_set`.
+    Cambiar `C=10` por `C=1` y recalcular la huella produce un freeze
+    perfectamente coherente consigo mismo que describe **otro** experimento.
+    El builder lo rechaza antes de generar nada.
     """
-    import joblib
+    _, _, freeze = built_artifact
+    other = replace(freeze, model_params={"C": 1.0, "class_weight": None}).with_fingerprint()
+    assert other.is_intact(), "el freeze manipulado debe ser internamente coherente"
+    assert other.freeze_fingerprint != APPROVED_FREEZE_FINGERPRINT
+    path = persist_freeze(other, tmp_path / "freeze.json")
 
-    directory, metadata, freeze = built_artifact
-    reordered = replace(freeze, features=list(reversed(freeze.features))).with_fingerprint()
-    freeze_file = persist_freeze(reordered, tmp_path / "freeze.json")
+    exit_code = main(
+        ["--rows", "6000", "--freeze-path", str(path), "--output-dir", str(tmp_path / "salida")]
+    )
 
-    joblib.dump(joblib.load(artifact_path(directory)), artifact_path(tmp_path))
-    aligned = dict(metadata.to_dict(), freeze_fingerprint=reordered.freeze_fingerprint)
-    aligned.pop("threshold_display", None)
-    ArtifactMetadata.from_dict(aligned).write(metadata_path(tmp_path))
+    assert exit_code == 1
+    assert "no es el aprobado" in capsys.readouterr().err
+    assert not artifact_path(tmp_path / "salida").exists()
 
-    with pytest.raises(ArtifactUnavailableError, match="declarado en el freeze"):
-        load_predictor(tmp_path, freeze_path=freeze_file)
+
+def test_the_builder_records_the_binary_digest(tmp_path: Path, freeze_path) -> None:
+    """El digest se calcula sobre el archivo escrito, no sobre el objeto."""
+    main(["--rows", "6000", "--freeze-path", str(freeze_path), "--output-dir", str(tmp_path)])
+    metadata = ArtifactMetadata.read(metadata_path(tmp_path))
+
+    assert metadata.artifact_sha256 == file_digest(artifact_path(tmp_path))
+    assert len(metadata.artifact_sha256) == 64
 
 
 def test_an_inference_failure_is_wrapped(built_artifact, sample_features) -> None:
