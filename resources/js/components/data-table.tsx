@@ -1,4 +1,4 @@
-import type { HTMLAttributes, Key, ReactNode } from 'react';
+import { useId, type HTMLAttributes, type Key, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 /**
@@ -6,16 +6,26 @@ import { cn } from '@/lib/utils';
  *
  * Existía la misma tabla copiada en requerimientos, vacantes, postulaciones,
  * auditoría y ranking: mismas clases, mismos errores. Aquí se resuelven una
- * sola vez tres cosas que faltaban en todas:
+ * sola vez, y con un solo DOM en todos los anchos.
  *
- * - `scope="col"` y `<caption>`, para que un lector de pantalla anuncie a qué
- *   columna pertenece cada celda y qué contiene la tabla;
- * - un encabezado que se queda fijo al desplazar tablas largas;
- * - en pantallas angostas, cada fila se apila como una ficha con su etiqueta
- *   delante, en lugar de obligar a arrastrar la tabla en horizontal.
+ * **Por qué la semántica está escrita a mano.** En pantallas angostas la fila
+ * se apila como ficha, y apilarla exige `display: block` y `display: flex`
+ * sobre `tbody`, `tr` y `td`. Cambiar el `display` de los elementos de una
+ * tabla destruye sus roles implícitos: el navegador deja de exponerla como
+ * tabla y la convierte en bloques sueltos. Por eso:
  *
- * El apilado es puramente CSS y conserva un solo DOM: las filas siguen siendo
- * los mismos elementos con los mismos `data-cy` en cualquier ancho.
+ * - cada elemento declara su rol (`table`, `rowgroup`, `row`, `columnheader`,
+ *   `cell`), que en escritorio solo repite lo nativo y en móvil lo restituye;
+ * - el encabezado **no se oculta con `display: none`** —eso lo borraría del
+ *   árbol de accesibilidad—, sino que se recorta visualmente y sigue
+ *   existiendo;
+ * - cada celda apunta a su encabezado con `headers`, una relación explícita
+ *   que no depende de que el algoritmo nativo de tablas siga vigente.
+ *
+ * La etiqueta que se ve delante del valor en móvil es texto real y no
+ * contenido generado por CSS, y va con `aria-hidden` porque la asociación
+ * `headers` ya entrega ese dato a la tecnología asistiva: mostrarlo dos veces
+ * haría que se oyera el encabezado repetido.
  */
 
 export type Column<Row> = {
@@ -25,7 +35,8 @@ export type Column<Row> = {
     header: ReactNode;
     /**
      * Etiqueta en texto plano que precede al valor cuando la fila se apila.
-     * Por omisión se usa `header`, que sirve cuando es una cadena.
+     * Por omisión se usa `header`, que sirve cuando es una cadena. Una cadena
+     * vacía deja la celda sin etiqueta, para columnas de acciones.
      */
     label?: string;
     cell: (row: Row) => ReactNode;
@@ -56,6 +67,14 @@ const alignment = {
     end: 'md:text-right',
 } as const;
 
+function labelOf<Row>(column: Column<Row>): string | undefined {
+    if (column.label !== undefined) {
+        return column.label || undefined;
+    }
+
+    return typeof column.header === 'string' ? column.header : undefined;
+}
+
 export function DataTable<Row>({
     caption,
     columns,
@@ -66,6 +85,12 @@ export function DataTable<Row>({
     className,
     ...props
 }: Props<Row>) {
+    // `useId` puede traer caracteres que no sirven como identificador HTML
+    // limpio; lo que importa es que sea único por tabla montada, para que dos
+    // tablas en la misma página no compartan los ids de sus encabezados.
+    const scope = `dt${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
+    const headerId = (key: string) => `${scope}-${key}`;
+
     return (
         <div
             className={cn(
@@ -73,16 +98,21 @@ export function DataTable<Row>({
                 className,
             )}
         >
-            <table className="w-full text-sm" {...props}>
+            <table role="table" className="w-full text-sm" {...props}>
                 <caption className="sr-only">{caption}</caption>
-                <thead className="bg-surface text-muted-foreground sticky top-0 z-10 hidden text-left text-xs md:table-header-group">
-                    <tr>
+                <thead
+                    role="rowgroup"
+                    className="text-muted-foreground sr-only text-left text-xs md:not-sr-only md:table-header-group"
+                >
+                    <tr role="row">
                         {columns.map((column) => (
                             <th
                                 key={column.key}
+                                id={headerId(column.key)}
+                                role="columnheader"
                                 scope="col"
                                 className={cn(
-                                    'border-b px-4 py-3 font-medium whitespace-nowrap',
+                                    'bg-surface border-b px-4 py-3 font-medium whitespace-nowrap md:sticky md:top-0 md:z-10',
                                     alignment[column.align ?? 'start'],
                                     column.headerClassName,
                                 )}
@@ -92,7 +122,10 @@ export function DataTable<Row>({
                         ))}
                     </tr>
                 </thead>
-                <tbody className="block space-y-3 md:table-row-group md:space-y-0 md:divide-y">
+                <tbody
+                    role="rowgroup"
+                    className="block space-y-3 md:table-row-group md:space-y-0 md:divide-y"
+                >
                     {rows.map((row) => {
                         const { className: rowClassName, ...attributes } =
                             rowAttributes?.(row) ?? {};
@@ -100,30 +133,43 @@ export function DataTable<Row>({
                         return (
                             <tr
                                 key={rowKey(row)}
+                                role="row"
                                 {...attributes}
                                 className={cn(
                                     'bg-card md:hover:bg-surface/60 block rounded-xl border p-4 md:table-row md:rounded-none md:border-0 md:p-0 md:transition-colors',
                                     rowClassName,
                                 )}
                             >
-                                {columns.map((column) => (
-                                    <td
-                                        key={column.key}
-                                        data-label={
-                                            column.label ??
-                                            (typeof column.header === 'string'
-                                                ? column.header
-                                                : undefined)
-                                        }
-                                        className={cn(
-                                            'before:text-muted-foreground flex items-baseline gap-3 py-1 before:w-28 before:shrink-0 before:text-xs before:content-[attr(data-label)] md:table-cell md:px-4 md:py-3 md:before:content-none',
-                                            alignment[column.align ?? 'start'],
-                                            column.className,
-                                        )}
-                                    >
-                                        {column.cell(row)}
-                                    </td>
-                                ))}
+                                {columns.map((column) => {
+                                    const label = labelOf(column);
+
+                                    return (
+                                        <td
+                                            key={column.key}
+                                            role="cell"
+                                            headers={headerId(column.key)}
+                                            className={cn(
+                                                'flex items-baseline gap-3 py-1 md:table-cell md:px-4 md:py-3',
+                                                alignment[
+                                                    column.align ?? 'start'
+                                                ],
+                                                column.className,
+                                            )}
+                                        >
+                                            {label && (
+                                                <span
+                                                    aria-hidden="true"
+                                                    className="text-muted-foreground w-28 shrink-0 text-xs md:hidden"
+                                                >
+                                                    {label}
+                                                </span>
+                                            )}
+                                            <span className="min-w-0 flex-1 md:contents">
+                                                {column.cell(row)}
+                                            </span>
+                                        </td>
+                                    );
+                                })}
                             </tr>
                         );
                     })}
