@@ -55,7 +55,7 @@ La barra lateral es oscura también en modo claro. El contenido queda como una h
 
 | Componente | Sustituye a |
 |---|---|
-| `components/data-table.tsx` | Cinco tablas copiadas. Encabezado fijo, `scope="col"`, `<caption>` y apilado en ficha por debajo de 768 px, con un solo DOM |
+| `components/data-table.tsx` | Cinco tablas copiadas. Encabezado fijo, `<caption>`, semántica accesible declarada y apilado en ficha por debajo de 768 px, con un solo DOM (ver §4) |
 | `components/page.tsx` → `Section` | La repetición de `Card + CardHeader + CardTitle` en cada módulo; fija el nivel `h2` |
 | `components/choice.tsx` | Los `<input type="radio">` sueltos y con estilo distinto en cada formulario de decisión |
 | `components/skip-link.tsx` | No existía |
@@ -67,16 +67,27 @@ Correcciones aplicadas, referidas a WCAG 2.2:
 
 | Criterio | Corrección |
 |---|---|
-| 1.3.1 Información y relaciones | `scope="col"` y `<caption>` en todas las tablas; `dt`/`dd` reales en los resúmenes; `fieldset`/`legend` en los formularios de decisión y de puntajes |
+| 1.3.1 Información y relaciones | `<caption>`, `scope="col"`, roles explícitos y relación `headers`/`id` en todas las tablas (ver más abajo); `dt`/`dd` reales en los resúmenes; `fieldset`/`legend` en los formularios de decisión y de puntajes |
 | 2.4.1 Evitar bloques | Enlace «Saltar al contenido» en el *shell* y en el sitio público |
-| 2.4.3 Orden del foco | Eliminados todos los `tabIndex` positivos |
+| 2.4.3 Orden del foco | Eliminados todos los `tabIndex` positivos, y el conmutador de visibilidad de la contraseña deja de estar excluido con `tabIndex={-1}`: ahora se alcanza con Tab y se activa con Enter o Espacio |
 | 2.4.7 Foco visible | Un único anillo de foco (`:focus-visible`) definido en la capa base, visible sobre fondo claro y sobre la barra lateral oscura |
 | 1.4.1 Uso del color | La opción elegida cambia de color **y** de grosor de borde; los badges de estado llevan un punto además del fondo; la página actual se marca con `aria-current` |
-| 4.1.2 Nombre, rol, valor | `aria-pressed` en los filtros y en el selector de tema; `aria-current="page"` en navegación y paginación; `aria-describedby`/`aria-invalid` conectados automáticamente por `FormField` |
+| 4.1.2 Nombre, rol, valor | `aria-pressed` en los filtros de estado y en las pestañas de tema de Configuración; `menuitemradio` con `aria-checked` en el selector de tema de la barra superior, que es un grupo de opciones excluyentes; `aria-current="page"` en navegación y paginación; `aria-describedby` y `aria-invalid` conectados automáticamente por `FormField` |
 | 3.3.1 Identificación de errores | `role="alert"` en los mensajes de campo |
 | 2.3.3 Animación por interacción | `prefers-reduced-motion` respetado globalmente |
 
-Nada de esto se declara como auditoría de accesibilidad completa: es la corrección de los defectos encontrados en la revisión de código de esta fase.
+### La tabla sigue siendo una tabla en móvil
+
+Apilar una fila como ficha exige `display: block` y `display: flex` sobre `tbody`, `tr` y `td`, y cambiar el `display` de los elementos de una tabla **destruye sus roles implícitos**: el navegador deja de exponerla como tabla. Ocultar además el encabezado con `display: none` lo borraría del árbol de accesibilidad. Por eso `DataTable`:
+
+- declara los roles a mano (`table`, `rowgroup`, `row`, `columnheader`, `cell`), que en escritorio solo repiten lo nativo y en móvil lo restituyen;
+- recorta el encabezado visualmente en vez de ocultarlo, de modo que sigue existiendo;
+- asocia cada celda con su columna mediante `headers`/`id`, una relación explícita que no depende del algoritmo nativo de tablas;
+- muestra la etiqueta de cada valor como texto real —no como contenido generado por CSS— y la marca `aria-hidden`, porque la relación `headers` ya entrega ese dato y repetirlo haría que se oyera el encabezado dos veces.
+
+Todo ello con **un solo DOM**: las filas son los mismos elementos, con los mismos `data-cy`, en cualquier ancho.
+
+Nada de esto se declara como auditoría de accesibilidad completa, ni como prueba con lector de pantalla real: es la corrección de los defectos encontrados en la revisión de código de esta fase, verificada sobre el DOM y los estilos calculados.
 
 ## 5. Responsive
 
@@ -103,7 +114,7 @@ Capturas reales tomadas con la aplicación corriendo en el entorno E2E aislado, 
 | `07-requerimientos-movil.png` | La misma tabla apilada en ficha a 390 px |
 | `24-vacantes-oscuro-1280.png` | Modo oscuro |
 
-Las especificaciones de captura y de desbordamiento viven en `cypress/visual/` y **no forman parte de la suite E2E**: `specPattern` solo recoge `cypress/e2e/**`. Para ejecutarlas:
+Las especificaciones de captura y de desbordamiento viven en `cypress/visual/` y **no forman parte de la suite E2E**: `specPattern` solo recoge `cypress/e2e/**`. La comprobación de semántica accesible de la tabla en móvil sí forma parte de la suite, en `cypress/e2e/e2e-16-tabla-accesible-movil.cy.js`. Para ejecutar las de `cypress/visual/`:
 
 ```
 npm run e2e:setup
@@ -139,7 +150,8 @@ Ejecutada de verdad, sobre el código final de la rama:
 | `pytest` (ml-service) | **532 pasadas** |
 | `npx tsc --noEmit` | sin errores |
 | `npm run build` | correcto |
-| `npm run cy:run` | **16 specs, 55 pruebas, 55 pasadas** |
+| `npm run cy:run` | **17 specs, 61 pruebas, 61 pasadas** |
+| `npx vp test --run` | **18 pruebas de componente, 18 pasadas** |
 | `vp fmt --check` y `vp lint` sobre los archivos de la fase | 0 advertencias, 0 errores |
 | `git diff --check` | limpio |
 | `php artisan route:list` | sin cambios |
@@ -163,3 +175,15 @@ Ejecutada de verdad, sobre el código final de la rama:
 ## 11. Fuera de alcance
 
 No se hizo, por corresponder a fases posteriores o a decisiones no aprobadas: animaciones avanzadas (Fase 19), 3D (Fase 20), cambios de lógica de negocio, de rutas, de contratos de API o del servicio ML, y nuevas dependencias de producción.
+
+## 12. Correcciones posteriores a la auditoría de Codex
+
+| Hallazgo | Corrección |
+|---|---|
+| MEDIUM · `DataTable` perdía la semántica de tabla en móvil | Roles declarados, encabezado recortado en vez de oculto, relación `headers`/`id` por celda y etiqueta como texto real (§4). Verificado en las cinco tablas migradas por `cypress/e2e/e2e-16-tabla-accesible-movil.cy.js` y por pruebas de componente |
+| LOW · `FormField` sustituía el `aria-describedby` del control | Ahora combina el propio del control, el de la ayuda y el del error, sin repetir y en ese orden; un error fuerza `aria-invalid="true"` aunque el llamador pase `false` |
+| LOW heredado · el conmutador de contraseña estaba fuera del orden de tabulación | `tabIndex={-1}` eliminado; se alcanza con Tab, se activa con Enter o Espacio, hereda el foco visible global y declara `aria-controls` |
+| LOW · salto de encabezados en el panel de evaluaciones | `h4` pasa a `h3` bajo el `h2` de la sección; la jerarquía queda h1 → h2 → h3 en toda la aplicación |
+| LOW · la documentación atribuía `aria-pressed` al selector de tema | El selector de la barra superior pasa a `menuitemradio` con `aria-checked`, que es el rol correcto para opciones excluyentes, y la tabla de §4 distingue ahora los dos controles |
+
+Pruebas añadidas por estas correcciones: 18 de componente (`vp test`, con `react-dom/server`, sin dependencias nuevas) y 6 de navegador (`e2e-16`). La línea base de Cypress pasa de 16 specs / 55 pruebas a **17 specs / 61 pruebas**.
