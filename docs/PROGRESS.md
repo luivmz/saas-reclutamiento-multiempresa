@@ -82,3 +82,12 @@ Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempre
 - **Workflow verde:** ejecuciones `34787563815` (rama de corrección), `34787861775` (`main`) y `34787885835` (`develop`), todas **success**.
 - **Sin cambios funcionales:** no cambiaron RF, reglas, código de la aplicación ni Docker. El tag `v1.0.0-academic` se conserva.
 - **Detalle:** `docs/final-report/post-publication-ci-fix.md`.
+
+## v1.1 — Fase 18: rediseño frontend integral
+
+- **Rama:** `feature/phase-18-frontend-redesign`, desde `develop` en `0d2ce42` (cierre de la Fase 17).
+- **Alcance:** solo interfaz. Sistema de diseño propio (tipografía IBM Plex, tokens de estado, barra lateral oscura), `DataTable` y `Section` reutilizables, accesibilidad (enlace de salto, foco visible único, `aria-current`/`aria-pressed`, tablas con `scope` y `caption`), responsive verificado a 1440/1280/768/390 px, modo oscuro y traducción al español del módulo de configuración.
+- **Sin cambios** en reglas de negocio, RF, rutas, contratos de API, modelos, Policies, migraciones ni servicio ML. RF-29 sigue siendo experimental y la decisión final sigue siendo humana (RF-23).
+- **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · `tsc` sin errores · `npm run build` correcto · Cypress 16 specs / 55 pruebas, 55 pasadas.
+- **Detalle y evidencia:** `docs/v1.1/phase-18-frontend-redesign.md` y `docs/v1.1/phase-18-screenshots/`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
