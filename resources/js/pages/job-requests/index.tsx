@@ -1,13 +1,13 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { ClipboardList, FilePlus2 } from 'lucide-react';
 import JobRequestController from '@/actions/App/Http/Controllers/JobRequests/JobRequestController';
+import { DataTable } from '@/components/data-table';
 import { EmptyState } from '@/components/empty-state';
 import { FilterChips } from '@/components/filter-chips';
 import { PageContainer, PageHeader } from '@/components/page';
 import { Pagination } from '@/components/pagination';
 import { StatusBadge } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { formatDate } from '@/lib/format';
 import type { JobRequest, Paginated, Presented } from '@/types';
 
@@ -39,12 +39,12 @@ export default function JobRequestsIndex({
             <PageContainer>
                 <PageHeader
                     title="Requerimientos de personal"
-                    description="Registro, validación, aprobación y trazabilidad de requerimientos (RF-01 a RF-04)."
+                    description="Registro, validación, aprobación y trazabilidad de las necesidades de personal (RF-01 a RF-04)."
                     actions={
                         can.create && (
                             <Button asChild data-cy="new-job-request">
                                 <Link href={JobRequestController.create()}>
-                                    <FilePlus2 />
+                                    <FilePlus2 aria-hidden="true" />
                                     Nuevo requerimiento
                                 </Link>
                             </Button>
@@ -62,67 +62,77 @@ export default function JobRequestsIndex({
                     <EmptyState
                         icon={ClipboardList}
                         title="No hay requerimientos para mostrar"
-                        description="Cuando existan requerimientos en este estado aparecerán aquí."
+                        description={
+                            filters.estado
+                                ? 'Ningún requerimiento está en ese estado. Quite el filtro para ver todos.'
+                                : 'Cuando un área registre una necesidad de personal, aparecerá aquí.'
+                        }
                     />
                 ) : (
-                    <Card className="gap-0 overflow-hidden py-0">
-                        <div className="overflow-x-auto">
-                            <table
-                                className="w-full text-sm"
-                                data-cy="job-requests-table"
-                            >
-                                <thead className="bg-muted/50 text-muted-foreground text-left text-xs tracking-wide uppercase">
-                                    <tr>
-                                        <th className="px-4 py-3 font-medium">Código</th>
-                                        <th className="px-4 py-3 font-medium">Puesto</th>
-                                        <th className="px-4 py-3 font-medium">Área</th>
-                                        <th className="px-4 py-3 text-center font-medium">Plazas</th>
-                                        <th className="px-4 py-3 font-medium">Solicitante</th>
-                                        <th className="px-4 py-3 font-medium">Estado</th>
-                                        <th className="px-4 py-3 font-medium">Registrado</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y">
-                                    {jobRequests.data.map((jobRequest) => (
-                                        <tr
-                                            key={jobRequest.id}
-                                            className="hover:bg-muted/40"
-                                            data-cy="job-request-row"
-                                            data-code={jobRequest.code}
-                                        >
-                                            <td className="px-4 py-3 font-mono text-xs">
-                                                <Link
-                                                    href={JobRequestController.show(jobRequest.id)}
-                                                    className="font-medium hover:underline"
-                                                    data-cy="job-request-link"
-                                                >
-                                                    {jobRequest.code}
-                                                </Link>
-                                            </td>
-                                            <td className="px-4 py-3 font-medium">
-                                                {jobRequest.position_title}
-                                            </td>
-                                            <td className="text-muted-foreground px-4 py-3">
-                                                {jobRequest.area}
-                                            </td>
-                                            <td className="px-4 py-3 text-center">
-                                                {jobRequest.headcount}
-                                            </td>
-                                            <td className="text-muted-foreground px-4 py-3">
-                                                {jobRequest.requester?.name}
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                <StatusBadge status={jobRequest.status} />
-                                            </td>
-                                            <td className="text-muted-foreground px-4 py-3 whitespace-nowrap">
-                                                {formatDate(jobRequest.created_at)}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </Card>
+                    <DataTable
+                        caption="Requerimientos de personal de su organización"
+                        data-cy="job-requests-table"
+                        rows={jobRequests.data}
+                        rowKey={(row) => row.id}
+                        rowAttributes={(row) => ({
+                            'data-cy': 'job-request-row',
+                            'data-code': row.code,
+                        })}
+                        columns={[
+                            {
+                                key: 'code',
+                                header: 'Código',
+                                className: 'font-mono text-xs',
+                                cell: (row) => (
+                                    <Link
+                                        href={JobRequestController.show(row.id)}
+                                        className="font-medium hover:underline"
+                                        data-cy="job-request-link"
+                                    >
+                                        {row.code}
+                                    </Link>
+                                ),
+                            },
+                            {
+                                key: 'position',
+                                header: 'Puesto',
+                                className: 'font-medium',
+                                cell: (row) => row.position_title,
+                            },
+                            {
+                                key: 'area',
+                                header: 'Área',
+                                className: 'text-muted-foreground',
+                                cell: (row) => row.area,
+                            },
+                            {
+                                key: 'headcount',
+                                header: 'Plazas',
+                                align: 'center',
+                                cell: (row) => row.headcount,
+                            },
+                            {
+                                key: 'requester',
+                                header: 'Solicitante',
+                                className: 'text-muted-foreground',
+                                cell: (row) => row.requester?.name ?? '—',
+                            },
+                            {
+                                key: 'status',
+                                header: 'Estado',
+                                cell: (row) => (
+                                    <StatusBadge status={row.status} />
+                                ),
+                            },
+                            {
+                                key: 'created',
+                                header: 'Registrado',
+                                className:
+                                    'text-muted-foreground whitespace-nowrap',
+                                cell: (row) => formatDate(row.created_at),
+                            },
+                        ]}
+                    />
                 )}
 
                 <Pagination meta={jobRequests.meta} />

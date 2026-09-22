@@ -1,7 +1,7 @@
 import { router } from '@inertiajs/react';
 import { KeyRound } from 'lucide-react';
 import { destroy } from '@/actions/Laravel/Passkeys/Http/Controllers/PasskeyRegistrationController';
-import Heading from '@/components/heading';
+import { Section } from '@/components/page';
 import PasskeyItem from '@/components/passkey-item';
 import PasskeyRegistration from '@/components/passkey-register';
 import type { Passkey } from '@/types/auth';
@@ -11,15 +11,19 @@ export type Props = {
     passkeys?: Passkey[];
 };
 
-const EmptyState = () => {
+const NoPasskeys = () => {
     return (
         <div className="p-8 text-center">
-            <div className="bg-muted mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl">
-                <KeyRound className="text-muted-foreground h-7 w-7" />
+            <div className="bg-surface mx-auto mb-4 flex size-12 items-center justify-center rounded-full">
+                <KeyRound
+                    className="text-muted-foreground size-5"
+                    aria-hidden="true"
+                />
             </div>
-            <p className="font-medium">No passkeys yet</p>
-            <p className="text-muted-foreground mt-1 text-sm">
-                Add a passkey to sign in without a password
+            <p className="font-medium">Todavía no tiene claves de acceso</p>
+            <p className="text-muted-foreground mx-auto mt-1 max-w-sm text-sm leading-relaxed">
+                Registre una para entrar con la huella, el rostro o el PIN de su
+                dispositivo, sin escribir la contraseña.
             </p>
         </div>
     );
@@ -44,28 +48,27 @@ export default function ManagePasskeys(props: Props) {
     }
 
     return (
-        <div className="space-y-6">
-            <Heading
-                variant="small"
-                title="Passkeys"
-                description="Manage your passkeys for passwordless sign-in"
-            />
+        <Section
+            title="Claves de acceso"
+            description="Entre sin contraseña usando la huella, el rostro o el PIN de su dispositivo."
+        >
+            <div className="space-y-5">
+                <div className="overflow-hidden rounded-lg border">
+                    {passkeys.length > 0 ? (
+                        passkeys.map((passkey) => (
+                            <PasskeyItem
+                                key={passkey.id}
+                                passkey={passkey}
+                                onDelete={handleDelete}
+                            />
+                        ))
+                    ) : (
+                        <NoPasskeys />
+                    )}
+                </div>
 
-            <div className="border-border overflow-hidden rounded-lg border">
-                {passkeys.length > 0 ? (
-                    passkeys.map((passkey) => (
-                        <PasskeyItem
-                            key={passkey.id}
-                            passkey={passkey}
-                            onDelete={handleDelete}
-                        />
-                    ))
-                ) : (
-                    <EmptyState />
-                )}
+                <PasskeyRegistration onSuccess={handleRegisterSuccess} />
             </div>
-
-            <PasskeyRegistration onSuccess={handleRegisterSuccess} />
-        </div>
+        </Section>
     );
 }

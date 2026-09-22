@@ -1,32 +1,23 @@
 import { Head } from '@inertiajs/react';
 import AppearanceTabs from '@/components/appearance-tabs';
-import Heading from '@/components/heading';
+import { Section } from '@/components/page';
 import { edit as editAppearance } from '@/routes/appearance';
 
 export default function Appearance() {
     return (
         <>
-            <Head title="Appearance settings" />
+            <Head title="Apariencia" />
 
-            <h1 className="sr-only">Appearance settings</h1>
-
-            <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Appearance settings"
-                    description="Update the appearance settings for your account"
-                />
+            <Section
+                title="Apariencia"
+                description="Elija el tema con el que verá la plataforma. La preferencia se guarda en este navegador."
+            >
                 <AppearanceTabs />
-            </div>
+            </Section>
         </>
     );
 }
 
 Appearance.layout = {
-    breadcrumbs: [
-        {
-            title: 'Appearance settings',
-            href: editAppearance(),
-        },
-    ],
+    breadcrumbs: [{ title: 'Apariencia', href: editAppearance() }],
 };

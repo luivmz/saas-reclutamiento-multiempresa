@@ -1,11 +1,11 @@
 import { Form, Head, usePage } from '@inertiajs/react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/delete-user';
-import Heading from '@/components/heading';
-import InputError from '@/components/input-error';
+import { FormField } from '@/components/form-controls';
+import { Section } from '@/components/page';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 import { edit } from '@/routes/profile';
 import type { Auth } from '@/types';
 
@@ -18,77 +18,63 @@ export default function Profile() {
 
     return (
         <>
-            <Head title="Profile settings" />
+            <Head title="Perfil de la cuenta" />
 
-            <h1 className="sr-only">Profile settings</h1>
-
-            <div className="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Profile"
-                    description="Update your name and email address"
-                />
-
+            <Section
+                title="Perfil"
+                description="Su nombre y su correo de acceso."
+            >
                 <Form
                     {...ProfileController.update.form()}
-                    options={{
-                        preserveScroll: true,
-                    }}
-                    className="space-y-6"
+                    options={{ preserveScroll: true }}
+                    className="max-w-lg space-y-5"
                 >
                     {({ processing, errors }) => (
                         <>
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
-
+                            <FormField
+                                label="Nombre"
+                                htmlFor="name"
+                                error={errors.name}
+                                required
+                            >
                                 <Input
                                     id="name"
-                                    className="mt-1 block w-full"
-                                    defaultValue={auth.user.name}
                                     name="name"
+                                    defaultValue={auth.user.name}
                                     required
                                     autoComplete="name"
-                                    placeholder="Full name"
+                                    placeholder="Nombre y apellidos"
                                 />
+                            </FormField>
 
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.name}
-                                />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-
+                            <FormField
+                                label="Correo electrónico"
+                                htmlFor="email"
+                                error={errors.email}
+                                required
+                            >
                                 <Input
                                     id="email"
                                     type="email"
-                                    className="mt-1 block w-full"
-                                    defaultValue={auth.user.email}
                                     name="email"
+                                    defaultValue={auth.user.email}
                                     required
                                     autoComplete="username"
-                                    placeholder="Email address"
+                                    placeholder="usuario@ejemplo.test"
                                 />
+                            </FormField>
 
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.email}
-                                />
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    disabled={processing}
-                                    data-test="update-profile-button"
-                                >
-                                    Save
-                                </Button>
-                            </div>
+                            <Button
+                                disabled={processing}
+                                data-test="update-profile-button"
+                            >
+                                {processing && <Spinner />}
+                                Guardar cambios
+                            </Button>
                         </>
                     )}
                 </Form>
-            </div>
+            </Section>
 
             <DeleteUser />
         </>
@@ -96,10 +82,5 @@ export default function Profile() {
 }
 
 Profile.layout = {
-    breadcrumbs: [
-        {
-            title: 'Profile settings',
-            href: edit(),
-        },
-    ],
+    breadcrumbs: [{ title: 'Perfil de la cuenta', href: edit() }],
 };

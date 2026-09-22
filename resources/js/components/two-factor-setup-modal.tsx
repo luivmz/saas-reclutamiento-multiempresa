@@ -26,7 +26,7 @@ import { confirm } from '@/routes/two-factor';
 function GridScanIcon() {
     return (
         <div className="border-border bg-card mb-3 rounded-full border p-0.5 shadow-sm">
-            <div className="border-border bg-muted relative overflow-hidden rounded-full border p-2.5">
+            <div className="bg-surface relative overflow-hidden rounded-full border p-2.5">
                 <div className="absolute inset-0 grid grid-cols-5 opacity-50">
                     {Array.from({ length: 5 }, (_, i) => (
                         <div
@@ -103,15 +103,15 @@ function TwoFactorSetupStep({
 
                     <div className="relative flex w-full items-center justify-center">
                         <div className="bg-border absolute inset-0 top-1/2 h-px w-full" />
-                        <span className="bg-card relative px-2 py-1">
-                            or, enter the code manually
+                        <span className="bg-card text-muted-foreground relative px-2 py-1 text-sm">
+                            o escriba la clave a mano
                         </span>
                     </div>
 
                     <div className="flex w-full space-x-2">
                         <div className="border-border flex w-full items-stretch overflow-hidden rounded-xl border">
                             {!manualSetupKey ? (
-                                <div className="bg-muted flex h-full w-full items-center justify-center p-3">
+                                <div className="bg-surface flex h-full w-full items-center justify-center p-3">
                                     <Spinner />
                                 </div>
                             ) : (
@@ -123,10 +123,17 @@ function TwoFactorSetupStep({
                                         className="bg-background text-foreground h-full w-full p-3 outline-none"
                                     />
                                     <button
+                                        type="button"
                                         onClick={() => copy(manualSetupKey)}
-                                        className="border-border hover:bg-muted border-l px-3"
+                                        className="hover:bg-surface border-l px-3"
                                     >
-                                        <IconComponent className="w-4" />
+                                        <IconComponent
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                        <span className="sr-only">
+                                            Copiar la clave
+                                        </span>
                                     </button>
                                 </>
                             )}
@@ -210,7 +217,7 @@ function TwoFactorVerificationStep({
                                 onClick={onBack}
                                 disabled={processing}
                             >
-                                Back
+                                Volver
                             </Button>
                             <Button
                                 type="submit"
@@ -219,7 +226,7 @@ function TwoFactorVerificationStep({
                                     processing || code.length < OTP_MAX_LENGTH
                                 }
                             >
-                                Confirm
+                                Confirmar
                             </Button>
                         </div>
                     </div>
@@ -262,27 +269,27 @@ export default function TwoFactorSetupModal({
     }>(() => {
         if (twoFactorEnabled) {
             return {
-                title: 'Two-factor authentication enabled',
+                title: 'Verificación en dos pasos activada',
                 description:
-                    'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
-                buttonText: 'Close',
+                    'Escanee el código QR o escriba la clave en su aplicación de autenticación.',
+                buttonText: 'Cerrar',
             };
         }
 
         if (showVerificationStep) {
             return {
-                title: 'Verify authentication code',
+                title: 'Verifique el código',
                 description:
-                    'Enter the 6-digit code from your authenticator app',
-                buttonText: 'Continue',
+                    'Escriba el código de 6 dígitos que muestra su aplicación de autenticación.',
+                buttonText: 'Continuar',
             };
         }
 
         return {
-            title: 'Enable two-factor authentication',
+            title: 'Activar la verificación en dos pasos',
             description:
-                'To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app',
-            buttonText: 'Continue',
+                'Para terminar, escanee el código QR o escriba la clave en su aplicación de autenticación.',
+            buttonText: 'Continuar',
         };
     }, [twoFactorEnabled, showVerificationStep]);
 

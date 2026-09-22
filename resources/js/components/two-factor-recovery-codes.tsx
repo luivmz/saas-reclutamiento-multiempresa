@@ -2,14 +2,8 @@ import { Form } from '@inertiajs/react';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import AlertError from '@/components/alert-error';
+import { Section } from '@/components/page';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { regenerateRecoveryCodes } from '@/routes/two-factor';
 
 type Props = {
@@ -53,18 +47,17 @@ export default function TwoFactorRecoveryCodes({
     const RecoveryCodeIconComponent = codesAreVisible ? EyeOff : Eye;
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex gap-3">
+        <Section
+            className="w-full"
+            title={
+                <span className="flex items-center gap-2">
                     <LockKeyhole className="size-4" aria-hidden="true" />
-                    2FA recovery codes
-                </CardTitle>
-                <CardDescription>
-                    Recovery codes let you regain access if you lose your 2FA
-                    device. Store them in a secure password manager.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
+                    Códigos de recuperación
+                </span>
+            }
+            description="Le devuelven el acceso si pierde el dispositivo con el que genera los códigos. Guárdelos en un gestor de contraseñas."
+        >
+            <div>
                 <div className="flex flex-col gap-3 select-none sm:flex-row sm:items-center sm:justify-between">
                     <Button
                         onClick={toggleCodesVisibility}
@@ -76,7 +69,7 @@ export default function TwoFactorRecoveryCodes({
                             className="size-4"
                             aria-hidden="true"
                         />
-                        {codesAreVisible ? 'Hide' : 'View'} recovery codes
+                        {codesAreVisible ? 'Ocultar' : 'Ver'} los códigos
                     </Button>
 
                     {canRegenerateCodes && (
@@ -92,7 +85,8 @@ export default function TwoFactorRecoveryCodes({
                                     disabled={processing}
                                     aria-describedby="regenerate-warning"
                                 >
-                                    <RefreshCw /> Regenerate codes
+                                    <RefreshCw aria-hidden="true" /> Generar
+                                    códigos nuevos
                                 </Button>
                             )}
                         </Form>
@@ -110,9 +104,9 @@ export default function TwoFactorRecoveryCodes({
                             <>
                                 <div
                                     ref={codesSectionRef}
-                                    className="bg-muted grid gap-1 rounded-lg p-4 font-mono text-sm"
+                                    className="bg-surface grid gap-1 rounded-lg p-4 font-mono text-sm"
                                     role="list"
-                                    aria-label="Recovery codes"
+                                    aria-label="Códigos de recuperación"
                                 >
                                     {recoveryCodesList.length ? (
                                         recoveryCodesList.map((code, index) => (
@@ -127,7 +121,7 @@ export default function TwoFactorRecoveryCodes({
                                     ) : (
                                         <div
                                             className="space-y-2"
-                                            aria-label="Loading recovery codes"
+                                            aria-label="Cargando los códigos de recuperación"
                                         >
                                             {Array.from(
                                                 { length: 8 },
@@ -145,20 +139,20 @@ export default function TwoFactorRecoveryCodes({
 
                                 <div className="text-muted-foreground text-xs select-none">
                                     <p id="regenerate-warning">
-                                        Each recovery code can be used once to
-                                        access your account and will be removed
-                                        after use. If you need more, click{' '}
-                                        <span className="font-bold">
-                                            Regenerate codes
-                                        </span>{' '}
-                                        above.
+                                        Cada código sirve una sola vez y
+                                        desaparece al usarlo. Si necesita más,
+                                        use{' '}
+                                        <span className="font-medium">
+                                            Generar códigos nuevos
+                                        </span>
+                                        .
                                     </p>
                                 </div>
                             </>
                         )}
                     </div>
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </Section>
     );
 }

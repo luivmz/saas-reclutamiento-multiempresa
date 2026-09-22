@@ -25,7 +25,9 @@ export default function CreateVacancy({
     stages,
     requiredWeightTotal,
 }: Props) {
-    const selected = jobRequests.find((option) => option.id === selectedJobRequestId);
+    const selected = jobRequests.find(
+        (option) => option.id === selectedJobRequestId,
+    );
 
     return (
         <>
@@ -33,7 +35,7 @@ export default function CreateVacancy({
             <PageContainer className="max-w-4xl">
                 <PageHeader
                     title="Nueva vacante"
-                    description="RF-05 y RF-06 · Registre el perfil, los criterios de evaluación y la configuración de la convocatoria."
+                    description="Registre el perfil, los criterios de evaluación y la configuración de la convocatoria (RF-05 y RF-06)."
                 />
                 {jobRequests.length === 0 ? (
                     <EmptyState

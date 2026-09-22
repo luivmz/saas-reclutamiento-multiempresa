@@ -1,13 +1,13 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Briefcase, Plus } from 'lucide-react';
 import VacancyController from '@/actions/App/Http/Controllers/Vacancies/VacancyController';
+import { DataTable } from '@/components/data-table';
 import { EmptyState } from '@/components/empty-state';
 import { FilterChips } from '@/components/filter-chips';
 import { PageContainer, PageHeader } from '@/components/page';
 import { Pagination } from '@/components/pagination';
 import { StatusBadge } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { formatDate } from '@/lib/format';
 import type { Paginated, Presented, Vacancy } from '@/types';
 
@@ -18,7 +18,12 @@ type Props = {
     can: { create: boolean };
 };
 
-export default function VacanciesIndex({ vacancies, filters, statuses, can }: Props) {
+export default function VacanciesIndex({
+    vacancies,
+    filters,
+    statuses,
+    can,
+}: Props) {
     const filter = (estado: string | null) =>
         router.get(
             VacancyController.index.url({ query: estado ? { estado } : {} }),
@@ -32,12 +37,12 @@ export default function VacanciesIndex({ vacancies, filters, statuses, can }: Pr
             <PageContainer>
                 <PageHeader
                     title="Vacantes"
-                    description="Perfil, criterios, validación, publicación y cierre de convocatorias."
+                    description="Perfil, criterios, validación, publicación y cierre de las convocatorias (RF-05 a RF-15)."
                     actions={
                         can.create && (
                             <Button asChild data-cy="new-vacancy">
                                 <Link href={VacancyController.create()}>
-                                    <Plus />
+                                    <Plus aria-hidden="true" />
                                     Nueva vacante
                                 </Link>
                             </Button>
@@ -45,49 +50,83 @@ export default function VacanciesIndex({ vacancies, filters, statuses, can }: Pr
                     }
                 />
 
-                <FilterChips options={statuses} value={filters.estado} onChange={filter} allLabel="Todas" />
+                <FilterChips
+                    options={statuses}
+                    value={filters.estado}
+                    onChange={filter}
+                    allLabel="Todas"
+                />
 
                 {vacancies.data.length === 0 ? (
                     <EmptyState
                         icon={Briefcase}
                         title="No hay vacantes para mostrar"
-                        description="Genere una vacante a partir de un requerimiento aprobado."
+                        description={
+                            filters.estado
+                                ? 'Ninguna vacante está en ese estado. Quite el filtro para verlas todas.'
+                                : 'Genere una vacante a partir de un requerimiento aprobado.'
+                        }
                     />
                 ) : (
-                    <Card className="gap-0 overflow-hidden py-0">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm" data-cy="vacancies-table">
-                                <thead className="bg-muted/50 text-muted-foreground text-left text-xs tracking-wide uppercase">
-                                    <tr>
-                                        <th className="px-4 py-3 font-medium">Código</th>
-                                        <th className="px-4 py-3 font-medium">Vacante</th>
-                                        <th className="px-4 py-3 font-medium">Requerimiento</th>
-                                        <th className="px-4 py-3 text-center font-medium">Plazas</th>
-                                        <th className="px-4 py-3 font-medium">Cierre</th>
-                                        <th className="px-4 py-3 font-medium">Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y">
-                                    {vacancies.data.map((vacancy) => (
-                                        <tr key={vacancy.id} className="hover:bg-muted/40" data-cy="vacancy-row" data-code={vacancy.code}>
-                                            <td className="px-4 py-3 font-mono text-xs">
-                                                <Link href={VacancyController.show(vacancy.id)} className="font-medium hover:underline" data-cy="vacancy-link">
-                                                    {vacancy.code}
-                                                </Link>
-                                            </td>
-                                            <td className="px-4 py-3 font-medium">{vacancy.title}</td>
-                                            <td className="text-muted-foreground px-4 py-3 font-mono text-xs">{vacancy.job_request?.code}</td>
-                                            <td className="px-4 py-3 text-center">{vacancy.positions}</td>
-                                            <td className="text-muted-foreground px-4 py-3 whitespace-nowrap">{formatDate(vacancy.closes_at)}</td>
-                                            <td className="px-4 py-3">
-                                                <StatusBadge status={vacancy.status} />
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </Card>
+                    <DataTable
+                        caption="Vacantes de su organización"
+                        data-cy="vacancies-table"
+                        rows={vacancies.data}
+                        rowKey={(row) => row.id}
+                        rowAttributes={(row) => ({
+                            'data-cy': 'vacancy-row',
+                            'data-code': row.code,
+                        })}
+                        columns={[
+                            {
+                                key: 'code',
+                                header: 'Código',
+                                className: 'font-mono text-xs',
+                                cell: (row) => (
+                                    <Link
+                                        href={VacancyController.show(row.id)}
+                                        className="font-medium hover:underline"
+                                        data-cy="vacancy-link"
+                                    >
+                                        {row.code}
+                                    </Link>
+                                ),
+                            },
+                            {
+                                key: 'title',
+                                header: 'Vacante',
+                                className: 'font-medium',
+                                cell: (row) => row.title,
+                            },
+                            {
+                                key: 'job-request',
+                                header: 'Requerimiento',
+                                className:
+                                    'text-muted-foreground font-mono text-xs',
+                                cell: (row) => row.job_request?.code ?? '—',
+                            },
+                            {
+                                key: 'positions',
+                                header: 'Plazas',
+                                align: 'center',
+                                cell: (row) => row.positions,
+                            },
+                            {
+                                key: 'closes',
+                                header: 'Cierre',
+                                className:
+                                    'text-muted-foreground whitespace-nowrap',
+                                cell: (row) => formatDate(row.closes_at),
+                            },
+                            {
+                                key: 'status',
+                                header: 'Estado',
+                                cell: (row) => (
+                                    <StatusBadge status={row.status} />
+                                ),
+                            },
+                        ]}
+                    />
                 )}
 
                 <Pagination meta={vacancies.meta} />

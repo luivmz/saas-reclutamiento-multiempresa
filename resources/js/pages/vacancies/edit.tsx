@@ -26,9 +26,13 @@ export default function EditVacancy({
             <Head title={`Configurar ${vacancy.code}`} />
             <PageContainer className="max-w-4xl">
                 <PageHeader
-                    eyebrow={<span className="font-mono">{vacancy.code}</span>}
+                    eyebrow={
+                        <span className="font-mono text-xs">
+                            {vacancy.code}
+                        </span>
+                    }
                     title="Configurar vacante"
-                    description={`Requerimiento ${vacancy.job_request?.code ?? ''} · ${vacancy.job_request?.area ?? ''}`}
+                    description={`Requerimiento ${vacancy.job_request?.code ?? '—'}, área ${vacancy.job_request?.area ?? '—'}.`}
                 />
                 <WorkflowAlert />
                 <VacancyForm
