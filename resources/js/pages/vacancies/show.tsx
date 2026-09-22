@@ -17,6 +17,7 @@ import VacancyPublicationController from '@/actions/App/Http/Controllers/Vacanci
 import { DetailList, PageContainer, PageHeader } from '@/components/page';
 import { StatusBadge } from '@/components/status-badge';
 import { CriteriaTable } from '@/components/vacancies/criteria-table';
+import { OperationalRiskCard } from '@/components/vacancies/operational-risk-card';
 import { WorkflowAlert } from '@/components/workflow-alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -129,6 +130,7 @@ export default function ShowVacancy({ vacancy, validation, can }: Props) {
                                         { label: 'Área', value: vacancy.job_request?.area ?? '—' },
                                         { label: 'Inicio de postulaciones', value: formatDate(vacancy.opens_at) },
                                         { label: 'Cierre de postulaciones', value: formatDate(vacancy.closes_at) },
+                                        { label: 'Plazo objetivo del proceso', value: formatDateTime(vacancy.target_completion_at) },
                                         { label: 'Publicada', value: formatDateTime(vacancy.published_at) },
                                         { label: 'Cerrada', value: formatDateTime(vacancy.closed_at) },
                                     ]}
@@ -171,6 +173,8 @@ export default function ShowVacancy({ vacancy, validation, can }: Props) {
                     </div>
 
                     <div className="space-y-6">
+                        {!isDraft && <OperationalRiskCard vacancyId={vacancy.id} />}
+
                         {isDraft && (
                             <Card data-cy="validation-panel">
                                 <CardHeader>

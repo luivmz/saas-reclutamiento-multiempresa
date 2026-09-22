@@ -57,6 +57,10 @@ class VacancyService
             $this->audit->record(AuditAction::VacancyCreated, $vacancy, [
                 'code' => $vacancy->code,
                 'job_request' => $jobRequest->code,
+                // GAP-01: el plazo objetivo queda en la bitacora desde su
+                // primer valor, para que su inmutabilidad posterior sea
+                // comprobable y no solo declarada.
+                'target_completion_at' => $vacancy->target_completion_at?->toIso8601String(),
             ], $hr);
 
             return $vacancy;
@@ -79,7 +83,10 @@ class VacancyService
             $this->saveProfile($vacancy, $profile);
             $this->syncCriteria($vacancy, $criteria);
 
-            $this->audit->record(AuditAction::VacancyUpdated, $vacancy, ['criteria' => count($criteria)], $hr);
+            $this->audit->record(AuditAction::VacancyUpdated, $vacancy, [
+                'criteria' => count($criteria),
+                'target_completion_at' => $vacancy->target_completion_at?->toIso8601String(),
+            ], $hr);
 
             return $vacancy;
         });

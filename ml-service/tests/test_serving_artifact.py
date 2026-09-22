@@ -493,6 +493,7 @@ def test_a_partially_fitted_artifact_never_reports_a_ready_model(
     from fastapi.testclient import TestClient
 
     from recruitment_ml.api.app import create_app
+    from recruitment_ml.api.security import TOKEN_ENV, TOKEN_HEADER
     from recruitment_ml.serving.paths import ARTIFACT_DIR_ENV
     from recruitment_ml.training.models import build_pipeline
 
@@ -501,9 +502,12 @@ def test_a_partially_fitted_artifact_never_reports_a_ready_model(
     half_fitted.named_steps["scaler"].fit(_dummy_frame(metadata.feature_order))
     _substitute(tmp_path, half_fitted, metadata)
     monkeypatch.setenv(ARTIFACT_DIR_ENV, str(tmp_path))
+    # Con credencial valida, para que el 503 sea atribuible al artefacto a
+    # medio ajustar y no a la autenticacion.
+    monkeypatch.setenv(TOKEN_ENV, "token-de-suite")
 
     payload = {name: int(value) for name, value in sample_features.items()}
-    with TestClient(create_app()) as client:
+    with TestClient(create_app(), headers={TOKEN_HEADER: "token-de-suite"}) as client:
         assert client.get("/health").json()["model_ready"] is False
         assert client.post("/v1/predict", json=payload).status_code == 503
 

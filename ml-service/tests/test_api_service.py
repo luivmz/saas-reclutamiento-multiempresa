@@ -22,10 +22,18 @@ from fastapi.testclient import TestClient
 
 from recruitment_ml.api.app import SERVICE_VERSION, create_app
 from recruitment_ml.serving.metadata import ArtifactMetadata
+from recruitment_ml.api.security import TOKEN_ENV, TOKEN_HEADER
 from recruitment_ml.serving.paths import ARTIFACT_DIR_ENV, artifact_path, metadata_path
 
 THRESHOLD = 0.1679418172266036
 FREEZE_FINGERPRINT = "9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2"
+
+
+#: El servicio falla cerrado: sin token configurado, `/v1/*` responde 503. Las
+#: pruebas de esta suite miran el contrato del modelo, no la autenticacion, asi
+#: que configuran un token y lo envian por omision. La autenticacion tiene su
+#: propia suite en `test_api_security.py`.
+TEST_TOKEN = "token-de-suite"
 
 
 @pytest.fixture
@@ -33,7 +41,8 @@ def client(monkeypatch, built_artifact) -> TestClient:
     """Servicio con el artefacto cargado, como en una ejecucion real."""
     directory, _, _ = built_artifact
     monkeypatch.setenv(ARTIFACT_DIR_ENV, str(directory))
-    with TestClient(create_app()) as test_client:
+    monkeypatch.setenv(TOKEN_ENV, TEST_TOKEN)
+    with TestClient(create_app(), headers={TOKEN_HEADER: TEST_TOKEN}) as test_client:
         yield test_client
 
 
@@ -41,7 +50,8 @@ def client(monkeypatch, built_artifact) -> TestClient:
 def client_without_model(monkeypatch, tmp_path: Path) -> TestClient:
     """Servicio vivo pero sin artefacto: el caso que no debe fingir estar listo."""
     monkeypatch.setenv(ARTIFACT_DIR_ENV, str(tmp_path / "vacio"))
-    with TestClient(create_app()) as test_client:
+    monkeypatch.setenv(TOKEN_ENV, TEST_TOKEN)
+    with TestClient(create_app(), headers={TOKEN_HEADER: TEST_TOKEN}) as test_client:
         yield test_client
 
 
@@ -344,8 +354,9 @@ def test_an_incompatible_artifact_keeps_the_service_unready(
     corrupted.pop("threshold_display", None)
     ArtifactMetadata.from_dict(corrupted).write(metadata_path(tmp_path))
     monkeypatch.setenv(ARTIFACT_DIR_ENV, str(tmp_path))
+    monkeypatch.setenv(TOKEN_ENV, TEST_TOKEN)
 
-    with TestClient(create_app()) as client:
+    with TestClient(create_app(), headers={TOKEN_HEADER: TEST_TOKEN}) as client:
         assert client.get("/health").json()["model_ready"] is False
         assert client.post("/v1/predict", json=payload).status_code == 503
         assert client.get("/v1/model-info").status_code == 503
