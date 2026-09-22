@@ -2,7 +2,8 @@ import { Monitor, Moon, Sun } from 'lucide-react';
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,10 @@ import { useAppearance } from '@/hooks/use-appearance';
  * El tema ya existía, pero solo se podía cambiar entrando a Configuración →
  * Apariencia. Quien trabaja de noche con tablas largas no debería tener que
  * salir de la página para bajar el brillo.
+ *
+ * Las tres opciones son excluyentes, así que el menú es un grupo de radios
+ * (`menuitemradio` con `aria-checked`, que aporta Radix) y no una lista de
+ * acciones sueltas con la opción vigente marcada solo por texto.
  */
 const options: { value: Appearance; icon: typeof Sun; label: string }[] = [
     { value: 'light', icon: Sun, label: 'Claro' },
@@ -40,23 +45,28 @@ export function AppearanceToggle() {
                     <span className="sr-only">Cambiar tema</span>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-44">
-                {options.map((option) => (
-                    <DropdownMenuItem
-                        key={option.value}
-                        onSelect={() => updateAppearance(option.value)}
-                        className="cursor-pointer"
-                        data-active={appearance === option.value}
-                    >
-                        <option.icon className="size-4" aria-hidden="true" />
-                        {option.label}
-                        {appearance === option.value && (
-                            <span className="text-muted-foreground ml-auto text-xs">
-                                Activo
-                            </span>
-                        )}
-                    </DropdownMenuItem>
-                ))}
+            <DropdownMenuContent align="end" className="min-w-48">
+                <DropdownMenuRadioGroup
+                    value={appearance}
+                    onValueChange={(value) =>
+                        updateAppearance(value as Appearance)
+                    }
+                >
+                    {options.map((option) => (
+                        <DropdownMenuRadioItem
+                            key={option.value}
+                            value={option.value}
+                            className="cursor-pointer"
+                            data-cy={`appearance-${option.value}`}
+                        >
+                            <option.icon
+                                className="size-4"
+                                aria-hidden="true"
+                            />
+                            {option.label}
+                        </DropdownMenuRadioItem>
+                    ))}
+                </DropdownMenuRadioGroup>
             </DropdownMenuContent>
         </DropdownMenu>
     );

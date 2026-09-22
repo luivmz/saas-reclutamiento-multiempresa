@@ -32,7 +32,7 @@ function SessionItem({ session }: { session: AssessmentSummary }) {
             data-status={session.status.value}
         >
             <div className="flex flex-wrap items-center justify-between gap-2">
-                <h4 className="font-medium">{session.title}</h4>
+                <h3 className="font-medium">{session.title}</h3>
                 <StatusBadge status={session.status} />
             </div>
 

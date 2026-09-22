@@ -12,12 +12,30 @@ import { cn } from '@/lib/utils';
 import type { Presented } from '@/types';
 
 /**
+ * Une los `aria-describedby` que ya trae el control con los de la ayuda y el
+ * error, en ese orden y sin repetir.
+ *
+ * Sustituir el valor propio del control en lugar de sumarlo dejaba mudo lo que
+ * el campo ya describía; quedarse con el propio dejaba mudo el error.
+ */
+function mergeDescribedBy(
+    ...values: (string | undefined)[]
+): string | undefined {
+    const tokens = values
+        .filter((value): value is string => typeof value === 'string')
+        .flatMap((value) => value.split(/\s+/))
+        .filter(Boolean);
+
+    return tokens.length > 0 ? [...new Set(tokens)].join(' ') : undefined;
+}
+
+/**
  * Campo de formulario: etiqueta, control, ayuda y error.
  *
- * El campo se encarga de la parte que antes faltaba y que ningún módulo
- * recordaba repetir: la ayuda y el mensaje de error quedan asociados al
- * control mediante `aria-describedby`, y un control con error queda marcado
- * con `aria-invalid`. Así el error se oye al llegar al campo, no solo se ve
+ * El campo se encarga de la parte que ningún módulo recordaba repetir: la
+ * ayuda y el mensaje de error quedan asociados al control mediante
+ * `aria-describedby`, y un control con error queda marcado con
+ * `aria-invalid`. Así el error se oye al llegar al campo, no solo se ve
  * debajo.
  */
 export function FormField({
@@ -39,8 +57,6 @@ export function FormField({
 }) {
     const hintId = hint ? `${htmlFor}-hint` : undefined;
     const errorId = error ? `${htmlFor}-error` : undefined;
-    const describedBy =
-        [hintId, errorId].filter(Boolean).join(' ') || undefined;
 
     const control = Children.map(children, (child) => {
         if (!isValidElement(child)) {
@@ -48,12 +64,18 @@ export function FormField({
         }
 
         const element = child as ReactElement<Record<string, unknown>>;
+        const own = element.props['aria-describedby'];
 
         return cloneElement(element, {
-            'aria-describedby':
-                element.props['aria-describedby'] ?? describedBy,
-            'aria-invalid':
-                element.props['aria-invalid'] ?? (error ? true : undefined),
+            'aria-describedby': mergeDescribedBy(
+                typeof own === 'string' ? own : undefined,
+                hintId,
+                errorId,
+            ),
+            // Un control con error es inválido, diga lo que diga el llamador:
+            // dejar `aria-invalid={false}` junto a un mensaje de error le
+            // contaría al lector de pantalla lo contrario de lo que se ve.
+            'aria-invalid': error ? true : element.props['aria-invalid'],
         });
     });
 
