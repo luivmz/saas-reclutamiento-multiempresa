@@ -38,14 +38,17 @@ CRITICAL_LIBRARIES = ("scikit-learn", "numpy", "joblib")
 #: Veredicto cientifico de la Fase 15B. No se reinterpreta aqui.
 VERDICT = "PREDICTIVE GO WITH LIMITATIONS"
 
-#: Estado de despliegue. `GAP-01` sigue abierto, asi que el servicio es
-#: experimental y ninguna respuesta debe sugerir lo contrario.
+#: Estado de despliegue. Que GAP-01 este resuelto no cambia esto: lo que impide
+#: autorizar produccion es la ausencia de validacion institucional, no la brecha
+#: tecnica. Ninguna respuesta debe sugerir lo contrario.
 DEPLOYMENT_STATUS = "experimental"
 
 GAP_01_NOTE = (
-    "GAP-01 abierto: target_completion_at no existe en Laravel, asi que "
-    "days_remaining_to_target no es computable en produccion. El servicio es "
-    "experimental y no esta autorizado para integracion."
+    "GAP-01 RESUELTO TECNICAMENTE en la Fase 16: vacancies.target_completion_at "
+    "existe en Laravel y days_remaining_to_target es computable. Resolverlo NO "
+    "equivale a validacion institucional: el modelo se entreno y evaluo solo con "
+    "datos sinteticos, asi que el servicio sigue siendo experimental y sin "
+    "autorizacion de produccion."
 )
 
 RISK_SCORE_MEANING = (
@@ -155,7 +158,9 @@ class ServiceMetadata:
             feature_order=list(metadata.feature_order),
             verdict=VERDICT,
             deployment_status=DEPLOYMENT_STATUS,
-            gap_01_open=True,
+            # Resuelto tecnicamente en la Fase 16. El caracter experimental del
+            # servicio lo sostiene ahora `deployment_status`, no esta bandera.
+            gap_01_open=False,
             gap_01_note=GAP_01_NOTE,
             risk_score_meaning=RISK_SCORE_MEANING,
             risk_flag_meaning=RISK_FLAG_MEANING,

@@ -113,9 +113,34 @@ def test_model_info_states_the_verdict_and_the_limits(client: TestClient) -> Non
 
     assert body["verdict"] == "PREDICTIVE GO WITH LIMITATIONS"
     assert body["deployment_status"] == "experimental"
-    assert body["gap_01_open"] is True
     assert "GAP-01" in body["gap_01_note"]
     assert "target_completion_at" in body["gap_01_note"]
+
+
+def test_model_info_reports_gap_01_as_technically_resolved(client: TestClient) -> None:
+    """La Fase 16 creo la columna: decir que GAP-01 sigue abierto seria falso.
+
+    Lo que sostiene el caracter experimental del servicio es la ausencia de
+    validacion institucional, no la brecha tecnica, y la nota debe decirlo sin
+    dejar que una cosa se lea como la otra.
+    """
+    body = client.get("/v1/model-info").json()
+
+    assert body["gap_01_open"] is False
+    assert "RESUELTO TECNICAMENTE" in body["gap_01_note"]
+    assert "NO" in body["gap_01_note"] and "institucional" in body["gap_01_note"]
+    assert body["deployment_status"] == "experimental"
+
+
+def test_the_openapi_description_does_not_claim_production_readiness(
+    client: TestClient,
+) -> None:
+    description = client.get("/openapi.json").json()["info"]["description"]
+
+    assert "EXPERIMENTAL" in description
+    assert "RESUELTO TECNICAMENTE" in description
+    assert "no esta autorizado para produccion" in description
+    assert "decision final es humana" in description
 
 
 def test_model_info_explains_what_the_score_is_not(client: TestClient) -> None:

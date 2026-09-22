@@ -264,6 +264,8 @@ Para que Laravel llame al servicio, en `.env`: `ML_SERVICE_ENABLED=true`, `ML_SE
 
 **Laravel: 366 pruebas, 0 fallos** (236 previas + 130 nuevas + 8 saltadas). **Python: 530, 0 fallos, 0 avisos, 98 % de cobertura** (506 de la Fase 15 + 24 de autenticación).
 
+> Cifras al cierre de la Fase 16. La Fase 17 añadió validación y las elevó a 402 y 532; ver [`phase-17-ml-validation.md`](phase-17-ml-validation.md).
+
 | Archivo | Pruebas | Garantía |
 |---|---|---|
 | `tests/Feature/Ml/TargetCompletionTest.php` | 16 | GAP-01: esquema, `CHECK`, cast, validación, inmutabilidad tras publicar, auditoría, multiempresa y **captura desde el formulario** |
@@ -302,7 +304,7 @@ Ejecutado con FastAPI en `0.0.0.0:8008` y Laravel en Docker, con token:
 ## 14. Limitaciones
 
 1. **Validación solo sintética.** Es la limitación dominante y no la resuelve ninguna integración.
-2. **Checkpoint único.** El modelo observa el proceso el día siguiente al cierre de postulaciones y **solo ahí**. Fuera de esa ventana Laravel no pregunta, y dentro de ella la estimación es la misma sin importar cuándo se consulte: el vector está congelado en ese instante. Un modelo con checkpoints múltiples daría seguimiento continuo; este no.
+2. **Instante de observación único.** El modelo mira el proceso en un solo punto —el día siguiente al cierre de postulaciones— y el vector queda congelado ahí. **Eso no limita cuándo puede consultarse**: la consulta es válida desde el checkpoint y mientras la vacante siga abierta y el plazo objetivo no haya vencido; lo que no cambia en todo ese periodo es la estimación, porque el vector no se recalcula. La limitación real es que no hay seguimiento continuo: un proceso que se deteriora después del checkpoint no mueve el número. Eso exigiría entrenar con checkpoints múltiples.
 3. **Tasa de alerta alta.** El punto de operación marca tres de cada cuatro procesos en test. El coste de revisar cada señal no está modelado.
 4. **Un solo tenant de entrenamiento.** El dataset es sintético y sus organizaciones son ficticias; la heterogeneidad observada (AP 0.476–0.840) sugiere que el desempeño por organización puede variar bastante.
 5. **Sin caché ni cola.** Cada consulta es una llamada sincrónica de hasta 3 s. Con volumen alto habría que revisarlo.
