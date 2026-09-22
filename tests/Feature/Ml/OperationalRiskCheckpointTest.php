@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Vacancy;
 use App\Services\Ml\OperationalRiskFeatureBuilder;
 use App\Services\Ml\OperationalRiskService;
+use App\Services\Ml\RiskAvailability;
 use Carbon\CarbonInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -309,6 +310,140 @@ class OperationalRiskCheckpointTest extends TestCase
         $features = $this->builder->build($this->vacancy(), $this->checkpoint($this->vacancy()));
 
         $this->assertSame(32, $features->get('days_since_last_operational_event'));
+    }
+
+    // -- la ventana de consulta ---------------------------------------------
+    //
+    // El punto que la documentacion de la Fase 17 describia mal: el checkpoint
+    // es el instante de OBSERVACION, no el unico dia en que se puede preguntar.
+    // La consulta es valida durante todo el periodo en que la vacante sigue
+    // abierta y el plazo objetivo no ha vencido, y el vector no cambia en todo
+    // ese tiempo.
+
+    public function test_the_query_window_spans_from_the_checkpoint_to_the_target(): void
+    {
+        $vacancy = $this->vacancy();
+        $this->applicationAt($vacancy, '2026-06-05 10:00:00');
+        $checkpointVector = $this->builder->build($vacancy, $this->checkpoint($vacancy))->toPayload();
+
+        /* Cinco momentos repartidos entre el checkpoint (2026-06-11) y el plazo
+           objetivo (2026-07-15 18:00). Todos deben ser elegibles y devolver
+           exactamente el mismo vector. */
+        foreach ([
+            '2026-06-11 00:00:00',
+            '2026-06-11 23:59:59',
+            '2026-06-25 09:00:00',
+            '2026-07-10 16:00:00',
+            '2026-07-15 17:59:59',
+        ] as $moment) {
+            Carbon::setTestNow($moment);
+
+            $this->assertNull(
+                $this->service()->outOfScopeReason($vacancy, Carbon::now()),
+                "deberia ser elegible en {$moment}"
+            );
+            $this->assertSame(
+                $checkpointVector,
+                $this->builder->build($vacancy->fresh(), $this->checkpoint($vacancy))->toPayload(),
+                "el vector deberia ser identico en {$moment}"
+            );
+        }
+    }
+
+    public function test_a_query_days_after_the_checkpoint_still_predicts(): void
+    {
+        /* Dos semanas despues del checkpoint, con la vacante abierta y el plazo
+           vigente: se estima igual. "Consulta tardia" NO significa "despues del
+           dia del checkpoint". */
+        Carbon::setTestNow('2026-06-25 11:00:00');
+        Http::fake(['*/v1/predict' => Http::response([
+            'risk_score' => 0.42,
+            'risk_flag' => true,
+            'threshold' => (float) config('ml.expected_threshold'),
+            'model_version' => (string) config('ml.expected_model_version'),
+            'freeze_fingerprint' => (string) config('ml.expected_freeze_fingerprint'),
+            'status' => 'experimental',
+        ])]);
+
+        $vacancy = $this->vacancy();
+        $assessment = $this->service()->assess($vacancy);
+
+        $this->assertTrue($assessment->isPredictive());
+        $this->assertSame(0.42, $assessment->score);
+    }
+
+    public function test_events_after_the_checkpoint_do_not_alter_a_later_query(): void
+    {
+        $vacancy = $this->vacancy();
+        $this->applicationAt($vacancy, '2026-06-05 10:00:00');
+
+        Carbon::setTestNow('2026-06-11 09:00:00');
+        $atCheckpoint = $this->builder->build($vacancy, $this->checkpoint($vacancy))->toPayload();
+
+        // Actividad real entre el checkpoint y la consulta posterior.
+        $this->applicationAt($vacancy, '2026-06-14 09:00:00');
+        $this->applicationAt($vacancy, '2026-06-20 09:00:00');
+        Evaluation::factory()->forApplication($this->applicationAt($vacancy, '2026-06-22 09:00:00'))->create([
+            'created_at' => '2026-06-23 09:00:00',
+            'scheduled_at' => '2026-06-24 09:00:00',
+        ]);
+
+        Carbon::setTestNow('2026-07-01 09:00:00');
+        $later = $this->builder->build($vacancy->fresh(), $this->checkpoint($vacancy))->toPayload();
+
+        $this->assertSame($atCheckpoint, $later);
+        $this->assertSame(1, $later['applications_received_count']);
+        // Sigue siendo elegible pese a toda esa actividad.
+        $this->assertNull($this->service()->outOfScopeReason($vacancy->fresh(), Carbon::now()));
+    }
+
+    public function test_a_late_query_means_outside_the_window_not_after_the_checkpoint_day(): void
+    {
+        $vacancy = $this->vacancy();
+
+        // Un dia despues del checkpoint: elegible.
+        Carbon::setTestNow('2026-06-12 09:00:00');
+        $this->assertNull($this->service()->outOfScopeReason($vacancy, Carbon::now()));
+
+        // Un mes despues del checkpoint pero antes del plazo: sigue elegible.
+        Carbon::setTestNow('2026-07-11 09:00:00');
+        $this->assertNull($this->service()->outOfScopeReason($vacancy, Carbon::now()));
+
+        // Pasado el plazo: ahi si es tardia.
+        Carbon::setTestNow('2026-07-15 18:00:01');
+        $this->assertSame(
+            OperationalRiskService::REASON_QUERY_AFTER_TARGET,
+            $this->service()->outOfScopeReason($vacancy, Carbon::now())
+        );
+    }
+
+    public function test_a_query_after_the_target_falls_back(): void
+    {
+        Carbon::setTestNow('2026-07-20 09:00:00');
+        Http::fake();
+
+        $assessment = $this->service()->assess($this->vacancy());
+
+        $this->assertSame(RiskAvailability::DescriptiveOnly, $assessment->availability);
+        $this->assertSame(OperationalRiskService::REASON_QUERY_AFTER_TARGET, $assessment->reason);
+        $this->assertNull($assessment->score);
+        Http::assertNothingSent();
+    }
+
+    public function test_closing_the_vacancy_ends_the_window_before_the_target(): void
+    {
+        /* La ventana tambien se cierra cuando el proceso termina, aunque el
+           plazo siga vigente. */
+        Carbon::setTestNow('2026-06-25 09:00:00');
+        Http::fake();
+
+        $vacancy = $this->vacancy(['closed_at' => '2026-06-24 16:00:00']);
+
+        $this->assertSame(
+            OperationalRiskService::REASON_VACANCY_CLOSED,
+            $this->service()->outOfScopeReason($vacancy, Carbon::now())
+        );
+        Http::assertNothingSent();
     }
 
     // -- elegibilidad: distinta de la reconstrucción ------------------------
