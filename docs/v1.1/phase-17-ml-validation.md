@@ -29,11 +29,11 @@ Faltaba prueba real. `cypress/e2e/e2e-14-target-completion-form.cy.js` cubre el 
 
 ## 3. Pruebas añadidas
 
-### Laravel — 36 nuevas (366 → 402)
+### Laravel — 42 nuevas (366 → 408)
 
 | Archivo | Pruebas | Qué fija |
 |---|---|---|
-| `OperationalRiskCheckpointTest.php` | 15 | El checkpoint con fechas explícitas, la frontera de eventos, ML-FEAT-17 y ML-FEAT-18 históricos, y la separación entre reconstrucción y elegibilidad |
+| `OperationalRiskCheckpointTest.php` | 21 | El checkpoint con fechas explícitas, la frontera de eventos, **la ventana de consulta del checkpoint al plazo**, ML-FEAT-17 y ML-FEAT-18 históricos, y la separación entre reconstrucción y elegibilidad |
 | `MlCrossTenantValidationTest.php` | 10 | Multiempresa adversarial: dos organizaciones pobladas, el vector de A inmune a B, la ruta que no distingue «ajena» de «inexistente» |
 | `OperationalRiskAuthorizationTest.php` | 11 | Autorización **por HTTP** para los cinco roles, con una prueba que obliga a decidir el acceso de cualquier rol nuevo |
 
@@ -63,12 +63,27 @@ Lo mismo con las sesiones: una evaluación creada antes y completada **después*
 
 ### Reconstrucción ≠ elegibilidad
 
-Son dos preguntas distintas y la suite las separa:
+Son dos preguntas distintas —confundirlas fue el error de la primera versión de este documento— y la suite las separa:
 
 | | Depende de | Consecuencia |
 |---|---|---|
 | **Reconstrucción del vector** | Solo del checkpoint | Determinista para siempre. Una prueba lo reconstruye en el checkpoint y meses después, con actividad de por medio, y obtiene el mismo resultado |
-| **Elegibilidad para inferir** | Del momento de la consulta | Siete motivos por los que Laravel no pregunta, incluidos vacante cerrada y consulta tardía |
+| **Elegibilidad para inferir** | Del momento de la consulta | Siete motivos la cierran, entre ellos vacante cerrada y plazo vencido |
+
+### La ventana de consulta
+
+**El checkpoint es el instante de observación, no el único día en que se puede preguntar.** Son cosas distintas y conviene no mezclarlas:
+
+| | Qué es |
+|---|---|
+| **Instante de observación científica** | `start_of_day(closes_at + 1 día)` en `America/Lima`. Fijo. Las 15 features se reconstruyen **siempre** ahí |
+| **Ventana de consulta permitida** | Desde el checkpoint, y mientras la vacante siga abierta y `now <= target_completion_at` |
+
+Dentro de esa ventana la consulta es válida **cualquier día**, y el resultado es idéntico: preguntar dos semanas después del checkpoint devuelve el mismo vector y la misma estimación, porque los eventos posteriores no entran en él. Fuera de la ventana no hay inferencia: se devuelve `descriptive_only`.
+
+Por tanto, **«consulta tardía» significa fuera de la ventana** —plazo vencido o vacante cerrada—, no «después del día del checkpoint».
+
+Seis pruebas lo fijan. Una recorre cinco momentos repartidos entre el checkpoint (`2026-06-11 00:00:00`) y el plazo (`2026-07-15 18:00`) y comprueba en cada uno que la vacante sigue siendo elegible y que el vector no ha cambiado; otra añade postulaciones y una evaluación **entre** el checkpoint y una consulta posterior, y verifica que el vector sigue idéntico y la consulta sigue siendo elegible.
 
 ### ML-FEAT-18 histórico
 
@@ -176,7 +191,7 @@ Servidores detenidos y datos ficticios eliminados.
 
 | Suite | Resultado | Duración |
 |---|---|---|
-| **Laravel** | **402 pasan**, 0 fallos, **8 saltadas** | ~47 s |
+| **Laravel** | **408 pasan**, 0 fallos, **8 saltadas** | ~47 s |
 | **Python** | **532 pasan**, 0 fallos, **0 avisos**, **98 %** cobertura | ~114 s |
 | **Cypress** | **16 specs, 55 pruebas**, todas pasan | ~4 min 28 s |
 | `npx tsc --noEmit` | exit 0 | — |
@@ -184,7 +199,7 @@ Servidores detenidos y datos ficticios eliminados.
 | `php artisan optimize:clear` | correcto | — |
 | `git diff --check` | limpio | — |
 
-**Las 8 pruebas saltadas** son las de soporte E2E (`/__e2e/*`), que se omiten porque `E2E_ENABLED=false` en el entorno de desarrollo: esos endpoints solo existen en el servicio aislado `app-e2e`. Es el comportamiento esperado y previo a esta fase.
+**Las 8 pruebas saltadas** son `EmailVerificationTest` (6) y `VerificationNotificationTest` (2). Las omite `tests/TestCase.php:22`, que llama a `markTestSkipped` cuando la funcionalidad de Fortify correspondiente está desactivada — aquí, `email-verification`. Es comportamiento esperado y previo a esta fase, y **no tiene relación con el soporte E2E**, como afirmaba la primera versión de este documento.
 
 ## 13. GAP-01 y RF-29
 
@@ -217,7 +232,7 @@ Ninguna de estas la resuelve una fase de QA:
 
 ## 15. Riesgos residuales
 
-1. **Checkpoint único.** El modelo solo observa el día siguiente al cierre. Fuera de esa ventana no hay estimación, y dentro de ella el valor no cambia con el tiempo. Un seguimiento continuo exigiría reentrenar con checkpoints múltiples.
+1. **Instante de observación único, sin seguimiento continuo.** El vector se congela en el checkpoint y **no se recalcula mientras dure la ventana de consulta**, así que un proceso que se deteriora después de ese punto no mueve el número. No es que solo pueda consultarse ese día —la ventana va del checkpoint al plazo objetivo—, sino que la respuesta es siempre la misma dentro de ella. Un seguimiento continuo exigiría reentrenar con checkpoints múltiples.
 2. **El camino predictivo no se prueba en navegador.** Requiere FastAPI dentro de la infraestructura de E2E.
 3. **`build_artifact.py` al 90 %**: cuatro ramas defensivas de incoherencia dataset↔freeze sin prueba.
 4. **Validación cruzada de una sola instancia.** No hay pruebas de concurrencia ni de carga sobre el servicio.
