@@ -12,12 +12,15 @@ import { email } from '@/routes/password';
 export default function ForgotPassword({ status }: { status?: string }) {
     return (
         <>
-            <Head title="Forgot password" />
+            <Head title="Recuperar la contraseña" />
 
             {status && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
+                <p
+                    role="status"
+                    className="bg-tone-success text-tone-success-foreground ring-tone-success-edge rounded-md px-3 py-2 text-sm ring-1 ring-inset"
+                >
                     {status}
-                </div>
+                </p>
             )}
 
             <div className="space-y-6">
@@ -25,14 +28,16 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     {({ processing, errors }) => (
                         <>
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                                <Label htmlFor="email">
+                                    Correo electrónico
+                                </Label>
                                 <Input
                                     id="email"
                                     type="email"
                                     name="email"
                                     autoComplete="off"
                                     autoFocus
-                                    placeholder="email@example.com"
+                                    placeholder="usuario@ejemplo.test"
                                 />
 
                                 <InputError message={errors.email} />
@@ -45,25 +50,29 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                     data-test="email-password-reset-link-button"
                                 >
                                     {processing && (
-                                        <LoaderCircle className="h-4 w-4 animate-spin" />
+                                        <LoaderCircle
+                                            className="size-4 animate-spin"
+                                            aria-hidden="true"
+                                        />
                                     )}
-                                    Email password reset link
+                                    Enviarme el enlace
                                 </Button>
                             </div>
                         </>
                     )}
                 </Form>
 
-                <div className="text-muted-foreground space-x-1 text-center text-sm">
-                    <span>Or, return to</span>
-                    <TextLink href={login()}>log in</TextLink>
-                </div>
+                <p className="text-muted-foreground text-center text-sm">
+                    ¿Ya la recordó?{' '}
+                    <TextLink href={login()}>Vuelva a iniciar sesión</TextLink>
+                </p>
             </div>
         </>
     );
 }
 
 ForgotPassword.layout = {
-    title: 'Forgot password',
-    description: 'Enter your email to receive a password reset link',
+    title: 'Recuperar la contraseña',
+    description:
+        'Escriba su correo y le enviaremos un enlace para restablecerla.',
 };
