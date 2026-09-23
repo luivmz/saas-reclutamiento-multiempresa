@@ -213,7 +213,10 @@
     --muted-foreground: oklch(0.708 0.014 230);
     --accent: oklch(0.318 0.029 210);
     --accent-foreground: oklch(0.932 0.021 205);
-    --destructive: oklch(0.612 0.191 25);
+    /* Fase 21: el rojo de relleno se oscurece para que el blanco encima
+       pase 4.5:1 (antes 4.14:1). El rojo como texto usa el tono de
+       peligro, que existe justamente para eso. */
+    --destructive: oklch(0.56 0.19 25);
     --destructive-foreground: oklch(0.975 0.008 25);
     --border: oklch(0.322 0.016 230);
     --input: oklch(0.362 0.017 230);
