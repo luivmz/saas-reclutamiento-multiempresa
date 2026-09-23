@@ -107,7 +107,7 @@ export function OperationalRiskCard({ vacancyId }: Props) {
                 )}
 
                 {risk !== null && (
-                    <>
+                    <div className="animate-in fade-in-0 space-y-4 duration-200 ease-out">
                         <div className="flex flex-wrap items-center gap-2">
                             <span
                                 className={cn(
@@ -184,7 +184,7 @@ export function OperationalRiskCard({ vacancyId }: Props) {
                                     ` Consultado el ${formatDateTime(risk.checked_at)}`}
                             </span>
                         </p>
-                    </>
+                    </div>
                 )}
             </div>
         </Section>

@@ -94,10 +94,14 @@ export default function TwoFactorRecoveryCodes({
                 </div>
                 <div
                     id="recovery-codes-section"
-                    className={`relative overflow-hidden transition-all duration-300 ${codesAreVisible ? 'h-auto opacity-100' : 'h-0 opacity-0'}`}
+                    className={`relative grid overflow-hidden transition-[grid-template-rows,opacity] duration-200 ease-out ${
+                        codesAreVisible
+                            ? 'grid-rows-[1fr] opacity-100'
+                            : 'grid-rows-[0fr] opacity-0'
+                    }`}
                     aria-hidden={!codesAreVisible}
                 >
-                    <div className="mt-3 space-y-3">
+                    <div className="min-h-0 space-y-3 pt-3">
                         {errors?.length ? (
                             <AlertError errors={errors} />
                         ) : (
