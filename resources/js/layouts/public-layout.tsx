@@ -21,7 +21,11 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         <div className="bg-background flex min-h-svh flex-col">
             <SkipLink />
             <header className="bg-background/90 sticky top-0 z-20 border-b backdrop-blur">
-                <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+                {/* Una fila siempre que quepa. A 320 px las cuatro acciones no
+                    caben: en lugar de empujar la página en horizontal —WCAG
+                    1.4.10 pide que a ese ancho no haga falta—, la navegación
+                    pasa a una segunda fila. */}
+                <div className="mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2 sm:px-6">
                     <Link
                         href={home()}
                         className="flex items-center gap-2.5"

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import AlertError from '@/components/alert-error';
 import { Section } from '@/components/page';
 import { Button } from '@/components/ui/button';
+import { preferredScrollBehavior } from '@/lib/motion';
 import { regenerateRecoveryCodes } from '@/routes/two-factor';
 
 type Props = {
@@ -30,8 +31,10 @@ export default function TwoFactorRecoveryCodes({
 
         if (!codesAreVisible) {
             setTimeout(() => {
+                // Con movimiento reducido, el salto es inmediato: la opción
+                // `smooth` pasaría por encima de la política global.
                 codesSectionRef.current?.scrollIntoView({
-                    behavior: 'smooth',
+                    behavior: preferredScrollBehavior(),
                     block: 'nearest',
                 });
             });
@@ -58,7 +61,7 @@ export default function TwoFactorRecoveryCodes({
             description="Le devuelven el acceso si pierde el dispositivo con el que genera los códigos. Guárdelos en un gestor de contraseñas."
         >
             <div>
-                <div className="flex flex-col gap-3 select-none sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-3 select-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                     <Button
                         onClick={toggleCodesVisibility}
                         className="w-fit"
@@ -101,59 +104,67 @@ export default function TwoFactorRecoveryCodes({
                     }`}
                     aria-hidden={!codesAreVisible}
                 >
-                    <div className="min-h-0 space-y-3 pt-3">
-                        {errors?.length ? (
-                            <AlertError errors={errors} />
-                        ) : (
-                            <>
-                                <div
-                                    ref={codesSectionRef}
-                                    className="bg-surface grid gap-1 rounded-lg p-4 font-mono text-sm"
-                                    role="list"
-                                    aria-label="Códigos de recuperación"
-                                >
-                                    {recoveryCodesList.length ? (
-                                        recoveryCodesList.map((code, index) => (
-                                            <div
-                                                key={index}
-                                                role="listitem"
-                                                className="select-text"
-                                            >
-                                                {code}
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div
-                                            className="space-y-2"
-                                            aria-label="Cargando los códigos de recuperación"
-                                        >
-                                            {Array.from(
-                                                { length: 8 },
-                                                (_, index) => (
+                    {/* El elemento de la rejilla no lleva relleno: una caja nunca
+                        es más baja que su propio relleno, y con él la fila
+                        plegada dejaba una franja de 12 px. El relleno va dentro,
+                        donde el recorte del contenedor lo oculta. */}
+                    <div className="min-h-0">
+                        <div className="space-y-3 pt-3">
+                            {errors?.length ? (
+                                <AlertError errors={errors} />
+                            ) : (
+                                <>
+                                    <div
+                                        ref={codesSectionRef}
+                                        className="bg-surface grid gap-1 rounded-lg p-4 font-mono text-sm"
+                                        role="list"
+                                        aria-label="Códigos de recuperación"
+                                    >
+                                        {recoveryCodesList.length ? (
+                                            recoveryCodesList.map(
+                                                (code, index) => (
                                                     <div
                                                         key={index}
-                                                        className="bg-muted-foreground/20 h-4 animate-pulse rounded"
-                                                        aria-hidden="true"
-                                                    />
+                                                        role="listitem"
+                                                        className="select-text"
+                                                    >
+                                                        {code}
+                                                    </div>
                                                 ),
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
+                                            )
+                                        ) : (
+                                            <div
+                                                className="space-y-2"
+                                                aria-label="Cargando los códigos de recuperación"
+                                            >
+                                                {Array.from(
+                                                    { length: 8 },
+                                                    (_, index) => (
+                                                        <div
+                                                            key={index}
+                                                            className="bg-muted-foreground/20 h-4 animate-pulse rounded"
+                                                            aria-hidden="true"
+                                                        />
+                                                    ),
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
 
-                                <div className="text-muted-foreground text-xs select-none">
-                                    <p id="regenerate-warning">
-                                        Cada código sirve una sola vez y
-                                        desaparece al usarlo. Si necesita más,
-                                        use{' '}
-                                        <span className="font-medium">
-                                            Generar códigos nuevos
-                                        </span>
-                                        .
-                                    </p>
-                                </div>
-                            </>
-                        )}
+                                    <div className="text-muted-foreground text-xs select-none">
+                                        <p id="regenerate-warning">
+                                            Cada código sirve una sola vez y
+                                            desaparece al usarlo. Si necesita
+                                            más, use{' '}
+                                            <span className="font-medium">
+                                                Generar códigos nuevos
+                                            </span>
+                                            .
+                                        </p>
+                                    </div>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
