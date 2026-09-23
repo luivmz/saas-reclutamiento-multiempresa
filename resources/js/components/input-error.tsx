@@ -7,6 +7,11 @@ import { cn } from '@/lib/utils';
  * Va con `role="alert"` para que se anuncie en cuanto aparece tras enviar el
  * formulario, y usa el token `destructive` en lugar de un rojo suelto de la
  * paleta.
+ *
+ * Entra con una aparicion corta y un desplazamiento minimo, lo justo para que
+ * el ojo registre que ahi hay algo nuevo sin que el campo de arriba parezca
+ * saltar. Nada de sacudidas: un formulario que tiembla castiga a quien se
+ * equivoco.
  */
 export default function InputError({
     message,
@@ -17,7 +22,10 @@ export default function InputError({
         <p
             role="alert"
             {...props}
-            className={cn('text-destructive text-sm', className)}
+            className={cn(
+                'text-destructive animate-in fade-in-0 slide-in-from-top-1 text-sm duration-150 ease-out',
+                className,
+            )}
         >
             {message}
         </p>

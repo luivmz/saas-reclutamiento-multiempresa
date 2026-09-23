@@ -29,6 +29,33 @@
     --font-serif: 'IBM Plex Serif', ui-serif, Georgia, serif;
     --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
 
+    /*
+     * Motion. Un solo juego de curvas para toda la aplicación: al redefinir
+     * aquí los tokens que Tailwind ya usa, cada `transition-*` y cada
+     * `animate-in` que ya existía en los componentes pasa a moverse con la
+     * misma curva, sin tocar una clase.
+     *
+     * Las curvas del navegador son demasiado flojas para interfaz. Estas
+     * vienen de valores establecidos, no inventados:
+     * `--ease-out` arranca fuerte y frena —lo que hace que 200 ms se sientan
+     * más rápidos que 200 ms con `ease-in`—, `--ease-in-out` es para lo que
+     * se desplaza en pantalla y `--ease-drawer` es la curva de cajón de iOS.
+     *
+     * `ease-in` no se usa nunca en interfaz: empieza lento justo en el
+     * instante que la persona está mirando.
+     *
+     * Escala de duración, en utilidades de Tailwind:
+     *   duration-100/150  respuesta a una pulsación, cambios de color
+     *   duration-200      desplegables, menús, diálogos
+     *   duration-250      cajón de navegación móvil
+     * Por encima de 300 ms nada de interfaz, salvo que haya una razón.
+     */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+    --default-transition-timing-function: var(--ease-out);
+    --default-transition-duration: 150ms;
+
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
@@ -264,13 +291,38 @@
     }
 }
 
+/*
+ * Movimiento reducido.
+ *
+ * No significa «sin animación»: significa menos y más suave. Lo que molesta
+ * es el desplazamiento y el escalado, no que un color cambie. Así que se
+ * conservan las transiciones que explican un cambio de estado —color, opacidad,
+ * sombra— acortadas, y se elimina todo lo que mueve o escala algo por la
+ * pantalla.
+ */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
+        transition-property:
+            opacity, color, background-color, border-color,
+            text-decoration-color, fill, stroke, box-shadow !important;
+        transition-duration: 120ms !important;
         animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
         animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+    }
+
+    /* El giro del spinner es información, no adorno: sin él una espera larga
+       parece una pantalla colgada. Se conserva, más lento. */
+    .animate-spin {
+        animation: spin 1.6s linear infinite !important;
+    }
+
+    /* El esqueleto sigue ocupando su sitio y diciendo que algo falta; el
+       latido, que no aporta nada más, se detiene. */
+    .animate-pulse {
+        animation: none !important;
     }
 }
