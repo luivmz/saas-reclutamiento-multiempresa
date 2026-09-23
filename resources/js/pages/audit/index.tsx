@@ -1,12 +1,13 @@
 import { Head, router } from '@inertiajs/react';
 import { ShieldCheck } from 'lucide-react';
 import AuditLogController from '@/actions/App/Http/Controllers/Audit/AuditLogController';
+import { DataTable } from '@/components/data-table';
 import { EmptyState } from '@/components/empty-state';
 import { NativeSelect } from '@/components/form-controls';
 import { PageContainer, PageHeader } from '@/components/page';
 import { Pagination } from '@/components/pagination';
 import { StatusBadge } from '@/components/status-badge';
-import { Card } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import { formatDateTime } from '@/lib/format';
 import type { Paginated, Presented } from '@/types';
 
@@ -39,71 +40,102 @@ export default function AuditIndex({ logs, actions, filters }: Props) {
             <PageContainer>
                 <PageHeader
                     title="Registro de auditoría"
-                    description="RF-27 · Acciones críticas del proceso de reclutamiento de su organización. Los registros son de solo lectura y no pueden modificarse."
+                    description="Acciones críticas del proceso de reclutamiento de su organización (RF-27). Los registros son de solo lectura: ni siquiera la plataforma puede modificarlos."
                 />
 
-                <div className="flex flex-wrap items-end gap-3">
-                    <div className="w-full max-w-sm">
-                        <label htmlFor="audit-action" className="mb-1 block text-sm font-medium">
-                            Acción
-                        </label>
-                        <NativeSelect
-                            id="audit-action"
-                            options={actions}
-                            placeholder="Todas las acciones"
-                            value={filters.accion ?? ''}
-                            onChange={(event) => filter(event.target.value)}
-                            data-cy="audit-action-filter"
-                        />
-                    </div>
+                <div className="w-full max-w-sm space-y-2">
+                    <Label htmlFor="audit-action">Acción</Label>
+                    <NativeSelect
+                        id="audit-action"
+                        options={actions}
+                        placeholder="Todas las acciones"
+                        value={filters.accion ?? ''}
+                        onChange={(event) => filter(event.target.value)}
+                        data-cy="audit-action-filter"
+                    />
                 </div>
 
                 {logs.data.length === 0 ? (
-                    <EmptyState icon={ShieldCheck} title="No hay registros para mostrar" description="Las acciones críticas del proceso aparecerán aquí." />
+                    <EmptyState
+                        icon={ShieldCheck}
+                        title="No hay registros para mostrar"
+                        description={
+                            filters.accion
+                                ? 'Todavía no se ha registrado ninguna acción de ese tipo.'
+                                : 'Las acciones críticas del proceso aparecerán aquí a medida que ocurran.'
+                        }
+                    />
                 ) : (
-                    <Card className="gap-0 overflow-hidden py-0">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm" data-cy="audit-table">
-                                <thead className="bg-muted/50 text-muted-foreground text-left text-xs tracking-wide uppercase">
-                                    <tr>
-                                        <th className="px-4 py-3 font-medium">Fecha y hora</th>
-                                        <th className="px-4 py-3 font-medium">Actor</th>
-                                        <th className="px-4 py-3 font-medium">Acción</th>
-                                        <th className="px-4 py-3 font-medium">Entidad</th>
-                                        <th className="px-4 py-3 font-medium">Detalle</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y">
-                                    {logs.data.map((log) => (
-                                        <tr key={log.id} className="align-top" data-cy="audit-row" data-action={log.action.value}>
-                                            <td className="text-muted-foreground px-4 py-3 whitespace-nowrap">{formatDateTime(log.created_at)}</td>
-                                            <td className="px-4 py-3 font-medium">{log.actor}</td>
-                                            <td className="px-4 py-3">
-                                                <StatusBadge status={log.action} />
-                                            </td>
-                                            <td className="px-4 py-3 whitespace-nowrap">
-                                                {log.entity.label} <span className="text-muted-foreground font-mono text-xs">#{log.entity.id}</span>
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                {log.details.length === 0 ? (
-                                                    <span className="text-muted-foreground">—</span>
-                                                ) : (
-                                                    <dl className="grid gap-0.5">
-                                                        {log.details.map((detail) => (
-                                                            <div key={detail.label} className="flex gap-1.5">
-                                                                <dt className="text-muted-foreground whitespace-nowrap">{detail.label}:</dt>
-                                                                <dd>{detail.value}</dd>
-                                                            </div>
-                                                        ))}
-                                                    </dl>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </Card>
+                    <DataTable
+                        caption="Acciones críticas registradas en su organización"
+                        data-cy="audit-table"
+                        rows={logs.data}
+                        rowKey={(row) => row.id}
+                        rowAttributes={(row) => ({
+                            'data-cy': 'audit-row',
+                            'data-action': row.action.value,
+                            className: 'md:align-top',
+                        })}
+                        columns={[
+                            {
+                                key: 'created',
+                                header: 'Fecha y hora',
+                                className:
+                                    'text-muted-foreground whitespace-nowrap',
+                                cell: (row) => formatDateTime(row.created_at),
+                            },
+                            {
+                                key: 'actor',
+                                header: 'Actor',
+                                className: 'font-medium',
+                                cell: (row) => row.actor,
+                            },
+                            {
+                                key: 'action',
+                                header: 'Acción',
+                                cell: (row) => (
+                                    <StatusBadge status={row.action} />
+                                ),
+                            },
+                            {
+                                key: 'entity',
+                                header: 'Entidad',
+                                className: 'whitespace-nowrap',
+                                cell: (row) => (
+                                    <>
+                                        {row.entity.label}{' '}
+                                        <span className="text-muted-foreground font-mono text-xs">
+                                            #{row.entity.id}
+                                        </span>
+                                    </>
+                                ),
+                            },
+                            {
+                                key: 'details',
+                                header: 'Detalle',
+                                cell: (row) =>
+                                    row.details.length === 0 ? (
+                                        <span className="text-muted-foreground">
+                                            —
+                                        </span>
+                                    ) : (
+                                        <dl className="grid gap-0.5">
+                                            {row.details.map((detail) => (
+                                                <div
+                                                    key={detail.label}
+                                                    className="flex gap-1.5"
+                                                >
+                                                    <dt className="text-muted-foreground whitespace-nowrap">
+                                                        {detail.label}:
+                                                    </dt>
+                                                    <dd>{detail.value}</dd>
+                                                </div>
+                                            ))}
+                                        </dl>
+                                    ),
+                            },
+                        ]}
+                    />
                 )}
 
                 <Pagination meta={logs.meta} />

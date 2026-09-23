@@ -23,18 +23,18 @@ export default function TwoFactorChallenge() {
     }>(() => {
         if (showRecoveryInput) {
             return {
-                title: 'Recovery code',
+                title: 'Código de recuperación',
                 description:
-                    'Please confirm access to your account by entering one of your emergency recovery codes.',
-                toggleText: 'login using an authentication code',
+                    'Escriba uno de sus códigos de recuperación de emergencia.',
+                toggleText: 'usar el código de la aplicación',
             };
         }
 
         return {
-            title: 'Authentication code',
+            title: 'Código de verificación',
             description:
-                'Enter the authentication code provided by your authenticator application.',
-            toggleText: 'login using a recovery code',
+                'Escriba el código que muestra su aplicación de autenticación.',
+            toggleText: 'usar un código de recuperación',
         };
     }, [showRecoveryInput]);
 
@@ -51,7 +51,7 @@ export default function TwoFactorChallenge() {
 
     return (
         <>
-            <Head title="Two-factor authentication" />
+            <Head title="Verificación en dos pasos" />
 
             <div className="space-y-6">
                 <Form
@@ -67,7 +67,7 @@ export default function TwoFactorChallenge() {
                                     <Input
                                         name="recovery_code"
                                         type="text"
-                                        placeholder="Enter recovery code"
+                                        placeholder="Código de recuperación"
                                         autoFocus={showRecoveryInput}
                                         required
                                     />
@@ -109,21 +109,22 @@ export default function TwoFactorChallenge() {
                                 className="w-full"
                                 disabled={processing}
                             >
-                                Continue
+                                Continuar
                             </Button>
 
-                            <div className="text-muted-foreground text-center text-sm">
-                                <span>or you can </span>
+                            <p className="text-muted-foreground text-center text-sm">
+                                También puede{' '}
                                 <button
                                     type="button"
-                                    className="text-foreground cursor-pointer underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                                    className="text-foreground decoration-muted-foreground/50 cursor-pointer underline underline-offset-4 transition-colors hover:decoration-current"
                                     onClick={() =>
                                         toggleRecoveryMode(clearErrors)
                                     }
                                 >
                                     {authConfigContent.toggleText}
                                 </button>
-                            </div>
+                                .
+                            </p>
                         </>
                     )}
                 </Form>

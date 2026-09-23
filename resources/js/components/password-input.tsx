@@ -4,6 +4,19 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
+/**
+ * Campo de contraseña con conmutador de visibilidad.
+ *
+ * El botón estaba fuera del orden de tabulación (`tabIndex={-1}`), heredado
+ * del kit de inicio: quien no usa ratón no podía comprobar lo que había
+ * escrito. Ahora es un `<button>` normal, alcanzable con Tab y activable con
+ * Enter o Espacio como cualquier botón nativo.
+ *
+ * El estado se anuncia por el nombre accesible, que cambia entre «Mostrar la
+ * contraseña» y «Ocultar la contraseña». No se añade además `aria-pressed`:
+ * duplicar la información haría que el lector de pantalla dijera dos veces lo
+ * mismo, con dos vocabularios distintos.
+ */
 export default function PasswordInput({
     className,
     ref,
@@ -22,14 +35,19 @@ export default function PasswordInput({
             <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="text-muted-foreground hover:text-foreground focus-visible:ring-ring absolute inset-y-0 right-0 flex items-center rounded-r-md px-3 focus-visible:ring-[3px] focus-visible:outline-none"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                tabIndex={-1}
+                className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 flex items-center rounded-r-md px-3"
+                aria-label={
+                    showPassword
+                        ? 'Ocultar la contraseña'
+                        : 'Mostrar la contraseña'
+                }
+                aria-controls={props.id}
+                data-cy="toggle-password-visibility"
             >
                 {showPassword ? (
-                    <EyeOff className="size-4" />
+                    <EyeOff className="size-4" aria-hidden="true" />
                 ) : (
-                    <Eye className="size-4" />
+                    <Eye className="size-4" aria-hidden="true" />
                 )}
             </button>
         </div>

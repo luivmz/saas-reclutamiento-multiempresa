@@ -24,6 +24,17 @@ export default function Login({ status, canResetPassword }: Props) {
 
             <PasskeyVerify />
 
+            {/* El aviso va antes del formulario: puesto debajo, quien acababa
+                de restablecer su contraseña no llegaba a verlo. */}
+            {status && (
+                <p
+                    role="status"
+                    className="bg-tone-success text-tone-success-foreground ring-tone-success-edge rounded-md px-3 py-2 text-sm ring-1 ring-inset"
+                >
+                    {status}
+                </p>
+            )}
+
             <Form
                 {...store.form()}
                 resetOnSuccess={['password']}
@@ -31,34 +42,41 @@ export default function Login({ status, canResetPassword }: Props) {
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
+                        <div className="grid gap-5">
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Correo electrónico</Label>
+                                <Label htmlFor="email">
+                                    Correo electrónico
+                                </Label>
                                 <Input
                                     id="email"
                                     type="email"
                                     name="email"
                                     required
                                     autoFocus
-                                    tabIndex={1}
                                     autoComplete="email"
                                     placeholder="usuario@ejemplo.test"
+                                    aria-invalid={
+                                        errors.email ? true : undefined
+                                    }
+                                    aria-describedby={
+                                        errors.email ? 'email-error' : undefined
+                                    }
                                     data-cy="login-email"
                                 />
                                 <InputError
+                                    id="email-error"
                                     message={errors.email}
                                     data-cy="login-error"
                                 />
                             </div>
 
                             <div className="grid gap-2">
-                                <div className="flex items-center">
+                                <div className="flex items-center justify-between gap-3">
                                     <Label htmlFor="password">Contraseña</Label>
                                     {canResetPassword && (
                                         <TextLink
                                             href={request()}
-                                            className="ml-auto text-sm"
-                                            tabIndex={5}
+                                            className="text-sm"
                                         >
                                             ¿Olvidó su contraseña?
                                         </TextLink>
@@ -68,27 +86,37 @@ export default function Login({ status, canResetPassword }: Props) {
                                     id="password"
                                     name="password"
                                     required
-                                    tabIndex={2}
                                     autoComplete="current-password"
                                     placeholder="Contraseña"
+                                    aria-invalid={
+                                        errors.password ? true : undefined
+                                    }
+                                    aria-describedby={
+                                        errors.password
+                                            ? 'password-error'
+                                            : undefined
+                                    }
                                     data-cy="login-password"
                                 />
-                                <InputError message={errors.password} />
+                                <InputError
+                                    id="password-error"
+                                    message={errors.password}
+                                />
                             </div>
 
-                            <div className="flex items-center space-x-3">
-                                <Checkbox
-                                    id="remember"
-                                    name="remember"
-                                    tabIndex={3}
-                                />
-                                <Label htmlFor="remember">Recordarme</Label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox id="remember" name="remember" />
+                                <Label
+                                    htmlFor="remember"
+                                    className="font-normal"
+                                >
+                                    Mantener la sesión iniciada
+                                </Label>
                             </div>
 
                             <Button
                                 type="submit"
-                                className="mt-4 w-full"
-                                tabIndex={4}
+                                className="w-full"
                                 disabled={processing}
                                 data-test="login-button"
                                 data-cy="login-submit"
@@ -98,26 +126,21 @@ export default function Login({ status, canResetPassword }: Props) {
                             </Button>
                         </div>
 
-                        <div className="text-muted-foreground text-center text-sm">
+                        <p className="text-muted-foreground text-center text-sm">
                             ¿Busca empleo y aún no tiene cuenta?{' '}
-                            <TextLink href={register()} tabIndex={5}>
+                            <TextLink href={register()}>
                                 Regístrese como postulante
                             </TextLink>
-                        </div>
+                        </p>
                     </>
                 )}
             </Form>
-
-            {status && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
         </>
     );
 }
 
 Login.layout = {
     title: 'Inicie sesión en su cuenta',
-    description: 'Ingrese su correo electrónico y contraseña',
+    description:
+        'Use el correo y la contraseña que le entregó el administrador de su organización.',
 };

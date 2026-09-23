@@ -3,13 +3,13 @@ import { Users } from 'lucide-react';
 import ApplicationController from '@/actions/App/Http/Controllers/Applications/ApplicationController';
 import VacancyApplicationController from '@/actions/App/Http/Controllers/Applications/VacancyApplicationController';
 import VacancyController from '@/actions/App/Http/Controllers/Vacancies/VacancyController';
+import { DataTable } from '@/components/data-table';
 import { EmptyState } from '@/components/empty-state';
 import { FilterChips } from '@/components/filter-chips';
 import { PageContainer, PageHeader } from '@/components/page';
 import { Pagination } from '@/components/pagination';
 import { StatusBadge } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { formatDate } from '@/lib/format';
 import type { JobApplication, Paginated, Presented, Vacancy } from '@/types';
 
@@ -37,17 +37,19 @@ export default function VacancyApplications({
 
     return (
         <>
-            <Head title={`Postulaciones · ${vacancy.code}`} />
+            <Head title={`Postulaciones de ${vacancy.code}`} />
             <PageContainer>
                 <PageHeader
                     eyebrow={
                         <>
-                            <span className="font-mono">{vacancy.code}</span>
+                            <span className="font-mono text-xs">
+                                {vacancy.code}
+                            </span>
                             <StatusBadge status={vacancy.status} />
                         </>
                     }
                     title={`Postulaciones: ${vacancy.title}`}
-                    description="RF-12 · Consulte y revise las postulaciones recibidas."
+                    description="Consulte y revise las postulaciones recibidas (RF-12)."
                     actions={
                         <Button variant="outline" asChild>
                             <Link href={VacancyController.show(vacancy.id)}>
@@ -67,69 +69,104 @@ export default function VacancyApplications({
                     value={filters.estado}
                     onChange={filter}
                     allLabel="Todas"
+                    label="Filtrar por etapa"
                 />
 
                 {applications.data.length === 0 ? (
                     <EmptyState
                         icon={Users}
                         title="No hay postulaciones para mostrar"
-                        description="Las postulaciones aparecerán aquí cuando los candidatos postulen a la vacante."
+                        description={
+                            filters.estado
+                                ? 'Ninguna postulación está en esa etapa. Quite el filtro para verlas todas.'
+                                : 'Aparecerán aquí en cuanto alguien postule a la convocatoria.'
+                        }
                     />
                 ) : (
-                    <Card className="gap-0 overflow-hidden py-0">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm" data-cy="applications-table">
-                                <thead className="bg-muted/50 text-muted-foreground text-left text-xs tracking-wide uppercase">
-                                    <tr>
-                                        <th className="px-4 py-3 font-medium">Código</th>
-                                        <th className="px-4 py-3 font-medium">Candidato</th>
-                                        <th className="px-4 py-3 text-center font-medium">Experiencia</th>
-                                        <th className="px-4 py-3 font-medium">Ciudad</th>
-                                        <th className="px-4 py-3 font-medium">Postuló</th>
-                                        <th className="px-4 py-3 font-medium">Etapa</th>
-                                        <th className="px-4 py-3" />
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y">
-                                    {applications.data.map((application) => (
-                                        <tr
-                                            key={application.id}
-                                            className="hover:bg-muted/40"
-                                            data-cy="application-row"
-                                            data-candidate={application.candidate?.email}
+                    <DataTable
+                        caption={`Postulaciones recibidas en la vacante ${vacancy.code}`}
+                        data-cy="applications-table"
+                        rows={applications.data}
+                        rowKey={(row) => row.id}
+                        rowAttributes={(row) => ({
+                            'data-cy': 'application-row',
+                            'data-candidate': row.candidate?.email,
+                        })}
+                        columns={[
+                            {
+                                key: 'code',
+                                header: 'Código',
+                                className: 'font-mono text-xs',
+                                cell: (row) => row.code,
+                            },
+                            {
+                                key: 'candidate',
+                                header: 'Candidato',
+                                cell: (row) => (
+                                    <>
+                                        <span className="block font-medium">
+                                            {row.candidate?.name}
+                                        </span>
+                                        <span className="text-muted-foreground block text-xs">
+                                            {row.candidate?.profile
+                                                ?.professional_title ?? '—'}
+                                        </span>
+                                    </>
+                                ),
+                            },
+                            {
+                                key: 'experience',
+                                header: 'Experiencia',
+                                align: 'center',
+                                cell: (row) =>
+                                    row.candidate?.profile
+                                        ?.years_of_experience !== undefined &&
+                                    row.candidate?.profile
+                                        ?.years_of_experience !== null
+                                        ? `${row.candidate.profile.years_of_experience} años`
+                                        : '—',
+                            },
+                            {
+                                key: 'city',
+                                header: 'Ciudad',
+                                className: 'text-muted-foreground',
+                                cell: (row) =>
+                                    row.candidate?.profile?.city ?? '—',
+                            },
+                            {
+                                key: 'applied',
+                                header: 'Postuló',
+                                className:
+                                    'text-muted-foreground whitespace-nowrap',
+                                cell: (row) => formatDate(row.applied_at),
+                            },
+                            {
+                                key: 'status',
+                                header: 'Etapa',
+                                cell: (row) => (
+                                    <StatusBadge status={row.status} />
+                                ),
+                            },
+                            {
+                                key: 'actions',
+                                header: (
+                                    <span className="sr-only">Expediente</span>
+                                ),
+                                label: '',
+                                align: 'end',
+                                cell: (row) => (
+                                    <Button variant="outline" size="sm" asChild>
+                                        <Link
+                                            href={ApplicationController(row.id)}
+                                            data-cy="application-link"
                                         >
-                                            <td className="px-4 py-3 font-mono text-xs">{application.code}</td>
-                                            <td className="px-4 py-3">
-                                                <p className="font-medium">{application.candidate?.name}</p>
-                                                <p className="text-muted-foreground text-xs">
-                                                    {application.candidate?.profile?.professional_title ?? '—'}
-                                                </p>
-                                            </td>
-                                            <td className="px-4 py-3 text-center">
-                                                {application.candidate?.profile?.years_of_experience ?? '—'} años
-                                            </td>
-                                            <td className="text-muted-foreground px-4 py-3">
-                                                {application.candidate?.profile?.city ?? '—'}
-                                            </td>
-                                            <td className="text-muted-foreground px-4 py-3 whitespace-nowrap">
-                                                {formatDate(application.applied_at)}
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                <StatusBadge status={application.status} />
-                                            </td>
-                                            <td className="px-4 py-3 text-right">
-                                                <Button variant="outline" size="sm" asChild>
-                                                    <Link href={ApplicationController(application.id)} data-cy="application-link">
-                                                        Ver expediente
-                                                    </Link>
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </Card>
+                                            Ver expediente
+                                        </Link>
+                                    </Button>
+                                ),
+                            },
+                        ]}
+                    />
                 )}
 
                 <Pagination meta={applications.meta} />

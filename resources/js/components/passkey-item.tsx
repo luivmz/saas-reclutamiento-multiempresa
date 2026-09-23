@@ -28,8 +28,11 @@ export default function PasskeyItem({ passkey, onDelete }: Props) {
     return (
         <div className="flex items-center justify-between border-b p-4 last:border-b-0">
             <div className="flex items-center gap-4">
-                <div className="bg-muted flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
-                    <KeyRound className="text-muted-foreground h-5 w-5" />
+                <div className="bg-surface flex size-10 shrink-0 items-center justify-center rounded-lg">
+                    <KeyRound
+                        className="text-muted-foreground size-5"
+                        aria-hidden="true"
+                    />
                 </div>
                 <div className="space-y-1">
                     <div className="flex items-center gap-2.5">
@@ -37,20 +40,15 @@ export default function PasskeyItem({ passkey, onDelete }: Props) {
                             {passkey.name}
                         </p>
                         {passkey.authenticator && (
-                            <span className="bg-muted text-muted-foreground ring-border inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium tracking-wide uppercase ring-1 ring-inset">
+                            <span className="bg-tone-neutral text-tone-neutral-foreground ring-tone-neutral-edge inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset">
                                 {passkey.authenticator}
                             </span>
                         )}
                     </div>
                     <p className="text-muted-foreground text-sm">
-                        Added {passkey.created_at_diff}
+                        Registrada {passkey.created_at_diff}
                         {passkey.last_used_at_diff && (
-                            <>
-                                <span className="text-muted-foreground/50 mx-1">
-                                    /
-                                </span>
-                                Last used {passkey.last_used_at_diff}
-                            </>
+                            <>. Último uso {passkey.last_used_at_diff}</>
                         )}
                     </p>
                 </div>
@@ -64,26 +62,27 @@ export default function PasskeyItem({ passkey, onDelete }: Props) {
                         className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                     >
                         <Trash2 className="h-4 w-4" />
-                        <span className="sr-only">Remove</span>
+                        <span className="sr-only">
+                            Eliminar clave de acceso
+                        </span>
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
-                    <DialogTitle>Remove passkey</DialogTitle>
+                    <DialogTitle>Eliminar la clave de acceso</DialogTitle>
                     <DialogDescription>
-                        Are you sure you want to remove the "{passkey.name}"
-                        passkey? You will no longer be able to use it to sign
-                        in.
+                        ¿Confirma que desea eliminar la clave «{passkey.name}»?
+                        Ya no podrá usarla para iniciar sesión.
                     </DialogDescription>
                     <DialogFooter className="gap-2">
                         <DialogClose asChild>
-                            <Button variant="secondary">Cancel</Button>
+                            <Button variant="secondary">Cancelar</Button>
                         </DialogClose>
                         <Button
                             variant="destructive"
                             onClick={handleDelete}
                             disabled={isDeleting}
                         >
-                            {isDeleting ? 'Removing...' : 'Remove passkey'}
+                            {isDeleting ? 'Eliminando…' : 'Eliminar clave'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

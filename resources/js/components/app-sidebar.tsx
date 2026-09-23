@@ -30,9 +30,24 @@ export function AppSidebar() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
+
+                {/* El rol decide qué puede hacer cada persona en el proceso;
+                    tenerlo a la vista evita la pregunta «¿por qué a mí no me
+                    aparece este botón?». */}
+                {auth.role && (
+                    <p
+                        className="text-sidebar-foreground/70 border-sidebar-border mx-1 mt-1 rounded-md border border-dashed px-2 py-1 text-xs group-data-[collapsible=icon]:hidden"
+                        data-cy="sidebar-role"
+                    >
+                        Rol:{' '}
+                        <span className="text-sidebar-foreground font-medium">
+                            {auth.role.label}
+                        </span>
+                    </p>
+                )}
             </SidebarHeader>
 
-            <SidebarContent>
+            <SidebarContent className="gap-4">
                 {groups.map((group) => (
                     <NavMain
                         key={group.label}

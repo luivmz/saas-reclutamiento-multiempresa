@@ -1,16 +1,24 @@
 import { cn } from '@/lib/utils';
 import type { Presented, Tone } from '@/types';
 
+/**
+ * Estado de una entidad, con el vocabulario de color definido en `app.css`.
+ *
+ * Los tonos vienen de tokens (`--tone-*`) y no de la paleta de Tailwind: así el
+ * mismo estado se ve igual en una tabla, en una línea de tiempo y en el
+ * encabezado de una página, y el modo oscuro se resuelve en un solo sitio.
+ */
 const toneClasses: Record<Tone, string> = {
-    neutral: 'bg-muted text-muted-foreground ring-border',
-    info: 'bg-sky-50 text-sky-800 ring-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:ring-sky-900',
+    neutral:
+        'bg-tone-neutral text-tone-neutral-foreground ring-tone-neutral-edge',
+    info: 'bg-tone-info text-tone-info-foreground ring-tone-info-edge',
     primary:
-        'bg-indigo-50 text-indigo-800 ring-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-300 dark:ring-indigo-900',
+        'bg-tone-primary text-tone-primary-foreground ring-tone-primary-edge',
     success:
-        'bg-emerald-50 text-emerald-800 ring-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:ring-emerald-900',
+        'bg-tone-success text-tone-success-foreground ring-tone-success-edge',
     warning:
-        'bg-amber-50 text-amber-900 ring-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:ring-amber-900',
-    danger: 'bg-rose-50 text-rose-800 ring-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:ring-rose-900',
+        'bg-tone-warning text-tone-warning-foreground ring-tone-warning-edge',
+    danger: 'bg-tone-danger text-tone-danger-foreground ring-tone-danger-edge',
 };
 
 export function StatusBadge({
@@ -25,11 +33,18 @@ export function StatusBadge({
             data-cy="status-badge"
             data-status={status.value}
             className={cn(
-                'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ring-inset',
+                'inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ring-inset',
                 toneClasses[status.tone],
                 className,
             )}
         >
+            {/* Un punto del mismo tono: quien no distingue los colores sigue
+                viendo un marcador de estado, y el badge no depende solo del
+                fondo para leerse como tal. */}
+            <span
+                aria-hidden="true"
+                className="size-1.5 shrink-0 rounded-full bg-current opacity-70"
+            />
             {status.label}
         </span>
     );
