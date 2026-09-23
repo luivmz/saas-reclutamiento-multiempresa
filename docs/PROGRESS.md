@@ -91,3 +91,15 @@ Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempre
 - **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 18 pruebas de componente (`vp test`) · `tsc` sin errores · `npm run build` correcto · Cypress 17 specs / 61 pruebas, 61 pasadas.
 - **Detalle y evidencia:** `docs/v1.1/phase-18-frontend-redesign.md` y `docs/v1.1/phase-18-screenshots/`.
 - **Sin `push`, `merge`, *tag* ni *release*.**
+
+## v1.1 — Fase 19: animaciones y microinteracciones
+
+- **Rama:** `feature/phase-19-animations`, desde `develop` en `11832ac` (cierre de la Fase 18).
+- **Alcance:** solo movimiento. Sistema de tres curvas y una escala de duración declarado con los tokens que Tailwind ya usa; corrección del movimiento heredado del kit de inicio (curvas lineales, `transition-all`, 500 ms de apertura, menús creciendo desde el centro); respuesta del botón a la pulsación; entrada de errores de formulario y del resultado de riesgo operacional. **Sin biblioteca de motion nueva.**
+- **Se anima poco a propósito:** sin transiciones entre páginas, sin entrada animada de filas de tabla, sin contadores y sin badges que laten.
+- **`prefers-reduced-motion` implementado y probado:** se conservan color y opacidad, se elimina todo desplazamiento, el spinner sigue girando y el esqueleto deja de latir.
+- **Defecto de accesibilidad encontrado y corregido:** al cerrar la navegación móvil el foco se perdía en `body`; ahora vuelve al botón que la abrió.
+- **Sin cambios** en reglas de negocio, RF, rutas, contratos de API, modelos, Policies, migraciones ni servicio ML.
+- **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 23 pruebas de componente · `tsc` sin errores · `npm run build` correcto · Cypress 18 specs / 69 pruebas · 0 desbordes horizontales.
+- **Detalle:** `docs/v1.1/phase-19-animations.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
