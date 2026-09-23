@@ -82,5 +82,6 @@ Ninguna implementación de v1.1 debe comenzar antes de responder 1 y 6.
 10. **¿Se autoriza, por separado, crear código Python e instalar dependencias en la Fase 15?** → **PENDIENTE.** Es la única condición que falta del gate científico.
 11. **¿Cuándo y cómo se resuelve `GAP-01`?** → **PENDIENTE.** Bloquea la integración del modelo en Laravel, aunque no el experimento.
 12. **¿Pasan RF-28 y RF-29 al baseline de v1.1?** → **PENDIENTE.** La decisión 11 los mantiene como candidatos.
+13. **¿Pasa RNF-C al baseline de v1.1?** → **PENDIENTE — propuesta de la Fase 21 (23/09/2026).** La experiencia 3D está implementada, auditada e integrada (Fase 20), pero implementar no promueve un requisito: RF-29 también está integrado y sigue siendo candidato por la decisión 11. Se propone al equipo decidir RNF-C junto con RF-28 y RF-29.
 
 Las dos compuertas —científica y de integración— están detalladas en [`phase-14-ml-definition.md` §8](phase-14-ml-definition.md).

@@ -115,3 +115,15 @@ Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempre
 - **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 36 pruebas de componente · `tsc` sin errores · `npm run build` correcto · Cypress 19 specs / 77 pruebas · 0 desbordes horizontales.
 - **Detalle:** `docs/v1.1/phase-20-3d-experience.md`.
 - **Sin `push`, `merge`, *tag* ni *release*.**
+
+## v1.1 — Fase 21: QA visual, accesibilidad, responsive y pulido final
+
+- **Rama:** `feature/phase-21-visual-qa`, desde `develop` en `a316c07` (cierre de la Fase 20).
+- **Alcance:** auditoría y corrección del frontend consolidado tras las Fases 18 a 20, sin rediseño ni funciones nuevas. 35 rutas y las sesiones de evaluación de los seis perfiles, en claro y oscuro, a 1440/1280/1024/768/390/320 px, con teclado, movimiento reducido y estados provocados (rechazo, errores, 2FA real).
+- **Defectos corregidos:** alertas destructivas ilegibles en claro (≈ 1:1, **alta**; afectaba al motivo de rechazo de RF-04); rojo destructivo en oscuro por debajo de 4.5:1 como botón y como texto de error; pantallas de acceso sin `main`; cabecera pública desbordada a 320 px (WCAG 1.4.10); franja visible de los códigos de recuperación plegados (regresión de la Fase 19); enlace de salto de 22 px; botones de 2FA fuera de su tarjeta a 1024 px; desplazamiento suave que ignoraba el movimiento reducido.
+- **Aceptado con evidencia:** animación de ancho de la barra lateral (0 cuadros de 50 ms o más); 27 objetivos pequeños que cumplen WCAG 2.5.8 por espaciado. **Pasan a F24/F25:** lector de pantalla real y rendimiento en equipo modesto.
+- **Gobierno:** RNF-C queda como propuesta (pregunta 13 de `scope-preliminary.md`), no aprobada; skill `recruitment-3d-experience` actualizada a «implementada y acotada»; `CLAUDE.md` sin tocar hasta la integración en `main`.
+- **Sin cambios** en backend, reglas de negocio, RF, rutas, contratos de API, modelos, Policies, migraciones ni servicio ML. No se adelantó la Fase 22.
+- **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 42 pruebas de componente · `tsc` sin errores · `npm run build` correcto · Cypress 20 specs / 84 pruebas · 0 desbordes horizontales.
+- **Detalle y evidencia:** `docs/v1.1/phase-21-visual-qa.md` y `docs/v1.1/phase-21-screenshots/`.
+- **Sin `push`, `merge`, *tag* ni *release*.**

@@ -35,6 +35,19 @@ La interfaz de v1.1 quedó documentada en tres fases separadas, cada una en su d
 | `scope-preliminary.md` · pregunta 3 | ¿Se autoriza el 3D y sus dependencias? | El 3D se encargó; las dependencias no hicieron falta | Anotada; la parte de dependencias sigue abierta |
 | `.claude/skills/recruitment-3d-experience/SKILL.md` | «Estado: candidato. No instales dependencias ni escribas componentes 3D todavía» | Ya hay un componente 3D, sin dependencias | **No se tocó**: es una skill del equipo; actualizar su estado le corresponde a quien la mantiene |
 
+### Divergencias registradas por la Fase 21 (23/09/2026)
+
+La interfaz de v1.1 queda documentada en cuatro fases, cada una en su documento: **F18 = diseño** ([`phase-18-frontend-redesign.md`](phase-18-frontend-redesign.md)), **F19 = movimiento** ([`phase-19-animations.md`](phase-19-animations.md)), **F20 = profundidad 3D** ([`phase-20-3d-experience.md`](phase-20-3d-experience.md)) y **F21 = QA visual y accesibilidad** ([`phase-21-visual-qa.md`](phase-21-visual-qa.md)). La Fase 21 corrige defectos de las anteriores sin reescribir sus documentos: cada corrección se registra en el suyo.
+
+| Documento | Qué decía | Qué es cierto ahora | Acción tomada |
+|---|---|---|---|
+| `.claude/skills/recruitment-3d-experience/SKILL.md` | «Estado: candidato…» (ver Fase 20) | Implementada y acotada a la portada | **Actualizada**, por encargo explícito de la Fase 21: estado «implementada y acotada», condiciones para ampliarla; el texto anterior se conserva como nota de historia y las reglas no cambian |
+| `CLAUDE.md` · tabla de skills | `recruitment-3d-experience`: «aún **no implementado**» | Implementada en la Fase 20 | **No se tocó**: `CLAUDE.md` se revisa cuando v1.1 se integre en `main` (misma regla que su § Estado actual) |
+| `scope-preliminary.md` · preguntas | Doce preguntas | Pregunta 13: ¿pasa RNF-C al baseline? | Añadida como **propuesta pendiente**; no se finge aprobación |
+| `phase-18-frontend-redesign.md` | El rojo destructivo y la variante destructiva de alerta como quedaron en la Fase 18 | La alerta destructiva era ilegible en claro (≈ 1:1) y el rojo en oscuro no llegaba a 4.5:1; corregido en la Fase 21 | Sin cambios en el documento de la Fase 18; la corrección y sus cifras están en `phase-21-visual-qa.md` §15–§16 |
+| `phase-19-animations.md` | Plegado de los códigos de recuperación con `grid-template-rows` | Dejaba una franja de 12 px visible; `scrollIntoView` suave ignoraba el movimiento reducido. Corregido en la Fase 21 | Sin cambios en el documento de la Fase 19; ver `phase-21-visual-qa.md` §10 y §13 |
+| `phase-20-3d-experience.md` §15 | `app-*.css` 99.90 kB | Las cifras actuales, tras la Fase 21, están en `phase-21-visual-qa.md` §19 | Sin cambios: las cifras de la Fase 20 son correctas para su momento |
+
 ## 2. Por verificar antes de tocar nada
 
 | Documento | Qué revisar |
