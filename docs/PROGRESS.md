@@ -103,3 +103,15 @@ Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempre
 - **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 23 pruebas de componente · `tsc` sin errores · `npm run build` correcto · Cypress 18 specs / 69 pruebas · 0 desbordes horizontales.
 - **Detalle:** `docs/v1.1/phase-19-animations.md`.
 - **Sin `push`, `merge`, *tag* ni *release*.**
+
+## v1.1 — Fase 20: experiencia 3D contextual
+
+- **Rama:** `feature/phase-20-3d-experience`, desde `develop` en `67a88a6` (cierre de la Fase 19).
+- **Alcance:** una sola superficie, la portada pública. Detrás del expediente de la portada, una pila de hojas en perspectiva, cada una con el tono de su etapa. Decorativa, opcional y sin información propia (ADR-003).
+- **Tecnología:** CSS 3D (perspectiva y capas de DOM), **sin WebGL y sin dependencias nuevas**. `package.json` no cambia.
+- **Presupuesto:** *bundle* inicial JS **+0 KB**; la escena va en su propio fragmento diferido (1.26 kB gzip) que solo se descarga en escritorio, sin movimiento reducido ni ahorro de datos, y al entrar en el viewport. 61 FPS con el puntero en movimiento; escena lista en ≈ 500 ms.
+- **Fallback:** póster estático con la misma idea en plano, visible al instante; queda con movimiento reducido, en móvil, con ahorro de datos, en equipos modestos o si el fragmento falla. Sin WebGL la escena se muestra igual.
+- **Gobierno:** ADR-003 y RNF-C seguían «pendiente de decisión»; se anotaron sin reescribir su historia. La promoción formal de RNF-C sigue siendo decisión del equipo.
+- **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 36 pruebas de componente · `tsc` sin errores · `npm run build` correcto · Cypress 19 specs / 77 pruebas · 0 desbordes horizontales.
+- **Detalle:** `docs/v1.1/phase-20-3d-experience.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**

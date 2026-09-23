@@ -1,8 +1,10 @@
 # ADR-003 — Experiencia 3D progresiva y acotada
 
-- **Estado:** propuesta (pendiente de decisión del equipo)
+- **Estado:** ~~propuesta (pendiente de decisión del equipo)~~ → implementada en la Fase 20 por encargo explícito del equipo (ver nota de evolución)
 - **Fecha:** 19 de septiembre de 2026
 - **Contexto:** Fase 13, planificación de v1.1
+
+> **Nota de evolución — Fase 20, 23/09/2026.** El equipo encargó la Fase 20 con instrucciones explícitas de implementar una experiencia 3D. Se implementó **bajo las siete condiciones de esta ADR**, solo en la portada pública y **sin dependencias nuevas**: la escena es CSS 3D (perspectiva y capas de DOM), no WebGL. Por eso la autorización de dependencias de frontend que esta ADR exige **no llegó a ser necesaria** y sigue pendiente para cualquier 3D futuro con WebGL. La promoción formal de RNF-C al baseline de v1.1 sigue siendo decisión del equipo. Detalle y mediciones: [`phase-20-3d-experience.md`](../phase-20-3d-experience.md). El cuerpo de la ADR se conserva tal como se aprobó para discusión.
 
 ## Contexto
 

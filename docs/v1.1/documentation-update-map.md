@@ -24,6 +24,17 @@ Ninguno de estos documentos se modificó. Se anota la evolución, no se corrige 
 | `docs/v1.1/ml-feasibility.md` (Fase 13) | Planteaba el servicio de riesgo como estudio abierto, con el plazo objetivo sin resolver | La Fase 14 lo especificó y el equipo aprobó doce decisiones; `ML-DECISION-01` quedó resuelta y apareció `GAP-01` | Ya actualizado con una nota de evolución al inicio; el cuerpo del estudio se conserva |
 | `docs/v1.1/scope-preliminary.md` (Fase 13) | Listaba seis decisiones pendientes | Tres se resolvieron el 20/09/2026; quedan tres nuevas, incluida `GAP-01` | Ya actualizado; las resueltas se tacharon en lugar de borrarse |
 
+### Divergencias registradas por la Fase 20 (23/09/2026)
+
+La interfaz de v1.1 quedó documentada en tres fases separadas, cada una en su documento, sin que ninguna reescriba a la anterior: **Fase 18 = diseño** ([`phase-18-frontend-redesign.md`](phase-18-frontend-redesign.md)), **Fase 19 = movimiento** ([`phase-19-animations.md`](phase-19-animations.md)) y **Fase 20 = profundidad 3D** ([`phase-20-3d-experience.md`](phase-20-3d-experience.md)).
+
+| Documento | Qué decía | Qué es cierto ahora | Acción tomada |
+|---|---|---|---|
+| `architecture-decisions/ADR-003-progressive-3d.md` | Estado «propuesta (pendiente de decisión del equipo)» | El equipo encargó la Fase 20 y la experiencia se implementó bajo las condiciones de la ADR, sin dependencias nuevas | Estado tachado, no borrado, y nota de evolución al inicio; el cuerpo se conserva |
+| `scope-preliminary.md` · RNF-C | «Pendiente de decisión» | Implementada en la Fase 20; su promoción formal al baseline sigue pendiente | Estado tachado y anotado |
+| `scope-preliminary.md` · pregunta 3 | ¿Se autoriza el 3D y sus dependencias? | El 3D se encargó; las dependencias no hicieron falta | Anotada; la parte de dependencias sigue abierta |
+| `.claude/skills/recruitment-3d-experience/SKILL.md` | «Estado: candidato. No instales dependencias ni escribas componentes 3D todavía» | Ya hay un componente 3D, sin dependencias | **No se tocó**: es una skill del equipo; actualizar su estado le corresponde a quien la mantiene |
+
 ## 2. Por verificar antes de tocar nada
 
 | Documento | Qué revisar |
