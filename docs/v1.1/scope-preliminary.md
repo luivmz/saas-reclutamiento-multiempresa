@@ -37,7 +37,7 @@ Numeración **provisional**: estos identificadores solo se fijan cuando el equip
 |---|---|---|
 | RNF-A (cand.) | Accesibilidad WCAG 2.1 AA verificada en las pantallas de RF-01 a RF-27 | Propuesta |
 | RNF-B (cand.) | Presupuesto de rendimiento del frontend con línea base medida | Propuesta |
-| RNF-C (cand.) | Experiencia 3D progresiva en pantallas públicas | Pendiente de decisión (ver ADR-003) |
+| RNF-C (cand.) | Experiencia 3D progresiva en pantallas públicas | ~~Pendiente de decisión~~ Implementada en la Fase 20 por encargo del equipo, sin dependencias nuevas; su promoción formal al baseline sigue pendiente (ver ADR-003) |
 | RNF-D (cand.) | Observabilidad del proceso: métricas operativas y registro estructurado | Propuesta |
 
 ## 4. Arquitectura propuesta
@@ -67,7 +67,7 @@ Se expresa el **riesgo de retraso**, no una duración exacta: el proyecto no tie
 
 1. ¿Qué candidatos de la sección 2 se aprueban como requerimientos de v1.1?
 2. ¿Se explora el servicio de riesgo operacional o se descarta de entrada?
-3. ¿Se autoriza la experiencia 3D y sus dependencias de frontend?
+3. ¿Se autoriza la experiencia 3D y sus dependencias de frontend? — *23/09/2026: la experiencia se encargó e implementó en la Fase 20 **sin dependencias**, así que la parte de dependencias sigue abierta para cualquier 3D futuro con WebGL.*
 4. ¿Se autoriza el uso de navegador o red para `reviewing-a11y`?
 5. ¿Se autoriza la instalación global de las herramientas oficiales de revisión bloqueadas por licencia?
 6. ¿Qué entregables exige la próxima evaluación del curso y con qué fecha?
