@@ -1,5 +1,6 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ShieldCheck } from 'lucide-react';
+import { RecruitmentDepth } from '@/components/experience-3d/recruitment-depth';
 import { Button } from '@/components/ui/button';
 import { dashboard, login } from '@/routes';
 import { index as jobsIndex } from '@/routes/jobs';
@@ -101,41 +102,47 @@ export default function Welcome() {
                         </div>
                     </div>
 
-                    <div className="bg-card rounded-xl border shadow-sm">
-                        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b px-5 py-4">
-                            <p className="font-mono text-sm font-medium">
-                                REQ-2026-0042
-                            </p>
-                            <p className="text-muted-foreground text-xs">
-                                Docente de Matemática, 2 plazas
+                    {/* El expediente queda delante, plano y sólido: su texto
+                        nunca depende del fondo para leerse. Detrás, la capa de
+                        profundidad —decorativa y opcional (ADR-003)—. */}
+                    <div className="relative">
+                        <RecruitmentDepth />
+                        <div className="bg-card relative z-10 rounded-xl border shadow-sm">
+                            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b px-5 py-4">
+                                <p className="font-mono text-sm font-medium">
+                                    REQ-2026-0042
+                                </p>
+                                <p className="text-muted-foreground text-xs">
+                                    Docente de Matemática, 2 plazas
+                                </p>
+                            </div>
+                            <ol className="divide-y">
+                                {record.map((entry) => (
+                                    <li
+                                        key={entry.stage}
+                                        className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-3.5"
+                                    >
+                                        <div className="min-w-0 space-y-0.5">
+                                            <span
+                                                className={`inline-flex rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${entry.tone}`}
+                                            >
+                                                {entry.stage}
+                                            </span>
+                                            <p className="text-muted-foreground text-xs">
+                                                {entry.actor}
+                                            </p>
+                                        </div>
+                                        <p className="text-muted-foreground font-mono text-xs">
+                                            {entry.when}
+                                        </p>
+                                    </li>
+                                ))}
+                            </ol>
+                            <p className="text-muted-foreground bg-surface rounded-b-xl px-5 py-3 text-xs">
+                                Ejemplo ilustrativo. Los expedientes reales
+                                viven dentro de la plataforma.
                             </p>
                         </div>
-                        <ol className="divide-y">
-                            {record.map((entry) => (
-                                <li
-                                    key={entry.stage}
-                                    className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-3.5"
-                                >
-                                    <div className="min-w-0 space-y-0.5">
-                                        <span
-                                            className={`inline-flex rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${entry.tone}`}
-                                        >
-                                            {entry.stage}
-                                        </span>
-                                        <p className="text-muted-foreground text-xs">
-                                            {entry.actor}
-                                        </p>
-                                    </div>
-                                    <p className="text-muted-foreground font-mono text-xs">
-                                        {entry.when}
-                                    </p>
-                                </li>
-                            ))}
-                        </ol>
-                        <p className="text-muted-foreground bg-surface rounded-b-xl px-5 py-3 text-xs">
-                            Ejemplo ilustrativo. Los expedientes reales viven
-                            dentro de la plataforma.
-                        </p>
                     </div>
                 </div>
             </section>
