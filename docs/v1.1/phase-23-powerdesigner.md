@@ -33,7 +33,7 @@ La fase se hizo en dos sesiones. La primera construyó el PDM y el OOM estructur
 | Skill | Uso |
 |---|---|
 | `project-guardian` | Rama, alcance (solo `docs/`), contratos (RF-23 humano, RF-29 experimental, sin datos reales ni secretos), cuándo detenerse |
-| `powerdesigner-uml` | Nada que no exista en el código; nombres técnicos idénticos; `<<propuesto v1.1>>` para RF-28; validar conteos tras importar; registrar versión, pasos, validación y ajustes. **Observación:** su texto dice que en «esta fase» no se generan `.oom`/`.pdm` y que PowerDesigner «no se automatiza desde este entorno»; es de la Fase 22 y contradice el encargo de F23 (§12, O-02) |
+| `powerdesigner-uml` | Nada que no exista en el código; nombres técnicos idénticos; `<<propuesto v1.1>>` para RF-28; validar conteos tras importar; registrar versión, pasos, validación y ajustes. **Observación:** su texto decía que en «esta fase» no se generan `.oom`/`.pdm` y que PowerDesigner «no se automatiza desde este entorno»; era de la Fase 22 y contradecía el encargo de F23. **Corregido en el *hotfix* documental de F23** (§12, O-02) |
 | `academic-traceability` | Trazabilidad RF → diagrama (§11); sin reescribir los documentos de v1.0 |
 
 ## 5. PowerDesigner usado
@@ -139,7 +139,7 @@ La matriz completa RF ↔ UML ↔ código ↔ pruebas sigue siendo [`uml/traceab
 | # | Observación | Tratamiento |
 |---|---|---|
 | O-01 | `evaluation_criteria.position` está en el esquema (PDM) y no en los atributos de `EvaluationCriterion` de la especificación de F22 | CL-01 sigue a F22. Anotado para revisar la especificación; no se corrige aquí |
-| O-02 | La skill `powerdesigner-uml` (y su `POWERDESIGNER.md`) dice que en «esta fase» no se generan `.oom`/`.pdm` y que PowerDesigner no se automatiza desde este entorno | Texto de la Fase 22. F23 pedía los archivos nativos, y la automatización por COM funcionó y es reproducible. **Decisión del equipo**: actualizar la skill en una fase de gobierno; no se modificó aquí |
+| O-02 | La skill `powerdesigner-uml` (y su `POWERDESIGNER.md`) decía que en «esta fase» no se generan `.oom`/`.pdm` y que PowerDesigner no se automatiza desde este entorno | Texto de la Fase 22. **Resuelto en el *hotfix* documental de F23** (auditoría de Codex, MEDIUM-01): la skill distingue ahora la regla de F22 (solo especificación), la de F23 (formalización autorizada, COM, modelos nativos, exportaciones y validación) y la de ediciones futuras (autorizadas, incrementales, trazables y sin destruir historia). *(Hasta el hotfix decía: «Decisión del equipo: actualizar la skill en una fase de gobierno; no se modificó aquí».)* |
 | O-03 | La skill pide registrar la importación en `docs/final-report/diagram-reports/` | Los informes de v1.0 no se tocan. El registro de v1.1 es este documento más `powerdesigner/inventory.md` y `f22-checklist.md` |
 | O-04 | Modelos de prueba de la primera sesión (`zz_*.oom`, copias de sondeo) | Solo en la carpeta temporal del trabajo de Claude Code, **fuera del repositorio**. No se versionaron ni se borraron: su limpieza espera autorización |
 | O-05 | Detalles cosméticos (guarda de `critical`, rótulos cortos de AC-01) | Listados en el inventario; no afectan a los datos |
@@ -154,6 +154,6 @@ La matriz completa RF ↔ UML ↔ código ↔ pruebas sigue siendo [`uml/traceab
 La Fase 24 **no se inició** y su alcance no está definido en la documentación de v1.1 (la Fase 21 solo anota que el lector de pantalla real y el rendimiento en equipo modesto «pasan a F24/F25»). Para quien la defina:
 
 1. **Auditoría de Codex de F23**: abrir los dos modelos en PowerDesigner 16.6; revisar el inventario, la checklist y las exportaciones; regenerar al menos una secuencia con `$env:PD_ONLY` para confirmar que el script reemplaza sin duplicar.
-2. **Decisiones pendientes del equipo**: actualizar la skill `powerdesigner-uml` (O-02); revisar `evaluation_criteria.position` en CL-01 (O-01); autorizar la limpieza de los modelos de prueba (O-04); corregir el texto OpenAPI de GAP-01 (§13) en una fase con permiso sobre `ml-service/`.
-3. **Uso de los modelos**: son la fuente gráfica de v1.1. Cualquier cambio se hace en su script y se regenera, y se actualiza el inventario.
+2. **Decisiones pendientes del equipo**: revisar `evaluation_criteria.position` en CL-01 (O-01); autorizar la limpieza de los modelos de prueba (O-04); corregir el texto OpenAPI de GAP-01 (§13) en una fase con permiso sobre `ml-service/`.
+3. **Uso de los modelos**: son la fuente gráfica de v1.1. Cualquier cambio sigue la regla de la skill `powerdesigner-uml` para ediciones posteriores a F23: autorización explícita, cambio incremental en el script del diagrama, reexportación, validación y registro en el inventario.
 4. **Sin cambios**: RF-01 a RF-27 con su número y significado; RF-28 candidato; RF-29 experimental; RF-23 humano; multiempresa, Policies y auditoría de solo inserción.
