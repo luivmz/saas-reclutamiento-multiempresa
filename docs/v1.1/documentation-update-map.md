@@ -105,6 +105,17 @@ La Fase 23 formalizó en PowerDesigner la especificación de la Fase 22 ([`phase
 | `uml/class-model.md` (atributos de `EvaluationCriterion`) | No lista `position` | La columna `evaluation_criteria.position` existe (está en el PDM) | CL-01 sigue a F22; anotado como observación O-01 para revisar la especificación |
 | `ml-service/src/recruitment_ml/api/schemas.py` (descripción de `days_remaining_to_target`) | «GAP-01: Laravel todavía no puede producirla» | GAP-01 resuelto técnicamente desde la Fase 16 | **No se tocó** (runtime fuera del alcance de F23). Deuda de texto que sigue registrada; en PowerDesigner GAP-01 figura resuelto |
 
+### Divergencias registradas por la Fase 24 (24/09/2026)
+
+La Fase 24 produjo el Formato 09 v1.1 ([`phase-24-academic-documentation.md`](phase-24-academic-documentation.md), [`../academico/phase-24/`](../academico/phase-24/)). El F9 histórico, la guía y la plantilla oficiales se versionaron **sin modificar**; el entregable nuevo es una copia actualizada. Ningún documento de v1.0 se modificó.
+
+| Documento | Qué dice | Qué es cierto en v1.1 | Acción tomada |
+|---|---|---|---|
+| `CLAUDE.md` · `PROGRESS.md` · `scope-preliminary.md` (estado) | `develop` = `2621bee` integra F13–F22; F23 implementada en su rama, pendiente de auditoría; F24 sin alcance ni iniciar | `develop` = `origin/develop` = `8211851` integra F13–F23; F24 implementada en `feature/phase-24-academic-documentation`, pendiente de auditoría; F25 y F26 sin iniciar | Actualizados en la Fase 24; el valor anterior se conserva entre paréntesis |
+| `academico/phase-24/F9_…_NRC30180.docx` (F9 histórico v1.0) | NRC 30180; «Laravel todavía no lo consume, GAP-01 permanece abierto»; OUT-11 «FastAPI no es consumido por Laravel»; anexos de casos de uso y arquitectura con Superadministrador SaaS, suscripciones y banco de talentos | NRC 28607; integración experimental Laravel ↔ FastAPI desde la Fase 16; cinco actores y exclusiones OUT-01 a OUT-07 | **Original intacto** como evidencia. Correcciones solo en `output/…FINAL_v1.1.docx`; detalle frase por frase en [`source-map.md`](../academico/phase-24/source-map.md) |
+| `final-report/04-requerimientos.md` §4.4 frente al F9 | Catálogo CU-01 a CU-13 y RNF-01 a RNF-11 | El Formato 09 conserva el catálogo académico CU-01 a CU-20 y RNF-01 a RNF-10; el UML v1.1 usa un caso por RF | **No se reconcilia**: se declara en el Formato (11.1, 13.2) y en `phase-24-academic-documentation.md` (O-02, O-03). Decisión del equipo |
+| Este mapa, §3 «Formato 09» | «Se actualiza **solo** cuando el equipo apruebe requerimientos de v1.1» | El equipo encargó la Fase 24; el Formato se actualizó **sin añadir ningún RF** a la línea base | Nota de la Fase 24 al final del §3; la regla de numeración se cumple y no se reescribe |
+
 ## 2. Por verificar antes de tocar nada
 
 | Documento | Qué revisar |
@@ -126,6 +137,8 @@ Cada verificación que se ejecute debe anotar aquí su resultado real, incluido 
 **Cuando `GAP-01` se aborde**, el plazo operacional explícito necesitará entrada propia en el Formato 09: no es una columna técnica sino una capacidad funcional nueva, con actor, momento de captura y regla de inmutabilidad. **No se le reserva número de RF por anticipado.**
 
 El Formato 09 se actualiza **solo** cuando el equipo apruebe requerimientos de v1.1. Regla: RF-01 a RF-27 conservan su número y su redacción; los nuevos se agregan al final desde RF-28 y no se renumera nada. Si un candidato de `scope-preliminary.md` se descarta, su número provisional se libera y no se reutiliza en ese mismo ciclo.
+
+**Nota de la Fase 24 (24/09/2026):** por encargo del equipo, el Formato 09 se actualizó a v1.1 ([`../academico/phase-24/output/`](../academico/phase-24/output/)) **sin aprobar ni añadir ningún requerimiento**. RF-01 a RF-27 conservan su número y redacción; RF-28, RF-29 y RNF-C aparecen como candidatos en una sección aparte (5.10). El plazo operacional de GAP-01 figura como parte de la evolución experimental de RF-29, sin número de RF propio, porque RF-29 no se promovió. Cuando el equipo apruebe requerimientos, esta regla sigue vigente.
 
 ## 4. UML
 
