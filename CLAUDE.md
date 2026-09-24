@@ -47,7 +47,8 @@ No dupliques estos documentos: enlázalos.
 | Suite E2E | `docs/testing/cypress-e2e.md` |
 | Usuarios demo ficticios | `docs/demo-users.md` |
 | Informe académico (14 capítulos) e informes de diagramas | `docs/final-report/` |
-| Planificación y fases de v1.1 (F13–F21) | `docs/v1.1/` — cada fase en su `phase-*.md` |
+| Planificación y fases de v1.1 (F13–F23) | `docs/v1.1/` — cada fase en su `phase-*.md` |
+| Modelos PowerDesigner de v1.1 (OOM, PDM y exportaciones) | `docs/v1.1/powerdesigner/` |
 | Divergencias documentales entre v1.0 y v1.1 | `docs/v1.1/documentation-update-map.md` |
 | Candidatos RF-28+, RNF y decisiones pendientes | `docs/v1.1/scope-preliminary.md` |
 
@@ -69,16 +70,16 @@ El servicio ML **no** corre en Docker Compose: se ejecuta desde `ml-service/` co
 
 ## Estado actual
 
-*Verificado con Git el 23/09/2026. Antes de actuar, vuelve a comprobarlo: `git log --oneline -1 main develop` y `docs/PROGRESS.md`.*
+*Verificado con Git el 24/09/2026. Antes de actuar, vuelve a comprobarlo: `git log --oneline -1 main develop` y `docs/PROGRESS.md`.*
 
 ### `main` — v1.0 académica (publicada)
 
 - `main` sigue siendo la **v1.0 académica** (`4563c69`) y **no contiene v1.1**. El tag `v1.0.0-academic` apunta a `9a946c2` y no se mueve.
 - RF-01 a RF-27 son la línea base v1.0. Sus documentos de cierre (`docs/final-report/`) siguen siendo correctos **para v1.0** y no se reescriben.
 
-### `develop` — v1.1 en curso (integrado hasta la Fase 21)
+### `develop` — v1.1 en curso (integrado hasta la Fase 22)
 
-`develop` = `origin/develop` = `aced6da`. **`main` y `develop` ya no tienen el mismo contenido**: `develop` integra las Fases 13 a 21.
+`develop` = `origin/develop` = `2621bee`. **`main` y `develop` ya no tienen el mismo contenido**: `develop` integra las Fases 13 a 22.
 
 | Fase | Contenido | Estado |
 |---|---|---|
@@ -89,8 +90,9 @@ El servicio ML **no** corre en Docker Compose: se ejecuta desde `ml-service/` co
 | 18 · 19 | **Rediseño del frontend** y **motion** (sin biblioteca nueva, con movimiento reducido) | Integradas |
 | 20 | **Experiencia 3D con CSS 3D**, solo en la portada pública | Integrada |
 | 21 | QA visual, accesibilidad y responsive | Integrada (`aced6da`) |
-| 22 | Especificación UML del AS-IS | **Implementada** en `feature/phase-22-uml-update`, solo documentación (`docs/v1.1/uml/`); pendiente de auditoría. No está en `develop` |
-| 23 | Formalización en PowerDesigner | **No iniciada** |
+| 22 | Especificación UML del AS-IS, solo documentación (`docs/v1.1/uml/`) | Integrada (`2621bee`) |
+| 23 | Formalización en PowerDesigner: OOM y PDM nativos, 22 diagramas exportados (`docs/v1.1/powerdesigner/`) | **Implementada** en `feature/phase-23-powerdesigner`, pendiente de auditoría. No está en `develop` |
+| 24 | Sin alcance definido | **No iniciada** |
 
 **ML (RF-29).** Implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, **no** validado institucionalmente ni autorizado para producción. Estima el riesgo de demora del **proceso**; no puntúa, ordena, selecciona ni descarta personas, no toca el ranking y no cambia RF-23. Contrato científico congelado, no se modifica: *freeze* `9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2`, *threshold* `0.1679418172266036`, Logistic Regression `C=10`, `class_weight=None`, `StandardScaler`, sin calibración.
 

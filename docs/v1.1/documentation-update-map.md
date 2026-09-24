@@ -93,6 +93,18 @@ La Fase 22 especificó el UML del AS-IS en [`uml/`](uml/) ([`phase-22-uml-update
 | `CLAUDE.md` · `PROGRESS.md` · `scope-preliminary.md` (estado) | `develop` = `a316c07`, Fase 21 pendiente de cierre, Fase 22 sin iniciar | `develop` = `aced6da` integra F13–F21; F22 en su rama; F23 sin iniciar | Actualizados en la Fase 22; `scope-preliminary.md` conserva el valor anterior entre paréntesis |
 | `ml-service/src/recruitment_ml/api/schemas.py` (descripción de `days_remaining_to_target`) | «GAP-01: Laravel todavía no puede producirla» | GAP-01 resuelto técnicamente desde la Fase 16 | **No se tocó** (runtime fuera del alcance de F22). Deuda de texto registrada; el UML modela GAP-01 como resuelto |
 
+### Divergencias registradas por la Fase 23 (24/09/2026)
+
+La Fase 23 formalizó en PowerDesigner la especificación de la Fase 22 ([`phase-23-powerdesigner.md`](phase-23-powerdesigner.md), [`powerdesigner/`](powerdesigner/)). Ningún documento de v1.0 se modificó.
+
+| Documento | Qué dice | Qué es cierto en v1.1 | Acción tomada |
+|---|---|---|---|
+| `CLAUDE.md` · `PROGRESS.md` · `scope-preliminary.md` (estado) | `develop` = `aced6da` integra F13–F21; F22 en su rama; F23 sin iniciar | `develop` = `origin/develop` = `2621bee` integra F13–F22; F23 implementada en `feature/phase-23-powerdesigner`, pendiente de auditoría; F24 sin iniciar | Actualizados en la Fase 23; `scope-preliminary.md` conserva el valor anterior entre paréntesis |
+| Skill `powerdesigner-uml` (`SKILL.md` §4 y `POWERDESIGNER.md`) | «No se editan ni se generan archivos `.oom`, `.pdm` o `.cdm` en esta fase»; PowerDesigner «no se automatiza desde este entorno» | F23 generó los modelos nativos, como pedía su encargo, automatizando PowerDesigner 16.6 por COM de forma reproducible | **No se tocó** la skill. Decisión del equipo: actualizarla en una fase de gobierno (`phase-23-powerdesigner.md` §12, O-02) |
+| Este mapa, §5 «PowerDesigner» | v1.1 «registrará el procedimiento de importación y su validación en el informe de diagramas correspondiente» | Los informes de `final-report/diagram-reports/` son de v1.0 y no se tocan | El registro de v1.1 es `phase-23-powerdesigner.md` más `powerdesigner/inventory.md` y `powerdesigner/f22-checklist.md` |
+| `uml/class-model.md` (atributos de `EvaluationCriterion`) | No lista `position` | La columna `evaluation_criteria.position` existe (está en el PDM) | CL-01 sigue a F22; anotado como observación O-01 para revisar la especificación |
+| `ml-service/src/recruitment_ml/api/schemas.py` (descripción de `days_remaining_to_target`) | «GAP-01: Laravel todavía no puede producirla» | GAP-01 resuelto técnicamente desde la Fase 16 | **No se tocó** (runtime fuera del alcance de F23). Deuda de texto que sigue registrada; en PowerDesigner GAP-01 figura resuelto |
+
 ## 2. Por verificar antes de tocar nada
 
 | Documento | Qué revisar |
