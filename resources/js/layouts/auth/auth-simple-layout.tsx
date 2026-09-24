@@ -38,7 +38,9 @@ export default function AuthSimpleLayout({
 }: AuthLayoutProps) {
     return (
         <div className="bg-background min-h-svh lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
-            <div className="flex min-h-svh flex-col justify-center px-6 py-10 sm:px-10 lg:min-h-0 lg:px-14">
+            {/* El formulario es el contenido principal: sin `main`, un lector
+                de pantalla no tenía a dónde saltar en estas cinco pantallas. */}
+            <main className="flex min-h-svh flex-col justify-center px-6 py-10 sm:px-10 lg:min-h-0 lg:px-14">
                 <div className="mx-auto w-full max-w-sm space-y-8">
                     <div className="space-y-6">
                         <Link
@@ -67,7 +69,7 @@ export default function AuthSimpleLayout({
 
                     {children}
                 </div>
-            </div>
+            </main>
 
             <aside className="bg-sidebar text-sidebar-foreground hidden flex-col justify-between px-14 py-14 lg:flex">
                 <div className="space-y-10">

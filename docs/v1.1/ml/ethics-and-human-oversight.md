@@ -72,6 +72,8 @@ Estimar el riesgo de demora de un **proceso** no tiene ese problema. El sujeto d
 - el aviso de que **no evalúa personas**;
 - la versión del modelo y de los umbrales.
 
+> **Nota de evolución (hotfix final de la Fase 21, 23/09/2026).** Este rotulado es una **propuesta condicionada a la aprobación de RF-29**, que sigue pendiente. La tarjeta experimental implementada en la Fase 16 lleva la etiqueta «Experimental», dice que estima el proceso y no a las personas, que el modelo se entrenó con datos sintéticos y que la decisión es humana, pero **no muestra incertidumbre**, porque el contrato implementado no la tiene. Si RF-29 se aprueba, cumplir o reformular ese punto es una decisión del equipo.
+
 Texto permitido para la explicación: **«Factores operacionales asociados a la estimación de riesgo»**.
 Texto prohibido: cualquier formulación que sugiera que un candidato es mejor, peor, apto o no apto.
 

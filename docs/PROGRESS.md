@@ -1,8 +1,32 @@
 # Progreso del proyecto
 
-Última actualización: 2026-09-13 · Rama actual: `release/qa-final`
+Última actualización: 2026-09-23 (hotfix documental de la Fase 21).
 
-## Fases
+> Hasta el 23/09/2026 esta cabecera decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
+
+## Estado de v1.1
+
+`main` sigue siendo la v1.0 académica (`4563c69`, tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1. `develop` = `origin/develop` = `a316c07`.
+
+| Fase | Contenido | Estado | Merge en `develop` | Detalle |
+|---|---|---|---|---|
+| 13 | Gobierno de v1.1 | ✅ Integrada | `95c5b8b` | `docs/v1.1/phase-13-master-plan.md` |
+| 14 | Definición del experimento de ML | ✅ Integrada | `5957fd4` | `docs/v1.1/phase-14-ml-definition.md` |
+| 14.5 | Gobierno multiagente | ✅ Integrada | `d02cbc9` | `docs/v1.1/multi-agent-workflow.md` |
+| 15 | Servicio ML: datos sintéticos, entrenamiento, FastAPI experimental | ✅ Integrada | `485f0e1` | `docs/v1.1/phase-15-closeout.md` |
+| 16 | Integración Laravel ↔ FastAPI (GAP-01 resuelto técnicamente) | ✅ Integrada | `e3e7540` | `docs/v1.1/phase-16-laravel-ml-integration.md` |
+| 17 | Validación ML y regresión integral | ✅ Integrada | `0d2ce42` | `docs/v1.1/phase-17-ml-validation.md` |
+| 18 | Rediseño del frontend | ✅ Integrada | `11832ac` | `docs/v1.1/phase-18-frontend-redesign.md` |
+| 19 | Animaciones y microinteracciones | ✅ Integrada | `67a88a6` | `docs/v1.1/phase-19-animations.md` |
+| 20 | Experiencia 3D con CSS 3D (solo portada) | ✅ Cerrada e integrada | `a316c07` | `docs/v1.1/phase-20-3d-experience.md` |
+| 21 | QA visual, accesibilidad y responsive | 🟡 Implementada en `feature/phase-21-visual-qa`, auditada técnicamente en verde; **pendiente de reauditoría del hotfix documental y de integración** | — | `docs/v1.1/phase-21-visual-qa.md` |
+| 22 | UML y PowerDesigner de v1.1 | ⬜ No iniciada | — | — |
+
+**RF-29** está implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, no validado institucionalmente ni autorizado para producción; no selecciona ni descarta a nadie y no cambia RF-23. RF-28, RF-29 y los RNF nuevos (incluido RNF-C) siguen siendo **candidatos** (`docs/v1.1/scope-preliminary.md`, decisión 11 y preguntas 12–13).
+
+Las entradas por fase de v1.1 que siguen al final de este documento empiezan en la Fase 18; las Fases 13 a 17 se documentaron en sus propios archivos, enlazados en la tabla.
+
+## Fases (v1.0)
 
 | Fase | Estado |
 |---|---|
@@ -114,4 +138,17 @@ Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempre
 - **Gobierno:** ADR-003 y RNF-C seguían «pendiente de decisión»; se anotaron sin reescribir su historia. La promoción formal de RNF-C sigue siendo decisión del equipo.
 - **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 36 pruebas de componente · `tsc` sin errores · `npm run build` correcto · Cypress 19 specs / 77 pruebas · 0 desbordes horizontales.
 - **Detalle:** `docs/v1.1/phase-20-3d-experience.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
+
+## v1.1 — Fase 21: QA visual, accesibilidad, responsive y pulido final
+
+- **Rama:** `feature/phase-21-visual-qa`, desde `develop` en `a316c07` (cierre de la Fase 20).
+- **Alcance:** auditoría y corrección del frontend consolidado tras las Fases 18 a 20, sin rediseño ni funciones nuevas. 35 rutas y las sesiones de evaluación de los seis perfiles, en claro y oscuro, a 1440/1280/1024/768/390/320 px, con teclado, movimiento reducido y estados provocados (rechazo, errores, 2FA real).
+- **Defectos corregidos:** alertas destructivas ilegibles en claro (≈ 1:1, **alta**; afectaba al motivo de rechazo de RF-04); rojo destructivo en oscuro por debajo de 4.5:1 como botón y como texto de error; pantallas de acceso sin `main`; cabecera pública desbordada a 320 px (WCAG 1.4.10); franja visible de los códigos de recuperación plegados (regresión de la Fase 19); enlace de salto de 22 px; botones de 2FA fuera de su tarjeta a 1024 px; desplazamiento suave que ignoraba el movimiento reducido.
+- **Aceptado con evidencia:** animación de ancho de la barra lateral (0 cuadros de 50 ms o más); 27 objetivos pequeños que cumplen WCAG 2.5.8 por espaciado. **Pasan a F24/F25:** lector de pantalla real y rendimiento en equipo modesto.
+- **Gobierno:** RNF-C queda como propuesta (pregunta 13 de `scope-preliminary.md`), no aprobada; skill `recruitment-3d-experience` actualizada a «implementada y acotada»; ~~`CLAUDE.md` sin tocar hasta la integración en `main`~~ *(decisión inicial de la fase, ya no vigente: el hotfix documental del 23/09/2026 corrigió `CLAUDE.md` al estado real a pedido de la auditoría de Codex)*.
+- **Sin cambios** en backend, reglas de negocio, RF, rutas, contratos de API, modelos, Policies, migraciones ni servicio ML. No se adelantó la Fase 22.
+- **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 42 pruebas de componente · `tsc` sin errores · `npm run build` correcto · Cypress 20 specs / 84 pruebas · 0 desbordes horizontales.
+- **Detalle y evidencia:** `docs/v1.1/phase-21-visual-qa.md` y `docs/v1.1/phase-21-screenshots/`.
+- **Auditoría de Codex:** técnicamente en verde; pidió un hotfix documental (`CLAUDE.md` desactualizado, redacción de WebGL en la skill 3D, cifra del CSS). Hecho el 23/09/2026 en la misma rama, solo documentación y skills. La reauditoría pidió un hotfix final (estado vigente en `scope-preliminary.md`, contrato real en la skill `ml-risk-service`, esta entrada), también solo documental. **La fase no está cerrada** hasta la nueva reauditoría.
 - **Sin `push`, `merge`, *tag* ni *release*.**

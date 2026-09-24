@@ -4,16 +4,25 @@
 
 > **Actualización del 20 de septiembre de 2026 (Fase 14).** El equipo aprobó doce decisiones sobre el **experimento de ML**, pero **ningún requerimiento**: RF-28 a RF-31 y los RNF **siguen siendo candidatos** y no entran al baseline de v1.1 (decisión 11). Se añadió la brecha `GAP-01` —necesidad de un plazo operacional explícito, aprobada conceptualmente y sin implementar— y cinco RNF candidatos con numeración provisional. Detalle en [`ml/requirements-and-traceability-plan.md`](ml/requirements-and-traceability-plan.md); registro de decisiones en [`phase-14-ml-definition.md` §4](phase-14-ml-definition.md).
 
+> **Estado vigente (23/09/2026, hotfix final de la Fase 21).** Este documento nació en la Fase 13 como fotografía preliminar y se conserva así: sus secciones 1 y 4 describen el repositorio **del 19/09/2026** y se anotan en lugar de reescribirse. Lo que es cierto hoy:
+>
+> - `main` permanece en la **v1.0 académica** (`4563c69`; tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1.
+> - `develop` (`a316c07`) integra las **Fases 13 a 20**. La Fase 21 está implementada en `feature/phase-21-visual-qa` y **pendiente de cierre**; la Fase 22 **no se inició**.
+> - El **servicio FastAPI existe** (Fase 15) y la **integración Laravel ↔ FastAPI existe** (Fase 16, validada en pruebas en la Fase 17). Ambos son **experimentales**: validados técnicamente con datos sintéticos, no validados institucionalmente ni autorizados para producción.
+> - **RF-29** está implementado experimentalmente y **sigue siendo candidato**; **RF-28** sigue siendo candidato; **RNF-C** sigue siendo **propuesta**. Nada de eso cambia RF-23: la decisión final es humana.
+>
+> El estado por fase se mantiene en [`../PROGRESS.md`](../PROGRESS.md) y en `CLAUDE.md`.
+
 Leyenda:
 
 - **Verificado** — comprobado en el repositorio o en una ejecución real.
 - **Propuesta** — idea del equipo, aún sin decisión.
 - **Pendiente de decisión** — requiere una decisión explícita antes de cualquier implementación.
 
-## 1. Hechos verificados (línea base de v1.1)
+## 1. Hechos verificados (línea base de v1.1, fotografía de la Fase 13 al 19/09/2026)
 
 - RF-01 a RF-27 están implementados y trazados; su significado no cambia en v1.1.
-- `main` y `develop` contienen el mismo código publicado; `v1.0.0-academic` marca el release académico.
+- ~~`main` y `develop` contienen el mismo código publicado~~; `v1.0.0-academic` marca el release académico. *Histórico: cierto el 19/09/2026; dejó de serlo al integrar la Fase 13 solo en `develop`. Hoy `main` sigue en v1.0 y `develop` integra F13–F20 (ver «Estado vigente» arriba).*
 - Última ejecución registrada de PHPUnit en v1.0: 244 pruebas, 236 aprobadas, 8 omitidas, 0 fallidas. Última ejecución registrada de Cypress: 14 especificaciones, 43 pruebas, 43 aprobadas. **No se reejecutaron en la Fase 13.**
 - El entorno es Docker (Laravel 13 / PHP 8.4, PostgreSQL 17, Redis 7) y CI ejecuta la suite en GitHub Actions.
 - El sistema no toma ninguna decisión automática sobre personas.
@@ -25,7 +34,7 @@ Numeración **provisional**: estos identificadores solo se fijan cuando el equip
 | Candidato | Descripción | Estado | Riesgo principal |
 |---|---|---|---|
 | RF-28 (cand.) | Panel operativo de seguimiento de convocatorias: etapas, tiempos y cuellos de botella, sin datos de personas | Propuesta | Puede confundirse con evaluación de candidatos si el diseño no es explícito |
-| RF-29 (cand.) | Estimación informativa de riesgo de demora de una convocatoria | Pendiente de decisión | Depende por completo de `ml-feasibility.md`; sin no-go superado, no existe. **Fase 14:** especificado en detalle y **bloqueado** por `ML-DECISION-01` (semántica del plazo objetivo) |
+| RF-29 (cand.) | Estimación informativa de riesgo de demora de una convocatoria | ~~Pendiente de decisión~~ Implementado e integrado **experimentalmente** (Fases 15–17): validado técnicamente con datos sintéticos, no validado institucionalmente ni autorizado para producción. **Sigue siendo candidato** (decisión 11) | Depende por completo de `ml-feasibility.md`; sin no-go superado, no existe. **Fase 14:** especificado en detalle y ~~**bloqueado** por `ML-DECISION-01` (semántica del plazo objetivo)~~ desbloqueado: `ML-DECISION-01` se resolvió el 20/09/2026 y `GAP-01` se resolvió técnicamente en la Fase 16 |
 | RF-30 (cand.) | Exportación de reportes operativos del proceso (PDF/CSV) para el informe académico | Propuesta | Riesgo de incluir datos personales si no se filtra por diseño |
 | RF-31 (cand.) | Portal público de vacantes con presentación visual mejorada | Propuesta | Alcance visual que puede desbordar hacia rediseño general |
 
@@ -40,11 +49,11 @@ Numeración **provisional**: estos identificadores solo se fijan cuando el equip
 | RNF-C (cand.) | Experiencia 3D progresiva en pantallas públicas | ~~Pendiente de decisión~~ Implementada en la Fase 20 por encargo del equipo, sin dependencias nuevas; su promoción formal al baseline sigue pendiente (ver ADR-003) |
 | RNF-D (cand.) | Observabilidad del proceso: métricas operativas y registro estructurado | Propuesta |
 
-## 4. Arquitectura propuesta
+## 4. Arquitectura propuesta (Fase 13; implementada después en las Fases 15 a 17)
 
 - **Laravel sigue siendo el sistema de registro.** Toda decisión, estado y dato de negocio vive en PostgreSQL bajo el control de Laravel.
-- **FastAPI, si llega a existir, es un servicio de inferencia opcional y sin estado**: sin acceso a la base principal, sin conocimiento del dominio, sin capacidad de escribir. Laravel funciona completo si el servicio no responde.
-- No hay integración Laravel–Python aprobada. No se ha escrito ni un cliente HTTP.
+- **FastAPI~~, si llega a existir,~~ es un servicio de inferencia opcional y sin estado**: sin acceso a la base principal, sin conocimiento del dominio, sin capacidad de escribir. Laravel funciona completo si el servicio no responde. *El servicio existe desde la Fase 15 y se construyó con estas condiciones.*
+- ~~No hay integración Laravel–Python aprobada. No se ha escrito ni un cliente HTTP.~~ *Histórico (Fase 13). La Fase 16 escribió el cliente HTTP (`app/Services/Ml/MlRiskClient.php`) e integró Laravel ↔ FastAPI de forma experimental; la Fase 17 la validó en entorno de pruebas. Detalle en [`phase-16-laravel-ml-integration.md`](phase-16-laravel-ml-integration.md) y [`phase-17-ml-validation.md`](phase-17-ml-validation.md).*
 
 ## 5. Advertencia sobre datos
 
@@ -79,8 +88,9 @@ Ninguna implementación de v1.1 debe comenzar antes de responder 1 y 6.
 7. ~~`ML-DECISION-01` — fuente y semántica de `target_completion_at`~~ → **Resuelta el 20/09/2026** (decisión 3): `required_by` descartado; plazo explícito aprobado conceptualmente; implementación en `GAP-01`.
 8. ~~Metas de precision y recall~~ → **Política aprobada** (decisión 8); las **cifras** se determinan experimentalmente en la Fase 15 y se documentan.
 9. ~~Contrato de features y estrategia de dataset~~ → **Aprobados** (decisiones 4 y 9).
-10. **¿Se autoriza, por separado, crear código Python e instalar dependencias en la Fase 15?** → **PENDIENTE.** Es la única condición que falta del gate científico.
-11. **¿Cuándo y cómo se resuelve `GAP-01`?** → **PENDIENTE.** Bloquea la integración del modelo en Laravel, aunque no el experimento.
+10. ~~**¿Se autoriza, por separado, crear código Python e instalar dependencias en la Fase 15?** → **PENDIENTE.** Es la única condición que falta del gate científico.~~ → **Superada:** la Fase 15 se ejecutó por encargo del equipo y se cerró el 21/09/2026 (`phase-15-closeout.md`). *Anotado en el hotfix documental de la Fase 21.*
+11. ~~**¿Cuándo y cómo se resuelve `GAP-01`?** → **PENDIENTE.** Bloquea la integración del modelo en Laravel, aunque no el experimento.~~ → **Resuelta técnicamente en la Fase 16:** `vacancies.target_completion_at` existe y `days_remaining_to_target` es computable. El modelo sigue siendo experimental (`phase-16-laravel-ml-integration.md` §2). *Anotado en el hotfix documental de la Fase 21.*
 12. **¿Pasan RF-28 y RF-29 al baseline de v1.1?** → **PENDIENTE.** La decisión 11 los mantiene como candidatos.
+13. **¿Pasa RNF-C al baseline de v1.1?** → **PENDIENTE — propuesta de la Fase 21 (23/09/2026).** La Fase 20 fue autorizada explícitamente por el equipo y la experiencia 3D está implementada, auditada e integrada, pero implementar no promueve un requisito: RF-29 también está integrado y sigue siendo candidato por la decisión 11. Se propone al equipo decidir RNF-C junto con RF-28 y RF-29.
 
 Las dos compuertas —científica y de integración— están detalladas en [`phase-14-ml-definition.md` §8](phase-14-ml-definition.md).

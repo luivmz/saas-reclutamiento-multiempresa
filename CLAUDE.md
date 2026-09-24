@@ -2,7 +2,7 @@
 
 Plataforma SaaS multiempresa para reclutamiento, evaluación y selección de personal. Caso de estudio: Colegio Andino de Huancayo. Proyecto académico de la Universidad Continental, curso Pruebas y Calidad de Software, NRC 28607, docente Dr. Maglioni Arana Caparachin. Integrantes: Coronacion Meza Fredy, Peña Arroyo Anthony y Vila Meza Luis Antonio.
 
-Stack real: Laravel 13 (PHP 8.4) + React 19 + TypeScript + Inertia 3 + Tailwind 4, PostgreSQL 17, Redis 7, PHPUnit, Cypress 15 y Docker Compose.
+Stack real: Laravel 13 (PHP 8.4) + React 19 + TypeScript + Inertia 3 + Tailwind 4, PostgreSQL 17, Redis 7, PHPUnit, Cypress 15 y Docker Compose. En `develop` (v1.1) se suma el servicio experimental `ml-service/`: Python, scikit-learn y FastAPI, con `pytest`.
 
 ## Antes de cambiar cualquier cosa
 
@@ -14,8 +14,8 @@ Stack real: Laravel 13 (PHP 8.4) + React 19 + TypeScript + Inertia 3 + Tailwind 
 | `laravel-saas-quality` | Backend Laravel: controladores, servicios, Policies, migraciones, pruebas |
 | `academic-traceability` | Documentación, trazabilidad RF y entregables del curso |
 | `powerdesigner-uml` | Diagramas UML/PlantUML derivados del código real |
-| `ml-risk-service` | Diseño del servicio de riesgo operacional (aún **no implementado**) |
-| `recruitment-3d-experience` | 3D público y progresivo (aún **no implementado**) |
+| `ml-risk-service` | Servicio de riesgo operacional (RF-29): **implementado en `develop` como experimental** (Fases 15–17); marco, fronteras y evidencia exigida |
+| `recruitment-3d-experience` | 3D público y progresivo: **implementado y acotado** a la portada con CSS 3D (Fase 20); condiciones para ampliarlo |
 
 Skills externas instaladas (ver `PROVENANCE.md` de cada una): `frontend-design`, `animate` y `reviewing-a11y`.
 
@@ -24,7 +24,7 @@ Skills externas instaladas (ver `PROVENANCE.md` de cada una): `frontend-design`,
 1. **RF-01 a RF-27 conservan su número y su significado.** No se renumeran, eliminan ni reinterpretan.
 2. **El sistema nunca selecciona, descarta ni contrata automáticamente.** El ranking calcula, ordena y compara; nada más.
 3. **La decisión final pertenece al Aprobador/Dirección**, con confirmación humana explícita y justificación (RF-23).
-4. **Cualquier ML futuro será informativo y operacional**, sobre el proceso, nunca evaluando, puntuando ni clasificando personas.
+4. **El ML es informativo y operacional**, sobre el proceso, nunca evaluando, puntuando ni clasificando personas. Vale para el servicio actual (RF-29) y para cualquier ML futuro.
 5. **Se preservan la multiempresa (`organization_id`), las Policies, los roles y las pruebas cross-tenant.**
 6. **Se preserva la auditoría segura y de solo inserción** (`AuditLogger` + trigger `audit_logs_append_only`).
 7. **Solo datos ficticios.** Nunca datos personales reales ni PII.
@@ -47,24 +47,57 @@ No dupliques estos documentos: enlázalos.
 | Suite E2E | `docs/testing/cypress-e2e.md` |
 | Usuarios demo ficticios | `docs/demo-users.md` |
 | Informe académico (14 capítulos) e informes de diagramas | `docs/final-report/` |
-| Planificación v1.1 | `docs/v1.1/` |
+| Planificación y fases de v1.1 (F13–F21) | `docs/v1.1/` — cada fase en su `phase-*.md` |
+| Divergencias documentales entre v1.0 y v1.1 | `docs/v1.1/documentation-update-map.md` |
+| Candidatos RF-28+, RNF y decisiones pendientes | `docs/v1.1/scope-preliminary.md` |
 
 ## Comandos habituales
 
-Todo corre en Docker; no hay PHP ni Node locales del proyecto.
+Laravel y el frontend corren en Docker; no hay PHP ni Node locales del proyecto. El servicio ML es la excepción (ver abajo).
 
 ```
 docker compose up -d --wait                                   # levantar
-docker compose exec app php artisan test                      # PHPUnit (244 pruebas)
+docker compose exec app php artisan test                      # PHPUnit (v1.0: 244 pruebas; develop: 408 + 8 omitidas)
 docker compose exec app npm run build                         # compilar frontend
 docker compose exec app npx tsc --noEmit                      # tipos
+docker compose exec app npx vp test --run                     # pruebas de componente (develop)
 npm run cy:run                                                # Cypress (entorno E2E aislado)
 docker compose exec app php artisan migrate:fresh --seed --force   # datos demo
 ```
 
+El servicio ML **no** corre en Docker Compose: se ejecuta desde `ml-service/` con su entorno virtual (`cd ml-service` y `.venv/Scripts/python.exe -m pytest`; el servidor, con `uvicorn` en el puerto 8008). Laravel solo lo llama si `ML_SERVICE_ENABLED=true`, y sin servicio la página funciona igual. Detalle en `docs/v1.1/phase-16-laravel-ml-integration.md`.
+
 ## Estado actual
 
-v1.0 está publicada: `main` y `develop` tienen el mismo contenido y el tag `v1.0.0-academic` marca el release académico. La Fase 13 abre v1.1 y es **solo gobierno y documentación**: no hay ML, FastAPI, rediseño de frontend, motion, 3D ni UML definitivo aprobados. RF-28 y los RNF nuevos existen únicamente como **candidatos** en `docs/v1.1/scope-preliminary.md`.
+*Verificado con Git el 23/09/2026. Antes de actuar, vuelve a comprobarlo: `git log --oneline -1 main develop` y `docs/PROGRESS.md`.*
+
+### `main` — v1.0 académica (publicada)
+
+- `main` sigue siendo la **v1.0 académica** (`4563c69`) y **no contiene v1.1**. El tag `v1.0.0-academic` apunta a `9a946c2` y no se mueve.
+- RF-01 a RF-27 son la línea base v1.0. Sus documentos de cierre (`docs/final-report/`) siguen siendo correctos **para v1.0** y no se reescriben.
+
+### `develop` — v1.1 en curso (integrado hasta la Fase 20)
+
+`develop` = `origin/develop` = `a316c07`. **`main` y `develop` ya no tienen el mismo contenido**: `develop` integra las Fases 13 a 20.
+
+| Fase | Contenido | Estado |
+|---|---|---|
+| 13 · 14 · 14.5 | Gobierno de v1.1, definición del experimento de ML, flujo multiagente | Integradas |
+| 15 | `ml-service/`: dataset sintético, entrenamiento y **servicio FastAPI experimental** (`/health`, `/v1/model-info`, `/v1/predict`) | Integrada |
+| 16 | **Integración Laravel ↔ FastAPI**: `vacancies.target_completion_at` (GAP-01 resuelto técnicamente), cliente HTTP con validación y *fallback*, tarjeta de riesgo operacional | Integrada |
+| 17 | Validación ML y regresión integral | Integrada |
+| 18 · 19 | **Rediseño del frontend** y **motion** (sin biblioteca nueva, con movimiento reducido) | Integradas |
+| 20 | **Experiencia 3D con CSS 3D**, solo en la portada pública | Integrada |
+| 21 | QA visual, accesibilidad y responsive | **Implementada** en `feature/phase-21-visual-qa` (commit técnico `1b3d27d`), auditada técnicamente en verde; **pendiente de reauditoría del hotfix documental y de integración**. No está en `develop` |
+| 22 | UML y PowerDesigner de v1.1 | **No iniciada** |
+
+**ML (RF-29).** Implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, **no** validado institucionalmente ni autorizado para producción. Estima el riesgo de demora del **proceso**; no puntúa, ordena, selecciona ni descarta personas, no toca el ranking y no cambia RF-23. Contrato científico congelado, no se modifica: *freeze* `9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2`, *threshold* `0.1679418172266036`, Logistic Regression `C=10`, `class_weight=None`, `StandardScaler`, sin calibración.
+
+**3D.** Una sola superficie —la tarjeta del expediente de la portada pública—, con **CSS 3D** (perspectiva y capas de DOM): sin WebGL, Three.js, React Three Fiber ni Spline, y sin dependencias nuevas. Decorativa, fuera de todo flujo operativo, con póster de respaldo (movimiento reducido, pantallas de menos de 1024 px, ahorro de datos, equipos modestos o fallo del fragmento). **No se amplía sin una nueva decisión del equipo** (ADR-003 y skill `recruitment-3d-experience`).
+
+**Requisitos.** RF-28, RF-29 y los RNF nuevos (RNF-A, RNF-B, RNF-C…) siguen siendo **candidatos** en `docs/v1.1/scope-preliminary.md`: implementar algo no lo promueve al baseline (decisión 11). La promoción de RF-28, RF-29 y RNF-C es una decisión pendiente del equipo (preguntas 12 y 13).
+
+> Historia: hasta el hotfix documental de la Fase 21 esta sección decía que `main` y `develop` tenían el mismo contenido y que la Fase 13 era solo gobierno, sin ML, FastAPI, rediseño, motion ni 3D. Era cierto al abrir v1.1 (19/09/2026); dejó de serlo al integrarse las Fases 13 a 20.
 
 ## Permisos
 
