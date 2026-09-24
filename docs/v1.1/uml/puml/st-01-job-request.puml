@@ -1,0 +1,14 @@
+@startuml st-01-job-request
+' ST-01 · Estados del requerimiento (JobRequestStatus). Especificación: ../state-diagrams.md
+[*] --> borrador : register (Área solicitante, RF-01)
+borrador --> enviado : submit (dueño)
+enviado --> observado : observe [comentario] (RR. HH., RF-02)
+observado --> enviado : submit tras correct (dueño, RF-02)
+enviado --> validado : validate (RR. HH., RF-02)
+validado --> aprobado : approve (Aprobador, RF-03)
+validado --> rechazado : reject [motivo] / notificar al solicitante (RF-03, RF-04)
+aprobado --> [*]
+rechazado --> [*]
+note right of borrador : editable en borrador y observado (isEditable)
+note right of aprobado : habilita crear UNA vacante
+@enduml

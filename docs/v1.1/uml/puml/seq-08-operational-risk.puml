@@ -1,0 +1,52 @@
+@startuml seq-08-operational-risk
+' SEQ-08 · Consultar riesgo operacional (RF-29) <<experimental>>. Especificación: ../sequence-diagrams.md
+actor "RR. HH. / Aprobador" as U
+participant "OperationalRiskCard\n(vacancies/show)" as UI
+participant VacancyOperationalRiskController as C
+participant VacancyPolicy as P
+participant OperationalRiskService as S
+participant OperationalRiskFeatureBuilder as FB
+participant MlRiskClient as MC
+database PostgreSQL as DB
+box "Servicio de inferencia <<external service>> <<experimental>>"
+  participant "FastAPI /v1/predict" as API
+  participant "Predictor + modelo congelado" as M
+end box
+
+U -> UI : abre el detalle de la vacante
+UI -> C : GET vacantes/{id}/riesgo-operacional
+C -> P : viewOperationalRisk(user, vacancy)
+P --> C : rrhh o aprobador de la misma organización
+C -> S : assess(vacancy)
+S -> S : outOfScopeReason() (7 motivos)
+alt fuera de alcance
+  S --> C : descriptive(motivo) — sin llamar al servicio
+else elegible
+  S -> FB : build(vacancy, checkpoint = día siguiente a closes_at)
+  FB -> DB : conteos y días hasta el checkpoint
+  FB --> S : 15 features enteras
+  S -> MC : predict(features)
+  alt ML_SERVICE_ENABLED = false
+    MC --> S : descriptive(service_disabled)
+  else habilitado
+    MC -> API : POST /v1/predict + X-Internal-Token\n{15 features; sin IDs ni PII}
+    API -> API : token; PredictionRequest (extra=forbid, strict)
+    API -> M : predecir
+    M --> API : probabilidad
+    API --> MC : risk_score, risk_flag, threshold,\nmodel_version, freeze_fingerprint, status
+    MC -> MC : validar tipos, rango, coherencia de risk_flag,\nthreshold y freeze congelados
+    alt timeout | conexión | 503 | 422 | 5xx | JSON inválido | contrato incompatible
+      MC --> S : unavailable(motivo)
+    else válida
+      MC --> S : predictive(...)
+    end
+  end
+end
+C --> UI : JSON (disponibilidad, %, señal, mensaje,\nis_experimental, measures: proceso, decision_is_human)
+UI -> U : tarjeta «Experimental»
+note over S, M
+  Estima el PROCESO, no a las personas. Nada se persiste.
+  Ningún mensaje hacia ranking, comparación ni decisión final.
+  La respuesta no incluye incertidumbre.
+end note
+@enduml

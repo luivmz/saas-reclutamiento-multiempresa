@@ -1,0 +1,11 @@
+@startuml st-02-vacancy
+' ST-02 · Estados de la vacante (VacancyStatus). Especificación: ../state-diagrams.md
+[*] --> borrador : create [requerimiento aprobado y sin vacante] (RR. HH., RF-05, RF-06)
+borrador --> publicada : publish [VacancyValidator sin observaciones] (RR. HH., RF-07)
+publicada --> cerrada : close [decisión RF-23 y selección RF-24] / closure_type = con_seleccion (RR. HH., RF-25)
+cerrada --> [*]
+note right of cerrada
+  'desierta' existe en VacancyClosureType
+  pero no tiene flujo implementado (A-30).
+end note
+@enduml

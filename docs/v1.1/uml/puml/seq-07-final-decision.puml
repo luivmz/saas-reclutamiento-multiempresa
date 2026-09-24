@@ -1,0 +1,39 @@
+@startuml seq-07-final-decision
+' SEQ-07 · Registrar decisión final (RF-23) <<human decision>>. Especificación: ../sequence-diagrams.md
+actor "Aprobador / Dirección" as APR
+participant "UI selection/comparison" as UI
+participant FinalDecisionController as C
+participant FinalDecisionRequest as R
+participant VacancyPolicy as P
+participant FinalDecisionService as S
+participant VacancyRankingBuilder as B
+database PostgreSQL as DB
+participant AuditLogger as A
+
+APR -> UI : elige finalista, justificación, confirmación humana
+UI -> C : POST vacantes/{id}/decision
+C -> R : rules(): application_id, justification (20..2000),\nhuman_confirmation (accepted)
+R -> P : decide(user, vacancy)
+P --> R : SOLO aprobador de la misma organización
+C -> S : decide(vacancy, approver, applicationId, justification)
+group critical DB::transaction
+  S -> DB : Vacancy lockForUpdate
+  alt no publicada/cerrada | ya decidida | postulación ajena | no finalista
+    S --> C : BusinessRuleException
+  else
+    S -> B : forVacancy(vacancy) — solo instantánea
+    alt sin resultados completos
+      S --> C : BusinessRuleException
+    else
+      S -> DB : SelectionDecision (elegida, decisor, justificación,\nselected_position, selected_score, ranked_candidates)
+      S -> A : record(SelectionDecisionRecorded)
+    end
+  end
+end
+C --> UI : redirección + toast
+note over APR, S
+  La persona decide; puede no ser la primera del ranking.
+  No cambia el estado de ninguna postulación (RF-24/RF-25 lo hacen).
+  Única e inmutable. Sin ningún mensaje al servicio de riesgo operacional.
+end note
+@enduml
