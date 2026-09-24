@@ -246,3 +246,5 @@ La auditoría de Codex dio la fase por **técnicamente en verde** (Laravel 408 +
 | **LOW-02** · Cifra del CSS | 99.86 kB / 16.58 kB gzip (§19) |
 
 También se anotaron, sin borrar historia, las entradas desactualizadas de `scope-preliminary.md` (RF-29 y preguntas 10 y 11) y se añadió a `PROGRESS.md` la tabla de estado de v1.1. RF-29 y RNF-C siguen siendo candidatos. **La Fase 21 no está cerrada** hasta que Codex reaudite este hotfix, y la Fase 22 no se inició.
+
+**Hotfix final (23/09/2026).** La reauditoría encontró tres restos más, corregidos también solo en documentación: `scope-preliminary.md` separa ahora la fotografía de la Fase 13 del estado vigente (MEDIUM-01); la skill `ml-risk-service` describe el contrato real de `schemas.py` —15 features enteras, sin identificadores ni PII, seis campos de respuesta, sin incertidumbre— (MEDIUM-02); y la frase de `PROGRESS.md` sobre no tocar `CLAUDE.md` queda marcada como decisión superada (LOW-01). Detalle en [`documentation-update-map.md`](documentation-update-map.md).

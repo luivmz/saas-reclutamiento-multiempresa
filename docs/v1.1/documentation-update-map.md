@@ -66,6 +66,20 @@ La auditoría de Codex encontró que `CLAUDE.md` —la fuente de contexto común
 
 **Sin cambios de decisión:** RF-29 y RNF-C siguen siendo candidatos; la promoción al baseline sigue siendo decisión del equipo (preguntas 12 y 13 de `scope-preliminary.md`).
 
+### Hotfix documental final de la Fase 21 (23/09/2026)
+
+La reauditoría de Codex encontró tres restos del estado anterior. Se corrigieron sin borrar historia:
+
+| Hallazgo | Documento | Qué decía | Acción tomada |
+|---|---|---|---|
+| **MEDIUM-01** | `scope-preliminary.md` §1 y §4 | «`main` y `develop` contienen el mismo código»; «FastAPI, si llega a existir…»; «No hay integración Laravel–Python aprobada. No se ha escrito ni un cliente HTTP» | Bloque **«Estado vigente»** al inicio (`main` = v1.0; `develop` = F13–F20; F21 pendiente de cierre; F22 sin iniciar; FastAPI e integración existen y son experimentales; RF-29 candidato; RNF-C propuesta). Las tres frases, **tachadas** y marcadas como historia de la Fase 13; §1 y §4 rotuladas como fotografía del 19/09/2026 |
+| **MEDIUM-02** | `.claude/skills/ml-risk-service/SKILL.md` | Contrato candidato: respuesta «con su incertidumbre», «incertidumbre visible», «solo identificadores internos» | Arquitectura, contrato e interfaz reescritos desde `ml-service/src/recruitment_ml/api/schemas.py` y el código de Laravel: **15 features enteras** con `extra="forbid"` y `strict=True`; **ningún identificador ni PII**; respuesta de **seis campos** (`risk_score`, `risk_flag`, `threshold`, `model_version`, `freeze_fingerprint`, `status`); **sin incertidumbre** en el contrato ni en la interfaz. Nota de historia con el texto anterior |
+| **MEDIUM-02** (arrastre) | `ml-feasibility.md` | §3 y §7 proponían `{valor, incertidumbre, model_version}` e «incertidumbre visible» | La nota de evolución inicial aclara que el contrato implementado difiere de esa propuesta y remite al vigente; el cuerpo, intacto |
+| Consistencia cruzada | `skills-catalog.md` · `ADR-001-ml-boundary.md` · `ml/ethics-and-human-oversight.md` | Catálogo: ML y 3D «no implementado». ADR-001: «el servicio, si existe… devuelve un valor con su incertidumbre». Ética §4: «la incertidumbre visible» como rotulado futuro | Catálogo tachado y anotado. ADR-001 y ética: nota de evolución, cuerpo intacto. En ética queda registrada la **diferencia real**: la tarjeta experimental no muestra incertidumbre; es un punto a decidir si RF-29 se aprueba |
+| **LOW-01** | `docs/PROGRESS.md`, entrada de la Fase 21 | «`CLAUDE.md` sin tocar hasta la integración en `main`» | Tachado y anotado como decisión inicial de la fase, **ya no vigente** desde el hotfix documental |
+
+Ningún cambio de runtime, contrato científico ni decisión: *freeze*, *threshold* y modelo intactos; RF-29 experimental y candidato; RF-23, decisión humana.
+
 ## 2. Por verificar antes de tocar nada
 
 | Documento | Qué revisar |

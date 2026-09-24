@@ -16,10 +16,10 @@ Escritas en esta fase, puramente declarativas (Markdown), sin scripts, sin red, 
 |---|---|---|
 | `project-guardian` | Compuerta previa a cualquier cambio: rama, alcance, contratos, pruebas y documentación | `SKILL.md`, `CHECKLIST.md` |
 | `laravel-saas-quality` | Patrón del backend multiempresa y su regresión obligatoria | `SKILL.md`, `PATTERNS.md` |
-| `ml-risk-service` | Marco del servicio de riesgo operacional (no implementado) | `SKILL.md`, `EVALUATION.md` |
+| `ml-risk-service` | Marco del servicio de riesgo operacional (~~no implementado~~ implementado como experimental en las Fases 15–17) | `SKILL.md`, `EVALUATION.md` |
 | `academic-traceability` | Trazabilidad RF ↔ código ↔ pruebas ↔ UML ↔ entorno ↔ Formato 09 | `SKILL.md` |
 | `powerdesigner-uml` | UML derivado del código real y su paso a PowerDesigner | `SKILL.md`, `POWERDESIGNER.md` |
-| `recruitment-3d-experience` | 3D público, progresivo y acotado (no implementado) | `SKILL.md`, `BUDGETS.md` |
+| `recruitment-3d-experience` | 3D público, progresivo y acotado (~~no implementado~~ implementado con CSS 3D en la Fase 20, solo en la portada) | `SKILL.md`, `BUDGETS.md` |
 
 ## 2. Skills externas instaladas
 

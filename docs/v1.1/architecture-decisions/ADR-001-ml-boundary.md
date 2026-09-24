@@ -4,6 +4,8 @@
 - **Fecha:** 19 de septiembre de 2026
 - **Contexto:** Fase 13, planificación de v1.1
 
+> **Nota de evolución (hotfix final de la Fase 21, 23/09/2026).** La decisión sigue vigente y no se reescribe. Lo que cambió: el servicio **existe** como experimento (Fases 15 a 17) y se construyó dentro de esta frontera. Una diferencia con el texto de abajo: la respuesta implementada **no incluye incertidumbre** —devuelve `risk_score`, `risk_flag`, `threshold`, `model_version`, `freeze_fingerprint` y `status`— y recibe 15 features operacionales enteras, sin identificadores ni PII. El contrato vigente está en la skill `ml-risk-service` y en `ml-service/src/recruitment_ml/api/schemas.py`.
+
 ## Contexto
 
 Se propone incorporar un componente de machine learning a la plataforma. El sistema gestiona procesos de reclutamiento: cualquier modelo mal encuadrado terminaría, directa o indirectamente, influyendo en decisiones sobre personas. El proyecto además no dispone de datos reales y no debe obtenerlos.
