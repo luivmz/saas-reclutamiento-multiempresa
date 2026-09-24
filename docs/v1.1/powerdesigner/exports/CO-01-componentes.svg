@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="474mm" xmlns="http://www.w3.org/2000/svg" height="408mm" version="1.1" viewBox="0 0 1795 1543" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <polygon fill="#ffffff" points="100,2 100,40 500,40 500,9 494,2" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="500" x2="494" y1="9" y2="9" stroke="#000000" stroke-width="1"/>
+   <line x1="494" x2="494" y1="9" y2="2" stroke="#000000" stroke-width="1"/>
+   <text x="300" y="19" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Navegador: lo sirve Laravel; sin servidor de frontend propio. La escena CSS 3D de la </text>
+   <text x="300" y="29" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">portada es presentación, no un componente.</text>
+   <polygon fill="#ffffff" points="1100,762 1100,826 1366,826 1366,772 1357,762" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="1366" x2="1357" y1="772" y2="772" stroke="#000000" stroke-width="1"/>
+   <line x1="1357" x2="1357" y1="772" y2="762" stroke="#000000" stroke-width="1"/>
+   <text x="1233" y="782" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Frontera RF-29: Riesgo operacional no depende de </text>
+   <text x="1233" y="792" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Cálculo de ranking ni de la decisión, ni ellos de él. 15 </text>
+   <text x="1233" y="802" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">features, sin IDs ni PII. Deshabilitado: descriptive_only; </text>
+   <text x="1233" y="812" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">sin respuesta válida: unavailable.</text>
+   <polygon fill="#ffffff" points="1473,436 1473,513 1793,513 1793,445 1784,436" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="1793" x2="1784" y1="445" y2="445" stroke="#000000" stroke-width="1"/>
+   <line x1="1784" x2="1784" y1="445" y2="436" stroke="#000000" stroke-width="1"/>
+   <text x="1633" y="462" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Contrato de /v1/predict. Petición: 15 features operacionales enteras </text>
+   <text x="1633" y="472" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">(extra=forbid, strict), sin candidate_id, vacancy_id, organization_id, </text>
+   <text x="1633" y="482" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">PII ni texto libre. Respuesta: risk_score, risk_flag, threshold, </text>
+   <text x="1633" y="492" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">model_version, freeze_fingerprint, status. Sin incertidumbre.</text>
+   <polygon fill="#ffffff" points="1500,1442 1500,1480 1766,1480 1766,1449 1760,1442" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="1766" x2="1760" y1="1449" y2="1449" stroke="#000000" stroke-width="1"/>
+   <line x1="1760" x2="1760" y1="1449" y2="1442" stroke="#000000" stroke-width="1"/>
+   <text x="1633" y="1459" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">training/ y synthetic/ generan el artefacto fuera de línea;</text>
+   <text x="1633" y="1469" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> no participan en la ejecución.</text>
+   <a target="_parent" xlink:href="#4080E46B-A59E-441B-BE5E-4485C478444C">
+      <polyline fill="none" points="140,209 290,370" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="278,363 290,370 284,358" stroke="#8080ff" stroke-width="1"/>
+      <text x="215" y="292" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#319A7ABD-FB5D-4B9E-AF9B-3A2B356AC1ED">
+      <polyline fill="none" points="508,209 663,370" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="651,364 663,370 657,358" stroke="#8080ff" stroke-width="1"/>
+      <text x="585" y="292" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#B9CCFA20-B214-4666-AE43-DB6AA836C590">
+      <polyline fill="none" points="459,553 310,392" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="322,399 310,392 316,404" stroke="#8080ff" stroke-width="1"/>
+      <text x="384" y="475" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">provee</text>
+   </a>
+   <a target="_parent" xlink:href="#20EE4EEF-9C7F-4B8C-96F7-98F34F651531">
+      <polyline fill="none" points="514,553 663,392" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="657,404 663,392 651,399" stroke="#8080ff" stroke-width="1"/>
+      <text x="588" y="475" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">provee</text>
+   </a>
+   <a target="_parent" xlink:href="#4C213493-2365-428C-8722-38DD569A0880">
+      <polyline fill="none" points="113,209 113,313" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="109,300 113,313 117,300" stroke="#8080ff" stroke-width="1"/>
+      <text x="113" y="264" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#773F3F09-A169-407C-8B9F-2AF7A8C1E111">
+      <polyline fill="none" points="435,609 164,767" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="173,757 164,767 177,763" stroke="#8080ff" stroke-width="1"/>
+      <text x="299" y="690" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#BD9AFFD2-CA31-4F6E-9EB1-ED9C24BE93D1">
+      <polyline fill="none" points="371,581 211,581" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="224,577 211,581 224,585" stroke="#8080ff" stroke-width="1"/>
+      <text x="291" y="576" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#12271BB3-88F4-4C23-98AF-001A17A576CA">
+      <polyline fill="none" points="486,609 486,767" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="482,753 486,767 490,753" stroke="#8080ff" stroke-width="1"/>
+      <text x="486" y="690" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#D65F485B-0519-4CA3-B6E0-737519AF700D">
+      <polyline fill="none" points="602,581 1141,581" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="1127,585 1141,581 1127,577" stroke="#8080ff" stroke-width="1"/>
+      <text x="871" y="576" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#98B2F806-DFB0-4694-9CD1-34C09048DD70">
+      <polyline fill="none" points="538,609 809,767" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="796,763 809,767 800,756" stroke="#8080ff" stroke-width="1"/>
+      <text x="674" y="690" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#F711D05F-7209-4E5A-815E-022FBC119FA6">
+      <polyline fill="none" points="602,581 756,581" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="743,585 756,581 743,577" stroke="#8080ff" stroke-width="1"/>
+      <text x="679" y="576" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#B81CA1BB-E877-4202-B466-251983CBCD2A">
+      <polyline fill="none" points="486,822 486,1007" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="482,993 486,1007 490,993" stroke="#8080ff" stroke-width="1"/>
+      <text x="486" y="917" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#870DFB12-738C-41B0-8A76-A57815D919A4">
+      <polyline fill="none" points="531,822 830,1007" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="817,1003 830,1007 821,996" stroke="#8080ff" stroke-width="1"/>
+      <text x="680" y="917" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#BB79DC6C-BD3D-4EF8-A86E-D2A07BAE03D0">
+      <polyline fill="none" points="442,822 157,1007" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="166,996 157,1007 171,1003" stroke="#8080ff" stroke-width="1"/>
+      <text x="300" y="917" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#5BF4E674-0661-4B80-9D7C-7530D4F08EDE">
+      <polyline fill="none" points="597,794 747,794" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="733,798 747,794 733,790" stroke="#8080ff" stroke-width="1"/>
+      <text x="671" y="790" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">instantánea en FinalDecisionService</text>
+   </a>
+   <a target="_parent" xlink:href="#74ACB697-1431-4E3F-BCE0-B49C323DF466">
+      <polyline fill="none" points="536,767 813,609" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="804,619 813,609 800,612" stroke="#8080ff" stroke-width="1"/>
+      <text x="675" y="690" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#555F9A26-9C43-4779-BB1F-0A96997600E0">
+      <polyline fill="none" points="155,609 829,1007" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="815,1003 829,1007 819,996" stroke="#8080ff" stroke-width="1"/>
+      <text x="492" y="810" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#F1D99213-9F62-462B-9F82-4900004D3669">
+      <polyline fill="none" points="815,822 535,1007" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="544,996 535,1007 548,1003" stroke="#8080ff" stroke-width="1"/>
+      <text x="675" y="917" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#4F500028-F39F-496E-9557-288F1620087F">
+      <polyline fill="none" points="1194,619 538,1007" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="547,996 538,1007 551,1003" stroke="#8080ff" stroke-width="1"/>
+      <text x="865" y="816" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">solo lectura</text>
+   </a>
+   <a target="_parent" xlink:href="#2A9707FD-114E-40EF-BF74-382A7F85B872">
+      <polyline fill="none" points="1326,581 1436,581" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="1422,585 1436,581 1422,577" stroke="#8080ff" stroke-width="1"/>
+      <text x="1381" y="576" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#A533E41D-13C2-4DE0-8E28-C812F0C26451">
+      <polyline fill="none" points="1611,767 1456,592" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="1468,599 1456,592 1462,604" stroke="#8080ff" stroke-width="1"/>
+      <text x="1533" y="682" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">provee</text>
+   </a>
+   <a target="_parent" xlink:href="#1E3DD5EA-CCA8-4295-B473-0688A129B682">
+      <polyline fill="none" points="1633,822 1633,1007" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="1629,993 1633,1007 1637,993" stroke="#8080ff" stroke-width="1"/>
+      <text x="1633" y="917" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#548227B4-63AE-4F7B-A516-BB8737ACAF88">
+      <polyline fill="none" points="1633,1062 1633,1242" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="1629,1229 1633,1242 1637,1229" stroke="#8080ff" stroke-width="1"/>
+      <text x="1633" y="1155" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#A965BFD2-4560-4224-9F1E-1969FB8ABF04">
+      <polyline fill="none" points="158,822 438,1007" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="425,1003 438,1007 429,996" stroke="#8080ff" stroke-width="1"/>
+      <text x="298" y="917" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#4E4ADCBF-4EEB-4B6C-BEB5-641043F76537">
+      <polyline fill="none" points="486,1062 486,1273" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="482,1260 486,1273 490,1260" stroke="#8080ff" stroke-width="1"/>
+      <text x="486" y="1170" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#F6F1F9C8-40F0-40D5-9CCB-A5534C8E826F">
+      <polyline fill="none" points="833,1062 511,1273" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="520,1263 511,1273 524,1269" stroke="#8080ff" stroke-width="1"/>
+      <text x="672" y="1170" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#D82922B5-F661-4C8B-B2E3-B6ECFBBF5972">
+      <polyline fill="none" points="113,1062 113,1273" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="109,1260 113,1273 117,1260" stroke="#8080ff" stroke-width="1"/>
+      <text x="113" y="1170" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">encola</text>
+   </a>
+   <a target="_parent" xlink:href="#80F04768-DDD3-417B-8B36-56F02ADD75ED">
+      <polyline fill="none" points="113,1487 113,1329" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="117,1342 113,1329 109,1342" stroke="#8080ff" stroke-width="1"/>
+      <text x="113" y="1410" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> </text>
+   </a>
+   <a target="_parent" xlink:href="#9197F998-C22E-42AE-8F7D-A1DCC0816E0F">
+      <polyline fill="none" points="156,1487 456,1329" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="446,1338 456,1329 442,1331" stroke="#8080ff" stroke-width="1"/>
+      <text x="305" y="1410" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">canal database</text>
+   </a>
+   <a target="_parent" xlink:href="#3E09EFD8-BEB6-4873-A14B-D8D99EC943D8">
+      <polyline fill="none" points="207,1514 417,1514" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="404,1518 417,1514 404,1510" stroke="#8080ff" stroke-width="1"/>
+      <text x="312" y="1510" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">canal mail</text>
+   </a>
+   <a target="_parent" xlink:href="#F6B5C8AC-2D25-46C4-A261-520B96DF2320">
+      <defs>
+         <linearGradient id="Gradient1" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="4" y="154" fill="url(#Gradient1)" width="218" height="54" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="205,161 205,158 218,158 218,172 205,172 205,169" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient2" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="201" y="161" fill="url(#Gradient2)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="205" x2="205" y1="164" y2="166" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient3" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="201" y="166" fill="url(#Gradient3)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="104" y="167" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Páginas Inertia (React 19 + TypeScript)</text>
+   </a>
+   <a target="_parent" xlink:href="#7968325B-B342-4330-A393-9E9CDEA27841">
+      <defs>
+         <linearGradient id="Gradient4" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="3" y="314" fill="url(#Gradient4)" width="220" height="54" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="206,321 206,318 219,318 219,332 206,332 206,329" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient5" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="202" y="321" fill="url(#Gradient5)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="206" x2="206" y1="324" y2="326" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient6" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="202" y="326" fill="url(#Gradient6)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="104" y="329" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Componentes compartidos (DataTable, </text>
+      <text x="104" y="339" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Section, ui/*)</text>
+   </a>
+   <a target="_parent" xlink:href="#AE5BFC0A-77B8-4F3E-8BA1-CE018E5702C2">
+      <defs>
+         <linearGradient id="Gradient7" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="400" y="154" fill="url(#Gradient7)" width="173" height="54" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="555,161 555,158 569,158 569,172 555,172 555,169" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient8" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="551" y="161" fill="url(#Gradient8)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="555" x2="555" y1="164" y2="166" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient9" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="551" y="166" fill="url(#Gradient9)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="477" y="167" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;experimental&gt;&gt;</text>
+      <text x="477" y="182" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Tarjeta de riesgo operacional</text>
+   </a>
+   <a target="_parent" xlink:href="#2470D21D-3128-41B0-AF83-8DE9CEED34B4">
+      <defs>
+         <linearGradient id="Gradient10" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="372" y="554" fill="url(#Gradient10)" width="229" height="54" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="584,561 584,558 597,558 597,572 584,572 584,569" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient11" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="580" y="561" fill="url(#Gradient11)" width="6" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="584" x2="584" y1="564" y2="566" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient12" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="580" y="566" fill="url(#Gradient12)" width="6" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="478" y="570" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Capa HTTP (rutas, middleware auth/role, </text>
+      <text x="478" y="580" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Form Requests, controladores, presenters, </text>
+      <text x="478" y="590" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">resources)</text>
+   </a>
+   <a target="_parent" xlink:href="#E6C09F61-65AD-40E0-B781-6D03608DE771">
+      <defs>
+         <linearGradient id="Gradient13" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="2" y="768" fill="url(#Gradient13)" width="222" height="53" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="207,774 207,772 220,772 220,785 207,785 207,783" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient14" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="203" y="774" fill="url(#Gradient14)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="207" x2="207" y1="777" y2="780" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient15" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="203" y="780" fill="url(#Gradient15)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="104" y="783" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Autorización y multiempresa (7 Policies, </text>
+      <text x="104" y="793" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">OrganizationScope)</text>
+   </a>
+   <a target="_parent" xlink:href="#A7A12A00-4B1F-4038-BEBF-E116775F48C7">
+      <defs>
+         <linearGradient id="Gradient16" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="17" y="554" fill="url(#Gradient16)" width="193" height="54" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="192,561 192,558 206,558 206,572 192,572 192,569" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient17" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="188" y="561" fill="url(#Gradient17)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="192" x2="192" y1="564" y2="566" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient18" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="188" y="566" fill="url(#Gradient18)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="104" y="567" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Cuenta y acceso (Fortify, passkeys)</text>
+   </a>
+   <a target="_parent" xlink:href="#37B4F5B5-D14A-4371-84F1-AE176DD0F85E">
+      <defs>
+         <linearGradient id="Gradient19" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="377" y="768" fill="url(#Gradient19)" width="219" height="53" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="578,774 578,772 592,772 592,785 578,785 578,783" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient20" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="574" y="774" fill="url(#Gradient20)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="578" x2="578" y1="777" y2="780" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient21" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="574" y="780" fill="url(#Gradient21)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="477" y="784" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Servicios de dominio (requerimientos, </text>
+      <text x="477" y="794" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">vacantes, postulaciones, evaluaciones, </text>
+      <text x="477" y="804" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">selección)</text>
+   </a>
+   <a target="_parent" xlink:href="#9908976B-8772-423F-A367-6F845B66DABA">
+      <defs>
+         <linearGradient id="Gradient22" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="748" y="768" fill="url(#Gradient22)" width="224" height="53" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="955,774 955,772 968,772 968,785 955,785 955,783" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient23" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="951" y="774" fill="url(#Gradient23)" width="6" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="955" x2="955" y1="777" y2="780" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient24" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="951" y="780" fill="url(#Gradient24)" width="6" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="851" y="784" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Cálculo de ranking (WeightingValidator, </text>
+      <text x="851" y="794" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">ScoreSheetValidator, RankingService, </text>
+      <text x="851" y="804" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">VacancyRankingBuilder)</text>
+   </a>
+   <a target="_parent" xlink:href="#C5E72EBB-26C8-4E0D-B8BA-9EB9E413FD82">
+      <defs>
+         <linearGradient id="Gradient25" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="366" y="1008" fill="url(#Gradient25)" width="241" height="53" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="589,1014 589,1012 603,1012 603,1025 589,1025 589,1023" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient26" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="585" y="1014" fill="url(#Gradient26)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="589" x2="589" y1="1017" y2="1020" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient27" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="585" y="1020" fill="url(#Gradient27)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="477" y="1021" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Modelos de dominio (17 Eloquent + enums)</text>
+   </a>
+   <a target="_parent" xlink:href="#5B231DA1-8C7B-4BE6-BF16-D4D869312B05">
+      <defs>
+         <linearGradient id="Gradient28" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="788" y="1008" fill="url(#Gradient28)" width="143" height="53" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="914,1014 914,1012 927,1012 927,1025 914,1025 914,1023" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient29" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="910" y="1014" fill="url(#Gradient29)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="914" x2="914" y1="1017" y2="1020" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient30" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="910" y="1020" fill="url(#Gradient30)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="851" y="1021" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Auditoría (AuditLogger)</text>
+   </a>
+   <a target="_parent" xlink:href="#A3C1951E-381E-4E7B-88BE-824418853502">
+      <defs>
+         <linearGradient id="Gradient31" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="4" y="1008" fill="url(#Gradient31)" width="219" height="53" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="205,1014 205,1012 219,1012 219,1025 205,1025 205,1023" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient32" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="201" y="1014" fill="url(#Gradient32)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="205" x2="205" y1="1017" y2="1020" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient33" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="201" y="1020" fill="url(#Gradient33)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="104" y="1023" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Notificaciones (RecruitmentNotification </text>
+      <text x="104" y="1033" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">x6)</text>
+   </a>
+   <a target="_parent" xlink:href="#1F21B653-B903-4660-AD0B-CF1DAC27050A">
+      <defs>
+         <linearGradient id="Gradient34" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="757" y="554" fill="url(#Gradient34)" width="205" height="54" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="945,561 945,558 958,558 958,572 945,572 945,569" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient35" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="941" y="561" fill="url(#Gradient35)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="945" x2="945" y1="564" y2="566" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient36" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="941" y="566" fill="url(#Gradient36)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="851" y="569" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Almacenamiento de CV (disco local </text>
+      <text x="851" y="579" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">privado)</text>
+   </a>
+   <a target="_parent" xlink:href="#7FB2260E-E0D1-41A8-B492-330FCE045A7C">
+      <defs>
+         <linearGradient id="Gradient37" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1142" y="544" fill="url(#Gradient37)" width="183" height="74" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="1307,550 1307,548 1321,548 1321,561 1307,561 1307,558" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient38" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1303" y="550" fill="url(#Gradient38)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="1307" x2="1307" y1="553" y2="556" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient39" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1303" y="556" fill="url(#Gradient39)" width="7" height="2" stroke="#0080c0" stroke-width="2"/>
+      <text x="1224" y="557" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;experimental&gt;&gt;</text>
+      <text x="1224" y="576" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Riesgo operacional </text>
+      <text x="1224" y="586" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">(OperationalRiskService, </text>
+      <text x="1224" y="596" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">OperationalRiskFeatureBuilder, </text>
+      <text x="1224" y="606" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">MlRiskClient)</text>
+   </a>
+   <a target="_parent" xlink:href="#F24DC1A9-9A85-42CA-8513-BB5C52A96B28">
+      <defs>
+         <linearGradient id="Gradient40" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="421" y="1274" fill="url(#Gradient40)" width="131" height="54" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="534,1281 534,1278 548,1278 548,1292 534,1292 534,1289" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient41" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="530" y="1281" fill="url(#Gradient41)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="534" x2="534" y1="1284" y2="1286" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient42" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="530" y="1286" fill="url(#Gradient42)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="477" y="1287" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;database&gt;&gt;</text>
+      <text x="477" y="1302" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">PostgreSQL 17</text>
+   </a>
+   <a target="_parent" xlink:href="#05BD5BB4-CF0F-467B-800E-38802191B75C">
+      <defs>
+         <linearGradient id="Gradient43" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="30" y="1274" fill="url(#Gradient43)" width="166" height="54" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="179,1281 179,1278 192,1278 192,1292 179,1292 179,1289" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient44" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="175" y="1281" fill="url(#Gradient44)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="179" x2="179" y1="1284" y2="1286" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient45" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="175" y="1286" fill="url(#Gradient45)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="104" y="1287" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Redis 7 (sesión, caché, cola)</text>
+   </a>
+   <a target="_parent" xlink:href="#23D61F22-23B1-4F91-8654-0F3949B925CD">
+      <defs>
+         <linearGradient id="Gradient46" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="21" y="1488" fill="url(#Gradient46)" width="185" height="53" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="188,1494 188,1492 202,1492 202,1505 188,1505 188,1503" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient47" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="184" y="1494" fill="url(#Gradient47)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="188" x2="188" y1="1497" y2="1500" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient48" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="184" y="1500" fill="url(#Gradient48)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="104" y="1501" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Trabajador de cola (queue:work)</text>
+   </a>
+   <a target="_parent" xlink:href="#06AAA94C-6E36-4A99-ABCB-7A88328B7DAC">
+      <defs>
+         <linearGradient id="Gradient49" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="418" y="1488" fill="url(#Gradient49)" width="137" height="53" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="537,1494 537,1492 551,1492 551,1505 537,1505 537,1503" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient50" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="533" y="1494" fill="url(#Gradient50)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="537" x2="537" y1="1497" y2="1500" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient51" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="533" y="1500" fill="url(#Gradient51)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="477" y="1501" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Mailer log (desarrollo)</text>
+   </a>
+   <a target="_parent" xlink:href="#52C40E94-6F3E-4526-8051-359E0F0F63DC">
+      <defs>
+         <linearGradient id="Gradient52" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1534" y="768" fill="url(#Gradient52)" width="198" height="53" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="1715,774 1715,772 1728,772 1728,785 1715,785 1715,783" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient53" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1711" y="774" fill="url(#Gradient53)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="1715" x2="1715" y1="777" y2="780" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient54" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1711" y="780" fill="url(#Gradient54)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="1624" y="781" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;external service, experimental&gt;&gt;</text>
+      <text x="1624" y="796" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">API FastAPI (schemas, security)</text>
+   </a>
+   <a target="_parent" xlink:href="#2966E6D4-AEF0-43B9-A835-4E6D7E9E03A9">
+      <defs>
+         <linearGradient id="Gradient55" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1556" y="1008" fill="url(#Gradient55)" width="155" height="53" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="1693,1014 1693,1012 1707,1012 1707,1025 1693,1025 1693,1023" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient56" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1689" y="1014" fill="url(#Gradient56)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="1693" x2="1693" y1="1017" y2="1020" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient57" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1689" y="1020" fill="url(#Gradient57)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="1624" y="1021" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;experimental&gt;&gt;</text>
+      <text x="1624" y="1036" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Serving (loader, predictor)</text>
+   </a>
+   <a target="_parent" xlink:href="#C0E93493-C302-4519-87FD-7F49AD2C6329">
+      <defs>
+         <linearGradient id="Gradient58" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1530" y="1243" fill="url(#Gradient58)" width="207" height="62" stroke="#0080c0" stroke-width="2"/>
+      <polyline fill="none" points="1719,1250 1719,1247 1733,1247 1733,1261 1719,1261 1719,1258" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient59" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1715" y="1250" fill="url(#Gradient59)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <line x1="1719" x2="1719" y1="1253" y2="1255" stroke="#0080c0" stroke-width="2"/>
+      <defs>
+         <linearGradient id="Gradient60" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1715" y="1255" fill="url(#Gradient60)" width="7" height="3" stroke="#0080c0" stroke-width="2"/>
+      <text x="1624" y="1256" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;artifact&gt;&gt;</text>
+      <text x="1624" y="1274" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Artefacto .joblib + metadatos (freeze </text>
+      <text x="1624" y="1284" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">9ee18430..., threshold 0.</text>
+      <text x="1624" y="1294" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1679418172266036)</text>
+   </a>
+   <a target="_parent" xlink:href="#E69EE4E6-A515-4B0C-8497-AC7D83B39B4E">
+      <defs>
+         <linearGradient id="Gradient61" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <ellipse cx="299" cy="381" rx="10" ry="11" fill="url(#Gradient61)" stroke="#8080ff" stroke-width="1"/>
+      <text x="300" y="403" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Inertia / HTTP</text>
+   </a>
+   <a target="_parent" xlink:href="#766F938A-378A-4D4D-A818-7AD9DBBA7087">
+      <defs>
+         <linearGradient id="Gradient62" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <ellipse cx="673" cy="381" rx="10" ry="11" fill="url(#Gradient62)" stroke="#8080ff" stroke-width="1"/>
+      <text x="673" y="408" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">JSON riesgo </text>
+      <text x="673" y="418" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">operacional: GET </text>
+      <text x="673" y="428" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">vacantes/{id}/riesgo-o</text>
+      <text x="673" y="438" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">peracional</text>
+   </a>
+   <a target="_parent" xlink:href="#07288C9A-6C3F-4091-AF4A-94A83CE58852">
+      <defs>
+         <linearGradient id="Gradient63" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <ellipse cx="1446" cy="581" rx="10" ry="11" fill="url(#Gradient63)" stroke="#8080ff" stroke-width="1"/>
+      <text x="1446" y="605" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">POST /v1/predict · </text>
+      <text x="1446" y="615" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">X-Internal-Token</text>
+   </a>
+</svg>

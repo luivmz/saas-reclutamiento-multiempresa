@@ -1,0 +1,850 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="643mm" xmlns="http://www.w3.org/2000/svg" height="524mm" version="1.1" viewBox="0 0 2431 1981" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <polygon fill="#ffffff" points="229,75 229,152 549,152 549,84 539,75" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="549" x2="539" y1="84" y2="84" stroke="#000000" stroke-width="1"/>
+   <line x1="539" x2="539" y1="84" y2="75" stroke="#000000" stroke-width="1"/>
+   <text x="389" y="96" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Multiempresa: aislamiento lógico. Las 13 clases &lt;&lt;tenant scoped&gt;&gt;</text>
+   <text x="389" y="106" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> llevan organization_id, OrganizationScope y Policies de rol y </text>
+   <text x="389" y="116" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">organización. Solo se dibujan las asociaciones con Organization de</text>
+   <text x="389" y="126" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> User, JobRequest, Vacancy y AuditLog. Sin PostgreSQL RLS ni </text>
+   <text x="389" y="136" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">base por tenant.</text>
+   <polygon fill="#ffffff" points="2,195 2,246 242,246 242,203 234,195" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="242" x2="234" y1="203" y2="203" stroke="#000000" stroke-width="1"/>
+   <line x1="234" x2="234" y1="203" y2="195" stroke="#000000" stroke-width="1"/>
+   <text x="122" y="213" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Globales: User (postulante), CandidateProfile y </text>
+   <text x="122" y="223" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">CandidateDocument no llevan organization_id. El </text>
+   <text x="122" y="233" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">CV vive en el disco privado local de Laravel.</text>
+   <polygon fill="#ffffff" points="29,1128 29,1179 269,1179 269,1137 260,1128" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="269" x2="260" y1="1137" y2="1137" stroke="#000000" stroke-width="1"/>
+   <line x1="260" x2="260" y1="1137" y2="1128" stroke="#000000" stroke-width="1"/>
+   <text x="149" y="1146" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">UNIQUE (vacancy_id, candidate_id). Índice </text>
+   <text x="149" y="1156" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">parcial: como mucho una postulación </text>
+   <text x="149" y="1166" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">'seleccionado' por vacante.</text>
+   <polygon fill="#ffffff" points="2082,1368 2082,1419 2322,1419 2322,1377 2314,1368" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="2322" x2="2314" y1="1377" y2="1377" stroke="#000000" stroke-width="1"/>
+   <line x1="2314" x2="2314" y1="1377" y2="1368" stroke="#000000" stroke-width="1"/>
+   <text x="2202" y="1386" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;human decision&gt;&gt;: una por vacante, inmutable.</text>
+   <text x="2202" y="1396" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> Guarda la instantánea del ranking al decidir. No </text>
+   <text x="2202" y="1406" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">depende del ML (RF-23).</text>
+   <polygon fill="#ffffff" points="2189,1928 2189,1979 2429,1979 2429,1937 2420,1928" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="2429" x2="2420" y1="1937" y2="1937" stroke="#000000" stroke-width="1"/>
+   <line x1="2420" x2="2420" y1="1937" y2="1928" stroke="#000000" stroke-width="1"/>
+   <text x="2309" y="1946" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">stage separa los criterios de evaluación y de </text>
+   <text x="2309" y="1956" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">entrevista; lo aplica ScoreSheetValidator, no una </text>
+   <text x="2309" y="1966" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">FK.</text>
+   <polygon fill="#ffffff" points="2082,2 2082,66 2375,66 2375,11 2366,2" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="2375" x2="2366" y1="11" y2="11" stroke="#000000" stroke-width="1"/>
+   <line x1="2366" x2="2366" y1="11" y2="2" stroke="#000000" stroke-width="1"/>
+   <text x="2228" y="22" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Fila 35: AuditLog depende de la entidad auditada </text>
+   <text x="2228" y="32" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">(auditable_type + auditable_id, polimórfica). Trigger </text>
+   <text x="2228" y="42" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">audit_logs_append_only: rechaza DELETE y todo UPDATE, </text>
+   <text x="2228" y="52" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">salvo anular user_id al borrar el usuario.</text>
+   <polygon fill="#ffffff" points="82,1468 82,1532 322,1532 322,1478 313,1468" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="322" x2="313" y1="1478" y2="1478" stroke="#000000" stroke-width="1"/>
+   <line x1="313" x2="313" y1="1478" y2="1468" stroke="#000000" stroke-width="1"/>
+   <text x="202" y="1488" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">scheduler (scheduled_by, RR. HH. que programa) y</text>
+   <text x="202" y="1498" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> evaluator (evaluator_id, evaluador asignado) son </text>
+   <text x="202" y="1508" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">asociaciones distintas de User con Evaluation e </text>
+   <text x="202" y="1518" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Interview (filas 24/36 y 25/37).</text>
+   <a target="_parent" xlink:href="#A689E1B8-3784-464B-AA82-6356D3AA5358">
+      <polyline fill="none" points="1242,292 1242,727" stroke="#0080ff" stroke-width="1"/>
+      <text x="1247" y="306" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="1247" y="316" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">organization</text>
+      <text x="1247" y="650" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#5A20B95A-2059-49FE-B0D7-2CD1A0CF91BB">
+      <polyline fill="none" points="1283,273 1720,551" stroke="#0080ff" stroke-width="1"/>
+      <text x="1299" y="275" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1299" y="285" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">organization</text>
+      <text x="1709" y="541" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#5D692EEC-F37A-415E-86C6-8B4D24600173">
+      <polyline fill="none" points="1275,292 1738,923" stroke="#0080ff" stroke-width="1"/>
+      <text x="1289" y="299" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1289" y="309" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">organization</text>
+      <text x="1732" y="910" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#F0A42C9D-17C3-4EE0-A6AA-0550788FE2FA">
+      <polyline fill="none" points="1283,252 1556,289" stroke="#0080ff" stroke-width="1"/>
+      <text x="1300" y="247" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="1300" y="257" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">organization</text>
+      <text x="1540" y="284" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#61658977-F914-46A2-9B82-2320280BF2D1">
+      <polyline fill="none" points="1355,782 1720,701" stroke="#0080ff" stroke-width="1"/>
+      <text x="1450" y="802" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1450" y="812" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">requester</text>
+      <text x="1708" y="724" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#C39B1D9B-1AD3-4421-B75E-3AE6BA9CC739">
+      <polyline fill="none" points="1355,771 1720,655" stroke="#0080ff" stroke-width="1"/>
+      <text x="1407" y="737" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="1407" y="747" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">validator</text>
+      <text x="1699" y="649" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#A023672C-8C1C-4E69-8D41-DEA0BE965230">
+      <polyline fill="none" points="1345,727 1720,644" stroke="#0080ff" stroke-width="1"/>
+      <text x="1355" y="706" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="1355" y="716" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">decider</text>
+      <text x="1686" y="606" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#97A285F1-D61B-46E8-ACE0-C050FF8EC02E">
+      <polyline fill="none" points="1938,511 2116,333" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="1938,511 1941,501 1951,498 1948,508" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="1945" y="499" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="2101" y="338" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="2101" y="348" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">statusHistories</text>
+   </a>
+   <a target="_parent" xlink:href="#CCB74F6F-2C40-4E01-8E84-B0D7C525851A">
+      <polyline fill="none" points="2114,309 1355,742" stroke="#0080ff" stroke-width="1"/>
+      <text x="2102" y="324" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="1390" y="726" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1390" y="736" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">author</text>
+   </a>
+   <a target="_parent" xlink:href="#8074FB7B-81E3-487D-903A-534C04A64A6B">
+      <polyline fill="none" points="1829,738 1829,923" stroke="#0080ff" stroke-width="1"/>
+      <text x="1834" y="751" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1834" y="761" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">jobRequest</text>
+      <text x="1834" y="905" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="1834" y="915" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">vacancy</text>
+   </a>
+   <a target="_parent" xlink:href="#71090240-5608-48C5-A829-4450C509823E">
+      <polyline fill="none" points="1952,1013 2251,930" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="1952,1013 1959,1006 1970,1008 1962,1015" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="1965" y="1006" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="2233" y="927" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="2233" y="937" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">profile</text>
+   </a>
+   <a target="_parent" xlink:href="#9517C045-E0D6-4AEE-88D8-32DB7D4731DB">
+      <polyline fill="none" points="1829,1171 1829,1728" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="1829,1171 1833,1180 1829,1190 1824,1180" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="1834" y="1190" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1834" y="1710" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="1834" y="1720" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">criteria</text>
+   </a>
+   <a target="_parent" xlink:href="#6B0BE6B8-281F-475A-ACC5-CB6B4C568CBC">
+      <polyline fill="none" points="1355,853 1706,997" stroke="#0080ff" stroke-width="1"/>
+      <text x="1406" y="937" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1406" y="947" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">creator</text>
+      <text x="1668" y="1049" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#D7553CCC-67D0-48A3-B7D2-CCF4E11EB678">
+      <polyline fill="none" points="1355,853 1706,997" stroke="#0080ff" stroke-width="1"/>
+      <text x="1376" y="844" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="1376" y="854" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">publisher</text>
+      <text x="1696" y="980" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#665F1F8B-1404-47C6-BEB5-2D5543372A2C">
+      <polyline fill="none" points="1355,842 1706,950" stroke="#0080ff" stroke-width="1"/>
+      <text x="1413" y="810" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="1413" y="820" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">closer</text>
+      <text x="1696" y="931" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#E71D48F4-1D6C-460B-A2B3-12F4A777FD3C">
+      <polyline fill="none" points="1706,1034 709,925" stroke="#0080ff" stroke-width="1"/>
+      <text x="1689" y="1035" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1689" y="1045" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">vacancy</text>
+      <text x="725" y="930" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="725" y="940" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">applications</text>
+   </a>
+   <a target="_parent" xlink:href="#E01B2C02-7EA6-428F-82EA-008641604062">
+      <polyline fill="none" points="1129,826 709,896" stroke="#0080ff" stroke-width="1"/>
+      <text x="1114" y="831" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1114" y="841" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">candidate</text>
+      <text x="726" y="896" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="726" y="906" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">applications</text>
+   </a>
+   <a target="_parent" xlink:href="#8B916D4A-EA5D-42C6-B448-4C03A01573AD">
+      <polyline fill="none" points="1200,727 979,305" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="1200,727 1192,721 1191,710 1200,717" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="1188" y="713" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1188" y="723" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">user</text>
+      <text x="981" y="319" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="981" y="329" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">candidateProfile</text>
+   </a>
+   <a target="_parent" xlink:href="#6F6091EF-417E-4AF9-BBE7-97EF9BCDE7B6">
+      <polyline fill="none" points="879,271 348,455" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="879,271 872,279 861,277 868,270" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="865" y="279" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="865" y="289" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">profile</text>
+      <text x="365" y="452" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="365" y="462" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">documents</text>
+   </a>
+   <a target="_parent" xlink:href="#F9FF089C-5A61-4548-B654-AB5D9BC49C17">
+      <polyline fill="none" points="559,861 297,538" stroke="#0080ff" stroke-width="1"/>
+      <text x="545" y="855" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="303" y="552" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="303" y="562" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">cvDocument</text>
+   </a>
+   <a target="_parent" xlink:href="#90B051AB-379E-4DBC-9EC5-B546B82BDAF7">
+      <polyline fill="none" points="609,861 647,599" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="609,861 606,851 612,843 615,853" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="606" y="847" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="639" y="612" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="639" y="622" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">stageHistories</text>
+   </a>
+   <a target="_parent" xlink:href="#D70CEAEE-DC34-42CB-AE8F-A6D7144C119E">
+      <polyline fill="none" points="716,568 1129,755" stroke="#0080ff" stroke-width="1"/>
+      <text x="732" y="572" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="1096" y="733" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1096" y="743" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">author</text>
+   </a>
+   <a target="_parent" xlink:href="#321DA8B5-DCA8-4764-8FC0-87AF50905615">
+      <polyline fill="none" points="625,966 746,1242" stroke="#0080ff" stroke-width="1"/>
+      <text x="636" y="976" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="636" y="986" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">application</text>
+      <text x="744" y="1223" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="744" y="1233" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">evaluations</text>
+   </a>
+   <a target="_parent" xlink:href="#8EEFCF9F-A186-49EB-A250-685573D31A23">
+      <polyline fill="none" points="668,966 1135,1336" stroke="#0080ff" stroke-width="1"/>
+      <text x="684" y="970" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="684" y="980" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">application</text>
+      <text x="1125" y="1319" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="1125" y="1329" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">interviews</text>
+   </a>
+   <a target="_parent" xlink:href="#11A3177C-E399-4064-803E-77AF0EC7357F">
+      <polyline fill="none" points="1145,887 866,1242" stroke="#0080ff" stroke-width="1"/>
+      <text x="1108" y="904" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1108" y="914" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">evaluator</text>
+      <text x="853" y="1209" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#23509C96-62E7-4D59-81A4-9813D8FC4A4B">
+      <polyline fill="none" points="1219,887 1219,1322" stroke="#0080ff" stroke-width="1"/>
+      <text x="1204" y="901" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1204" y="911" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">evaluator</text>
+      <text x="1204" y="1309" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#3B6EED84-B633-4858-81CF-4E48373AD986">
+      <polyline fill="none" points="789,1438 789,1748" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="789,1438 793,1448 789,1457 784,1448" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="794" y="1457" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="794" y="1729" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="794" y="1739" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">results</text>
+   </a>
+   <a target="_parent" xlink:href="#F04EB537-AE0B-4758-B58D-E8E0F5783144">
+      <polyline fill="none" points="1242,1518 1242,1828" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="1242,1518 1247,1528 1242,1537 1237,1528" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="1247" y="1537" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1247" y="1809" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+      <text x="1247" y="1819" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">results</text>
+   </a>
+   <a target="_parent" xlink:href="#43060DA0-E696-4850-831A-292FE71F5C36">
+      <polyline fill="none" points="1736,1794 847,1794" stroke="#0080ff" stroke-width="1"/>
+      <text x="1719" y="1797" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1719" y="1807" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">criterion</text>
+      <text x="862" y="1802" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#DC1984BA-F2A7-4BFC-B6C5-10717CFE9A08">
+      <polyline fill="none" points="1736,1806 1300,1866" stroke="#0080ff" stroke-width="1"/>
+      <text x="1720" y="1811" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1720" y="1821" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">criterion</text>
+      <text x="1316" y="1872" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#C0E0162D-D443-4A05-8CAF-310B0D70BA15">
+      <polyline fill="none" points="1762,1171 1681,1322" stroke="#0080ff" stroke-width="1"/>
+      <text x="1759" y="1185" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1759" y="1195" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">vacancy</text>
+      <text x="1692" y="1308" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="1692" y="1318" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">selectionDecision</text>
+   </a>
+   <a target="_parent" xlink:href="#7DAFE537-1197-4034-8E59-254F57831A8F">
+      <polyline fill="none" points="1553,1352 709,963" stroke="#0080ff" stroke-width="1"/>
+      <text x="1535" y="1353" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="722" y="972" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="722" y="982" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">selectedApplication</text>
+   </a>
+   <a target="_parent" xlink:href="#0CE23F2C-AC88-4B4C-B9C1-6C4D5EAD40D8">
+      <polyline fill="none" points="1292,887 1566,1322" stroke="#0080ff" stroke-width="1"/>
+      <text x="1299" y="954" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1299" y="964" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">decider</text>
+      <text x="1544" y="1320" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#E66E6968-28BE-4DEC-A470-527E329453F1">
+      <polyline fill="none" points="1323,887 1597,1322" stroke="#0080ff" stroke-width="1"/>
+      <text x="1357" y="907" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="1357" y="917" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">selectionRegistrar</text>
+      <text x="1614" y="1290" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#E48EA4ED-683E-4E58-B7D6-8DB1CF2F2E38">
+      <polyline fill="none" points="1305,727 1585,372" stroke="#0080ff" stroke-width="1"/>
+      <text x="1337" y="675" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..1</text>
+      <text x="1337" y="685" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">user</text>
+      <text x="1571" y="384" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#A925566E-721A-4B6D-9147-47F27A471CF0">
+      <polyline fill="none" points="1179,887 894,1251" stroke="#0080ff" stroke-width="1"/>
+      <text x="1164" y="954" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1164" y="964" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">scheduler</text>
+      <text x="915" y="1251" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#B18D73FE-0327-4A22-875C-69E46947DF2D">
+      <polyline fill="none" points="1265,887 1265,1322" stroke="#0080ff" stroke-width="1"/>
+      <text x="1279" y="965" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">1</text>
+      <text x="1279" y="975" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">scheduler</text>
+      <text x="1279" y="1309" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">0..*</text>
+   </a>
+   <a target="_parent" xlink:href="#0BDBE47C-02F2-4567-95C0-2F829FB67E03">
+      <defs>
+         <linearGradient id="Gradient1" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1201" y="202" fill="url(#Gradient1)" width="82" height="90" stroke="#0080ff" stroke-width="1"/>
+      <text x="1242" y="213" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Organization</text>
+      <line x1="1201" x2="1283" y1="219" y2="219" stroke="#0080ff" stroke-width="1"/>
+      <text x="1206" y="229" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1206" y="242" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1206" y="255" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1206" y="268" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1220" y="229" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">name</text>
+      <text x="1220" y="242" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">slug</text>
+      <text x="1220" y="255" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">tax_id</text>
+      <text x="1220" y="268" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">is_active</text>
+      <text x="1269" y="229" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1269" y="242" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1269" y="255" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1269" y="268" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="1201" x2="1283" y1="275" y2="275" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#126C0A6E-4BFD-4BEB-8343-02109ED9BE97">
+      <defs>
+         <linearGradient id="Gradient2" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1129" y="727" fill="url(#Gradient2)" width="226" height="160" stroke="#0080ff" stroke-width="1"/>
+      <text x="1242" y="738" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">User</text>
+      <line x1="1129" x2="1355" y1="744" y2="744" stroke="#0080ff" stroke-width="1"/>
+      <text x="1133" y="754" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1133" y="767" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1133" y="780" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1133" y="793" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1147" y="754" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">name</text>
+      <text x="1147" y="767" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">email</text>
+      <text x="1147" y="780" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">role</text>
+      <text x="1147" y="793" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1229" y="754" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1229" y="767" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1229" y="780" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: UserRole</text>
+      <text x="1229" y="793" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="1129" x2="1355" y1="800" y2="800" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#DEECBBEF-A24B-4D5D-84BF-67F2F2B11AAA">
+      <defs>
+         <linearGradient id="Gradient3" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1720" y="503" fill="url(#Gradient3)" width="218" height="235" stroke="#0080ff" stroke-width="1"/>
+      <text x="1829" y="514" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped&gt;&gt;</text>
+      <text x="1829" y="529" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">JobRequest</text>
+      <line x1="1720" x2="1938" y1="535" y2="535" stroke="#0080ff" stroke-width="1"/>
+      <text x="1724" y="545" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="558" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="571" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="584" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="597" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="610" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="623" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="636" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="649" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="662" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="675" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="688" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="701" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="714" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1738" y="545" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1738" y="558" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">code</text>
+      <text x="1738" y="571" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">position_title</text>
+      <text x="1738" y="584" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">area</text>
+      <text x="1738" y="597" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">headcount</text>
+      <text x="1738" y="610" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">contract_type</text>
+      <text x="1738" y="623" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">justification</text>
+      <text x="1738" y="636" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">required_by</text>
+      <text x="1738" y="649" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">status</text>
+      <text x="1738" y="662" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">observation</text>
+      <text x="1738" y="675" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">submitted_at</text>
+      <text x="1738" y="688" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">validated_at</text>
+      <text x="1738" y="701" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">decided_at</text>
+      <text x="1738" y="714" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">decision_comment</text>
+      <text x="1835" y="545" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="558" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="571" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="584" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="597" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="610" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="623" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="636" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="649" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: JobRequestStatus</text>
+      <text x="1835" y="662" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="675" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="688" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="701" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1835" y="714" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="1720" x2="1938" y1="721" y2="721" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#CAEEC3E1-EBF2-4349-ACC7-1C55F657F636">
+      <defs>
+         <linearGradient id="Gradient4" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="2114" y="215" fill="url(#Gradient4)" width="123" height="118" stroke="#0080ff" stroke-width="1"/>
+      <text x="2175" y="226" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped&gt;&gt;</text>
+      <text x="2175" y="241" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">JobRequestStatusHistory</text>
+      <line x1="2114" x2="2237" y1="247" y2="247" stroke="#0080ff" stroke-width="1"/>
+      <text x="2119" y="257" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="2119" y="270" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="2119" y="283" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="2119" y="296" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="2119" y="309" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="2133" y="257" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="2133" y="270" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">from_status</text>
+      <text x="2133" y="283" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">to_status</text>
+      <text x="2133" y="296" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">comment</text>
+      <text x="2133" y="309" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="2215" y="257" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="2215" y="270" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="2215" y="283" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="2215" y="296" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="2215" y="309" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="2114" x2="2237" y1="316" y2="316" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#D0D3D7F3-C5DA-4A06-8F84-70698C6ED072">
+      <defs>
+         <linearGradient id="Gradient5" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1706" y="923" fill="url(#Gradient5)" width="246" height="248" stroke="#0080ff" stroke-width="1"/>
+      <text x="1829" y="934" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped&gt;&gt;</text>
+      <text x="1829" y="949" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Vacancy</text>
+      <line x1="1706" x2="1952" y1="955" y2="955" stroke="#0080ff" stroke-width="1"/>
+      <text x="1710" y="965" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="978" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="991" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1004" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1017" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1030" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1043" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1056" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1069" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1082" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1095" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1108" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1121" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1134" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1710" y="1147" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1724" y="965" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1724" y="978" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">code</text>
+      <text x="1724" y="991" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">title</text>
+      <text x="1724" y="1004" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">summary</text>
+      <text x="1724" y="1017" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">location</text>
+      <text x="1724" y="1030" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">contract_type</text>
+      <text x="1724" y="1043" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">positions</text>
+      <text x="1724" y="1056" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">opens_at</text>
+      <text x="1724" y="1069" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">closes_at</text>
+      <text x="1724" y="1082" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">target_completion_at</text>
+      <text x="1724" y="1095" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">status</text>
+      <text x="1724" y="1108" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">published_at</text>
+      <text x="1724" y="1121" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">closed_at</text>
+      <text x="1724" y="1134" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">closure_type</text>
+      <text x="1724" y="1147" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">closure_notes</text>
+      <text x="1833" y="965" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="978" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="991" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="1004" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="1017" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="1030" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="1043" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="1056" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="1069" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="1082" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="1095" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: VacancyStatus</text>
+      <text x="1833" y="1108" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="1121" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1833" y="1134" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: VacancyClosureType</text>
+      <text x="1833" y="1147" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="1706" x2="1952" y1="1154" y2="1154" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#9D78C56D-EE66-47FE-84D9-4F6BF509D02B">
+      <defs>
+         <linearGradient id="Gradient6" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="2251" y="855" fill="url(#Gradient6)" width="116" height="118" stroke="#0080ff" stroke-width="1"/>
+      <text x="2309" y="866" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped&gt;&gt;</text>
+      <text x="2309" y="881" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">JobProfile</text>
+      <line x1="2251" x2="2367" y1="887" y2="887" stroke="#0080ff" stroke-width="1"/>
+      <text x="2255" y="897" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="2255" y="910" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="2255" y="923" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="2255" y="936" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="2255" y="949" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="2269" y="897" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="2269" y="910" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">education</text>
+      <text x="2269" y="923" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">experience</text>
+      <text x="2269" y="936" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">functions</text>
+      <text x="2269" y="949" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">competencies</text>
+      <text x="2351" y="897" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="2351" y="910" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="2351" y="923" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="2351" y="936" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="2351" y="949" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="2251" x2="2367" y1="956" y2="956" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#B6C03DA4-56F7-4E29-A1E8-06439D441834">
+      <defs>
+         <linearGradient id="Gradient7" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1736" y="1728" fill="url(#Gradient7)" width="186" height="131" stroke="#0080ff" stroke-width="1"/>
+      <text x="1829" y="1739" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped&gt;&gt;</text>
+      <text x="1829" y="1754" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">EvaluationCriterion</text>
+      <line x1="1736" x2="1922" y1="1760" y2="1760" stroke="#0080ff" stroke-width="1"/>
+      <text x="1740" y="1770" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1740" y="1783" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1740" y="1796" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1740" y="1809" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1740" y="1822" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1740" y="1835" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1754" y="1770" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1754" y="1783" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">name</text>
+      <text x="1754" y="1796" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">stage</text>
+      <text x="1754" y="1809" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">weight</text>
+      <text x="1754" y="1822" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">min_score</text>
+      <text x="1754" y="1835" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">max_score</text>
+      <text x="1836" y="1770" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1836" y="1783" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1836" y="1796" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: CriterionStage</text>
+      <text x="1836" y="1809" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1836" y="1822" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1836" y="1835" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="1736" x2="1922" y1="1842" y2="1842" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#DB9F8BC8-431D-4B65-BB6D-961171E2E291">
+      <defs>
+         <linearGradient id="Gradient8" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="879" y="189" fill="url(#Gradient8)" width="140" height="116" stroke="#0080ff" stroke-width="1"/>
+      <text x="949" y="200" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">CandidateProfile</text>
+      <line x1="879" x2="1019" y1="206" y2="206" stroke="#0080ff" stroke-width="1"/>
+      <text x="883" y="216" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="883" y="229" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="883" y="242" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="883" y="255" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="883" y="268" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="883" y="281" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="897" y="216" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">phone</text>
+      <text x="897" y="229" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">city</text>
+      <text x="897" y="242" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">education_level</text>
+      <text x="897" y="255" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">professional_title</text>
+      <text x="897" y="268" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">years_of_experience</text>
+      <text x="897" y="281" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">summary</text>
+      <text x="1002" y="216" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1002" y="229" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1002" y="242" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1002" y="255" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1002" y="268" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1002" y="281" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="879" x2="1019" y1="288" y2="288" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#6512497A-2B77-4C16-B7E8-3DC5FB952EA7">
+      <defs>
+         <linearGradient id="Gradient9" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="163" y="436" fill="url(#Gradient9)" width="185" height="102" stroke="#0080ff" stroke-width="1"/>
+      <text x="255" y="447" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">CandidateDocument</text>
+      <line x1="163" x2="348" y1="453" y2="453" stroke="#0080ff" stroke-width="1"/>
+      <text x="167" y="463" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="167" y="476" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="167" y="489" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="167" y="502" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="167" y="514" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="181" y="463" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">type</text>
+      <text x="181" y="476" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">original_name</text>
+      <text x="181" y="489" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">stored_path</text>
+      <text x="181" y="502" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">mime_type</text>
+      <text x="181" y="514" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">size_bytes</text>
+      <text x="258" y="463" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: DocumentType</text>
+      <text x="258" y="476" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="258" y="489" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="258" y="502" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="258" y="514" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="163" x2="348" y1="521" y2="521" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#73BC308B-3231-4F5D-8C0A-0F9FEC6398F4">
+      <defs>
+         <linearGradient id="Gradient10" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="495" y="861" fill="url(#Gradient10)" width="214" height="105" stroke="#0080ff" stroke-width="1"/>
+      <text x="602" y="872" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped&gt;&gt;</text>
+      <text x="602" y="887" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Application</text>
+      <line x1="495" x2="709" y1="893" y2="893" stroke="#0080ff" stroke-width="1"/>
+      <text x="499" y="903" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="499" y="916" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="499" y="929" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="499" y="942" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="513" y="903" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="513" y="916" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">status</text>
+      <text x="513" y="929" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">applied_at</text>
+      <text x="513" y="942" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">stage_changed_at</text>
+      <text x="608" y="903" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="608" y="916" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: ApplicationStatus</text>
+      <text x="608" y="929" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="608" y="942" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="495" x2="709" y1="949" y2="949" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#552C075B-56E0-4BFD-BF96-B10302DB2C73">
+      <defs>
+         <linearGradient id="Gradient11" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="595" y="481" fill="url(#Gradient11)" width="121" height="118" stroke="#0080ff" stroke-width="1"/>
+      <text x="655" y="492" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped&gt;&gt;</text>
+      <text x="655" y="507" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">ApplicationStageHistory</text>
+      <line x1="595" x2="716" y1="513" y2="513" stroke="#0080ff" stroke-width="1"/>
+      <text x="600" y="523" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="600" y="536" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="600" y="549" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="600" y="562" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="600" y="575" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="614" y="523" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="614" y="536" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">from_status</text>
+      <text x="614" y="549" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">to_status</text>
+      <text x="614" y="562" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">comment</text>
+      <text x="614" y="575" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="696" y="523" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="696" y="536" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="696" y="549" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="696" y="562" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="696" y="575" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="595" x2="716" y1="582" y2="582" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#18F12A78-4F7D-45A7-8F72-299126C62073">
+      <defs>
+         <linearGradient id="Gradient12" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="683" y="1242" fill="url(#Gradient12)" width="211" height="196" stroke="#0080ff" stroke-width="1"/>
+      <text x="788" y="1253" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped&gt;&gt;</text>
+      <text x="788" y="1268" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Evaluation</text>
+      <line x1="683" x2="894" y1="1274" y2="1274" stroke="#0080ff" stroke-width="1"/>
+      <text x="688" y="1284" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="688" y="1297" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="688" y="1310" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="688" y="1323" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="688" y="1336" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="688" y="1349" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="688" y="1362" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="688" y="1375" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="688" y="1388" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="688" y="1401" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="688" y="1414" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="702" y="1284" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="702" y="1297" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">type</text>
+      <text x="702" y="1310" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">modality</text>
+      <text x="702" y="1323" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">location</text>
+      <text x="702" y="1336" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">scheduled_at</text>
+      <text x="702" y="1349" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">duration_minutes</text>
+      <text x="702" y="1362" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">instructions</text>
+      <text x="702" y="1375" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">status</text>
+      <text x="702" y="1388" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">invitation_sent_at</text>
+      <text x="702" y="1401" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">completed_at</text>
+      <text x="702" y="1414" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">observations</text>
+      <text x="794" y="1284" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="794" y="1297" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: EvaluationType</text>
+      <text x="794" y="1310" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="794" y="1323" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="794" y="1336" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="794" y="1349" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="794" y="1362" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="794" y="1375" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: AssessmentStatus</text>
+      <text x="794" y="1388" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="794" y="1401" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="794" y="1414" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="683" x2="894" y1="1421" y2="1421" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#2474EE38-B234-48A4-A7D1-768B5D85008B">
+      <defs>
+         <linearGradient id="Gradient13" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="731" y="1748" fill="url(#Gradient13)" width="116" height="92" stroke="#0080ff" stroke-width="1"/>
+      <text x="789" y="1759" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped&gt;&gt;</text>
+      <text x="789" y="1774" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">EvaluationResult</text>
+      <line x1="731" x2="847" y1="1780" y2="1780" stroke="#0080ff" stroke-width="1"/>
+      <text x="735" y="1790" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="735" y="1803" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="735" y="1816" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="749" y="1790" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="749" y="1803" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">score</text>
+      <text x="749" y="1816" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">comment</text>
+      <text x="831" y="1790" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="831" y="1803" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="831" y="1816" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="731" x2="847" y1="1823" y2="1823" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#8693E6F3-436B-42B4-A7AD-AFE6C7871045">
+      <defs>
+         <linearGradient id="Gradient14" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1135" y="1322" fill="url(#Gradient14)" width="214" height="196" stroke="#0080ff" stroke-width="1"/>
+      <text x="1242" y="1333" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped&gt;&gt;</text>
+      <text x="1242" y="1348" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Interview</text>
+      <line x1="1135" x2="1349" y1="1354" y2="1354" stroke="#0080ff" stroke-width="1"/>
+      <text x="1140" y="1364" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1140" y="1377" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1140" y="1390" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1140" y="1403" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1140" y="1416" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1140" y="1429" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1140" y="1442" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1140" y="1455" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1140" y="1468" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1140" y="1481" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1140" y="1494" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1154" y="1364" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1154" y="1377" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">modality</text>
+      <text x="1154" y="1390" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">location</text>
+      <text x="1154" y="1403" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">scheduled_at</text>
+      <text x="1154" y="1416" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">duration_minutes</text>
+      <text x="1154" y="1429" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">instructions</text>
+      <text x="1154" y="1442" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">status</text>
+      <text x="1154" y="1455" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">outcome</text>
+      <text x="1154" y="1468" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">invitation_sent_at</text>
+      <text x="1154" y="1481" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">completed_at</text>
+      <text x="1154" y="1494" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">observations</text>
+      <text x="1246" y="1364" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1246" y="1377" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1246" y="1390" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1246" y="1403" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1246" y="1416" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1246" y="1429" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1246" y="1442" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: AssessmentStatus</text>
+      <text x="1246" y="1455" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: InterviewOutcome</text>
+      <text x="1246" y="1468" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1246" y="1481" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1246" y="1494" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="1135" x2="1349" y1="1501" y2="1501" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#C666AED4-BA18-4AC7-A3AC-488C5DA9F684">
+      <defs>
+         <linearGradient id="Gradient15" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1184" y="1828" fill="url(#Gradient15)" width="116" height="92" stroke="#0080ff" stroke-width="1"/>
+      <text x="1242" y="1839" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped&gt;&gt;</text>
+      <text x="1242" y="1854" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">InterviewResult</text>
+      <line x1="1184" x2="1300" y1="1860" y2="1860" stroke="#0080ff" stroke-width="1"/>
+      <text x="1189" y="1870" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1189" y="1883" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1189" y="1896" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1203" y="1870" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1203" y="1883" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">score</text>
+      <text x="1203" y="1896" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">comment</text>
+      <text x="1285" y="1870" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1285" y="1883" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1285" y="1896" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="1184" x2="1300" y1="1903" y2="1903" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#8CE69051-18C0-410E-8B0A-18AD97BA3D58">
+      <defs>
+         <linearGradient id="Gradient16" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1553" y="1322" fill="url(#Gradient16)" width="178" height="144" stroke="#0080ff" stroke-width="1"/>
+      <text x="1642" y="1333" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped, human decision&gt;&gt;</text>
+      <text x="1642" y="1348" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">SelectionDecision</text>
+      <line x1="1553" x2="1731" y1="1354" y2="1354" stroke="#0080ff" stroke-width="1"/>
+      <text x="1557" y="1364" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1557" y="1377" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1557" y="1390" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1557" y="1403" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1557" y="1416" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1557" y="1429" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1557" y="1442" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1571" y="1364" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1571" y="1377" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">justification</text>
+      <text x="1571" y="1390" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">selected_position</text>
+      <text x="1571" y="1403" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">selected_score</text>
+      <text x="1571" y="1416" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">ranked_candidates</text>
+      <text x="1571" y="1429" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">decided_at</text>
+      <text x="1571" y="1442" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">selection_registered_at</text>
+      <text x="1688" y="1364" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1688" y="1377" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1688" y="1390" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1688" y="1403" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1688" y="1416" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1688" y="1429" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1688" y="1442" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="1553" x2="1731" y1="1449" y2="1449" stroke="#0080ff" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#11079B04-8A74-4E93-97EB-E4B5A5CBE587">
+      <defs>
+         <linearGradient id="Gradient17" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#aee4ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1556" y="228" fill="url(#Gradient17)" width="172" height="144" stroke="#0080ff" stroke-width="1"/>
+      <text x="1642" y="239" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;tenant scoped, append only&gt;&gt;</text>
+      <text x="1642" y="254" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">AuditLog</text>
+      <line x1="1556" x2="1728" y1="260" y2="260" stroke="#0080ff" stroke-width="1"/>
+      <text x="1560" y="270" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1560" y="283" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1560" y="296" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1560" y="309" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1560" y="322" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1560" y="335" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1560" y="348" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">+</text>
+      <text x="1574" y="270" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1574" y="283" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">action</text>
+      <text x="1574" y="296" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">auditable_type</text>
+      <text x="1574" y="309" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">auditable_id</text>
+      <text x="1574" y="322" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">metadata</text>
+      <text x="1574" y="335" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">ip_address</text>
+      <text x="1574" y="348" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="1656" y="270" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1656" y="283" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: AuditAction</text>
+      <text x="1656" y="296" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1656" y="309" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1656" y="322" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1656" y="335" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <text x="1656" y="348" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">: </text>
+      <line x1="1556" x2="1728" y1="355" y2="355" stroke="#0080ff" stroke-width="1"/>
+   </a>
+</svg>

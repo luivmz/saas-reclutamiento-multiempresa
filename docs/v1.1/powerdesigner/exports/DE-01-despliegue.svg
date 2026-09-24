@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="537mm" xmlns="http://www.w3.org/2000/svg" height="387mm" version="1.1" viewBox="0 0 2031 1463" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <rect x="2" y="322" fill="#ffffff" width="347" height="534" stroke="#000000" stroke-width="1"/>
+   <text x="103" y="342" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;device&gt;&gt; Equipo del usuario</text>
+   <rect x="455" y="2" fill="#ffffff" width="1574" height="1334" stroke="#000000" stroke-width="1"/>
+   <text x="556" y="22" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;device&gt;&gt; Equipo anfitrión</text>
+   <rect x="495" y="216" fill="#ffffff" width="1067" height="1066" stroke="#000000" stroke-width="1"/>
+   <text x="665" y="236" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;execution environment&gt;&gt; Docker Engine · proyecto reclutamiento</text>
+   <rect x="549" y="242" fill="#ffffff" width="480" height="400" stroke="#000000" stroke-width="1"/>
+   <text x="650" y="262" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;container&gt;&gt; app</text>
+   <polygon fill="#ffffff" points="15,1024 15,1061 335,1061 335,1030 329,1024" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="335" x2="329" y1="1030" y2="1030" stroke="#000000" stroke-width="1"/>
+   <line x1="329" x2="329" y1="1030" y2="1024" stroke="#000000" stroke-width="1"/>
+   <text x="175" y="1040" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">public/build lo genera npm run build en entrypoint.sh; no hay </text>
+   <text x="175" y="1050" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">servidor de frontend separado.</text>
+   <polygon fill="#ffffff" points="842,1424 842,1461 1642,1461 1642,1430 1636,1424" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="1642" x2="1636" y1="1430" y2="1430" stroke="#000000" stroke-width="1"/>
+   <line x1="1636" x2="1636" y1="1430" y2="1424" stroke="#000000" stroke-width="1"/>
+   <text x="1242" y="1445" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Perfil e2e (app-e2e :8001, queue-e2e, cypress): solo pruebas. Mailer 'log' en desarrollo: sin SMTP ni proveedor. Sin entorno de producción, nube, S3, CDN ni Kubernetes.</text>
+   <a target="_parent" xlink:href="#C8734186-C1E3-4065-9937-79ACFD4D9A26">
+      <polyline fill="none" points="246,637 702,432" stroke="#0080ff" stroke-width="1"/>
+      <text x="474" y="537" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">HTTP :8000 · Inertia + JSON</text>
+   </a>
+   <a target="_parent" xlink:href="#00894261-B8DA-4DD8-96FC-B71DD10A900A">
+      <polyline fill="none" points="789,434 789,1090" stroke="#0080ff" stroke-width="1"/>
+      <text x="788" y="765" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">TCP 5432</text>
+   </a>
+   <a target="_parent" xlink:href="#186C7B96-DB8A-4270-BB3D-E1736CA21F85">
+      <polyline fill="none" points="829,434 1318,931" stroke="#0080ff" stroke-width="1"/>
+      <text x="1073" y="686" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">TCP 6379</text>
+   </a>
+   <a target="_parent" xlink:href="#050ED7A3-849C-4FB5-A85B-FDFFA865EBDF">
+      <polyline fill="none" points="1349,434 1349,930" stroke="#0080ff" stroke-width="1"/>
+      <text x="1348" y="685" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">TCP 6379</text>
+   </a>
+   <a target="_parent" xlink:href="#82AAC399-3BE0-429F-AF4B-A1C82310EE9F">
+      <polyline fill="none" points="1328,434 814,1090" stroke="#0080ff" stroke-width="1"/>
+      <text x="1071" y="765" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">TCP 5432</text>
+   </a>
+   <a target="_parent" xlink:href="#578E28A6-365B-4FC1-A24F-E2DDB53B8267">
+      <polyline fill="none" points="868,429 1720,716" stroke="#0080ff" stroke-width="1"/>
+      <text x="1294" y="566" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">HTTP host.docker.internal:8008 · POST /v1/</text>
+      <text x="1294" y="576" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">predict + X-Internal-Token [ML_SERVICE_</text>
+      <text x="1294" y="586" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">ENABLED=true]</text>
+   </a>
+   <a target="_parent" xlink:href="#DA2815B4-7E0D-461A-B116-7860B1E2573C">
+      <defs>
+         <linearGradient id="Gradient1" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient1)" points="101,650 114,637 250,637 237,650 101,650" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient2" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient2)" points="237,701 237,650 250,637 250,688 237,701" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient3" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="101" y="650" fill="url(#Gradient3)" width="136" height="51" stroke="none" stroke-width="0"/>
+      <polyline fill="none" points="101,701 101,650 114,637 250,637 250,688 237,701 101,701 101,650" stroke="#8080c0" stroke-width="1"/>
+      <line x1="101" x2="237" y1="650" y2="650" stroke="#8080c0" stroke-width="1"/>
+      <line x1="250" x2="237" y1="637" y2="650" stroke="#8080c0" stroke-width="1"/>
+      <line x1="237" x2="237" y1="701" y2="650" stroke="#8080c0" stroke-width="1"/>
+      <text x="103" y="670" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;&lt;execution environment&gt;&gt;</text>
+      <text x="168" y="685" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Navegador web</text>
+   </a>
+   <a target="_parent" xlink:href="#F204AFA6-DB79-4623-9451-393FA8F6FBC5">
+      <defs>
+         <linearGradient id="Gradient4" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient4)" points="702,383 714,370 876,370 863,383 702,383" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient5" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient5)" points="863,434 863,383 876,370 876,422 863,434" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient6" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="702" y="383" fill="url(#Gradient6)" width="161" height="51" stroke="none" stroke-width="0"/>
+      <polyline fill="none" points="702,434 702,383 714,370 876,370 876,422 863,434 702,434 702,383" stroke="#8080c0" stroke-width="1"/>
+      <line x1="702" x2="863" y1="383" y2="383" stroke="#8080c0" stroke-width="1"/>
+      <line x1="876" x2="863" y1="370" y2="383" stroke="#8080c0" stroke-width="1"/>
+      <line x1="863" x2="863" y1="434" y2="383" stroke="#8080c0" stroke-width="1"/>
+      <text x="782" y="397" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;execution environment&gt;&gt;</text>
+      <text x="782" y="414" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">PHP 8.4 · php artisan serve :</text>
+      <text x="782" y="424" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">8000</text>
+   </a>
+   <a target="_parent" xlink:href="#FA27A98E-4E81-487E-B8AE-297970851868">
+      <defs>
+         <linearGradient id="Gradient7" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient7)" points="1306,383 1319,370 1391,370 1378,383 1306,383" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient8" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient8)" points="1378,434 1378,383 1391,370 1391,422 1378,434" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient9" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1306" y="383" fill="url(#Gradient9)" width="72" height="51" stroke="none" stroke-width="0"/>
+      <polyline fill="none" points="1306,434 1306,383 1319,370 1391,370 1391,422 1378,434 1306,434 1306,383" stroke="#8080c0" stroke-width="1"/>
+      <line x1="1306" x2="1378" y1="383" y2="383" stroke="#8080c0" stroke-width="1"/>
+      <line x1="1391" x2="1378" y1="370" y2="383" stroke="#8080c0" stroke-width="1"/>
+      <line x1="1378" x2="1378" y1="434" y2="383" stroke="#8080c0" stroke-width="1"/>
+      <text x="1308" y="403" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;&lt;container&gt;&gt;</text>
+      <text x="1341" y="418" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">queue</text>
+   </a>
+   <a target="_parent" xlink:href="#DBB5CA93-588C-472A-8C17-EFCF80FCB9D8">
+      <defs>
+         <linearGradient id="Gradient10" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient10)" points="746,1103 759,1090 831,1090 818,1103 746,1103" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient11" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient11)" points="818,1154 818,1103 831,1090 831,1142 818,1154" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient12" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="746" y="1103" fill="url(#Gradient12)" width="72" height="51" stroke="none" stroke-width="0"/>
+      <polyline fill="none" points="746,1154 746,1103 759,1090 831,1090 831,1142 818,1154 746,1154 746,1103" stroke="#8080c0" stroke-width="1"/>
+      <line x1="746" x2="818" y1="1103" y2="1103" stroke="#8080c0" stroke-width="1"/>
+      <line x1="831" x2="818" y1="1090" y2="1103" stroke="#8080c0" stroke-width="1"/>
+      <line x1="818" x2="818" y1="1154" y2="1103" stroke="#8080c0" stroke-width="1"/>
+      <text x="748" y="1123" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;&lt;container&gt;&gt;</text>
+      <text x="781" y="1138" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">postgres</text>
+   </a>
+   <a target="_parent" xlink:href="#51C16E08-6944-4289-BC29-9F78C48B1EA7">
+      <defs>
+         <linearGradient id="Gradient13" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient13)" points="1306,943 1319,930 1391,930 1378,943 1306,943" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient14" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient14)" points="1378,994 1378,943 1391,930 1391,982 1378,994" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient15" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1306" y="943" fill="url(#Gradient15)" width="72" height="51" stroke="none" stroke-width="0"/>
+      <polyline fill="none" points="1306,994 1306,943 1319,930 1391,930 1391,982 1378,994 1306,994 1306,943" stroke="#8080c0" stroke-width="1"/>
+      <line x1="1306" x2="1378" y1="943" y2="943" stroke="#8080c0" stroke-width="1"/>
+      <line x1="1391" x2="1378" y1="930" y2="943" stroke="#8080c0" stroke-width="1"/>
+      <line x1="1378" x2="1378" y1="994" y2="943" stroke="#8080c0" stroke-width="1"/>
+      <text x="1308" y="963" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;&lt;container&gt;&gt;</text>
+      <text x="1341" y="978" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">redis</text>
+   </a>
+   <a target="_parent" xlink:href="#F73E3C98-4722-4AAE-9A83-39BBAFAFDB60">
+      <defs>
+         <linearGradient id="Gradient16" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient16)" points="1720,703 1733,690 1937,690 1924,703 1720,703" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient17" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <polygon fill="url(#Gradient17)" points="1924,754 1924,703 1937,690 1937,742 1924,754" stroke="none" stroke-width="0" stroke-linejoin="miter"/>
+      <defs>
+         <linearGradient id="Gradient18" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#d0d0ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1720" y="703" fill="url(#Gradient18)" width="204" height="51" stroke="none" stroke-width="0"/>
+      <polyline fill="none" points="1720,754 1720,703 1733,690 1937,690 1937,742 1924,754 1720,754 1720,703" stroke="#8080c0" stroke-width="1"/>
+      <line x1="1720" x2="1924" y1="703" y2="703" stroke="#8080c0" stroke-width="1"/>
+      <line x1="1937" x2="1924" y1="690" y2="703" stroke="#8080c0" stroke-width="1"/>
+      <line x1="1924" x2="1924" y1="754" y2="703" stroke="#8080c0" stroke-width="1"/>
+      <text x="1722" y="723" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;&lt;execution environment, experimental&gt;&gt;</text>
+      <text x="1821" y="738" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Proceso Python · uvicorn :8008</text>
+   </a>
+   <a target="_parent" xlink:href="#D457F080-549D-4C07-98C7-A6D194F8BF7D">
+      <image x="159" y="706" width="32" height="32" xlink:href="DE-01-despliegue_svg_Files/svg_bitmap1.png"/>
+      <text x="175" y="751" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Bundle JS y CSS </text>
+      <text x="175" y="761" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">(React + Inertia)</text>
+   </a>
+   <a target="_parent" xlink:href="#D055E15D-3D10-4A39-BFF6-3A21AC41870E">
+      <image x="679" y="440" width="32" height="32" xlink:href="DE-01-despliegue_svg_Files/svg_bitmap1.png"/>
+      <text x="695" y="483" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Aplicación Laravel</text>
+   </a>
+   <a target="_parent" xlink:href="#E77EB5F4-4C74-4985-B91F-73515BB71A84">
+      <image x="866" y="440" width="32" height="32" xlink:href="DE-01-despliegue_svg_Files/svg_bitmap1.png"/>
+      <text x="882" y="483" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">public-build</text>
+   </a>
+   <a target="_parent" xlink:href="#5AFFDC7D-907F-4F6C-9D2E-7584D71FA8B5">
+      <image x="773" y="560" width="32" height="32" xlink:href="DE-01-despliegue_svg_Files/svg_bitmap1.png"/>
+      <text x="789" y="605" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">storage-app-private </text>
+      <text x="789" y="615" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">(CV)</text>
+   </a>
+   <a target="_parent" xlink:href="#3896F937-D5AF-4DC7-BEDA-BE97FB56283D">
+      <image x="1333" y="440" width="32" height="32" xlink:href="DE-01-despliegue_svg_Files/svg_bitmap1.png"/>
+      <text x="1348" y="485" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">queue work redis --</text>
+      <text x="1348" y="495" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">tries=3</text>
+   </a>
+   <a target="_parent" xlink:href="#D9ABB955-0DA6-4630-B589-ECEEA10D1975">
+      <image x="773" y="1200" width="32" height="32" xlink:href="DE-01-despliegue_svg_Files/svg_bitmap2.png"/>
+      <text x="788" y="1246" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">PostgreSQL 17.11 - </text>
+      <text x="788" y="1256" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">reclutamiento, _</text>
+      <text x="788" y="1266" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">testing, _e2e</text>
+   </a>
+   <a target="_parent" xlink:href="#30594943-E4F5-4713-A033-F53367B5FEB7">
+      <image x="1333" y="1000" width="32" height="32" xlink:href="DE-01-despliegue_svg_Files/svg_bitmap3.png"/>
+      <text x="1349" y="1045" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Redis 7.4.11 - sesión</text>
+      <text x="1349" y="1055" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">, caché, cola</text>
+   </a>
+   <a target="_parent" xlink:href="#8B853D08-47E1-41D0-A653-99846BD0835C">
+      <image x="1813" y="813" width="32" height="32" xlink:href="DE-01-despliegue_svg_Files/svg_bitmap4.png"/>
+      <text x="1828" y="858" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">recruitment_ml.api.</text>
+      <text x="1828" y="868" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">app</text>
+   </a>
+   <a target="_parent" xlink:href="#2381C3ED-D5B3-43AF-863A-989F6EA0E16A">
+      <image x="1813" y="893" width="32" height="32" xlink:href="DE-01-despliegue_svg_Files/svg_bitmap5.png"/>
+      <text x="1829" y="938" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">ml-service artifacts (.</text>
+      <text x="1829" y="948" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">joblib + metadatos)</text>
+   </a>
+</svg>

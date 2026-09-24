@@ -1,0 +1,1379 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="628mm" xmlns="http://www.w3.org/2000/svg" height="595mm" version="1.1" viewBox="0 0 2376 2250" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <a target="_parent" xlink:href="#FD86B90B-B7C7-4D43-8D28-AD67A792B7E4">
+      <polyline fill="none" points="374,718 451,718 451,1013" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="451,1013 448,1000 454,1000" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#2469E884-76A5-4A34-A643-084CCA2AB946">
+      <polyline fill="none" points="261,780 261,1172 835,1172" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="835,1172 822,1175 822,1169" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#0C30AFF1-2311-40A4-9640-86A0419AB465">
+      <polyline fill="none" points="374,723 974,723" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="974,723 960,726 960,720" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#C5DFAFFD-4081-45A7-BAFC-6DAE8A4C15F8">
+      <polyline fill="none" points="419,1164 419,1386 255,1386" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="255,1386 268,1383 268,1389" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#49129FA3-8052-4CD8-A1E8-0E3320F3613E">
+      <polyline fill="none" points="451,1164 451,1172 835,1172" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="835,1172 822,1175 822,1169" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#4192716A-8022-4809-BDC5-A0E4F55B77B9">
+      <polyline fill="none" points="451,1013 451,728 974,728" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="974,728 960,731 960,725" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#CB97089C-8D28-419F-8A91-946A3D5AB277">
+      <polyline fill="none" points="1259,664 467,664 467,718" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="467,734 467,1013" stroke="#0080c0" stroke-width="1"/>
+      <path d="M467,734 A5,5 0 0,0 472,728" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="472" x2="472" y1="728" y2="723" stroke="#0080c0" stroke-width="1"/>
+      <path d="M472,723 A5,5 0 0,0 467,718" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1259,664 1245,667 1245,661" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#FA08A974-6203-45DE-9A7C-FD3008B8D589">
+      <polyline fill="none" points="1736,959 1736,931 1186,931 1186,784" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1186,784 1189,798 1183,798" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#D465B8AA-3C0B-4911-B197-07EA923599A9">
+      <polyline fill="none" points="1736,1097 1736,1250 1116,1250" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1116,1250 1130,1247 1130,1253" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#1182A4FC-1C18-492B-930C-9376078E67F9">
+      <polyline fill="none" points="255,1438 464,1438" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="464,1438 451,1441 451,1435" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#24C2C3F3-7C6E-47A5-A905-499E83BCD61D">
+      <polyline fill="none" points="595,1430 595,1172 835,1172" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="835,1172 822,1175 822,1169" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#C3A2BCC3-4B86-407A-A719-0AD42A4DA4B6">
+      <polyline fill="none" points="1060,526 1060,672" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1060,672 1057,659 1063,659" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#ADE92232-83B1-4C21-A64C-368C2897CFA2">
+      <polyline fill="none" points="928,526 928,623 1259,623" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1259,623 1245,626 1245,620" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#FB2864FA-E92A-47AF-BA0E-F6315F2EAC86">
+      <polyline fill="none" points="947,127 947,362" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="947,362 944,348 950,348" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#64B5DB97-68FC-43CE-807F-C31582925D50">
+      <polyline fill="none" points="1212,65 1230,65 1230,261" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1230,261 1227,248 1233,248" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#C7D54990-00C1-420D-9DB6-46DC3377AF67">
+      <polyline fill="none" points="1076,672 1076,670" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1076,659 1076,127" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1076,670 A5,5 0 0,0 1082,664" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1082" x2="1082" y1="664" y2="664" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1082,664 A5,5 0 0,0 1076,659" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1076,672 1073,659 1079,659" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#D10B4F39-C111-4ACD-AF75-B9A7B34302B8">
+      <polyline fill="none" points="435,1013 435,728" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="435,718 435,307 1071,307" stroke="#0080c0" stroke-width="1"/>
+      <path d="M435,728 A5,5 0 0,0 440,723" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="440" x2="440" y1="723" y2="723" stroke="#0080c0" stroke-width="1"/>
+      <path d="M440,723 A5,5 0 0,0 435,718" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1082,307 1109,307" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1082,307 A5,5 0 0,0 1076,301" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1076" x2="1076" y1="301" y2="301" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1076,301 A5,5 0 0,0 1071,307" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="435,1013 432,1000 438,1000" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#D556F248-474D-4D7C-B833-2CA358E72D9A">
+      <polyline fill="none" points="1116,1118 1239,1118 1239,936" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1239,926 1239,670" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1239,936 A5,5 0 0,0 1244,931" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1244" x2="1244" y1="931" y2="931" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1244,931 A5,5 0 0,0 1239,926" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1239,659 1239,503" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1239,670 A5,5 0 0,0 1244,664" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1244" x2="1244" y1="664" y2="664" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1244,664 A5,5 0 0,0 1239,659" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1116,1118 1130,1115 1130,1121" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#786A549D-AE1B-4E19-B56B-8608F2F55C9A">
+      <polyline fill="none" points="1081,672 1081,670" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1081,659 1081,382 1109,382" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1081,670 A5,5 0 0,0 1086,664" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1086" x2="1086" y1="664" y2="664" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1086,664 A5,5 0 0,0 1081,659" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1081,672 1078,659 1084,659" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#2F8BA94E-EE20-471D-BD84-DD58E218056B">
+      <polyline fill="none" points="960,1077 960,734" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="960,718 960,670" stroke="#0080c0" stroke-width="1"/>
+      <path d="M960,734 A5,5 0 0,0 965,728" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="965" x2="965" y1="728" y2="723" stroke="#0080c0" stroke-width="1"/>
+      <path d="M965,723 A5,5 0 0,0 960,718" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="960,659 960,639 1071,639" stroke="#0080c0" stroke-width="1"/>
+      <path d="M960,670 A5,5 0 0,0 965,664" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="965" x2="965" y1="664" y2="664" stroke="#0080c0" stroke-width="1"/>
+      <path d="M965,664 A5,5 0 0,0 960,659" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1086,639 1223,639 1223,503" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1086,639 A5,5 0 0,0 1081,634" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1081" x2="1076" y1="634" y2="634" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1076,634 A5,5 0 0,0 1071,639" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="960,1077 957,1064 963,1064" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#040E6006-DCC1-4787-9478-D633FE222BF2">
+      <polyline fill="none" points="772,377 825,377" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="825,377 812,380 812,374" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#9DE06745-8EF9-4F99-B511-A87010403843">
+      <polyline fill="none" points="675,732 675,732" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="675,718 675,670" stroke="#0080c0" stroke-width="1"/>
+      <path d="M675,732 A5,5 0 0,0 680,726" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="680" x2="680" y1="726" y2="723" stroke="#0080c0" stroke-width="1"/>
+      <path d="M680,723 A5,5 0 0,0 675,718" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="675,659 675,586 632,586 632,440" stroke="#0080c0" stroke-width="1"/>
+      <path d="M675,670 A5,5 0 0,0 680,664" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="680" x2="680" y1="664" y2="664" stroke="#0080c0" stroke-width="1"/>
+      <path d="M680,664 A5,5 0 0,0 675,659" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="675,732 672,718 678,718" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#E3DFE528-74F3-462D-8560-CAB1865A735A">
+      <polyline fill="none" points="974,728 965,728" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="954,728 680,728" stroke="#0080c0" stroke-width="1"/>
+      <path d="M965,728 A5,5 0 0,0 960,723" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="960" x2="960" y1="723" y2="723" stroke="#0080c0" stroke-width="1"/>
+      <path d="M960,723 A5,5 0 0,0 954,728" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="670,728 632,728 632,728" stroke="#0080c0" stroke-width="1"/>
+      <path d="M680,728 A5,5 0 0,0 675,723" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="675" x2="675" y1="723" y2="723" stroke="#0080c0" stroke-width="1"/>
+      <path d="M675,723 A5,5 0 0,0 670,728" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="632,718 632,670" stroke="#0080c0" stroke-width="1"/>
+      <path d="M632,728 A5,5 0 0,0 637,723" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="637" x2="637" y1="723" y2="723" stroke="#0080c0" stroke-width="1"/>
+      <path d="M637,723 A5,5 0 0,0 632,718" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="632,659 632,440" stroke="#0080c0" stroke-width="1"/>
+      <path d="M632,670 A5,5 0 0,0 637,664" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="637" x2="637" y1="664" y2="664" stroke="#0080c0" stroke-width="1"/>
+      <path d="M637,664 A5,5 0 0,0 632,659" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="974,728 960,731 960,725" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#3D2403E6-3AEF-4FD4-9D1C-04D25C0EEFE1">
+      <polyline fill="none" points="451,1013 451,853 461,853" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="472,853 554,853" stroke="#0080c0" stroke-width="1"/>
+      <path d="M472,853 A5,5 0 0,0 467,847" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="467" x2="467" y1="847" y2="847" stroke="#0080c0" stroke-width="1"/>
+      <path d="M467,847 A5,5 0 0,0 461,853" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="451,1013 448,1000 454,1000" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#B270A929-7AD2-4061-946D-3F5DB4C7764C">
+      <polyline fill="none" points="796,852 944,852 944,1077" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="944,1077 941,1064 947,1064" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#91A2A648-B7B0-4E12-AECA-02092B1F14C8">
+      <polyline fill="none" points="974,728 965,728" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="954,728 675,728 675,732" stroke="#0080c0" stroke-width="1"/>
+      <path d="M965,728 A5,5 0 0,0 960,723" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="960" x2="960" y1="723" y2="723" stroke="#0080c0" stroke-width="1"/>
+      <path d="M960,723 A5,5 0 0,0 954,728" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="974,728 960,731 960,725" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#BF95D85E-FCB5-4944-B2AA-2DB653BE3C98">
+      <polyline fill="none" points="796,853 928,853 928,1077" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="928,1077 925,1064 931,1064" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#3BF94FBE-A8FE-4721-BBE9-59359259B869">
+      <polyline fill="none" points="1413,534 1097,534 1097,672" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1097,672 1094,659 1100,659" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#929DF7C6-C916-49EB-B7DC-4E2A09EDBB51">
+      <polyline fill="none" points="1529,557 1529,615" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1529,615 1526,602 1532,602" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#C2FAABEB-C7FF-4D99-A1E6-E5D4F46EEB85">
+      <polyline fill="none" points="1325,1402 976,1402 976,1267" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="976,1267 979,1280 973,1280" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#EED223F4-CDEC-4E2F-A743-36B504B2FE62">
+      <polyline fill="none" points="1385,1242 1385,1245" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1385,1256 1385,1332" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1385,1256 A5,5 0 0,0 1390,1250" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1390" x2="1390" y1="1250" y2="1250" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1390,1250 A5,5 0 0,0 1385,1245" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1385,1242 1388,1256 1382,1256" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#006DF77B-17EA-4A3B-95E2-60C5A495BB71">
+      <polyline fill="none" points="1140,784 1140,1113" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1140,1123 1140,1245" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1140,1123 A5,5 0 0,0 1146,1118" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1146" x2="1146" y1="1118" y2="1118" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1146,1118 A5,5 0 0,0 1140,1113" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1140,1256 1140,1386 1325,1386" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1140,1256 A5,5 0 0,0 1146,1250" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1146" x2="1146" y1="1250" y2="1250" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1146,1250 A5,5 0 0,0 1140,1245" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1140,784 1143,798 1137,798" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#481EFCF5-5DAC-462F-AFF5-6933F19A7129">
+      <polyline fill="none" points="1116,1172 1135,1172" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1146,1172 1255,1172" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1146,1172 A5,5 0 0,0 1140,1167" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1140" x2="1140" y1="1167" y2="1167" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1140,1167 A5,5 0 0,0 1135,1172" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1116,1172 1130,1169 1130,1175" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#8D9A0B69-1CAC-4857-A778-521EA0CE8DDB">
+      <polyline fill="none" points="1156,784 1156,1102 1234,1102" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1244,1102 1255,1102" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1244,1102 A5,5 0 0,0 1239,1097" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1239" x2="1239" y1="1097" y2="1097" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1239,1097 A5,5 0 0,0 1234,1102" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1156,784 1159,798 1153,798" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#172BD8CE-D170-403E-868C-31C8BF470F75">
+      <polyline fill="none" points="1116,1140 1135,1140" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1146,1140 1255,1140" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1146,1140 A5,5 0 0,0 1140,1135" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1140" x2="1140" y1="1135" y2="1135" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1140,1135 A5,5 0 0,0 1135,1140" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1116,1140 1130,1137 1130,1143" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#FF8F7728-D9A2-464D-A88D-E50A47A3D86A">
+      <polyline fill="none" points="1116,1156 1135,1156" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1146,1156 1255,1156" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1146,1156 A5,5 0 0,0 1140,1151" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1140" x2="1140" y1="1151" y2="1151" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1140,1151 A5,5 0 0,0 1135,1156" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1116,1156 1130,1153 1130,1159" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#D4DEA1E6-DE11-4640-BF60-A275CB488338">
+      <polyline fill="none" points="1116,1188 1135,1188" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1146,1188 1207,1188 1207,1245" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1146,1188 A5,5 0 0,0 1140,1183" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1140" x2="1140" y1="1183" y2="1183" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1140,1183 A5,5 0 0,0 1135,1188" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1207,1256 1207,1381" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1207,1256 A5,5 0 0,0 1212,1250" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1212" x2="1212" y1="1250" y2="1250" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1212,1250 A5,5 0 0,0 1207,1245" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1207,1391 1207,1397" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1207,1391 A5,5 0 0,0 1212,1386" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1212" x2="1212" y1="1386" y2="1386" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1212,1386 A5,5 0 0,0 1207,1381" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1207,1407 1207,1971" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1207,1407 A5,5 0 0,0 1212,1402" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1212" x2="1212" y1="1402" y2="1402" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1212,1402 A5,5 0 0,0 1207,1397" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1116,1188 1130,1185 1130,1191" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#3B148580-B38E-4A5C-A129-7550D4CAF2B4">
+      <polyline fill="none" points="1085,1267 1085,1397" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1085,1407 1085,1554" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1085,1407 A5,5 0 0,0 1090,1402" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1090" x2="1090" y1="1402" y2="1402" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1090,1402 A5,5 0 0,0 1085,1397" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1085,1267 1088,1280 1082,1280" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#0BDD82A0-4AD9-4812-B99C-B227FB61B4EC">
+      <polyline fill="none" points="1124,784 1124,1113" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1124,1123 1124,1135" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1124,1123 A5,5 0 0,0 1130,1118" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1130" x2="1130" y1="1118" y2="1118" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1130,1118 A5,5 0 0,0 1124,1113" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1124,1146 1124,1151" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1124,1146 A5,5 0 0,0 1130,1140" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1130" x2="1130" y1="1140" y2="1140" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1130,1140 A5,5 0 0,0 1124,1135" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1124,1162 1124,1167" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1124,1162 A5,5 0 0,0 1130,1156" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1130" x2="1130" y1="1156" y2="1156" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1130,1156 A5,5 0 0,0 1124,1151" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1124,1178 1124,1183" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1124,1178 A5,5 0 0,0 1130,1172" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1130" x2="1130" y1="1172" y2="1172" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1130,1172 A5,5 0 0,0 1124,1167" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1124,1194 1124,1245" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1124,1194 A5,5 0 0,0 1130,1188" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1130" x2="1130" y1="1188" y2="1188" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1130,1188 A5,5 0 0,0 1124,1183" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1124,1256 1124,1397" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1124,1256 A5,5 0 0,0 1130,1250" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1130" x2="1130" y1="1250" y2="1250" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1130,1250 A5,5 0 0,0 1124,1245" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1124,1407 1124,1554" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1124,1407 A5,5 0 0,0 1130,1402" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1130" x2="1130" y1="1402" y2="1402" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1130,1402 A5,5 0 0,0 1124,1397" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1124,784 1127,798 1121,798" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#08C8D39A-C6C4-4006-BFC0-64EDE070A509">
+      <polyline fill="none" points="435,1164 435,1167" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="435,1178 435,1433" stroke="#0080c0" stroke-width="1"/>
+      <path d="M435,1178 A5,5 0 0,0 440,1172" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="440" x2="440" y1="1172" y2="1172" stroke="#0080c0" stroke-width="1"/>
+      <path d="M440,1172 A5,5 0 0,0 435,1167" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="435,1444 435,1655 966,1655" stroke="#0080c0" stroke-width="1"/>
+      <path d="M435,1444 A5,5 0 0,0 440,1438" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="440" x2="440" y1="1438" y2="1438" stroke="#0080c0" stroke-width="1"/>
+      <path d="M440,1438 A5,5 0 0,0 435,1433" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="435,1164 438,1178 432,1178" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#D6CC1894-CBE4-48A4-8B0D-44B1DF80D00A">
+      <polyline fill="none" points="1101,1267 1101,1397" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1101,1407 1101,1554" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1101,1407 A5,5 0 0,0 1106,1402" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1106" x2="1106" y1="1402" y2="1402" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1106,1402 A5,5 0 0,0 1101,1397" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1101,1267 1104,1280 1098,1280" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#4F05B4C0-8EC6-4C1A-AC23-44E5704C7EC9">
+      <polyline fill="none" points="1537,768 1590,768 1590,926" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1590,936 1590,1245" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1590,936 A5,5 0 0,0 1595,931" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1595" x2="1595" y1="931" y2="931" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1595,931 A5,5 0 0,0 1590,926" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1590,1256 1590,1655 1204,1655" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1590,1256 A5,5 0 0,0 1595,1250" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1595" x2="1595" y1="1250" y2="1250" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1595,1250 A5,5 0 0,0 1590,1245" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1537,768 1550,765 1550,771" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#6A5092F5-2896-4443-AE29-9FBAC7D1C1FA">
+      <polyline fill="none" points="1024,1077 1024,931 1081,931 1081,784" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1081,784 1084,798 1078,798" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#278EAAF5-78E5-4DB8-8734-0E2121E85574">
+      <polyline fill="none" points="976,1077 976,852 1075,852" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1086,852 1119,852" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1086,852 A5,5 0 0,0 1081,847" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1081" x2="1081" y1="847" y2="847" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1081,847 A5,5 0 0,0 1075,852" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1130,852 1135,852" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1130,852 A5,5 0 0,0 1124,847" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1124" x2="1124" y1="847" y2="847" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1124,847 A5,5 0 0,0 1119,852" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1146,852 1151,852" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1146,852 A5,5 0 0,0 1140,847" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1140" x2="1140" y1="847" y2="847" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1140,847 A5,5 0 0,0 1135,852" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1162,852 1180,852" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1162,852 A5,5 0 0,0 1156,847" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1156" x2="1156" y1="847" y2="847" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1156,847 A5,5 0 0,0 1151,852" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1191,852 1234,852" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1191,852 A5,5 0 0,0 1186,847" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1186" x2="1186" y1="847" y2="847" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1186,847 A5,5 0 0,0 1180,852" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1244,852 1259,852" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1244,852 A5,5 0 0,0 1239,847" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1239" x2="1239" y1="847" y2="847" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1239,847 A5,5 0 0,0 1234,852" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="976,1077 973,1064 979,1064" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#9C56939E-AC9A-47ED-8589-891C53224103">
+      <polyline fill="none" points="992,1077 992,851 1075,851" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1086,851 1119,851" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1086,851 A5,5 0 0,0 1081,845" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1081" x2="1081" y1="845" y2="845" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1081,845 A5,5 0 0,0 1075,851" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1130,851 1135,851" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1130,851 A5,5 0 0,0 1124,845" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1124" x2="1124" y1="845" y2="845" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1124,845 A5,5 0 0,0 1119,851" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1146,851 1151,851" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1146,851 A5,5 0 0,0 1140,845" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1140" x2="1140" y1="845" y2="845" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1140,845 A5,5 0 0,0 1135,851" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1162,851 1180,851" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1162,851 A5,5 0 0,0 1156,845" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1156" x2="1156" y1="845" y2="845" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1156,845 A5,5 0 0,0 1151,851" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1191,851 1234,851" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1191,851 A5,5 0 0,0 1186,845" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1186" x2="1186" y1="845" y2="845" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1186,845 A5,5 0 0,0 1180,851" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1244,851 1259,851" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1244,851 A5,5 0 0,0 1239,845" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1239" x2="1239" y1="845" y2="845" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1239,845 A5,5 0 0,0 1234,851" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="992,1077 989,1064 995,1064" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#253B4FB4-C916-4909-A9A7-DA9B06B328B1">
+      <polyline fill="none" points="1385,962 1385,936" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1385,926 1385,922" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1385,936 A5,5 0 0,0 1390,931" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1390" x2="1390" y1="931" y2="931" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1390,931 A5,5 0 0,0 1385,926" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1385,962 1382,948 1388,948" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#D52C2893-BDE5-4AC1-B5B1-29C6C01908DA">
+      <polyline fill="none" points="1187,728 1234,728" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1244,728 1259,728" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1244,728 A5,5 0 0,0 1239,723" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1239" x2="1239" y1="723" y2="723" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1239,723 A5,5 0 0,0 1234,728" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1187,728 1201,725 1201,731" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#85287305-F402-4036-9B32-F48898D5A1F5">
+      <polyline fill="none" points="1008,1077 1008,869 1075,869" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1086,869 1119,869" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1086,869 A5,5 0 0,0 1081,863" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1081" x2="1081" y1="863" y2="863" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1081,863 A5,5 0 0,0 1075,869" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1130,869 1135,869" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1130,869 A5,5 0 0,0 1124,863" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1124" x2="1124" y1="863" y2="863" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1124,863 A5,5 0 0,0 1119,869" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1146,869 1151,869" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1146,869 A5,5 0 0,0 1140,863" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1140" x2="1140" y1="863" y2="863" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1140,863 A5,5 0 0,0 1135,869" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1162,869 1180,869" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1162,869 A5,5 0 0,0 1156,863" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1156" x2="1156" y1="863" y2="863" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1156,863 A5,5 0 0,0 1151,869" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1191,869 1234,869" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1191,869 A5,5 0 0,0 1186,863" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1186" x2="1186" y1="863" y2="863" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1186,863 A5,5 0 0,0 1180,869" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polyline fill="none" points="1244,869 1259,869" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1244,869 A5,5 0 0,0 1239,863" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <line x1="1239" x2="1239" y1="863" y2="863" stroke="#0080c0" stroke-width="1"/>
+      <path d="M1239,863 A5,5 0 0,0 1234,869" fill="none" stroke="#0080c0" stroke-width="1"/>
+      <polygon fill="#0080c0" points="1008,1077 1005,1064 1011,1064" stroke="#0080c0" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#9A7C01BA-5836-4EB2-A185-E9EAE20788A7">
+      <defs>
+         <linearGradient id="Gradient1" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#ffffc0"/>
+         </linearGradient>
+      </defs>
+      <rect x="1710" y="2136" rx="2" ry="2" fill="url(#Gradient1)" width="144" height="17" stroke="#806c00" stroke-width="1"/>
+      <image x="1717" y="2141" width="9" height="9" xlink:href="PDM-01-esquema-completo_svg_Files/svg_bitmap1.png"/>
+      <text x="1790" y="2147" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">audit_logs_append_only</text>
+   </a>
+   <a target="_parent" xlink:href="#AF3F227C-6DE9-4B70-A479-2FEC322206D6">
+      <rect x="149" y="655" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient2" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="149" y="655" fill="url(#Gradient2)" width="225" height="125" stroke="#0080c0" stroke-width="1"/>
+      <text x="261" y="666" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">application_stage_histories</text>
+      <line x1="149" x2="374" y1="672" y2="672" stroke="#0080c0" stroke-width="1"/>
+      <text x="154" y="682" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="154" y="695" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="154" y="708" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">application_id</text>
+      <text x="154" y="721" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">from_status</text>
+      <text x="154" y="734" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">to_status</text>
+      <text x="154" y="747" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">changed_by</text>
+      <text x="154" y="760" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">comment</text>
+      <text x="154" y="773" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="236" y="682" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="236" y="695" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="236" y="708" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="236" y="721" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="236" y="734" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="236" y="747" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="236" y="760" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="236" y="773" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="342" y="682" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="342" y="695" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk3&gt;</text>
+      <text x="342" y="708" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk1&gt;</text>
+      <text x="342" y="747" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk2&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#50B44662-D5C7-41F2-8CAC-DEE0717CB2B9">
+      <rect x="311" y="1013" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient3" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="311" y="1013" fill="url(#Gradient3)" width="280" height="151" stroke="#0080c0" stroke-width="1"/>
+      <text x="451" y="1024" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">applications</text>
+      <line x1="311" x2="591" y1="1030" y2="1030" stroke="#0080c0" stroke-width="1"/>
+      <text x="315" y="1040" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="315" y="1053" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="315" y="1066" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">vacancy_id</text>
+      <text x="315" y="1079" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">candidate_id</text>
+      <text x="315" y="1092" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">candidate_document_id</text>
+      <text x="315" y="1105" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">status</text>
+      <text x="315" y="1118" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">applied_at</text>
+      <text x="315" y="1131" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">stage_changed_at</text>
+      <text x="315" y="1144" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="315" y="1157" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="438" y="1040" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="438" y="1053" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="438" y="1066" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="438" y="1079" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="438" y="1092" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="438" y="1105" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="438" y="1118" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="438" y="1131" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="438" y="1144" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="438" y="1157" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="544" y="1040" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="544" y="1053" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk4&gt;</text>
+      <text x="544" y="1066" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak,fk2&gt;</text>
+      <text x="544" y="1079" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak,fk1&gt;</text>
+      <text x="544" y="1092" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk3&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#04AC3CB5-277F-4B77-B10B-EA11264C0949">
+      <rect x="1623" y="959" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient4" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="1623" y="959" fill="url(#Gradient4)" width="225" height="138" stroke="#0080c0" stroke-width="1"/>
+      <text x="1735" y="970" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">audit_logs</text>
+      <line x1="1623" x2="1848" y1="976" y2="976" stroke="#0080c0" stroke-width="1"/>
+      <text x="1628" y="986" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="1628" y="999" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1628" y="1012" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">user_id</text>
+      <text x="1628" y="1025" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">action</text>
+      <text x="1628" y="1038" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">auditable_type</text>
+      <text x="1628" y="1051" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">auditable_id</text>
+      <text x="1628" y="1064" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">metadata</text>
+      <text x="1628" y="1077" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">ip_address</text>
+      <text x="1628" y="1090" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="1710" y="986" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="1710" y="999" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1710" y="1012" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1710" y="1025" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(80)</text>
+      <text x="1710" y="1038" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(60)</text>
+      <text x="1710" y="1051" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1710" y="1064" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">jsonb</text>
+      <text x="1710" y="1077" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(45)</text>
+      <text x="1710" y="1090" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1816" y="986" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1816" y="999" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk1&gt;</text>
+      <text x="1816" y="1012" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk2&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#EE33DBB7-5B59-4639-BD55-EA60E5DD1A1F">
+      <rect x="991" y="2136" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient5" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="991" y="2136" fill="url(#Gradient5)" width="200" height="60" stroke="#0080c0" stroke-width="1"/>
+      <text x="1091" y="2147" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">cache</text>
+      <line x1="991" x2="1191" y1="2153" y2="2153" stroke="#0080c0" stroke-width="1"/>
+      <text x="996" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">key</text>
+      <text x="996" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">value</text>
+      <text x="996" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">expiration</text>
+      <text x="1051" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">character varying(255)</text>
+      <text x="1051" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1051" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1163" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#BED44A28-E3A3-4958-8B9C-2BBD80A59164">
+      <rect x="1231" y="2136" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient6" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="1231" y="2136" fill="url(#Gradient6)" width="201" height="60" stroke="#0080c0" stroke-width="1"/>
+      <text x="1331" y="2147" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">cache_locks</text>
+      <line x1="1231" x2="1432" y1="2153" y2="2153" stroke="#0080c0" stroke-width="1"/>
+      <text x="1236" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">key</text>
+      <text x="1236" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">owner</text>
+      <text x="1236" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">expiration</text>
+      <text x="1291" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">character varying(255)</text>
+      <text x="1291" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="1291" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1403" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#55709575-B4E6-4AC5-8DC3-5C4F20F21CF2">
+      <rect x="2" y="1333" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient7" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="2" y="1333" fill="url(#Gradient7)" width="253" height="138" stroke="#0080c0" stroke-width="1"/>
+      <text x="128" y="1344" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">candidate_documents</text>
+      <line x1="2" x2="255" y1="1350" y2="1350" stroke="#0080c0" stroke-width="1"/>
+      <text x="7" y="1360" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="7" y="1373" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">candidate_profile_id</text>
+      <text x="7" y="1386" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">type</text>
+      <text x="7" y="1399" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">original_name</text>
+      <text x="7" y="1412" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">stored_path</text>
+      <text x="7" y="1425" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">mime_type</text>
+      <text x="7" y="1438" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">size_bytes</text>
+      <text x="7" y="1451" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="7" y="1464" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="113" y="1360" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="113" y="1373" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="113" y="1386" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="113" y="1399" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="113" y="1412" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="113" y="1425" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(100)</text>
+      <text x="113" y="1438" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="113" y="1451" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="113" y="1464" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="225" y="1360" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="225" y="1373" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk&gt;</text>
+      <text x="225" y="1412" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#941B0901-8EA6-49E4-9D8D-DC2C141ACFBA">
+      <rect x="464" y="1430" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient8" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="464" y="1430" fill="url(#Gradient8)" width="262" height="151" stroke="#0080c0" stroke-width="1"/>
+      <text x="595" y="1441" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">candidate_profiles</text>
+      <line x1="464" x2="726" y1="1447" y2="1447" stroke="#0080c0" stroke-width="1"/>
+      <text x="469" y="1457" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="469" y="1470" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">user_id</text>
+      <text x="469" y="1483" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">phone</text>
+      <text x="469" y="1496" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">city</text>
+      <text x="469" y="1509" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">education_level</text>
+      <text x="469" y="1522" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">professional_title</text>
+      <text x="469" y="1535" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">years_of_experience</text>
+      <text x="469" y="1548" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">summary</text>
+      <text x="469" y="1561" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="469" y="1574" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="574" y="1457" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="574" y="1470" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="574" y="1483" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="574" y="1496" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(80)</text>
+      <text x="574" y="1509" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="574" y="1522" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(150)</text>
+      <text x="574" y="1535" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">smallint</text>
+      <text x="574" y="1548" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="574" y="1561" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="574" y="1574" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="686" y="1457" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="686" y="1470" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak,fk&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#0C2659FD-D22A-4900-9DE4-74DA335C3E5B">
+      <rect x="825" y="362" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient9" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="825" y="362" fill="url(#Gradient9)" width="244" height="164" stroke="#0080c0" stroke-width="1"/>
+      <text x="947" y="373" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">evaluation_criteria</text>
+      <line x1="825" x2="1069" y1="379" y2="379" stroke="#0080c0" stroke-width="1"/>
+      <text x="830" y="389" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="830" y="402" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="830" y="415" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">vacancy_id</text>
+      <text x="830" y="428" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">name</text>
+      <text x="830" y="441" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">stage</text>
+      <text x="830" y="454" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">weight</text>
+      <text x="830" y="467" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">min_score</text>
+      <text x="830" y="480" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">max_score</text>
+      <text x="830" y="493" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">position</text>
+      <text x="830" y="506" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="830" y="519" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="912" y="389" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="912" y="402" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="912" y="415" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="912" y="428" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(120)</text>
+      <text x="912" y="441" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="912" y="454" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">numeric(6,2)</text>
+      <text x="912" y="467" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">numeric(6,2)</text>
+      <text x="912" y="480" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">numeric(6,2)</text>
+      <text x="912" y="493" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">smallint</text>
+      <text x="912" y="506" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="912" y="519" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1024" y="389" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1024" y="402" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk1&gt;</text>
+      <text x="1024" y="415" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak,fk2&gt;</text>
+      <text x="1024" y="428" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#8FE0793B-5984-420D-92BC-9965E3B452F2">
+      <rect x="932" y="2" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient10" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="932" y="2" fill="url(#Gradient10)" width="280" height="125" stroke="#0080c0" stroke-width="1"/>
+      <text x="1072" y="13" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">evaluation_results</text>
+      <line x1="932" x2="1212" y1="19" y2="19" stroke="#0080c0" stroke-width="1"/>
+      <text x="936" y="29" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="936" y="42" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="936" y="55" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">evaluation_id</text>
+      <text x="936" y="68" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">evaluation_criterion_id</text>
+      <text x="936" y="81" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">score</text>
+      <text x="936" y="94" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">comment</text>
+      <text x="936" y="107" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="936" y="120" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="1053" y="29" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="1053" y="42" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1053" y="55" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1053" y="68" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1053" y="81" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">numeric(6,2)</text>
+      <text x="1053" y="94" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(500)</text>
+      <text x="1053" y="107" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1053" y="120" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1165" y="29" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1165" y="42" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk3&gt;</text>
+      <text x="1165" y="55" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak,fk2&gt;</text>
+      <text x="1165" y="68" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak,fk1&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#094EBD4E-CB96-40FE-AFCC-362C1A69A9B9">
+      <rect x="1109" y="261" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient11" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="1109" y="261" fill="url(#Gradient11)" width="242" height="242" stroke="#0080c0" stroke-width="1"/>
+      <text x="1230" y="272" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">evaluations</text>
+      <line x1="1109" x2="1351" y1="278" y2="278" stroke="#0080c0" stroke-width="1"/>
+      <text x="1114" y="288" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="1114" y="301" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1114" y="314" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">application_id</text>
+      <text x="1114" y="327" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">evaluator_id</text>
+      <text x="1114" y="340" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">scheduled_by</text>
+      <text x="1114" y="353" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">type</text>
+      <text x="1114" y="366" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">modality</text>
+      <text x="1114" y="379" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">location</text>
+      <text x="1114" y="392" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">scheduled_at</text>
+      <text x="1114" y="405" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">duration_minutes</text>
+      <text x="1114" y="418" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">instructions</text>
+      <text x="1114" y="431" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">status</text>
+      <text x="1114" y="444" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">invitation_sent_at</text>
+      <text x="1114" y="457" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">completed_at</text>
+      <text x="1114" y="470" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">observations</text>
+      <text x="1114" y="483" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="1114" y="496" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="1206" y="288" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="1206" y="301" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1206" y="314" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1206" y="327" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1206" y="340" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1206" y="353" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1206" y="366" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1206" y="379" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(200)</text>
+      <text x="1206" y="392" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1206" y="405" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">smallint</text>
+      <text x="1206" y="418" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1206" y="431" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1206" y="444" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1206" y="457" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1206" y="470" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1206" y="483" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1206" y="496" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1318" y="288" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1318" y="301" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk3&gt;</text>
+      <text x="1318" y="314" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk1&gt;</text>
+      <text x="1318" y="327" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk2&gt;</text>
+      <text x="1318" y="340" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk4&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#457244D7-A77E-4B83-B9D7-C913918C374F">
+      <rect x="254" y="2136" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient12" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="254" y="2136" fill="url(#Gradient12)" width="206" height="112" stroke="#0080c0" stroke-width="1"/>
+      <text x="357" y="2147" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">failed_jobs</text>
+      <line x1="254" x2="460" y1="2153" y2="2153" stroke="#0080c0" stroke-width="1"/>
+      <text x="259" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="259" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">uuid</text>
+      <text x="259" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">connection</text>
+      <text x="259" y="2202" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">queue</text>
+      <text x="259" y="2215" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">payload</text>
+      <text x="259" y="2228" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">exception</text>
+      <text x="259" y="2241" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">failed_at</text>
+      <text x="319" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="319" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="319" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="319" y="2202" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="319" y="2215" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="319" y="2228" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="319" y="2241" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="431" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="431" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#2A378420-3DAC-404C-BDBB-932EBCE532AB">
+      <rect x="492" y="315" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient13" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="492" y="315" fill="url(#Gradient13)" width="280" height="125" stroke="#0080c0" stroke-width="1"/>
+      <text x="632" y="326" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">interview_results</text>
+      <line x1="492" x2="772" y1="332" y2="332" stroke="#0080c0" stroke-width="1"/>
+      <text x="497" y="342" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="497" y="355" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="497" y="368" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">interview_id</text>
+      <text x="497" y="381" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">evaluation_criterion_id</text>
+      <text x="497" y="394" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">score</text>
+      <text x="497" y="407" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">comment</text>
+      <text x="497" y="420" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="497" y="433" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="614" y="342" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="614" y="355" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="614" y="368" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="614" y="381" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="614" y="394" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">numeric(6,2)</text>
+      <text x="614" y="407" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(500)</text>
+      <text x="614" y="420" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="614" y="433" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="726" y="342" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="726" y="355" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk3&gt;</text>
+      <text x="726" y="368" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak,fk2&gt;</text>
+      <text x="726" y="381" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak,fk1&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#71C0AB9E-5EF6-4428-92F1-5B9EF6AEB094">
+      <rect x="554" y="732" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient14" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="554" y="732" fill="url(#Gradient14)" width="242" height="241" stroke="#0080c0" stroke-width="1"/>
+      <text x="675" y="743" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">interviews</text>
+      <line x1="554" x2="796" y1="749" y2="749" stroke="#0080c0" stroke-width="1"/>
+      <text x="559" y="759" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="559" y="772" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="559" y="785" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">application_id</text>
+      <text x="559" y="798" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">evaluator_id</text>
+      <text x="559" y="811" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">scheduled_by</text>
+      <text x="559" y="824" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">modality</text>
+      <text x="559" y="837" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">location</text>
+      <text x="559" y="850" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">scheduled_at</text>
+      <text x="559" y="863" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">duration_minutes</text>
+      <text x="559" y="876" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">instructions</text>
+      <text x="559" y="889" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">status</text>
+      <text x="559" y="901" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">outcome</text>
+      <text x="559" y="914" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">invitation_sent_at</text>
+      <text x="559" y="927" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">completed_at</text>
+      <text x="559" y="940" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">observations</text>
+      <text x="559" y="953" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="559" y="966" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="651" y="759" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="651" y="772" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="651" y="785" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="651" y="798" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="651" y="811" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="651" y="824" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="651" y="837" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(200)</text>
+      <text x="651" y="850" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="651" y="863" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">smallint</text>
+      <text x="651" y="876" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="651" y="889" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="651" y="901" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(30)</text>
+      <text x="651" y="914" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="651" y="927" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="651" y="940" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="651" y="953" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="651" y="966" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="763" y="759" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="763" y="772" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk3&gt;</text>
+      <text x="763" y="785" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk1&gt;</text>
+      <text x="763" y="798" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk2&gt;</text>
+      <text x="763" y="811" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk4&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#147F09EF-2DBE-464B-8519-58A1D0EBF897">
+      <rect x="1888" y="2" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient15" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="1888" y="2" fill="url(#Gradient15)" width="221" height="151" stroke="#0080c0" stroke-width="1"/>
+      <text x="1998" y="13" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">job_batches</text>
+      <line x1="1888" x2="2109" y1="19" y2="19" stroke="#0080c0" stroke-width="1"/>
+      <text x="1893" y="29" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="1893" y="42" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">name</text>
+      <text x="1893" y="55" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">total_jobs</text>
+      <text x="1893" y="68" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">pending_jobs</text>
+      <text x="1893" y="81" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">failed_jobs</text>
+      <text x="1893" y="94" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">failed_job_ids</text>
+      <text x="1893" y="107" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">options</text>
+      <text x="1893" y="120" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">cancelled_at</text>
+      <text x="1893" y="133" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="1893" y="146" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">finished_at</text>
+      <text x="1968" y="29" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">character varying(255)</text>
+      <text x="1968" y="42" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="1968" y="55" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="1968" y="68" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="1968" y="81" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="1968" y="94" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1968" y="107" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1968" y="120" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="1968" y="133" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="1968" y="146" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="2080" y="29" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#EE38D081-B774-44B6-971C-3DA419E1F4D7">
+      <rect x="1413" y="419" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient16" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="1413" y="419" fill="url(#Gradient16)" width="244" height="138" stroke="#0080c0" stroke-width="1"/>
+      <text x="1535" y="430" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">job_profiles</text>
+      <line x1="1413" x2="1657" y1="436" y2="436" stroke="#0080c0" stroke-width="1"/>
+      <text x="1417" y="446" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="1417" y="459" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1417" y="472" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">vacancy_id</text>
+      <text x="1417" y="485" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">education</text>
+      <text x="1417" y="498" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">experience</text>
+      <text x="1417" y="511" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">functions</text>
+      <text x="1417" y="524" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">competencies</text>
+      <text x="1417" y="537" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="1417" y="550" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="1499" y="446" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="1499" y="459" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1499" y="472" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1499" y="485" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(200)</text>
+      <text x="1499" y="498" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(200)</text>
+      <text x="1499" y="511" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1499" y="524" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1499" y="537" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1499" y="550" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1611" y="446" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1611" y="459" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk1&gt;</text>
+      <text x="1611" y="472" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak,fk2&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#5025DD63-2159-4DAA-9534-641A13EB9C6E">
+      <rect x="1325" y="1332" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient17" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="1325" y="1332" fill="url(#Gradient17)" width="225" height="125" stroke="#0080c0" stroke-width="1"/>
+      <text x="1437" y="1343" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">job_request_status_histories</text>
+      <line x1="1325" x2="1550" y1="1349" y2="1349" stroke="#0080c0" stroke-width="1"/>
+      <text x="1330" y="1359" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="1330" y="1372" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1330" y="1385" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">job_request_id</text>
+      <text x="1330" y="1398" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">from_status</text>
+      <text x="1330" y="1411" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">to_status</text>
+      <text x="1330" y="1424" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">changed_by</text>
+      <text x="1330" y="1437" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">comment</text>
+      <text x="1330" y="1450" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="1412" y="1359" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="1412" y="1372" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1412" y="1385" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1412" y="1398" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1412" y="1411" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1412" y="1424" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1412" y="1437" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1412" y="1450" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1518" y="1359" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1518" y="1372" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk3&gt;</text>
+      <text x="1518" y="1385" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk2&gt;</text>
+      <text x="1518" y="1424" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk1&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#34A3AC8F-080C-4955-882F-99AAB6EA52B7">
+      <rect x="1255" y="962" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient18" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="1255" y="962" fill="url(#Gradient18)" width="260" height="280" stroke="#0080c0" stroke-width="1"/>
+      <text x="1385" y="973" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">job_requests</text>
+      <line x1="1255" x2="1515" y1="979" y2="979" stroke="#0080c0" stroke-width="1"/>
+      <text x="1260" y="989" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="1260" y="1002" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1260" y="1015" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">requested_by</text>
+      <text x="1260" y="1028" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">code</text>
+      <text x="1260" y="1041" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">position_title</text>
+      <text x="1260" y="1054" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">area</text>
+      <text x="1260" y="1067" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">headcount</text>
+      <text x="1260" y="1079" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">contract_type</text>
+      <text x="1260" y="1092" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">justification</text>
+      <text x="1260" y="1105" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">required_by</text>
+      <text x="1260" y="1118" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">status</text>
+      <text x="1260" y="1131" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">observation</text>
+      <text x="1260" y="1144" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">submitted_at</text>
+      <text x="1260" y="1157" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">validated_by</text>
+      <text x="1260" y="1170" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">validated_at</text>
+      <text x="1260" y="1183" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">decided_by</text>
+      <text x="1260" y="1196" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">decided_at</text>
+      <text x="1260" y="1209" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">decision_comment</text>
+      <text x="1260" y="1222" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="1260" y="1235" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="1357" y="989" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="1357" y="1002" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1357" y="1015" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1357" y="1028" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1357" y="1041" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(150)</text>
+      <text x="1357" y="1054" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(120)</text>
+      <text x="1357" y="1067" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">smallint</text>
+      <text x="1357" y="1079" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1357" y="1092" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1357" y="1105" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">date</text>
+      <text x="1357" y="1118" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1357" y="1131" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1357" y="1144" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1357" y="1157" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1357" y="1170" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1357" y="1183" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1357" y="1196" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1357" y="1209" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1357" y="1222" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1357" y="1235" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1469" y="989" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1469" y="1002" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak,fk3&gt;</text>
+      <text x="1469" y="1015" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk1&gt;</text>
+      <text x="1469" y="1028" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak&gt;</text>
+      <text x="1469" y="1157" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk4&gt;</text>
+      <text x="1469" y="1183" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk2&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#5E842190-001C-4753-A6D3-459CE4DDA57F">
+      <rect x="2" y="2136" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient19" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="2" y="2136" fill="url(#Gradient19)" width="212" height="112" stroke="#0080c0" stroke-width="1"/>
+      <text x="108" y="2147" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">jobs</text>
+      <line x1="2" x2="214" y1="2153" y2="2153" stroke="#0080c0" stroke-width="1"/>
+      <text x="7" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="7" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">queue</text>
+      <text x="7" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">payload</text>
+      <text x="7" y="2202" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">attempts</text>
+      <text x="7" y="2215" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">reserved_at</text>
+      <text x="7" y="2228" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">available_at</text>
+      <text x="7" y="2241" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="74" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="74" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="74" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="74" y="2202" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">smallint</text>
+      <text x="74" y="2215" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="74" y="2228" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="74" y="2241" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="186" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#A3632344-0C09-4177-A1B2-AAD4DA0D8EFE">
+      <rect x="1472" y="2136" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient20" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="1472" y="2136" fill="url(#Gradient20)" width="198" height="60" stroke="#0080c0" stroke-width="1"/>
+      <text x="1571" y="2147" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">migrations</text>
+      <line x1="1472" x2="1670" y1="2153" y2="2153" stroke="#0080c0" stroke-width="1"/>
+      <text x="1476" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="1476" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">migration</text>
+      <text x="1476" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">batch</text>
+      <text x="1529" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">integer</text>
+      <text x="1529" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="1529" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="1641" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#6CB957A1-5E6F-4E97-93AC-C959D37C6555">
+      <rect x="2149" y="2" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient21" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="2149" y="2" fill="url(#Gradient21)" width="225" height="125" stroke="#0080c0" stroke-width="1"/>
+      <text x="2261" y="13" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">notifications</text>
+      <line x1="2149" x2="2374" y1="19" y2="19" stroke="#0080c0" stroke-width="1"/>
+      <text x="2154" y="29" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="2154" y="42" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">type</text>
+      <text x="2154" y="55" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">notifiable_type</text>
+      <text x="2154" y="68" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">notifiable_id</text>
+      <text x="2154" y="81" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">data</text>
+      <text x="2154" y="94" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">read_at</text>
+      <text x="2154" y="107" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="2154" y="120" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="2233" y="29" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">uuid</text>
+      <text x="2233" y="42" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="2233" y="55" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="2233" y="68" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="2233" y="81" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">jsonb</text>
+      <text x="2233" y="94" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="2233" y="107" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="2233" y="120" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="2345" y="29" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#E10541B9-9A1C-40F9-A76F-582EDA542AFD">
+      <rect x="974" y="672" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient22" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="974" y="672" fill="url(#Gradient22)" width="213" height="112" stroke="#0080c0" stroke-width="1"/>
+      <text x="1080" y="683" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">organizations</text>
+      <line x1="974" x2="1187" y1="689" y2="689" stroke="#0080c0" stroke-width="1"/>
+      <text x="978" y="699" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="978" y="712" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">name</text>
+      <text x="978" y="725" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">slug</text>
+      <text x="978" y="738" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">tax_id</text>
+      <text x="978" y="751" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">is_active</text>
+      <text x="978" y="764" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="978" y="777" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="1040" y="699" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="1040" y="712" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(150)</text>
+      <text x="1040" y="725" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(80)</text>
+      <text x="1040" y="738" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1040" y="751" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">boolean</text>
+      <text x="1040" y="764" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1040" y="777" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1152" y="699" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1152" y="725" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak1&gt;</text>
+      <text x="1152" y="738" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak2&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#2D86E46F-1C05-4CA0-89FD-5CF0619DD8C3">
+      <rect x="1205" y="1971" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient23" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="1205" y="1971" fill="url(#Gradient23)" width="215" height="125" stroke="#0080c0" stroke-width="1"/>
+      <text x="1312" y="1982" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">passkeys</text>
+      <line x1="1205" x2="1420" y1="1988" y2="1988" stroke="#0080c0" stroke-width="1"/>
+      <text x="1209" y="1998" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="1209" y="2011" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">user_id</text>
+      <text x="1209" y="2024" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">name</text>
+      <text x="1209" y="2037" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">credential_id</text>
+      <text x="1209" y="2050" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">credential</text>
+      <text x="1209" y="2063" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">last_used_at</text>
+      <text x="1209" y="2076" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="1209" y="2089" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="1279" y="1998" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="1279" y="2011" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1279" y="2024" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="1279" y="2037" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="1279" y="2050" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">json</text>
+      <text x="1279" y="2063" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1279" y="2076" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1279" y="2089" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1391" y="1998" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1391" y="2011" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk&gt;</text>
+      <text x="1391" y="2037" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#A58DF92A-45C0-4AFC-A226-4257288B9906">
+      <rect x="748" y="2136" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient24" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="748" y="2136" fill="url(#Gradient24)" width="203" height="60" stroke="#0080c0" stroke-width="1"/>
+      <text x="849" y="2147" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">password_reset_tokens</text>
+      <line x1="748" x2="951" y1="2153" y2="2153" stroke="#0080c0" stroke-width="1"/>
+      <text x="753" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">email</text>
+      <text x="753" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">token</text>
+      <text x="753" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="811" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">character varying(255)</text>
+      <text x="811" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="811" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="923" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#BC7F4584-10AD-492A-9540-BCE7FAB56EF8">
+      <rect x="966" y="1554" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient25" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="966" y="1554" fill="url(#Gradient25)" width="238" height="203" stroke="#0080c0" stroke-width="1"/>
+      <text x="1085" y="1565" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">selection_decisions</text>
+      <line x1="966" x2="1204" y1="1571" y2="1571" stroke="#0080c0" stroke-width="1"/>
+      <text x="970" y="1581" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="970" y="1594" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="970" y="1607" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">vacancy_id</text>
+      <text x="970" y="1620" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">selected_application_id</text>
+      <text x="970" y="1633" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">decided_by</text>
+      <text x="970" y="1646" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">justification</text>
+      <text x="970" y="1659" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">selected_position</text>
+      <text x="970" y="1672" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">selected_score</text>
+      <text x="970" y="1685" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">ranked_candidates</text>
+      <text x="970" y="1698" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">decided_at</text>
+      <text x="970" y="1711" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">selection_registered_by</text>
+      <text x="970" y="1724" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">selection_registered_at</text>
+      <text x="970" y="1737" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="970" y="1750" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="1091" y="1581" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="1091" y="1594" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1091" y="1607" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1091" y="1620" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1091" y="1633" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1091" y="1646" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1091" y="1659" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">smallint</text>
+      <text x="1091" y="1672" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">numeric(6,2)</text>
+      <text x="1091" y="1685" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">smallint</text>
+      <text x="1091" y="1698" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1091" y="1711" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1091" y="1724" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1091" y="1737" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1091" y="1750" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1158" y="1581" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1158" y="1594" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk1&gt;</text>
+      <text x="1158" y="1607" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak,fk5&gt;</text>
+      <text x="1158" y="1620" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk3&gt;</text>
+      <text x="1158" y="1633" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk2&gt;</text>
+      <text x="1158" y="1711" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk4&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#BE0BBCA5-72DD-4E37-8901-DD30CD745EF8">
+      <rect x="500" y="2136" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient26" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="500" y="2136" fill="url(#Gradient26)" width="208" height="99" stroke="#0080c0" stroke-width="1"/>
+      <text x="604" y="2147" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">sessions</text>
+      <line x1="500" x2="708" y1="2153" y2="2153" stroke="#0080c0" stroke-width="1"/>
+      <text x="504" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="504" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">user_id</text>
+      <text x="504" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">ip_address</text>
+      <text x="504" y="2202" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">user_agent</text>
+      <text x="504" y="2215" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">payload</text>
+      <text x="504" y="2228" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">last_activity</text>
+      <text x="567" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">character varying(255)</text>
+      <text x="567" y="2176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="567" y="2189" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(45)</text>
+      <text x="567" y="2202" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="567" y="2215" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="567" y="2228" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">integer</text>
+      <text x="679" y="2163" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#FCAC7CC0-FD18-4599-8E3B-B70B1E9BF75C">
+      <rect x="835" y="1077" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient27" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="835" y="1077" fill="url(#Gradient27)" width="281" height="190" stroke="#0080c0" stroke-width="1"/>
+      <text x="975" y="1088" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">users</text>
+      <line x1="835" x2="1116" y1="1094" y2="1094" stroke="#0080c0" stroke-width="1"/>
+      <text x="840" y="1104" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="840" y="1117" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">name</text>
+      <text x="840" y="1130" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">email</text>
+      <text x="840" y="1143" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">email_verified_at</text>
+      <text x="840" y="1156" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">password</text>
+      <text x="840" y="1169" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">remember_token</text>
+      <text x="840" y="1182" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="840" y="1195" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="840" y="1208" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">two_factor_secret</text>
+      <text x="840" y="1221" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">two_factor_recovery_codes</text>
+      <text x="840" y="1234" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">two_factor_confirmed_at</text>
+      <text x="840" y="1247" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="840" y="1260" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">role</text>
+      <text x="974" y="1104" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="974" y="1117" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="974" y="1130" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="974" y="1143" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="974" y="1156" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(255)</text>
+      <text x="974" y="1169" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(100)</text>
+      <text x="974" y="1182" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="974" y="1195" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="974" y="1208" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="974" y="1221" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="974" y="1234" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="974" y="1247" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="974" y="1260" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1086" y="1104" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1086" y="1130" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak&gt;</text>
+      <text x="1086" y="1247" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk&gt;</text>
+   </a>
+   <a target="_parent" xlink:href="#FD5CEB27-C8CF-4A82-AEDC-64247CF5E208">
+      <rect x="1259" y="615" fill="#ffffff" width="0" height="0" stroke="none" stroke-width="0"/>
+      <defs>
+         <linearGradient id="Gradient28" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#b2d6fc"/>
+         </linearGradient>
+      </defs>
+      <rect x="1259" y="615" fill="url(#Gradient28)" width="278" height="307" stroke="#0080c0" stroke-width="1"/>
+      <text x="1398" y="626" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">vacancies</text>
+      <line x1="1259" x2="1537" y1="632" y2="632" stroke="#0080c0" stroke-width="1"/>
+      <text x="1263" y="642" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">id</text>
+      <text x="1263" y="655" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">organization_id</text>
+      <text x="1263" y="668" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">job_request_id</text>
+      <text x="1263" y="681" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">code</text>
+      <text x="1263" y="694" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">title</text>
+      <text x="1263" y="707" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">summary</text>
+      <text x="1263" y="720" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">location</text>
+      <text x="1263" y="733" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">contract_type</text>
+      <text x="1263" y="746" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">positions</text>
+      <text x="1263" y="759" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">opens_at</text>
+      <text x="1263" y="772" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">closes_at</text>
+      <text x="1263" y="785" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">status</text>
+      <text x="1263" y="798" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_by</text>
+      <text x="1263" y="811" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">published_by</text>
+      <text x="1263" y="824" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">published_at</text>
+      <text x="1263" y="837" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">closed_by</text>
+      <text x="1263" y="850" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">closed_at</text>
+      <text x="1263" y="863" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">closure_type</text>
+      <text x="1263" y="876" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">closure_notes</text>
+      <text x="1263" y="889" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">created_at</text>
+      <text x="1263" y="902" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">updated_at</text>
+      <text x="1263" y="915" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">target_completion_at</text>
+      <text x="1372" y="642" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">bigint</text>
+      <text x="1372" y="655" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1372" y="668" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1372" y="681" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1372" y="694" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(150)</text>
+      <text x="1372" y="707" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1372" y="720" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(120)</text>
+      <text x="1372" y="733" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1372" y="746" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">smallint</text>
+      <text x="1372" y="759" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">date</text>
+      <text x="1372" y="772" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">date</text>
+      <text x="1372" y="785" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1372" y="798" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1372" y="811" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1372" y="824" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1372" y="837" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">bigint</text>
+      <text x="1372" y="850" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1372" y="863" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">character varying(20)</text>
+      <text x="1372" y="876" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">text</text>
+      <text x="1372" y="889" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1372" y="902" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1372" y="915" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timestamp</text>
+      <text x="1484" y="642" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start" text-decoration="underline">&lt;pk&gt;</text>
+      <text x="1484" y="655" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak2,fk4&gt;</text>
+      <text x="1484" y="668" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak1,fk3&gt;</text>
+      <text x="1484" y="681" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;ak2&gt;</text>
+      <text x="1484" y="798" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk2&gt;</text>
+      <text x="1484" y="811" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk5&gt;</text>
+      <text x="1484" y="837" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">&lt;fk1&gt;</text>
+   </a>
+</svg>
