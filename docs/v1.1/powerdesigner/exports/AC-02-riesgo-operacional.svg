@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="286mm" xmlns="http://www.w3.org/2000/svg" height="256mm" version="1.1" viewBox="0 0 1084 971" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <polygon fill="#ffffff" points="855,852 855,902 1082,902 1082,860 1074,852" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="1082" x2="1074" y1="860" y2="860" stroke="#000000" stroke-width="1"/>
+   <line x1="1074" x2="1074" y1="860" y2="852" stroke="#000000" stroke-width="1"/>
+   <text x="968" y="870" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Sin efectos: no se persiste, no cambia </text>
+   <text x="968" y="880" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">postulaciones ni ranking, no notifica. No es una </text>
+   <text x="968" y="890" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">actividad de selección.</text>
+   <a target="_parent" xlink:href="#69E25378-6A73-4D9A-8AD0-54209E6C3190">
+      <polyline fill="none" points="329,18 329,56" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="329,56 326,42 332,42" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#7BF539AD-B096-479F-8566-FF797D31B8A7">
+      <polyline fill="none" points="329,98 329,122" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="329,122 326,109 332,109" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#95D1648E-8DBC-40EE-9BD3-0791459E993D">
+      <polyline fill="none" points="329,165 329,188" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="329,188 326,174 332,174" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#1DD8A104-5AE2-4B37-93FA-8E21F5D88A07">
+      <polyline fill="none" points="242,217 122,217" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="122,217 135,214 135,220" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="213" y="226" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">[no]</text>
+   </a>
+   <a target="_parent" xlink:href="#EAD81CE5-E29D-4E1D-A6B2-A99FB08C9F6A">
+      <polyline fill="none" points="62,233 62,280" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="62,280 59,267 65,267" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#EB76C827-0608-4D18-81B8-A052A08AA929">
+      <polyline fill="none" points="329,246 329,297" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="329,297 326,284 332,284" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="339" y="272" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">[sí]</text>
+   </a>
+   <a target="_parent" xlink:href="#5A9338CE-FDAA-4CC7-ACB8-CA19F8623BA5">
+      <polyline fill="none" points="475,350 595,350" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="595,350 582,353 582,347" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="504" y="347" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">[no]</text>
+   </a>
+   <a target="_parent" xlink:href="#2283EEB2-4C2A-457D-BEA1-FE48DF5D886D">
+      <polyline fill="none" points="329,404 329,436" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="329,436 326,422 332,422" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="339" y="429" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">[sí]</text>
+   </a>
+   <a target="_parent" xlink:href="#AF5D5591-4B21-412E-A761-C098AE4CF0C9">
+      <polyline fill="none" points="329,478 329,501" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="329,501 326,488 332,488" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#29507439-2167-48CC-9C8E-1E72A896F046">
+      <polyline fill="none" points="449,530 529,530" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="529,530 515,533 515,527" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="477" y="527" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">[no]</text>
+   </a>
+   <a target="_parent" xlink:href="#13AB1CA9-3444-4BD5-AF9E-8CCB51B0C466">
+      <polyline fill="none" points="329,560 329,596" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="329,596 326,582 332,582" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="339" y="585" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">[sí]</text>
+   </a>
+   <a target="_parent" xlink:href="#FDF0B19B-8F3F-4BD9-96D1-0EBA9AEEC9CE">
+      <polyline fill="none" points="329,638 329,665" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="329,665 326,652 332,652" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#0C03617B-B0A9-4C4D-BF15-8F52BEC5B860">
+      <polyline fill="none" points="415,697 529,697" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="529,697 515,700 515,694" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="444" y="693" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">[no]</text>
+   </a>
+   <a target="_parent" xlink:href="#C185AA8E-1777-4EB2-9A9C-E3B1BAC06B2C">
+      <polyline fill="none" points="329,729 329,769" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="329,769 326,756 332,756" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="339" y="754" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">[sí]</text>
+   </a>
+   <a target="_parent" xlink:href="#E1B83FF0-5F97-4553-8A53-A4A35A949B8A">
+      <polyline fill="none" points="329,812 329,852" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="329,852 326,838 332,838" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#0CA629F1-FE3B-4619-9B15-4717BB0A03CD">
+      <polyline fill="none" points="755,350 822,350 822,892 442,892" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="442,892 455,889 455,895" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#299A3911-459E-46F0-BB98-E0869F597864">
+      <polyline fill="none" points="715,530 782,530 782,877 442,877" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="442,877 455,874 455,880" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#06F0FA90-F162-45E0-91C7-9E5A4EEDE1E6">
+      <polyline fill="none" points="715,697 742,697 742,862 442,862" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="442,862 455,859 455,865" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#EA41033E-BDBF-4285-80E2-966AC8296993">
+      <polyline fill="none" points="329,902 329,947" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="329,947 326,934 332,934" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#DC492016-84D2-416D-9EA9-555B22DDE6CA">
+      <defs>
+         <linearGradient id="Gradient1" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#c0c0c0"/>
+            <stop offset="95%" stop-color="#0080c0"/>
+         </linearGradient>
+      </defs>
+      <ellipse cx="329" cy="10" rx="8" ry="8" fill="url(#Gradient1)" stroke="#0080c0" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#6FDAD79C-1AAB-4663-9C69-158FA2730D28">
+      <defs>
+         <linearGradient id="Gradient2" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="229" y="56" rx="5" ry="5" fill="url(#Gradient2)" width="200" height="42" stroke="#0080c0" stroke-width="1"/>
+      <text x="328" y="75" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">RR. HH. o Aprobador abre el detalle de </text>
+      <text x="328" y="85" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">la vacante</text>
+   </a>
+   <a target="_parent" xlink:href="#F984A692-7818-42A7-8B50-FE483789A2A5">
+      <defs>
+         <linearGradient id="Gradient3" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="229" y="122" rx="5" ry="5" fill="url(#Gradient3)" width="200" height="43" stroke="#0080c0" stroke-width="1"/>
+      <text x="328" y="141" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">La tarjeta pide GET vacantes/{id}/riesgo-</text>
+      <text x="328" y="151" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">operacional</text>
+   </a>
+   <a target="_parent" xlink:href="#CBF8DE87-227E-4CBD-8A69-B13BC44BAE2B">
+      <defs>
+         <radialGradient r="0" cx="0" cy="0" fx="0" fy="0" id="Gradient4" gradientUnits="userSpaceOnUse">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="50%" stop-color="#ffffc0"/>
+         </radialGradient>
+      </defs>
+      <polygon fill="url(#Gradient4)" points="242,217 329,188 415,217 329,246" stroke="#808000" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="328" y="215" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">¿Misma organización y</text>
+      <text x="328" y="225" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> rol autorizado?</text>
+   </a>
+   <a target="_parent" xlink:href="#6D8E7241-1C0B-48C3-95B6-DCE0EEBA4B01">
+      <defs>
+         <linearGradient id="Gradient5" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="2" y="201" rx="4" ry="4" fill="url(#Gradient5)" width="120" height="32" stroke="#0080c0" stroke-width="1"/>
+      <text x="62" y="220" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">403</text>
+   </a>
+   <a target="_parent" xlink:href="#DEFC974B-2A84-4E94-9C3D-978AC8F3FB96">
+      <ellipse cx="62" cy="290" rx="10" ry="10" fill="#ffffff" stroke="#0080c0" stroke-width="1"/>
+      <defs>
+         <linearGradient id="Gradient6" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#c0c0c0"/>
+            <stop offset="95%" stop-color="#0080c0"/>
+         </linearGradient>
+      </defs>
+      <ellipse cx="62" cy="290" rx="6" ry="6" fill="url(#Gradient6)" stroke="#0080c0" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#9B912B00-C3C0-4B46-863A-3E1212FCB951">
+      <defs>
+         <radialGradient r="0" cx="0" cy="0" fx="0" fy="0" id="Gradient7" gradientUnits="userSpaceOnUse">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="50%" stop-color="#ffffc0"/>
+         </radialGradient>
+      </defs>
+      <polygon fill="url(#Gradient7)" points="182,350 329,297 475,350 329,404" stroke="#808000" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="328" y="338" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">¿Elegible? publicada, closes_at, </text>
+      <text x="328" y="348" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">target_completion_at, checkpoint </text>
+      <text x="328" y="358" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">alcanzado, no cerrada, plazo &gt; </text>
+      <text x="328" y="368" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">checkpoint, consulta antes del plazo</text>
+   </a>
+   <a target="_parent" xlink:href="#983AE9F9-3B45-4BC9-9988-6A4E1B838C20">
+      <defs>
+         <linearGradient id="Gradient8" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="595" y="334" rx="4" ry="4" fill="url(#Gradient8)" width="160" height="32" stroke="#0080c0" stroke-width="1"/>
+      <text x="675" y="353" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">descriptive_only (motivo)</text>
+   </a>
+   <a target="_parent" xlink:href="#20722276-4756-43AE-82CC-90081BB82A3A">
+      <defs>
+         <linearGradient id="Gradient9" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="229" y="436" rx="5" ry="5" fill="url(#Gradient9)" width="200" height="42" stroke="#0080c0" stroke-width="1"/>
+      <text x="328" y="460" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Construir 15 features en el checkpoint</text>
+   </a>
+   <a target="_parent" xlink:href="#C7FA6B43-F808-4887-A93A-CB73E6BF14E5">
+      <defs>
+         <radialGradient r="0" cx="0" cy="0" fx="0" fy="0" id="Gradient10" gradientUnits="userSpaceOnUse">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="50%" stop-color="#ffffc0"/>
+         </radialGradient>
+      </defs>
+      <polygon fill="url(#Gradient10)" points="209,530 329,501 449,530 329,560" stroke="#808000" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="329" y="533" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">¿ML_SERVICE_ENABLED?</text>
+   </a>
+   <a target="_parent" xlink:href="#5F2A4D78-7D9B-4BF8-B70B-F8C31477A692">
+      <defs>
+         <linearGradient id="Gradient11" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="529" y="509" rx="5" ry="5" fill="url(#Gradient11)" width="186" height="43" stroke="#0080c0" stroke-width="1"/>
+      <text x="622" y="533" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">descriptive_only (service_disabled)</text>
+   </a>
+   <a target="_parent" xlink:href="#96E136C0-8078-4F12-88F6-4035C5A11EE3">
+      <defs>
+         <linearGradient id="Gradient12" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="229" y="596" rx="5" ry="5" fill="url(#Gradient12)" width="200" height="42" stroke="#0080c0" stroke-width="1"/>
+      <text x="328" y="620" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">POST /v1/predict + X-Internal-Token</text>
+   </a>
+   <a target="_parent" xlink:href="#D27C5B7A-BE3E-4734-AED7-224B510F2EE4">
+      <defs>
+         <radialGradient r="0" cx="0" cy="0" fx="0" fy="0" id="Gradient13" gradientUnits="userSpaceOnUse">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="50%" stop-color="#ffffc0"/>
+         </radialGradient>
+      </defs>
+      <polygon fill="url(#Gradient13)" points="242,697 329,665 415,697 329,729" stroke="#808000" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="328" y="695" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">¿Respuesta válida y </text>
+      <text x="328" y="705" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">contrato congelado?</text>
+   </a>
+   <a target="_parent" xlink:href="#C6641067-D746-405C-BE5B-D505B6536B82">
+      <defs>
+         <linearGradient id="Gradient14" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="529" y="681" rx="4" ry="4" fill="url(#Gradient14)" width="186" height="32" stroke="#0080c0" stroke-width="1"/>
+      <text x="622" y="700" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">unavailable (motivo)</text>
+   </a>
+   <a target="_parent" xlink:href="#C49E12BF-6D10-4DA6-9003-A510B532CAFC">
+      <defs>
+         <linearGradient id="Gradient15" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="215" y="769" rx="5" ry="5" fill="url(#Gradient15)" width="227" height="43" stroke="#0080c0" stroke-width="1"/>
+      <text x="328" y="793" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">predictive_available (risk_score, risk_flag)</text>
+   </a>
+   <a target="_parent" xlink:href="#1C0C917D-1341-4B6E-A2D6-7EF3BB6D0395">
+      <defs>
+         <linearGradient id="Gradient16" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="215" y="852" rx="6" ry="6" fill="url(#Gradient16)" width="227" height="50" stroke="#0080c0" stroke-width="1"/>
+      <text x="328" y="875" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Mostrar tarjeta «Experimental» con mensaje y</text>
+      <text x="328" y="885" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> aviso de decisión humana</text>
+   </a>
+   <a target="_parent" xlink:href="#7D1604E3-7C3C-4801-A285-54D78D1240CE">
+      <ellipse cx="329" cy="957" rx="10" ry="10" fill="#ffffff" stroke="#0080c0" stroke-width="1"/>
+      <defs>
+         <linearGradient id="Gradient17" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#c0c0c0"/>
+            <stop offset="95%" stop-color="#0080c0"/>
+         </linearGradient>
+      </defs>
+      <ellipse cx="329" cy="957" rx="6" ry="6" fill="url(#Gradient17)" stroke="#0080c0" stroke-width="1"/>
+   </a>
+</svg>

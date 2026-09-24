@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="368mm" xmlns="http://www.w3.org/2000/svg" height="51mm" version="1.1" viewBox="0 0 1393 196" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <polygon fill="#ffffff" points="1054,143 1054,180 1281,180 1281,149 1274,143" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="1281" x2="1274" y1="149" y2="149" stroke="#000000" stroke-width="1"/>
+   <line x1="1274" x2="1274" y1="149" y2="143" stroke="#000000" stroke-width="1"/>
+   <text x="1167" y="159" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">'desierta' existe en VacancyClosureType pero no</text>
+   <text x="1167" y="169" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> tiene flujo implementado (A-30).</text>
+   <a target="_parent" xlink:href="#FEA010F3-1677-451A-8B70-6C4DABBCE811">
+      <polyline fill="none" points="82,55 307,55" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="307,55 294,58 294,52" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="192" y="41" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">create (RR. HH., RF-05, RF-06) </text>
+      <text x="192" y="51" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">[requerimiento aprobado y sin vacante]</text>
+   </a>
+   <a target="_parent" xlink:href="#882D93A4-8FDF-4570-A0E1-C2B19FF10C1F">
+      <polyline fill="none" points="427,55 707,55" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="707,55 694,58 694,52" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="537" y="41" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">publish (RR. HH., RF-07) [VacancyValidator</text>
+      <text x="537" y="51" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle"> sin observaciones]</text>
+   </a>
+   <a target="_parent" xlink:href="#26D6286A-7BB0-4CF7-A21C-21D02720C600">
+      <polyline fill="none" points="827,55 1107,55" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="1107,55 1094,58 1094,52" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="937" y="36" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">close [decisión RF-23 y selección RF-24]/ </text>
+      <text x="937" y="46" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">closure_type = con_seleccion (RR. HH., </text>
+      <text x="937" y="56" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">RF-25)</text>
+   </a>
+   <a target="_parent" xlink:href="#1E98A940-6CC1-449C-A034-516431AF129E">
+      <polyline fill="none" points="1227,55 1371,55" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="1371,55 1357,58 1357,52" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#90AF2E38-A3B8-46B6-82A6-32EBBFDBC0D7">
+      <defs>
+         <linearGradient id="Gradient1" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#c0c0c0"/>
+            <stop offset="95%" stop-color="#0080c0"/>
+         </linearGradient>
+      </defs>
+      <ellipse cx="74" cy="55" rx="8" ry="8" fill="url(#Gradient1)" stroke="#0080c0" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#D846F71C-FADD-4F63-BF0D-28D60248BA74">
+      <defs>
+         <linearGradient id="Gradient2" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="307" y="35" rx="5" ry="5" fill="url(#Gradient2)" width="120" height="40" stroke="#0080c0" stroke-width="1"/>
+      <text x="367" y="46" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">borrador</text>
+      <line x1="307" x2="427" y1="52" y2="52" stroke="#0080c0" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#1DA09174-6DD7-485F-A3B4-FB93C4FD0409">
+      <defs>
+         <linearGradient id="Gradient3" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="707" y="35" rx="5" ry="5" fill="url(#Gradient3)" width="120" height="40" stroke="#0080c0" stroke-width="1"/>
+      <text x="767" y="46" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">publicada</text>
+      <line x1="707" x2="827" y1="52" y2="52" stroke="#0080c0" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#0D21639A-0151-4552-BBAA-E360AAE84408">
+      <defs>
+         <linearGradient id="Gradient4" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1107" y="35" rx="5" ry="5" fill="url(#Gradient4)" width="120" height="40" stroke="#0080c0" stroke-width="1"/>
+      <text x="1167" y="46" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">cerrada</text>
+      <line x1="1107" x2="1227" y1="52" y2="52" stroke="#0080c0" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#66E40C14-3F65-493F-965B-050839407436">
+      <ellipse cx="1381" cy="55" rx="10" ry="10" fill="#ffffff" stroke="#0080c0" stroke-width="1"/>
+      <defs>
+         <linearGradient id="Gradient5" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#c0c0c0"/>
+            <stop offset="95%" stop-color="#0080c0"/>
+         </linearGradient>
+      </defs>
+      <ellipse cx="1381" cy="55" rx="6" ry="6" fill="url(#Gradient5)" stroke="#0080c0" stroke-width="1"/>
+   </a>
+</svg>

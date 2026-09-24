@@ -1,12 +1,12 @@
 # Progreso del proyecto
 
-Última actualización: 2026-09-23 (hotfix documental de la Fase 21).
+Última actualización: 2026-09-24 (Fase 23, pendiente de auditoría).
 
-> Hasta el 23/09/2026 esta cabecera decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
+> El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
 
 ## Estado de v1.1
 
-`main` sigue siendo la v1.0 académica (`4563c69`, tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1. `develop` = `origin/develop` = `aced6da`.
+`main` sigue siendo la v1.0 académica (`4563c69`, tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1. `develop` = `origin/develop` = `2621bee`.
 
 | Fase | Contenido | Estado | Merge en `develop` | Detalle |
 |---|---|---|---|---|
@@ -20,8 +20,9 @@
 | 19 | Animaciones y microinteracciones | ✅ Integrada | `67a88a6` | `docs/v1.1/phase-19-animations.md` |
 | 20 | Experiencia 3D con CSS 3D (solo portada) | ✅ Cerrada e integrada | `a316c07` | `docs/v1.1/phase-20-3d-experience.md` |
 | 21 | QA visual, accesibilidad y responsive | ✅ Cerrada e integrada | `aced6da` | `docs/v1.1/phase-21-visual-qa.md` |
-| 22 | Especificación UML del AS-IS | 🟡 Implementada en `feature/phase-22-uml-update`, pendiente de auditoría | — | `docs/v1.1/phase-22-uml-update.md` |
-| 23 | Formalización en PowerDesigner | ⬜ No iniciada | — | — |
+| 22 | Especificación UML del AS-IS | ✅ Integrada | `2621bee` | `docs/v1.1/phase-22-uml-update.md` |
+| 23 | Formalización en PowerDesigner | 🟡 Implementada en `feature/phase-23-powerdesigner`, pendiente de auditoría | — | `docs/v1.1/phase-23-powerdesigner.md` |
+| 24 | Sin alcance definido | ⬜ No iniciada | — | — |
 
 **RF-29** está implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, no validado institucionalmente ni autorizado para producción; no selecciona ni descarta a nadie y no cambia RF-23. RF-28, RF-29 y los RNF nuevos (incluido RNF-C) siguen siendo **candidatos** (`docs/v1.1/scope-preliminary.md`, decisión 11 y preguntas 12–13).
 
@@ -163,4 +164,15 @@ Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempre
 - **Sin cambios** en código, pruebas, dependencias ni servicio ML. **Sin archivos de PowerDesigner**: son de la Fase 23, que no se inició. No se ejecutaron suites funcionales: el cambio es documental.
 - **Auditoría de Codex:** tres correcciones de UML (`scheduled_by` en CL-01, descarte terminal en AC-01, UC-RF07 solo de RR. HH.), hechas en la misma rama; pendiente de reauditoría.
 - **Detalle:** `docs/v1.1/phase-22-uml-update.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
+- **Cierre:** tras la reauditoría, integrada en `develop` con el merge `2621bee`. *(Anotado en la Fase 23.)*
+
+## v1.1 — Fase 23: formalización en PowerDesigner
+
+- **Rama:** `feature/phase-23-powerdesigner`, desde `develop` en `2621bee` (cierre de la Fase 22).
+- **Alcance:** modelos nativos de PowerDesigner 16.6.1.5066 en `docs/v1.1/powerdesigner/`, construidos por su interfaz COM con scripts versionados. OOM con los 19 diagramas de F22 (CL-01, UC-01, PK-01, CO-01, DE-01, SEQ-01 a SEQ-08, AC-01, AC-02, ST-01 a ST-04) más la vista CL-01b; PDM por ingeniería inversa del esquema real (27 tablas, 48 FK, 32 CHECK) con PDM-01 y PDM-02. 22 diagramas exportados en PNG y SVG.
+- **Validación:** revisión visual de cada exportación y conteo de elementos contra F22 (125 mensajes, 20 fragmentos, 19 estados, 37 transiciones…), sin diferencias de contenido; las de representación están justificadas en `powerdesigner/f22-checklist.md`. RF-23 humano, RF-28 candidato sin asociaciones, RF-29 experimental. Los modelos, tal como quedan en Git, abren en PowerDesigner.
+- **Sin cambios** en código, pruebas, dependencias ni servicio ML; no se ejecutaron suites funcionales. La deuda de texto OpenAPI de GAP-01 (`schemas.py`) se registra, no se corrige.
+- **Proceso:** dos sesiones; la primera se detuvo en un *checkpoint* sin commits y la segunda la reanudó sin reconstruir.
+- **Detalle:** `docs/v1.1/phase-23-powerdesigner.md`.
 - **Sin `push`, `merge`, *tag* ni *release*.**
