@@ -66,7 +66,6 @@ APR -- RF23
 APR -- RF27
 APR -- RF29
 EVA -- RF19
-POS -- RF07
 POS -- RF08
 POS -- RF09
 POS -- RF10
@@ -108,6 +107,13 @@ end note
 note right of RF28
   Candidato NO implementado.
   El estado descriptive_only de RF-29 no es este panel.
+end note
+
+note right of RF07
+  Solo RR. HH. publica.
+  Efecto: la vacante aparece en /empleos, que cualquiera
+  (con o sin sesión) consulta. La consulta es contexto de
+  RF-10, no una asociación del Postulante con RF-07.
 end note
 
 note right of RF24

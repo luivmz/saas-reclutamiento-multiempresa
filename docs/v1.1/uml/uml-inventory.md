@@ -22,7 +22,7 @@ Los roles son exactamente los cinco de `app/Enums/UserRole.php`, replicados en e
 Precisiones verificadas:
 
 - **Entrevistador**: no es un rol. La entrevista tiene `evaluator_id` y la registra el Evaluador asignado (`InterviewPolicy::recordResult` → `isAssignedEvaluator`).
-- **Visitante sin sesión**: consulta la portada y las vacantes publicadas (`/`, `/empleos`, `/empleos/{id}`) y puede registrarse. No es un rol: en UML se trata como el Postulante antes de autenticarse (RF-07 consulta pública, RF-08 registro).
+- **Visitante sin sesión**: consulta la portada y las vacantes publicadas (`/`, `/empleos`, `/empleos/{id}`) y puede registrarse. No es un rol: en UML se trata como el Postulante antes de autenticarse (registro, RF-08). La consulta de vacantes publicadas es el efecto visible de RF-07, que **solo publica RR. HH.**; el Postulante no se asocia a ese caso de uso.
 - `CHECK users_role_organization`: el postulante tiene `organization_id` nulo; el personal, obligatorio.
 - Las cuentas de personal no se autorregistran: `CreateNewUser` (Fortify) crea solo postulantes. El personal existe por *seeders*.
 

@@ -51,7 +51,7 @@ Total: **1 PDM y 19 diagramas UML** (1 de casos de uso, 1 de clases, 4 de estado
 ### 2 · CL-01 Dominio
 
 - **Elementos**: 17 clases (§2 de `class-model.md`) en `App\Models`; 10 enums en `App\Enums` (+ `AuditAction` como nota o diccionario).
-- **Relaciones**: 35 asociaciones con multiplicidad y rol (§3); 8 composiciones.
+- **Relaciones**: 37 asociaciones con multiplicidad y rol (§3); 8 composiciones. `Evaluation` e `Interview` tienen **dos** asociaciones con `User` cada una: `evaluator` (`evaluator_id`, evaluador asignado, `1 — 0..*`) y `scheduler` (`scheduled_by`, RR. HH. que programó, `1 — 0..*`).
 - **Multiplicidades clave**: `JobRequest 1 — 0..1 Vacancy`; `Vacancy 1 — 1 JobProfile`; `Vacancy 1 — 0..1 SelectionDecision`; `User 1 — 0..* Application` con `UNIQUE (vacancy_id, candidate_id)`; `User 1 — 0..1 CandidateProfile`; `Organization 0..1 — 0..* User`.
 - **Notas**: multiempresa lógica (sin RLS ni base por tenant); postulante global; índice parcial de selección; criterios por etapa; `desierta` sin flujo; *trigger* de solo inserción con su única excepción.
 
@@ -64,7 +64,7 @@ Total: **1 PDM y 19 diagramas UML** (1 de casos de uso, 1 de clases, 4 de estado
 ### 4 · UC-01 Casos de uso
 
 - **Actores**: Área solicitante, Recursos Humanos, Aprobador / Dirección, Evaluador, Postulante, Servicio de riesgo operacional (`<<external service>>` `<<experimental>>`). **Ni administrador ni entrevistador.**
-- **Casos**: 29, `UC-RF01` … `UC-RF29`, nombres oficiales; UC-RF28 `<<propuesto v1.1>>` sin asociaciones.
+- **Casos**: 29, `UC-RF01` … `UC-RF29`, nombres oficiales; UC-RF28 `<<propuesto v1.1>>` sin asociaciones. **UC-RF07 se asocia solo a RR. HH.**: el Postulante no publica. La consulta pública de vacantes va como nota en UC-RF07 (contexto de UC-RF10), no como asociación.
 - **Relaciones**: 1 `<<extend>>` (RF-04 → RF-03) y 12 `<<include>>` (§3 de `use-cases.md`). Ninguna otra.
 - **Notas**: RF-23 humano; RF-21/22 soporte; RF-29 experimental y sin relación con ranking ni decisión; auditoría transversal; precondición de RF-24.
 
@@ -95,7 +95,7 @@ Total: **1 PDM y 19 diagramas UML** (1 de casos de uso, 1 de clases, 4 de estado
 
 ### 9 · AC-01 y AC-02
 
-- **AC-01**: seis particiones; decisiones de requerimiento, aprobación, configuración, preselección, más sesiones y decisión humana; nota de auditoría, A-28 y A-30.
+- **AC-01**: seis particiones; decisiones de requerimiento, aprobación, configuración, preselección, más sesiones, **¿postulación descartada?** y decisión humana. Los dos descartes terminan en **fin de flujo** (⊗, «fin de esta postulación»): una descartada no llega al ranking (RF-21) ni a la decisión (RF-23), y la vacante sigue con las demás. La rama no descartada pasa a `finalista` y continúa. Solo el rechazo del requerimiento y el cierre usan fin de actividad. Notas: dos niveles (vacante y postulación), auditoría, A-28 y A-30.
 - **AC-02**: elegibilidad → `descriptive_only`; habilitación → `descriptive_only`; respuesta → `unavailable` o `predictive_available`; fin sin efectos.
 
 ## 4. Lo que F23 no debe modelar

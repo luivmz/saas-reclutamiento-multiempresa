@@ -12,6 +12,8 @@
 
 **Particiones (*swimlanes*)**: Área solicitante · Recursos Humanos · Aprobador / Dirección · Postulante · Evaluador · Sistema.
 
+**Dos niveles en el mismo diagrama.** Los pasos 1–6 y 16–20 son de la **vacante**; los pasos 7–15 se repiten **por cada postulación**. Una vacante tiene varias postulaciones: unas se descartan y otras siguen. Por eso el descarte termina con un **nodo de fin de flujo** (⊗, *flow final*), que cierra **esa postulación**, y no con un nodo de fin de actividad (◉), que cerraría todo el proceso. El único fin de actividad del proceso es el cierre de la vacante (paso 20) o el rechazo del requerimiento (paso 3). Esta regla se escribe como nota en el diagrama.
+
 ### Flujo
 
 | # | Partición | Actividad o decisión | RF |
@@ -25,14 +27,14 @@
 | 7 | Postulante | Crear cuenta, completar perfil y cargar CV en PDF | RF-08, RF-09 |
 | 8 | Postulante | Postular. ◇ Vacante abierta, perfil completo, CV y sin postulación previa → **Sí**: postulación `postulado`; **No**: error y fin para ese intento | RF-10 |
 | 9 | Sistema | Confirmar la postulación al postulante | RF-11 |
-| 10 | RR. HH. | Revisar postulaciones. ◇ Preseleccionar o descartar (con comentario) | RF-12, RF-13 |
+| 10 | RR. HH. | Revisar la postulación. ◇ **¿Preseleccionar?** — **No**: descartar con comentario (`descartado`) → Sistema notifica (RF-15) → **⊗ fin de esta postulación**. **Sí**: `preseleccionado` | RF-12, RF-13 |
 | 11 | Sistema | Notificar el cambio de etapa | RF-15 |
 | 12 | RR. HH. | Programar evaluación y/o entrevista con un evaluador de la organización; la postulación avanza a `en_evaluacion` / `en_entrevista` | RF-16, RF-18 |
 | 13 | Sistema | Enviar la convocatoria al postulante y el aviso al evaluador | RF-17 |
 | 14 | Evaluador | Registrar puntajes por criterio (y resultado de la entrevista); el sistema valida los rangos | RF-19, RF-20 |
-| 15 | RR. HH. | Gestionar etapas hasta `finalista` o `descartado`, con notificación en cada cambio | RF-14, RF-15 |
-| 16 | RR. HH. o Aprobador | Consultar la comparación; el sistema calcula el ranking en ese momento | RF-21, RF-22 |
-| 17 | **Aprobador** | **◇ Decisión humana**: elegir un finalista con resultados completos, justificar y confirmar. Puede no ser el primero | **RF-23** |
+| 15 | RR. HH. | Gestionar la etapa tras las sesiones. ◇ **¿Postulación descartada?** — **Sí**: `descartado` → Sistema notifica (RF-15) → **⊗ fin de esta postulación**; no llega al ranking ni a la decisión. **No**: `finalista` → sigue | RF-14, RF-15 |
+| 16 | RR. HH. o Aprobador | Consultar la comparación de la vacante; el sistema calcula el ranking en ese momento **solo con las postulaciones no descartadas** (`VacancyRankingBuilder` excluye `descartado`) | RF-21, RF-22 |
+| 17 | **Aprobador** | **◇ Decisión humana**: elegir una postulación **`finalista`** con resultados completos, justificar y confirmar. Puede no ser la primera. Una descartada no es elegible (`FinalDecisionService` exige `finalista`) | **RF-23** |
 | 18 | RR. HH. | Registrar la selección: la elegida pasa a `seleccionado` | RF-24 |
 | 19 | RR. HH. | Cerrar la convocatoria (`cerrada`, `con_seleccion`): las demás postulaciones activas pasan a `no_seleccionado` | RF-25 |
 | 20 | Sistema | Notificar el resultado a la seleccionada y a las no seleccionadas | RF-26 |
@@ -42,6 +44,7 @@
 
 - **Paralelismo**: el Postulante (7–9) actúa desde que la vacante está publicada, en paralelo con la revisión de RR. HH.; la postulación es por postulante. Se dibuja con la vacante publicada como punto de sincronización, no como bifurcación del sistema.
 - **Bucles reales**: observación y corrección del requerimiento (2 → 1); reconfiguración de la vacante (5 → 4); varias evaluaciones o entrevistas por postulación (12–14).
+- **Descarte terminal**: `descartado` es un estado final (ST-03). Una postulación descartada en el paso 10 o en el 15 **no llega** a 16 ni a 17; la vacante sigue con las demás. El descarte también es posible desde `finalista` mientras no haya decisión final; tampoco entonces llega a 17.
 - **Bloqueos**: después de 17, RR. HH. ya no cambia etapas en esa vacante (A-28). Tras 19 no se admiten postulaciones, sesiones ni resultados.
 - **No implementado**: cierre `desierta` (sin selección, A-30). No se dibuja como camino del proceso; como mucho, nota.
 - **Sin ML en este proceso**: el riesgo operacional no forma parte del flujo de decisión (AC-02 es aparte).
@@ -71,6 +74,6 @@
 
 ## Instrucciones para F23
 
-1. *Activity Diagram* «AC-01 Proceso de reclutamiento AS-IS» con las seis particiones y los nodos de decisión de la tabla; nota transversal de auditoría.
+1. *Activity Diagram* «AC-01 Proceso de reclutamiento AS-IS» con las seis particiones y los nodos de decisión de la tabla; nota transversal de auditoría. Los dos descartes (pasos 10 y 15) terminan en un **nodo de fin de flujo** (*Flow Final*) etiquetado «fin de esta postulación»; solo el rechazo (3) y el cierre (20) usan **fin de actividad**. Añadir la nota de los dos niveles (vacante y postulación).
 2. *Activity Diagram* «AC-02 Riesgo operacional (experimental)» con los tres desenlaces nombrados como los valores reales de `RiskAvailability`.
 3. Marcar la actividad 17 con `<<human decision>>` y AC-02 con `<<experimental>>`.

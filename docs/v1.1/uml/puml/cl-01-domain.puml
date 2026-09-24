@@ -245,11 +245,13 @@ Application "0..*" -- "0..1" CandidateDocument : cvDocument
 Application "1" *-- "0..*" ApplicationStageHistory
 ApplicationStageHistory "0..*" -- "1" User : author
 
-' 22-29 · Evaluación y entrevista
+' 22-29 y 36-37 · Evaluación y entrevista (evaluator y scheduler son asociaciones distintas)
 Application "1" -- "0..*" Evaluation
 Application "1" -- "0..*" Interview
 User "1" -- "0..*" Evaluation : evaluator
 User "1" -- "0..*" Interview : evaluator
+User "1" -- "0..*" Evaluation : scheduler (scheduled_by)
+User "1" -- "0..*" Interview : scheduler (scheduled_by)
 Evaluation "1" *-- "0..*" EvaluationResult
 Interview "1" *-- "0..*" InterviewResult
 EvaluationCriterion "1" -- "0..*" EvaluationResult

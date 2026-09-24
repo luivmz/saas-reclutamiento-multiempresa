@@ -14,7 +14,7 @@ Abreviaturas UML: UC = caso de uso ([`use-cases.md`](use-cases.md)), CL = clase 
 | RF-04 | UC-RF04 (`<<extend>>`) · SEQ-02 | — (notificación) | `JobRequestRejectedNotification` | `JobRequestWorkflowTest::test_rf04_rejection_notifies_the_requester` · E2E-03 |
 | RF-05 | UC-RF05 · AC-01 #4 · ST-02 | `Vacancy`, `JobProfile`, `EvaluationCriterion` | `vacancies.store/update` · `VacancyController` · `VacancyService::create/update` | `VacancyPublicationTest` · E2E-04 |
 | RF-06 | UC-RF06 · AC-01 #5 | `Vacancy` (`target_completion_at` desde F16) | `VacancyValidator` | `VacancyPublicationTest`, `Ml/TargetCompletionTest` · E2E-04, E2E-14 |
-| RF-07 | UC-RF07 · ST-02 | `Vacancy` | `vacancies.publish` · `VacancyPublicationController` · `VacancyService::publish`; `jobs.index/show` · `PublicVacancyController` | `VacancyPublicationTest` · E2E-04 |
+| RF-07 | UC-RF07 (actor: **RR. HH.**; la consulta pública va como nota) · ST-02 | `Vacancy` | `vacancies.publish` · `VacancyPublicationController` · `VacancyService::publish`; `jobs.index/show` · `PublicVacancyController` | `VacancyPublicationTest` · E2E-04 |
 | RF-08 | UC-RF08 | `User` (`postulante`) | Fortify `register` · `CreateNewUser` | `Auth/CandidateRegistrationTest`, `Auth/AuthenticationTest`, `Auth/RoleMiddlewareTest` · E2E-01, E2E-05 |
 | RF-09 | UC-RF09 | `CandidateProfile`, `CandidateDocument` | `candidate.profile.update`, `candidate.cv.store` · `CandidateProfileService` | `Candidates/CandidateProfileTest` · E2E-05 |
 | RF-10 | UC-RF10 · SEQ-01 · ST-03 | `Application`, `ApplicationStageHistory` | `jobs.apply` · `ApplyController` · `ApplicationService::apply` | `Applications/ApplyToVacancyTest`, `Selection/VacancyClosureTest` · E2E-05, E2E-12 |
@@ -23,9 +23,9 @@ Abreviaturas UML: UC = caso de uso ([`use-cases.md`](use-cases.md)), CL = clase 
 | RF-13 | UC-RF13 · SEQ-03 · ST-03 | `Application` | `applications.shortlist/discard` · `ApplicationStageService::shortlist/discard` | `ApplicationReviewTest`, `SelectionRegistrationTest` · E2E-06 |
 | RF-14 | UC-RF14 · SEQ-03 · ST-03 | `Application`, `ApplicationStageHistory` | `applications.stage` · `ApplicationStageService::moveTo` | `ApplicationReviewTest`, `Unit/Enums/ApplicationStatusTest` · E2E-06 |
 | RF-15 | UC-RF15 (`<<include>>`) · SEQ-03 | — (notificación) | `ApplicationStageChangedNotification` | `ApplicationReviewTest` · E2E-06 |
-| RF-16 | UC-RF16 · SEQ-04 · ST-04 | `Evaluation` | `applications.evaluations.store` · `AssessmentScheduleController::evaluation` · `AssessmentScheduler::scheduleEvaluation` | `Assessments/EvaluationTest` |
+| RF-16 | UC-RF16 · SEQ-04 · ST-04 · CL-01 asociaciones 24 (`evaluator`) y 36 (`scheduler`) | `Evaluation` (`scheduled_by` = quien programó; `evaluator_id` = evaluador asignado) | `applications.evaluations.store` · `AssessmentScheduleController::evaluation` · `AssessmentScheduler::scheduleEvaluation` | `Assessments/EvaluationTest` |
 | RF-17 | UC-RF17 (`<<include>>`) · SEQ-04, SEQ-05 | — (notificaciones) | `AssessmentConvocationNotification`, `AssessmentAssignedNotification` | `EvaluationTest`, `Assessments/InterviewTest` |
-| RF-18 | UC-RF18 · SEQ-05 · ST-04 | `Interview` | `applications.interviews.store` · `AssessmentScheduler::scheduleInterview` | `InterviewTest`, `VacancyClosureTest` |
+| RF-18 | UC-RF18 · SEQ-05 · ST-04 · CL-01 asociaciones 25 (`evaluator`) y 37 (`scheduler`) | `Interview` (`scheduled_by` = quien programó; `evaluator_id` = evaluador asignado) | `applications.interviews.store` · `AssessmentScheduler::scheduleInterview` | `InterviewTest`, `VacancyClosureTest` |
 | RF-19 | UC-RF19 · SEQ-05 · ST-04 | `EvaluationResult`, `InterviewResult` | `evaluations.results.store`, `interviews.results.store` · `AssessmentResultRecorder` | `InterviewTest`, `EvaluationTest` · E2E-07 |
 | RF-20 | UC-RF20 · SEQ-05, SEQ-06 | `EvaluationCriterion` | `WeightingValidator`, `ScoreSheetValidator`, `RankingService` | `Unit/Evaluation/WeightingValidatorTest`, `Unit/Assessments/ScoreSheetValidatorTest`, `Unit/Ranking/RankingServiceTest` · E2E-04, E2E-07 |
 | RF-21 | UC-RF21 · SEQ-06 · CO «Cálculo de ranking» | — (no persistente) | `VacancyRankingBuilder`, `RankingService` | `RankingServiceTest`, `Selection/RankingComparisonTest` · E2E-08 |
@@ -50,6 +50,7 @@ Abreviaturas UML: UC = caso de uso ([`use-cases.md`](use-cases.md)), CL = clase 
 | Registrar, corregir, enviar (RF-01/02) | Dueño | — | — | — | — | `create`, `update`, `submit` |
 | Observar o validar (RF-02) | — | Misma org. | — | — | — | `review` |
 | Aprobar o rechazar (RF-03) | — | — | Misma org. | — | — | `decide` |
+| Consultar vacantes publicadas (efecto de RF-07, no el caso «Publicar») | Sí | Sí | Sí | Sí | Sí, **también sin sesión** | Rutas públicas `jobs.index`, `jobs.show` (fuera del grupo `auth`) |
 | Ver vacantes internas | — | Misma org. | Misma org. | — | — | `VacancyPolicy::view` |
 | Crear, configurar, publicar (RF-05–07) | — | Misma org. | — | — | — | `create`, `update`, `publish` |
 | Ver postulaciones (RF-12) | — | Misma org. | Misma org. | — | Las propias | `ApplicationPolicy::view`, `viewAnyForVacancy` |

@@ -16,7 +16,7 @@
 | Recursos Humanos | Primario | — |
 | Aprobador / Dirección | Primario | — |
 | Evaluador | Primario | — |
-| Postulante | Primario | Incluye al visitante sin sesión para la consulta pública (RF-07) y el registro (RF-08) |
+| Postulante | Primario | Incluye al visitante sin sesión para el registro (RF-08). Consulta las vacantes publicadas, pero **no se asocia a UC-RF07**: ver §4 |
 | Servicio de riesgo operacional | Secundario, `<<external service>>` `<<experimental>>` | — |
 
 No hay generalización entre actores del personal: sus permisos no se heredan (por ejemplo, el Aprobador no puede validar requerimientos ni RR. HH. decidir). Dibujar un actor «Personal» abstracto sería una simplificación falsa.
@@ -33,7 +33,7 @@ Nombres del catálogo oficial, sin renumerar ni fusionar. **Iniciado por** = qui
 | UC-RF04 | Notificar rechazo del requerimiento | RF-04 | Sistema | AS-IS |
 | UC-RF05 | Registrar perfil y criterios del puesto | RF-05 | RR. HH. | AS-IS |
 | UC-RF06 | Configurar y validar vacante | RF-06 | RR. HH. | AS-IS |
-| UC-RF07 | Publicar vacante | RF-07 | RR. HH. (publica) · Postulante/visitante (consulta pública) | AS-IS |
+| UC-RF07 | Publicar vacante | RF-07 | **RR. HH.** (único actor) | AS-IS |
 | UC-RF08 | Gestionar cuenta y acceso del postulante | RF-08 | Postulante | AS-IS |
 | UC-RF09 | Gestionar perfil y CV del postulante | RF-09 | Postulante | AS-IS |
 | UC-RF10 | Registrar postulación | RF-10 | Postulante | AS-IS |
@@ -93,6 +93,7 @@ Solo las que corresponden a un comportamiento real. Cada una se justifica con el
 - **UC-RF24 / UC-RF25.** Solo tras UC-RF23. El cierre deja `seleccionado` a la elegida y `no_seleccionado` al resto de las activas. Tras la decisión, RR. HH. no puede cambiar etapas en esa vacante (A-28).
 - **UC-RF29 — `<<experimental>>`.** Riesgo operacional del **proceso** de la vacante, no del candidato. No selecciona, no descarta, no ordena ni modifica el ranking. La petición al servicio lleva 15 features operacionales y ningún identificador ni PII. Validado solo con datos sintéticos; no productivo. RF-29 sigue siendo candidato.
 - **UC-RF28 — candidato no implementado.** Panel agregado de tiempos, *backlog* y cuellos de botella (definición en `docs/v1.1/ml/requirements-and-traceability-plan.md`). **El estado `descriptive_only` de la tarjeta de UC-RF29 no es este panel**: solo muestra una etiqueta y un mensaje explicativo. Dibujarlo con estereotipo `<<propuesto v1.1>>`, sin asociación a actores ni al sistema implementado.
+- **UC-RF07 — solo RR. HH. publica.** Publicar es una acción de RR. HH. de la organización (`VacancyPolicy::publish`). El efecto visible de publicar es que la vacante aparece en las páginas públicas (`/empleos`, `/empleos/{id}`, `PublicVacancyController`), que cualquier persona, con o sin sesión, puede **consultar**. Esa consulta es el contexto de UC-RF10 (se postula a una vacante publicada), **no** una asociación con UC-RF07: dibujar al Postulante unido a «Publicar vacante» haría leer que publica. Va como nota en UC-RF07; no se crea un caso ni un RF nuevo y RF-07 no se renombra.
 - **Multiempresa.** Todos los casos del personal operan dentro de su organización (Policy de rol **y** organización). El Postulante es global y solo ve lo suyo.
 
 ## 5. Asociaciones actor ↔ caso
@@ -103,7 +104,7 @@ Solo las que corresponden a un comportamiento real. Cada una se justifica con el
 | Recursos Humanos | UC-RF02, UC-RF05, UC-RF06, UC-RF07, UC-RF12, UC-RF13, UC-RF14, UC-RF16, UC-RF18, UC-RF22, UC-RF24, UC-RF25, UC-RF29 |
 | Aprobador / Dirección | UC-RF03, UC-RF12, UC-RF22, UC-RF23, UC-RF27, UC-RF29 |
 | Evaluador | UC-RF19 |
-| Postulante | UC-RF07 (consulta pública), UC-RF08, UC-RF09, UC-RF10 |
+| Postulante | UC-RF08, UC-RF09, UC-RF10 |
 | Servicio de riesgo operacional | UC-RF29 |
 
 Los casos del sistema (UC-RF04, UC-RF11, UC-RF15, UC-RF17, UC-RF20, UC-RF21, UC-RF26 y el registro de UC-RF27) no se asocian a actores: se alcanzan por `<<include>>` o `<<extend>>`. El destinatario de cada notificación figura en la nota del caso: UC-RF04 → solicitante; UC-RF11, UC-RF15, UC-RF26 → postulante; UC-RF17 → postulante y evaluador.
@@ -124,5 +125,5 @@ El informe [`03-use-case-report.md`](../../final-report/diagram-reports/03-use-c
 2. Crear los seis actores; el servicio de riesgo con estereotipos `<<external service>>` y `<<experimental>>`.
 3. Crear los 29 casos con el código `UC-RFnn` y el nombre oficial; UC-RF28 con `<<propuesto v1.1>>` y color gris.
 4. Trazar las asociaciones de §5 y las relaciones de §3; ninguna otra.
-5. Añadir las notas de §4 y la nota transversal de auditoría.
+5. Añadir las notas de §4 (incluida la de consulta pública en UC-RF07) y la nota transversal de auditoría. El Postulante **no** se asocia a UC-RF07.
 6. Registrar el resultado en el informe de diagramas de v1.1.

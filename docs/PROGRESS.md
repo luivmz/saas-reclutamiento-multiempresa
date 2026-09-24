@@ -158,8 +158,9 @@ Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempre
 ## v1.1 — Fase 22: especificación UML del AS-IS
 
 - **Rama:** `feature/phase-22-uml-update`, desde `develop` en `aced6da` (cierre de la Fase 21).
-- **Alcance:** solo documentación. Especificación verificable de los diagramas UML del sistema implementado, en `docs/v1.1/uml/`: inventario, casos de uso (RF-01 a RF-29), clases del dominio (17 clases, 35 asociaciones), componentes y paquetes, despliegue, 8 secuencias, 2 actividades, 4 máquinas de estado, matriz de trazabilidad y guía para PowerDesigner. 19 borradores PlantUML, no renderizados.
+- **Alcance:** solo documentación. Especificación verificable de los diagramas UML del sistema implementado, en `docs/v1.1/uml/`: inventario, casos de uso (RF-01 a RF-29), clases del dominio (17 clases, 37 asociaciones), componentes y paquetes, despliegue, 8 secuencias, 2 actividades, 4 máquinas de estado, matriz de trazabilidad y guía para PowerDesigner. 19 borradores PlantUML, no renderizados.
 - **Hallazgos del cruce con el código:** RF-28 es un candidato no implementado (el estado `descriptive_only` de RF-29 no es su panel); el cierre `desierta` no tiene flujo; la descripción OpenAPI de `days_remaining_to_target` quedó obsoleta (GAP-01 está resuelto).
 - **Sin cambios** en código, pruebas, dependencias ni servicio ML. **Sin archivos de PowerDesigner**: son de la Fase 23, que no se inició. No se ejecutaron suites funcionales: el cambio es documental.
+- **Auditoría de Codex:** tres correcciones de UML (`scheduled_by` en CL-01, descarte terminal en AC-01, UC-RF07 solo de RR. HH.), hechas en la misma rama; pendiente de reauditoría.
 - **Detalle:** `docs/v1.1/phase-22-uml-update.md`.
 - **Sin `push`, `merge`, *tag* ni *release*.**

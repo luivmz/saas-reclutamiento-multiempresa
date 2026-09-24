@@ -106,3 +106,15 @@ Ningún elemento quedó como «pendiente de confirmación»: toda multiplicidad 
 ## 12. Handoff a la Fase 23
 
 [`uml/powerdesigner-handoff.md`](uml/powerdesigner-handoff.md): reglas, estereotipos, orden de creación (PDM → clases → estados → casos de uso → componentes → paquetes → despliegue → secuencias → actividades), una ficha por diagrama y la lista de lo que no se modela. La Fase 23 no se inició.
+
+## 13. *Hotfix* de auditoría (23/09/2026)
+
+La auditoría de Codex pidió tres correcciones antes de la Fase 23. Se hicieron solo en la documentación UML, sin tocar código:
+
+| Hallazgo | Corrección | Documentos |
+|---|---|---|
+| **MEDIUM-01** · CL-01 omitía `scheduled_by` en `Evaluation` e `Interview` | Dos asociaciones nuevas, **36** (`User 1 — 0..* Evaluation`) y **37** (`User 1 — 0..* Interview`), rol *scheduler*: FK `scheduled_by` NOT NULL a `users` que `AssessmentScheduler` llena con el usuario de RR. HH. Coexisten con `evaluator` (24 y 25), que es el evaluador asignado. Los modelos no declaran relación Eloquent para `scheduled_by`: la fuente es la FK. Se verificó que las otras 15 FK a `users` ya estaban modeladas. **CL-01 pasa de 35 a 37 asociaciones** (recuento de la tabla y del `.puml`) | `class-model.md`, `cl-01-domain.puml`, `traceability-matrix.md`, `powerdesigner-handoff.md`, `README.md`, `PROGRESS.md` |
+| **MEDIUM-02** · AC-01 dejaba que una postulación descartada siguiera hacia el ranking y la decisión | Decisión explícita **«¿Postulación descartada?»** tras las sesiones: **sí** → descartar, notificar y **fin de flujo** (⊗) de esa postulación; **no** → `finalista` y sigue. El descarte en la revisión inicial también termina en fin de flujo, no en fin de actividad. Nota de dos niveles: la vacante sigue con las demás postulaciones y el ranking solo usa las no descartadas | `activity-diagrams.md`, `ac-01-recruitment.puml`, `powerdesigner-handoff.md` |
+| **LOW-01** · UC-RF07 «Publicar vacante» estaba asociado al Postulante | Asociación eliminada: **solo RR. HH.** publica. La consulta pública de vacantes queda como nota en UC-RF07, contexto de UC-RF10; RF-07 no se renombra ni se crea otro caso | `use-cases.md`, `uc-01-use-cases.puml`, `uml-inventory.md`, `traceability-matrix.md`, `powerdesigner-handoff.md` |
+
+Sin cambios en RF-28 (candidato no implementado), RF-29 (experimental), RF-23 (decisión humana), la frontera ML, componentes, despliegue, secuencias, estados ni paquetes. **La Fase 22 sigue pendiente de reauditoría y la Fase 23 no se inició.**

@@ -10,7 +10,7 @@ Estos archivos son la **especificación** de los diagramas. La formalización gr
 |---|---|---|
 | 1 | [`uml-inventory.md`](uml-inventory.md) | Inventario verificado contra el código: actores, módulos, entidades, estados, integraciones, despliegue y lo que **no** existe. Base de todo lo demás |
 | 2 | [`use-cases.md`](use-cases.md) | UC-01: RF-01 a RF-29, actores, `<<include>>`/`<<extend>>` justificados |
-| 3 | [`class-model.md`](class-model.md) | CL-01: 17 clases, 35 asociaciones con multiplicidad, multiempresa, enums |
+| 3 | [`class-model.md`](class-model.md) | CL-01: 17 clases, 37 asociaciones con multiplicidad, multiempresa, enums |
 | 4 | [`component-model.md`](component-model.md) | CO-01 componentes y PK-01 paquetes, con la frontera Laravel ↔ FastAPI |
 | 5 | [`deployment-model.md`](deployment-model.md) | DE-01: contenedores reales y servicio de inferencia fuera de Compose |
 | 6 | [`sequence-diagrams.md`](sequence-diagrams.md) | SEQ-01 a SEQ-08: flujos críticos |
