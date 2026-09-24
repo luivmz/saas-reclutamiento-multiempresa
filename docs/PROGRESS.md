@@ -6,7 +6,7 @@
 
 ## Estado de v1.1
 
-`main` sigue siendo la v1.0 académica (`4563c69`, tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1. `develop` = `origin/develop` = `a316c07`.
+`main` sigue siendo la v1.0 académica (`4563c69`, tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1. `develop` = `origin/develop` = `aced6da`.
 
 | Fase | Contenido | Estado | Merge en `develop` | Detalle |
 |---|---|---|---|---|
@@ -19,8 +19,9 @@
 | 18 | Rediseño del frontend | ✅ Integrada | `11832ac` | `docs/v1.1/phase-18-frontend-redesign.md` |
 | 19 | Animaciones y microinteracciones | ✅ Integrada | `67a88a6` | `docs/v1.1/phase-19-animations.md` |
 | 20 | Experiencia 3D con CSS 3D (solo portada) | ✅ Cerrada e integrada | `a316c07` | `docs/v1.1/phase-20-3d-experience.md` |
-| 21 | QA visual, accesibilidad y responsive | 🟡 Implementada en `feature/phase-21-visual-qa`, auditada técnicamente en verde; **pendiente de reauditoría del hotfix documental y de integración** | — | `docs/v1.1/phase-21-visual-qa.md` |
-| 22 | UML y PowerDesigner de v1.1 | ⬜ No iniciada | — | — |
+| 21 | QA visual, accesibilidad y responsive | ✅ Cerrada e integrada | `aced6da` | `docs/v1.1/phase-21-visual-qa.md` |
+| 22 | Especificación UML del AS-IS | 🟡 Implementada en `feature/phase-22-uml-update`, pendiente de auditoría | — | `docs/v1.1/phase-22-uml-update.md` |
+| 23 | Formalización en PowerDesigner | ⬜ No iniciada | — | — |
 
 **RF-29** está implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, no validado institucionalmente ni autorizado para producción; no selecciona ni descarta a nadie y no cambia RF-23. RF-28, RF-29 y los RNF nuevos (incluido RNF-C) siguen siendo **candidatos** (`docs/v1.1/scope-preliminary.md`, decisión 11 y preguntas 12–13).
 
@@ -151,4 +152,14 @@ Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempre
 - **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 42 pruebas de componente · `tsc` sin errores · `npm run build` correcto · Cypress 20 specs / 84 pruebas · 0 desbordes horizontales.
 - **Detalle y evidencia:** `docs/v1.1/phase-21-visual-qa.md` y `docs/v1.1/phase-21-screenshots/`.
 - **Auditoría de Codex:** técnicamente en verde; pidió un hotfix documental (`CLAUDE.md` desactualizado, redacción de WebGL en la skill 3D, cifra del CSS). Hecho el 23/09/2026 en la misma rama, solo documentación y skills. La reauditoría pidió un hotfix final (estado vigente en `scope-preliminary.md`, contrato real en la skill `ml-risk-service`, esta entrada), también solo documental. **La fase no está cerrada** hasta la nueva reauditoría.
+- **Cierre:** tras la reauditoría, integrada en `develop` con el merge `aced6da`. *(Anotado en la Fase 22.)*
+- **Sin `push`, `merge`, *tag* ni *release*.**
+
+## v1.1 — Fase 22: especificación UML del AS-IS
+
+- **Rama:** `feature/phase-22-uml-update`, desde `develop` en `aced6da` (cierre de la Fase 21).
+- **Alcance:** solo documentación. Especificación verificable de los diagramas UML del sistema implementado, en `docs/v1.1/uml/`: inventario, casos de uso (RF-01 a RF-29), clases del dominio (17 clases, 35 asociaciones), componentes y paquetes, despliegue, 8 secuencias, 2 actividades, 4 máquinas de estado, matriz de trazabilidad y guía para PowerDesigner. 19 borradores PlantUML, no renderizados.
+- **Hallazgos del cruce con el código:** RF-28 es un candidato no implementado (el estado `descriptive_only` de RF-29 no es su panel); el cierre `desierta` no tiene flujo; la descripción OpenAPI de `days_remaining_to_target` quedó obsoleta (GAP-01 está resuelto).
+- **Sin cambios** en código, pruebas, dependencias ni servicio ML. **Sin archivos de PowerDesigner**: son de la Fase 23, que no se inició. No se ejecutaron suites funcionales: el cambio es documental.
+- **Detalle:** `docs/v1.1/phase-22-uml-update.md`.
 - **Sin `push`, `merge`, *tag* ni *release*.**

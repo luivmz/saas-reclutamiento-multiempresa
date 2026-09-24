@@ -20,7 +20,7 @@ package "Monolito Laravel 13" {
   [Auditoría (AuditLogger)] as AUDIT
   [Notificaciones (RecruitmentNotification x6)] as NOTIF
   [Almacenamiento de CV (disco local privado)] as CVSTORE
-  [Riesgo operacional\n(OperationalRiskService, FeatureBuilder,\nMlRiskClient)] as RISK <<experimental>>
+  [Riesgo operacional\n(OperationalRiskService,\nOperationalRiskFeatureBuilder, MlRiskClient)] as RISK <<experimental>>
 }
 
 package "Infraestructura" {

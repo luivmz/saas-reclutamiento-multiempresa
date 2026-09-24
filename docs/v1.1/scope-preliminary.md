@@ -7,7 +7,7 @@
 > **Estado vigente (23/09/2026, hotfix final de la Fase 21).** Este documento nació en la Fase 13 como fotografía preliminar y se conserva así: sus secciones 1 y 4 describen el repositorio **del 19/09/2026** y se anotan en lugar de reescribirse. Lo que es cierto hoy:
 >
 > - `main` permanece en la **v1.0 académica** (`4563c69`; tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1.
-> - `develop` (`a316c07`) integra las **Fases 13 a 20**. La Fase 21 está implementada en `feature/phase-21-visual-qa` y **pendiente de cierre**; la Fase 22 **no se inició**.
+> - `develop` (`aced6da`) integra las **Fases 13 a 21**. La Fase 22 (especificación UML del AS-IS) está implementada en `feature/phase-22-uml-update` y pendiente de auditoría; la Fase 23 (PowerDesigner) **no se inició**. *(Actualizado en la Fase 22; hasta entonces decía `a316c07`, Fases 13 a 20 y la Fase 21 pendiente de cierre.)*
 > - El **servicio FastAPI existe** (Fase 15) y la **integración Laravel ↔ FastAPI existe** (Fase 16, validada en pruebas en la Fase 17). Ambos son **experimentales**: validados técnicamente con datos sintéticos, no validados institucionalmente ni autorizados para producción.
 > - **RF-29** está implementado experimentalmente y **sigue siendo candidato**; **RF-28** sigue siendo candidato; **RNF-C** sigue siendo **propuesta**. Nada de eso cambia RF-23: la decisión final es humana.
 >
