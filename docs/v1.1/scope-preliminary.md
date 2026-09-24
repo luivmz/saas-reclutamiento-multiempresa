@@ -25,7 +25,7 @@ Numeración **provisional**: estos identificadores solo se fijan cuando el equip
 | Candidato | Descripción | Estado | Riesgo principal |
 |---|---|---|---|
 | RF-28 (cand.) | Panel operativo de seguimiento de convocatorias: etapas, tiempos y cuellos de botella, sin datos de personas | Propuesta | Puede confundirse con evaluación de candidatos si el diseño no es explícito |
-| RF-29 (cand.) | Estimación informativa de riesgo de demora de una convocatoria | Pendiente de decisión | Depende por completo de `ml-feasibility.md`; sin no-go superado, no existe. **Fase 14:** especificado en detalle y **bloqueado** por `ML-DECISION-01` (semántica del plazo objetivo) |
+| RF-29 (cand.) | Estimación informativa de riesgo de demora de una convocatoria | ~~Pendiente de decisión~~ Implementado e integrado **experimentalmente** (Fases 15–17): validado técnicamente con datos sintéticos, no validado institucionalmente ni autorizado para producción. **Sigue siendo candidato** (decisión 11) | Depende por completo de `ml-feasibility.md`; sin no-go superado, no existe. **Fase 14:** especificado en detalle y ~~**bloqueado** por `ML-DECISION-01` (semántica del plazo objetivo)~~ desbloqueado: `ML-DECISION-01` se resolvió el 20/09/2026 y `GAP-01` se resolvió técnicamente en la Fase 16 |
 | RF-30 (cand.) | Exportación de reportes operativos del proceso (PDF/CSV) para el informe académico | Propuesta | Riesgo de incluir datos personales si no se filtra por diseño |
 | RF-31 (cand.) | Portal público de vacantes con presentación visual mejorada | Propuesta | Alcance visual que puede desbordar hacia rediseño general |
 
@@ -79,9 +79,9 @@ Ninguna implementación de v1.1 debe comenzar antes de responder 1 y 6.
 7. ~~`ML-DECISION-01` — fuente y semántica de `target_completion_at`~~ → **Resuelta el 20/09/2026** (decisión 3): `required_by` descartado; plazo explícito aprobado conceptualmente; implementación en `GAP-01`.
 8. ~~Metas de precision y recall~~ → **Política aprobada** (decisión 8); las **cifras** se determinan experimentalmente en la Fase 15 y se documentan.
 9. ~~Contrato de features y estrategia de dataset~~ → **Aprobados** (decisiones 4 y 9).
-10. **¿Se autoriza, por separado, crear código Python e instalar dependencias en la Fase 15?** → **PENDIENTE.** Es la única condición que falta del gate científico.
-11. **¿Cuándo y cómo se resuelve `GAP-01`?** → **PENDIENTE.** Bloquea la integración del modelo en Laravel, aunque no el experimento.
+10. ~~**¿Se autoriza, por separado, crear código Python e instalar dependencias en la Fase 15?** → **PENDIENTE.** Es la única condición que falta del gate científico.~~ → **Superada:** la Fase 15 se ejecutó por encargo del equipo y se cerró el 21/09/2026 (`phase-15-closeout.md`). *Anotado en el hotfix documental de la Fase 21.*
+11. ~~**¿Cuándo y cómo se resuelve `GAP-01`?** → **PENDIENTE.** Bloquea la integración del modelo en Laravel, aunque no el experimento.~~ → **Resuelta técnicamente en la Fase 16:** `vacancies.target_completion_at` existe y `days_remaining_to_target` es computable. El modelo sigue siendo experimental (`phase-16-laravel-ml-integration.md` §2). *Anotado en el hotfix documental de la Fase 21.*
 12. **¿Pasan RF-28 y RF-29 al baseline de v1.1?** → **PENDIENTE.** La decisión 11 los mantiene como candidatos.
-13. **¿Pasa RNF-C al baseline de v1.1?** → **PENDIENTE — propuesta de la Fase 21 (23/09/2026).** La experiencia 3D está implementada, auditada e integrada (Fase 20), pero implementar no promueve un requisito: RF-29 también está integrado y sigue siendo candidato por la decisión 11. Se propone al equipo decidir RNF-C junto con RF-28 y RF-29.
+13. **¿Pasa RNF-C al baseline de v1.1?** → **PENDIENTE — propuesta de la Fase 21 (23/09/2026).** La Fase 20 fue autorizada explícitamente por el equipo y la experiencia 3D está implementada, auditada e integrada, pero implementar no promueve un requisito: RF-29 también está integrado y sigue siendo candidato por la decisión 11. Se propone al equipo decidir RNF-C junto con RF-28 y RF-29.
 
 Las dos compuertas —científica y de integración— están detalladas en [`phase-14-ml-definition.md` §8](phase-14-ml-definition.md).

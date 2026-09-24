@@ -1,11 +1,17 @@
 ---
 name: ml-risk-service
-description: Marco de diseño del servicio de riesgo operacional del proceso de reclutamiento (candidato v1.1, aún NO implementado). Úsala al discutir, diseñar o evaluar machine learning, modelos predictivos, un servicio FastAPI de inferencia, datasets sintéticos o métricas de modelo para este proyecto. Define qué puede predecir el modelo, qué tiene prohibido predecir y qué evidencia exige antes de existir.
+description: Marco del servicio de riesgo operacional del proceso de reclutamiento (RF-29, implementado en develop como experimental en las Fases 15 a 17; candidato, no validado para producción). Úsala al discutir, diseñar o evaluar machine learning, modelos predictivos, un servicio FastAPI de inferencia, datasets sintéticos o métricas de modelo para este proyecto. Define qué puede predecir el modelo, qué tiene prohibido predecir y qué evidencia exige antes de existir.
 ---
 
-# Servicio de riesgo operacional (diseño, no implementación)
+# Servicio de riesgo operacional
 
-**Estado: candidato. No implementes nada todavía.** Esta skill fija el marco para que, si el equipo lo aprueba, el servicio nazca correcto. Mientras la Fase 13 esté vigente, su uso es exclusivamente de diseño y documentación en `docs/v1.1/ml-feasibility.md`.
+**Estado: implementado en `develop` como experimental.** Las Fases 15 a 17 lo construyeron dentro de este marco: `ml-service/` (dataset sintético, entrenamiento y servicio FastAPI con `/health`, `/v1/model-info` y `/v1/predict`), la integración Laravel ↔ FastAPI con `vacancies.target_completion_at` y la tarjeta de riesgo operacional. RF-29 está **validado técnicamente con datos sintéticos, no validado institucionalmente ni autorizado para producción**, y sigue siendo **candidato** (decisión 11). Detalle: [`phase-15-closeout.md`](../../../docs/v1.1/phase-15-closeout.md), [`phase-16-laravel-ml-integration.md`](../../../docs/v1.1/phase-16-laravel-ml-integration.md) y [`phase-17-ml-validation.md`](../../../docs/v1.1/phase-17-ml-validation.md).
+
+**Contrato científico congelado.** No se modifica sin una fase y una decisión del equipo: *freeze* `9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2`, *threshold* `0.1679418172266036`, Logistic Regression `C=10`, `class_weight=None`, `StandardScaler`, sin calibración.
+
+Las reglas de abajo siguen vigentes para el servicio actual y para cualquier cambio o modelo futuro.
+
+> Historia: hasta la Fase 21 esta skill decía «Estado: candidato. No implementes nada todavía» y limitaba su uso al diseño durante la Fase 13. Se actualizó en el hotfix documental de la Fase 21 (23/09/2026) para reflejar lo implementado; las fronteras y la evidencia exigida no cambiaron.
 
 ## La frontera, primero
 
@@ -28,7 +34,7 @@ El modelo predice **el comportamiento del proceso**, nunca a las personas.
 
 Si una propuesta necesita cruzar esa frontera, la respuesta es no. Documenta la petición en `docs/v1.1/scope-preliminary.md` como descartada y explica por qué.
 
-## Arquitectura acordada como candidata
+## Arquitectura (acordada como candidata, implementada así)
 
 - **Laravel es el sistema de registro.** Ninguna decisión ni estado de negocio nace en el servicio de ML.
 - **FastAPI es un servicio de inferencia opcional y sin estado**: no accede a la base de datos principal, no conoce el dominio, no escribe en PostgreSQL. Recibe un vector de características ya anonimizado y devuelve un número con su incertidumbre.
@@ -37,7 +43,7 @@ Si una propuesta necesita cruzar esa frontera, la respuesta es no. Documenta la 
 - **Sin PII cruzando el límite**: solo identificadores internos, conteos, duraciones y fechas relativas.
 - La comunicación se simula con `Http::fake()` en todas las pruebas de Laravel.
 
-## Datos y evidencia exigidas antes de aprobar
+## Datos y evidencia exigidas (cumplidas para el experimento; exigibles a cualquier modelo nuevo)
 
 Los detalles del protocolo están en [EVALUATION.md](EVALUATION.md). En resumen:
 
@@ -51,4 +57,4 @@ Los detalles del protocolo están en [EVALUATION.md](EVALUATION.md). En resumen:
 
 ## En la interfaz
 
-Cuando exista, la estimación se presenta como **información operativa**: etiqueta explícita de "estimación", incertidumbre visible, origen del dato y aviso de que no evalúa personas. Nunca cerca del ranking, de la comparación de candidatos ni de la decisión final.
+La estimación se presenta como **información operativa**: etiqueta explícita de "estimación", incertidumbre visible, origen del dato y aviso de que no evalúa personas. Nunca cerca del ranking, de la comparación de candidatos ni de la decisión final.

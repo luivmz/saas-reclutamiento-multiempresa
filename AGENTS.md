@@ -35,7 +35,7 @@ Reglas de compatibilidad:
 - La decisión final sigue siendo humana, del Aprobador / Dirección, con confirmación y justificación. Ningún agente ni ML selecciona, descarta o contrata.
 - Conserva `organization_id`, scopes, Policies, roles y pruebas cross-tenant.
 - Conserva la auditoría segura y append-only; no almacenes PII o secretos en sus metadatos.
-- Laravel continúa como sistema de registro. Todo ML futuro es operacional, informativo y opcional.
+- Laravel continúa como sistema de registro. El ML actual (RF-29, experimental) y cualquier ML futuro son operacionales, informativos y opcionales.
 - Los candidatos v1.1 siguen siendo candidatos hasta una aprobación explícita.
 
 ## Evidencia y trazabilidad

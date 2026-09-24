@@ -28,7 +28,7 @@ La razón es simple: esas pantallas sostienen decisiones sobre personas y eviden
 
 ## Progresivo de verdad
 
-El 3D es un adorno que puede no cargar. La pantalla debe funcionar completa sin él:
+El 3D es un adorno que puede no cargar. La pantalla debe funcionar completa sin él. Las reglas se escribieron pensando en un lienzo WebGL; en la implementación actual, con CSS 3D, «capa» equivale a las hojas de DOM de la escena y el póster es DOM, no una imagen:
 
 1. **El DOM funcional es independiente del canvas.** Títulos, textos, enlaces, botones y formularios existen y operan aunque el canvas nunca se monte. El contenido no se renderiza *dentro* del canvas.
 2. **Carga diferida**: `React.lazy` + `Suspense`, fuera del *bundle* principal, y solo cuando el contenedor entra en viewport.
@@ -38,7 +38,13 @@ El 3D es un adorno que puede no cargar. La pantalla debe funcionar completa sin 
 
 ## Cuándo no se muestra el 3D
 
-Se cae al poster automáticamente si: el navegador no soporta WebGL, el dispositivo es móvil o de gama baja, la conexión es limitada (`navigator.connection` ahorro de datos), o el usuario declaró `prefers-reduced-motion: reduce`. Esta última no es opcional: es un requisito de accesibilidad, y la skill `reviewing-a11y` lo verifica.
+**Implementación actual (CSS 3D, sin WebGL).** Se queda en el póster si el usuario declaró `prefers-reduced-motion: reduce`, si hay ahorro de datos (`navigator.connection.saveData`), si el viewport mide menos de 1024 px, si el equipo es modesto (≤ 2 núcleos o ≤ 2 GB), si el navegador no compone en perspectiva (`transform-style: preserve-3d`) o si el fragmento de la escena falla. **La escena no depende de WebGL**: sin WebGL se muestra igual, y así lo prueba `e2e-18-profundidad-portada.cy.js`.
+
+**Escenas WebGL futuras (hipotéticas).** Solo si el equipo autoriza una ampliación con WebGL, esa escena deberá caer al póster también cuando WebGL no esté disponible, además de todas las condiciones anteriores.
+
+El movimiento reducido no es opcional en ningún caso: es un requisito de accesibilidad, y la skill `reviewing-a11y` lo verifica.
+
+> Historia: hasta el hotfix documental de la Fase 21 esta sección listaba «el navegador no soporta WebGL» como primera condición, sin distinguir la escena actual, que no usa WebGL, de una escena WebGL futura.
 
 ## Presupuestos
 

@@ -4,6 +4,8 @@
 
 > **Científicamente aceptable no equivale a desplegable.** `GAP-01` sigue abierto y el modelo **no puede integrarse ni desplegarse**.
 
+> **Nota de evolución (hotfix documental de la Fase 21, 23/09/2026).** Esta ficha se escribió al cierre de la Fase 15B y se conserva tal cual. Después, la Fase 16 resolvió `GAP-01` **técnicamente** (`vacancies.target_completion_at` existe y `days_remaining_to_target` es computable) e integró el modelo con Laravel, y la Fase 17 lo validó en entorno de pruebas. El modelo **sigue siendo experimental**: validado solo con datos sintéticos, no validado institucionalmente ni autorizado para producción. RF-29 sigue siendo candidato. El modelo y su contrato no cambiaron (*freeze* `9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2`, *threshold* `0.1679418172266036`). Ver [`phase-16-laravel-ml-integration.md`](../phase-16-laravel-ml-integration.md) y [`phase-17-ml-validation.md`](../phase-17-ml-validation.md).
+
 ---
 
 ## Identificación

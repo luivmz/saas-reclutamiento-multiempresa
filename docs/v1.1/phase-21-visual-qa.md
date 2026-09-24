@@ -169,7 +169,7 @@ Ningún defecto obligó a tocar backend, rutas ni contratos.
 
 - **RNF-C** (experiencia 3D): implementar no promueve un requisito —RF-29 está integrado y sigue siendo candidato por la decisión 11—. Se dejó **propuesta**, no aprobación: pregunta 13 de [`scope-preliminary.md`](scope-preliminary.md), para que el equipo decida RNF-C junto con RF-28 y RF-29.
 - **Skill `recruitment-3d-experience`**: actualizada, como pedía la fase, de «candidato, no implementado» a «implementada y acotada». Las reglas de uso no cambiaron; se añadieron las condiciones para *ampliar* el 3D y se conservó el texto anterior como nota de historia.
-- **`CLAUDE.md`** sigue diciendo en la tabla de skills que el 3D está «aún no implementado». **No se tocó**: la convención del mapa documental es revisar `CLAUDE.md` cuando v1.1 se integre en `main`. Anotado en [`documentation-update-map.md`](documentation-update-map.md).
+- ~~**`CLAUDE.md`** sigue diciendo en la tabla de skills que el 3D está «aún no implementado». **No se tocó**: la convención del mapa documental es revisar `CLAUDE.md` cuando v1.1 se integre en `main`.~~ **Corregido en el hotfix documental** (§23): la auditoría de Codex lo marcó como hallazgo medio, porque `CLAUDE.md` es el contexto de partida de los agentes y no puede describir un estado falso. Anotado en [`documentation-update-map.md`](documentation-update-map.md).
 - Sin cambios en RF-01 a RF-29, rutas, Policies, permisos, `FormRequest`, FastAPI, `target_completion_at`, *checkpoint*, *freeze* ni umbral.
 
 ## 19. Resultados de pruebas
@@ -189,7 +189,7 @@ Ningún defecto obligó a tocar backend, rutas ni contratos.
 | Python (`ml-service`) | **532 pasadas** |
 | Componente (`vp test`) | **42 pasadas** (36 + 6 nuevas) |
 | `tsc --noEmit` | Sin errores |
-| `npm run build` | Correcto. `app-*.js` 204.31 kB / 59.93 kB gzip (+0.04 kB por `lib/motion.ts`); `app-*.css` 99.82 kB / 16.57 kB gzip; `recruitment-scene-*.js` 2.51 kB / 1.26 kB gzip, sin cambios |
+| `npm run build` | Correcto. `app-*.js` 204.31 kB / 59.93 kB gzip (+0.04 kB por `lib/motion.ts`); `app-*.css` **99.86 kB / 16.58 kB gzip** en la compilación de `1b3d27d` (la primera versión de este documento decía 99.82 / 16.57, medido antes de los últimos commits; corregido en el hotfix documental); `recruitment-scene-*.js` 2.51 kB / 1.26 kB gzip, sin cambios |
 | Cypress (`cy:run`) | **20 specs / 84 pruebas, 84 pasadas** (19/77 + E2E-19 con 7) |
 | `phase-18-overflow` | 5/5, **0 desbordes** a 1440, 1280, 768 y 390 px |
 | `phase-21-responsive` (1024 y 320 px) | 7/7, **0 desbordes** |
@@ -234,3 +234,15 @@ La interfaz queda cerrada para v1.1: sin defectos visuales de severidad media o 
 - la decisión pendiente sobre RNF-C, RF-28 y RF-29 (pregunta 13), que condiciona qué se marca como `<<propuesto v1.1>>`.
 
 Para las Fases 24/25: lector de pantalla real, medición de rendimiento en un equipo modesto y LCP fuera del iframe de Cypress.
+
+## 23. Hotfix documental (23/09/2026)
+
+La auditoría de Codex dio la fase por **técnicamente en verde** (Laravel 408 + 8, Python 532, 42 pruebas de componente, `tsc`, *build*, Cypress 20 specs / 84, 0 desbordes, 2FA real, auditoría del DOM, teclado y barra lateral) y pidió corregir la documentación antes del cierre. Se corrigió **solo documentación y skills**, sin tocar código, pruebas ni dependencias:
+
+| Hallazgo | Corrección |
+|---|---|
+| **MEDIUM-01** · `CLAUDE.md` describía como actuales `main` = `develop`, la Fase 13 vigente y ML y 3D sin implementar | `CLAUDE.md` separa `main`/v1.0 de `develop`/v1.1, lista el estado por fase (F21 sin integrar, F22 sin iniciar), documenta el ML experimental con su contrato congelado y el 3D con CSS 3D acotado. La skill `ml-risk-service` se actualizó igual |
+| **LOW-01** · La skill 3D ponía «sin WebGL» como condición de *fallback*, como si la escena lo necesitara | La skill distingue la escena actual (CSS 3D, independiente de WebGL) de una escena WebGL futura hipotética |
+| **LOW-02** · Cifra del CSS | 99.86 kB / 16.58 kB gzip (§19) |
+
+También se anotaron, sin borrar historia, las entradas desactualizadas de `scope-preliminary.md` (RF-29 y preguntas 10 y 11) y se añadió a `PROGRESS.md` la tabla de estado de v1.1. RF-29 y RNF-C siguen siendo candidatos. **La Fase 21 no está cerrada** hasta que Codex reaudite este hotfix, y la Fase 22 no se inició.
