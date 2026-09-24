@@ -1,0 +1,46 @@
+@startuml pk-01-packages
+' PK-01 · Paquetes (módulos) del monolito Laravel AS-IS v1.1
+' Borrador textual para F23. Especificación: ../component-model.md §3
+skinparam packageStyle folder
+
+package "Requerimientos\nRF-01..RF-04" as P_REQ
+package "Vacantes\nRF-05..RF-07" as P_VAC
+package "Postulantes\nRF-08..RF-11" as P_CAND
+package "Postulaciones\nRF-12..RF-15" as P_APP
+package "Evaluaciones\nRF-16..RF-20" as P_ASS
+package "Ranking y selección\nRF-20..RF-26" as P_SEL
+package "Auditoría\nRF-27" as P_AUD
+package "Riesgo operacional\nRF-29" as P_RISK <<experimental>>
+package "Modelos y enums" as P_MOD
+package "Compartido\n(notificaciones, settings, support)" as P_SHARED
+
+P_REQ ..> P_MOD
+P_VAC ..> P_MOD
+P_CAND ..> P_MOD
+P_APP ..> P_MOD
+P_ASS ..> P_MOD
+P_SEL ..> P_MOD
+P_RISK ..> P_MOD
+
+P_REQ ..> P_AUD
+P_VAC ..> P_AUD
+P_CAND ..> P_AUD
+P_APP ..> P_AUD
+P_ASS ..> P_AUD
+P_SEL ..> P_AUD
+
+P_VAC ..> P_REQ : vacante desde\nrequerimiento aprobado
+P_ASS ..> P_APP : avance de etapa\nal programar
+P_SEL ..> P_APP : seleccionar y cerrar
+P_REQ ..> P_SHARED
+P_CAND ..> P_SHARED
+P_APP ..> P_SHARED
+P_ASS ..> P_SHARED
+P_SEL ..> P_SHARED
+
+note right of P_RISK
+  Depende solo de Modelos (lectura).
+  Ningún paquete de negocio depende de él
+  y él no depende de Ranking y selección.
+end note
+@enduml
