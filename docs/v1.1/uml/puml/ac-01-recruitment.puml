@@ -1,0 +1,97 @@
+@startuml ac-01-recruitment
+' AC-01 · Proceso de reclutamiento de extremo a extremo AS-IS v1.1
+' Borrador textual para F23. Especificación: ../activity-diagrams.md
+' Nodos finales: 'stop' = fin de actividad (todo el proceso);
+'                'end'  = fin de flujo (⊗), solo termina ESTA postulación.
+|Área solicitante|
+start
+repeat
+  :Registrar o corregir requerimiento (RF-01);
+  :Enviar a RR. HH.;
+|Recursos Humanos|
+repeat while (¿Requerimiento correcto? (RF-02)) is (no: observar con comentario)
+->sí;
+:Validar requerimiento;
+|Aprobador / Dirección|
+if (¿Aprobar? (RF-03)) then (no)
+  :Rechazar con motivo;
+  |Sistema|
+  :Notificar rechazo al solicitante (RF-04);
+  stop
+else (sí)
+endif
+|Recursos Humanos|
+repeat
+  :Crear vacante: datos, perfil, criterios,\nplazo objetivo opcional (RF-05, RF-06);
+|Sistema|
+repeat while (¿Configuración, rangos y ponderaciones válidos? (RF-20)) is (no)
+->sí;
+|Recursos Humanos|
+:Publicar vacante (RF-07);
+
+' ---- Desde aquí, por cada postulación de la vacante ----
+|Postulante|
+:Crear cuenta, completar perfil y CV (RF-08, RF-09);
+:Postular (RF-10);
+|Sistema|
+:Confirmar postulación (RF-11);
+|Recursos Humanos|
+:Revisar la postulación (RF-12);
+if (¿Preseleccionar? (RF-13)) then (no)
+  :Descartar con comentario;
+  |Sistema|
+  :Notificar cambio de etapa (RF-15);
+  end
+else (sí)
+endif
+|Sistema|
+:Notificar cambio de etapa (RF-15);
+|Recursos Humanos|
+repeat
+  :Programar evaluación o entrevista (RF-16, RF-18);
+  |Sistema|
+  :Convocatoria al postulante y aviso al evaluador (RF-17);
+  |Evaluador|
+  :Registrar puntajes y resultado (RF-19, RF-20);
+|Recursos Humanos|
+repeat while (¿Más sesiones?) is (sí)
+->no;
+if (¿Postulación descartada? (RF-14)) then (sí)
+  :Descartar con comentario;
+  |Sistema|
+  :Notificar cambio de etapa (RF-15);
+  end
+else (no)
+  |Recursos Humanos|
+  :Pasar a finalista (RF-14);
+  |Sistema|
+  :Notificar cambio de etapa (RF-15);
+endif
+
+' ---- Desde aquí, a nivel de la vacante ----
+|Recursos Humanos|
+:Consultar comparación; el sistema calcula el ranking
+solo con postulaciones NO descartadas (RF-21, RF-22);
+|Aprobador / Dirección|
+:<<human decision>>
+Elegir una postulación finalista, justificar y confirmar (RF-23);
+|Recursos Humanos|
+:Registrar selección (RF-24);
+:Cerrar convocatoria con selección (RF-25);
+|Sistema|
+:Notificar resultado a seleccionada
+y no seleccionadas (RF-26);
+stop
+
+floating note right
+  Dos niveles: requerimiento y vacante (inicio y final) y,
+  en medio, el recorrido de CADA postulación. Una vacante
+  tiene varias: las descartadas terminan en su fin de flujo (⊗)
+  y no llegan al ranking ni a la decisión; la vacante sigue
+  con las demás.
+  Transversal (RF-27): cada acción crítica queda en audit_logs.
+  Tras RF-23 no hay cambios manuales de etapa (A-28).
+  Cierre 'desierta' no implementado (A-30).
+  El riesgo operacional (RF-29) no participa en este flujo.
+end note
+@enduml

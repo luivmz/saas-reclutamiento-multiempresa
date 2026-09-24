@@ -76,9 +76,9 @@ El servicio ML **no** corre en Docker Compose: se ejecuta desde `ml-service/` co
 - `main` sigue siendo la **v1.0 académica** (`4563c69`) y **no contiene v1.1**. El tag `v1.0.0-academic` apunta a `9a946c2` y no se mueve.
 - RF-01 a RF-27 son la línea base v1.0. Sus documentos de cierre (`docs/final-report/`) siguen siendo correctos **para v1.0** y no se reescriben.
 
-### `develop` — v1.1 en curso (integrado hasta la Fase 20)
+### `develop` — v1.1 en curso (integrado hasta la Fase 21)
 
-`develop` = `origin/develop` = `a316c07`. **`main` y `develop` ya no tienen el mismo contenido**: `develop` integra las Fases 13 a 20.
+`develop` = `origin/develop` = `aced6da`. **`main` y `develop` ya no tienen el mismo contenido**: `develop` integra las Fases 13 a 21.
 
 | Fase | Contenido | Estado |
 |---|---|---|
@@ -88,8 +88,9 @@ El servicio ML **no** corre en Docker Compose: se ejecuta desde `ml-service/` co
 | 17 | Validación ML y regresión integral | Integrada |
 | 18 · 19 | **Rediseño del frontend** y **motion** (sin biblioteca nueva, con movimiento reducido) | Integradas |
 | 20 | **Experiencia 3D con CSS 3D**, solo en la portada pública | Integrada |
-| 21 | QA visual, accesibilidad y responsive | **Implementada** en `feature/phase-21-visual-qa` (commit técnico `1b3d27d`), auditada técnicamente en verde; **pendiente de reauditoría del hotfix documental y de integración**. No está en `develop` |
-| 22 | UML y PowerDesigner de v1.1 | **No iniciada** |
+| 21 | QA visual, accesibilidad y responsive | Integrada (`aced6da`) |
+| 22 | Especificación UML del AS-IS | **Implementada** en `feature/phase-22-uml-update`, solo documentación (`docs/v1.1/uml/`); pendiente de auditoría. No está en `develop` |
+| 23 | Formalización en PowerDesigner | **No iniciada** |
 
 **ML (RF-29).** Implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, **no** validado institucionalmente ni autorizado para producción. Estima el riesgo de demora del **proceso**; no puntúa, ordena, selecciona ni descarta personas, no toca el ranking y no cambia RF-23. Contrato científico congelado, no se modifica: *freeze* `9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2`, *threshold* `0.1679418172266036`, Logistic Regression `C=10`, `class_weight=None`, `StandardScaler`, sin calibración.
 

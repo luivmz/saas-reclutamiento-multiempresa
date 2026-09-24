@@ -1,0 +1,39 @@
+@startuml st-03-application
+' ST-03 · Estados de la postulación (ApplicationStatus). Especificación: ../state-diagrams.md
+[*] --> postulado : apply (Postulante, RF-10)
+postulado --> preseleccionado : shortlist (RR. HH., RF-13)
+preseleccionado --> en_evaluacion : moveTo | automático al programar evaluación (RF-14, RF-16)
+preseleccionado --> en_entrevista : moveTo | automático al programar entrevista (RF-14, RF-18)
+en_evaluacion --> en_entrevista : moveTo | automático al programar entrevista
+en_evaluacion --> finalista : moveTo (RF-14)
+en_entrevista --> finalista : moveTo (RF-14)
+finalista --> seleccionado : register (RR. HH., RF-24) [decisión final registrada]
+
+postulado --> descartado : discard [comentario] (RF-13)
+preseleccionado --> descartado : discard
+en_evaluacion --> descartado : discard
+en_entrevista --> descartado : discard
+finalista --> descartado : discard
+
+postulado --> no_seleccionado : close (RF-25)
+preseleccionado --> no_seleccionado : close
+en_evaluacion --> no_seleccionado : close
+en_entrevista --> no_seleccionado : close
+finalista --> no_seleccionado : close [no es la elegida]
+
+seleccionado --> [*]
+no_seleccionado --> [*]
+descartado --> [*]
+
+note right of seleccionado
+  Solo por RF-24; como mucho una por vacante (índice parcial).
+  La decisión RF-23 no es una transición: la elegida sigue
+  en finalista hasta RF-24.
+end note
+note left of descartado
+  Tras la decisión final no hay cambios manuales (A-28).
+  Con la vacante cerrada, ningún cambio.
+  Cambios manuales notifican (RF-15); automáticos y RF-24 no;
+  el cierre notifica por RF-26.
+end note
+@enduml

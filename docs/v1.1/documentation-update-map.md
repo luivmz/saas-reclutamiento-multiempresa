@@ -80,6 +80,19 @@ La reauditoría de Codex encontró tres restos del estado anterior. Se corrigier
 
 Ningún cambio de runtime, contrato científico ni decisión: *freeze*, *threshold* y modelo intactos; RF-29 experimental y candidato; RF-23, decisión humana.
 
+### Divergencias registradas por la Fase 22 (23/09/2026)
+
+La Fase 22 especificó el UML del AS-IS en [`uml/`](uml/) ([`phase-22-uml-update.md`](phase-22-uml-update.md)). Los informes de diagramas de v1.0 **no se modificaron**; las diferencias se anotan aquí.
+
+| Documento | Qué dice | Qué es cierto en v1.1 | Acción tomada |
+|---|---|---|---|
+| `final-report/diagram-reports/03-use-case-report.md` | 13 casos agrupados (CU-01 a CU-13); CU-09 atribuye RF-20 al Evaluador | UC-01 de v1.1 tiene un caso por RF (RF-01 a RF-29); RF-20 es un caso del sistema incluido por RF-06, RF-19 y RF-21; se añade RF-29 experimental y RF-28 como candidato | Informe de v1.0 intacto; v1.1 en `uml/use-cases.md` §6 |
+| `final-report/diagram-reports/05-class-model-report.md` | 17 clases | Las mismas 17 clases; se añade `Vacancy.target_completion_at` (Fase 16) | Informe intacto; v1.1 en `uml/class-model.md` §7 |
+| `final-report/diagram-reports/04-architecture-report.md` · `09-deployment-report.md` | Arquitectura y despliegue de v1.0; el diagrama original de despliegue incluía S3 | Se añade el servicio de inferencia experimental (proceso del anfitrión, fuera de Compose); S3 sigue sin existir | Informes intactos; v1.1 en `uml/component-model.md` y `uml/deployment-model.md` |
+| Este mapa, §4 «UML» | «Componentes: incorporar el servicio de inferencia **solo si** supera los criterios de `ml-feasibility.md`, y marcado como opcional» | El servicio superó el experimento (Fase 15, `PREDICTIVE GO WITH LIMITATIONS`) y se integró como experimental | CO-01 lo incorpora con `<<experimental>>` y `<<external service>>`; la regla del §4 se cumplió, no se reescribe |
+| `CLAUDE.md` · `PROGRESS.md` · `scope-preliminary.md` (estado) | `develop` = `a316c07`, Fase 21 pendiente de cierre, Fase 22 sin iniciar | `develop` = `aced6da` integra F13–F21; F22 en su rama; F23 sin iniciar | Actualizados en la Fase 22; `scope-preliminary.md` conserva el valor anterior entre paréntesis |
+| `ml-service/src/recruitment_ml/api/schemas.py` (descripción de `days_remaining_to_target`) | «GAP-01: Laravel todavía no puede producirla» | GAP-01 resuelto técnicamente desde la Fase 16 | **No se tocó** (runtime fuera del alcance de F22). Deuda de texto registrada; el UML modela GAP-01 como resuelto |
+
 ## 2. Por verificar antes de tocar nada
 
 | Documento | Qué revisar |
