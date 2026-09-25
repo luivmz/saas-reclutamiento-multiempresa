@@ -1,12 +1,12 @@
 # Progreso del proyecto
 
-Última actualización: 2026-09-24 (Fase 24, pendiente de auditoría).
+Última actualización: 2026-09-25 (Fase 25, pendiente de auditoría).
 
-> El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
+> El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24; el 25/09/2026, de la Fase 24 a la Fase 25. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
 
 ## Estado de v1.1
 
-`main` sigue siendo la v1.0 académica (`4563c69`, tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1. `develop` = `origin/develop` = `8211851` *(hasta la Fase 24: `2621bee`)*.
+`main` sigue siendo la v1.0 académica (`4563c69`, tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1. `develop` = `origin/develop` = `4469128` *(hasta la Fase 25: `8211851`; hasta la Fase 24: `2621bee`)*.
 
 | Fase | Contenido | Estado | Merge en `develop` | Detalle |
 |---|---|---|---|---|
@@ -21,9 +21,9 @@
 | 20 | Experiencia 3D con CSS 3D (solo portada) | ✅ Cerrada e integrada | `a316c07` | `docs/v1.1/phase-20-3d-experience.md` |
 | 21 | QA visual, accesibilidad y responsive | ✅ Cerrada e integrada | `aced6da` | `docs/v1.1/phase-21-visual-qa.md` |
 | 22 | Especificación UML del AS-IS | ✅ Integrada | `2621bee` | `docs/v1.1/phase-22-uml-update.md` |
-| 23 | Formalización en PowerDesigner | ✅ Integrada | `8211851` | `docs/v1.1/phase-23-powerdesigner.md` |
-| 24 | Documentación académica final: Formato 09 v1.1 | 🟡 Implementada en `feature/phase-24-academic-documentation`, pendiente de auditoría | — | `docs/v1.1/phase-24-academic-documentation.md` |
-| 25 | QA global final | ⬜ No iniciada | — | — |
+| 23 | Formalización en PowerDesigner | ✅ Cerrada e integrada | `8211851` | `docs/v1.1/phase-23-powerdesigner.md` |
+| 24 | Documentación académica final: Formato 09 v1.1 | ✅ Cerrada con observaciones e integrada | `4469128` | `docs/v1.1/phase-24-academic-documentation.md` |
+| 25 | QA global final / *release readiness* | 🟡 Implementada en `feature/phase-25-final-qa`, pendiente de auditoría | — | `docs/v1.1/phase-25-final-qa.md` |
 | 26 | GitHub, *release* y cierre de v1.1 | ⬜ No iniciada | — | — |
 
 **RF-29** está implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, no validado institucionalmente ni autorizado para producción; no selecciona ni descarta a nadie y no cambia RF-23. RF-28, RF-29 y los RNF nuevos (incluido RNF-C) siguen siendo **candidatos** (`docs/v1.1/scope-preliminary.md`, decisión 11 y preguntas 12–13).
@@ -189,4 +189,15 @@ Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempre
 - **Observaciones:** los catálogos de CU (20 académicos, 13 del informe y uno por RF en el UML) y de RNF (10 frente a 11) divergen; se declaran y quedan para decisión del equipo.
 - **Validación:** documental y estructural (`tools/validate_f9.py` sin fallos; índice verificado contra el PDF; originales con el mismo SHA-256). **No se ejecutaron suites funcionales**: el QA global es de la Fase 25.
 - **Detalle:** `docs/v1.1/phase-24-academic-documentation.md`, `docs/academico/phase-24/README.md` y `source-map.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
+- **Cierre:** tras la auditoría, cerrada con observaciones e integrada en `develop` con el merge `4469128`. *(Anotado en la Fase 25.)*
+
+## v1.1 — Fase 25: QA global final / release readiness
+
+- **Rama:** `feature/phase-25-final-qa`, desde `develop` en `4469128` (cierre de la Fase 24).
+- **Alcance:** verificación integral de v1.1 (repositorio, entorno, dependencias, Laravel, base de datos, seguridad, multitenencia, roles, ML, integración, frontend, accesibilidad, responsive, rendimiento exploratorio, documentación, secretos y Git), sin funciones nuevas ni cambios en el ML.
+- **Resultados reales tras los arreglos:** PHPUnit **411 passed, 8 skipped, 0 failed (1498 assertions)**; pytest **533 passed**; componentes **42 passed**; `tsc` 0 errores; build correcto; Cypress **20 specs, 85/85**. Contrato ML intacto (freeze y threshold exactos; LR `C=10`, sin calibración); integración Laravel ↔ FastAPI verificada en vivo en sus tres estados.
+- **Hallazgos corregidos:** F25-M01 (MEDIUM) ID no numérico en rutas → 500, ahora 404; F25-M02 (MEDIUM) fichas de tabla recortadas en móvil (WCAG 1.4.10); F25-L01 textos de GAP-01 obsoletos en el servicio ML (deuda OpenAPI de F22/F23, cerrada); F25-L02 guía de Cypress desactualizada. Además, una prueba cross-tenant nueva para evaluaciones. Sin BLOCKER ni HIGH.
+- **Deudas transferidas a F26:** formato preexistente (Pint/`vp check`), lector de pantalla real, rendimiento en equipo modesto, observaciones heredadas de F23 y F24.
+- **Detalle:** `docs/v1.1/phase-25-final-qa.md` y `docs/v1.1/phase-25-qa-matrix.md`.
 - **Sin `push`, `merge`, *tag* ni *release*.**
