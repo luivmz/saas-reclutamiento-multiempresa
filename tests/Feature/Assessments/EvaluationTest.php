@@ -174,6 +174,36 @@ class EvaluationTest extends TestCase
         $this->assertSame(0, $evaluation->results()->count());
     }
 
+    /**
+     * Fase 25 (QA global): caracterización cross-tenant de evaluaciones. RR. HH. y un
+     * evaluador de otra organización no pueden programar, ver ni registrar sesiones
+     * de esta organización, aunque conozcan el ID.
+     */
+    public function test_actors_of_another_organization_cannot_schedule_view_or_record_evaluations(): void
+    {
+        $foreign = Organization::factory()->create();
+        $foreignHr = User::factory()->hr($foreign)->create();
+        $foreignEvaluator = User::factory()->evaluator($foreign)->create();
+        // Antes de autenticar: con un usuario de otra organización el scope oculta los criterios.
+        $resultPayload = ['scores' => $this->evaluationScores()];
+
+        $shortlisted = Application::factory()->for($this->vacancy)->shortlisted()->create();
+        $schedule = $this->actingAs($foreignHr)
+            ->post(route('applications.evaluations.store', $shortlisted), $this->schedulePayload(['evaluator_id' => $foreignEvaluator->id]));
+        $this->assertContains($schedule->status(), [403, 404]);
+        $this->assertSame(0, Evaluation::query()->withoutGlobalScopes()->count());
+
+        $evaluation = Evaluation::factory()->forApplication(Application::factory()->for($this->vacancy)->inEvaluation()->create())->assignedTo($this->evaluator)->create();
+
+        $this->assertContains($this->actingAs($foreignEvaluator)->get(route('evaluations.show', $evaluation))->status(), [403, 404]);
+        $this->assertContains($this->actingAs($foreignHr)->get(route('evaluations.show', $evaluation))->status(), [403, 404]);
+
+        $record = $this->actingAs($foreignEvaluator)
+            ->post(route('evaluations.results.store', $evaluation), $resultPayload);
+        $this->assertContains($record->status(), [403, 404]);
+        $this->assertSame(AssessmentStatus::Scheduled, Evaluation::query()->withoutGlobalScopes()->findOrFail($evaluation->id)->status);
+    }
+
     public function test_only_the_assigned_evaluator_can_record_results(): void
     {
         $evaluation = Evaluation::factory()->forApplication(Application::factory()->for($this->vacancy)->inEvaluation()->create())->assignedTo($this->evaluator)->create();
