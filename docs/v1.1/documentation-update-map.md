@@ -116,6 +116,18 @@ La Fase 24 produjo el Formato 09 v1.1 ([`phase-24-academic-documentation.md`](ph
 | `final-report/04-requerimientos.md` §4.4 frente al F9 | Catálogo CU-01 a CU-13 y RNF-01 a RNF-11 | El Formato 09 conserva el catálogo académico CU-01 a CU-20 y RNF-01 a RNF-10; el UML v1.1 usa un caso por RF | **No se reconcilia**: se declara en el Formato (11.1, 13.2) y en `phase-24-academic-documentation.md` (O-02, O-03). Decisión del equipo |
 | Este mapa, §3 «Formato 09» | «Se actualiza **solo** cuando el equipo apruebe requerimientos de v1.1» | El equipo encargó la Fase 24; el Formato se actualizó **sin añadir ningún RF** a la línea base | Nota de la Fase 24 al final del §3; la regla de numeración se cumple y no se reescribe |
 
+### Divergencias registradas por la Fase 25 (25/09/2026)
+
+La Fase 25 hizo el QA global de v1.1 ([`phase-25-final-qa.md`](phase-25-final-qa.md), [`phase-25-qa-matrix.md`](phase-25-qa-matrix.md)). Ningún documento de v1.0 se reescribió; donde uno quedó incompleto se añadió una sección nueva.
+
+| Documento | Qué dice | Qué es cierto en v1.1 | Acción tomada |
+|---|---|---|---|
+| `CLAUDE.md` · `PROGRESS.md` · `scope-preliminary.md` (estado) | `develop` = `8211851` integra F13–F23; F24 implementada en su rama, pendiente de auditoría; F25 y F26 sin iniciar | `develop` = `origin/develop` = `4469128` integra F13–F24 (F23 cerrada; F24 cerrada con observaciones); F25 implementada en `feature/phase-25-final-qa`, pendiente de auditoría; F26 sin iniciar | Actualizados en la Fase 25; el valor anterior se conserva entre paréntesis |
+| `testing/cypress-e2e.md` | «14 specs y 43 tests» (suite de v1.0) | 20 specs y 85 tests (E2E-14 a E2E-19 de las Fases 17 a 21; E2E-16 ampliado en la 25) | Nueva §9 «v1.1»; lo anterior se conserva |
+| `ml-service/README.md` (aviso 15C y ejemplo de uvicorn) | «Laravel **no** consume este servicio todavía… `GAP-01` sigue abierto»; puerto 8001 | Integración experimental desde la Fase 16; GAP-01 resuelto técnicamente; el 8001 lo usa `app-e2e` (Fase 16: 8008) | Corregido en la Fase 25 (F25-L01), con la frase anterior anotada como historia de la 15C |
+| `ml-service/src/recruitment_ml/api/schemas.py` y textos del paquete `serving` | «GAP-01: Laravel todavía no puede producirla»; «GAP-01 sigue abierto»; CLI «GAP-01 abierto» | GAP-01 resuelto técnicamente desde la Fase 16 | **Corregido en la Fase 25** (solo texto; pruebas nuevas en `test_api_service.py` y `test_serving_cli.py`). Cierra la deuda registrada en las Fases 22 y 23. Los textos del veredicto de la Fase 15B (`training/`) se conservan como registro congelado |
+| `phase-21-visual-qa.md` §11–12 | «0 px de desborde» y DataTable «sin cambios de código» | El desborde del documento era 0, pero en móvil las fichas de tabla se recortaban dentro del contenedor con scroll (auditoría, «Mis evaluaciones») | Corregido en la Fase 25 (F25-M02) y `e2e-16` ampliado; el documento de la Fase 21 no se reescribe |
+
 ## 2. Por verificar antes de tocar nada
 
 | Documento | Qué revisar |
