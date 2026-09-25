@@ -33,7 +33,7 @@ export function StatusBadge({
             data-cy="status-badge"
             data-status={status.value}
             className={cn(
-                'inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ring-inset',
+                'inline-flex max-w-full items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium whitespace-normal ring-1 ring-inset md:whitespace-nowrap',
                 toneClasses[status.tone],
                 className,
             )}

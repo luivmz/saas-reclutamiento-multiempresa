@@ -98,7 +98,7 @@ export function DataTable<Row>({
                 className,
             )}
         >
-            <table role="table" className="w-full text-sm" {...props}>
+            <table role="table" className="block w-full text-sm md:table" {...props}>
                 <caption className="sr-only">{caption}</caption>
                 <thead
                     role="rowgroup"

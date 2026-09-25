@@ -70,7 +70,7 @@ export default function AssessmentAssignments({
                             {
                                 key: 'schedule',
                                 header: 'Fecha',
-                                className: 'whitespace-nowrap',
+                                className: 'md:whitespace-nowrap',
                                 cell: (row) => (
                                     <>
                                         <span className="block">
