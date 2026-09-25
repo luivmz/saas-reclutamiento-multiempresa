@@ -187,7 +187,10 @@ def main(argv: list[str] | None = None) -> int:
     print(f"umbral exacto        : {metadata.threshold!r}")
     print(f"features             : {len(metadata.feature_order)}")
     print(f"filas de train       : {metadata.n_train}")
-    print("estado               : experimental; GAP-01 abierto, sin autorizacion de despliegue")
+    print(
+        "estado               : experimental; GAP-01 resuelto tecnicamente (Fase 16), "
+        "sin validacion institucional ni autorizacion de despliegue"
+    )
     return 0
 
 

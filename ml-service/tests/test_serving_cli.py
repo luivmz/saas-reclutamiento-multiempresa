@@ -40,6 +40,8 @@ def test_the_cli_builds_the_artifact(tmp_path: Path, freeze_path, capsys) -> Non
     assert "0.1679418172266036" in output
     assert "experimental" in output
     assert "GAP-01" in output
+    # Fase 25: GAP-01 quedo resuelto en la Fase 16; la CLI no puede decir que sigue abierto.
+    assert "GAP-01 abierto" not in output
 
 
 def test_the_cli_fails_cleanly_on_a_wrong_row_count(
