@@ -1,0 +1,7 @@
+@startuml st-04-assessment
+' ST-04 · Estados de evaluación y entrevista (AssessmentStatus). Especificación: ../state-diagrams.md
+[*] --> programada : scheduleEvaluation | scheduleInterview (RR. HH., RF-16, RF-18)
+programada --> realizada : recordEvaluation | recordInterview (Evaluador asignado, RF-19)
+realizada --> [*]
+note right of realizada : sin cancelación ni reprogramación implementadas
+@enduml

@@ -1,0 +1,309 @@
+{
+  "ablation_conclusions": {
+    "concurrent_open_vacancies_count": "quitarla cambia AP en -0.0100 (-1.32 % relativo): 0.7574 -> 0.7474. Cifra descriptiva; no existe umbral preregistrado que la convierta en criterio.",
+    "configured_stage_count": "anadirla cambia AP en -0.0004 (-0.05 % relativo): 0.7574 -> 0.7570. Se mantiene como ablation experimental; cifra descriptiva, sin umbral preregistrado.",
+    "elapsed_days_since_publication": "quitarla cambia AP en -0.0002 (-0.03 % relativo): 0.7574 -> 0.7572. Cifra descriptiva; no existe umbral preregistrado que la convierta en criterio."
+  },
+  "ablation_feature_sets": [
+    "core",
+    "core_without_concurrency",
+    "core_without_elapsed",
+    "core_plus_configured_stage_count"
+  ],
+  "calibration_decision": {
+    "adopt_calibration": false,
+    "average_precision_loss": -0.000738,
+    "brier_calibrated": 0.161148,
+    "brier_gain": 0.00026,
+    "brier_uncalibrated": 0.161408,
+    "decision_rule": "adoptar si mejora Brier y ECE y la perdida de AP no supera 0.01",
+    "ece_calibrated": 0.027528,
+    "ece_gain": -0.001654,
+    "ece_uncalibrated": 0.025874,
+    "fitted_on": "train (validacion cruzada interna)",
+    "folds": 5,
+    "method": "sigmoid"
+  },
+  "config_fingerprint": "4107a60ede323da2bc834128e449628f8c05a797ccf623cbfdfc3b93408b72df",
+  "contains_test_results": false,
+  "dataset_fingerprint": "d94fe60d941be87580c71c3a72155b59a0b3a38071ad619ecd986bf607f1b2ae",
+  "excluded_features": [
+    "configured_stage_count",
+    "evaluations_pending_count",
+    "interviews_pending_count"
+  ],
+  "experiment_id": "phase-15b-20260920-6000",
+  "feature_set": "core",
+  "features": [
+    "elapsed_days_since_publication",
+    "application_window_days",
+    "positions_count",
+    "applications_received_count",
+    "configured_criteria_count",
+    "evaluations_scheduled_count",
+    "evaluations_completed_count",
+    "evaluations_overdue_pending_count",
+    "interviews_scheduled_count",
+    "interviews_completed_count",
+    "interviews_overdue_pending_count",
+    "stage_transition_count",
+    "days_since_last_operational_event",
+    "concurrent_open_vacancies_count",
+    "days_remaining_to_target"
+  ],
+  "freeze_fingerprint": "9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2",
+  "frozen_at": "2026-09-20T20:06:16.324247-05:00",
+  "is_frozen": true,
+  "known_limitations": [
+    "Datos exclusivamente sinteticos: el resultado demuestra metodo, no validez institucional.",
+    "Censura informativa por diseno: el conjunto supervisado esta sesgado hacia procesos que cerraron.",
+    "Colinealidad fuerte entre features (elapsed/window y applications/stage_transitions): los coeficientes no son interpretables como importancia relativa.",
+    "concurrent_open_vacancies_count correlaciona con el calendario y puede actuar como proxy temporal.",
+    "Heterogeneidad esperada entre organizaciones sinteticas.",
+    "Tasa de alerta elevada en el punto de operacion elegido: la regla de umbral prioriza recall sobre precision y en validation marca una fraccion alta de los procesos. El coste de revisar cada alerta no esta modelado, asi que la carga operativa real es desconocida.",
+    "CONTAMINACION PROCEDIMENTAL MENOR: durante el desarrollo de 15B se observo la AP de test antes de cerrar la version final de la regla de umbral. AP es invariante al umbral y ninguna metrica de test dependiente del umbral se inspecciono antes de esa correccion, pero el holdout no puede describirse como intacto.",
+    "GAP-01 abierto: days_remaining_to_target no es computable en Laravel, asi que el modelo no es desplegable aunque sea cientificamente aceptable."
+  ],
+  "model_family": "logistic_regression",
+  "model_params": {
+    "C": 10.0,
+    "class_weight": null
+  },
+  "note": "Protocolo congelado antes de revelar el conjunto de prueba. No contiene resultados de test: estos viven en el artefacto de resultados, que referencia esta huella.",
+  "preprocessing": "StandardScaler dentro del Pipeline (solo para regresion logistica)",
+  "schema_version": "15b.1",
+  "seed": 20260920,
+  "split_definition": {
+    "boundaries": {
+      "boundary_note": "Un mismo checkpoint_at puede aparecer a ambos lados de una frontera; el corte es por posicion tras un orden determinista, no por desigualdad estricta de tiempo.",
+      "test_first_checkpoint": "2026-02-04T05:00:00+00:00",
+      "total_rows": 5533,
+      "train_end_index": 3873,
+      "train_last_checkpoint": "2025-08-07T05:00:00+00:00",
+      "validation_end_index": 4703,
+      "validation_first_checkpoint": "2025-08-07T05:00:00+00:00",
+      "validation_last_checkpoint": "2026-02-04T05:00:00+00:00"
+    },
+    "n_test": 830,
+    "n_train": 3873,
+    "n_validation": 830,
+    "ordering": "checkpoint_at ascendente, desempate determinista por vacancy_id",
+    "ratios": {
+      "test": 0.15,
+      "train": 0.7,
+      "validation": 0.15
+    }
+  },
+  "split_signature": "c5e6028f3eb6ec8943a621f510e8d3521a0911bcf4ce8f5e186396b2ce943295",
+  "threshold": 0.1679418172266036,
+  "threshold_display": 0.167942,
+  "threshold_rule": "Referencia = precision y recall del baseline operacional en validation. Elegibles: umbrales que no empeoran ninguno de los dos ejes (precision >= precision_floor y recall >= recall_floor). Entre ellos se elige el de mayor F2; desempate por mayor recall y luego por umbral menor. Si ninguno domina al baseline, se elige el de mayor F2 sobre toda la curva y se marca floor_satisfied=false.",
+  "threshold_selection": {
+    "candidates_considered": 830,
+    "eligible_thresholds": 554,
+    "f2": 0.796266,
+    "floor_satisfied": true,
+    "precision": 0.516934,
+    "precision_floor": 0.45,
+    "recall": 0.920635,
+    "recall_floor": 0.342857,
+    "rule": "Referencia = precision y recall del baseline operacional en validation. Elegibles: umbrales que no empeoran ninguno de los dos ejes (precision >= precision_floor y recall >= recall_floor). Entre ellos se elige el de mayor F2; desempate por mayor recall y luego por umbral menor. Si ninguno domina al baseline, se elige el de mayor F2 sobre toda la curva y se marca floor_satisfied=false.",
+    "selected_on": "validation",
+    "threshold": 0.1679418172266036,
+    "threshold_display": 0.167942
+  },
+  "validation_baselines": {
+    "dummy_prior": {
+      "accuracy": 0.620482,
+      "alert_rate": 0.0,
+      "average_precision": 0.379518,
+      "balanced_accuracy": 0.5,
+      "brier": 0.241241,
+      "brier_reference": 0.241241,
+      "brier_skill_score": 0.0,
+      "calibration": {
+        "bins": [
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.4,
+            "count": 830,
+            "mean_predicted": 0.303641,
+            "observed_rate": 0.379518
+          }
+        ],
+        "expected_calibration_error": 0.075877,
+        "maximum_calibration_error": 0.075877
+      },
+      "confusion_matrix": {
+        "fn": 315,
+        "fp": 0,
+        "tn": 515,
+        "tp": 0
+      },
+      "f1": 0.0,
+      "f2": 0.0,
+      "n": 830,
+      "precision": 0.0,
+      "prevalence": 0.379518,
+      "recall": 0.0,
+      "reference_rate": 0.303641,
+      "roc_auc": 0.5,
+      "threshold": 0.5,
+      "threshold_display": 0.5
+    },
+    "operational": {
+      "accuracy": 0.591566,
+      "alert_rate": 0.289157,
+      "average_precision": 0.403683,
+      "balanced_accuracy": 0.543273,
+      "brier": 0.408434,
+      "brier_reference": 0.241241,
+      "brier_skill_score": -0.693049,
+      "calibration": {
+        "bins": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.1,
+            "count": 590,
+            "mean_predicted": 0.0,
+            "observed_rate": 0.350847
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 1.0,
+            "count": 240,
+            "mean_predicted": 1.0,
+            "observed_rate": 0.45
+          }
+        ],
+        "expected_calibration_error": 0.408434,
+        "maximum_calibration_error": 0.55
+      },
+      "confusion_matrix": {
+        "fn": 207,
+        "fp": 132,
+        "tn": 383,
+        "tp": 108
+      },
+      "f1": 0.389189,
+      "f2": 0.36,
+      "n": 830,
+      "precision": 0.45,
+      "prevalence": 0.379518,
+      "recall": 0.342857,
+      "reference_rate": 0.303641,
+      "roc_auc": 0.543273,
+      "threshold": 0.5,
+      "threshold_display": 0.5
+    }
+  },
+  "validation_metrics": {
+    "accuracy": 0.643373,
+    "alert_rate": 0.675904,
+    "average_precision": 0.757382,
+    "balanced_accuracy": 0.697211,
+    "brier": 0.161408,
+    "brier_reference": 0.241241,
+    "brier_skill_score": 0.330926,
+    "calibration": {
+      "bins": [
+        {
+          "bin_lower": 0.0,
+          "bin_upper": 0.1,
+          "count": 170,
+          "mean_predicted": 0.049789,
+          "observed_rate": 0.076471
+        },
+        {
+          "bin_lower": 0.1,
+          "bin_upper": 0.2,
+          "count": 133,
+          "mean_predicted": 0.146601,
+          "observed_rate": 0.142857
+        },
+        {
+          "bin_lower": 0.2,
+          "bin_upper": 0.3,
+          "count": 89,
+          "mean_predicted": 0.252602,
+          "observed_rate": 0.247191
+        },
+        {
+          "bin_lower": 0.3,
+          "bin_upper": 0.4,
+          "count": 94,
+          "mean_predicted": 0.346919,
+          "observed_rate": 0.351064
+        },
+        {
+          "bin_lower": 0.4,
+          "bin_upper": 0.5,
+          "count": 56,
+          "mean_predicted": 0.453893,
+          "observed_rate": 0.482143
+        },
+        {
+          "bin_lower": 0.5,
+          "bin_upper": 0.6,
+          "count": 70,
+          "mean_predicted": 0.547288,
+          "observed_rate": 0.471429
+        },
+        {
+          "bin_lower": 0.6,
+          "bin_upper": 0.7,
+          "count": 69,
+          "mean_predicted": 0.650204,
+          "observed_rate": 0.608696
+        },
+        {
+          "bin_lower": 0.7,
+          "bin_upper": 0.8,
+          "count": 56,
+          "mean_predicted": 0.752723,
+          "observed_rate": 0.803571
+        },
+        {
+          "bin_lower": 0.8,
+          "bin_upper": 0.9,
+          "count": 57,
+          "mean_predicted": 0.847652,
+          "observed_rate": 0.859649
+        },
+        {
+          "bin_lower": 0.9,
+          "bin_upper": 1.0,
+          "count": 36,
+          "mean_predicted": 0.952307,
+          "observed_rate": 0.888889
+        }
+      ],
+      "expected_calibration_error": 0.025874,
+      "maximum_calibration_error": 0.075859
+    },
+    "confusion_matrix": {
+      "fn": 25,
+      "fp": 271,
+      "tn": 244,
+      "tp": 290
+    },
+    "f1": 0.6621,
+    "f2": 0.796266,
+    "n": 830,
+    "precision": 0.516934,
+    "prevalence": 0.379518,
+    "recall": 0.920635,
+    "reference_rate": 0.303641,
+    "roc_auc": 0.8261,
+    "threshold": 0.1679418172266036,
+    "threshold_display": 0.167942
+  },
+  "verdict_rule": {
+    "limitation_if_margin_halves": "si el margen de AP sobre el baseline operacional en test cae por debajo de la mitad del margen en validation, se anota como limitacion",
+    "limitations_downgrade_the_verdict": "si se cumplen los criterios comparativos pero persisten limitaciones conocidas, el veredicto es GO CON LIMITACIONES, no GO a secas",
+    "must_beat_dummy_ap": "AP(test) del modelo por encima de AP(test) del baseline trivial",
+    "must_beat_operational_ap": "AP(test) del modelo por encima de AP(test) del baseline operacional",
+    "must_have_positive_bss": "Brier Skill Score(test) positivo frente al predictor constante de train",
+    "not_deployable_while_gap_01_open": "ningun veredicto favorable autoriza despliegue mientras GAP-01 siga abierto: target_completion_at no existe en Laravel, asi que days_remaining_to_target no es computable en produccion y el modelo no puede servirse"
+  }
+}

@@ -1,17 +1,18 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import { PageContainer, PageHeader } from '@/components/page';
 import { StatusBadge } from '@/components/status-badge';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { navigationFor } from '@/lib/navigation';
 import { dashboard } from '@/routes';
 
+/**
+ * Panel de inicio.
+ *
+ * No inventa métricas: muestra exactamente lo que esta persona puede hacer
+ * según su rol y para qué sirve cada cosa. Se presenta como un índice con
+ * renglones, no como una parrilla de tarjetas iguales, porque eso es lo que
+ * es: la portada de un expediente.
+ */
 export default function Dashboard() {
     const { auth } = usePage().props;
     const links = navigationFor(auth.user.role)
@@ -27,50 +28,65 @@ export default function Dashboard() {
                     title={`Hola, ${auth.user.name}`}
                     description={
                         auth.organization
-                            ? `Organización: ${auth.organization.name}`
-                            : 'Portal de postulantes'
+                            ? `Está trabajando en ${auth.organization.name}. Estas son las secciones que su rol tiene habilitadas.`
+                            : 'Portal de postulantes. Estas son las secciones disponibles para su cuenta.'
                     }
                 />
 
-                <div
-                    className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                <ul
+                    className="bg-card divide-y overflow-hidden rounded-xl border"
                     data-cy="quick-links"
                 >
                     {links.map((link) => (
-                        <Link key={link.title} href={link.href} className="group">
-                            <Card className="group-hover:border-primary/40 h-full gap-3 transition-colors">
-                                <CardHeader className="gap-2">
-                                    <div className="flex items-center justify-between">
-                                        {link.icon && (
-                                            <link.icon className="text-muted-foreground size-5" />
-                                        )}
-                                        <ArrowRight className="text-muted-foreground size-4 transition-transform group-hover:translate-x-0.5" />
-                                    </div>
-                                    <CardTitle className="text-base">
+                        <li key={link.title}>
+                            <Link
+                                href={link.href}
+                                className="hover:bg-surface flex items-start gap-4 px-5 py-4 transition-colors"
+                            >
+                                {link.icon && (
+                                    <span className="bg-surface text-primary mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-md">
+                                        <link.icon
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </span>
+                                )}
+                                <span className="min-w-0 space-y-1">
+                                    <span className="block font-medium">
                                         {link.title}
-                                    </CardTitle>
-                                    <CardDescription>
+                                    </span>
+                                    <span className="text-muted-foreground block text-sm leading-relaxed">
                                         {link.description}
-                                    </CardDescription>
-                                </CardHeader>
-                            </Card>
-                        </Link>
+                                    </span>
+                                </span>
+                                {link.badge ? (
+                                    <span className="bg-primary text-primary-foreground ml-auto rounded-full px-2 py-0.5 text-xs font-semibold">
+                                        {link.badge}
+                                        <span className="sr-only">
+                                            {' '}
+                                            sin leer
+                                        </span>
+                                    </span>
+                                ) : null}
+                            </Link>
+                        </li>
                     ))}
-                </div>
+                </ul>
 
-                <Card className="bg-muted/30 border-dashed">
-                    <CardContent className="flex gap-3 text-sm">
-                        <ShieldCheck className="size-5 shrink-0 text-emerald-600" />
-                        <p>
-                            El sistema calcula puntajes y rankings como apoyo.{' '}
-                            <strong>
-                                La decisión final de selección siempre la registra
-                                una persona autorizada
-                            </strong>{' '}
-                            (RF-23).
-                        </p>
-                    </CardContent>
-                </Card>
+                <aside className="bg-surface text-surface-foreground flex gap-3 rounded-xl border border-dashed px-5 py-4 text-sm leading-relaxed">
+                    <ShieldCheck
+                        className="text-primary mt-0.5 size-5 shrink-0"
+                        aria-hidden="true"
+                    />
+                    <p>
+                        El sistema calcula puntajes y rankings como apoyo.{' '}
+                        <strong className="font-medium">
+                            La decisión final de selección siempre la registra
+                            una persona autorizada
+                        </strong>{' '}
+                        (RF-23).
+                    </p>
+                </aside>
             </PageContainer>
         </>
     );

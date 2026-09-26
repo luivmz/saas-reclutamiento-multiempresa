@@ -1,0 +1,31 @@
+@startuml seq-01-apply
+' SEQ-01 · Registrar postulación (RF-10, RF-11). Especificación: ../sequence-diagrams.md
+actor Postulante
+participant "UI jobs/show" as UI
+participant ApplyController as C
+participant ApplicationPolicy as P
+participant ApplicationService as S
+database PostgreSQL as DB
+participant AuditLogger as A
+queue "Cola Redis" as Q
+
+Postulante -> UI : Postular
+UI -> C : POST empleos/{vacancy}/postular
+C -> P : apply(user)
+P --> C : solo rol postulante
+C -> S : apply(candidate, vacancy)
+group critical DB::transaction
+  S -> DB : Vacancy lockForUpdate (sin global scope)
+  alt no abierta | perfil incompleto | sin CV | duplicada
+    S --> C : BusinessRuleException
+    C --> UI : redirección con error
+  else válida
+    S -> DB : Application (postulado, CV más reciente)
+    S -> DB : ApplicationStageHistory (null -> postulado)
+    S -> A : record(ApplicationSubmitted)
+  end
+end
+S -> Q : ApplicationReceivedNotification (RF-11, afterCommit)
+C --> UI : redirección + toast
+note over DB : UNIQUE (vacancy_id, candidate_id)\ntambién rechaza el duplicado concurrente
+@enduml

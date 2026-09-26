@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="148mm" xmlns="http://www.w3.org/2000/svg" height="112mm" version="1.1" viewBox="0 0 562 424" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <polygon fill="#ffffff" points="2,271 2,309 202,309 202,278 196,271" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="202" x2="196" y1="278" y2="278" stroke="#000000" stroke-width="1"/>
+   <line x1="196" x2="196" y1="278" y2="271" stroke="#000000" stroke-width="1"/>
+   <text x="102" y="288" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">sin cancelación ni reprogramación </text>
+   <text x="102" y="298" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">implementadas</text>
+   <a target="_parent" xlink:href="#CA0FFC9D-C88C-4448-8808-635E64FBD4BC">
+      <polyline fill="none" points="369,18 369,123" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="369,123 366,110 372,110" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="459" y="32" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">scheduleEvaluation | scheduleInterview </text>
+      <text x="459" y="42" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">(RR. HH., RF-16, RF-18)</text>
+   </a>
+   <a target="_parent" xlink:href="#9D92CC0D-0F18-4070-A033-BE42C9984F36">
+      <polyline fill="none" points="369,163 369,270" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="369,270 366,257 372,257" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="460" y="177" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">recordEvaluation | recordInterview </text>
+      <text x="460" y="187" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">(Evaluador asignado, RF-19)</text>
+   </a>
+   <a target="_parent" xlink:href="#50458E89-1477-4936-BED9-0E0205268086">
+      <polyline fill="none" points="369,310 369,400" stroke="#0080ff" stroke-width="1"/>
+      <polygon fill="#0080ff" points="369,400 366,387 372,387" stroke="#0080ff" stroke-width="1" stroke-linejoin="miter"/>
+   </a>
+   <a target="_parent" xlink:href="#8D4D83C8-141F-47BE-BAC0-05A0A1033B1D">
+      <defs>
+         <linearGradient id="Gradient1" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#c0c0c0"/>
+            <stop offset="95%" stop-color="#0080c0"/>
+         </linearGradient>
+      </defs>
+      <ellipse cx="369" cy="10" rx="8" ry="8" fill="url(#Gradient1)" stroke="#0080c0" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#21082526-D4C2-46D5-BD4C-F8ED7CF33018">
+      <defs>
+         <linearGradient id="Gradient2" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="309" y="123" rx="5" ry="5" fill="url(#Gradient2)" width="120" height="40" stroke="#0080c0" stroke-width="1"/>
+      <text x="368" y="134" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">programada</text>
+      <line x1="309" x2="429" y1="140" y2="140" stroke="#0080c0" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#A12BD6A4-CF85-44F8-B648-1BB664591A15">
+      <defs>
+         <linearGradient id="Gradient3" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#c0ffff"/>
+         </linearGradient>
+      </defs>
+      <rect x="309" y="270" rx="5" ry="5" fill="url(#Gradient3)" width="120" height="40" stroke="#0080c0" stroke-width="1"/>
+      <text x="368" y="281" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">realizada</text>
+      <line x1="309" x2="429" y1="287" y2="287" stroke="#0080c0" stroke-width="1"/>
+   </a>
+   <a target="_parent" xlink:href="#7785C864-CD26-4EB9-9ED9-B634DB270B39">
+      <ellipse cx="369" cy="410" rx="10" ry="10" fill="#ffffff" stroke="#0080c0" stroke-width="1"/>
+      <defs>
+         <linearGradient id="Gradient4" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#c0c0c0"/>
+            <stop offset="95%" stop-color="#0080c0"/>
+         </linearGradient>
+      </defs>
+      <ellipse cx="369" cy="410" rx="6" ry="6" fill="url(#Gradient4)" stroke="#0080c0" stroke-width="1"/>
+   </a>
+</svg>

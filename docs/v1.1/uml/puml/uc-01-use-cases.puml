@@ -1,0 +1,122 @@
+@startuml uc-01-use-cases
+' UC-01 · Casos de uso AS-IS v1.1 (develop aced6da)
+' Borrador textual para F23. Especificación: ../use-cases.md
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Área solicitante" as SOL
+actor "Recursos Humanos" as RH
+actor "Aprobador / Dirección" as APR
+actor "Evaluador" as EVA
+actor "Postulante" as POS
+actor "Servicio de riesgo operacional" as ML <<external service>> <<experimental>>
+
+rectangle "SaaS de reclutamiento multiempresa" {
+  usecase "RF-01 Registrar requerimiento de personal" as RF01
+  usecase "RF-02 Validar y corregir requerimiento" as RF02
+  usecase "RF-03 Registrar aprobación o rechazo del requerimiento" as RF03
+  usecase "RF-04 Notificar rechazo del requerimiento" as RF04
+  usecase "RF-05 Registrar perfil y criterios del puesto" as RF05
+  usecase "RF-06 Configurar y validar vacante" as RF06
+  usecase "RF-07 Publicar vacante" as RF07
+  usecase "RF-08 Gestionar cuenta y acceso del postulante" as RF08
+  usecase "RF-09 Gestionar perfil y CV del postulante" as RF09
+  usecase "RF-10 Registrar postulación" as RF10
+  usecase "RF-11 Confirmar postulación al postulante" as RF11
+  usecase "RF-12 Consultar y revisar postulaciones" as RF12
+  usecase "RF-13 Registrar preselección o descarte" as RF13
+  usecase "RF-14 Gestionar cambio de etapa de la postulación" as RF14
+  usecase "RF-15 Notificar cambio de etapa al candidato" as RF15
+  usecase "RF-16 Programar evaluación" as RF16
+  usecase "RF-17 Generar convocatoria de evaluación" as RF17
+  usecase "RF-18 Programar entrevista" as RF18
+  usecase "RF-19 Registrar entrevista y su resultado" as RF19
+  usecase "RF-20 Validar rangos y ponderaciones" as RF20
+  usecase "RF-21 Calcular ranking configurable" as RF21
+  usecase "RF-22 Presentar comparación de candidatos" as RF22
+  usecase "RF-23 Registrar decisión final de selección" as RF23 <<human decision>>
+  usecase "RF-24 Registrar selección del candidato" as RF24
+  usecase "RF-25 Cerrar vacante o convocatoria" as RF25
+  usecase "RF-26 Notificar resultado y cierre al postulante" as RF26
+  usecase "RF-27 Generar registro de auditoría" as RF27
+  usecase "RF-29 Consultar riesgo operacional del proceso" as RF29 <<experimental>>
+}
+
+usecase "RF-28 Panel operativo descriptivo" as RF28 <<propuesto v1.1>> #lightgray
+
+SOL -- RF01
+SOL -- RF02
+RH -- RF02
+RH -- RF05
+RH -- RF06
+RH -- RF07
+RH -- RF12
+RH -- RF13
+RH -- RF14
+RH -- RF16
+RH -- RF18
+RH -- RF22
+RH -- RF24
+RH -- RF25
+RH -- RF29
+APR -- RF03
+APR -- RF12
+APR -- RF22
+APR -- RF23
+APR -- RF27
+APR -- RF29
+EVA -- RF19
+POS -- RF08
+POS -- RF09
+POS -- RF10
+RF29 -- ML
+
+RF04 .> RF03 : <<extend>>\n[decisión = rechazar]
+RF06 .> RF20 : <<include>>
+RF07 .> RF06 : <<include>>
+RF10 .> RF11 : <<include>>
+RF13 .> RF15 : <<include>>
+RF14 .> RF15 : <<include>>
+RF16 .> RF17 : <<include>>
+RF18 .> RF17 : <<include>>
+RF19 .> RF20 : <<include>>
+RF21 .> RF20 : <<include>>
+RF22 .> RF21 : <<include>>
+RF23 .> RF21 : <<include>>\n(solo instantánea)
+RF25 .> RF26 : <<include>>
+
+note right of RF23
+  Decisión humana: Aprobador de la misma organización,
+  confirmación explícita y justificación (>= 20 caracteres).
+  Candidato finalista, no necesariamente el primero.
+  No depende del ML.
+end note
+
+note right of RF29
+  Riesgo del PROCESO, no del candidato. Experimental, no productivo.
+  15 features operacionales, sin IDs ni PII.
+  No alimenta RF-21, RF-22 ni RF-23.
+end note
+
+note bottom of RF27
+  Transversal: AuditLogger registra 23 acciones críticas
+  (RF-01..RF-03, RF-05..RF-10, RF-13, RF-14, RF-16, RF-18,
+  RF-19, RF-23..RF-26). Tabla de solo inserción.
+end note
+
+note right of RF28
+  Candidato NO implementado.
+  El estado descriptive_only de RF-29 no es este panel.
+end note
+
+note right of RF07
+  Solo RR. HH. publica.
+  Efecto: la vacante aparece en /empleos, que cualquiera
+  (con o sin sesión) consulta. La consulta es contexto de
+  RF-10, no una asociación del Postulante con RF-07.
+end note
+
+note right of RF24
+  Precondición: decisión final registrada (RF-23).
+end note
+@enduml

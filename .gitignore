@@ -33,3 +33,25 @@ yarn-error.log
 /.vscode
 /.zed
 /.claude/settings.local.json
+
+# Componente Python del experimento academico (ml-service, Fase 15A)
+ml-service/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+
+# Datasets y artefactos de modelo generados: nunca se versionan.
+# Las reglas se acotan a ml-service/ a proposito: un patron global como *.csv
+# atraparia exportaciones legitimas de la aplicacion (por ejemplo el candidato
+# RF-30, reportes operativos en PDF/CSV).
+ml-service/artifacts/*
+!ml-service/artifacts/.gitkeep
+ml-service/**/*.csv
+ml-service/**/*.parquet
+ml-service/**/*.pkl
+ml-service/**/*.pickle
+ml-service/**/*.joblib

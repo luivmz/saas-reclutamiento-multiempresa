@@ -1,0 +1,81 @@
+@startuml co-01-components
+' CO-01 · Componentes AS-IS v1.1 (develop aced6da) — arquitectura lógica
+' Borrador textual para F23. Especificación: ../component-model.md
+
+package "Navegador" {
+  [Páginas Inertia (React 19 + TypeScript)] as PAGES
+  [Componentes compartidos (DataTable, Section, ui/*)] as SHARED
+  [Tarjeta de riesgo operacional] as CARD <<experimental>>
+}
+
+package "Monolito Laravel 13" {
+  interface "Inertia / HTTP" as I_HTTP
+  interface "JSON riesgo operacional\nGET vacantes/{id}/riesgo-operacional" as I_RISK
+  [Capa HTTP\n(rutas, middleware auth/role, Form Requests,\ncontroladores, presenters, resources)] as HTTP
+  [Autorización y multiempresa\n(7 Policies, OrganizationScope)] as AUTHZ
+  [Cuenta y acceso (Fortify, passkeys)] as ACCOUNT
+  [Servicios de dominio\n(requerimientos, vacantes, postulaciones,\nevaluaciones, selección)] as DOMAIN
+  [Cálculo de ranking\n(WeightingValidator, ScoreSheetValidator,\nRankingService, VacancyRankingBuilder)] as RANKING
+  [Modelos de dominio (17 Eloquent + enums)] as MODELS
+  [Auditoría (AuditLogger)] as AUDIT
+  [Notificaciones (RecruitmentNotification x6)] as NOTIF
+  [Almacenamiento de CV (disco local privado)] as CVSTORE
+  [Riesgo operacional\n(OperationalRiskService,\nOperationalRiskFeatureBuilder, MlRiskClient)] as RISK <<experimental>>
+}
+
+package "Infraestructura" {
+  database "PostgreSQL 17" as PG
+  [Redis 7 (sesión, caché, cola)] as REDIS
+  [Trabajador de cola (queue:work)] as WORKER
+  [Mailer log (desarrollo)] as MAILLOG
+}
+
+package "Servicio de inferencia" <<external service>> <<experimental>> {
+  interface "POST /v1/predict\nX-Internal-Token" as I_PREDICT
+  [API FastAPI (schemas, security)] as API
+  [Serving (loader, predictor)] as SERVING
+  artifact "Artefacto .joblib + metadatos\n(freeze 9ee18430..., threshold 0.1679418172266036)" as MODEL
+}
+
+PAGES ..> I_HTTP
+CARD ..> I_RISK
+PAGES --> SHARED
+I_HTTP - HTTP
+I_RISK - HTTP
+HTTP --> AUTHZ
+HTTP --> ACCOUNT
+HTTP --> DOMAIN
+HTTP --> RISK
+HTTP --> RANKING
+HTTP --> CVSTORE
+DOMAIN --> MODELS
+DOMAIN --> AUDIT
+DOMAIN --> NOTIF
+DOMAIN --> RANKING : instantánea en\nFinalDecisionService
+DOMAIN --> CVSTORE
+ACCOUNT --> AUDIT
+RANKING --> MODELS
+RISK --> MODELS : solo lectura
+RISK ..> I_PREDICT
+I_PREDICT - API
+API --> SERVING
+SERVING --> MODEL
+AUTHZ --> MODELS
+MODELS --> PG
+AUDIT --> PG
+NOTIF --> REDIS : encola
+WORKER --> REDIS
+WORKER --> PG : canal database
+WORKER --> MAILLOG : canal mail
+
+note bottom of RISK
+  Frontera RF-29: no depende de RANKING ni de la decisión,
+  ni ellos de RISK. 15 features, sin IDs ni PII.
+  Deshabilitado -> descriptive_only; sin respuesta válida -> unavailable.
+end note
+
+note right of MODEL
+  training/ y synthetic/ generan el artefacto fuera de línea;
+  no participan en la ejecución.
+end note
+@enduml

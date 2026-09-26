@@ -1,13 +1,23 @@
 import { Link } from '@inertiajs/react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Paginated } from '@/types';
 
+/**
+ * Paginación de un listado.
+ *
+ * La página actual se marca con `aria-current`, no solo con color, y los
+ * extremos llevan su flecha como icono aparte del texto: quien navega por
+ * teclado o con lector de pantalla oye «Anterior», no un carácter suelto.
+ */
 export function Pagination({ meta }: { meta: Paginated<unknown>['meta'] }) {
     if (meta.last_page <= 1) {
         return null;
     }
 
     const lastIndex = meta.links.length - 1;
+    const base =
+        'inline-flex h-8 min-w-8 items-center justify-center gap-1 rounded-md border px-2.5 text-sm';
 
     return (
         <nav
@@ -17,38 +27,77 @@ export function Pagination({ meta }: { meta: Paginated<unknown>['meta'] }) {
             <p className="text-muted-foreground">
                 Mostrando {meta.from}–{meta.to} de {meta.total}
             </p>
-            <div className="flex flex-wrap items-center gap-1">
+            <ul className="flex flex-wrap items-center gap-1">
                 {meta.links.map((link, index) => {
-                    const label =
-                        index === 0
-                            ? '‹ Anterior'
-                            : index === lastIndex
-                              ? 'Siguiente ›'
-                              : link.label;
+                    const isFirst = index === 0;
+                    const isLast = index === lastIndex;
+                    const label = isFirst
+                        ? 'Anterior'
+                        : isLast
+                          ? 'Siguiente'
+                          : link.label;
 
-                    return link.url ? (
-                        <Link
-                            key={index}
-                            href={link.url}
-                            preserveScroll
-                            className={cn(
-                                'hover:bg-accent rounded-md border px-3 py-1.5',
-                                link.active &&
-                                    'bg-primary text-primary-foreground hover:bg-primary',
+                    return (
+                        <li key={index}>
+                            {link.url ? (
+                                <Link
+                                    href={link.url}
+                                    preserveScroll
+                                    aria-current={
+                                        link.active ? 'page' : undefined
+                                    }
+                                    aria-label={
+                                        isFirst || isLast
+                                            ? label
+                                            : `Página ${link.label}`
+                                    }
+                                    className={cn(
+                                        base,
+                                        'bg-card hover:border-input hover:text-foreground transition-colors',
+                                        link.active &&
+                                            'border-primary bg-primary text-primary-foreground hover:text-primary-foreground',
+                                    )}
+                                >
+                                    {isFirst && (
+                                        <ChevronLeft
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                    {label}
+                                    {isLast && (
+                                        <ChevronRight
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                </Link>
+                            ) : (
+                                <span
+                                    className={cn(
+                                        base,
+                                        'text-muted-foreground border-dashed',
+                                    )}
+                                >
+                                    {isFirst && (
+                                        <ChevronLeft
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                    {label}
+                                    {isLast && (
+                                        <ChevronRight
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                </span>
                             )}
-                        >
-                            {label}
-                        </Link>
-                    ) : (
-                        <span
-                            key={index}
-                            className="text-muted-foreground rounded-md border px-3 py-1.5 opacity-50"
-                        >
-                            {label}
-                        </span>
+                        </li>
                     );
                 })}
-            </div>
+            </ul>
         </nav>
     );
 }

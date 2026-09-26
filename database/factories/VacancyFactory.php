@@ -14,6 +14,7 @@ use App\Models\Organization;
 use App\Models\User;
 use App\Models\Vacancy;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 
 /**
  * @extends Factory<Vacancy>
@@ -41,6 +42,22 @@ class VacancyFactory extends Factory
             'closes_at' => now()->addDays(15)->startOfDay(),
             'status' => VacancyStatus::Draft,
         ];
+    }
+
+    /**
+     * GAP-01: plazo objetivo posterior al cierre de postulaciones.
+     *
+     * No entra en `definition()` a proposito: sin el, una vacante sigue siendo
+     * valida y se queda en el panel descriptivo. Las pruebas que necesitan
+     * prediccion lo piden explicitamente.
+     */
+    public function withTargetCompletion(?int $daysAfterClose = 30): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'target_completion_at' => Carbon::parse($attributes['closes_at'] ?? now()->addDays(15))
+                ->addDays($daysAfterClose)
+                ->setTime(18, 0),
+        ]);
     }
 
     /**

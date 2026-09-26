@@ -1,0 +1,37 @@
+@startuml seq-02-decide-job-request
+' SEQ-02 · Aprobar o rechazar requerimiento (RF-03, RF-04). Especificación: ../sequence-diagrams.md
+actor "Aprobador / Dirección" as APR
+participant "UI job-requests/show" as UI
+participant JobRequestTransitionController as C
+participant DecideJobRequestRequest as R
+participant JobRequestPolicy as P
+participant JobRequestWorkflow as W
+database PostgreSQL as DB
+participant AuditLogger as A
+queue "Cola Redis" as Q
+
+APR -> UI : aprobar | rechazar (+ motivo)
+UI -> C : POST requerimientos/{id}/decision
+C -> R : authorize() + rules()
+R -> P : decide(user, jobRequest)
+P --> R : aprobador de la misma organización
+alt decisión = aprobar
+  C -> W : approve(jobRequest, approver, comment)
+else decisión = rechazar (motivo obligatorio)
+  C -> W : reject(jobRequest, approver, comment)
+end
+group critical DB::transaction
+  W -> DB : JobRequest lockForUpdate
+  alt transición no permitida (no está validado)
+    W --> C : InvalidStateTransition
+  else
+    W -> DB : status, decided_by, decided_at, decision_comment
+    W -> DB : JobRequestStatusHistory
+    W -> A : record(JobRequestApproved | JobRequestRejected)
+  end
+end
+opt rechazo
+  W -> Q : JobRequestRejectedNotification al solicitante (RF-04)
+end
+C --> UI : redirección + toast
+@enduml

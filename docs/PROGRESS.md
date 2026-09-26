@@ -1,8 +1,36 @@
 # Progreso del proyecto
 
-Última actualización: 2026-09-13 · Rama actual: `release/qa-final`
+Última actualización: 2026-09-25 (Fase 26, pendiente de auditoría).
 
-## Fases
+> El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24; el 25/09/2026, de la Fase 24 a la Fase 25, y ese mismo día, de la Fase 25 a la Fase 26. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
+
+## Estado de v1.1
+
+`main` sigue siendo la v1.0 académica (`4563c69`, tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1. `develop` = `origin/develop` = `2b97fe3` *(hasta la Fase 26: `4469128`; hasta la Fase 25: `8211851`; hasta la Fase 24: `2621bee`)*.
+
+| Fase | Contenido | Estado | Merge en `develop` | Detalle |
+|---|---|---|---|---|
+| 13 | Gobierno de v1.1 | ✅ Integrada | `95c5b8b` | `docs/v1.1/phase-13-master-plan.md` |
+| 14 | Definición del experimento de ML | ✅ Integrada | `5957fd4` | `docs/v1.1/phase-14-ml-definition.md` |
+| 14.5 | Gobierno multiagente | ✅ Integrada | `d02cbc9` | `docs/v1.1/multi-agent-workflow.md` |
+| 15 | Servicio ML: datos sintéticos, entrenamiento, FastAPI experimental | ✅ Integrada | `485f0e1` | `docs/v1.1/phase-15-closeout.md` |
+| 16 | Integración Laravel ↔ FastAPI (GAP-01 resuelto técnicamente) | ✅ Integrada | `e3e7540` | `docs/v1.1/phase-16-laravel-ml-integration.md` |
+| 17 | Validación ML y regresión integral | ✅ Integrada | `0d2ce42` | `docs/v1.1/phase-17-ml-validation.md` |
+| 18 | Rediseño del frontend | ✅ Integrada | `11832ac` | `docs/v1.1/phase-18-frontend-redesign.md` |
+| 19 | Animaciones y microinteracciones | ✅ Integrada | `67a88a6` | `docs/v1.1/phase-19-animations.md` |
+| 20 | Experiencia 3D con CSS 3D (solo portada) | ✅ Cerrada e integrada | `a316c07` | `docs/v1.1/phase-20-3d-experience.md` |
+| 21 | QA visual, accesibilidad y responsive | ✅ Cerrada e integrada | `aced6da` | `docs/v1.1/phase-21-visual-qa.md` |
+| 22 | Especificación UML del AS-IS | ✅ Integrada | `2621bee` | `docs/v1.1/phase-22-uml-update.md` |
+| 23 | Formalización en PowerDesigner | ✅ Cerrada e integrada | `8211851` | `docs/v1.1/phase-23-powerdesigner.md` |
+| 24 | Documentación académica final: Formato 09 v1.1 | ✅ Cerrada con observaciones e integrada | `4469128` | `docs/v1.1/phase-24-academic-documentation.md` |
+| 25 | QA global final / *release readiness* | ✅ Cerrada con observaciones e integrada | `2b97fe3` | `docs/v1.1/phase-25-final-qa.md` |
+| 26 | GitHub, *release* y cierre de v1.1 | 🟡 Implementada en `feature/phase-26-release-closeout`, pendiente de auditoría | — | `docs/v1.1/phase-26-release-closeout.md` |
+
+**RF-29** está implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, no validado institucionalmente ni autorizado para producción; no selecciona ni descarta a nadie y no cambia RF-23. RF-28, RF-29 y los RNF nuevos (incluido RNF-C) siguen siendo **candidatos** (`docs/v1.1/scope-preliminary.md`, decisión 11 y preguntas 12–13).
+
+Las entradas por fase de v1.1 que siguen al final de este documento empiezan en la Fase 18; las Fases 13 a 17 se documentaron en sus propios archivos, enlazados en la tabla.
+
+## Fases (v1.0)
 
 | Fase | Estado |
 |---|---|
@@ -82,3 +110,107 @@ Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempre
 - **Workflow verde:** ejecuciones `34787563815` (rama de corrección), `34787861775` (`main`) y `34787885835` (`develop`), todas **success**.
 - **Sin cambios funcionales:** no cambiaron RF, reglas, código de la aplicación ni Docker. El tag `v1.0.0-academic` se conserva.
 - **Detalle:** `docs/final-report/post-publication-ci-fix.md`.
+
+## v1.1 — Fase 18: rediseño frontend integral
+
+- **Rama:** `feature/phase-18-frontend-redesign`, desde `develop` en `0d2ce42` (cierre de la Fase 17).
+- **Alcance:** solo interfaz. Sistema de diseño propio (tipografía IBM Plex, tokens de estado, barra lateral oscura), `DataTable` y `Section` reutilizables, accesibilidad (enlace de salto, foco visible único, `aria-current`/`aria-pressed`, tablas con `scope` y `caption`), responsive verificado a 1440/1280/768/390 px, modo oscuro y traducción al español del módulo de configuración.
+- **Sin cambios** en reglas de negocio, RF, rutas, contratos de API, modelos, Policies, migraciones ni servicio ML. RF-29 sigue siendo experimental y la decisión final sigue siendo humana (RF-23).
+- **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 18 pruebas de componente (`vp test`) · `tsc` sin errores · `npm run build` correcto · Cypress 17 specs / 61 pruebas, 61 pasadas.
+- **Detalle y evidencia:** `docs/v1.1/phase-18-frontend-redesign.md` y `docs/v1.1/phase-18-screenshots/`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
+
+## v1.1 — Fase 19: animaciones y microinteracciones
+
+- **Rama:** `feature/phase-19-animations`, desde `develop` en `11832ac` (cierre de la Fase 18).
+- **Alcance:** solo movimiento. Sistema de tres curvas y una escala de duración declarado con los tokens que Tailwind ya usa; corrección del movimiento heredado del kit de inicio (curvas lineales, `transition-all`, 500 ms de apertura, menús creciendo desde el centro); respuesta del botón a la pulsación; entrada de errores de formulario y del resultado de riesgo operacional. **Sin biblioteca de motion nueva.**
+- **Se anima poco a propósito:** sin transiciones entre páginas, sin entrada animada de filas de tabla, sin contadores y sin badges que laten.
+- **`prefers-reduced-motion` implementado y probado:** se conservan color y opacidad, se elimina todo desplazamiento, el spinner sigue girando y el esqueleto deja de latir.
+- **Defecto de accesibilidad encontrado y corregido:** al cerrar la navegación móvil el foco se perdía en `body`; ahora vuelve al botón que la abrió.
+- **Sin cambios** en reglas de negocio, RF, rutas, contratos de API, modelos, Policies, migraciones ni servicio ML.
+- **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 23 pruebas de componente · `tsc` sin errores · `npm run build` correcto · Cypress 18 specs / 69 pruebas · 0 desbordes horizontales.
+- **Detalle:** `docs/v1.1/phase-19-animations.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
+
+## v1.1 — Fase 20: experiencia 3D contextual
+
+- **Rama:** `feature/phase-20-3d-experience`, desde `develop` en `67a88a6` (cierre de la Fase 19).
+- **Alcance:** una sola superficie, la portada pública. Detrás del expediente de la portada, una pila de hojas en perspectiva, cada una con el tono de su etapa. Decorativa, opcional y sin información propia (ADR-003).
+- **Tecnología:** CSS 3D (perspectiva y capas de DOM), **sin WebGL y sin dependencias nuevas**. `package.json` no cambia.
+- **Presupuesto:** *bundle* inicial JS **+0 KB**; la escena va en su propio fragmento diferido (1.26 kB gzip) que solo se descarga en escritorio, sin movimiento reducido ni ahorro de datos, y al entrar en el viewport. 61 FPS con el puntero en movimiento; escena lista en ≈ 500 ms.
+- **Fallback:** póster estático con la misma idea en plano, visible al instante; queda con movimiento reducido, en móvil, con ahorro de datos, en equipos modestos o si el fragmento falla. Sin WebGL la escena se muestra igual.
+- **Gobierno:** ADR-003 y RNF-C seguían «pendiente de decisión»; se anotaron sin reescribir su historia. La promoción formal de RNF-C sigue siendo decisión del equipo.
+- **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 36 pruebas de componente · `tsc` sin errores · `npm run build` correcto · Cypress 19 specs / 77 pruebas · 0 desbordes horizontales.
+- **Detalle:** `docs/v1.1/phase-20-3d-experience.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
+
+## v1.1 — Fase 21: QA visual, accesibilidad, responsive y pulido final
+
+- **Rama:** `feature/phase-21-visual-qa`, desde `develop` en `a316c07` (cierre de la Fase 20).
+- **Alcance:** auditoría y corrección del frontend consolidado tras las Fases 18 a 20, sin rediseño ni funciones nuevas. 35 rutas y las sesiones de evaluación de los seis perfiles, en claro y oscuro, a 1440/1280/1024/768/390/320 px, con teclado, movimiento reducido y estados provocados (rechazo, errores, 2FA real).
+- **Defectos corregidos:** alertas destructivas ilegibles en claro (≈ 1:1, **alta**; afectaba al motivo de rechazo de RF-04); rojo destructivo en oscuro por debajo de 4.5:1 como botón y como texto de error; pantallas de acceso sin `main`; cabecera pública desbordada a 320 px (WCAG 1.4.10); franja visible de los códigos de recuperación plegados (regresión de la Fase 19); enlace de salto de 22 px; botones de 2FA fuera de su tarjeta a 1024 px; desplazamiento suave que ignoraba el movimiento reducido.
+- **Aceptado con evidencia:** animación de ancho de la barra lateral (0 cuadros de 50 ms o más); 27 objetivos pequeños que cumplen WCAG 2.5.8 por espaciado. **Pasan a F24/F25:** lector de pantalla real y rendimiento en equipo modesto.
+- **Gobierno:** RNF-C queda como propuesta (pregunta 13 de `scope-preliminary.md`), no aprobada; skill `recruitment-3d-experience` actualizada a «implementada y acotada»; ~~`CLAUDE.md` sin tocar hasta la integración en `main`~~ *(decisión inicial de la fase, ya no vigente: el hotfix documental del 23/09/2026 corrigió `CLAUDE.md` al estado real a pedido de la auditoría de Codex)*.
+- **Sin cambios** en backend, reglas de negocio, RF, rutas, contratos de API, modelos, Policies, migraciones ni servicio ML. No se adelantó la Fase 22.
+- **Regresión ejecutada:** Laravel 408 pasadas + 8 omitidas · Python 532 pasadas · 42 pruebas de componente · `tsc` sin errores · `npm run build` correcto · Cypress 20 specs / 84 pruebas · 0 desbordes horizontales.
+- **Detalle y evidencia:** `docs/v1.1/phase-21-visual-qa.md` y `docs/v1.1/phase-21-screenshots/`.
+- **Auditoría de Codex:** técnicamente en verde; pidió un hotfix documental (`CLAUDE.md` desactualizado, redacción de WebGL en la skill 3D, cifra del CSS). Hecho el 23/09/2026 en la misma rama, solo documentación y skills. La reauditoría pidió un hotfix final (estado vigente en `scope-preliminary.md`, contrato real en la skill `ml-risk-service`, esta entrada), también solo documental. **La fase no está cerrada** hasta la nueva reauditoría.
+- **Cierre:** tras la reauditoría, integrada en `develop` con el merge `aced6da`. *(Anotado en la Fase 22.)*
+- **Sin `push`, `merge`, *tag* ni *release*.**
+
+## v1.1 — Fase 22: especificación UML del AS-IS
+
+- **Rama:** `feature/phase-22-uml-update`, desde `develop` en `aced6da` (cierre de la Fase 21).
+- **Alcance:** solo documentación. Especificación verificable de los diagramas UML del sistema implementado, en `docs/v1.1/uml/`: inventario, casos de uso (RF-01 a RF-29), clases del dominio (17 clases, 37 asociaciones), componentes y paquetes, despliegue, 8 secuencias, 2 actividades, 4 máquinas de estado, matriz de trazabilidad y guía para PowerDesigner. 19 borradores PlantUML, no renderizados.
+- **Hallazgos del cruce con el código:** RF-28 es un candidato no implementado (el estado `descriptive_only` de RF-29 no es su panel); el cierre `desierta` no tiene flujo; la descripción OpenAPI de `days_remaining_to_target` quedó obsoleta (GAP-01 está resuelto).
+- **Sin cambios** en código, pruebas, dependencias ni servicio ML. **Sin archivos de PowerDesigner**: son de la Fase 23, que no se inició. No se ejecutaron suites funcionales: el cambio es documental.
+- **Auditoría de Codex:** tres correcciones de UML (`scheduled_by` en CL-01, descarte terminal en AC-01, UC-RF07 solo de RR. HH.), hechas en la misma rama; pendiente de reauditoría.
+- **Detalle:** `docs/v1.1/phase-22-uml-update.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
+- **Cierre:** tras la reauditoría, integrada en `develop` con el merge `2621bee`. *(Anotado en la Fase 23.)*
+
+## v1.1 — Fase 23: formalización en PowerDesigner
+
+- **Rama:** `feature/phase-23-powerdesigner`, desde `develop` en `2621bee` (cierre de la Fase 22).
+- **Alcance:** modelos nativos de PowerDesigner 16.6.1.5066 en `docs/v1.1/powerdesigner/`, construidos por su interfaz COM con scripts versionados. OOM con los 19 diagramas de F22 (CL-01, UC-01, PK-01, CO-01, DE-01, SEQ-01 a SEQ-08, AC-01, AC-02, ST-01 a ST-04) más la vista CL-01b; PDM por ingeniería inversa del esquema real (27 tablas, 48 FK, 32 CHECK) con PDM-01 y PDM-02. 22 diagramas exportados en PNG y SVG.
+- **Validación:** revisión visual de cada exportación y conteo de elementos contra F22 (125 mensajes, 20 fragmentos, 19 estados, 37 transiciones…), sin diferencias de contenido; las de representación están justificadas en `powerdesigner/f22-checklist.md`. RF-23 humano, RF-28 candidato sin asociaciones, RF-29 experimental. Los modelos, tal como quedan en Git, abren en PowerDesigner.
+- **Sin cambios** en código, pruebas, dependencias ni servicio ML; no se ejecutaron suites funcionales. La deuda de texto OpenAPI de GAP-01 (`schemas.py`) se registra, no se corrige.
+- **Proceso:** dos sesiones; la primera se detuvo en un *checkpoint* sin commits y la segunda la reanudó sin reconstruir.
+- **Detalle:** `docs/v1.1/phase-23-powerdesigner.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
+- **Cierre:** tras la auditoría, integrada en `develop` con el merge `8211851`. *(Anotado en la Fase 24.)*
+
+## v1.1 — Fase 24: documentación académica final (Formato 09)
+
+- **Rama:** `feature/phase-24-academic-documentation`, desde `develop` en `8211851` (cierre de la Fase 23).
+- **Alcance:** solo documentación. Formato 09 v1.1 en `docs/academico/phase-24/output/` (DOCX y PDF exportado por Word, 28 páginas), construido a partir del F9 histórico del equipo con la guía y la plantilla oficiales como referencia. Los tres originales se versionaron sin cambios.
+- **Correcciones:** NRC 30180 → **28607**; campos oficiales que faltaban (usuarios principales, entorno de uso, módulo/sistema, destino de las salidas, los cuatro criterios de aceptación); afirmaciones de ML obsoletas («Laravel todavía no lo consume», «GAP-01 permanece abierto») reemplazadas por la integración experimental vigente; anexos de casos de uso y de arquitectura con actores y servicios fuera del alcance sustituidos por UC-01 y CO-01 de PowerDesigner, más DE-01, AC-01 y CL-01.
+- **Contratos:** RF-01 a RF-27 siguen siendo la línea base oficial; RF-28 (no implementado), RF-29 (experimental) y RNF-C (propuesta) figuran como candidatos, sin promoción; RF-23, decisión humana.
+- **Observaciones:** los catálogos de CU (20 académicos, 13 del informe y uno por RF en el UML) y de RNF (10 frente a 11) divergen; se declaran y quedan para decisión del equipo.
+- **Validación:** documental y estructural (`tools/validate_f9.py` sin fallos; índice verificado contra el PDF; originales con el mismo SHA-256). **No se ejecutaron suites funcionales**: el QA global es de la Fase 25.
+- **Detalle:** `docs/v1.1/phase-24-academic-documentation.md`, `docs/academico/phase-24/README.md` y `source-map.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
+- **Cierre:** tras la auditoría, cerrada con observaciones e integrada en `develop` con el merge `4469128`. *(Anotado en la Fase 25.)*
+
+## v1.1 — Fase 25: QA global final / release readiness
+
+- **Rama:** `feature/phase-25-final-qa`, desde `develop` en `4469128` (cierre de la Fase 24).
+- **Alcance:** verificación integral de v1.1 (repositorio, entorno, dependencias, Laravel, base de datos, seguridad, multitenencia, roles, ML, integración, frontend, accesibilidad, responsive, rendimiento exploratorio, documentación, secretos y Git), sin funciones nuevas ni cambios en el ML.
+- **Resultados reales tras los arreglos:** PHPUnit **411 passed, 8 skipped, 0 failed (1498 assertions)**; pytest **533 passed**; componentes **42 passed**; `tsc` 0 errores; build correcto; Cypress **20 specs, 85/85**. Contrato ML intacto (freeze y threshold exactos; LR `C=10`, sin calibración); integración Laravel ↔ FastAPI verificada en vivo en sus tres estados.
+- **Hallazgos corregidos:** F25-M01 (MEDIUM) ID no numérico en rutas → 500, ahora 404; F25-M02 (MEDIUM) fichas de tabla recortadas en móvil (WCAG 1.4.10); F25-L01 textos de GAP-01 obsoletos en el servicio ML (deuda OpenAPI de F22/F23, cerrada); F25-L02 guía de Cypress desactualizada. Además, una prueba cross-tenant nueva para evaluaciones. Sin BLOCKER ni HIGH.
+- **Deudas transferidas a F26:** formato preexistente (Pint/`vp check`), lector de pantalla real, rendimiento en equipo modesto, observaciones heredadas de F23 y F24.
+- **Detalle:** `docs/v1.1/phase-25-final-qa.md` y `docs/v1.1/phase-25-qa-matrix.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
+- **Cierre:** tras la auditoría, cerrada con observaciones e integrada en `develop` con el merge `2b97fe3`. *(Anotado en la Fase 26.)*
+
+## v1.1 — Fase 26: release, GitHub y cierre final
+
+- **Rama:** `feature/phase-26-release-closeout`, desde `develop` en `2b97fe3` (cierre de la Fase 25).
+- **Alcance:** solo cierre documental, sin código, pruebas, dependencias, ML ni modelos nativos. `CHANGELOG.md`, notas de versión, manifiesto con hashes, lista de aceptación final, documento de cierre y README actualizado a v1.1.
+- **Deuda consolidada:** 0 BLOCKER, 0 HIGH, 0 MEDIUM, 8 LOW y 9 INFO, cada una clasificada como ACCEPTED, DEFERRED, RESOLVED o NOT APPLICABLE. Los modelos de prueba `zz_*` de la F23, que estaban fuera del repositorio, se borraron (RESOLVED). Pint y `vp check` quedan aplazados, con su alcance medido.
+- **Corrección a la F25:** el build sí muestra un aviso informativo (falta el paquete opcional `fontaine`); se acepta sin instalar nada.
+- **Estrategia propuesta, sin ejecutar:** etiqueta anotada `v1.1.0-academic`; merge `develop → main` con `--no-ff`, como en la v1.0. Secuencia: CI de `develop` en verde, merge a `main`, **CI de `main` en verde**, `develop^{tree} == main^{tree}` verificado en el cierre y **solo entonces** la etiqueta sobre el merge de `main` y el GitHub Release, con el PDF y el DOCX del Formato 09. La simulación con `git merge-tree` sobre el baseline pre-F26 no dio conflictos.
+- **Correcciones de la auditoría de Codex:** F26-M01 (el hash `f945b8d…` es solo el árbol del baseline pre-F26; la integridad se valida en el cierre) y F26-M02 (etiqueta solo tras el CI verde de `main`), más dos LOW (redacción de WebGL y conteo de `vp check`). Solo documentación.
+- **Suites:** no se volvieron a ejecutar (sin cambios de código); rige la línea base de la F25.
+- **Detalle:** `docs/v1.1/phase-26-release-closeout.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**

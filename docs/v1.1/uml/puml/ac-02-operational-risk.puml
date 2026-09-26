@@ -1,0 +1,32 @@
+@startuml ac-02-operational-risk
+' AC-02 · Consulta del riesgo operacional (RF-29) <<experimental>>
+' Borrador textual para F23. Especificación: ../activity-diagrams.md
+start
+:RR. HH. o Aprobador abre el detalle de la vacante;
+:La tarjeta pide GET vacantes/{id}/riesgo-operacional;
+if (¿Misma organización y rol autorizado?) then (no)
+  :403;
+  stop
+endif
+if (¿Elegible? publicada, closes_at, target_completion_at,\ncheckpoint alcanzado, no cerrada, plazo > checkpoint,\nconsulta antes del plazo) then (no)
+  :descriptive_only (motivo);
+else (sí)
+  :Construir 15 features en el checkpoint;
+  if (¿ML_SERVICE_ENABLED?) then (no)
+    :descriptive_only (service_disabled);
+  else (sí)
+    :POST /v1/predict + X-Internal-Token;
+    if (¿Respuesta válida y contrato congelado?) then (no)
+      :unavailable (motivo);
+    else (sí)
+      :predictive_available (risk_score, risk_flag);
+    endif
+  endif
+endif
+:Mostrar tarjeta «Experimental» con mensaje\ny aviso de decisión humana;
+stop
+note right
+  Sin efectos: no se persiste, no cambia postulaciones
+  ni ranking, no notifica. No es una actividad de selección.
+end note
+@enduml

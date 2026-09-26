@@ -7,11 +7,54 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Sistema de diseño — Fase 18.
+ *
+ * El producto es un expediente: un requerimiento que avanza por etapas, deja
+ * rastro de quién hizo qué y termina en una decisión que firma una persona.
+ * Por eso la tipografía es una superfamilia de documento (IBM Plex: serif para
+ * los títulos, sans para la interfaz, mono para códigos y cifras) y el color se
+ * gasta casi entero en comunicar estado, no en decorar.
+ *
+ * Regla de uso del color: los seis tonos `--tone-*` son el vocabulario de
+ * estado de toda la aplicación. Ningún componente debe inventar colores de la
+ * paleta de Tailwind por su cuenta.
+ */
+
 @theme {
     --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
+    --font-serif: 'IBM Plex Serif', ui-serif, Georgia, serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+
+    /*
+     * Motion. Un solo juego de curvas para toda la aplicación: al redefinir
+     * aquí los tokens que Tailwind ya usa, cada `transition-*` y cada
+     * `animate-in` que ya existía en los componentes pasa a moverse con la
+     * misma curva, sin tocar una clase.
+     *
+     * Las curvas del navegador son demasiado flojas para interfaz. Estas
+     * vienen de valores establecidos, no inventados:
+     * `--ease-out` arranca fuerte y frena —lo que hace que 200 ms se sientan
+     * más rápidos que 200 ms con `ease-in`—, `--ease-in-out` es para lo que
+     * se desplaza en pantalla y `--ease-drawer` es la curva de cajón de iOS.
+     *
+     * `ease-in` no se usa nunca en interfaz: empieza lento justo en el
+     * instante que la persona está mirando.
+     *
+     * Escala de duración, en utilidades de Tailwind:
+     *   duration-100/150  respuesta a una pulsación, cambios de color
+     *   duration-200      desplegables, menús, diálogos
+     *   duration-250      cajón de navegación móvil
+     * Por encima de 300 ms nada de interfaz, salvo que haya una razón.
+     */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+    --default-transition-timing-function: var(--ease-out);
+    --default-transition-duration: 150ms;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -45,6 +88,34 @@
     --color-input: var(--input);
     --color-ring: var(--ring);
 
+    --color-surface: var(--surface);
+    --color-surface-foreground: var(--surface-foreground);
+
+    /* Vocabulario de estado. Cada tono tiene fondo, texto y borde. */
+    --color-tone-neutral: var(--tone-neutral);
+    --color-tone-neutral-foreground: var(--tone-neutral-foreground);
+    --color-tone-neutral-edge: var(--tone-neutral-edge);
+
+    --color-tone-info: var(--tone-info);
+    --color-tone-info-foreground: var(--tone-info-foreground);
+    --color-tone-info-edge: var(--tone-info-edge);
+
+    --color-tone-primary: var(--tone-primary);
+    --color-tone-primary-foreground: var(--tone-primary-foreground);
+    --color-tone-primary-edge: var(--tone-primary-edge);
+
+    --color-tone-success: var(--tone-success);
+    --color-tone-success-foreground: var(--tone-success-foreground);
+    --color-tone-success-edge: var(--tone-success-edge);
+
+    --color-tone-warning: var(--tone-warning);
+    --color-tone-warning-foreground: var(--tone-warning-foreground);
+    --color-tone-warning-edge: var(--tone-warning-edge);
+
+    --color-tone-danger: var(--tone-danger);
+    --color-tone-danger-foreground: var(--tone-danger-foreground);
+    --color-tone-danger-edge: var(--tone-danger-edge);
+
     --color-chart-1: var(--chart-1);
     --color-chart-2: var(--chart-2);
     --color-chart-3: var(--chart-3);
@@ -62,74 +133,127 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    /* Papel con un matiz frío: el fondo nunca es blanco puro, las tarjetas sí,
+       para que el contenido se levante sin necesidad de sombras. */
+    --background: oklch(0.979 0.004 228);
+    --foreground: oklch(0.238 0.019 235);
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
+    --card-foreground: oklch(0.238 0.019 235);
+    --surface: oklch(0.962 0.006 228);
+    --surface-foreground: oklch(0.335 0.019 233);
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.87 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.87 0 0);
+    --popover-foreground: oklch(0.238 0.019 235);
+    /* Petróleo institucional. Es la marca y, a la vez, el tono de estado
+       «en curso»: reutilizarlo es deliberado, no una coincidencia. */
+    --primary: oklch(0.452 0.077 213);
+    --primary-foreground: oklch(0.985 0.004 213);
+    --secondary: oklch(0.944 0.008 228);
+    --secondary-foreground: oklch(0.31 0.021 230);
+    --muted: oklch(0.953 0.006 228);
+    --muted-foreground: oklch(0.503 0.017 233);
+    --accent: oklch(0.932 0.019 210);
+    --accent-foreground: oklch(0.335 0.055 210);
+    --destructive: oklch(0.545 0.196 25);
+    --destructive-foreground: oklch(0.985 0.005 25);
+    --border: oklch(0.903 0.007 228);
+    --input: oklch(0.878 0.009 228);
+    --ring: oklch(0.544 0.083 213);
+    --chart-1: oklch(0.452 0.077 213);
+    --chart-2: oklch(0.585 0.112 155);
+    --chart-3: oklch(0.672 0.132 72);
+    --chart-4: oklch(0.523 0.122 258);
+    --chart-5: oklch(0.575 0.168 25);
+    --radius: 0.5rem;
+
+    --tone-neutral: oklch(0.951 0.006 228);
+    --tone-neutral-foreground: oklch(0.412 0.017 233);
+    --tone-neutral-edge: oklch(0.882 0.009 228);
+    --tone-info: oklch(0.955 0.023 250);
+    --tone-info-foreground: oklch(0.432 0.118 254);
+    --tone-info-edge: oklch(0.878 0.049 250);
+    --tone-primary: oklch(0.949 0.024 210);
+    --tone-primary-foreground: oklch(0.392 0.073 211);
+    --tone-primary-edge: oklch(0.868 0.047 208);
+    --tone-success: oklch(0.951 0.036 155);
+    --tone-success-foreground: oklch(0.406 0.086 155);
+    --tone-success-edge: oklch(0.872 0.069 156);
+    --tone-warning: oklch(0.958 0.048 88);
+    --tone-warning-foreground: oklch(0.438 0.094 65);
+    --tone-warning-edge: oklch(0.882 0.088 85);
+    --tone-danger: oklch(0.952 0.026 22);
+    --tone-danger-foreground: oklch(0.462 0.158 26);
+    --tone-danger-edge: oklch(0.878 0.055 22);
+
+    /* La barra lateral es el escritorio y el contenido, la hoja apoyada
+       encima. De ahí que en modo claro también sea oscura. */
+    --sidebar: oklch(0.262 0.031 222);
+    --sidebar-foreground: oklch(0.935 0.008 220);
+    --sidebar-primary: oklch(0.708 0.089 205);
+    --sidebar-primary-foreground: oklch(0.195 0.028 218);
+    --sidebar-accent: oklch(0.338 0.036 218);
+    --sidebar-accent-foreground: oklch(0.975 0.005 220);
+    --sidebar-border: oklch(0.348 0.031 220);
+    --sidebar-ring: oklch(0.672 0.079 205);
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.145 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: oklch(0.269 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.439 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.985 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
+    --background: oklch(0.192 0.015 232);
+    --foreground: oklch(0.941 0.006 228);
+    --card: oklch(0.232 0.017 230);
+    --card-foreground: oklch(0.941 0.006 228);
+    --surface: oklch(0.268 0.017 230);
+    --surface-foreground: oklch(0.878 0.008 228);
+    --popover: oklch(0.232 0.017 230);
+    --popover-foreground: oklch(0.941 0.006 228);
+    --primary: oklch(0.731 0.083 201);
+    --primary-foreground: oklch(0.196 0.031 209);
+    --secondary: oklch(0.285 0.018 230);
+    --secondary-foreground: oklch(0.925 0.007 228);
+    --muted: oklch(0.278 0.017 230);
+    --muted-foreground: oklch(0.708 0.014 230);
+    --accent: oklch(0.318 0.029 210);
+    --accent-foreground: oklch(0.932 0.021 205);
+    /* Fase 21: el rojo de relleno se oscurece para que el blanco encima
+       pase 4.5:1 (antes 4.14:1). El rojo como texto usa el tono de
+       peligro, que existe justamente para eso. */
+    --destructive: oklch(0.56 0.19 25);
+    --destructive-foreground: oklch(0.975 0.008 25);
+    --border: oklch(0.322 0.016 230);
+    --input: oklch(0.362 0.017 230);
+    --ring: oklch(0.612 0.073 207);
+    --chart-1: oklch(0.731 0.083 201);
+    --chart-2: oklch(0.712 0.118 155);
+    --chart-3: oklch(0.782 0.132 75);
+    --chart-4: oklch(0.672 0.122 262);
+    --chart-5: oklch(0.682 0.158 25);
+
+    --tone-neutral: oklch(0.302 0.015 230);
+    --tone-neutral-foreground: oklch(0.812 0.011 230);
+    --tone-neutral-edge: oklch(0.382 0.016 230);
+    --tone-info: oklch(0.302 0.048 252);
+    --tone-info-foreground: oklch(0.832 0.076 250);
+    --tone-info-edge: oklch(0.402 0.072 252);
+    --tone-primary: oklch(0.305 0.042 208);
+    --tone-primary-foreground: oklch(0.842 0.062 203);
+    --tone-primary-edge: oklch(0.408 0.058 207);
+    --tone-success: oklch(0.302 0.052 156);
+    --tone-success-foreground: oklch(0.832 0.092 157);
+    --tone-success-edge: oklch(0.402 0.072 156);
+    --tone-warning: oklch(0.312 0.058 78);
+    --tone-warning-foreground: oklch(0.858 0.098 85);
+    --tone-warning-edge: oklch(0.418 0.078 78);
+    --tone-danger: oklch(0.312 0.072 24);
+    --tone-danger-foreground: oklch(0.832 0.092 24);
+    --tone-danger-edge: oklch(0.418 0.108 24);
+
+    --sidebar: oklch(0.158 0.015 232);
+    --sidebar-foreground: oklch(0.921 0.007 228);
+    --sidebar-primary: oklch(0.731 0.083 201);
+    --sidebar-primary-foreground: oklch(0.182 0.026 214);
+    --sidebar-accent: oklch(0.272 0.023 224);
+    --sidebar-accent-foreground: oklch(0.958 0.006 228);
+    --sidebar-border: oklch(0.288 0.018 226);
+    --sidebar-ring: oklch(0.612 0.073 207);
 }
 
 @layer base {
@@ -139,5 +263,69 @@
 
     body {
         @apply bg-background text-foreground;
+        text-rendering: optimizeLegibility;
+    }
+
+    /* Un solo anillo de foco en toda la aplicación: visible sobre fondo claro
+       y sobre la barra lateral oscura. Sin esto, navegar con teclado por el
+       shell era adivinar dónde estaba uno. */
+    :focus-visible {
+        @apply outline-ring rounded-sm outline-2 outline-offset-2;
+    }
+
+    ::selection {
+        @apply bg-primary/15;
+    }
+
+    h1,
+    h2,
+    h3 {
+        text-wrap: balance;
+    }
+
+    p {
+        text-wrap: pretty;
+    }
+
+    /* Las cifras comparables (puntajes, ponderaciones, plazas) se leen en
+       columna: sin ancho tabular el ojo no puede compararlas. */
+    table {
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+/*
+ * Movimiento reducido.
+ *
+ * No significa «sin animación»: significa menos y más suave. Lo que molesta
+ * es el desplazamiento y el escalado, no que un color cambie. Así que se
+ * conservan las transiciones que explican un cambio de estado —color, opacidad,
+ * sombra— acortadas, y se elimina todo lo que mueve o escala algo por la
+ * pantalla.
+ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-property:
+            opacity, color, background-color, border-color,
+            text-decoration-color, fill, stroke, box-shadow !important;
+        transition-duration: 120ms !important;
+        animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* El giro del spinner es información, no adorno: sin él una espera larga
+       parece una pantalla colgada. Se conserva, más lento. */
+    .animate-spin {
+        animation: spin 1.6s linear infinite !important;
+    }
+
+    /* El esqueleto sigue ocupando su sitio y diciendo que algo falta; el
+       latido, que no aporta nada más, se detiene. */
+    .animate-pulse {
+        animation: none !important;
     }
 }

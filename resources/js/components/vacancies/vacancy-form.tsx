@@ -4,14 +4,8 @@ import type { FormEvent } from 'react';
 import VacancyController from '@/actions/App/Http/Controllers/Vacancies/VacancyController';
 import { FormField, NativeSelect } from '@/components/form-controls';
 import InputError from '@/components/input-error';
+import { Section } from '@/components/page';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
@@ -52,14 +46,34 @@ export type VacancyFormData = {
     positions: string;
     opens_at: string;
     closes_at: string;
+    /** GAP-01: plazo objetivo de cierre del proceso (datetime-local). */
+    target_completion_at: string;
     profile: ProfileInput;
     criteria: CriterionInput[];
 };
 
 const suggestedCriteria: CriterionInput[] = [
-    { name: 'Conocimientos pedagógicos', stage: 'evaluacion', weight: '40', min_score: '0', max_score: '20' },
-    { name: 'Clase modelo', stage: 'evaluacion', weight: '30', min_score: '0', max_score: '20' },
-    { name: 'Entrevista personal', stage: 'entrevista', weight: '30', min_score: '0', max_score: '20' },
+    {
+        name: 'Conocimientos pedagógicos',
+        stage: 'evaluacion',
+        weight: '40',
+        min_score: '0',
+        max_score: '20',
+    },
+    {
+        name: 'Clase modelo',
+        stage: 'evaluacion',
+        weight: '30',
+        min_score: '0',
+        max_score: '20',
+    },
+    {
+        name: 'Entrevista personal',
+        stage: 'entrevista',
+        weight: '30',
+        min_score: '0',
+        max_score: '20',
+    },
 ];
 
 export function initialVacancyData(
@@ -76,6 +90,10 @@ export function initialVacancyData(
             positions: String(vacancy.positions),
             opens_at: vacancy.opens_at ?? '',
             closes_at: vacancy.closes_at ?? '',
+            // El backend lo entrega en ISO 8601; el input datetime-local necesita
+            // `YYYY-MM-DDTHH:mm`, sin zona.
+            target_completion_at:
+                vacancy.target_completion_at?.slice(0, 16) ?? '',
             profile: {
                 education: vacancy.profile?.education ?? '',
                 experience: vacancy.profile?.experience ?? '',
@@ -101,7 +119,13 @@ export function initialVacancyData(
         positions: jobRequest ? String(jobRequest.headcount) : '1',
         opens_at: '',
         closes_at: '',
-        profile: { education: '', experience: '', functions: '', competencies: '' },
+        target_completion_at: '',
+        profile: {
+            education: '',
+            experience: '',
+            functions: '',
+            competencies: '',
+        },
         criteria: suggestedCriteria,
     };
 }
@@ -145,13 +169,19 @@ export function VacancyForm({
         }
     };
 
-    const setField = (field: Exclude<keyof VacancyFormData, 'profile' | 'criteria'>, value: string) =>
-        form.setData(field, value);
+    const setField = (
+        field: Exclude<keyof VacancyFormData, 'profile' | 'criteria'>,
+        value: string,
+    ) => form.setData(field, value);
 
     const setProfile = (field: keyof ProfileInput, value: string) =>
         form.setData('profile', { ...form.data.profile, [field]: value });
 
-    const setCriterion = (index: number, field: keyof CriterionInput, value: string) =>
+    const setCriterion = (
+        index: number,
+        field: keyof CriterionInput,
+        value: string,
+    ) =>
         form.setData(
             'criteria',
             form.data.criteria.map((criterion, i) =>
@@ -160,178 +190,422 @@ export function VacancyForm({
         );
 
     const selectJobRequest = (id: string) => {
-        const jobRequest = jobRequests.find((option) => String(option.id) === id);
+        const jobRequest = jobRequests.find(
+            (option) => String(option.id) === id,
+        );
         form.setData({
             ...form.data,
             job_request_id: id,
             title: jobRequest?.position_title ?? form.data.title,
             contract_type: jobRequest?.contract_type ?? form.data.contract_type,
-            positions: jobRequest ? String(jobRequest.headcount) : form.data.positions,
+            positions: jobRequest
+                ? String(jobRequest.headcount)
+                : form.data.positions,
         });
     };
 
     return (
         <form onSubmit={submit} className="space-y-6" data-cy="vacancy-form">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Datos de la convocatoria</CardTitle>
-                    <CardDescription>
-                        RF-06 · Configuración pública de la vacante.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-5 md:grid-cols-2">
-                    {mode === 'create' && (
-                        <FormField
-                            label="Requerimiento aprobado"
-                            htmlFor="job_request_id"
-                            error={errors.job_request_id}
-                            className="md:col-span-2"
-                        >
-                            <NativeSelect
-                                id="job_request_id"
-                                value={form.data.job_request_id}
-                                onChange={(event) => selectJobRequest(event.target.value)}
-                                placeholder="Seleccione un requerimiento…"
-                                options={jobRequests.map((jobRequest) => ({
-                                    value: String(jobRequest.id),
-                                    label: `${jobRequest.code} · ${jobRequest.position_title} (${jobRequest.headcount} plaza/s)`,
-                                }))}
-                                data-cy="vacancy-job-request"
-                            />
-                        </FormField>
-                    )}
-                    <FormField label="Título" htmlFor="title" error={errors.title} className="md:col-span-2">
-                        <Input id="title" value={form.data.title} onChange={(e) => setField('title', e.target.value)} data-cy="vacancy-title" />
+            <Section
+                title="Datos de la convocatoria"
+                description="Configuración pública de la vacante (RF-06)."
+                contentClassName="grid gap-5 px-5 py-5 md:grid-cols-2"
+            >
+                {mode === 'create' && (
+                    <FormField
+                        label="Requerimiento aprobado"
+                        htmlFor="job_request_id"
+                        error={errors.job_request_id}
+                        className="md:col-span-2"
+                    >
+                        <NativeSelect
+                            id="job_request_id"
+                            value={form.data.job_request_id}
+                            onChange={(event) =>
+                                selectJobRequest(event.target.value)
+                            }
+                            placeholder="Seleccione un requerimiento…"
+                            options={jobRequests.map((jobRequest) => ({
+                                value: String(jobRequest.id),
+                                label: `${jobRequest.code} — ${jobRequest.position_title} (${jobRequest.headcount} plaza/s)`,
+                            }))}
+                            data-cy="vacancy-job-request"
+                        />
                     </FormField>
-                    <FormField label="Descripción pública" htmlFor="summary" error={errors.summary} className="md:col-span-2">
-                        <Textarea id="summary" rows={4} value={form.data.summary} onChange={(e) => setField('summary', e.target.value)} data-cy="vacancy-summary" />
+                )}
+                <FormField
+                    label="Título"
+                    htmlFor="title"
+                    error={errors.title}
+                    className="md:col-span-2"
+                >
+                    <Input
+                        id="title"
+                        value={form.data.title}
+                        onChange={(e) => setField('title', e.target.value)}
+                        data-cy="vacancy-title"
+                    />
+                </FormField>
+                <FormField
+                    label="Descripción pública"
+                    htmlFor="summary"
+                    error={errors.summary}
+                    className="md:col-span-2"
+                >
+                    <Textarea
+                        id="summary"
+                        rows={4}
+                        value={form.data.summary}
+                        onChange={(e) => setField('summary', e.target.value)}
+                        data-cy="vacancy-summary"
+                    />
+                </FormField>
+                <FormField
+                    label="Lugar de trabajo"
+                    htmlFor="location"
+                    error={errors.location}
+                >
+                    <Input
+                        id="location"
+                        value={form.data.location}
+                        onChange={(e) => setField('location', e.target.value)}
+                        data-cy="vacancy-location"
+                    />
+                </FormField>
+                <FormField
+                    label="Tipo de contrato"
+                    htmlFor="contract_type"
+                    error={errors.contract_type}
+                >
+                    <NativeSelect
+                        id="contract_type"
+                        value={form.data.contract_type}
+                        onChange={(e) =>
+                            setField('contract_type', e.target.value)
+                        }
+                        options={contractTypes}
+                        placeholder="Seleccione…"
+                        data-cy="vacancy-contract-type"
+                    />
+                </FormField>
+                <FormField
+                    label="Plazas"
+                    htmlFor="positions"
+                    error={errors.positions}
+                >
+                    <Input
+                        id="positions"
+                        type="number"
+                        min={1}
+                        max={50}
+                        value={form.data.positions}
+                        onChange={(e) => setField('positions', e.target.value)}
+                        data-cy="vacancy-positions"
+                    />
+                </FormField>
+                <div className="grid gap-5 sm:grid-cols-2">
+                    <FormField
+                        label="Inicio de postulaciones"
+                        htmlFor="opens_at"
+                        error={errors.opens_at}
+                    >
+                        <Input
+                            id="opens_at"
+                            type="date"
+                            value={form.data.opens_at}
+                            onChange={(e) =>
+                                setField('opens_at', e.target.value)
+                            }
+                            data-cy="vacancy-opens-at"
+                        />
                     </FormField>
-                    <FormField label="Lugar de trabajo" htmlFor="location" error={errors.location}>
-                        <Input id="location" value={form.data.location} onChange={(e) => setField('location', e.target.value)} data-cy="vacancy-location" />
+                    <FormField
+                        label="Cierre de postulaciones"
+                        htmlFor="closes_at"
+                        error={errors.closes_at}
+                    >
+                        <Input
+                            id="closes_at"
+                            type="date"
+                            value={form.data.closes_at}
+                            onChange={(e) =>
+                                setField('closes_at', e.target.value)
+                            }
+                            data-cy="vacancy-closes-at"
+                        />
                     </FormField>
-                    <FormField label="Tipo de contrato" htmlFor="contract_type" error={errors.contract_type}>
-                        <NativeSelect id="contract_type" value={form.data.contract_type} onChange={(e) => setField('contract_type', e.target.value)} options={contractTypes} placeholder="Seleccione…" data-cy="vacancy-contract-type" />
-                    </FormField>
-                    <FormField label="Plazas" htmlFor="positions" error={errors.positions}>
-                        <Input id="positions" type="number" min={1} max={50} value={form.data.positions} onChange={(e) => setField('positions', e.target.value)} data-cy="vacancy-positions" />
-                    </FormField>
-                    <div className="grid gap-5 sm:grid-cols-2">
-                        <FormField label="Inicio de postulaciones" htmlFor="opens_at" error={errors.opens_at}>
-                            <Input id="opens_at" type="date" value={form.data.opens_at} onChange={(e) => setField('opens_at', e.target.value)} data-cy="vacancy-opens-at" />
-                        </FormField>
-                        <FormField label="Cierre de postulaciones" htmlFor="closes_at" error={errors.closes_at}>
-                            <Input id="closes_at" type="date" value={form.data.closes_at} onChange={(e) => setField('closes_at', e.target.value)} data-cy="vacancy-closes-at" />
-                        </FormField>
-                    </div>
-                </CardContent>
-            </Card>
+                </div>
+                <FormField
+                    label="Plazo objetivo del proceso (opcional)"
+                    htmlFor="target_completion_at"
+                    error={errors.target_completion_at}
+                    hint="Fecha límite para cerrar la selección. Debe ser posterior al cierre de postulaciones y no podrá modificarse una vez publicada la vacante."
+                >
+                    <Input
+                        id="target_completion_at"
+                        type="datetime-local"
+                        min={
+                            form.data.closes_at
+                                ? `${form.data.closes_at}T00:01`
+                                : undefined
+                        }
+                        value={form.data.target_completion_at}
+                        onChange={(e) =>
+                            setField('target_completion_at', e.target.value)
+                        }
+                        data-cy="vacancy-target-completion-at"
+                    />
+                </FormField>
+            </Section>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Perfil del puesto</CardTitle>
-                    <CardDescription>RF-05 · Requisitos y funciones del puesto.</CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-5 md:grid-cols-2">
-                    <FormField label="Formación académica" htmlFor="profile-education" error={errors['profile.education']}>
-                        <Input id="profile-education" value={form.data.profile.education} onChange={(e) => setProfile('education', e.target.value)} data-cy="profile-education" />
-                    </FormField>
-                    <FormField label="Experiencia" htmlFor="profile-experience" error={errors['profile.experience']}>
-                        <Input id="profile-experience" value={form.data.profile.experience} onChange={(e) => setProfile('experience', e.target.value)} data-cy="profile-experience" />
-                    </FormField>
-                    <FormField label="Funciones" htmlFor="profile-functions" error={errors['profile.functions']}>
-                        <Textarea id="profile-functions" rows={4} value={form.data.profile.functions} onChange={(e) => setProfile('functions', e.target.value)} data-cy="profile-functions" />
-                    </FormField>
-                    <FormField label="Competencias" htmlFor="profile-competencies" error={errors['profile.competencies']}>
-                        <Textarea id="profile-competencies" rows={4} value={form.data.profile.competencies} onChange={(e) => setProfile('competencies', e.target.value)} data-cy="profile-competencies" />
-                    </FormField>
-                </CardContent>
-            </Card>
+            <Section
+                title="Perfil del puesto"
+                description="Requisitos y funciones del puesto (RF-05)."
+                contentClassName="grid gap-5 px-5 py-5 md:grid-cols-2"
+            >
+                <FormField
+                    label="Formación académica"
+                    htmlFor="profile-education"
+                    error={errors['profile.education']}
+                >
+                    <Input
+                        id="profile-education"
+                        value={form.data.profile.education}
+                        onChange={(e) =>
+                            setProfile('education', e.target.value)
+                        }
+                        data-cy="profile-education"
+                    />
+                </FormField>
+                <FormField
+                    label="Experiencia"
+                    htmlFor="profile-experience"
+                    error={errors['profile.experience']}
+                >
+                    <Input
+                        id="profile-experience"
+                        value={form.data.profile.experience}
+                        onChange={(e) =>
+                            setProfile('experience', e.target.value)
+                        }
+                        data-cy="profile-experience"
+                    />
+                </FormField>
+                <FormField
+                    label="Funciones"
+                    htmlFor="profile-functions"
+                    error={errors['profile.functions']}
+                >
+                    <Textarea
+                        id="profile-functions"
+                        rows={4}
+                        value={form.data.profile.functions}
+                        onChange={(e) =>
+                            setProfile('functions', e.target.value)
+                        }
+                        data-cy="profile-functions"
+                    />
+                </FormField>
+                <FormField
+                    label="Competencias"
+                    htmlFor="profile-competencies"
+                    error={errors['profile.competencies']}
+                >
+                    <Textarea
+                        id="profile-competencies"
+                        rows={4}
+                        value={form.data.profile.competencies}
+                        onChange={(e) =>
+                            setProfile('competencies', e.target.value)
+                        }
+                        data-cy="profile-competencies"
+                    />
+                </FormField>
+            </Section>
 
-            <Card>
-                <CardHeader className="flex flex-row flex-wrap items-start justify-between gap-3">
-                    <div className="space-y-1.5">
-                        <CardTitle>Criterios de evaluación y ponderaciones</CardTitle>
-                        <CardDescription>
-                            RF-05 y RF-20 · Cada criterio se califica en su rango y aporta
-                            según su ponderación al puntaje del ranking.
-                        </CardDescription>
-                    </div>
+            <Section
+                title="Criterios de evaluación y ponderaciones"
+                description="Cada criterio se califica en su rango y aporta según su ponderación al puntaje del ranking (RF-05 y RF-20)."
+                actions={
                     <span
                         data-cy="weight-total"
                         className={cn(
-                            'rounded-full px-3 py-1 text-xs font-semibold',
+                            'rounded-md px-2.5 py-1 text-xs font-medium ring-1 ring-inset',
                             weightOk
-                                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
-                                : 'bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300',
+                                ? 'bg-tone-success text-tone-success-foreground ring-tone-success-edge'
+                                : 'bg-tone-warning text-tone-warning-foreground ring-tone-warning-edge',
                         )}
                     >
                         Suma: {formatNumber(totalWeight)}
-                        {requiredWeightTotal !== null && ` / ${formatNumber(requiredWeightTotal)}`}
+                        {requiredWeightTotal !== null &&
+                            ` / ${formatNumber(requiredWeightTotal)}`}
                     </span>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                    <InputError message={errors.criteria} />
-                    <div className="text-muted-foreground hidden grid-cols-[2fr_1fr_0.8fr_0.8fr_0.8fr_auto] gap-2 px-1 text-xs font-medium md:grid">
-                        <span>Criterio</span>
-                        <span>Etapa</span>
-                        <span>Ponderación</span>
-                        <span>Mínimo</span>
-                        <span>Máximo</span>
-                        <span className="w-9" />
-                    </div>
-                    {form.data.criteria.map((criterion, index) => (
-                        <div key={index} className="rounded-lg border p-3 md:border-0 md:p-0" data-cy="criterion-row">
-                            <div className="grid gap-2 md:grid-cols-[2fr_1fr_0.8fr_0.8fr_0.8fr_auto]">
-                                <Input aria-label="Nombre del criterio" placeholder="Nombre del criterio" value={criterion.name} onChange={(e) => setCriterion(index, 'name', e.target.value)} data-cy={`criterion-name-${index}`} />
-                                <NativeSelect aria-label="Etapa" value={criterion.stage} onChange={(e) => setCriterion(index, 'stage', e.target.value)} options={stages} data-cy={`criterion-stage-${index}`} />
-                                <Input aria-label="Ponderación" type="number" step="0.01" min="0" value={criterion.weight} onChange={(e) => setCriterion(index, 'weight', e.target.value)} data-cy={`criterion-weight-${index}`} />
-                                <Input aria-label="Puntaje mínimo" type="number" step="0.01" min="0" value={criterion.min_score} onChange={(e) => setCriterion(index, 'min_score', e.target.value)} data-cy={`criterion-min-${index}`} />
-                                <Input aria-label="Puntaje máximo" type="number" step="0.01" min="0" value={criterion.max_score} onChange={(e) => setCriterion(index, 'max_score', e.target.value)} data-cy={`criterion-max-${index}`} />
-                                <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    aria-label="Quitar criterio"
-                                    onClick={() => form.setData('criteria', form.data.criteria.filter((_, i) => i !== index))}
-                                    data-cy={`remove-criterion-${index}`}
-                                >
-                                    <Trash2 />
-                                </Button>
-                            </div>
-                            {['name', 'stage', 'weight', 'min_score', 'max_score'].map((field) => (
-                                <InputError key={field} message={errors[`criteria.${index}.${field}`]} />
-                            ))}
-                        </div>
-                    ))}
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => form.setData('criteria', [...form.data.criteria, { name: '', stage: 'evaluacion', weight: '', min_score: '0', max_score: '20' }])}
-                        data-cy="add-criterion"
+                }
+                contentClassName="space-y-3 px-5 py-5"
+            >
+                <InputError message={errors.criteria} />
+                <div className="text-muted-foreground hidden grid-cols-[2fr_1fr_0.8fr_0.8fr_0.8fr_auto] gap-2 px-1 text-xs font-medium md:grid">
+                    <span>Criterio</span>
+                    <span>Etapa</span>
+                    <span>Ponderación</span>
+                    <span>Mínimo</span>
+                    <span>Máximo</span>
+                    <span className="w-9" />
+                </div>
+                {form.data.criteria.map((criterion, index) => (
+                    <div
+                        key={index}
+                        className="rounded-lg border p-3 md:border-0 md:p-0"
+                        data-cy="criterion-row"
                     >
-                        <Plus />
-                        Agregar criterio
-                    </Button>
-                    {requiredWeightTotal !== null && (
-                        <p className="text-muted-foreground text-xs">
-                            Regla configurada: las ponderaciones deben sumar {formatNumber(requiredWeightTotal)}.
-                            La vacante puede guardarse como borrador, pero no podrá publicarse si
-                            la configuración es inválida.
-                        </p>
-                    )}
-                </CardContent>
-            </Card>
+                        <div className="grid gap-2 md:grid-cols-[2fr_1fr_0.8fr_0.8fr_0.8fr_auto]">
+                            <Input
+                                aria-label="Nombre del criterio"
+                                placeholder="Nombre del criterio"
+                                value={criterion.name}
+                                onChange={(e) =>
+                                    setCriterion(index, 'name', e.target.value)
+                                }
+                                data-cy={`criterion-name-${index}`}
+                            />
+                            <NativeSelect
+                                aria-label="Etapa"
+                                value={criterion.stage}
+                                onChange={(e) =>
+                                    setCriterion(index, 'stage', e.target.value)
+                                }
+                                options={stages}
+                                data-cy={`criterion-stage-${index}`}
+                            />
+                            <Input
+                                aria-label="Ponderación"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                value={criterion.weight}
+                                onChange={(e) =>
+                                    setCriterion(
+                                        index,
+                                        'weight',
+                                        e.target.value,
+                                    )
+                                }
+                                data-cy={`criterion-weight-${index}`}
+                            />
+                            <Input
+                                aria-label="Puntaje mínimo"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                value={criterion.min_score}
+                                onChange={(e) =>
+                                    setCriterion(
+                                        index,
+                                        'min_score',
+                                        e.target.value,
+                                    )
+                                }
+                                data-cy={`criterion-min-${index}`}
+                            />
+                            <Input
+                                aria-label="Puntaje máximo"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                value={criterion.max_score}
+                                onChange={(e) =>
+                                    setCriterion(
+                                        index,
+                                        'max_score',
+                                        e.target.value,
+                                    )
+                                }
+                                data-cy={`criterion-max-${index}`}
+                            />
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                aria-label="Quitar criterio"
+                                onClick={() =>
+                                    form.setData(
+                                        'criteria',
+                                        form.data.criteria.filter(
+                                            (_, i) => i !== index,
+                                        ),
+                                    )
+                                }
+                                data-cy={`remove-criterion-${index}`}
+                            >
+                                <Trash2 />
+                            </Button>
+                        </div>
+                        {[
+                            'name',
+                            'stage',
+                            'weight',
+                            'min_score',
+                            'max_score',
+                        ].map((field) => (
+                            <InputError
+                                key={field}
+                                message={errors[`criteria.${index}.${field}`]}
+                            />
+                        ))}
+                    </div>
+                ))}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                        form.setData('criteria', [
+                            ...form.data.criteria,
+                            {
+                                name: '',
+                                stage: 'evaluacion',
+                                weight: '',
+                                min_score: '0',
+                                max_score: '20',
+                            },
+                        ])
+                    }
+                    data-cy="add-criterion"
+                >
+                    <Plus />
+                    Agregar criterio
+                </Button>
+                {requiredWeightTotal !== null && (
+                    <p className="text-muted-foreground text-xs">
+                        Regla configurada: las ponderaciones deben sumar{' '}
+                        {formatNumber(requiredWeightTotal)}. La vacante puede
+                        guardarse como borrador, pero no podrá publicarse si la
+                        configuración es inválida.
+                    </p>
+                )}
+            </Section>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex flex-wrap justify-end gap-2">
                 <Button variant="outline" asChild>
-                    <Link href={vacancyId ? VacancyController.show(vacancyId) : VacancyController.index()}>
+                    <Link
+                        href={
+                            vacancyId
+                                ? VacancyController.show(vacancyId)
+                                : VacancyController.index()
+                        }
+                    >
                         Cancelar
                     </Link>
                 </Button>
-                <Button type="submit" disabled={form.processing} data-cy="save-vacancy">
+                <Button
+                    type="submit"
+                    disabled={form.processing}
+                    data-cy="save-vacancy"
+                >
                     {form.processing && <Spinner />}
-                    {mode === 'create' ? 'Registrar vacante' : 'Guardar configuración'}
+                    {mode === 'create'
+                        ? 'Registrar vacante'
+                        : 'Guardar configuración'}
                 </Button>
             </div>
         </form>

@@ -13,9 +13,12 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.tsx'],
             refresh: true,
             fonts: [
-                bunny('Instrument Sans', {
-                    weights: [400, 500, 600],
-                }),
+                // Superfamilia IBM Plex: sans para la interfaz, serif para los
+                // titulos y mono para codigos y cifras. Se descargan en el
+                // build y se sirven desde el propio dominio.
+                bunny('IBM Plex Sans', { weights: [400, 500, 600] }),
+                bunny('IBM Plex Serif', { weights: [600] }),
+                bunny('IBM Plex Mono', { weights: [400, 500] }),
             ],
         }),
         inertia(),

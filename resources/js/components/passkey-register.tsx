@@ -29,7 +29,7 @@ export default function PasskeyRegistration({ onSuccess }: Props) {
             { pattern: /Windows/, name: 'Windows' },
         ].find(({ pattern }) => pattern.test(ua))?.name;
 
-        return [browser, os].filter(Boolean).join(' on ') || '';
+        return [browser, os].filter(Boolean).join(' en ') || '';
     });
 
     const [showForm, setShowForm] = useState(false);
@@ -58,16 +58,16 @@ export default function PasskeyRegistration({ onSuccess }: Props) {
 
     if (!isSupported) {
         return (
-            <div className="text-muted-foreground text-sm">
-                Passkeys are not supported in this browser.
-            </div>
+            <p className="text-muted-foreground text-sm">
+                Este navegador no admite claves de acceso.
+            </p>
         );
     }
 
     if (!showForm) {
         return (
             <Button variant="outline" onClick={() => setShowForm(true)}>
-                Add passkey
+                Registrar una clave de acceso
             </Button>
         );
     }
@@ -75,21 +75,22 @@ export default function PasskeyRegistration({ onSuccess }: Props) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="border-border bg-muted/50 space-y-4 rounded-lg border p-4"
+            className="bg-surface space-y-4 rounded-lg border p-4"
         >
             <div className="grid gap-2">
-                <Label htmlFor="passkey-name">Passkey name</Label>
+                <Label htmlFor="passkey-name">Nombre de la clave</Label>
                 <Input
                     id="passkey-name"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g., MacBook Pro, iPhone"
-                    className="border-foreground/20 mt-1 block w-full"
+                    placeholder="Por ejemplo: laptop del trabajo"
+                    className="block w-full"
                     autoFocus
                 />
                 <p className="text-muted-foreground text-xs">
-                    A name helps you identify this passkey later.
+                    El nombre le servirá para reconocer el dispositivo más
+                    adelante.
                 </p>
             </div>
 
@@ -97,10 +98,10 @@ export default function PasskeyRegistration({ onSuccess }: Props) {
 
             <div className="flex gap-2">
                 <Button type="submit" disabled={isLoading || !name.trim()}>
-                    {isLoading ? 'Registering...' : 'Register passkey'}
+                    {isLoading ? 'Registrando…' : 'Registrar clave'}
                 </Button>
                 <Button type="button" variant="ghost" onClick={handleCancel}>
-                    Cancel
+                    Cancelar
                 </Button>
             </div>
         </form>

@@ -13,12 +13,15 @@
 
 > El sistema calcula puntajes y rankings como **apoyo**, pero **nunca selecciona automáticamente al candidato**: la decisión final la registra el Aprobador/Dirección, con justificación (RF-23).
 
+> **Versión v1.1 (académica).** Prototipo académico con datos ficticios; **no es un sistema productivo**. Añade un servicio **experimental** de riesgo operacional (RF-29) que estima el riesgo de demora del **proceso** de una vacante: no evalúa, puntúa, ordena, selecciona ni descarta personas y no interviene en el ranking ni en la decisión humana. Notas de la versión: [`docs/v1.1/release-notes-v1.1.md`](docs/v1.1/release-notes-v1.1.md) · [`CHANGELOG.md`](CHANGELOG.md).
+
 ## Arquitectura
 
 - **Estilo:** monolito modular SaaS multiempresa, sin microservicios.
 - **Aislamiento entre organizaciones:** `organization_id` con *scope* global y **Policies** que verifican rol y organización en el backend.
 - **Base de datos:** PostgreSQL con restricciones de integridad y auditoría de solo inserción.
 - **Redis:** sesiones, caché y colas; un worker procesa las notificaciones.
+- **Riesgo operacional (v1.1, experimental):** servicio FastAPI **fuera de Docker Compose** (`ml-service/`), llamado por HTTP interno con token solo si `ML_SERVICE_ENABLED=true`. Sin servicio, la aplicación funciona igual.
 
 Detalle en `docs/final-report/07-arquitectura-tecnologica.md`.
 
@@ -29,10 +32,11 @@ Detalle en `docs/final-report/07-arquitectura-tecnologica.md`.
 | Backend | Laravel 13.31 · PHP 8.4.25 · Fortify |
 | Frontend | React 19 · TypeScript 5.9 · Inertia 3 · Tailwind CSS 4 (shadcn/ui) · Vite 8 |
 | Datos | PostgreSQL 17.11 · Redis 7.4.11 |
-| Pruebas | PHPUnit 12.5 · Cypress 15.3.0 (Electron 136) |
+| ML experimental (v1.1) | Python 3.12 · scikit-learn 1.9.1 · FastAPI 0.115.6 · pytest |
+| Pruebas | PHPUnit 12.5 · Vitest 4.1 · Cypress 15.3.0 (Electron 136) · pytest |
 | Entorno | Docker Compose · Git |
 
-No usa XAMPP ni MySQL. No implementa despliegue en la nube, R2/S3, Sentry, Meilisearch, IA ni RLS.
+No usa XAMPP ni MySQL. No implementa despliegue en la nube, R2/S3, Sentry, Meilisearch, IA en la nube ni RLS. El único componente de ML es el servicio local y experimental de riesgo operacional (RF-29).
 
 ## Instalación con Docker
 
@@ -61,11 +65,15 @@ Contraseña de todos: `password` (solo para desarrollo y demostración). Lista c
 
 ## Pruebas
 
-| Tipo | Comando | Último resultado |
+| Tipo | Comando | Último resultado (QA global, Fase 25) |
 |---|---|---|
-| PHPUnit (unitarias + *feature*) | `docker compose exec app php artisan test` | 244 pruebas: 236 superadas, 8 omitidas, 0 fallidas (1074 aserciones) |
-| Cypress E2E (entorno aislado) | `npm run cy:run` | 14 specs, 43/43 |
+| PHPUnit (unitarias + *feature*) | `docker compose exec app php artisan test` | 411 superadas, 8 omitidas, 0 fallidas (1498 aserciones) |
+| Componentes (Vitest) | `docker compose exec app npx vp test --run` | 42/42 |
+| Servicio ML (pytest) | `cd ml-service` · `.venv/Scripts/python.exe -m pytest` | 533 superadas |
+| Cypress E2E (entorno aislado) | `npm run cy:run` | 20 specs, 85/85 |
 | *Build* y tipos | `docker compose exec app npm run build` · `docker compose exec app npx tsc --noEmit` | Correcto · 0 errores |
+
+Resultado de la v1.0 (Fase 12): 244 pruebas PHPUnit (236 superadas, 8 omitidas) y 14 specs Cypress (43/43). Detalle de la v1.1: [`docs/v1.1/phase-25-final-qa.md`](docs/v1.1/phase-25-final-qa.md).
 
 La cobertura porcentual de código no se ha medido.
 
@@ -87,6 +95,7 @@ database/             Migraciones (PostgreSQL) y DemoSeeder
 resources/js/         Frontend React/TypeScript (páginas Inertia por módulo)
 tests/                PHPUnit: Unit y Feature
 cypress/              Suite E2E (specs, soporte, fixtures)
+ml-service/           Servicio experimental de riesgo operacional (Python, FastAPI; v1.1)
 docker/               Dockerfile, entrypoint y scripts de PostgreSQL
 docs/                 Documentación técnica y del informe final
 ```
@@ -103,6 +112,10 @@ docs/                 Documentación técnica y del informe final
 | Docker | `docs/docker.md` |
 | Suite E2E | `docs/testing/cypress-e2e.md` |
 | TDD, defectos y supuestos | `docs/tdd-evidence.md` · `docs/defects.md` · `docs/assumptions.md` |
+| v1.1: fases, cierre y *release* | `docs/v1.1/` · `docs/v1.1/phase-26-release-closeout.md` · `docs/v1.1/release-notes-v1.1.md` |
+| v1.1: UML y PowerDesigner | `docs/v1.1/uml/` · `docs/v1.1/powerdesigner/` |
+| v1.1: Formato 09 | `docs/academico/phase-24/` |
+| Divergencias entre v1.0 y v1.1 | `docs/v1.1/documentation-update-map.md` |
 
 ## Seguridad
 
@@ -117,8 +130,6 @@ Todos los datos son ficticios. No se afirma cumplimiento legal ni certificación
 
 ## Estado
 
-- **Fases completadas:**
-  - 0 a 10: implementación de RF-01 a RF-27, frontend, E2E y Docker.
-  - 11: documentación final.
-  - 12: QA final, con veredicto **APTO PARA PUBLICACIÓN** (`docs/final-report/qa-final-report.md`).
-- **Pendiente:** cierre Git y publicación del repositorio, bajo revisión humana.
+- **v1.0 académica (publicada):** Fases 0 a 12, RF-01 a RF-27; rama `main` y tag `v1.0.0-academic`. Veredicto de la Fase 12: **APTO PARA PUBLICACIÓN** (`docs/final-report/qa-final-report.md`).
+- **v1.1 académica (en cierre):** Fases 13 a 25 cerradas en `develop` (ML experimental, integración Laravel ↔ FastAPI, rediseño, *motion*, CSS 3D, QA visual, UML, PowerDesigner, Formato 09 y QA global). La Fase 26 prepara el cierre y el *release* (`docs/v1.1/phase-26-release-closeout.md`); la etiqueta propuesta es `v1.1.0-academic`, pendiente de auditoría.
+- **Requisitos:** RF-01 a RF-27 son la línea base. RF-28 (candidato, no implementado), RF-29 (experimental) y RNF-C (propuesta) **no** forman parte de ella. Estado por fase: `docs/PROGRESS.md`.

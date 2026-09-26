@@ -1,0 +1,35 @@
+@startuml seq-06-ranking
+' SEQ-06 · Calcular ranking y comparar (RF-20, RF-21, RF-22). Solo lectura. Especificación: ../sequence-diagrams.md
+actor "RR. HH. / Aprobador" as U
+participant "UI selection/comparison" as UI
+participant VacancyComparisonController as C
+participant VacancyPolicy as P
+participant VacancyRankingBuilder as B
+participant RankingService as RS
+participant RankingPresenter as PR
+database PostgreSQL as DB
+
+U -> UI : abrir comparación
+UI -> C : GET vacantes/{id}/comparacion
+C -> P : viewRanking(user, vacancy)
+P --> C : rrhh o aprobador de la misma organización
+C -> B : forVacancy(vacancy)
+B -> DB : postulaciones (excepto descartadas)
+B -> DB : puntajes de sesiones realizadas
+B -> RS : rank(criteria, candidates)
+RS -> RS : validar configuración y puntajes (RF-20)
+RS -> RS : promedios, aportes ponderados, total, empates, incompletos
+alt entrada inválida
+  RS --> C : InvalidRankingInput
+  C -> C : ranking vacío + mensaje de error
+else
+  RS --> B : RankingResult
+  B --> C : RankingResult
+end
+C -> PR : present(result, applications)
+C --> UI : Inertia::render('selection/comparison')
+note over RS, DB
+  El ranking no se guarda y no cambia ninguna postulación.
+  Soporte a la decisión, no decisión.
+end note
+@enduml

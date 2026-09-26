@@ -25,15 +25,16 @@ export default function Register({ passwordRules }: Props) {
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
+                        <div className="grid gap-5">
                             <div className="grid gap-2">
-                                <Label htmlFor="name">Nombres y apellidos</Label>
+                                <Label htmlFor="name">
+                                    Nombres y apellidos
+                                </Label>
                                 <Input
                                     id="name"
                                     type="text"
                                     required
                                     autoFocus
-                                    tabIndex={1}
                                     autoComplete="name"
                                     name="name"
                                     placeholder="Nombre completo"
@@ -46,12 +47,13 @@ export default function Register({ passwordRules }: Props) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Correo electrónico</Label>
+                                <Label htmlFor="email">
+                                    Correo electrónico
+                                </Label>
                                 <Input
                                     id="email"
                                     type="email"
                                     required
-                                    tabIndex={2}
                                     autoComplete="email"
                                     name="email"
                                     placeholder="usuario@ejemplo.test"
@@ -65,7 +67,6 @@ export default function Register({ passwordRules }: Props) {
                                 <PasswordInput
                                     id="password"
                                     required
-                                    tabIndex={3}
                                     autoComplete="new-password"
                                     name="password"
                                     placeholder="Contraseña"
@@ -82,7 +83,6 @@ export default function Register({ passwordRules }: Props) {
                                 <PasswordInput
                                     id="password_confirmation"
                                     required
-                                    tabIndex={4}
                                     autoComplete="new-password"
                                     name="password_confirmation"
                                     placeholder="Repita la contraseña"
@@ -96,8 +96,7 @@ export default function Register({ passwordRules }: Props) {
 
                             <Button
                                 type="submit"
-                                className="mt-2 w-full"
-                                tabIndex={5}
+                                className="w-full"
                                 data-test="register-user-button"
                                 data-cy="register-submit"
                             >
@@ -106,12 +105,10 @@ export default function Register({ passwordRules }: Props) {
                             </Button>
                         </div>
 
-                        <div className="text-muted-foreground text-center text-sm">
+                        <p className="text-muted-foreground text-center text-sm">
                             ¿Ya tiene una cuenta?{' '}
-                            <TextLink href={login()} tabIndex={6}>
-                                Inicie sesión
-                            </TextLink>
-                        </div>
+                            <TextLink href={login()}>Inicie sesión</TextLink>
+                        </p>
                     </>
                 )}
             </Form>
@@ -122,5 +119,5 @@ export default function Register({ passwordRules }: Props) {
 Register.layout = {
     title: 'Cree su cuenta de postulante',
     description:
-        'Con su cuenta podrá completar su perfil, cargar su CV y postular a vacantes',
+        'Con su cuenta podrá completar su perfil, cargar su CV y postular a las convocatorias vigentes.',
 };

@@ -1,0 +1,31 @@
+@startuml seq-03-change-stage
+' SEQ-03 · Cambiar etapa y notificar (RF-13, RF-14, RF-15). Especificación: ../sequence-diagrams.md
+actor "Recursos Humanos" as RH
+participant "UI applications/show" as UI
+participant ApplicationStageController as C
+participant "StageComment / Discard /\nChangeApplicationStage Request" as R
+participant ApplicationPolicy as P
+participant ApplicationStageService as S
+database PostgreSQL as DB
+participant AuditLogger as A
+queue "Cola Redis" as Q
+
+RH -> UI : preseleccionar | descartar | cambiar etapa
+UI -> C : POST postulaciones/{id}/preseleccionar | descartar | etapa
+C -> R : authorize()
+R -> P : changeStage(user, application)
+P --> R : rrhh de la misma organización
+C -> S : shortlist | discard | moveTo(target)
+group critical DB::transaction
+  S -> DB : Application lockForUpdate
+  alt destino seleccionado/no_seleccionado | decisión final registrada (A-28) | vacante cerrada | transición inválida
+    S --> C : excepción de negocio
+  else
+    S -> DB : status, stage_changed_at
+    S -> DB : ApplicationStageHistory (autor, comentario)
+    S -> A : record(ApplicationStageChanged)
+  end
+end
+S -> Q : ApplicationStageChangedNotification al postulante (RF-15)
+C --> UI : redirección + toast
+@enduml

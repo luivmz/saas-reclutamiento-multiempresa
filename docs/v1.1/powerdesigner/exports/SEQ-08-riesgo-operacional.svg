@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="486mm" xmlns="http://www.w3.org/2000/svg" height="604mm" version="1.1" viewBox="0 0 1837 2287" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <a target="_parent" xlink:href="#3BECAC3E-BFCA-424A-8337-857C8C7F8043">
+      <rect x="2" y="2" fill="none" width="1833" height="2283" stroke="#d0d0e8" stroke-width="1"/>
+      <polygon fill="#ffffff" points="2,2 2,19 300,19 306,14 306,2 2,2" stroke="#d0d0e8" stroke-width="1" stroke-linejoin="miter"/>
+      <text x="6" y="12" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">SEQ-08 Consultar riesgo operacional (RF-29) &lt;&lt;experimental&gt;&gt;</text>
+   </a>
+   <polygon fill="#ffffff" points="1549,249 1549,300 1815,300 1815,257 1807,249" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="1815" x2="1807" y1="257" y2="257" stroke="#000000" stroke-width="1"/>
+   <line x1="1807" x2="1807" y1="257" y2="249" stroke="#000000" stroke-width="1"/>
+   <text x="1682" y="267" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">El mismo flujo lo ejecuta el Aprobador / Dirección </text>
+   <text x="1682" y="277" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">(VacancyPolicy::viewOperationalRisk); la lifeline de </text>
+   <text x="1682" y="287" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">actor es la de UC-01.</text>
+   <polygon fill="#ffffff" points="1549,900 1549,950 1815,950 1815,908 1807,900" stroke="#000000" stroke-width="1" stroke-linejoin="miter"/>
+   <line x1="1815" x2="1807" y1="908" y2="908" stroke="#000000" stroke-width="1"/>
+   <line x1="1807" x2="1807" y1="908" y2="900" stroke="#000000" stroke-width="1"/>
+   <text x="1682" y="918" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Estima el PROCESO, no a las personas. Nada se </text>
+   <text x="1682" y="928" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">persiste. Ningún mensaje hacia ranking, comparación ni </text>
+   <text x="1682" y="938" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">decisión final. La respuesta no incluye incertidumbre.</text>
+   <a target="_parent" xlink:href="#CAC879CA-0534-4D8D-923A-CE8778E5E9E4">
+      <polyline fill="none" points="295,1398 149,1398" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="162,1394 149,1398 162,1402" stroke="#8080c0" stroke-width="1"/>
+      <text x="222" y="1394" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">tarjeta «Experimental»</text>
+   </a>
+   <a target="_parent" xlink:href="#FC978AA2-1223-45E1-9D7F-0CD9F8DAF699">
+      <polyline fill="none" points="442,1356 295,1356" stroke="#8080c0" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="309,1352 295,1356 309,1360" stroke="#8080c0" stroke-width="1"/>
+      <text x="369" y="1328" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">JSON (disponibilidad, %, señal, mensaje, </text>
+      <text x="369" y="1338" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">is_experimental, measures: proceso, </text>
+      <text x="369" y="1348" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">decision_is_human)</text>
+   </a>
+   <a target="_parent" xlink:href="#94E6557F-68F3-46C8-832C-CDC07805C914">
+      <polyline fill="none" points="1029,1293 735,1293" stroke="#8080c0" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="749,1289 735,1293 749,1297" stroke="#8080c0" stroke-width="1"/>
+      <text x="882" y="1288" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">predictive(...)</text>
+   </a>
+   <a target="_parent" xlink:href="#CBA6A09F-8DFC-4822-B97D-88DF8025899A">
+      <polyline fill="none" points="1029,1216 735,1216" stroke="#8080c0" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="749,1212 735,1216 749,1220" stroke="#8080c0" stroke-width="1"/>
+      <text x="882" y="1211" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">unavailable(motivo)</text>
+   </a>
+   <a target="_parent" xlink:href="#F79FCA94-C6B9-42DB-A986-5E689C3A119D">
+      <polyline fill="none" points="1029,1132 1063,1132 1063,1145 1029,1145" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="1042,1141 1029,1145 1042,1149" stroke="#8080c0" stroke-width="1"/>
+      <text x="1176" y="1136" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">validar tipos, rango, coherencia de risk_</text>
+      <text x="1176" y="1146" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">flag, threshold y freeze congelados</text>
+   </a>
+   <a target="_parent" xlink:href="#BD52DA9C-F155-4744-87AF-179D74F6DC2A">
+      <polyline fill="none" points="1322,1096 1029,1096" stroke="#8080c0" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="1042,1092 1029,1096 1042,1100" stroke="#8080c0" stroke-width="1"/>
+      <text x="1175" y="1073" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">risk_score, risk_flag, threshold, model_</text>
+      <text x="1175" y="1083" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">version, freeze_fingerprint, status</text>
+   </a>
+   <a target="_parent" xlink:href="#F95653AF-824A-4853-A5D2-73F4B27B7388">
+      <polyline fill="none" points="1469,1053 1322,1053" stroke="#8080c0" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="1335,1049 1322,1053 1335,1057" stroke="#8080c0" stroke-width="1"/>
+      <text x="1395" y="1048" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">probabilidad</text>
+   </a>
+   <a target="_parent" xlink:href="#37627741-AC13-4612-890A-77E606BFDEC4">
+      <polyline fill="none" points="1322,1010 1469,1010" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="1455,1014 1469,1010 1455,1006" stroke="#8080c0" stroke-width="1"/>
+      <text x="1395" y="1006" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">predecir</text>
+   </a>
+   <a target="_parent" xlink:href="#BD3799E0-2402-4A6A-9D6C-41AD0745D12C">
+      <polyline fill="none" points="1322,961 1357,961 1357,974 1322,974" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="1335,970 1322,974 1335,978" stroke="#8080c0" stroke-width="1"/>
+      <text x="1470" y="965" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">token; PredictionRequest (extra=forbid, </text>
+      <text x="1470" y="975" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">strict)</text>
+   </a>
+   <a target="_parent" xlink:href="#851712D1-773B-4231-A4D7-7FD6F1598C05">
+      <polyline fill="none" points="1029,925 1322,925" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="1309,929 1322,925 1309,921" stroke="#8080c0" stroke-width="1"/>
+      <text x="1175" y="909" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">POST /v1/predict + X-Internal-Token {15 </text>
+      <text x="1175" y="919" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">features; sin IDs ni PII}</text>
+   </a>
+   <a target="_parent" xlink:href="#DDB8DC62-64D8-4A7E-B935-3E1E411EB80D">
+      <polyline fill="none" points="1029,848 735,848" stroke="#8080c0" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="749,844 735,848 749,852" stroke="#8080c0" stroke-width="1"/>
+      <text x="882" y="843" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">descriptive(service_disabled)</text>
+   </a>
+   <a target="_parent" xlink:href="#11E9BDBC-9B71-470C-A087-25ACE4164C03">
+      <polyline fill="none" points="735,770 1029,770" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="1015,774 1029,770 1015,766" stroke="#8080c0" stroke-width="1"/>
+      <text x="882" y="766" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">predict(features)</text>
+   </a>
+   <a target="_parent" xlink:href="#3C4CB777-28D7-41A9-A926-CF0BE29A6202">
+      <polyline fill="none" points="882,728 735,728" stroke="#8080c0" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="749,724 735,728 749,732" stroke="#8080c0" stroke-width="1"/>
+      <text x="809" y="723" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">15 features enteras</text>
+   </a>
+   <a target="_parent" xlink:href="#680F8D3E-6A09-479A-9B3F-2316820D7110">
+      <polyline fill="none" points="882,685 1175,685" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="1162,689 1175,685 1162,681" stroke="#8080c0" stroke-width="1"/>
+      <text x="1029" y="680" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">conteos y días hasta el checkpoint</text>
+   </a>
+   <a target="_parent" xlink:href="#2A05CB74-8FD7-4C1B-926A-A17FE25D6508">
+      <polyline fill="none" points="735,642 882,642" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="869,646 882,642 869,638" stroke="#8080c0" stroke-width="1"/>
+      <text x="808" y="626" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">build(vacancy, checkpoint = día siguiente </text>
+      <text x="808" y="636" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">a closes_at)</text>
+   </a>
+   <a target="_parent" xlink:href="#68428A39-447C-43E2-A61C-0F356548086F">
+      <polyline fill="none" points="735,565 442,565" stroke="#8080c0" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="455,561 442,565 455,569" stroke="#8080c0" stroke-width="1"/>
+      <text x="589" y="549" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">descriptive(motivo) — sin llamar al </text>
+      <text x="589" y="559" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">servicio</text>
+   </a>
+   <a target="_parent" xlink:href="#48DB0E25-F57E-4BF5-8749-7C7644E05C02">
+      <polyline fill="none" points="735,481 770,481 770,494 735,494" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="749,490 735,494 749,498" stroke="#8080c0" stroke-width="1"/>
+      <text x="860" y="490" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">outOfScopeReason() (7 motivos)</text>
+   </a>
+   <a target="_parent" xlink:href="#FBF2891F-E285-4487-B089-E94C518BD2EE">
+      <polyline fill="none" points="442,445 735,445" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="722,449 735,445 722,441" stroke="#8080c0" stroke-width="1"/>
+      <text x="588" y="440" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">assess(vacancy)</text>
+   </a>
+   <a target="_parent" xlink:href="#531BBF49-E1C4-4A40-8B14-C3FE19BB504C">
+      <polyline fill="none" points="589,402 442,402" stroke="#8080c0" stroke-width="1" stroke-dasharray="16,8"/>
+      <polyline fill="none" points="455,398 442,402 455,406" stroke="#8080c0" stroke-width="1"/>
+      <text x="515" y="391" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">rrhh o aprobador de la misma organización</text>
+   </a>
+   <a target="_parent" xlink:href="#7EFD4A77-948D-4DC6-97F9-FABB68D9ECF7">
+      <polyline fill="none" points="442,360 589,360" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="575,364 589,360 575,356" stroke="#8080c0" stroke-width="1"/>
+      <text x="515" y="355" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">viewOperationalRisk(user, vacancy)</text>
+   </a>
+   <a target="_parent" xlink:href="#7999152E-9801-4E08-AEEB-FF7AA6AF2085">
+      <polyline fill="none" points="295,317 442,317" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="429,321 442,317 429,313" stroke="#8080c0" stroke-width="1"/>
+      <text x="368" y="312" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">GET vacantes/{id}/riesgo-operacional</text>
+   </a>
+   <a target="_parent" xlink:href="#3D4C8531-1A0F-4461-BDE7-B891D510D689">
+      <polyline fill="none" points="149,274 295,274" stroke="#8080c0" stroke-width="1"/>
+      <polyline fill="none" points="282,278 295,274 282,270" stroke="#8080c0" stroke-width="1"/>
+      <text x="222" y="270" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">abre el detalle de la vacante</text>
+   </a>
+   <a target="_parent" xlink:href="#8F148627-778D-4A6B-A850-DE4FAC58F465">
+      <defs>
+         <linearGradient id="Gradient1" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#ffffc0"/>
+         </linearGradient>
+      </defs>
+      <ellipse cx="149" cy="178" rx="8" ry="8" fill="url(#Gradient1)" stroke="#0080ff" stroke-width="2"/>
+      <line x1="149" x2="149" y1="186" y2="202" stroke="#0080ff" stroke-width="2"/>
+      <line x1="133" x2="165" y1="194" y2="194" stroke="#0080ff" stroke-width="2"/>
+      <line x1="133" x2="149" y1="218" y2="202" stroke="#0080ff" stroke-width="2"/>
+      <line x1="165" x2="149" y1="218" y2="202" stroke="#0080ff" stroke-width="2"/>
+      <text x="148" y="229" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">Recursos Humanos</text>
+      <polyline fill="none" points="149,218 149,2266" stroke="#0080ff" stroke-width="2" stroke-dasharray="3,3"/>
+   </a>
+   <a target="_parent" xlink:href="#F0452087-67E7-4778-970E-4965CD56CA5A">
+      <defs>
+         <linearGradient id="Gradient2" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#ecf9ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="232" y="170" fill="url(#Gradient2)" width="127" height="48" stroke="#0080ff" stroke-width="1"/>
+      <text x="295" y="192" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">OperationalRiskCard </text>
+      <text x="295" y="202" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">(vacancies/show)</text>
+      <polyline fill="none" points="295,218 295,2266" stroke="#0080ff" stroke-width="1" stroke-dasharray="3,3"/>
+   </a>
+   <a target="_parent" xlink:href="#8667A151-91A1-4084-BB52-B9503073ABCE">
+      <defs>
+         <linearGradient id="Gradient3" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#ecf9ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="379" y="170" fill="url(#Gradient3)" width="126" height="48" stroke="#0080ff" stroke-width="1"/>
+      <text x="442" y="192" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">VacancyOperationalRiskC</text>
+      <text x="442" y="202" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">ontroller</text>
+      <polyline fill="none" points="442,218 442,2266" stroke="#0080ff" stroke-width="1" stroke-dasharray="3,3"/>
+   </a>
+   <a target="_parent" xlink:href="#54ECA02A-E6C5-4008-AB78-C4D7E4FF0C78">
+      <defs>
+         <linearGradient id="Gradient4" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#ecf9ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="525" y="170" fill="url(#Gradient4)" width="127" height="48" stroke="#0080ff" stroke-width="1"/>
+      <text x="588" y="197" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">VacancyPolicy</text>
+      <polyline fill="none" points="589,218 589,2266" stroke="#0080ff" stroke-width="1" stroke-dasharray="3,3"/>
+   </a>
+   <a target="_parent" xlink:href="#4EF27054-5596-440D-B087-3D1EBC6EEACB">
+      <defs>
+         <linearGradient id="Gradient5" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#ecf9ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="672" y="170" fill="url(#Gradient5)" width="127" height="48" stroke="#0080ff" stroke-width="1"/>
+      <text x="735" y="197" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">OperationalRiskService</text>
+      <polyline fill="none" points="735,218 735,2266" stroke="#0080ff" stroke-width="1" stroke-dasharray="3,3"/>
+   </a>
+   <a target="_parent" xlink:href="#E98AD7FD-6820-40A0-BF14-F4F0683CE3C7">
+      <defs>
+         <linearGradient id="Gradient6" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#ecf9ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="819" y="170" fill="url(#Gradient6)" width="126" height="48" stroke="#0080ff" stroke-width="1"/>
+      <text x="882" y="192" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">OperationalRiskFeatureB</text>
+      <text x="882" y="202" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">uilder</text>
+      <polyline fill="none" points="882,218 882,2266" stroke="#0080ff" stroke-width="1" stroke-dasharray="3,3"/>
+   </a>
+   <a target="_parent" xlink:href="#8A172F69-A413-4B74-81B8-05C83C6978BC">
+      <defs>
+         <linearGradient id="Gradient7" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#ecf9ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="965" y="170" fill="url(#Gradient7)" width="127" height="48" stroke="#0080ff" stroke-width="1"/>
+      <text x="1028" y="197" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">MlRiskClient</text>
+      <polyline fill="none" points="1029,218 1029,2266" stroke="#0080ff" stroke-width="1" stroke-dasharray="3,3"/>
+   </a>
+   <a target="_parent" xlink:href="#5B20A38A-5096-4334-97DD-FE6334285715">
+      <defs>
+         <linearGradient id="Gradient8" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#ecf9ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1132" y="170" fill="url(#Gradient8)" width="87" height="48" stroke="#0080ff" stroke-width="1"/>
+      <text x="1175" y="197" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">PostgreSQL</text>
+      <polyline fill="none" points="1175,218 1175,2266" stroke="#0080ff" stroke-width="1" stroke-dasharray="3,3"/>
+   </a>
+   <a target="_parent" xlink:href="#8EC0CE8F-C800-4287-B5B2-334BEF1BC499">
+      <defs>
+         <linearGradient id="Gradient9" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#ecf9ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1235" y="153" fill="url(#Gradient9)" width="174" height="65" stroke="#0080ff" stroke-width="1"/>
+      <text x="1322" y="181" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;external service, experimental&gt;&gt;</text>
+      <text x="1322" y="196" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">FastAPI /v1/predict</text>
+      <polyline fill="none" points="1322,218 1322,2266" stroke="#0080ff" stroke-width="1" stroke-dasharray="3,3"/>
+   </a>
+   <a target="_parent" xlink:href="#C4824187-0A22-4ADF-894C-630471BC8B05">
+      <defs>
+         <linearGradient id="Gradient10" x1="0%" x2="100%" y1="0%" y2="100%" gradientUnits="objectBoundingBox">
+            <stop offset="5%" stop-color="#ffffff"/>
+            <stop offset="95%" stop-color="#ecf9ff"/>
+         </linearGradient>
+      </defs>
+      <rect x="1415" y="153" fill="url(#Gradient10)" width="107" height="65" stroke="#0080ff" stroke-width="1"/>
+      <text x="1468" y="174" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">&lt;&lt;experimental&gt;&gt;</text>
+      <text x="1468" y="191" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">Predictor + modelo </text>
+      <text x="1468" y="201" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="middle" text-decoration="underline">congelado</text>
+      <polyline fill="none" points="1469,218 1469,2266" stroke="#0080ff" stroke-width="1" stroke-dasharray="3,3"/>
+   </a>
+   <a target="_parent" xlink:href="#064ABB90-9A20-4C46-9241-F4BE7713DB4F">
+      <text x="431" y="540" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">fuera de alcance</text>
+      <polyline fill="none" points="395,582 1515,582" stroke="#000000" stroke-width="1" stroke-dasharray="16,8"/>
+      <text x="401" y="594" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">elegible</text>
+      <polyline fill="none" points="395,528 1515,528 1515,1316 395,1316 395,528" stroke="#d0d0e8" stroke-width="2"/>
+      <polygon fill="#ffffff" points="395,528 395,543 414,543 419,538 419,528 395,528" stroke="#d0d0e8" stroke-width="2" stroke-linejoin="miter"/>
+      <text x="399" y="538" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">alt</text>
+   </a>
+   <a target="_parent" xlink:href="#FBBBF344-4BB9-45D1-A395-169E47846CC7">
+      <text x="737" y="816" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">ML_SERVICE_ENABLED = false</text>
+      <polyline fill="none" points="702,865 1502,865" stroke="#000000" stroke-width="1" stroke-dasharray="16,8"/>
+      <text x="708" y="877" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">habilitado</text>
+      <polyline fill="none" points="702,804 1502,804 1502,1310 702,1310 702,804" stroke="#d0d0e8" stroke-width="2"/>
+      <polygon fill="#ffffff" points="702,804 702,820 721,820 726,815 726,804 702,804" stroke="#d0d0e8" stroke-width="2" stroke-linejoin="miter"/>
+      <text x="706" y="814" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">alt</text>
+   </a>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5">
+      <text x="751" y="1178" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">timeout | conexión | 503 | 422 | 5xx | JSON inválido | contrato incompatible</text>
+      <polyline fill="none" points="715,1233 1049,1233" stroke="#000000" stroke-width="1" stroke-dasharray="16,8"/>
+      <text x="721" y="1245" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">válida</text>
+      <polyline fill="none" points="715,1166 1049,1166 1049,1305 715,1305 715,1166" stroke="#d0d0e8" stroke-width="2"/>
+      <polygon fill="#ffffff" points="715,1166 715,1182 734,1182 739,1177 739,1166 715,1166" stroke="#d0d0e8" stroke-width="2" stroke-linejoin="miter"/>
+      <text x="719" y="1176" fill="#000000" font-size="10" font-family="'Arial Unicode MS','Arial'" text-anchor="start">alt</text>
+   </a>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+   <a target="_parent" xlink:href="#DAA6A252-30EE-440D-B572-EC060B4E5ED5"/>
+</svg>

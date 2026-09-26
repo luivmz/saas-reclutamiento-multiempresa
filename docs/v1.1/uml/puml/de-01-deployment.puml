@@ -1,0 +1,54 @@
+@startuml de-01-deployment
+' DE-01 · Despliegue AS-IS v1.1 — entorno de desarrollo y demostración
+' Borrador textual para F23. Especificación: ../deployment-model.md
+
+node "Equipo del usuario" <<device>> {
+  node "Navegador web" as BROWSER <<execution environment>> {
+    artifact "Bundle JS/CSS (React + Inertia)" as BUNDLE
+  }
+}
+
+node "Equipo anfitrión" <<device>> {
+  node "Docker Engine · proyecto reclutamiento" as DOCKER <<execution environment>> {
+    node "app" <<container>> {
+      node "PHP 8.4 · php artisan serve :8000" as PHP <<execution environment>> {
+        artifact "Aplicación Laravel" as LARAVEL
+        artifact "public/build" as BUILD
+      }
+      database "storage/app/private (CV)" as CVSTORE
+    }
+    node "queue" <<container>> {
+      artifact "queue:work redis --tries=3" as WORKER
+    }
+    node "postgres" <<container>> {
+      database "PostgreSQL 17.11\nreclutamiento · _testing · _e2e" as PG
+    }
+    node "redis" <<container>> {
+      database "Redis 7.4.11\nsesión · caché · cola" as REDIS
+    }
+  }
+  node "Proceso Python · uvicorn :8008" as PY <<execution environment>> <<experimental>> {
+    artifact "recruitment_ml.api.app" as FASTAPI
+    artifact "ml-service/artifacts (.joblib + metadatos)" as MODEL
+  }
+}
+
+BROWSER --> PHP : HTTP :8000\nInertia + JSON
+PHP --> PG : TCP 5432
+PHP --> REDIS : TCP 6379
+WORKER --> REDIS : TCP 6379
+WORKER --> PG : TCP 5432
+PHP ..> FASTAPI : HTTP host.docker.internal:8008\nPOST /v1/predict + X-Internal-Token\n[ML_SERVICE_ENABLED=true]
+FASTAPI --> MODEL
+
+note right of BUILD
+  Generado por npm run build en entrypoint.sh.
+  No hay servidor de frontend separado.
+end note
+
+note bottom of DOCKER
+  Perfil e2e (app-e2e :8001, queue-e2e, cypress): solo pruebas.
+  Mailer 'log' en desarrollo: sin SMTP ni proveedor.
+  Sin entorno de producción, nube, S3 ni CDN.
+end note
+@enduml

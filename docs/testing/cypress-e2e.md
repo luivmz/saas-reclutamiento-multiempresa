@@ -65,7 +65,7 @@ Las notificaciones son `ShouldQueue` y las procesa el servicio `queue-e2e` (work
 ```text
 cypress.config.cjs
 cypress/
-├── e2e/                      14 specs (*.cy.js): e2e-00 de soporte y E2E-01 a E2E-13
+├── e2e/                      14 specs (*.cy.js): e2e-00 de soporte y E2E-01 a E2E-13 (20 desde la Fase 21; ver §9)
 ├── fixtures/
 │   ├── users.json            correos de usuarios demo por rol (ficticios)
 │   ├── demo.json             IDs y nombres que genera DemoSeeder
@@ -207,3 +207,18 @@ Ambas corridas usaron Cypress 15.3.0 y Electron 136 headless, sin reintentos.
 - **Duración:** cada reset tarda unos 6 s, por lo que la suite completa dura unos 4 min en serie.
 - **Ruido en logs:** los mensajes `dbus` de Electron dentro del contenedor no afectan los resultados.
 - **Alcance:** sin métricas de cobertura E2E ni integración continua (fuera del alcance de la Fase 9).
+
+## 9. v1.1: specs añadidos después de la Fase 12
+
+*Sección añadida en la Fase 25. Las secciones anteriores describen la suite de v1.0 y se conservan como estaban.*
+
+| Spec | Fase | Qué verifica | Tests |
+|---|---|---|---|
+| `e2e-14-target-completion-form.cy.js` | 17 | RR. HH. captura el plazo objetivo del proceso (GAP-01) | 4 |
+| `e2e-15-operational-risk-panel.cy.js` | 17 | Panel de riesgo operacional `<<experimental>>` (RF-29): sin estimación inventada, declara que no decide, no habla de candidatos ni ranking, no aparece en borrador, acceso por rol y por organización | 8 |
+| `e2e-16-tabla-accesible-movil.cy.js` | 18 (ampliado en la 25) | La tabla conserva su semántica en móvil; **desde la Fase 25, cada ficha cabe en el viewport** y se incluye la tabla de evaluaciones asignadas | 7 |
+| `e2e-17-motion-accesible.cy.js` | 19 | Movimiento reducido, teclado y foco | 8 |
+| `e2e-18-profundidad-portada.cy.js` | 20 | Portada 3D (CSS) y póster de respaldo | 8 |
+| `e2e-19-qa-visual-accesible.cy.js` | 21 | Regresiones visuales y de accesibilidad de la Fase 21 | 7 |
+
+**Total vigente: 20 specs y 85 tests.** Resultado de la Fase 25 (`npm run cy:run`, Cypress 15.3.0, Electron 136 headless): **85/85, 0 failed, 0 pending, 0 skipped, 5:24**. Antes de ampliar `e2e-16` eran 84 tests (84/84, 5:13). Detalle: [`../v1.1/phase-25-final-qa.md`](../v1.1/phase-25-final-qa.md).

@@ -1,0 +1,33 @@
+@startuml seq-04-schedule-evaluation
+' SEQ-04 · Programar evaluación (RF-16, RF-17). Especificación: ../sequence-diagrams.md
+actor "Recursos Humanos" as RH
+participant "UI applications/show" as UI
+participant AssessmentScheduleController as C
+participant ScheduleEvaluationRequest as R
+participant ApplicationPolicy as P
+participant AssessmentScheduler as S
+participant ApplicationStageService as ST
+database PostgreSQL as DB
+participant AuditLogger as A
+queue "Cola Redis" as Q
+
+RH -> UI : tipo, modalidad, lugar, fecha, evaluador
+UI -> C : POST postulaciones/{id}/evaluaciones
+C -> R : authorize() + rules()
+R -> P : scheduleAssessment(user, application)
+P --> R : rrhh de la misma organización
+C -> S : scheduleEvaluation(application, hr, data)
+group critical DB::transaction
+  S -> DB : Application lockForUpdate
+  alt vacante cerrada | sin criterios de evaluación | etapa no admitida | evaluador ajeno
+    S --> C : BusinessRuleException
+  else
+    S -> DB : Evaluation (programada, invitation_sent_at)
+    S -> ST : transition(en_evaluacion, notify: false)
+    S -> A : record(EvaluationScheduled)
+  end
+end
+S -> Q : AssessmentConvocationNotification al postulante (RF-17)
+S -> Q : AssessmentAssignedNotification al evaluador
+C --> UI : redirección + toast
+@enduml

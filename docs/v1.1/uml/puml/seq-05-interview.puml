@@ -1,0 +1,48 @@
+@startuml seq-05-interview
+' SEQ-05 · Programar y registrar entrevista (RF-18, RF-19). Especificación: ../sequence-diagrams.md
+actor "Recursos Humanos" as RH
+actor Evaluador as EV
+participant UI
+participant AssessmentScheduleController as SC
+participant AssessmentScheduler as S
+participant InterviewController as IC
+participant InterviewPolicy as IP
+participant AssessmentResultRecorder as REC
+participant ScoreSheetValidator as V
+database PostgreSQL as DB
+participant AuditLogger as A
+queue "Cola Redis" as Q
+
+== A · Programar (RR. HH.) ==
+RH -> UI : datos de la entrevista + evaluador
+UI -> SC : POST postulaciones/{id}/entrevistas
+note right of SC : ScheduleAssessmentRequest -> ApplicationPolicy::scheduleAssessment
+SC -> S : scheduleInterview(application, hr, data)
+group critical DB::transaction
+  S -> DB : Application lockForUpdate; Interview (programada)
+  S -> DB : postulación -> en_entrevista (notify: false)
+  S -> A : record(InterviewScheduled)
+end
+S -> Q : convocatoria al postulante (RF-17) y aviso al evaluador
+
+== B · Registrar resultado (Evaluador asignado) ==
+EV -> UI : abre la sesión asignada
+UI -> IC : GET entrevistas/{id}
+IC -> IP : view()
+EV -> UI : puntaje por criterio, resultado, observaciones
+UI -> IC : POST entrevistas/{id}/resultados
+note right of IC : RecordInterviewResultRequest -> InterviewPolicy::recordResult\n(evaluator_id = usuario, misma organización)
+IC -> REC : recordInterview(interview, evaluator, scores, outcome, observations)
+group critical DB::transaction
+  REC -> DB : Interview lockForUpdate
+  REC -> V : validar puntajes de la etapa entrevista (RF-20)
+  alt ya registrada | vacante cerrada | puntaje fuera de rango o criterio ajeno
+    REC --> IC : excepción
+  else
+    REC -> DB : InterviewResult por criterio
+    REC -> DB : Interview -> realizada, outcome, completed_at
+    REC -> A : record(InterviewResultRecorded)
+  end
+end
+IC --> UI : redirección + toast
+@enduml

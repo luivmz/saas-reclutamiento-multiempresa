@@ -1,7 +1,7 @@
 import { Form } from '@inertiajs/react';
 import { ShieldCheck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import Heading from '@/components/heading';
+import { Section } from '@/components/page';
 import TwoFactorRecoveryCodes from '@/components/two-factor-recovery-codes';
 import TwoFactorSetupModal from '@/components/two-factor-setup-modal';
 import { Button } from '@/components/ui/button';
@@ -45,18 +45,15 @@ export default function ManageTwoFactor(props: Props) {
     }
 
     return (
-        <div className="space-y-6">
-            <Heading
-                variant="small"
-                title="Two-factor authentication"
-                description="Manage your two-factor authentication settings"
-            />
+        <Section
+            title="Verificación en dos pasos"
+            description="Un segundo factor al iniciar sesión, además de la contraseña."
+        >
             {twoFactorEnabled ? (
                 <div className="flex flex-col items-start justify-start space-y-4">
-                    <p className="text-muted-foreground text-sm">
-                        You will be prompted for a secure, random pin during
-                        login, which you can retrieve from the TOTP-supported
-                        application on your phone.
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                        Al iniciar sesión se le pedirá un código temporal que
+                        genera la aplicación de autenticación de su teléfono.
                     </p>
 
                     <div className="relative inline">
@@ -67,7 +64,7 @@ export default function ManageTwoFactor(props: Props) {
                                     type="submit"
                                     disabled={processing}
                                 >
-                                    Disable 2FA
+                                    Desactivar la verificación en dos pasos
                                 </Button>
                             )}
                         </Form>
@@ -81,18 +78,17 @@ export default function ManageTwoFactor(props: Props) {
                 </div>
             ) : (
                 <div className="flex flex-col items-start justify-start space-y-4">
-                    <p className="text-muted-foreground text-sm">
-                        When you enable two-factor authentication, you will be
-                        prompted for a secure pin during login. This pin can be
-                        retrieved from a TOTP-supported application on your
-                        phone.
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                        Al activarla, cada inicio de sesión pedirá un código
+                        temporal generado por una aplicación de autenticación
+                        compatible con TOTP en su teléfono.
                     </p>
 
                     <div>
                         {hasSetupData ? (
                             <Button onClick={() => setShowSetupModal(true)}>
-                                <ShieldCheck />
-                                Continue setup
+                                <ShieldCheck aria-hidden="true" />
+                                Continuar la configuración
                             </Button>
                         ) : (
                             <Form
@@ -101,7 +97,7 @@ export default function ManageTwoFactor(props: Props) {
                             >
                                 {({ processing }) => (
                                     <Button type="submit" disabled={processing}>
-                                        Enable 2FA
+                                        Activar la verificación en dos pasos
                                     </Button>
                                 )}
                             </Form>
@@ -121,6 +117,6 @@ export default function ManageTwoFactor(props: Props) {
                 fetchSetupData={fetchSetupData}
                 errors={errors}
             />
-        </div>
+        </Section>
     );
 }
