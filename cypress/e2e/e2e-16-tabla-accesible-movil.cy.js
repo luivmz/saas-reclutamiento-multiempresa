@@ -68,6 +68,26 @@ function sinDesborde() {
 }
 
 /**
+ * Fase 25: la página puede no desbordar y la ficha, aun así, quedar recortada,
+ * porque el contenedor de la tabla hace scroll horizontal y absorbe el exceso.
+ * En móvil cada ficha tiene que caber entera en el viewport.
+ */
+function fichasDentroDelViewport(fila) {
+    cy.document().then((doc) => {
+        const ancho = doc.documentElement.clientWidth;
+
+        cy.dataCy(fila).each(($fila) => {
+            const borde = $fila[0].getBoundingClientRect().right;
+
+            expect(
+                borde,
+                `borde derecho de la ficha «${$fila.text().trim().slice(0, 30)}»`,
+            ).to.be.at.most(ancho + 1);
+        });
+    });
+}
+
+/**
  * Recorre una tabla en móvil y en escritorio: la semántica debe ser la misma
  * y el número de filas también, porque el apilado es CSS y no duplica DOM.
  */
@@ -87,6 +107,7 @@ function auditar({ rol, ruta, tabla, fila }) {
         cy.dataCy(fila).should('have.length', enEscritorio);
         verificarSemantica(tabla);
         sinDesborde();
+        fichasDentroDelViewport(fila);
     });
 }
 
@@ -135,6 +156,14 @@ describe('E2E-16 · La tabla de expedientes conserva su semántica en móvil', (
             ruta: '/auditoria',
             tabla: 'audit-table',
             fila: 'audit-row',
+        }));
+
+    it('evaluaciones asignadas', () =>
+        auditar({
+            rol: 'evaluator',
+            ruta: '/mis-evaluaciones',
+            tabla: 'assignments-table',
+            fila: 'assignment-row',
         }));
 
     it('en móvil cada celda muestra su etiqueta como texto, no como adorno CSS', function () {

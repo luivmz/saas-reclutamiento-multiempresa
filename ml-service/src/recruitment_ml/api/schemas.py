@@ -100,7 +100,8 @@ class PredictionRequest(BaseModel):
         le=MAX_DAYS,
         description=(
             "Dias que faltan para el plazo objetivo. Estrictamente positiva por contrato. "
-            "GAP-01: Laravel todavia no puede producirla."
+            "Laravel la calcula en el checkpoint a partir de vacancies.target_completion_at "
+            "(GAP-01 resuelto tecnicamente en la Fase 16)."
         ),
     )
 

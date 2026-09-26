@@ -424,6 +424,21 @@ def test_openapi_documents_the_endpoints_with_a_fictional_example(client: TestCl
     )
 
 
+def test_the_days_remaining_field_does_not_claim_gap_01_is_open(client: TestClient) -> None:
+    """Fase 25: la descripcion OpenAPI del campo decia que Laravel no podia producirlo.
+
+    Desde la Fase 16 Laravel lo calcula a partir de `vacancies.target_completion_at`;
+    la documentacion del contrato no puede seguir diciendo lo contrario.
+    """
+    properties = client.get("/openapi.json").json()["components"]["schemas"][
+        "PredictionRequest"
+    ]["properties"]
+    description = properties["days_remaining_to_target"]["description"]
+
+    assert "todavia no puede" not in description
+    assert "target_completion_at" in description
+
+
 def test_the_documentation_states_that_it_is_not_deployable(client: TestClient) -> None:
     description = client.get("/openapi.json").json()["info"]["description"]
 

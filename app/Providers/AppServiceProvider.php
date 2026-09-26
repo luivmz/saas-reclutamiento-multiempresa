@@ -67,6 +67,18 @@ class AppServiceProvider extends ServiceProvider
 
         Route::resourceVerbs(['create' => 'crear', 'edit' => 'editar']);
 
+        // Los identificadores de los modelos son `bigint`: un segmento no numérico
+        // (p. ej. `/requerimientos/create`) no debe llegar a PostgreSQL, donde
+        // provocaba un error 22P02 y un 500. Sin coincidencia de ruta responde 404.
+        Route::patterns([
+            'application' => '[0-9]+',
+            'document' => '[0-9]+',
+            'evaluation' => '[0-9]+',
+            'interview' => '[0-9]+',
+            'jobRequest' => '[0-9]+',
+            'vacancy' => '[0-9]+',
+        ]);
+
         DB::prohibitDestructiveCommands(
             app()->isProduction(),
         );

@@ -7,8 +7,9 @@ Separa dos responsabilidades que conviene no mezclar:
 - `loader` y `predictor` **sirven** ese artefacto, verificando antes que
   corresponde exactamente al freeze que la fase aprobo.
 
-Nada de esto autoriza despliegue: `GAP-01` sigue abierto y el servicio es
-experimental.
+Nada de esto autoriza despliegue: el servicio es experimental y no tiene
+validacion institucional. `GAP-01` quedo resuelto tecnicamente en la Fase 16
+(`vacancies.target_completion_at`); eso no cambia su caracter experimental.
 """
 
 from recruitment_ml.serving.metadata import ArtifactMetadata, ServiceMetadata

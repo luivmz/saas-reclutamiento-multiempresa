@@ -30,8 +30,8 @@ CORE_FEATURES: Final[tuple[str, ...]] = (
 )
 
 #: ML-FEAT-02. Aprobada para el dataset sintetico porque `target_completion_at`
-#: se genera explicitamente. NO es computable en Laravel mientras GAP-01 siga
-#: abierta.
+#: se genera explicitamente. Laravel la calcula desde la Fase 16 a partir de
+#: `vacancies.target_completion_at` (GAP-01 resuelto tecnicamente).
 CONDITIONAL_FEATURES: Final[tuple[str, ...]] = ("days_remaining_to_target",)
 
 #: ML-FEAT-07. Cardinalidad maxima 3 por el CHECK del esquema real. Se genera,

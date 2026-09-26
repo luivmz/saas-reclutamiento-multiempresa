@@ -77,7 +77,7 @@ Resultado de referencia: **Logistic Regression**, AP test **0.769** frente a 0.3
 
 ## Servicio experimental (15C)
 
-> **No es producción.** Laravel **no** consume este servicio todavía —eso es Fase 16— y `GAP-01` sigue abierto: `target_completion_at` no existe en Laravel, así que `days_remaining_to_target` no es computable ahí. `/v1/predict` **no está autorizado para integración productiva**.
+> **No es producción.** Desde la Fase 16 Laravel consume este servicio de forma **experimental** (cliente HTTP con token interno, validación del contrato y *fallback*), y `GAP-01` está **resuelto técnicamente**: Laravel calcula `days_remaining_to_target` a partir de `vacancies.target_completion_at`. El servicio sigue sin validación institucional y `/v1/predict` **no está autorizado para integración productiva**. *(Hasta la Fase 25 este aviso decía que Laravel no consumía el servicio y que `GAP-01` seguía abierto: era el estado de la Fase 15C.)*
 
 El modelo **no se versiona**: se reconstruye a partir del protocolo congelado —que debe ser **el aprobado**, no solo uno íntegro—, verificando que el dataset, la configuración y la partición regenerados son los del experimento. El builder registra el **SHA-256 del binario**; el loader lo comprueba **antes de deserializar** y después valida que el objeto cargado *es* el pipeline congelado —pasos, clases, hiperparámetros y **estado de entrenamiento de cada componente**—, no cualquier estimador con `predict_proba`.
 
@@ -85,8 +85,10 @@ El modelo **no se versiona**: se reconstruye a partir del protocolo congelado �
 
 ```bash
 .venv/Scripts/python.exe -m recruitment_ml.serving.build_artifact
-.venv/Scripts/python.exe -m uvicorn recruitment_ml.api.app:app --host 127.0.0.1 --port 8001
+.venv/Scripts/python.exe -m uvicorn recruitment_ml.api.app:app --host 127.0.0.1 --port 8008
 ```
+
+Puerto **8008**: el 8001 lo ocupa `app-e2e`. Para que Laravel (en Docker) lo alcance, el servicio escucha en `0.0.0.0:8008` con `RECRUITMENT_ML_INTERNAL_TOKEN` en el entorno; ver [`docs/v1.1/phase-16-laravel-ml-integration.md`](../docs/v1.1/phase-16-laravel-ml-integration.md). *(Hasta la Fase 25 el ejemplo usaba el puerto 8001.)*
 
 | Endpoint | Devuelve |
 |---|---|
