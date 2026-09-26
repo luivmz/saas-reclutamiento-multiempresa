@@ -204,9 +204,9 @@ Ni *push*, ni *merge*, ni etiqueta en esta fase (contrato 10 de `CLAUDE.md`).
 
 **Etiqueta propuesta:** `v1.1.0-academic`, **anotada**, con el mismo formato que `v1.0.0-academic`: *«Academic release v1.1.0 - SaaS recruitment platform»*. **No se mueve `v1.0.0-academic`.**
 
-**Opciones analizadas:**
+**Opciones analizadas.** La opción A fue **descartada para v1.1**. Se conserva en esta tabla solo como antecedente de la decisión: **no se usará** y no autoriza a crear ninguna etiqueta. La **opción B es la única estrategia activa**.
 
-| | A) Etiqueta sobre `develop`, `main` congelado en v1.0 | B) Merge controlado `develop → main` y etiqueta sobre `main` |
+| | A) **Descartada para v1.1** (solo antecedente): `main` congelado en v1.0 | B) **Estrategia activa y única**: merge controlado `develop → main` y etiqueta sobre `main` |
 |---|---|---|
 | Coherencia con la historia | Rompe el patrón: la v1.0 se publicó con un **merge `--no-ff` de `develop` en `main`** (`9a946c2`, «release: publish academic MVP v1.0») y la etiqueta está **sobre ese merge de `main`** | **Repite el patrón de la v1.0** |
 | Qué ve GitHub | La rama por defecto (`main`) seguiría mostrando la v1.0 y el README de la v1.0 | La rama por defecto muestra la versión vigente |
@@ -214,7 +214,7 @@ Ni *push*, ni *merge*, ni etiqueta en esta fase (contrato 10 de `CLAUDE.md`).
 | v1.0 | Intacta en `main` y en su etiqueta | Intacta en su etiqueta (`9a946c2`), que es la referencia histórica. `main` avanza, pero la historia no se reescribe |
 | CI | Se ejecuta en `develop` | Se ejecuta en `main` al integrar: build, `tsc` y PHPUnit |
 
-**Recomendación: opción B**, condicionada a la auditoría de Codex y a la autorización explícita del equipo:
+**Estrategia activa para v1.1: opción B**, la única ejecutable. Su ejecución sigue condicionada a la auditoría de Codex y a la autorización explícita del equipo:
 
 1. Integrar F26 en `develop`: `git switch develop` y `git merge --no-ff feature/phase-26-release-closeout`.
 2. *Push* de `develop`.
@@ -223,13 +223,19 @@ Ni *push*, ni *merge*, ni etiqueta en esta fase (contrato 10 de `CLAUDE.md`).
 5. *Push* de `main`.
 6. **Esperar el CI de `main` en verde.** Si falla, no se crea la etiqueta: se corrige en `develop` y se repite desde el paso 2.
 7. **Verificar la integridad del árbol** (ver abajo): `develop^{tree}` debe ser igual a `main^{tree}`.
-8. Crear la etiqueta anotada **sobre el merge commit verificado de `main`**: `git tag -a v1.1.0-academic <merge-de-main> -m "Academic release v1.1.0 - SaaS recruitment platform"`.
+8. Crear la etiqueta anotada **sobre el merge commit verificado de `main`** (`FINAL_MAIN_MERGE_COMMIT`): `git tag -a v1.1.0-academic <FINAL_MAIN_MERGE_COMMIT> -m "Academic release v1.1.0 - SaaS recruitment platform"`.
 9. *Push* de la etiqueta: `git push origin v1.1.0-academic`.
 10. Crear el GitHub Release **desde esa etiqueta** (§16).
 11. Adjuntar el PDF y el DOCX del Formato 09.
 12. Verificar el release publicado: la etiqueta, los adjuntos y que el cuerpo tenga los enlaces absolutos.
 
-**La etiqueta se crea solo después de que el CI de `main` esté en verde**, y una vez publicada no se mueve. **No se etiqueta** la rama F26, `develop` antes de F26, F25 ni el merge de F26 en `develop`: el destino es solo el futuro merge verificado de `main`.
+**La etiqueta se crea solo después de que el CI de `main` esté en verde**, y una vez publicada no se mueve. **Destino único de la etiqueta:** `FINAL_MAIN_MERGE_COMMIT`, el merge `--no-ff` de `develop` en `main`, y solo con el CI de `main` en verde y `develop^{tree} == main^{tree}`. **No son destinos válidos:**
+
+- la rama `feature/phase-26-release-closeout`;
+- `develop` antes de F26 (`2b97fe3`);
+- el merge de F25;
+- el merge de F26 en `develop` (`FINAL_DEVELOP_MERGE_COMMIT`);
+- cualquier otro commit de `develop`.
 
 **Verificación de integridad en el cierre.** No hay un hash fijo de «árbol final». Cualquier corrección documental posterior cambiaría el árbol, así que un valor escrito de antemano quedaría obsoleto o sería autorreferencial. La comprobación se hace **en el momento del cierre**, después de los pasos 1 a 6:
 
@@ -253,7 +259,7 @@ Motivos:
 - deja la rama por defecto de GitHub en la versión vigente;
 - la v1.0 queda preservada por su etiqueta, que no se mueve.
 
-La opción A solo conviene si el equipo quiere que `main` siga mostrando la v1.0 como entrega evaluada. En ese caso, la etiqueta se pone sobre el merge de F26 en `develop`.
+**Opción A: analizada y descartada para v1.1.** Se conserva solo como antecedente de la decisión y no debe usarse para crear la etiqueta del release. Contemplaba dejar `main` en la v1.0 como entrega evaluada. No autoriza a etiquetar `develop` ni ninguno de los destinos excluidos arriba, y no tiene pasos ejecutables.
 
 Al ejecutar la opción B, la frase de `CLAUDE.md` «`main` sigue siendo la v1.0 académica y no contiene v1.1» deberá actualizarse en el mismo cierre, conservándola como historia.
 
@@ -310,5 +316,11 @@ La auditoría de la F26 (commits `62f3f10` y `4eb6c18`) pidió correcciones ante
 | **F26-M02** (MEDIUM) | La secuencia proponía crear la etiqueta y publicar, y **después** comprobar el CI de `main` | Secuencia de 12 pasos (§15): CI de `develop` en verde, merge a `main`, **CI de `main` en verde**, igualdad de árboles, y **solo entonces** la etiqueta sobre el merge verificado de `main`, su *push* y el release | **Resuelto** |
 | LOW | `CHANGELOG.md` citaba «sin WebGL» como condición del póster de respaldo, aunque la experiencia es CSS 3D y no depende de WebGL | Redacción fiel a ADR-003 y a `CLAUDE.md`: póster con movimiento reducido, pantallas de menos de 1024 px, ahorro de datos, equipos modestos o fallo del fragmento | **Resuelto** |
 | LOW | El número de archivos de `vp check` (154) no es estable: la auditoría contó 157 | Los documentos de la F26 hablan de «incidencias de formato preexistentes en múltiples archivos». Las cifras 154 (F25) y 157 (auditoría) solo se citan con su contexto (§12, nota de A-03). Los documentos cerrados de la F25 conservan su cifra como historia | **Resuelto** |
+
+**Reauditoría (sobre `0ceddfd`):**
+
+| Hallazgo | Problema | Corrección | Estado |
+|---|---|---|---|
+| **F26-M02-R1** (MEDIUM) | La §15 conservaba, para la opción A, la frase «la etiqueta se pone sobre el merge de F26 en `develop`», que contradecía la estrategia final | Se eliminó la frase. La opción A queda marcada como **descartada para v1.1**, solo como antecedente y sin pasos ejecutables. La opción B es la **única estrategia activa**, y el único destino de la etiqueta es `FINAL_MAIN_MERGE_COMMIT`, con el CI de `main` en verde y los árboles iguales. Los destinos excluidos se listan de forma explícita | **Resuelto** |
 
 Sin cambios de runtime, pruebas, ML, artefactos académicos, UML ni modelos nativos. Las suites no se volvieron a ejecutar (hotfix documental).
