@@ -149,7 +149,7 @@ Clasificación: **ACCEPTED** (se acepta tal cual), **DEFERRED** (queda para desp
 |---|---|---|---|---|---|
 | A-01 | F25 | Aviso opcional de Fontaine en el build | INFO | ACCEPTED | Informativo. Instalar `fontaine` sería una dependencia nueva (prohibida en el cierre) y desactivar `optimizedFallbacks` cambiaría la configuración. El build es correcto |
 | A-02 | F25 | Pint: 8 archivos PHP (`Vacancy`, `AppServiceProvider`, `AssessmentResultRecorder`, `bootstrap/app.php`, `DemoSeeder`, `routes/web.php` y 2 pruebas), unas 24 líneas; orden de imports, import sin uso, FQCN y espacios | LOW | DEFERRED | Poco *churn*, pero es **código** y obligaría a repetir la regresión en una fase documental. El CI no lo verifica. Destino: *hotfix* de estilo posterior al release, con `pint` y PHPUnit |
-| A-03 | F25 | `vp check`: 154 archivos | LOW | ACCEPTED (global) / DEFERRED (código) | Solo **5** son código (`resources/js`); el resto es Markdown: 49 de `docs/v1.1`, 30 de `docs/final-report` (historia de v1.0, **no se reescribe**), 28 de `.claude/skills` (incluye skills externas con procedencia, **no se modifican**), 25 de Cypress y otros sueltos. Un `--fix` global violaría contratos. Si se hace, solo `resources/js` y `cypress/`, con Vitest y Cypress |
+| A-03 | F25 | `vp check`: incidencias de formato preexistentes en múltiples archivos (ver nota) | LOW | ACCEPTED (global) / DEFERRED (código) | Solo **5** son código (`resources/js`); el resto es Markdown: 49 de `docs/v1.1`, 30 de `docs/final-report` (historia de v1.0, **no se reescribe**), 28 de `.claude/skills` (incluye skills externas con procedencia, **no se modifican**), 25 de Cypress y otros sueltos. Un `--fix` global violaría contratos. Si se hace, solo `resources/js` y `cypress/`, con Vitest y Cypress. **Nota:** el número total de archivos no es estable (varía con el árbol y la versión de la herramienta): 154 en la ejecución de la F25 y 157 en la auditoría independiente de Codex. Por eso no se fija una cifra; el desglose es de la ejecución de la F26 sobre `2b97fe3` |
 | A-04 | F25 | Lector de pantalla real | INFO | DEFERRED | NVDA no está instalado y el Narrador no se puede verificar desde una sesión automatizada. Prueba manual del equipo |
 | A-05 | F25 | Rendimiento en hardware modesto | INFO | DEFERRED | El equipo de QA no es modesto. Prueba manual o con limitación documentada |
 | A-06 | F25 | Validación manual independiente a 375 px | INFO | DEFERRED | La F25 lo verificó por automatización (60 mediciones, E2E-16 ampliado); falta una revisión humana en un dispositivo real |
@@ -192,9 +192,11 @@ Clasificación: **ACCEPTED** (se acepta tal cual), **DEFERRED** (queda para desp
 | Paso | Quién | Estado |
 |---|---|---|
 | 1. Auditar `feature/phase-26-release-closeout` | Codex | Pendiente |
-| 2. Integrar F26 en `develop` con `--no-ff`, como en todas las fases | Codex o el equipo, con autorización | **No ejecutado** |
-| 3. Decidir y ejecutar la estrategia de `main` (§15) | Equipo, con autorización explícita | **No ejecutado** |
-| 4. Crear la etiqueta y el GitHub Release (§15–16) | Equipo o Codex, con autorización | **No ejecutado** |
+| 2. Integrar F26 en `develop` (`--no-ff`), *push* y **CI de `develop` en verde** | Codex o el equipo, con autorización | **No ejecutado** |
+| 3. Merge `develop → main` (`--no-ff`), *push* y **CI de `main` en verde** | Equipo, con autorización explícita | **No ejecutado** |
+| 4. Verificar `develop^{tree} == main^{tree}`, crear la etiqueta sobre el merge verificado de `main` y publicar el GitHub Release (§15–16) | Equipo o Codex, con autorización | **No ejecutado** |
+
+La secuencia completa y su orden obligatorio están en §15.
 
 Ni *push*, ni *merge*, ni etiqueta en esta fase (contrato 10 de `CLAUDE.md`).
 
@@ -208,16 +210,42 @@ Ni *push*, ni *merge*, ni etiqueta en esta fase (contrato 10 de `CLAUDE.md`).
 |---|---|---|
 | Coherencia con la historia | Rompe el patrón: la v1.0 se publicó con un **merge `--no-ff` de `develop` en `main`** (`9a946c2`, «release: publish academic MVP v1.0») y la etiqueta está **sobre ese merge de `main`** | **Repite el patrón de la v1.0** |
 | Qué ve GitHub | La rama por defecto (`main`) seguiría mostrando la v1.0 y el README de la v1.0 | La rama por defecto muestra la versión vigente |
-| Riesgo | Ninguno técnico | Bajo. El merge es limpio: simulado con `git merge-tree`, **sin conflictos**, y el árbol resultante es **idéntico al de `develop`** (`f945b8d`). `main` solo tiene un commit que `develop` no tiene (el merge `4563c69`, cuyo contenido ya está en `develop`) |
+| Riesgo | Ninguno técnico | Bajo. Se simuló el merge con `git merge-tree` sobre el **baseline pre-F26** (`develop` = `2b97fe3`): **sin conflictos**, y el árbol simulado coincidió con el árbol de ese baseline (`f945b8d123f419d7e038962a8a92c99008e950e0`, **árbol del baseline `develop` pre-F26**, no el árbol final del release). `main` solo tiene un commit que `develop` no tiene (el merge `4563c69`, cuyo contenido ya está en `develop`). La integridad final se comprueba **en el cierre** (ver abajo) |
 | v1.0 | Intacta en `main` y en su etiqueta | Intacta en su etiqueta (`9a946c2`), que es la referencia histórica. `main` avanza, pero la historia no se reescribe |
 | CI | Se ejecuta en `develop` | Se ejecuta en `main` al integrar: build, `tsc` y PHPUnit |
 
 **Recomendación: opción B**, condicionada a la auditoría de Codex y a la autorización explícita del equipo:
 
-1. Integrar F26 en `develop` con `git merge --no-ff feature/phase-26-release-closeout`.
-2. Desde `main`, hacer el merge de `develop` con `--no-ff` y el mensaje «release: publish academic v1.1».
-3. Crear en ese merge la etiqueta `git tag -a v1.1.0-academic -m "Academic release v1.1.0 - SaaS recruitment platform"`.
-4. Hacer *push* de `main`, `develop` y la etiqueta, y comprobar que el CI de `main` pasa.
+1. Integrar F26 en `develop`: `git switch develop` y `git merge --no-ff feature/phase-26-release-closeout`.
+2. *Push* de `develop`.
+3. **Esperar el CI de `develop` en verde.**
+4. Hacer el merge `develop → main`: `git switch main` y `git merge --no-ff develop -m "release: publish academic v1.1"`.
+5. *Push* de `main`.
+6. **Esperar el CI de `main` en verde.** Si falla, no se crea la etiqueta: se corrige en `develop` y se repite desde el paso 2.
+7. **Verificar la integridad del árbol** (ver abajo): `develop^{tree}` debe ser igual a `main^{tree}`.
+8. Crear la etiqueta anotada **sobre el merge commit verificado de `main`**: `git tag -a v1.1.0-academic <merge-de-main> -m "Academic release v1.1.0 - SaaS recruitment platform"`.
+9. *Push* de la etiqueta: `git push origin v1.1.0-academic`.
+10. Crear el GitHub Release **desde esa etiqueta** (§16).
+11. Adjuntar el PDF y el DOCX del Formato 09.
+12. Verificar el release publicado: la etiqueta, los adjuntos y que el cuerpo tenga los enlaces absolutos.
+
+**La etiqueta se crea solo después de que el CI de `main` esté en verde**, y una vez publicada no se mueve. **No se etiqueta** la rama F26, `develop` antes de F26, F25 ni el merge de F26 en `develop`: el destino es solo el futuro merge verificado de `main`.
+
+**Verificación de integridad en el cierre.** No hay un hash fijo de «árbol final». Cualquier corrección documental posterior cambiaría el árbol, así que un valor escrito de antemano quedaría obsoleto o sería autorreferencial. La comprobación se hace **en el momento del cierre**, después de los pasos 1 a 6:
+
+```bash
+release_tree=$(git rev-parse develop^{tree})
+main_tree=$(git rev-parse main^{tree})
+[ "$release_tree" = "$main_tree" ] || { echo "Release tree mismatch"; exit 1; }
+```
+
+```powershell
+$releaseTree = git rev-parse "develop^{tree}"
+$mainTree = git rev-parse "main^{tree}"
+if ($releaseTree -ne $mainTree) { throw "Release tree mismatch" }
+```
+
+El release continúa **solo si** `release_tree == main_tree`.
 
 Motivos:
 
@@ -234,7 +262,7 @@ Al ejecutar la opción B, la frase de `CLAUDE.md` «`main` sigue siendo la v1.0 
 | Campo | Propuesta |
 |---|---|
 | Título | `v1.1 académica — Plataforma SaaS multiempresa de reclutamiento` |
-| Etiqueta | `v1.1.0-academic` |
+| Etiqueta | `v1.1.0-academic`, ya creada y publicada sobre el merge verificado de `main` (pasos 8–9 de §15). El release se crea **desde esa etiqueta**, nunca antes del CI verde de `main` |
 | Cuerpo | [`release-notes-v1.1.md`](release-notes-v1.1.md). Los enlaces relativos deben convertirse en enlaces absolutos a la etiqueta al pegarlos en GitHub |
 | Artefactos adjuntos | `F9_Alcance_Proyecto_Software_Colegio_Andino_FINAL_v1.1.pdf` (2,1 MB) y `F9_…_FINAL_v1.1.docx` (2,6 MB). Opcionales: PNG de UC-01, CO-01 y DE-01 |
 | No adjuntar | Binarios del runtime, `vendor`, `node_modules`, el modelo ML (se reconstruye desde el protocolo congelado y no se versiona), `.env*` ni modelos nativos: ya están en el repositorio |
@@ -267,7 +295,20 @@ Lista completa: [`final-acceptance-checklist.md`](final-acceptance-checklist.md)
    - la clasificación de la deuda (§12);
    - la ausencia de secretos;
    - que `develop`, `main` y la etiqueta de la v1.0 no se movieron.
-3. Aprobar o ajustar la recomendación B y, **solo con autorización del equipo**, ejecutar la estrategia Git (§14–15) y el release (§16).
+3. Aprobar o ajustar la recomendación B y, **solo con autorización del equipo**, ejecutar la secuencia de §15 en su orden: CI de `develop` en verde, merge a `main`, CI de `main` en verde, `develop^{tree} == main^{tree}`, etiqueta sobre el merge verificado de `main` y release (§16).
 4. Tras el release, actualizar `CLAUDE.md`, `PROGRESS.md` y la lista de aceptación: F26 cerrada, v1.1 publicada.
 
 **Después del cierre**, solo con una fase nueva y autorizada: el *hotfix* de estilo (A-02 y A-03 de código), las pruebas manuales (A-04 a A-06) y las decisiones del equipo sobre RF-28, RF-29, RNF-C y los catálogos de RNF y CU.
+
+## 19. Correcciones posteriores a la auditoría de Codex
+
+La auditoría de la F26 (commits `62f3f10` y `4eb6c18`) pidió correcciones antes de la reauditoría. Se hicieron en la misma rama, solo en documentación.
+
+| Hallazgo | Problema | Corrección | Estado |
+|---|---|---|---|
+| **F26-M01** (MEDIUM) | El manifiesto y §15 presentaban `f945b8d123f419d7e038962a8a92c99008e950e0` como el árbol que tendría `main` tras el release. Ese hash es el árbol del **baseline pre-F26**, y cualquier cambio documental posterior lo vuelve obsoleto | `f945b8d…` queda identificado solo como «árbol del baseline `develop` pre-F26». No se fija ningún hash de «árbol final»: la integridad se verifica **en el cierre** con `develop^{tree} == main^{tree}` (Bash y PowerShell en §15) | **Resuelto** |
+| **F26-M02** (MEDIUM) | La secuencia proponía crear la etiqueta y publicar, y **después** comprobar el CI de `main` | Secuencia de 12 pasos (§15): CI de `develop` en verde, merge a `main`, **CI de `main` en verde**, igualdad de árboles, y **solo entonces** la etiqueta sobre el merge verificado de `main`, su *push* y el release | **Resuelto** |
+| LOW | `CHANGELOG.md` citaba «sin WebGL» como condición del póster de respaldo, aunque la experiencia es CSS 3D y no depende de WebGL | Redacción fiel a ADR-003 y a `CLAUDE.md`: póster con movimiento reducido, pantallas de menos de 1024 px, ahorro de datos, equipos modestos o fallo del fragmento | **Resuelto** |
+| LOW | El número de archivos de `vp check` (154) no es estable: la auditoría contó 157 | Los documentos de la F26 hablan de «incidencias de formato preexistentes en múltiples archivos». Las cifras 154 (F25) y 157 (auditoría) solo se citan con su contexto (§12, nota de A-03). Los documentos cerrados de la F25 conservan su cifra como historia | **Resuelto** |
+
+Sin cambios de runtime, pruebas, ML, artefactos académicos, UML ni modelos nativos. Las suites no se volvieron a ejecutar (hotfix documental).

@@ -6,7 +6,7 @@ Prototipo académico con **datos ficticios**; no es un sistema productivo. El si
 
 ## v1.1 — académica (Fases 13 a 25; cierre en la Fase 26)
 
-Etiqueta propuesta: `v1.1.0-academic`, **pendiente de auditoría**; no creada. Línea base funcional sin cambios: **RF-01 a RF-27**. RF-28 (candidato, no implementado), RF-29 (experimental) y RNF-C (propuesta) **no** se promovieron (decisión 11 de `scope-preliminary.md`).
+Etiqueta propuesta: `v1.1.0-academic`, **pendiente de auditoría**; no creada. Se crea solo sobre el merge verificado de `main`, con el CI de `main` en verde (ver `docs/v1.1/phase-26-release-closeout.md` §15). Línea base funcional sin cambios: **RF-01 a RF-27**. RF-28 (candidato, no implementado), RF-29 (experimental) y RNF-C (propuesta) **no** se promovieron (decisión 11 de `scope-preliminary.md`).
 
 ### Added
 
@@ -23,7 +23,7 @@ Etiqueta propuesta: `v1.1.0-academic`, **pendiente de auditoría**; no creada. L
   - Tarjeta de riesgo «Experimental» en el detalle de la vacante.
 - **Experiencia 3D con CSS 3D** en la portada pública — Fase 20.
   - Decorativa, sin WebGL ni dependencias nuevas.
-  - Póster de respaldo con movimiento reducido, en móvil, en equipos modestos o sin WebGL.
+  - Póster de respaldo con movimiento reducido, en pantallas de menos de 1024 px, con ahorro de datos, en equipos modestos o si el fragmento 3D no carga.
 - **Especificación UML AS-IS** (19 diagramas) — Fase 22. **Modelos nativos de PowerDesigner** (OOM y PDM) con 22 diagramas exportados en PNG y SVG — Fase 23.
 - **Formato 09 v1.1** (DOCX y PDF) — Fase 24.
 - **Pruebas nuevas:**
@@ -94,7 +94,7 @@ QA global de la Fase 25. Ejecuciones reales:
 - **Rendimiento en un equipo modesto:** no se midió. La evidencia de la Fase 25 es exploratoria y viene de un equipo potente.
 - **Formato:**
   - `pint --test` marca 8 archivos PHP, con unas 24 líneas de diferencia;
-  - `vp check` marca 154 archivos, casi todos Markdown, incluida la historia de v1.0 y skills externas.
+  - `vp check` reporta incidencias de formato preexistentes en múltiples archivos, casi todos Markdown, incluida la historia de v1.0 y skills externas.
   - Aplazado; el CI no lo verifica.
 - **Build:** muestra un aviso informativo del plugin `laravel:fonts`, porque falta el paquete opcional `fontaine`. No se instala.
 - **Observaciones heredadas de las Fases 23 y 24:**

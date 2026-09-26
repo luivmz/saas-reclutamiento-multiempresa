@@ -24,6 +24,18 @@ Estado al terminar la implementación de la Fase 26 (25/09/2026), en `feature/ph
 | [x] | Manifiesto | [`release-manifest-v1.1.md`](release-manifest-v1.1.md) |
 | [x] | Deuda residual documentada | [`phase-26-release-closeout.md`](phase-26-release-closeout.md) §12–13: 0 BLOCKER, 0 HIGH, 0 MEDIUM, 8 LOW y 9 INFO clasificados |
 | [x] | Sin secretos | Barrido de la F26: sin claves, tokens ni `.env` versionados |
-| [ ] | Estrategia de etiqueta aprobada | Propuesta: `v1.1.0-academic`, anotada (§15). **Pendiente de aprobación** |
-| [ ] | Estrategia de `main` aprobada | Recomendación: opción B, merge `develop → main` con `--no-ff` y la etiqueta sobre `main` (§15). **Pendiente de aprobación** |
-| [ ] | F26 auditada | **Pendiente de la auditoría de Codex** |
+| [ ] | Estrategia de etiqueta aprobada | Propuesta: `v1.1.0-academic`, anotada, sobre el futuro merge verificado de `main` (§15). **Pendiente de aprobación** |
+| [ ] | Estrategia de `main` aprobada | Recomendación: opción B, merge `develop → main` con `--no-ff` (§15). **Pendiente de aprobación** |
+| [ ] | F26 auditada | **Pendiente de la reauditoría de Codex** (tras las correcciones F26-M01 y F26-M02) |
+
+**Antes del cierre, en este orden** (§15, pasos 1 a 12). Ninguna de estas acciones se ha ejecutado:
+
+| | Paso de cierre | Condición |
+|---|---|---|
+| [ ] | F26 integrada en `develop` y *push* | Tras la auditoría y con autorización |
+| [ ] | CI de `develop` en verde | Obligatorio antes del merge a `main` |
+| [ ] | Merge `develop → main` (`--no-ff`) y *push* | Con autorización explícita del equipo |
+| [ ] | CI de `main` en verde | **Obligatorio antes de crear la etiqueta** |
+| [ ] | Árboles iguales | `git rev-parse develop^{tree}` == `git rev-parse main^{tree}` |
+| [ ] | Etiqueta `v1.1.0-academic` creada y publicada | Sobre el merge verificado de `main`; no se mueve después |
+| [ ] | GitHub Release creado | Desde la etiqueta, con el PDF y el DOCX del Formato 09 |

@@ -5,11 +5,17 @@
 | Versión | **v1.1** (académica) |
 | Etiqueta propuesta | `v1.1.0-academic`, anotada. **No creada**: pendiente de auditoría y autorización |
 | Rama de cierre | `feature/phase-26-release-closeout` |
-| Commit base (merge F25 en `develop`) | `2b97fe36d25fd3911bc2e4e1e24c6ab16200179a` |
-| HEAD de F26 | El último commit de `feature/phase-26-release-closeout`, que registra el handoff de la Fase 26. Un documento no puede contener el hash del commit que lo introduce |
+| Baseline pre-F26 (merge F25 en `develop`) | `2b97fe36d25fd3911bc2e4e1e24c6ab16200179a` |
+| Árbol del baseline `develop` pre-F26 | `f945b8d123f419d7e038962a8a92c99008e950e0`. Solo identifica el baseline; **no** es el árbol final del release |
+| HEAD de la rama F26 | El último commit de `feature/phase-26-release-closeout`. Un documento no puede contener el hash del commit que lo introduce; se lee con `git rev-parse feature/phase-26-release-closeout` |
+| `FINAL_DEVELOP_MERGE_COMMIT` | Por resolver en el cierre: merge `--no-ff` de F26 en `develop` |
+| `FINAL_MAIN_MERGE_COMMIT` | Por resolver en el cierre: merge `--no-ff` de `develop` en `main`, con el CI de `develop` en verde |
+| `FINAL_RELEASE_TREE` | Se valida dinámicamente en el cierre: `git rev-parse develop^{tree}` debe ser igual a `git rev-parse main^{tree}`. No hay hash fijo |
+| `TAG_TARGET` | `FINAL_MAIN_MERGE_COMMIT`, solo después del CI de `main` en verde y de la igualdad de árboles |
 | `main` = `origin/main` | `4563c696ba08fd6d2a689af733020d849edebad2` (v1.0), sin cambios |
 | Etiqueta de la v1.0 | `v1.0.0-academic` → `9a946c202ef7473230e8efa371ace13479ab889c`, sin cambios |
-| Árbol de `develop` en la base | `f945b8d123f419d7e038962a8a92c99008e950e0`. Es también el árbol que tendría `main` tras un merge `develop → main`, según la simulación con `git merge-tree` |
+
+Secuencia obligatoria de cierre, con la etiqueta solo después del CI verde de `main`: [`phase-26-release-closeout.md`](phase-26-release-closeout.md) §15.
 
 ## Artefactos clave con hash
 

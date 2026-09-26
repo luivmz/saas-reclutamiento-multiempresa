@@ -1,6 +1,6 @@
 # v1.1 académica — Plataforma SaaS multiempresa de reclutamiento
 
-**Etiqueta propuesta:** `v1.1.0-academic` · **Estado:** preparada en la Fase 26, pendiente de auditoría.
+**Etiqueta propuesta:** `v1.1.0-academic` · **Estado:** preparada en la Fase 26, pendiente de auditoría. La etiqueta se crea sobre el merge de `develop` en `main` **después** de que el CI de `main` esté en verde y de verificar `develop^{tree} == main^{tree}`.
 
 Universidad Continental · Pruebas y Calidad de Software (NRC 28607) · Caso de estudio: Colegio Andino de Huancayo.
 
