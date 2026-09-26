@@ -1,12 +1,12 @@
 # Progreso del proyecto
 
-Última actualización: 2026-09-25 (Fase 25, pendiente de auditoría).
+Última actualización: 2026-09-25 (Fase 26, pendiente de auditoría).
 
-> El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24; el 25/09/2026, de la Fase 24 a la Fase 25. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
+> El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24; el 25/09/2026, de la Fase 24 a la Fase 25, y ese mismo día, de la Fase 25 a la Fase 26. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
 
 ## Estado de v1.1
 
-`main` sigue siendo la v1.0 académica (`4563c69`, tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1. `develop` = `origin/develop` = `4469128` *(hasta la Fase 25: `8211851`; hasta la Fase 24: `2621bee`)*.
+`main` sigue siendo la v1.0 académica (`4563c69`, tag `v1.0.0-academic` en `9a946c2`) y no contiene v1.1. `develop` = `origin/develop` = `2b97fe3` *(hasta la Fase 26: `4469128`; hasta la Fase 25: `8211851`; hasta la Fase 24: `2621bee`)*.
 
 | Fase | Contenido | Estado | Merge en `develop` | Detalle |
 |---|---|---|---|---|
@@ -23,8 +23,8 @@
 | 22 | Especificación UML del AS-IS | ✅ Integrada | `2621bee` | `docs/v1.1/phase-22-uml-update.md` |
 | 23 | Formalización en PowerDesigner | ✅ Cerrada e integrada | `8211851` | `docs/v1.1/phase-23-powerdesigner.md` |
 | 24 | Documentación académica final: Formato 09 v1.1 | ✅ Cerrada con observaciones e integrada | `4469128` | `docs/v1.1/phase-24-academic-documentation.md` |
-| 25 | QA global final / *release readiness* | 🟡 Implementada en `feature/phase-25-final-qa`, pendiente de auditoría | — | `docs/v1.1/phase-25-final-qa.md` |
-| 26 | GitHub, *release* y cierre de v1.1 | ⬜ No iniciada | — | — |
+| 25 | QA global final / *release readiness* | ✅ Cerrada con observaciones e integrada | `2b97fe3` | `docs/v1.1/phase-25-final-qa.md` |
+| 26 | GitHub, *release* y cierre de v1.1 | 🟡 Implementada en `feature/phase-26-release-closeout`, pendiente de auditoría | — | `docs/v1.1/phase-26-release-closeout.md` |
 
 **RF-29** está implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, no validado institucionalmente ni autorizado para producción; no selecciona ni descarta a nadie y no cambia RF-23. RF-28, RF-29 y los RNF nuevos (incluido RNF-C) siguen siendo **candidatos** (`docs/v1.1/scope-preliminary.md`, decisión 11 y preguntas 12–13).
 
@@ -200,4 +200,16 @@ Repositorio publicado en https://github.com/luivmz/saas-reclutamiento-multiempre
 - **Hallazgos corregidos:** F25-M01 (MEDIUM) ID no numérico en rutas → 500, ahora 404; F25-M02 (MEDIUM) fichas de tabla recortadas en móvil (WCAG 1.4.10); F25-L01 textos de GAP-01 obsoletos en el servicio ML (deuda OpenAPI de F22/F23, cerrada); F25-L02 guía de Cypress desactualizada. Además, una prueba cross-tenant nueva para evaluaciones. Sin BLOCKER ni HIGH.
 - **Deudas transferidas a F26:** formato preexistente (Pint/`vp check`), lector de pantalla real, rendimiento en equipo modesto, observaciones heredadas de F23 y F24.
 - **Detalle:** `docs/v1.1/phase-25-final-qa.md` y `docs/v1.1/phase-25-qa-matrix.md`.
+- **Sin `push`, `merge`, *tag* ni *release*.**
+- **Cierre:** tras la auditoría, cerrada con observaciones e integrada en `develop` con el merge `2b97fe3`. *(Anotado en la Fase 26.)*
+
+## v1.1 — Fase 26: release, GitHub y cierre final
+
+- **Rama:** `feature/phase-26-release-closeout`, desde `develop` en `2b97fe3` (cierre de la Fase 25).
+- **Alcance:** solo cierre documental, sin código, pruebas, dependencias, ML ni modelos nativos. `CHANGELOG.md`, notas de versión, manifiesto con hashes, lista de aceptación final, documento de cierre y README actualizado a v1.1.
+- **Deuda consolidada:** 0 BLOCKER, 0 HIGH, 0 MEDIUM, 8 LOW y 9 INFO, cada una clasificada como ACCEPTED, DEFERRED, RESOLVED o NOT APPLICABLE. Los modelos de prueba `zz_*` de la F23, que estaban fuera del repositorio, se borraron (RESOLVED). Pint y `vp check` quedan aplazados, con su alcance medido.
+- **Corrección a la F25:** el build sí muestra un aviso informativo (falta el paquete opcional `fontaine`); se acepta sin instalar nada.
+- **Estrategia propuesta, sin ejecutar:** etiqueta anotada `v1.1.0-academic`; merge `develop → main` con `--no-ff` y la etiqueta sobre `main`, como en la v1.0. Simulado con `git merge-tree`: sin conflictos y con el mismo árbol que `develop`. El GitHub Release lleva el PDF y el DOCX del Formato 09.
+- **Suites:** no se volvieron a ejecutar (sin cambios de código); rige la línea base de la F25.
+- **Detalle:** `docs/v1.1/phase-26-release-closeout.md`.
 - **Sin `push`, `merge`, *tag* ni *release*.**

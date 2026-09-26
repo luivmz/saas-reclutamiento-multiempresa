@@ -47,7 +47,8 @@ No dupliques estos documentos: enlázalos.
 | Suite E2E | `docs/testing/cypress-e2e.md` |
 | Usuarios demo ficticios | `docs/demo-users.md` |
 | Informe académico (14 capítulos) e informes de diagramas | `docs/final-report/` |
-| Planificación y fases de v1.1 (F13–F25) | `docs/v1.1/` — cada fase en su `phase-*.md` |
+| Planificación y fases de v1.1 (F13–F26) | `docs/v1.1/` — cada fase en su `phase-*.md` |
+| Release v1.1 (changelog, notas, manifiesto, aceptación) | `CHANGELOG.md` · `docs/v1.1/release-notes-v1.1.md` · `docs/v1.1/release-manifest-v1.1.md` · `docs/v1.1/final-acceptance-checklist.md` |
 | Formato 09 (fuentes, entregable final v1.1 y mapa de fuentes) | `docs/academico/phase-24/` |
 | Modelos PowerDesigner de v1.1 (OOM, PDM y exportaciones) | `docs/v1.1/powerdesigner/` |
 | Divergencias documentales entre v1.0 y v1.1 | `docs/v1.1/documentation-update-map.md` |
@@ -78,9 +79,9 @@ El servicio ML **no** corre en Docker Compose: se ejecuta desde `ml-service/` co
 - `main` sigue siendo la **v1.0 académica** (`4563c69`) y **no contiene v1.1**. El tag `v1.0.0-academic` apunta a `9a946c2` y no se mueve.
 - RF-01 a RF-27 son la línea base v1.0. Sus documentos de cierre (`docs/final-report/`) siguen siendo correctos **para v1.0** y no se reescriben.
 
-### `develop` — v1.1 en curso (integrado hasta la Fase 24)
+### `develop` — v1.1 en cierre (integrado hasta la Fase 25)
 
-`develop` = `origin/develop` = `4469128`. **`main` y `develop` ya no tienen el mismo contenido**: `develop` integra las Fases 13 a 24. *(Hasta la Fase 25 decía `8211851` y Fases 13 a 23; hasta la Fase 24, `2621bee` y Fases 13 a 22.)*
+`develop` = `origin/develop` = `2b97fe3`. **`main` y `develop` ya no tienen el mismo contenido**: `develop` integra las Fases 13 a 25. *(Hasta la Fase 26 decía `4469128` y Fases 13 a 24; hasta la Fase 25, `8211851` y Fases 13 a 23; hasta la Fase 24, `2621bee` y Fases 13 a 22.)*
 
 | Fase | Contenido | Estado |
 |---|---|---|
@@ -94,8 +95,8 @@ El servicio ML **no** corre en Docker Compose: se ejecuta desde `ml-service/` co
 | 22 | Especificación UML del AS-IS, solo documentación (`docs/v1.1/uml/`) | Integrada (`2621bee`) |
 | 23 | Formalización en PowerDesigner: OOM y PDM nativos, 22 diagramas exportados (`docs/v1.1/powerdesigner/`) | Cerrada e integrada (`8211851`) |
 | 24 | Documentación académica final: Formato 09 v1.1 (`docs/academico/phase-24/`) | Cerrada con observaciones e integrada (`4469128`) |
-| 25 | QA global final / *release readiness* (`docs/v1.1/phase-25-final-qa.md`) | **Implementada** en `feature/phase-25-final-qa`, pendiente de auditoría. No está en `develop` |
-| 26 | GitHub, *release* y cierre de v1.1 | **No iniciada** |
+| 25 | QA global final / *release readiness* (`docs/v1.1/phase-25-final-qa.md`) | Cerrada con observaciones e integrada (`2b97fe3`) |
+| 26 | GitHub, *release* y cierre de v1.1 (`docs/v1.1/phase-26-release-closeout.md`) | **Implementada** en `feature/phase-26-release-closeout`, pendiente de auditoría. Etiqueta propuesta `v1.1.0-academic`, **no creada**; sin *merge* a `main` |
 
 **ML (RF-29).** Implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, **no** validado institucionalmente ni autorizado para producción. Estima el riesgo de demora del **proceso**; no puntúa, ordena, selecciona ni descarta personas, no toca el ranking y no cambia RF-23. Contrato científico congelado, no se modifica: *freeze* `9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2`, *threshold* `0.1679418172266036`, Logistic Regression `C=10`, `class_weight=None`, `StandardScaler`, sin calibración.
 

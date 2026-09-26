@@ -128,6 +128,18 @@ La Fase 25 hizo el QA global de v1.1 ([`phase-25-final-qa.md`](phase-25-final-qa
 | `ml-service/src/recruitment_ml/api/schemas.py` y textos del paquete `serving` | «GAP-01: Laravel todavía no puede producirla»; «GAP-01 sigue abierto»; CLI «GAP-01 abierto» | GAP-01 resuelto técnicamente desde la Fase 16 | **Corregido en la Fase 25** (solo texto; pruebas nuevas en `test_api_service.py` y `test_serving_cli.py`). Cierra la deuda registrada en las Fases 22 y 23. Los textos del veredicto de la Fase 15B (`training/`) se conservan como registro congelado |
 | `phase-21-visual-qa.md` §11–12 | «0 px de desborde» y DataTable «sin cambios de código» | El desborde del documento era 0, pero en móvil las fichas de tabla se recortaban dentro del contenedor con scroll (auditoría, «Mis evaluaciones») | Corregido en la Fase 25 (F25-M02) y `e2e-16` ampliado; el documento de la Fase 21 no se reescribe |
 
+### Divergencias registradas por la Fase 26 (25/09/2026)
+
+La Fase 26 preparó el cierre de la v1.1 ([`phase-26-release-closeout.md`](phase-26-release-closeout.md)). No se reescribió ningún documento de v1.0 ni el informe cerrado de la Fase 25.
+
+| Documento | Qué dice | Qué es cierto | Acción tomada |
+|---|---|---|---|
+| `phase-25-final-qa.md` §6 y §12 · `phase-25-qa-matrix.md` QA-021 | *Build* «0 avisos» | El build muestra un aviso **informativo** del plugin `laravel:fonts` porque falta el paquete opcional `fontaine`; la búsqueda filtraba por «warn» y no lo captó | Registrado aquí y en `phase-26-release-closeout.md` §8 (deuda A-01, ACCEPTED). El informe de la F25 no se reescribe |
+| `README.md` (raíz) | Estado y resultados de v1.0 (244 pruebas, 14 specs), «No implementa… IA», publicación pendiente | v1.1 con ML experimental, resultados de la F25 y cierre en la F26 | Actualizado en la F26; los resultados de la v1.0 se conservan como histórico |
+| `CLAUDE.md` · `PROGRESS.md` (estado) | `develop` = `4469128`; F25 pendiente de auditoría; F26 sin iniciar | `develop` = `origin/develop` = `2b97fe3` (F25 cerrada con observaciones); F26 en su rama, pendiente de auditoría | Actualizados; el valor anterior se conserva entre paréntesis |
+| `CLAUDE.md` § Estado actual | «`main` sigue siendo la v1.0 académica y no contiene v1.1» | Sigue siendo cierto. La F26 **recomienda** integrar la v1.1 en `main` (opción B), sin ejecutarlo | Si se ejecuta, actualizar esta frase en ese mismo cierre, conservándola como historia |
+| `phase-23-powerdesigner.md` O-04 · `phase-25-final-qa.md` §28 | Modelos de prueba `zz_*` pendientes de limpieza | Borrados en la F26 (estaban fuera del repositorio) | Registrado como RESOLVED (D-02) |
+
 ## 2. Por verificar antes de tocar nada
 
 | Documento | Qué revisar |
