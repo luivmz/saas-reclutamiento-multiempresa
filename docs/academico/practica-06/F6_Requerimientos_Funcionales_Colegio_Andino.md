@@ -66,7 +66,7 @@ El Sistema valida, calcula, notifica y audita, pero **nunca selecciona**. No exi
 | RF-03 | Registrar aprobación o rechazo del requerimiento | El sistema debe permitir al Aprobador / Dirección aprobar o rechazar un requerimiento validado, con motivo obligatorio si lo rechaza. | Aprobador / Dirección | Decisión (aprobar o rechazar) y motivo (obligatorio al rechazar, hasta 1000 caracteres). | Estado final «aprobado» o «rechazado», con historial y auditoría. | Alta |
 | RF-04 | Notificar rechazo del requerimiento | El sistema debe notificar automáticamente al área solicitante el rechazo de su requerimiento, con el motivo. | Sistema (destinatario: área solicitante) | Rechazo registrado en RF-03, con su motivo. | Notificación en la plataforma y por correo, que se registra con el driver «log»: sin envío real (OUT-08). | Media |
 | RF-05 | Registrar perfil y criterios del puesto | El sistema debe permitir a RR. HH. crear una vacante desde un requerimiento aprobado y registrar su perfil y sus criterios ponderados. | RR. HH. | Requerimiento aprobado; título, resumen, lugar, tipo de contrato y plazas; perfil (formación, experiencia, funciones y competencias); criterios con etapa, ponderación y rango. | Vacante en estado «borrador» con perfil y criterios. | Alta |
-| RF-06 | Configurar y validar vacante | El sistema debe permitir configurar la convocatoria y mostrar una lista de validación previa a la publicación. | RR. HH. (configura) · Sistema (valida) | Plazas (sin superar las aprobadas), fechas de apertura y cierre y plazo objetivo del proceso (opcional, v1.1). | Lista de validación: ponderaciones, rangos, fechas, criterios y plazas. | Alta |
+| RF-06 | Configurar y validar vacante | El sistema debe permitir configurar la convocatoria y mostrar una lista de validación previa a la publicación. | RR. HH. (configura) · Sistema (valida) | Plazas (sin superar las aprobadas) y fechas de apertura y cierre. **Nota (H-09):** desde la v1.1 (Fase 16) el formulario incluye además el campo opcional `target_completion_at` (plazo objetivo del proceso), un soporte operativo introducido para el servicio experimental RF-29. **No forma parte del RF-06 de la línea base v1.0.** | Lista de validación: ponderaciones, rangos, fechas, criterios y plazas. | Alta |
 | RF-07 | Publicar vacante | El sistema debe publicar en el portal público de empleos las vacantes que cumplan la validación. | RR. HH. | Orden de publicación de una vacante en borrador. | Vacante «publicada», visible en el portal público de empleos. | Alta |
 | RF-08 | Gestionar cuenta y acceso del postulante | El sistema debe permitir al postulante crear su cuenta e iniciar sesión. | Postulante | Nombre, correo y contraseña para el registro; credenciales para el inicio de sesión. | Cuenta global con rol de postulante, sin organización (A-04), y sesión iniciada. | Alta |
 | RF-09 | Gestionar perfil y CV del postulante | El sistema debe permitir al postulante completar su perfil y cargar su CV en PDF de forma privada. | Postulante | Teléfono, ciudad, nivel educativo, título u ocupación, años de experiencia y resumen (opcional); CV en PDF de hasta 5 MB. | Perfil completo y CV guardado en disco privado con nombre UUID. | Alta |
@@ -91,24 +91,39 @@ El Sistema valida, calcula, notifica y audita, pero **nunca selecciona**. No exi
 
 La prioridad es una priorización analítica del equipo: **Alta** si el RF está en el camino principal del proceso y **Media** si es una notificación derivada de otra acción. Los 27 RF son de la línea base y están implementados.
 
-**Nombres canónicos y alias históricos**
+**Nombres canónicos, fuente y alias históricos**
 
-| ID | Nombre canónico | Alias en el F9 (v1.0 y v1.1) | Alias en el informe v1.0 (cap. 4) |
-|---|---|---|---|
-| RF-03 | Registrar aprobación o rechazo del requerimiento | Registrar aprobación o rechazo | Registrar aprobación o rechazo |
-| RF-04 | Notificar rechazo del requerimiento | Notificar rechazo | Notificar rechazo |
-| RF-05 | Registrar perfil y criterios del puesto | — | Registrar perfil y criterios |
-| RF-08 | Gestionar cuenta y acceso del postulante | Gestionar cuenta y acceso | — |
-| RF-09 | Gestionar perfil y CV del postulante | Gestionar perfil y CV | Gestionar perfil y CV |
-| RF-11 | Confirmar postulación al postulante | Confirmar postulación | Confirmar postulación |
-| RF-14 | Gestionar cambio de etapa de la postulación | Gestionar cambio de etapa | Gestionar cambio de etapa |
-| RF-15 | Notificar cambio de etapa al candidato | Notificar cambio de etapa | Notificar cambio de etapa |
-| RF-17 | Generar convocatoria de evaluación | Generar convocatoria | — |
-| RF-19 | Registrar entrevista y su resultado | Registrar entrevista y resultado | Registrar entrevista y resultado |
-| RF-22 | Presentar comparación de candidatos | Presentar comparación | — |
-| RF-23 | Registrar decisión final de selección | Registrar decisión final humana | — |
-| RF-24 | Registrar selección del candidato | Registrar selección | — |
-| RF-26 | Notificar resultado y cierre al postulante | Notificar resultado y cierre | Notificar resultado y cierre |
+**Nombre canónico:** el del catálogo técnico de la línea base. **Fuente:** Catálogo técnico de la línea base v1.1 (Fase 22): `docs/v1.1/uml/use-cases.md`, casos UC-RF01 a UC-RF27. Es el mismo catálogo del encargo F27B §2. **Alias histórico:** el rótulo que otro documento usó para el mismo RF (abreviatura o variante). No es otro RF ni otro nombre oficial.
+
+| RF | Nombre canónico | Fuente | Alias histórico | Observación |
+|---|---|---|---|---|
+| RF-01 | Registrar requerimiento de personal | UC-RF01 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-02 | Validar y corregir requerimiento | UC-RF02 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-03 | Registrar aprobación o rechazo del requerimiento | UC-RF03 (F22) | Registrar aprobación o rechazo | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional); informe v1.0, cap. 4 §4.2. No es un RF distinto |
+| RF-04 | Notificar rechazo del requerimiento | UC-RF04 (F22) | Notificar rechazo | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional); informe v1.0, cap. 4 §4.2. No es un RF distinto |
+| RF-05 | Registrar perfil y criterios del puesto | UC-RF05 (F22) | Registrar perfil y criterios | Rótulo abreviado o variante usado en: informe v1.0, cap. 4 §4.2. No es un RF distinto |
+| RF-06 | Configurar y validar vacante | UC-RF06 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-07 | Publicar vacante | UC-RF07 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-08 | Gestionar cuenta y acceso del postulante | UC-RF08 (F22) | Gestionar cuenta y acceso | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional). No es un RF distinto |
+| RF-09 | Gestionar perfil y CV del postulante | UC-RF09 (F22) | Gestionar perfil y CV | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional); informe v1.0, cap. 4 §4.2. No es un RF distinto |
+| RF-10 | Registrar postulación | UC-RF10 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-11 | Confirmar postulación al postulante | UC-RF11 (F22) | Confirmar postulación | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional); informe v1.0, cap. 4 §4.2. No es un RF distinto |
+| RF-12 | Consultar y revisar postulaciones | UC-RF12 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-13 | Registrar preselección o descarte | UC-RF13 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-14 | Gestionar cambio de etapa de la postulación | UC-RF14 (F22) | Gestionar cambio de etapa | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional); informe v1.0, cap. 4 §4.2. No es un RF distinto |
+| RF-15 | Notificar cambio de etapa al candidato | UC-RF15 (F22) | Notificar cambio de etapa | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional); informe v1.0, cap. 4 §4.2. No es un RF distinto |
+| RF-16 | Programar evaluación | UC-RF16 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-17 | Generar convocatoria de evaluación | UC-RF17 (F22) | Generar convocatoria | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional). No es un RF distinto |
+| RF-18 | Programar entrevista | UC-RF18 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-19 | Registrar entrevista y su resultado | UC-RF19 (F22) | Registrar entrevista y resultado | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional); informe v1.0, cap. 4 §4.2. No es un RF distinto |
+| RF-20 | Validar rangos y ponderaciones | UC-RF20 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-21 | Calcular ranking configurable | UC-RF21 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-22 | Presentar comparación de candidatos | UC-RF22 (F22) | Presentar comparación | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional). No es un RF distinto |
+| RF-23 | Registrar decisión final de selección | UC-RF23 (F22) | Registrar decisión final humana | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional). No es un RF distinto |
+| RF-24 | Registrar selección del candidato | UC-RF24 (F22) | Registrar selección | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional). No es un RF distinto |
+| RF-25 | Cerrar vacante o convocatoria | UC-RF25 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
+| RF-26 | Notificar resultado y cierre al postulante | UC-RF26 (F22) | Notificar resultado y cierre | Rótulo abreviado o variante usado en: F9 v1.0 y v1.1 (tabla de línea base funcional); informe v1.0, cap. 4 §4.2. No es un RF distinto |
+| RF-27 | Generar registro de auditoría | UC-RF27 (F22) | — | Mismo nombre en el F9 y en el cap. 4 de v1.0 |
 
 Los IDs no cambian. La Fase 24 registró «seis rótulos abreviados» en el Formato 09 (observación L-02). La comparación completa contra el catálogo canónico encuentra **13** rótulos distintos en el F9: 11 abreviaturas y 2 variantes (RF-19 y RF-23). En el informe v1.0 hay 8. Todos quedan resueltos aquí con su alias; el F9 publicado no se modifica.
 

@@ -51,7 +51,8 @@ No cambia el alcance del F9: RF-01 a RF-27 siguen siendo la línea base. RF-28, 
 ## 4. Qué no cambia
 
 - **Decisión final:** es **humana** y la registra el Aprobador / Dirección (RF-23). El sistema no selecciona, descarta ni contrata.
-- **RF-29:** experimental y solo sobre el proceso; no evalúa candidatos. **RF-28:** candidato no implementado. **RNF-C:** propuesta.
+- **RF-29:** experimental y solo sobre el proceso; no evalúa candidatos. **RF-28:** candidato no implementado.
+- **Candidatos no funcionales**, separados de los 10 RNF académicos: RNF-A (accesibilidad), RNF-B (presupuesto de rendimiento), RNF-C (experiencia 3D) y **RNF-D (observabilidad)**. Todos siguen como **PROPUESTOS**; RNF-D se incorporó al F7 en la F27D (H-10).
 - **AS-IS:** sigue siendo **preliminar** y sujeto a validación institucional.
 
 Si el equipo decide emitir una versión 1.2 del Formato 09, esta adenda y la [trazabilidad F2–F9](../trazabilidad/F2-F9-traceability.md) son su insumo. Esa emisión requiere una decisión y una auditoría propias.

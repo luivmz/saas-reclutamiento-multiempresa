@@ -749,9 +749,14 @@ def build_f6():
             [(r[0], r[1], r[2], r[3], r[4], r[5], r[6]) for r in R.RF], widths=[7, 16, 20, 11, 18, 17, 11], sz=14)
     d.p(f'La prioridad es una {R.PRIORIZACION}: **Alta** si el RF está en el camino principal del proceso y **Media** si '
         'es una notificación derivada de otra acción. Los 27 RF son de la línea base y están implementados.')
-    d.sub('Nombres canónicos y alias históricos')
-    d.table(['ID', 'Nombre canónico', 'Alias en el F9 (v1.0 y v1.1)', 'Alias en el informe v1.0 (cap. 4)'],
-            [(k, RFD[k][1], v[0] or '—', v[1] or '—') for k, v in R.ALIAS.items()], widths=[9, 35, 28, 28], sz=16)
+    d.sub('Nombres canónicos, fuente y alias históricos')
+    d.p('**Nombre canónico:** el del catálogo técnico de la línea base. **Fuente:** ' + R.FUENTE_CANONICA + ' **Alias '
+        'histórico:** el rótulo que otro documento usó para el mismo RF (abreviatura o variante). No es otro RF ni otro nombre '
+        'oficial.')
+    d.table(['RF', 'Nombre canónico', 'Fuente', 'Alias histórico', 'Observación'],
+            [(r[0], r[1], f'UC-{r[0].replace("-", "")} (F22)',
+              ' / '.join(x for x in dict.fromkeys(R.ALIAS.get(r[0], (None, None))) if x) or '—', R.obs_nombre(r[0]))
+             for r in R.RF], widths=[8, 28, 13, 22, 29], sz=15)
     d.p('Los IDs no cambian. La Fase 24 registró «seis rótulos abreviados» en el Formato 09 (observación L-02). La '
         'comparación completa contra el catálogo canónico encuentra **13** rótulos distintos en el F9: 11 abreviaturas y '
         '2 variantes (RF-19 y RF-23). En el informe v1.0 hay 8. Todos quedan resueltos aquí con su alias; el F9 publicado '
@@ -829,7 +834,9 @@ def build_f7():
     d.table(['RNF técnico sin equivalente académico', 'Requerimiento', 'Estado'], N.TECNICOS_SIN_EQUIVALENTE,
             widths=[22, 48, 30], sz=16)
     d.sub('Candidatos fuera de la línea base')
-    d.table(['ID', 'Candidato', 'Estado', 'Observación'], N.CANDIDATOS, widths=[8, 37, 13, 42], sz=16)
+    d.table(['ID', 'Candidato', 'Estado', 'Observación'], N.CANDIDATOS, widths=[8, 32, 13, 47], sz=16)
+    d.p('RNF-A a RNF-D son **propuestas separadas** de los 10 RNF académicos: no se cuentan en la línea base ni cambian su '
+        'estado de verificación.')
     emit(7, 'F7_Requerimientos_No_Funcionales_Colegio_Andino', 'Formato_07_Requerimientos_no_funcionales.docx', 'modulo',
          d, 'Formato 07 — Requerimientos no funcionales')
     write_evidence(7, 'Formato 07', [

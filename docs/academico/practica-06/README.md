@@ -39,6 +39,13 @@ Los IDs no cambian. El formato muestra el **nombre canónico** y, si existe, el 
 
 La Fase 24 había registrado «seis rótulos abreviados» (observación L-02). La comparación completa de la F27B encuentra las 13 diferencias y las resuelve todas. El F9 publicado no se modifica.
 
+## Correcciones de la F27D
+
+| Hallazgo | Corrección |
+|---|---|
+| H-08 | Tabla de los 27 RF con **nombre canónico**, **fuente** (catálogo técnico de la línea base, F22: `docs/v1.1/uml/use-cases.md`, UC-RFnn), **alias histórico** y observación. Un alias es solo el rótulo que otro documento usó para el mismo RF |
+| H-09 | RF-06: `target_completion_at` (plazo objetivo del proceso) se anota como un campo introducido en la v1.1 (Fase 16) como soporte operativo del servicio experimental RF-29. **No forma parte del RF-06 de la línea base v1.0** |
+
 ## Reglas que el formato mantiene
 
 - **RF-23:** la decisión final es humana y la registra el **Aprobador / Dirección**, con confirmación y justificación. RR. HH. no decide.

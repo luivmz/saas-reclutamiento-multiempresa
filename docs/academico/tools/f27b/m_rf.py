@@ -90,7 +90,9 @@ RF = [
     ('RF-06', 'Configurar y validar vacante',
      'El sistema debe permitir configurar la convocatoria y mostrar una lista de validación previa a la publicación.',
      'RR. HH. (configura) · Sistema (valida)',
-     'Plazas (sin superar las aprobadas), fechas de apertura y cierre y plazo objetivo del proceso (opcional, v1.1).',
+     'Plazas (sin superar las aprobadas) y fechas de apertura y cierre. **Nota (H-09):** desde la v1.1 (Fase 16) el '
+     'formulario incluye además el campo opcional `target_completion_at` (plazo objetivo del proceso), un soporte '
+     'operativo introducido para el servicio experimental RF-29. **No forma parte del RF-06 de la línea base v1.0.**',
      'Lista de validación: ponderaciones, rangos, fechas, criterios y plazas.', 'Alta',
      'Vacante en borrador de la organización.',
      ['Configura la convocatoria.', 'El sistema evalúa la lista de validación.', 'El sistema muestra qué está completo y qué falta.'],
@@ -336,3 +338,18 @@ EXTENSIONES = [
      'No cambia RF-23.',
      'docs/v1.1/phase-16-laravel-ml-integration.md; docs/v1.1/phase-17-ml-validation.md; UC-RF29 «experimental»'),
 ]
+
+FUENTE_CANONICA = ('Catálogo técnico de la línea base v1.1 (Fase 22): `docs/v1.1/uml/use-cases.md`, casos UC-RF01 a UC-RF27. '
+                   'Es el mismo catálogo del encargo F27B §2.')
+
+
+def obs_nombre(rf):
+    a = ALIAS.get(rf)
+    if not a:
+        return 'Mismo nombre en el F9 y en el cap. 4 de v1.0'
+    docs = []
+    if a[0]:
+        docs.append('F9 v1.0 y v1.1 (tabla de línea base funcional)')
+    if a[1]:
+        docs.append('informe v1.0, cap. 4 §4.2')
+    return 'Rótulo abreviado o variante usado en: ' + '; '.join(docs) + '. No es un RF distinto'

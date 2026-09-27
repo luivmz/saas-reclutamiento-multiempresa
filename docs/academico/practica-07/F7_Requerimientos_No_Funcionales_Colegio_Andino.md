@@ -231,3 +231,6 @@ La relación **no es 1:1**. Tres RNF académicos (RNF-06, RNF-07 y RNF-08) no ti
 | RNF-A | Accesibilidad WCAG 2.1 AA verificada en las pantallas de RF-01 a RF-27 | PROPUESTO | Hay evidencia parcial de la F21 y la F25; falta un lector de pantalla real |
 | RNF-B | Presupuesto de rendimiento del frontend con línea base medida | PROPUESTO | Sin línea base aprobada |
 | RNF-C | Experiencia 3D progresiva en pantallas públicas | PROPUESTO | Implementada en la F20 (portada, CSS 3D), pero **no promovida**: implementar no promueve un requisito (decisión 11) |
+| RNF-D | Observabilidad del proceso: métricas operativas y registro estructurado | PROPUESTO | Candidato de `docs/v1.1/scope-preliminary.md`, refinado como «observabilidad operacional» en `docs/v1.1/ml/requirements-and-traceability-plan.md`. Añadido al F7 en la F27D (H-10); **no** forma parte de los 10 RNF académicos |
+
+RNF-A a RNF-D son **propuestas separadas** de los 10 RNF académicos: no se cuentan en la línea base ni cambian su estado de verificación.

@@ -36,4 +36,13 @@ La relación **no es 1:1**:
 - **RNF-06, RNF-07 y RNF-08** no tienen equivalente técnico.
 - **Portabilidad y localización** (capítulo 4, RNF-09 y RNF-11) no tienen equivalente académico.
 
-Unificar los catálogos es una decisión pendiente del equipo (F24 L-01). Los candidatos RNF-A, RNF-B y **RNF-C** siguen siendo **propuestas**. RNF-C está implementado en la portada (F20), pero no está promovido.
+Unificar los catálogos es una decisión pendiente del equipo (F24 L-01).
+
+**Candidatos, separados de los 10 RNF académicos:**
+
+| ID | Candidato | Estado |
+|---|---|---|
+| RNF-A | Accesibilidad WCAG 2.1 AA verificada | PROPUESTO |
+| RNF-B | Presupuesto de rendimiento con línea base medida | PROPUESTO |
+| RNF-C | Experiencia 3D progresiva (implementada en la portada en la F20, pero no promovida) | PROPUESTO |
+| RNF-D | Observabilidad del proceso: métricas operativas y registro estructurado. Añadido al F7 en la F27D (H-10); fuente: `scope-preliminary.md` | PROPUESTO |

@@ -121,6 +121,10 @@ CANDIDATOS = [
     ('RNF-B', 'Presupuesto de rendimiento del frontend con línea base medida', 'PROPUESTO', 'Sin línea base aprobada'),
     ('RNF-C', 'Experiencia 3D progresiva en pantallas públicas', 'PROPUESTO',
      'Implementada en la F20 (portada, CSS 3D), pero **no promovida**: implementar no promueve un requisito (decisión 11)'),
+    ('RNF-D', 'Observabilidad del proceso: métricas operativas y registro estructurado', 'PROPUESTO',
+     'Candidato de `docs/v1.1/scope-preliminary.md`, refinado como «observabilidad operacional» en '
+     '`docs/v1.1/ml/requirements-and-traceability-plan.md`. Añadido al F7 en la F27D (H-10); **no** forma parte de los 10 '
+     'RNF académicos'),
 ]
 
 CLASIFICACION = [

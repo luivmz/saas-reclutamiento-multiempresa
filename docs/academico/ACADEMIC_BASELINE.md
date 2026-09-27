@@ -54,6 +54,7 @@ Candidatos en [`../v1.1/scope-preliminary.md`](../v1.1/scope-preliminary.md), si
 | RF-28 | Candidato, **no implementado** |
 | RF-29 | Implementado de forma **experimental**: estima el riesgo de demora del **proceso**. No evalúa, puntúa, ordena, selecciona ni descarta candidatos. Validado solo con datos sintéticos, no institucionalmente |
 | RNF-C | **Propuesta** |
+| RNF-A, RNF-B y RNF-D | **Propuestas** (accesibilidad, presupuesto de rendimiento y observabilidad), fuera de los 10 RNF académicos |
 
 ## Fuentes oficiales disponibles
 
