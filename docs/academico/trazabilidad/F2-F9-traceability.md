@@ -1,8 +1,10 @@
-# Trazabilidad F2 → F9 (Fase 27B)
+# Trazabilidad F2 → F9 (Fases 27B y 27D)
 
 Cadena académica completa: actividad AS-IS → problema → solución → actividad TO-BE → RF → RNF relevantes → CU → alcance del F9.
 Se genera desde los mismos modelos que los Formatos 02 a 08 (`docs/academico/tools/f27b/`), así que no puede contradecirlos.
 Para regenerarla: `python docs/academico/tools/f27b/build.py trace`.
+
+Alcance de la validación automática: [`README.md`](README.md). `validate.py` comprueba la coherencia **estructural**, no la semántica completa.
 
 | Formato | Entregable |
 |---|---|
@@ -23,49 +25,54 @@ Para regenerarla: `python docs/academico/tools/f27b/build.py trace`.
 | TO-BE (F5) | **Propuesto** |
 | RF (F6) y CU (F8) | Describen el **software implementado** v1.1 |
 | RNF (F7) | Cada uno con su estado de verificación |
-| RF-28, RF-29 y RNF-C | **Fuera** de la cadena de la línea base |
-
-Un RNF no se asocia a una única actividad: son transversales, y la columna muestra los más relevantes para cada RF.
+| RF-28, RF-29 y RNF-A a RNF-D | **Fuera** de la cadena de la línea base |
 
 ## 1. Cadena completa por actividad TO-BE
 
-| AS-IS | Problema | Solución | Actividad TO-BE | RF | RNF relevantes | CU | Alcance F9 |
-|---|---|---|---|---|---|---|---|
-| AS-01, AS-02 | P1 | S-01 | TB-01 Registrar el requerimiento de personal | RF-01 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-01 | IN-01 |
-| AS-02 | P2 | S-02 | TB-02 Enviar el requerimiento a RR. HH. | RF-02 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-02 | IN-01 |
-| AS-03 | P2 | S-02 | TB-03 Revisar el requerimiento y validarlo u observarlo | RF-02 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-02 | IN-01 |
-| AS-03 | P2 | S-02 | TB-04 Corregir y reenviar el requerimiento observado | RF-02 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-02 | IN-01 |
-| AS-04 | P2 | S-02 | TB-05 Aprobar o rechazar el requerimiento | RF-03 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-03 | IN-01 |
-| AS-04 | P4 | S-04 | TB-06 Notificar el rechazo al área solicitante | RF-04 | RNF-02 | CU-03 | IN-01 |
-| AS-05 | P1, P3 | S-01, S-03 | TB-07 Crear la vacante y registrar el perfil y los criterios ponderados | RF-05 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-04 | IN-02 |
-| AS-05 | P1 | S-01 | TB-08 Configurar la vacante | RF-06 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-05 | IN-02 |
-| AS-05 | P3 | S-03 | TB-09 Validar la configuración, las ponderaciones y los rangos | RF-06, RF-20 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-05, CU-16 | IN-02, IN-06 |
-| AS-06 | — | — | TB-10 Publicar la vacante en el portal de empleos | RF-07 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-06 | IN-02 |
-| AS-07 | — | — | TB-11 Crear la cuenta e iniciar sesión | RF-08 | RNF-01, RNF-04 | CU-07 | IN-03 |
-| AS-07 | P1 | S-01 | TB-12 Completar el perfil y cargar el CV | RF-09 | RNF-04, RNF-05 | CU-08 | IN-03 |
-| AS-07 | P1 | S-01 | TB-13 Registrar la postulación | RF-10 | RNF-04, RNF-10 | CU-09 | IN-03 |
-| AS-07 | P4 | S-04 | TB-14 Confirmar la postulación | RF-11 | RNF-04 | CU-09 | IN-03 |
-| AS-08 | P1 | S-01 | TB-15 Revisar las postulaciones y el expediente | RF-12 | RNF-02, RNF-04, RNF-06 | CU-10 | IN-04 |
-| AS-09 | P2 | S-02 | TB-16 Preseleccionar o descartar | RF-13 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-11 | IN-04 |
-| AS-09 | P4 | S-04 | TB-17 Notificar el cambio de etapa al postulante | RF-15 | RNF-04 | CU-12 | IN-04 |
-| AS-10 | P3 | S-03 | TB-18 Programar la evaluación | RF-16 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-13 | IN-05 |
-| AS-10 | P3, P4 | S-03, S-04 | TB-19 Enviar la convocatoria al postulante y el aviso al evaluador | RF-17 | RNF-04 | CU-13 | IN-05 |
-| AS-10 | P3 | S-03 | TB-20 Programar la entrevista | RF-18 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-14 | IN-05 |
-| AS-11 | P3 | S-03 | TB-21 Registrar puntajes, resultado y observaciones | RF-19 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-15 | IN-05 |
-| AS-11 | P3 | S-03 | TB-22 Validar los puntajes dentro del rango de cada criterio | RF-20 | RNF-10 | CU-16 | IN-06 |
-| AS-11 | P2 | S-02 | TB-23 Actualizar la etapa de la postulación (finalista o descarte) | RF-14 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-12 | IN-04 |
-| AS-12 | P3, P5 | S-03, S-05 | TB-24 Calcular el ranking ponderado explicable | RF-21 | RNF-06, RNF-10 | CU-17 | IN-06 |
-| AS-12 | P3, P5 | S-03, S-05 | TB-25 Presentar la comparación de candidatos | RF-22 | RNF-02, RNF-05, RNF-06 | CU-17 | IN-06 |
-| AS-13 | P5 | S-05 | TB-26 Registrar la decisión final humana | RF-23 | RNF-01, RNF-02, RNF-03 | CU-18 | IN-07, IN-08 |
-| AS-14 | P2 | S-02 | TB-27 Registrar la selección del candidato decidido | RF-24 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-19 | IN-07 |
-| AS-14 | P2 | S-02 | TB-28 Cerrar la convocatoria (con selección) | RF-25 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-20 | IN-07 |
-| AS-14 | P4 | S-04 | TB-29 Notificar el resultado a cada postulante | RF-26 | RNF-04 | CU-20 | IN-07 |
-| — (nueva) | P5 | S-05 | TB-30 Registrar la auditoría de las acciones críticas | RF-27 | RNF-02, RNF-03 | CU-18 | IN-07, IN-08 |
-| — (nueva) | — | — | TB-F1 Cerrar la convocatoria sin selección (convocatoria desierta) | — (propuesta futura) | — | — | Fuera de alcance (OUT) |
+**Dos columnas de problema (H-06):**
+
+- **«Problema directo (F4)»:** solo los problemas que el Formato 04 asigna a la actividad AS-IS de origen.
+- **«Problema vía solución»:** el problema que atiende la solución (F5, relación de §2.3) donde participa esa actividad TO-BE.
+
+Una columna no se deduce de la otra, y no se atribuye a ninguna actividad un problema que F4 no le asignó.
+
+| AS-IS | Problema directo (F4) | Problema vía solución | Solución | Actividad TO-BE | RF | RNF relevantes | CU | Alcance F9 |
+|---|---|---|---|---|---|---|---|---|
+| AS-01, AS-02 | P1, P2 | P1 | S-01 | TB-01 Registrar el requerimiento de personal | RF-01 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-01 | IN-01 |
+| AS-02 | P1, P2 | P2 | S-02 | TB-02 Enviar el requerimiento a RR. HH. | RF-02 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-02 | IN-01 |
+| AS-03 | P2 | P2 | S-02 | TB-03 Revisar el requerimiento y validarlo u observarlo | RF-02 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-02 | IN-01 |
+| AS-03 | P2 | P2 | S-02 | TB-04 Corregir y reenviar el requerimiento observado | RF-02 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-02 | IN-01 |
+| AS-04 | P2 | P2 | S-02 | TB-05 Aprobar o rechazar el requerimiento | RF-03 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-03 | IN-01 |
+| AS-04 | P2 | P4 | S-04 | TB-06 Notificar el rechazo al área solicitante | RF-04 | RNF-02 | CU-03 | IN-01 |
+| AS-05 | P1 | P1, P3 | S-01, S-03 | TB-07 Crear la vacante y registrar el perfil y los criterios ponderados | RF-05 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-04 | IN-02 |
+| AS-05 | P1 | P1 | S-01 | TB-08 Configurar la vacante | RF-06 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-05 | IN-02 |
+| AS-05 | P1 | P3 | S-03 | TB-09 Validar la configuración, las ponderaciones y los rangos | RF-06, RF-20 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-05, CU-16 | IN-02, IN-06 |
+| AS-06 | P1 | — | — | TB-10 Publicar la vacante en el portal de empleos | RF-07 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-06 | IN-02 |
+| AS-07 | P4 | — | — | TB-11 Crear la cuenta e iniciar sesión | RF-08 | RNF-01, RNF-04 | CU-07 | IN-03 |
+| AS-07 | P4 | P1 | S-01 | TB-12 Completar el perfil y cargar el CV | RF-09 | RNF-04, RNF-05 | CU-08 | IN-03 |
+| AS-07 | P4 | P1 | S-01 | TB-13 Registrar la postulación | RF-10 | RNF-04, RNF-10 | CU-09 | IN-03 |
+| AS-07 | P4 | P4 | S-04 | TB-14 Confirmar la postulación | RF-11 | RNF-04 | CU-09 | IN-03 |
+| AS-08 | P1 | P1 | S-01 | TB-15 Revisar las postulaciones y el expediente | RF-12 | RNF-02, RNF-04, RNF-06 | CU-10 | IN-04 |
+| AS-09 | P2 | P2 | S-02 | TB-16 Preseleccionar o descartar | RF-13 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-11 | IN-04 |
+| AS-09 | P2 | P4 | S-04 | TB-17 Notificar el cambio de etapa al postulante | RF-15 | RNF-04 | CU-12 | IN-04 |
+| AS-10 | P4 | P3 | S-03 | TB-18 Programar la evaluación | RF-16 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-13 | IN-05 |
+| AS-10 | P4 | P3, P4 | S-03, S-04 | TB-19 Enviar la convocatoria al postulante y el aviso al evaluador | RF-17 | RNF-04 | CU-13 | IN-05 |
+| AS-10 | P4 | P3 | S-03 | TB-20 Programar la entrevista | RF-18 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-14 | IN-05 |
+| AS-11 | P3 | P3 | S-03 | TB-21 Registrar puntajes, resultado y observaciones | RF-19 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-15 | IN-05 |
+| AS-11 | P3 | P3 | S-03 | TB-22 Validar los puntajes dentro del rango de cada criterio | RF-20 | RNF-10 | CU-16 | IN-06 |
+| AS-11 | P3 | P2 | S-02 | TB-23 Actualizar la etapa de la postulación (finalista o descarte) | RF-14 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-12 | IN-04 |
+| AS-12 | P3, P5 | P3, P5 | S-03, S-05 | TB-24 Calcular el ranking ponderado explicable | RF-21 | RNF-06, RNF-10 | CU-17 | IN-06 |
+| AS-12 | P3, P5 | P3, P5 | S-03, S-05 | TB-25 Presentar la comparación de candidatos | RF-22 | RNF-02, RNF-05, RNF-06 | CU-17 | IN-06 |
+| AS-13 | P5 | P5 | S-05 | TB-26 Registrar la decisión final humana | RF-23 | RNF-01, RNF-02, RNF-03 | CU-18 | IN-07 |
+| AS-14 | P4 | P2 | S-02 | TB-27 Registrar la selección del candidato decidido | RF-24 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-19 | IN-07 |
+| AS-14 | P4 | P2 | S-02 | TB-28 Cerrar la convocatoria (con selección) | RF-25 | RNF-01, RNF-02, RNF-03, RNF-10 | CU-20 | IN-07 |
+| AS-14 | P4 | P4 | S-04 | TB-29 Notificar el resultado a cada postulante | RF-26 | RNF-04 | CU-20 | IN-07 |
+| — (nueva) | — | P5 | S-05 | TB-30 Registrar la auditoría de las acciones críticas | RF-27 | RNF-02, RNF-03 | RF-27: — (transversal; fuera del catálogo CU-01..CU-20) | IN-08 |
+| — (nueva) | — | — | — | TB-F1 Cerrar la convocatoria sin selección (convocatoria desierta) | — (propuesta futura) | — | — | Fuera de alcance (OUT) |
 
 ## 2. Del proceso actual al TO-BE
 
-| AS-IS | Actividad actual | Problemas | Actividades TO-BE que la sustituyen |
+| AS-IS | Actividad actual | Problemas (F4) | Actividades TO-BE que la sustituyen |
 |---|---|---|---|
 | AS-01 | Identificar la necesidad de personal | — | TB-01 |
 | AS-02 | Comunicar la necesidad a RR. HH. | P1, P2 | TB-01, TB-02 |
@@ -75,7 +82,7 @@ Un RNF no se asocia a una única actividad: son transversales, y la columna mues
 | AS-06 | Difundir la convocatoria | P1 | TB-10 |
 | AS-07 | Presentar la postulación y el CV | P4 | TB-11, TB-12, TB-13, TB-14 |
 | AS-08 | Recibir y reunir postulaciones y CV | P1 | TB-15 |
-| AS-09 | Revisar y preseleccionar candidatos | P2 | TB-16, TB-17 |
+| AS-09 | Revisar el CV y preseleccionar al candidato | P2 | TB-16, TB-17 |
 | AS-10 | Coordinar evaluaciones y entrevistas | P4 | TB-18, TB-19, TB-20 |
 | AS-11 | Realizar evaluaciones y entrevistas | P3 | TB-21, TB-22, TB-23 |
 | AS-12 | Consolidar resultados y comparar candidatos | P3, P5 | TB-24, TB-25 |
@@ -83,6 +90,8 @@ Un RNF no se asocia a una única actividad: son transversales, y la columna mues
 | AS-14 | Comunicar el resultado | P4 | TB-27, TB-28, TB-29 |
 
 ## 3. Por requerimiento funcional
+
+RF-23 va a CU-18 «Registrar decisión final humana» → UC-RF23 (IN-07). RF-27 es transversal → UC-RF27 (IN-08) y no se mezcla con RF-23 (H-07).
 
 | RF | Nombre canónico | TO-BE | CU académico | CU agrupado (v1.0) | UC-RF | RNF relevantes | Alcance F9 |
 |---|---|---|---|---|---|---|---|
@@ -108,11 +117,11 @@ Un RNF no se asocia a una única actividad: son transversales, y la columna mues
 | RF-20 | Validar rangos y ponderaciones | TB-09, TB-22 | CU-16 | CU-04 · CU-09 | UC-RF20 | RNF-10 | IN-06 |
 | RF-21 | Calcular ranking configurable | TB-24 | CU-17 | CU-10 | UC-RF21, UC-RF22 | RNF-10, RNF-06 | IN-06 |
 | RF-22 | Presentar comparación de candidatos | TB-25 | CU-17 | CU-10 | UC-RF21, UC-RF22 | RNF-02, RNF-05, RNF-06 | IN-06 |
-| RF-23 | Registrar decisión final de selección | TB-26 | CU-18 | CU-11 · CU-13 (consulta de auditoría) | UC-RF23 «human decision», UC-RF27 | RNF-01, RNF-02, RNF-03 | IN-07, IN-08 |
+| RF-23 | Registrar decisión final de selección | TB-26 | CU-18 | CU-11 | UC-RF23 «human decision» | RNF-01, RNF-02, RNF-03 | IN-07 |
 | RF-24 | Registrar selección del candidato | TB-27 | CU-19 | CU-12 | UC-RF24 | RNF-01, RNF-02, RNF-03, RNF-10 | IN-07 |
 | RF-25 | Cerrar vacante o convocatoria | TB-28 | CU-20 | CU-12 | UC-RF25, UC-RF26 «include» | RNF-01, RNF-02, RNF-03, RNF-10 | IN-07 |
 | RF-26 | Notificar resultado y cierre al postulante | TB-29 | CU-20 | CU-12 | UC-RF25, UC-RF26 «include» | RNF-04 | IN-07 |
-| RF-27 | Generar registro de auditoría | TB-30 | CU-18 | CU-11 · CU-13 (consulta de auditoría) | UC-RF23 «human decision», UC-RF27 | RNF-03, RNF-02 | IN-07, IN-08 |
+| RF-27 | Generar registro de auditoría | TB-30 | — (transversal; fuera del catálogo CU-01..CU-20) | CU-13 | UC-RF27 | RNF-03, RNF-02 | IN-08 |
 
 ## 4. RNF transversales
 
@@ -129,9 +138,11 @@ Un RNF no se asocia a una única actividad: son transversales, y la columna mues
 | RNF-09 | Mantenibilidad | EVIDENCIA PARCIAL | cap. 4 RNF-08 (mantenibilidad) |
 | RNF-10 | Integridad de datos | VERIFICADO | cap. 4 RNF-04 (integridad) |
 
-## 5. Validación de coherencia (§17 del encargo)
+## 5. Validación de coherencia estructural (§17 del encargo)
 
-Resultado de `docs/academico/tools/f27b/validate.py` al generar este documento: **35 de 35 reglas OK, 0 fallas.**
+Resultado de `docs/academico/tools/f27b/validate.py` al generar este documento: **37 de 37 reglas OK, 0 fallas.**
+
+Es una validación **estructural**. En la F27D, además, se revisaron a mano F3, F5, F8 y esta trazabilidad (ver [`README.md`](README.md)).
 
 | Regla | Resultado | Detalle |
 |---|---|---|
@@ -155,37 +166,39 @@ Resultado de `docs/academico/tools/f27b/validate.py` al generar este documento: 
 | F7: hay 10 RNF académicos, cada uno con método de verificación y estado | OK |  |
 | F7: los estados usan solo el vocabulario permitido | OK |  |
 | F7: RNF-C figura solo como propuesta | OK |  |
-| F8: todo RF-01..RF-27 está en algún CU | OK |  |
+| F8: todo RF-01..RF-27 está en algún CU o declarado transversal (RF-27) | OK |  |
+| F8: RF-23 solo en el CU de decisión final humana y sin RF-27 | OK |  |
 | F8: ningún CU usa RF fuera de la línea base | OK |  |
 | F8: todo CU tiene actor directo o es un caso incluido | OK |  |
 | F8: todo CU tiene RF | OK |  |
 | F8: hay 20 CU académicos (CU-01..CU-20) | OK |  |
 | F9: se leyó la tabla RF → CU del F9 publicado (27 filas) | OK | 27 |
-| F8 ↔ F9: la relación RF → CU → bloque IN coincide con el F9 publicado | OK |  |
+| F8 ↔ F9: la relación RF → CU → bloque IN coincide con el F9 publicado (RF-27: solo el bloque, divergencia de CU documentada en D-CU-04) | OK |  |
 | Ninguna afirmación de validación institucional sin negación o condición | OK |  |
+| F3/F5: no quedan variantes de nombre retiradas (glosario único) | OK |  |
 | DOCX F2_Analisis_del_Proceso_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 2 imágenes |
 | DOCX F3_Diagrama_BPM_ASIS_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 2 imágenes |
 | DOCX F4_Problemas_del_Proceso_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 2 imágenes |
-| DOCX F5_Modelo_BPM_TOBE_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 4 imágenes |
+| DOCX F5_Modelo_BPM_TOBE_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 5 imágenes |
 | DOCX F6_Requerimientos_Funcionales_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 0 imágenes |
 | DOCX F7_Requerimientos_No_Funcionales_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 0 imágenes |
 | DOCX F8_Diagrama_Casos_de_Uso_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 3 imágenes |
 
-## 6. Rupturas y pendientes conocidos
+## 6. Rupturas y pendientes conocidos (historial y resolución)
 
-Las reglas se cumplen. Estos puntos son **límites declarados**, no errores de trazabilidad:
+La descripción original de la F27B se conserva y la resolución de la F27D se añade al lado.
 
-| ID | Eslabón | Pendiente | Tratamiento |
-|---|---|---|---|
-| T-01 | AS-IS | Todo el AS-IS es **preliminar**: sin validación de RR. HH. ni de la Administración del Colegio | Mantener el rótulo hasta validarlo; no afirmar hechos institucionales |
-| T-02 | AS-IS → problema | AS-01 no tiene un problema asociado | Correcto: no toda actividad es problemática |
-| T-03 | Problema → solución | P5 se atiende **en parte**: los indicadores de gestión dependen de RF-28, un candidato no implementado | Declarado en F4, F5 y F6 |
-| T-04 | TO-BE → RF | TB-F1 «cerrar sin selección» no tiene RF: es una propuesta futura (A-30) | Requiere un cambio de alcance aprobado |
-| T-05 | TO-BE ← AS-IS | TB-30 (auditoría) no tiene actividad AS-IS de origen: es una capacidad nueva | Correcto: responde a P2 y P5 |
-| T-06 | RF → CU | La consulta de auditoría (RF-27) no tiene un CU académico propio; el F9 la incluye en CU-18 | Propuesta CU-21, pendiente de decisión del equipo (O-F8-02) |
-| T-07 | CU | Los nombres de CU-01 a CU-20 los asignó la F27B; el F9 solo los numeraba | Confirmación del equipo (O-F8-01) |
-| T-08 | RNF | RNF-06 y RNF-07 no están verificados; RNF-05, RNF-08 y RNF-09 tienen evidencia parcial | Criterios propuestos en el F7, sin umbrales inventados |
-| T-09 | RNF ↔ catálogo técnico | La equivalencia no es 1:1 (10 académicos frente a 11 técnicos) | Unificarla es una decisión del equipo (F24 L-01) |
-| T-10 | Diagramas | Los BPMN de F3 y F5 y el diagrama académico de F8 son **borradores** | Se formalizan en PowerDesigner en la F29, tras la F27C ([worklist](../POWERDESIGNER_WORKLIST.md)) |
-| T-11 | F9 | El F9 publicado no refleja el release, la QA de la F25 ni la resolución de los rótulos | [Adenda](../practica-09/F9_POST_RELEASE_ADDENDUM.md); el F9 no se modifica |
-| T-12 | Problema → RF | RF-07 (TB-10) y RF-08 (TB-11) no responden directamente a P1–P5 en la relación de §2.3: habilitan el flujo (publicar y acceder) | Correcto; no se fuerza una relación inexistente |
+| ID | Eslabón | Pendiente (F27B) | Estado (F27D) | Resolución |
+|---|---|---|---|---|
+| T-01 | AS-IS | Todo el AS-IS es **preliminar**: sin validación de RR. HH. ni de la Administración del Colegio | ACEPTADO / DOCUMENTADO | Se mantiene el rótulo en F2 a F4; no se afirman hechos institucionales |
+| T-02 | AS-IS → problema | AS-01 no tiene un problema asociado | INFO, no bloqueante | No toda actividad es problemática |
+| T-03 | Problema → solución | P5 se atiende **en parte**: los indicadores dependen de RF-28, un candidato no implementado | ACEPTADO | Declarado en F4, F5 y F6 |
+| T-04 | TO-BE → RF | TB-F1 «cerrar sin selección» no tiene RF | RESUELTO (F27D, H-04) | TB-F1 desconectado del flujo como propuesta futura (A-30), sin condición del sistema |
+| T-05 | TO-BE ← AS-IS | TB-30 (auditoría) no tiene actividad AS-IS de origen | INFO | Capacidad nueva y transversal; atiende P5 a través de S-05 (§2.3) |
+| T-06 | RF → CU | La consulta de auditoría (RF-27) no tiene un CU académico propio | RESUELTO como DIFERIDO (F27D, H-11) | CU-21 diferido por decisión del equipo; RF-27 es transversal → UC-RF27, IN-08 |
+| T-07 | CU | Los nombres de CU-01 a CU-20 los asignó la F27B | RESUELTO por decisión del equipo (F27D, H-12) | 20 CU aprobados; CU-18 renombrado a «Registrar decisión final humana» |
+| T-08 | RNF | RNF-06 y RNF-07 no verificados; RNF-05, RNF-08 y RNF-09 con evidencia parcial | ACEPTADO | Criterios propuestos en el F7, sin umbrales inventados |
+| T-09 | RNF ↔ catálogo técnico | La equivalencia no es 1:1 (10 académicos frente a 11 técnicos) | ACEPTADO | Unificarla es una decisión del equipo (F24 L-01) |
+| T-10 | Diagramas | Los BPMN de F3 y F5 y la vista académica de F8 eran borradores con ambigüedades (MEDIUM en la F27C) | RESUELTO EN ESPECIFICACIÓN; pendiente de formalización en PowerDesigner | Especificaciones cerradas (H-01 a H-05, H-11 a H-13): READY FOR POWERDESIGNER en la F29 |
+| T-11 | F9 | El F9 publicado no refleja el release, la QA de la F25 ni la resolución de los rótulos | CUBIERTO POR ADENDA | [Adenda post-release](../practica-09/F9_POST_RELEASE_ADDENDUM.md); el F9 no se modifica |
+| T-12 | Problema → RF | RF-07 (TB-10) y RF-08 (TB-11) no aparecen en la relación problema → RF de §2.3 | RESUELTO / CONCILIADO (F27D, H-06) | La columna «Problema directo» muestra los problemas que F4 asigna a su actividad AS-IS (AS-06 → P1; AS-07 → P4). La columna «vía solución» queda vacía porque §2.3 no los incluye en ninguna solución. No se inventan relaciones |

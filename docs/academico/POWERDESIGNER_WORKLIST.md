@@ -11,21 +11,24 @@ Qué diagramas académicos deben formalizarse en PowerDesigner y en qué orden.
 | NO REQUERIDO | No necesita un diagrama nuevo |
 | BORRADOR DISPONIBLE | Hay un borrador PNG de revisión en `practica-XX/diagramas/draft/` |
 | REQUIERE POWERDESIGNER | Debe modelarse formalmente |
-| LISTO PARA F29 | Especificación completa; solo espera la aprobación de la F27C |
+| READY FOR POWERDESIGNER | Especificación cerrada y corregida tras la F27C; lista para modelarse en la F29 sin reinterpretar nada |
+| DEFER / F28 | Se decide en la F28, no antes |
+
+**Actualización F27D:** tras la auditoría F27C se cerraron las especificaciones de F3 (H-01, H-02, H-13), F5 (H-03, H-04, H-05) y F8 (H-11, H-12 y la decisión del equipo sobre los CU).
 
 | Práctica | Diagrama | Estado | Fuente | Acción | Prioridad |
 |---|---|---|---|---|---|
 | F2 | Flujo del proceso actual (símbolos básicos) | NO REQUERIDO · BORRADOR DISPONIBLE | [`practica-02/diagramas/draft/`](practica-02/diagramas/draft/) | Ninguna: la guía pide un diagrama de flujo y el BPMN formal es el de F3 | Baja |
-| F3 | BPMN AS-IS preliminar | BORRADOR DISPONIBLE · REQUIERE POWERDESIGNER · **LISTO PARA F29** | [`practica-03/POWERDESIGNER_PENDING.md`](practica-03/POWERDESIGNER_PENDING.md) | Modelar el BPMN con 2 pools, 4 lanes, 14 tareas, 2 compuertas y 4 eventos; anotarlo como preliminar | **Alta** |
-| F4 | BPMN AS-IS anotado con P1–P5 | NO REQUERIDO · BORRADOR DISPONIBLE | [`practica-04/diagramas/draft/`](practica-04/diagramas/draft/) | Derivarlo de F3 (anotaciones P1–P5 sobre las tareas) cuando exista el modelo formal | Media |
-| F5 | BPMN TO-BE propuesto | BORRADOR DISPONIBLE · REQUIERE POWERDESIGNER · **LISTO PARA F29** | [`practica-05/POWERDESIGNER_PENDING.md`](practica-05/POWERDESIGNER_PENDING.md) | Modelar TB-01 a TB-30, 6 compuertas y TB-F1 como propuesta futura; decisión humana en el lane del Aprobador / Dirección | **Alta** |
-| F8 | Casos de uso, vista académica (CU-01 a CU-20) | BORRADOR DISPONIBLE · REQUIERE POWERDESIGNER · **LISTO PARA F29** (tras O-F8-01) | [`practica-08/POWERDESIGNER_PENDING.md`](practica-08/POWERDESIGNER_PENDING.md) | Nuevo diagrama en un paquete propio; **no** editar UC-01 | Media |
+| F3 | BPMN AS-IS preliminar | **READY FOR POWERDESIGNER** | [`practica-03/POWERDESIGNER_PENDING.md`](practica-03/POWERDESIGNER_PENDING.md) | Modelar 2 pools, 4 lanes, 14 tareas, SP-01 de instancia múltiple, 2 compuertas, 6 + 2 eventos y MF-01 a MF-04, según el glosario | **Alta** |
+| F4 | BPMN AS-IS anotado con P1–P5 | NO REQUERIDO · BORRADOR DISPONIBLE | [`practica-04/diagramas/draft/`](practica-04/diagramas/draft/) | Derivarlo de F3 (anotaciones P1–P5) cuando exista el modelo formal | Media |
+| F5 | BPMN TO-BE propuesto | **READY FOR POWERDESIGNER** | [`practica-05/POWERDESIGNER_PENDING.md`](practica-05/POWERDESIGNER_PENDING.md) | Modelar los dos niveles, SP-P, 10 compuertas (con GM1 y GM2), 9 eventos, MT-01 a MT-08 y TB-F1 desconectado | **Alta** |
+| F8 | Casos de uso, vista académica (CU-01 a CU-20) | **READY FOR POWERDESIGNER** | [`practica-08/POWERDESIGNER_PENDING.md`](practica-08/POWERDESIGNER_PENDING.md) | Nuevo diagrama en un paquete propio, con CU-18 «Registrar decisión final humana» y sin CU-21 (diferido); **no** editar UC-01 | Media |
 | F8 | UC-01 técnico (UC-RF01 a UC-RF29) | NO REQUERIDO | [`docs/v1.1/powerdesigner/`](../v1.1/powerdesigner/README.md) | Ninguna: se usa sin cambios como referencia | — |
-| F11 | Arquitectura conceptual (futuro) | REQUIERE POWERDESIGNER (pendiente de definición) | Guía 11; CO-01 y DE-01 de la F23 como insumo | Primero redactar el F11 como **adaptación académica** (no hay Formato 11 oficial), después modelarlo | Media |
+| F11 | Arquitectura conceptual (futuro) | **DEFER / F28** | Guía 11; CO-01 y DE-01 de la F23 como insumo | Primero la F28 define el F11 como **adaptación académica** (no hay Formato 11 oficial). No está lista para PowerDesigner | Media |
 
 ## Reglas para la F29
 
 1. **Modelos de la F23:** cada diagrama nuevo va en un modelo o paquete propio. No se modifican los diagramas de la F23 (22 vistas) ni sus exportaciones, salvo con una autorización explícita del equipo.
-2. **Correspondencia:** el contenido debe coincidir uno a uno con el formato aprobado en la F27C: mismos IDs, actores, compuertas y eventos.
+2. **Correspondencia:** el contenido debe coincidir uno a uno con el formato corregido en la F27D y aprobado en la reauditoría F27E: mismos IDs, actores, compuertas, eventos y mensajes.
 3. **Exportación:** PNG y SVG. El borrador del formato se sustituye solo después de una nueva auditoría.
 4. **Etiquetas de estado:** se mantienen. El AS-IS es «preliminar»; el TO-BE, «propuesto»; RF-29, «experimental»; TB-F1, «propuesta futura».

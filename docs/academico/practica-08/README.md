@@ -35,18 +35,31 @@ El formato incluye la **matriz de correspondencia** CU académico ↔ CU agrupad
 
 El Sistema **no** es un actor. No hay superadministrador ni facturación.
 
+## Decisión del equipo sobre los casos de uso (F27D)
+
+| ID | Decisión |
+|---|---|
+| D-CU-01 | Los **20 casos de uso académicos** (CU-01 a CU-20) quedan **aprobados**. No se amplía el catálogo |
+| D-CU-02 | CU-18 se renombra a **«Registrar decisión final humana»**. RF-23 conserva su ID. Alias histórico: «Registrar decisión final» |
+| D-CU-03 | **CU-21 «Consultar auditoría»: DIFERIDO.** No forma parte del catálogo de esta versión |
+| D-CU-04 | La consulta de auditoría es una **capacidad técnica vinculada a RF-27** |
+
+**Nota técnica.** Consulta de auditoría vinculada a RF-27 y ACT-03; cubierta por la vista técnica UC-RF27 y fuera del catálogo académico CU-01..CU-20 de esta versión.
+
+En la trazabilidad, RF-23 va solo a CU-18 → UC-RF23 (bloque IN-07). RF-27 es transversal → UC-RF27 (bloque IN-08) y no se mezcla con RF-23.
+
 ## Observaciones
 
 | ID | Observación |
 |---|---|
-| O-F8-01 | **Nombres de los CU.** El F9 no registra los nombres de CU-01 a CU-20. La F27B les asigna el del RF principal que agrupan; **el equipo debe confirmarlos**. |
-| O-F8-02 | **Consulta de auditoría.** No tiene un CU académico propio: el F9 incluye RF-27 en CU-18. Se **propone** CU-21 «Consultar auditoría», pendiente de decisión del equipo; no se crea. |
-| O-F8-03 | **CU-16.** Es un caso incluido, sin actor directo. En UML es válido. |
-| O-F8-04 | **CU-10.** Además de RR. HH., se asocia al Aprobador, igual que en la implementación (UC-RF12). El F9 publicado no se modifica. |
-| O-F8-05 | **Entrevista.** También envía la convocatoria de RF-17. |
-| O-F8-06 | **Antecedente superado.** El diagrama de CU del F9 v1.0 (anexo B) tenía actores fuera del alcance. Se conserva solo como evidencia histórica. |
-| O-F8-07 | **Extensiones.** RF-28 y RF-29 no están en los 20 CU; solo aparecen en la vista técnica UC-RF. |
+| O-F8-01 | **Nombres de los CU. Resuelto:** el equipo aprobó los 20 CU y el nuevo nombre de CU-18 (D-CU-01 y D-CU-02) |
+| O-F8-02 | **Consulta de auditoría. Resuelto como DIFERIDO:** CU-21 no se crea (D-CU-03 y D-CU-04) |
+| O-F8-03 | **CU-16.** Es un caso incluido, sin actor directo. En UML es válido |
+| O-F8-04 | **CU-10.** Además de RR. HH., se asocia al Aprobador, igual que en la implementación (UC-RF12). El F9 publicado no se modifica |
+| O-F8-05 | **Entrevista.** También envía la convocatoria de RF-17 |
+| O-F8-06 | **Antecedente superado.** El diagrama de CU del F9 v1.0 (anexo B) tenía actores fuera del alcance; se conserva solo como evidencia |
+| O-F8-07 | **Extensiones.** RF-28 y RF-29 no están en los 20 CU; solo aparecen en la vista técnica UC-RF |
 
 ## ¿Requiere PowerDesigner?
 
-Para una **adaptación formal** de la vista académica, sí: está en [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md) y se hará en la Fase 29. **UC-01 de la F23 no se modifica**: se usa como referencia técnica en el formato.
+Para una **adaptación formal** de la vista académica, sí. Está **lista para PowerDesigner** ([`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md)) y se hará en la Fase 29. **UC-01 de la F23 no se modifica**: se usa como referencia técnica en el formato.

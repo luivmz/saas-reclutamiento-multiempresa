@@ -52,7 +52,18 @@
 
 **Relación con los requerimientos funcionales.**
 
-> Los 20 CU cubren los 27 RF del Formato 06 sin RF adicionales. Cada CU indica sus RF, y cada RF tiene al menos un CU (sección 8). RF-28 y RF-29 son extensiones fuera de esta vista.
+> Los 20 CU cubren RF-01 a RF-26 del Formato 06, sin RF adicionales. **RF-27** (auditoría) es transversal: su registro ocurre en todas las acciones críticas y su consulta es una capacidad técnica (UC-RF27), fuera del catálogo académico (decisión D-CU-04). RF-28 y RF-29 son extensiones fuera de esta vista.
+
+**Decisión del equipo sobre los casos de uso (F27D)**
+
+| ID | Decisión |
+|---|---|
+| D-CU-01 | Los 20 casos de uso académicos (CU-01 a CU-20) quedan **aprobados**. No se amplía el catálogo. |
+| D-CU-02 | CU-18 se renombra a **«Registrar decisión final humana»**. RF-23 conserva su ID. Alias histórico: «Registrar decisión final» (F27B y CU-11 agrupado de v1.0). |
+| D-CU-03 | CU-21 «Consultar auditoría»: **DIFERIDO**. No forma parte del catálogo de esta versión. |
+| D-CU-04 | La consulta de auditoría se documenta como **capacidad técnica vinculada a RF-27**, sin crear un CU académico. |
+
+**Nota técnica.** Consulta de auditoría vinculada a RF-27 y ACT-03; cubierta por la vista técnica UC-RF27 y fuera del catálogo académico CU-01..CU-20 de esta versión.
 
 ## 3. Identificación de actores
 
@@ -87,7 +98,7 @@ El Sistema no es un actor: valida, calcula, notifica y audita como parte de los 
 | CU-15 | Registrar resultados de evaluación y entrevista | El evaluador asignado registra puntajes y resultado. |
 | CU-16 | Validar rangos y ponderaciones | Validación incluida por la configuración, el registro de resultados y el ranking. |
 | CU-17 | Consultar ranking y comparación | Ranking y comparación explicables. No selecciona. |
-| CU-18 | Registrar decisión final | **Decisión humana** con confirmación y justificación. Según el F9, incluye el registro de auditoría. |
+| CU-18 | Registrar decisión final humana | **Decisión humana** del Aprobador / Dirección, con confirmación explícita y justificación. El ranking no elige. |
 | CU-19 | Registrar selección | RR. HH. aplica la decisión registrada. |
 | CU-20 | Cerrar convocatoria y notificar resultado | RR. HH. cierra con selección; cada postulante recibe su resultado. |
 
@@ -137,9 +148,12 @@ La adaptación formal de la vista académica en PowerDesigner está en `POWERDES
 | CU-15 Registrar resultados de evaluación y entrevista | CU-09 | UC-RF19 | ACT-05 | RF-19 | IN-05 |
 | CU-16 Validar rangos y ponderaciones | CU-04 · CU-09 | UC-RF20 | — (incluido) | RF-20 | IN-06 |
 | CU-17 Consultar ranking y comparación | CU-10 | UC-RF21, UC-RF22 | ACT-02, ACT-03 | RF-21, RF-22 | IN-06 |
-| CU-18 Registrar decisión final | CU-11 · CU-13 (consulta de auditoría) | UC-RF23 «human decision», UC-RF27 | ACT-03 | RF-23, RF-27 | IN-07 · IN-08 |
+| CU-18 Registrar decisión final humana | CU-11 | UC-RF23 «human decision» | ACT-03 | RF-23 | IN-07 |
 | CU-19 Registrar selección | CU-12 | UC-RF24 | ACT-02 | RF-24 | IN-07 |
 | CU-20 Cerrar convocatoria y notificar resultado | CU-12 | UC-RF25, UC-RF26 «include» | ACT-02 | RF-25, RF-26 | IN-07 |
+| — (transversal; fuera del catálogo CU-01..CU-20) | CU-13 | UC-RF27 | Sistema (registro) · ACT-03 (consulta) | RF-27 | IN-08 |
+
+RF-27: El F9 lo rotula «Incluido en CU-18»; desde la F27D se separa de RF-23 (decisión D-CU-04). RF-23 queda solo en CU-18 → UC-RF23.
 
 **Los 13 CU agrupados de v1.0 (se conservan)**
 
@@ -165,8 +179,8 @@ Las tres vistas se conservan: 20 CU académicos (F9), 13 CU agrupados (informe v
 
 | ID | Tema | Observación |
 |---|---|---|
-| O-F8-01 | Nombres de CU-01 a CU-20 | El F9 no registra los nombres, solo la numeración y los RF. La F27B asigna el nombre del RF principal que agrupa cada CU, sin renumerar. El equipo debe confirmarlos. |
-| O-F8-02 | Consulta de auditoría | En la vista de 20 CU, RF-27 figura «incluido en CU-18» (F9). La consulta de auditoría del Aprobador existe (CU-13 agrupado, UC-RF27), pero no tiene un CU académico propio. **Propuesta, pendiente de decisión del equipo:** CU-21 «Consultar auditoría». No se crea en esta fase. |
+| O-F8-01 | Nombres de CU-01 a CU-20 | **Resuelto (decisión del equipo, F27D).** El F9 solo numeraba los CU; la F27B les asignó el nombre del RF principal que agrupan. El equipo aprobó los 20 CU, con CU-18 renombrado a «Registrar decisión final humana». |
+| O-F8-02 | Consulta de auditoría | **CU-21 «Consultar auditoría»: DIFERIDO (decisión del equipo, F27D).** No se añade al catálogo de esta versión. Consulta de auditoría vinculada a RF-27 y ACT-03; cubierta por la vista técnica UC-RF27 y fuera del catálogo académico CU-01..CU-20 de esta versión. |
 | O-F8-03 | CU-16 sin actor directo | Es un caso incluido («include») por CU-05, CU-15 y CU-17. Sus actores indirectos son RR. HH. (al configurar) y el Evaluador (al registrar). En UML es válido; no es un caso huérfano. |
 | O-F8-04 | CU-10 y el Aprobador | El F9 asigna CU-10 solo a RR. HH. La implementación también permite la consulta del Aprobador / Dirección (UC-RF12), así que se asocian ambos. El F9 publicado no se modifica. |
 | O-F8-05 | Convocatoria de la entrevista | La entrevista también envía la convocatoria de RF-17 (UC-RF18 incluye UC-RF17), aunque el nombre del RF dice «evaluación». |

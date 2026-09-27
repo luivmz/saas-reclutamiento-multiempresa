@@ -39,12 +39,12 @@ No cambia el alcance del F9: RF-01 a RF-27 siguen siendo la línea base. RF-28, 
 
 ## 3. Divergencias conocidas del F9 y cómo quedan resueltas
 
-| Tema | En el F9 publicado | Resolución académica (F27B) |
+| Tema | En el F9 publicado | Resolución académica (F27B y F27D) |
 |---|---|---|
 | Rótulos de RF | 13 rótulos distintos del nombre canónico (la F24 registró «seis», L-02) | [F6](../practica-06/README.md): tabla de nombre canónico y alias histórico. Los IDs no cambian |
-| Catálogo de CU | CU-01 a CU-20 numerados, sin nombre. Diverge del catálogo de 13 CU y de UC-RF (D-08) | [F8](../practica-08/README.md): nombres asignados (O-F8-01, a confirmar por el equipo) y matriz de correspondencia entre las 3 vistas, que coincide con la tabla RF → CU → IN del F9 (comprobado por `validate.py`) |
+| Catálogo de CU | CU-01 a CU-20 numerados, sin nombre. Diverge del catálogo de 13 CU y de UC-RF (D-08) | [F8](../practica-08/README.md): **20 CU aprobados por el equipo (F27D)**, con nombres asignados y CU-18 «Registrar decisión final humana». La matriz de correspondencia entre las 3 vistas coincide con la tabla RF → CU → IN del F9 (comprobado por `validate.py`), salvo RF-27, que se trata como transversal |
 | CU-10 | Solo con RR. HH. | F8 agrega al Aprobador / Dirección, como en la implementación (UC-RF12) |
-| Consulta de auditoría | RF-27 «incluido en CU-18» | Sin CU académico propio. Se **propone** CU-21 (O-F8-02), pendiente de decisión |
+| Consulta de auditoría | RF-27 «incluido en CU-18» | **CU-21 «Consultar auditoría»: DIFERIDO** (decisión del equipo, F27D). La consulta es una capacidad técnica vinculada a RF-27 y ACT-03, cubierta por UC-RF27 (IN-08) y fuera del catálogo CU-01..CU-20. RF-23 queda solo en CU-18 |
 | Catálogo de RNF | 10 RNF académicos frente a 11 técnicos (D-09, L-01) | [F7](../practica-07/README.md): equivalencia no 1:1 y estado real de cada RNF (5 verificados, 3 con evidencia parcial, 2 no verificados) |
 | TO-BE (anexo A) | Rama «cerrar sin selección» | [F5](../practica-05/README.md): **propuesta futura** TB-F1, no implementada (A-30) |
 
