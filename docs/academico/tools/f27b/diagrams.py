@@ -378,3 +378,107 @@ def use_case_diagram(path, title, subtitle, actors_left, actors_right, cases, li
         d.text((40, H - 44), note, font=font(15, italic=True), fill=MUTED)
     img.save(path, optimize=True)
     return img.size
+
+
+def block_diagram(path, title, subtitle, groups, boxes, arrows, notes=(), size=(1900, 1700), anchors=None):
+    """Diagrama conceptual de bloques.
+    groups: [(x, y, w, h, etiqueta, estilo)]; boxes: {id: (x, y, w, h, texto, estilo)};
+    arrows: [(origen, destino, etiqueta, estilo)] con estilo 'solid' | 'dashed'; notes: [(x, y, w, texto)]."""
+    W, H = size
+    img = Image.new('RGB', (W, H), 'white')
+    d = ImageDraw.Draw(img)
+    d.text((40, 14), title, font=font(28, bold=True), fill=INK)
+    d.text((40, 50), subtitle, font=font(17, italic=True), fill=MUTED)
+    d.text((40, 76), 'BORRADOR DE REVISIÓN — no es el modelo formal de PowerDesigner', font=font(16, bold=True), fill=WARN)
+    palette = {
+        'layer': ((244, 247, 252), (31, 78, 121)),
+        'business': ((238, 244, 251), (31, 78, 121)),
+        'transversal': ((240, 248, 240), (46, 125, 50)),
+        'infra': ((246, 246, 246), (90, 90, 90)),
+        'experimental': ((250, 246, 255), (120, 80, 160)),
+        'actors': ((255, 250, 235), (168, 120, 0)),
+    }
+    for x, y, w, h, label, style in groups:
+        fill, line = palette.get(style, palette['layer'])
+        d.rounded_rectangle([x, y, x + w, y + h], radius=16, fill=fill, outline=line, width=2)
+        if style == 'experimental':
+            dashed(d, [(x, y), (x + w, y), (x + w, y + h), (x, y + h), (x, y)], line, width=3)
+        d.text((x + 14, y + 8), label, font=font(17, bold=True), fill=line)
+    box_fill = {'normal': ('white', (31, 78, 121)), 'human': ((255, 243, 224), (191, 96, 0)),
+                'transversal': ('white', (46, 125, 50)), 'infra': ('white', (90, 90, 90)),
+                'experimental': ('white', (120, 80, 160)), 'actor': ((255, 250, 235), (168, 120, 0))}
+
+    def anchor(b, side):
+        x, y, w, h = b[:4]
+        return {'top': (x + w / 2, y), 'bottom': (x + w / 2, y + h), 'left': (x, y + h / 2), 'right': (x + w, y + h / 2)}[side]
+
+    labels = []
+    targets = dict(anchors or {})
+    targets.update(boxes)
+    for arr in arrows:
+        src, dst, label, style = arr[:4]
+        via = arr[4] if len(arr) > 4 else None
+        a, b = targets[src], targets[dst]
+        ax0, ay0, aw, ah = a[:4]
+        bx0, by0, bw, bh = b[:4]
+        if by0 >= ay0 + ah:            # destino debajo
+            p0, p1 = anchor(a, 'bottom'), anchor(b, 'top')
+            ox = max(ax0, bx0) + (min(ax0 + aw, bx0 + bw) - max(ax0, bx0)) / 2
+            if min(ax0 + aw, bx0 + bw) - max(ax0, bx0) > 20:
+                pts = [(ox, p0[1]), (ox, p1[1])]
+            else:
+                ym = (p0[1] + p1[1]) / 2
+                pts = [p0, (p0[0], ym), (p1[0], ym), p1]
+        elif ay0 >= by0 + bh:          # destino arriba
+            p0, p1 = anchor(a, 'top'), anchor(b, 'bottom')
+            ox = max(ax0, bx0) + (min(ax0 + aw, bx0 + bw) - max(ax0, bx0)) / 2
+            if min(ax0 + aw, bx0 + bw) - max(ax0, bx0) > 20:
+                pts = [(ox, p0[1]), (ox, p1[1])]
+            else:
+                ym = (p0[1] + p1[1]) / 2
+                pts = [p0, (p0[0], ym), (p1[0], ym), p1]
+        elif bx0 >= ax0 + aw:          # a la derecha
+            p0, p1 = anchor(a, 'right'), anchor(b, 'left')
+            xm = (p0[0] + p1[0]) / 2
+            pts = [p0, (xm, p0[1]), (xm, p1[1]), p1]
+        else:                          # a la izquierda
+            p0, p1 = anchor(a, 'left'), anchor(b, 'right')
+            xm = (p0[0] + p1[0]) / 2
+            pts = [p0, (xm, p0[1]), (xm, p1[1]), p1]
+        if via:
+            pts = list(via)
+        col = (120, 80, 160) if style == 'dashed' else (60, 70, 85)
+        if style == 'dashed':
+            dashed(d, pts, col, width=3)
+            arrowhead(d, pts[-2], pts[-1], col, size=14, open_=True)
+        else:
+            d.line(pts, fill=col, width=3)
+            arrowhead(d, pts[-2], pts[-1], col, size=14)
+        if label:
+            mx = (pts[len(pts) // 2 - 1][0] + pts[len(pts) // 2][0]) / 2 + 8
+            my = (pts[len(pts) // 2 - 1][1] + pts[len(pts) // 2][1]) / 2 - 10
+            labels.append((mx, my, label, col))
+    for bid, (x, y, w, h, text, style) in boxes.items():
+        fill, line = box_fill.get(style, box_fill['normal'])
+        d.rounded_rectangle([x, y, x + w, y + h], radius=12, fill=fill, outline=line, width=3)
+        if style == 'experimental':
+            dashed(d, [(x, y), (x + w, y), (x + w, y + h), (x, y + h), (x, y)], line, width=3)
+        text_block(d, x + w / 2, y + h / 2, text, font(17), w - 20)
+    for mx, my, label, col in labels:
+        f = font(14, bold=True)
+        w = d.textlength(label, font=f)
+        if mx + w > W - 8:
+            mx = W - w - 16
+        d.rectangle([mx - 3, my - 1, mx + w + 3, my + 17], fill='white')
+        d.text((mx, my), label, font=f, fill=col)
+    for x, y, w, text in notes:
+        f = font(15, italic=True)
+        lines = wrap(d, text, f, w - 20)
+        h = 20 * len(lines) + 16
+        d.rectangle([x, y, x + w, y + h], fill=(255, 252, 230), outline=(200, 170, 60))
+        yy = y + 8
+        for ln in lines:
+            d.text((x + 10, yy), ln, font=f, fill=INK)
+            yy += 20
+    img.save(path, optimize=True)
+    return img.size
