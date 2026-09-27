@@ -12,7 +12,9 @@ Qué diagramas académicos deben formalizarse en PowerDesigner y en qué orden.
 | BORRADOR DISPONIBLE | Hay un borrador PNG de revisión en `practica-XX/diagramas/draft/` |
 | REQUIERE POWERDESIGNER | Debe modelarse formalmente |
 | READY FOR POWERDESIGNER | Especificación cerrada y corregida tras la F27C; lista para modelarse en la F29 sin reinterpretar nada |
-| DEFER / F28 | Se decide en la F28, no antes |
+| DEFER / F28 | Se decide en la F28, no antes. Usado hasta la F28 para el F11 |
+
+**Actualización F28:** el F11 adaptado se desarrolló y su vista ARQ-01 quedó especificada.
 
 **Actualización F27D:** tras la auditoría F27C se cerraron las especificaciones de F3 (H-01, H-02, H-13), F5 (H-03, H-04, H-05) y F8 (H-11, H-12 y la decisión del equipo sobre los CU).
 
@@ -24,7 +26,7 @@ Qué diagramas académicos deben formalizarse en PowerDesigner y en qué orden.
 | F5 | BPMN TO-BE propuesto | **READY FOR POWERDESIGNER** | [`practica-05/POWERDESIGNER_PENDING.md`](practica-05/POWERDESIGNER_PENDING.md) | Modelar los dos niveles, SP-P, 10 compuertas (con GM1 y GM2), 9 eventos, MT-01 a MT-08 y TB-F1 desconectado | **Alta** |
 | F8 | Casos de uso, vista académica (CU-01 a CU-20) | **READY FOR POWERDESIGNER** | [`practica-08/POWERDESIGNER_PENDING.md`](practica-08/POWERDESIGNER_PENDING.md) | Nuevo diagrama en un paquete propio, con CU-18 «Registrar decisión final humana» y sin CU-21 (diferido); **no** editar UC-01 | Media |
 | F8 | UC-01 técnico (UC-RF01 a UC-RF29) | NO REQUERIDO | [`docs/v1.1/powerdesigner/`](../v1.1/powerdesigner/README.md) | Ninguna: se usa sin cambios como referencia | — |
-| F11 | Arquitectura conceptual (futuro) | **DEFER / F28** | Guía 11; CO-01 y DE-01 de la F23 como insumo | Primero la F28 define el F11 como **adaptación académica** (no hay Formato 11 oficial). No está lista para PowerDesigner | Media |
+| F11 | Arquitectura conceptual ARQ-01 (adaptación académica) | **READY FOR POWERDESIGNER** (condicionado a la auditoría de la F28) | [`practica-11/POWERDESIGNER_PENDING.md`](practica-11/POWERDESIGNER_PENDING.md) | Modelar 17 bloques en 6 agrupaciones y R-01 a R-20; C10 como decisión humana y C17 experimental y aislado; **no** editar CO-01, PK-01 ni DE-01 | Media |
 
 ## Reglas para la F29
 

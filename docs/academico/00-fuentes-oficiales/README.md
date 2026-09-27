@@ -21,7 +21,7 @@ Inventario con los hashes: [`inventory.md`](inventory.md). Estado académico gen
 
 ## Qué no contiene
 
-- **Formato 11 oficial: NO DISPONIBLE.** La Guía 11 existe y remite a un «Formato 11: Arquitectura del sistema», pero esa plantilla no forma parte de las fuentes recibidas. Si se desarrolla el F11, será una **adaptación académica explícita** hecha por el equipo, nunca una plantilla oficial. Aún no se ha creado.
+- **Formato 11 oficial: NO DISPONIBLE.** La Guía 11 existe y remite a un «Formato 11: Arquitectura del sistema», pero esa plantilla no forma parte de las fuentes recibidas. Si se desarrolla el F11, será una **adaptación académica explícita** hecha por el equipo, nunca una plantilla oficial. Se desarrolló en la Fase 28 como adaptación académica, en `docs/academico/practica-11/`, identificada como tal.
 - **Guías 01 y 10 y Formatos 01 y 10:** no forman parte de estas fuentes.
 - **Formatos desarrollados por el equipo:**
   - el F9 entregado (histórico y final v1.1) vive en [`../phase-24/`](../phase-24/);

@@ -76,7 +76,7 @@ Candidatos en [`../v1.1/scope-preliminary.md`](../v1.1/scope-preliminary.md), si
 |---|---|
 | F2 a F8 | **Desarrollados en la F27B**, sobre las plantillas oficiales ([`practica-02`](practica-02/README.md) a [`practica-08`](practica-08/README.md)). **Pendientes de la auditoría F27C.** Los diagramas BPMN y de CU son borradores; se formalizan en PowerDesigner en la F29 ([worklist](POWERDESIGNER_WORKLIST.md)) |
 | F9 | **Completo.** Entregable final v1.1 en [`phase-24/output/`](phase-24/README.md) (DOCX y PDF), con el histórico v1.0 y su [mapa de fuentes](phase-24/source-map.md). No se modifica; la [adenda post-release](practica-09/F9_POST_RELEASE_ADDENDUM.md) (F27B) registra el estado posterior y las divergencias resueltas |
-| F11 | **Pendiente.** No hay plantilla oficial (ver la regla anterior) |
+| F11 | **Adaptación académica desarrollada en la F28** ([`practica-11`](practica-11/README.md)), sin plantilla oficial y según la regla anterior. **Pendiente de la auditoría de la F28** |
 
 **Insumos usados en la F27B** (trazabilidad completa en [`trazabilidad/F2-F9-traceability.md`](trazabilidad/F2-F9-traceability.md)):
 

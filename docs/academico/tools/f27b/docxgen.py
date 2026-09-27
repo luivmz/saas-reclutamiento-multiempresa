@@ -262,15 +262,16 @@ def _md_cell(x):
     return str(x).replace('|', '\\|').replace('\n', '<br>')
 
 
-def build_md(out_path, title, datos, doc, preface=''):
+def build_md(out_path, title, datos, doc, preface='', start=None):
     rel = lambda p: os.path.relpath(p, os.path.dirname(out_path)).replace(os.sep, '/')
     lines = [f'# {title}', '']
     if preface:
         lines += [preface, '']
-    lines += ['## 1. Datos generales del proyecto', '', '| Campo | Valor |', '|---|---|']
-    lines += [f'| {k} | {_md_cell(v)} |' for k, v in datos.items()]
-    lines.append('')
-    n = 2  # la plantilla numera «Datos generales del proyecto» como 1
+    if datos:
+        lines += ['## 1. Datos generales del proyecto', '', '| Campo | Valor |', '|---|---|']
+        lines += [f'| {k} | {_md_cell(v)} |' for k, v in datos.items()]
+        lines.append('')
+    n = start if start is not None else 2  # la plantilla numera «Datos generales del proyecto» como 1
     for it in doc.items:
         k = it[0]
         if k == 'h':
@@ -306,3 +307,166 @@ def build_md(out_path, title, datos, doc, preface=''):
     text = re.sub(r'\n{3,}', '\n\n', text)
     with open(out_path, 'w', encoding='utf-8', newline='\n') as f:
         f.write(text)
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# Constructor sobre el paquete del F9 final (estilo visual académico del F9), usado por el F11 adaptado (Fase 28).
+# El F9 se lee en memoria y nunca se modifica.
+F9_BLUE = '1F4E79'
+ARIAL = '<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Arial"/>'
+
+
+def _f9_heading(text, level=1, page_break=False):
+    size = 30 if level == 1 else 24
+    pb = '<w:pageBreakBefore/>' if page_break else ''
+    return (f'<w:p><w:pPr><w:pStyle w:val="Ttulo{level}"/><w:keepNext/>{pb}</w:pPr><w:r><w:rPr>{ARIAL}<w:b/>'
+            f'<w:color w:val="{F9_BLUE}"/><w:sz w:val="{size}"/></w:rPr>'
+            f'<w:t xml:space="preserve">{escape(text)}</w:t></w:r></w:p>')
+
+
+def _arial(runs):
+    runs = runs.replace('<w:rPr>', '<w:rPr>' + ARIAL)
+    return runs.replace('<w:r><w:t', f'<w:r><w:rPr>{ARIAL}</w:rPr><w:t')
+
+
+def _f9_cell(text, width, header=False, sz=16):
+    paras = []
+    for line in str(text).split('\n'):
+        runs = _arial(_runs(line, bold=header, sz=sz, color='FFFFFF' if header else None))
+        jc = 'center' if header else 'left'
+        paras.append(f'<w:p><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/><w:jc w:val="{jc}"/></w:pPr>{runs}</w:p>')
+    shd = f'<w:shd w:val="clear" w:color="auto" w:fill="{F9_BLUE}"/>' if header else ''
+    mar = ('<w:tcMar><w:top w:w="60" w:type="dxa"/><w:start w:w="70" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/>'
+           '<w:end w:w="70" w:type="dxa"/></w:tcMar>')
+    return f'<w:tc><w:tcPr><w:tcW w:w="{width}" w:type="dxa"/>{shd}{mar}<w:vAlign w:val="center"/></w:tcPr>{"".join(paras)}</w:tc>'
+
+
+def _f9_table(headers, rows, widths=None, sz=16, total=9380):
+    n = len(headers) if headers else len(rows[0])
+    widths = widths or [1] * n
+    widths = [int(w * total / sum(widths)) for w in widths]
+    grid = ''.join(f'<w:gridCol w:w="{w}"/>' for w in widths)
+    xml = [('<w:tbl><w:tblPr><w:tblStyle w:val="Tablaconcuadrcula"/><w:tblW w:w="%d" w:type="dxa"/><w:jc w:val="center"/>'
+            '<w:tblLayout w:type="fixed"/><w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" '
+            'w:lastColumn="0" w:noHBand="0" w:noVBand="1"/></w:tblPr><w:tblGrid>%s</w:tblGrid>') % (total, grid)]
+    if headers:
+        xml.append('<w:tr><w:trPr><w:cantSplit/><w:tblHeader/></w:trPr>' +
+                   ''.join(_f9_cell(h, w, True, sz) for h, w in zip(headers, widths)) + '</w:tr>')
+    for r in rows:
+        xml.append('<w:tr><w:trPr><w:cantSplit/></w:trPr>' + ''.join(_f9_cell(c, w, False, sz) for c, w in zip(r, widths)) + '</w:tr>')
+    xml.append('</w:tbl>')
+    return ''.join(xml) + '<w:p><w:pPr><w:spacing w:after="60"/></w:pPr></w:p>'
+
+
+def _replace_text(xml, old, new):
+    if f'>{old}<' not in xml:
+        raise ValueError('Texto de portada no encontrado: ' + old)
+    return xml.replace(f'>{old}<', f'>{escape(new)}<', 1)
+
+
+def build_docx_f9(base, out_path, cover, cover_note, header_text, doc, props, contents):
+    """base: DOCX del F9 final (solo lectura). cover: [(texto_antiguo, texto_nuevo)] de la portada.
+    cover_note: nota visible añadida en la portada. contents: títulos de la página «Contenido» (estática)."""
+    zin = zipfile.ZipFile(base)
+    document = zin.read('word/document.xml').decode('utf-8')
+    rels = zin.read('word/_rels/document.xml.rels').decode('utf-8')
+    head, rest = document.split('<w:body>', 1)
+    body, tail = rest.rsplit('</w:body>', 1)
+    blocks = split_blocks(body)
+    toc_i = next(i for i, b in enumerate(blocks) if 'Tabla de contenido' in b[1])
+    ver_i = next(i for i, b in enumerate(blocks) if 'Versión 1.1' in b[1])
+    sect = blocks[-1][1]
+    assert 'w:sectPr' in sect
+    cover_blocks = [b[1] for b in blocks[:toc_i]]
+    cover_blocks.insert(ver_i + 1, para(cover_note, italic=True, sz=18, jc='center', ind=0, after=60, color=F9_BLUE))
+    cover_xml = ''.join(cover_blocks)
+    for old, new in cover:
+        cover_xml = _replace_text(cover_xml, old, new)
+    parts = [cover_xml, _f9_heading('Contenido', 1, page_break=True)]
+    for c in contents:
+        parts.append(para(c, ind=0, after=40))
+    media, rid_n, docpr, n = [], 900, 900, 0
+    for it in doc.items:
+        k = it[0]
+        if k == 'h':
+            n += 1
+            parts.append(_f9_heading(f'{n}. {it[1]}', 1, page_break=(n == 1)))
+        elif k == 'sub':
+            parts.append(_f9_heading(it[1], 2))
+        elif k == 'instr':
+            parts.append(para(it[1], italic=True, sz=18, color='595959', after=80, ind=0, keep_next=True))
+        elif k == 'p':
+            parts.append(para(it[1], after=100, ind=0))
+        elif k == 'bullets':
+            for x in it[1]:
+                parts.append(para('• ' + x, after=40, ind=284))
+            parts.append(para('', after=0, ind=0))
+        elif k == 'table':
+            parts.append(_f9_table(it[1], it[2], it[3], it[4] or 16))
+        elif k == 'kv':
+            parts.append(_f9_table(None, it[1], list(it[2]), it[3]))
+        elif k == 'box':
+            parts.append(box(it[1]).replace('<w:tblInd w:w="284" w:type="dxa"/>', ''))
+        elif k == 'note':
+            parts.append(box([f'**{it[1]}**'] + it[2], sz=18, fill='FFF2CC').replace('<w:tblInd w:w="284" w:type="dxa"/>', ''))
+        elif k == 'img':
+            path, caption, width_cm = it[1], it[2], it[3]
+            w, h = png_size(path)
+            cx = int(width_cm / 2.54 * 914400)
+            cy = int(cx * h / w)
+            max_cy = int(22.0 / 2.54 * 914400)
+            if cy > max_cy:
+                cy = max_cy
+                cx = int(cy * w / h)
+            rid_n += 1
+            docpr += 1
+            rid = f'rId{rid_n}'
+            target = f'media/f28_{len(media) + 1}.png'
+            media.append((target, path))
+            rels = rels.replace('</Relationships>', f'<Relationship Id="{rid}" Type="http://schemas.openxmlformats.org/'
+                                f'officeDocument/2006/relationships/image" Target="{target}"/></Relationships>')
+            parts.append(image_xml(rid, docpr, os.path.basename(path), cx, cy))
+            parts.append(para(caption, italic=True, sz=18, jc='center', after=160, ind=0))
+        elif k == 'pb':
+            parts.append(PAGEBREAK)
+    parts.append(sect)
+    new_doc = head + '<w:body>' + ''.join(parts) + '</w:body>' + tail
+    used = set(re.findall(r'r:(?:embed|id|link|pict)="(rId\d+)"', new_doc))
+    drop = set()
+
+    def keep_rel(m):
+        rid, typ, target = m.group(1), m.group(2), m.group(3)
+        if typ.endswith('/image') and rid not in used:
+            drop.add('word/' + target)
+            return ''
+        return m.group(0)
+    rels = re.sub(r'<Relationship Id="(rId\d+)" Type="([^"]+)" Target="([^"]+)"/>', keep_rel, rels)
+    header = zin.read('word/header1.xml').decode('utf-8')
+    header = _replace_text(header, 'ALCANCE F9 | PRUEBAS Y CALIDAD DE SOFTWARE', header_text)
+    core = zin.read('docProps/core.xml').decode('utf-8')
+    for tag, val in props.items():
+        pat = '<' + tag + '>.*?</' + tag + '>|<' + tag + '/>'
+        core = re.sub(pat, lambda m, t=tag, v=val: '<' + t + '>' + escape(v) + '</' + t + '>', core, flags=re.S)
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    fixed = (2026, 9, 27, 0, 0, 0)
+    with zipfile.ZipFile(out_path, 'w', zipfile.ZIP_DEFLATED) as zout:
+        for info in zin.infolist():
+            if info.filename in drop:
+                continue
+            data = zin.read(info.filename)
+            if info.filename == 'word/document.xml':
+                data = new_doc.encode('utf-8')
+            elif info.filename == 'word/_rels/document.xml.rels':
+                data = rels.encode('utf-8')
+            elif info.filename == 'word/header1.xml':
+                data = header.encode('utf-8')
+            elif info.filename == 'docProps/core.xml':
+                data = core.encode('utf-8')
+            zi = zipfile.ZipInfo(info.filename, date_time=fixed)
+            zi.compress_type = zipfile.ZIP_DEFLATED
+            zout.writestr(zi, data)
+        for target, path in media:
+            zi = zipfile.ZipInfo('word/' + target, date_time=fixed)
+            zi.compress_type = zipfile.ZIP_DEFLATED
+            with open(path, 'rb') as f:
+                zout.writestr(zi, f.read())

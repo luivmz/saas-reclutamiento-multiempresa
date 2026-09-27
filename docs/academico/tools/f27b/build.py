@@ -15,7 +15,7 @@ ROOT = os.path.abspath(os.path.join(HERE, '..', '..', '..', '..'))
 ACAD = os.path.join(ROOT, 'docs', 'academico')
 FMT = os.path.join(ACAD, '00-fuentes-oficiales', 'formatos-originales')
 
-from docxgen import Doc, build_docx, build_md  # noqa: E402
+from docxgen import Doc, build_docx, build_md, build_docx_f9  # noqa: E402
 import diagrams as dg  # noqa: E402
 import m_common as C  # noqa: E402
 
@@ -1092,6 +1092,278 @@ La descripción original de la F27B se conserva y la resolución de la F27D se a
 """
     write_text(os.path.join(out_dir, 'F2-F9-traceability.md'), text)
     print('OK', os.path.relpath(os.path.join(out_dir, 'F2-F9-traceability.md'), ROOT))
+
+
+# --------------------------------------------------------------------------- F11 adaptado (Fase 28)
+import m_arch as AR  # noqa: E402
+
+F9_BASE = os.path.join(ACAD, 'phase-24', 'output', 'F9_Alcance_Proyecto_Software_Colegio_Andino_FINAL_v1.1.docx')
+F11_STEM = 'F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino'
+
+
+def arch_diagram():
+    path = os.path.join(pdir(11, 'diagramas', 'draft'), 'F11-arquitectura-conceptual.png')
+    L = lambda c: next(x for x in AR.COMPONENTES if x[0] == c)
+    t = lambda c, extra='': f'{c} {L(c)[1]}' + (f'\n{extra}' if extra else '')
+    groups = [
+        (60, 105, 1420, 90, 'Actores', 'actors'),
+        (60, 240, 1420, 110, 'Capa de presentación', 'layer'),
+        (60, 375, 1420, 135, 'Capa de acceso y seguridad', 'layer'),
+        (60, 535, 1430, 470, 'Capa de negocio (módulos del monolito)', 'business'),
+        (1530, 375, 330, 630, 'Servicios transversales', 'transversal'),
+        (60, 1040, 1430, 160, 'Persistencia e infraestructura', 'infra'),
+        (1530, 1040, 330, 250, 'Experimental (opcional)', 'experimental'),
+    ]
+    bw, bh = 290, 90
+    xs = [90, 450, 810, 1170]
+    boxes = {
+        'ACT': (90, 135, 1360, 50, 'Área solicitante · Recursos Humanos · Aprobador / Dirección · Evaluador · Postulante', 'actor'),
+        'C01': (90, 272, 1360, 64, t('C01', 'páginas por rol · portal público de empleos · notificaciones propias'), 'normal'),
+        'C02': (90, 410, 650, 80, t('C02', 'registro, inicio de sesión, 2FA'), 'normal'),
+        'C03': (800, 410, 650, 80, t('C03', 'rol + organización · organization_id'), 'transversal'),
+        'C04': (xs[0], 580, bw, bh, t('C04'), 'normal'),
+        'C05': (xs[1], 580, bw, bh, t('C05'), 'normal'),
+        'C07': (xs[2], 580, bw, bh, t('C07'), 'normal'),
+        'C06': (xs[3], 580, bw, bh, t('C06'), 'normal'),
+        'C10': (xs[0], 740, bw, bh, t('C10', 'Aprobador / Dirección'), 'human'),
+        'C09': (xs[1], 740, bw, bh, t('C09', 'apoyo: no selecciona'), 'normal'),
+        'C08': (xs[2], 740, bw, bh, t('C08'), 'normal'),
+        'C11': (xs[0], 895, bw, bh, t('C11'), 'normal'),
+        'C12': (1560, 430, 270, 140, t('C12', 'se encolan tras el commit'), 'transversal'),
+        'C13': (1560, 640, 270, 140, t('C13', 'solo inserción'), 'transversal'),
+        'C14': (90, 1090, 430, 80, t('C14'), 'infra'),
+        'C15': (560, 1090, 430, 80, t('C15'), 'infra'),
+        'C16': (1030, 1090, 430, 80, t('C16'), 'infra'),
+        'C17': (1560, 1090, 270, 170, t('C17', 'solo el proceso; no evalúa personas'), 'experimental'),
+    }
+    anchors = {'BUS': (60, 535, 1430, 470), 'INFRA': (60, 1040, 1430, 160), 'TRV': (1530, 375, 330, 630)}
+    arrows = [
+        ('ACT', 'C01', 'usan', 'solid'), ('C01', 'C02', 'R-01', 'solid'), ('C02', 'C03', 'R-02', 'solid'),
+        ('C03', 'BUS', 'R-03', 'solid'),
+        ('C04', 'C05', 'R-05', 'solid'), ('C05', 'C07', 'R-06', 'solid'), ('C06', 'C07', 'R-07', 'solid'),
+        ('C08', 'C07', 'R-08', 'solid'), ('C08', 'C09', 'R-09', 'solid'), ('C09', 'C10', 'R-10', 'solid'),
+        ('C10', 'C11', 'R-11', 'solid'),
+        ('BUS', 'TRV', 'R-13/14', 'solid'), ('BUS', 'INFRA', 'R-16/17', 'solid'),
+        ('C05', 'C17', 'R-19', 'dashed', [(595, 580), (595, 555), (1510, 555), (1510, 1175), (1560, 1175)]),
+        ('C17', 'C01', 'R-20', 'dashed', [(1830, 1175), (1880, 1175), (1880, 304), (1450, 304)]),
+    ]
+    notes = [
+        (60, 1320, 900, 'C10 es la decisión HUMANA (RF-23): la registra el Aprobador / Dirección. C09 calcula y compara, '
+                        'pero no selecciona ni cambia estados.'),
+        (60, 1395, 900, 'C11 aplica las transiciones de C07 (R-12). C12 usa la cola de C16 (R-15). C02 usa sesiones de C16 '
+                        '(R-18). C01 invoca los módulos a través de C03 (R-04).'),
+        (1000, 1320, 860, 'C17 (RF-29) es experimental y opcional: no se relaciona con C09, C10 ni C11. RF-28 (panel '
+                          'operativo) es un candidato NO IMPLEMENTADO y no forma parte de la arquitectura.'),
+    ]
+    dg.block_diagram(path, 'F11 · Arquitectura conceptual del sistema (adaptación académica, Guía 11)',
+                     '17 componentes conceptuales en capas. Flechas numeradas = relaciones R-xx de RELATIONSHIPS.md.',
+                     groups, boxes, arrows, notes, size=(1900, 1490), anchors=anchors)
+    return path
+
+
+def rnf_of_comp(c):
+    return [r[0] for r in AR.RNF_ARQ if c in r[3] or r[3].startswith('Todos')]
+
+
+def f11_trace_rows():
+    import validate as V
+    _, comp, rf_of, cu_of, _ = V.f11_model()
+    rows = []
+    for c in AR.COMPONENTES:
+        cus = sorted(cu_of[c[0]])
+        ins = sorted({x.strip() for u in U.CU if u[0] in cus for x in u[7].split('·')})
+        if 'RF-27' in rf_of[c[0]]:
+            ins = sorted(set(ins) | {'IN-08'})
+        rfs = ', '.join(sorted(rf_of[c[0]])) or ('; '.join(c[4]))
+        rows.append((f'{c[0]} {c[1]}', rfs, ', '.join(cus) or c[5], ', '.join(rnf_of_comp(c[0])) or '—',
+                     ', '.join(ins) or ('Fuera de la línea base (RF-29)' if c[0] == 'C17' else 'Transversal / soporte'), c[8]))
+    return rows
+
+
+@builder('f11')
+def build_f11():
+    import validate as V
+    diag = arch_diagram()
+    checks = V.f11_checks()
+    d = Doc()
+    d.note('Formato 11 – Arquitectura del sistema. Adaptación académica', [
+        AR.NOTA_ADAPTACION + ' Formato oficial no publicado / no disponible.',
+        'Estructura derivada de las actividades y entregables de la Guía 11: lista de componentes, relación entre '
+        'componentes, diagrama de arquitectura conceptual y arquitectura validada.',
+        f'Estados usados: **{C.SI}** (componentes IMPLEMENTADOS), TRANSVERSAL, **EXPERIMENTAL** (RF-29), NO IMPLEMENTADO '
+        '(RF-28). La decisión final de selección es **humana** (RF-23).'])
+    d.h('Datos generales')
+    d.kv([('Proyecto', C.PROYECTO), ('Curso', 'Pruebas y Calidad de Software'), ('NRC', '28607'), ('Docente', C.DOCENTE),
+          ('Equipo', C.EQUIPO), ('Formato', 'Formato 11 – Arquitectura del sistema (adaptación académica; sin plantilla oficial)'),
+          ('Fuente normativa', 'Guía de Práctica N.° 11 (docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_11.docx)'),
+          ('Fecha', '27/09/2026'), ('Estado', 'Versión 1.0, lista para auditoría (Fase 28). Sin aprobación institucional')],
+         widths=(26, 74), sz=17)
+    d.sub('Correspondencia con la Guía 11')
+    d.table(['ID', 'Exigencia de la guía', 'Apartado de la guía', 'Sección de este documento'],
+            [(g[0], g[1], g[2], s) for g, s in zip(AR.GUIA, ['2', '3', '4 y 5', '6 y 7', '8', '10'])], widths=[8, 50, 20, 22])
+    d.h('Contexto y alcance arquitectónico')
+    d.p('Síntesis del Formato 09 v1.1 útil para la arquitectura; el F9 publicado no se modifica.')
+    d.kv(AR.CONTEXTO, widths=(22, 78), sz=16)
+    d.h('Casos de uso que condicionan la arquitectura')
+    d.p('Agrupados por responsabilidad arquitectónica a partir del catálogo aprobado del Formato 08 (CU-01 a CU-20). '
+        'CU-18 es «Registrar decisión final humana». CU-21 «Consultar auditoría» está **DIFERIDO** y no forma parte del catálogo.')
+    d.table(['Responsabilidad', 'Casos de uso', 'Qué condiciona en la arquitectura', 'Componentes'], AR.CU_GRUPOS,
+            widths=[18, 28, 38, 16], sz=16)
+    d.h('Componentes principales')
+    d.table(['ID', 'Componente', 'Capa conceptual', 'Estado'], [(c[0], c[1], c[2], c[7]) for c in AR.COMPONENTES],
+            widths=[8, 42, 30, 20], sz=16)
+    d.p('Son **17 componentes conceptuales**: agrupan responsabilidades, no son clases ni carpetas. Evaluaciones y '
+        'entrevistas forman un solo componente porque comparten programación y registro (un único módulo en el código). '
+        'La decisión (C10) se separa de la selección y el cierre (C11) para dejar visible la frontera de RF-23.')
+    d.sub('Elementos no incluidos como componentes')
+    d.table(['ID', 'Elemento', 'Estado', 'Motivo'], AR.EXCLUIDOS, widths=[8, 26, 22, 44], sz=16)
+    d.h('Responsabilidades')
+    d.table(['ID', 'Componente', 'Responsabilidad', 'RF', 'CU', 'Actores', 'Fuente'],
+            [(c[0], c[1], c[3], ', '.join(c[4]), c[5], c[6], c[8]) for c in AR.COMPONENTES],
+            widths=[6, 13, 27, 12, 12, 13, 17], sz=14)
+    d.h('Relaciones entre componentes')
+    d.table(['ID', 'Origen', 'Destino', 'Tipo', 'Información intercambiada', 'RF/CU'],
+            [(r[0], r[1], r[2], r[3], r[4], r[6]) for r in AR.RELACIONES], widths=[7, 12, 13, 13, 38, 17], sz=15)
+    d.p('La dependencia y la observación de cada relación están en `RELATIONSHIPS.md`. No hay dependencias circulares '
+        'entre los módulos de negocio: C07 (postulaciones) no depende de ningún otro módulo de negocio.')
+    d.h('Flujo de información')
+    d.box([f'{i}. {x}' for i, x in enumerate(AR.FLUJO, start=1)])
+    d.p(AR.NOTA_FLUJO)
+    d.sub('Flujo separado de RF-29 (experimental)')
+    d.box([f'{i}. {x}' for i, x in enumerate(AR.FLUJO_RF29, start=1)])
+    d.h('Arquitectura conceptual')
+    d.table(['Capa conceptual', 'Componentes'], AR.CAPAS, widths=[45, 55])
+    d.p(AR.NOTA_CAPAS)
+    d.img(diag, 'Figura 1. Arquitectura conceptual del sistema (borrador). La vista formal ARQ-01 se modelará en '
+                'PowerDesigner en la F29.', 17)
+    d.sub('Arquitectura técnica de referencia (implementación actual)')
+    d.p('Esta sección documenta cómo está construido el sistema. **No es la vista conceptual principal** ni un despliegue.')
+    d.kv(AR.TECNICA, widths=(24, 76), sz=16)
+    d.h('Decisiones arquitectónicas')
+    d.table(['ID', 'Decisión', 'Motivo', 'Fuente', 'Impacto'], AR.DECISIONES, widths=[8, 20, 30, 20, 22], sz=15)
+    d.sub('RNF académicos → decisiones y componentes')
+    d.table(['RNF', 'Nombre', 'Decisión', 'Componentes / soporte', 'Estado (F7)'], AR.RNF_ARQ, widths=[9, 20, 12, 43, 16], sz=15)
+    d.p('RNF-06 y RNF-07 siguen **NO VERIFICADOS**: la arquitectura indica qué decisiones los soportan, pero no hay '
+        'medición ni prueba de respaldo y restauración.')
+    d.h('Validación')
+    npass = sum(1 for c in checks if c[2] == 'PASS')
+    d.p(f'Validación estructural y académica de la arquitectura ({len(checks)} criterios): **{npass} PASS**, '
+        f'{sum(1 for c in checks if c[2] == "PASS CON OBSERVACIÓN")} PASS CON OBSERVACIÓN, '
+        f'{sum(1 for c in checks if c[2] == "NO VERIFICADO")} NO VERIFICADO y '
+        f'{sum(1 for c in checks if c[2] == "FALLA")} fallas. El detalle está en `VALIDATION.md`. No hay aprobación institucional.')
+    d.table(['Criterio', 'Resultado', 'Evidencia'], [(c[0], c[2], c[3]) for c in checks], widths=[46, 16, 38], sz=14)
+    d.h('Limitaciones y observaciones')
+    d.bullets(AR.LIMITACIONES)
+    d.h('Conclusiones')
+    d.box(AR.CONCLUSIONES)
+    d.h('Evidencias')
+    d.bullets([
+        'Guía oficial: `docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_11.docx`.',
+        'Alcance: F9 v1.1 (`docs/academico/phase-24/output/`) y su adenda (`docs/academico/practica-09/`).',
+        'Casos de uso, RF y RNF: Formatos 06, 07 y 08 (`docs/academico/practica-06` a `practica-08`).',
+        'Referencias técnicas sin modificar: CO-01 y PK-01 (`docs/v1.1/uml/component-model.md`), DE-01 '
+        '(`deployment-model.md`), UC-01, SEQ-07 y SEQ-08 (`docs/v1.1/uml/`); exportaciones de la F23.',
+        'Manifiesto con SHA-256: `docs/academico/practica-11/evidencias/README.md`.',
+    ])
+    d.h('Trazabilidad')
+    d.table(['Componente', 'RF', 'CU', 'RNF', 'Alcance F9', 'Artefacto técnico'], f11_trace_rows(),
+            widths=[18, 17, 15, 14, 12, 24], sz=14)
+    contents = ['Nota de adaptación'] + [f'{i}. {it[1]}' for i, it in enumerate([x for x in d.items if x[0] == 'h'], start=1)]
+    title = 'Formato 11 — Arquitectura del sistema (adaptación académica)'
+    out_docx = os.path.join(pdir(11), F11_STEM + '.docx')
+    build_docx_f9(F9_BASE, out_docx,
+                  cover=[('ALCANCE DEL PROYECTO SOFTWARE F9', 'ARQUITECTURA DEL SISTEMA — FORMATO 11 (ADAPTACIÓN ACADÉMICA)'),
+                         ('Versión 1.1 · septiembre de 2026', 'Versión 1.0 · septiembre de 2026')],
+                  cover_note=AR.NOTA_ADAPTACION,
+                  header_text='F11 ADAPTADO | PRUEBAS Y CALIDAD DE SOFTWARE',
+                  doc=d, props={'dc:title': title, 'dc:subject': 'Arquitectura conceptual — adaptación académica de la Guía 11',
+                                'dc:description': 'NRC 28607 · Formato 11 adaptado (no oficial) · Fase 28',
+                                'dc:creator': C.EQUIPO, 'cp:lastModifiedBy': 'Equipo del proyecto'},
+                  contents=contents)
+    build_md(os.path.join(pdir(11), F11_STEM + '.md'), title, None, d, start=1,
+             preface=f'> Espejo en Markdown de `{F11_STEM}.docx`. **{AR.NOTA_ADAPTACION}**')
+    print('OK', os.path.relpath(out_docx, ROOT))
+    # Archivos de trabajo
+    comp_rows = [(c[0], c[1], c[3], ', '.join(c[4]), c[5], c[6], c[7], c[8]) for c in AR.COMPONENTES]
+    write_text(os.path.join(pdir(11), 'COMPONENTS.md'),
+               '# Componentes de la arquitectura conceptual (F11)\n\nGenerado desde `docs/academico/tools/f27b/m_arch.py`. '
+               'Estados: IMPLEMENTADO · TRANSVERSAL · EXPERIMENTAL · PROPUESTO · NO IMPLEMENTADO.\n\n'
+               + md_table(['ID', 'Componente', 'Responsabilidad', 'RF asociados', 'CU asociados', 'Actores', 'Estado', 'Fuente'], comp_rows)
+               + '\n\n## Elementos no incluidos como componentes\n\n' + md_table(['ID', 'Elemento', 'Estado', 'Motivo'], AR.EXCLUIDOS)
+               + '\n\n## Capas conceptuales\n\n' + md_table(['Capa', 'Componentes'], AR.CAPAS) + '\n\n' + AR.NOTA_CAPAS)
+    write_text(os.path.join(pdir(11), 'RELATIONSHIPS.md'),
+               '# Relaciones entre componentes (F11)\n\nGenerado desde `m_arch.py`. «C04 a C11» significa cada componente '
+               'de ese rango. Las flechas del borrador llevan estos IDs.\n\n'
+               + md_table(['ID', 'Origen', 'Destino', 'Tipo de relación', 'Información intercambiada', 'Dependencia',
+                           'RF/CU relacionados', 'Observación'], AR.RELACIONES)
+               + '\n\n## Flujo de información\n\n' + '\n'.join(f'{i}. {x}' for i, x in enumerate(AR.FLUJO, start=1))
+               + '\n\n' + AR.NOTA_FLUJO + '\n\n### Flujo separado de RF-29 (experimental)\n\n'
+               + '\n'.join(f'{i}. {x}' for i, x in enumerate(AR.FLUJO_RF29, start=1)))
+    _, comp, rf_of, cu_of, _ = V.f11_model()
+    comp_val = [(f'{c[0]} {c[1]}', 'Sí — ' + (', '.join(sorted(rf_of[c[0]])) or ', '.join(sorted(cu_of[c[0]])) or
+                                            ('transversal' if c[7] == 'TRANSVERSAL' else 'soporte de infraestructura / interfaz')),
+                 c[7], 'RF-29 fuera de la línea base' if c[0] == 'C17' else '') for c in AR.COMPONENTES]
+    write_text(os.path.join(pdir(11), 'VALIDATION.md'),
+               '# Validación de la arquitectura conceptual (F11)\n\nResultados: PASS · PASS CON OBSERVACIÓN · NO VERIFICADO · '
+               'NO APLICA. Generado por `validate.py` (`f11_checks`) sobre el modelo `m_arch.py`. Es una validación '
+               '**estructural y académica, interna del equipo**: no hay aprobación institucional. `validate.py` no juzga '
+               'la calidad semántica del diseño (ver `docs/academico/trazabilidad/README.md`).\n\n## Matriz de validación\n\n'
+               + md_table(['Criterio', 'Fuente', 'Resultado', 'Evidencia', 'Observación'], checks)
+               + '\n\n## Validación de componentes\n\n'
+               + md_table(['Componente', 'Tiene RF/CU/justificación transversal', 'Estado', 'Observación'], comp_val)
+               + '\n\n## Validación de relaciones\n\n- Relaciones necesarias: R-01 a R-20 (todas las pedidas por el encargo, '
+               'con la dirección de dependencia real).\n- Dependencias circulares entre módulos de negocio: ninguna (C07 no '
+               'depende de otro módulo de negocio; C08 y C11 dependen de C07).\n- Componentes aislados: ninguno.\n- Flujo '
+               'completo: R-05 → R-06/R-07 → R-08 → R-09 → R-10 → R-11 → R-12.\n- RF-29: C17 solo se relaciona con C05 '
+               '(lectura de datos operativos) y C01 (presentación); **sin relación** con C09, C10 ni C11.')
+    guia_rows = [
+        ('Revisar el alcance', 'Sección 2 (síntesis del F9: IN, OUT, límites y restricciones)', 'PASS'),
+        ('Analizar los casos de uso', 'Sección 3 (CU-01..CU-20 agrupados; CU-18 y CU-21 tratados)', 'PASS'),
+        ('Identificar los componentes', 'Secciones 4 y 5; COMPONENTS.md (17 componentes y 4 exclusiones)', 'PASS'),
+        ('Definir las relaciones', 'Secciones 6 y 7; RELATIONSHIPS.md (20 relaciones y flujo)', 'PASS'),
+        ('Diagrama conceptual', 'Sección 8; diagramas/draft/F11-arquitectura-conceptual.png (borrador; formal en F29)', 'PASS'),
+        ('Arquitectura validada', f'Sección 10; VALIDATION.md ({npass} PASS, sin fallas; RNF-06 y RNF-07 NO VERIFICADOS; '
+                                  'validación interna, no institucional)', 'PASS CON OBSERVACIONES'),
+    ]
+    write_text(os.path.join(pdir(11), 'F28_VALIDATION.md'),
+               '# Validación de la Fase 28 frente a la Guía 11\n\nCada exigencia de la Guía de Práctica N.° 11 y su evidencia '
+               'en este entregable. No se agregan exigencias no oficiales.\n\n'
+               + md_table(['Requisito de la Guía 11', 'Evidencia', 'Estado'], guia_rows)
+               + '\n\n**Observaciones:** el formato es una adaptación académica (no hay Formato 11 oficial); RNF-06 y '
+               'RNF-07 no verificados; H-14 (PDF del F4) pendiente para la F31; sin aprobación institucional.')
+    tr = f11_trace_rows()
+    write_text(os.path.join(ACAD, 'trazabilidad', 'F11-architecture-traceability.md'),
+               '# Trazabilidad de la arquitectura (F11)\n\nComponente → RF → CU → RNF → alcance F9 → artefacto técnico. '
+               'Generado desde `m_arch.py`, `m_cu.py` y `validate.py`; no se inventan correspondencias: los RF y CU salen '
+               'de la tabla de componentes, el alcance IN sale de los CU (F8/F9) y el artefacto técnico es la fuente '
+               'citada (CO-01, PK-01, SEQ, ADR).\n\n'
+               + md_table(['Componente', 'RF', 'CU', 'RNF', 'Alcance F9', 'Artefacto técnico'], tr)
+               + '\n\nNotas: C01, C03, C14 y C16 soportan todos los RF (interfaz, autorización y persistencia) y no se '
+               'listan RF por separado. C13 es transversal (RF-27 → UC-RF27, IN-08). C17 es experimental (RF-29, fuera de '
+               'la línea base). Relación con la cadena académica: [F2-F9-traceability.md](F2-F9-traceability.md).')
+    write_evidence(11, 'Formato 11 (adaptado)', [
+        ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_11.docx', 'Fuente normativa (Guía 11)'),
+        ('docs/academico/phase-24/output/F9_Alcance_Proyecto_Software_Colegio_Andino_FINAL_v1.1.docx',
+         'Alcance (F9) y base visual del documento (solo lectura)'),
+        ('docs/academico/practica-09/F9_POST_RELEASE_ADDENDUM.md', 'Estado post-release del alcance'),
+        ('docs/academico/practica-08/F8_Diagrama_Casos_de_Uso_Colegio_Andino.md', 'Casos de uso aprobados (CU-01..CU-20)'),
+        ('docs/academico/practica-06/F6_Requerimientos_Funcionales_Colegio_Andino.md', 'RF-01..RF-27'),
+        ('docs/academico/practica-07/F7_Requerimientos_No_Funcionales_Colegio_Andino.md', 'RNF académicos y su estado'),
+        ('docs/academico/trazabilidad/F2-F9-traceability.md', 'Cadena académica F2 → F9'),
+        ('docs/v1.1/uml/component-model.md', 'CO-01 y PK-01: componentes y paquetes reales (referencia)'),
+        ('docs/v1.1/uml/deployment-model.md', 'DE-01: despliegue (referencia; no se mezcla con la vista conceptual)'),
+        ('docs/v1.1/uml/use-cases.md', 'UC-01: vista técnica de casos de uso (UC-RF27, UC-RF29)'),
+        ('docs/v1.1/uml/sequence-diagrams.md', 'SEQ-07 (decisión humana) y SEQ-08 (riesgo operacional)'),
+        ('docs/v1.1/powerdesigner/exports/CO-01-componentes.png', 'Exportación CO-01 (F23), sin modificar'),
+        ('docs/v1.1/powerdesigner/exports/PK-01-paquetes.png', 'Exportación PK-01 (F23), sin modificar'),
+        ('docs/v1.1/powerdesigner/exports/DE-01-despliegue.png', 'Exportación DE-01 (F23), sin modificar'),
+        ('docs/v1.1/powerdesigner/exports/UC-01-casos-de-uso.png', 'Exportación UC-01 (F23), sin modificar'),
+        ('docs/final-report/07-arquitectura-tecnologica.md', 'Estilo, multitenencia, PostgreSQL y Redis (decisiones)'),
+        ('docs/v1.1/architecture-decisions/ADR-001-ml-boundary.md', 'Frontera del ML (DA-07)'),
+        ('docs/v1.1/architecture-decisions/ADR-002-human-oversight.md', 'Decisión humana (DA-03)'),
+        ('docs/academico/tools/f27b/m_arch.py', 'Modelo de datos de la arquitectura'),
+        ('docs/academico/practica-11/diagramas/draft/F11-arquitectura-conceptual.png', 'Borrador del diagrama conceptual'),
+    ])
 
 
 if __name__ == '__main__':
