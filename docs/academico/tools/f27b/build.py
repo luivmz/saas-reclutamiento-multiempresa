@@ -868,6 +868,107 @@ def build_f8():
     ])
 
 
+# --------------------------------------------------------------------------- Trazabilidad F2 → F9
+@builder('trace')
+def build_trace():
+    import validate as V
+    out_dir = os.path.join(ACAD, 'trazabilidad')
+    os.makedirs(out_dir, exist_ok=True)
+    tbd = {t[0]: t for t in T.ACTIVIDADES + T.FUTURAS}
+    rnf_rf = lambda rf: N.RNF_POR_RF.get(rf, N.RNF_POR_RF['default'])
+    cu_of = lambda rfs: [c for c in U.CU if set(c[4]) & set(rfs)]
+    rows = []
+    for t in T.ACTIVIDADES + T.FUTURAS:
+        sols = [s for s in T.SOLUCIONES if t[0] in s[4]]
+        cus = cu_of(t[5])
+        rows.append((', '.join(t[6]) or '— (nueva)', ', '.join(s[0] for s in sols) or '—', ', '.join(s[1] for s in sols) or '—',
+                     f'{t[0]} {t[2]}', ', '.join(t[5]) or '— (propuesta futura)',
+                     ', '.join(sorted({x for r in t[5] for x in rnf_rf(r)})) or '—',
+                     ', '.join(c[0] for c in cus) or '—',
+                     ', '.join(sorted({p.strip() for c in cus for p in c[7].split('·')})) or 'Fuera de alcance (OUT)'))
+    as_rows = [(a[0], a[1], ', '.join(a[5]) or '—', ', '.join(t[0] for t in T.ACTIVIDADES if a[0] in t[6])) for a in A.ACTIVIDADES]
+    rf_rows = []
+    for r in R.RF:
+        cus = cu_of([r[0]])
+        rf_rows.append((r[0], r[1], ', '.join(r[11]), ', '.join(c[0] for c in cus),
+                        ', '.join(sorted({c[5] for c in cus})), ', '.join(sorted({c[6] for c in cus})),
+                        ', '.join(rnf_rf(r[0])), ', '.join(sorted({p.strip() for c in cus for p in c[7].split('·')}))))
+    val = V.checks()
+    fails = sum(1 for v in val if v[1] != 'OK')
+    text = f"""# Trazabilidad F2 → F9 (Fase 27B)
+
+Cadena académica completa: actividad AS-IS → problema → solución → actividad TO-BE → RF → RNF relevantes → CU → alcance del F9.
+Se genera desde los mismos modelos que los Formatos 02 a 08 (`docs/academico/tools/f27b/`), así que no puede contradecirlos.
+Para regenerarla: `python docs/academico/tools/f27b/build.py trace`.
+
+| Formato | Entregable |
+|---|---|
+| F2 | [`practica-02`](../practica-02/README.md) |
+| F3 | [`practica-03`](../practica-03/README.md) |
+| F4 | [`practica-04`](../practica-04/README.md) |
+| F5 | [`practica-05`](../practica-05/README.md) |
+| F6 | [`practica-06`](../practica-06/README.md) |
+| F7 | [`practica-07`](../practica-07/README.md) |
+| F8 | [`practica-08`](../practica-08/README.md) |
+| F9 | [`phase-24/output`](../phase-24/README.md) (publicado, sin cambios) y [`practica-09`](../practica-09/F9_POST_RELEASE_ADDENDUM.md) (adenda) |
+
+**Estado de cada eslabón:**
+
+| Eslabón | Estado |
+|---|---|
+| AS-IS (F2 a F4) | **Preliminar**, sujeto a validación institucional |
+| TO-BE (F5) | **Propuesto** |
+| RF (F6) y CU (F8) | Describen el **software implementado** v1.1 |
+| RNF (F7) | Cada uno con su estado de verificación |
+| RF-28, RF-29 y RNF-C | **Fuera** de la cadena de la línea base |
+
+Un RNF no se asocia a una única actividad: son transversales, y la columna muestra los más relevantes para cada RF.
+
+## 1. Cadena completa por actividad TO-BE
+
+{md_table(['AS-IS', 'Problema', 'Solución', 'Actividad TO-BE', 'RF', 'RNF relevantes', 'CU', 'Alcance F9'], rows)}
+
+## 2. Del proceso actual al TO-BE
+
+{md_table(['AS-IS', 'Actividad actual', 'Problemas', 'Actividades TO-BE que la sustituyen'], as_rows)}
+
+## 3. Por requerimiento funcional
+
+{md_table(['RF', 'Nombre canónico', 'TO-BE', 'CU académico', 'CU agrupado (v1.0)', 'UC-RF', 'RNF relevantes', 'Alcance F9'], rf_rows)}
+
+## 4. RNF transversales
+
+{md_table(['RNF', 'Nombre', 'Estado', 'Equivalente técnico'], [(x[0], x[2], x[8], next(e[1] for e in N.EQUIVALENCIA if e[0].startswith(x[0]))) for x in N.RNF])}
+
+## 5. Validación de coherencia (§17 del encargo)
+
+Resultado de `docs/academico/tools/f27b/validate.py` al generar este documento: **{len(val) - fails} de {len(val)} reglas OK, {fails} fallas.**
+
+{md_table(['Regla', 'Resultado', 'Detalle'], val)}
+
+## 6. Rupturas y pendientes conocidos
+
+Las reglas se cumplen. Estos puntos son **límites declarados**, no errores de trazabilidad:
+
+| ID | Eslabón | Pendiente | Tratamiento |
+|---|---|---|---|
+| T-01 | AS-IS | Todo el AS-IS es **preliminar**: sin validación de RR. HH. ni de la Administración del Colegio | Mantener el rótulo hasta validarlo; no afirmar hechos institucionales |
+| T-02 | AS-IS → problema | AS-01 no tiene un problema asociado | Correcto: no toda actividad es problemática |
+| T-03 | Problema → solución | P5 se atiende **en parte**: los indicadores de gestión dependen de RF-28, un candidato no implementado | Declarado en F4, F5 y F6 |
+| T-04 | TO-BE → RF | TB-F1 «cerrar sin selección» no tiene RF: es una propuesta futura (A-30) | Requiere un cambio de alcance aprobado |
+| T-05 | TO-BE ← AS-IS | TB-30 (auditoría) no tiene actividad AS-IS de origen: es una capacidad nueva | Correcto: responde a P2 y P5 |
+| T-06 | RF → CU | La consulta de auditoría (RF-27) no tiene un CU académico propio; el F9 la incluye en CU-18 | Propuesta CU-21, pendiente de decisión del equipo (O-F8-02) |
+| T-07 | CU | Los nombres de CU-01 a CU-20 los asignó la F27B; el F9 solo los numeraba | Confirmación del equipo (O-F8-01) |
+| T-08 | RNF | RNF-06 y RNF-07 no están verificados; RNF-05, RNF-08 y RNF-09 tienen evidencia parcial | Criterios propuestos en el F7, sin umbrales inventados |
+| T-09 | RNF ↔ catálogo técnico | La equivalencia no es 1:1 (10 académicos frente a 11 técnicos) | Unificarla es una decisión del equipo (F24 L-01) |
+| T-10 | Diagramas | Los BPMN de F3 y F5 y el diagrama académico de F8 son **borradores** | Se formalizan en PowerDesigner en la F29, tras la F27C ([worklist](../POWERDESIGNER_WORKLIST.md)) |
+| T-11 | F9 | El F9 publicado no refleja el release, la QA de la F25 ni la resolución de los rótulos | [Adenda](../practica-09/F9_POST_RELEASE_ADDENDUM.md); el F9 no se modifica |
+| T-12 | Problema → RF | RF-07 (TB-10) y RF-08 (TB-11) no responden directamente a P1–P5 en la relación de §2.3: habilitan el flujo (publicar y acceder) | Correcto; no se fuerza una relación inexistente |
+"""
+    write_text(os.path.join(out_dir, 'F2-F9-traceability.md'), text)
+    print('OK', os.path.relpath(os.path.join(out_dir, 'F2-F9-traceability.md'), ROOT))
+
+
 if __name__ == '__main__':
     keys = sys.argv[1:] or list(BUILDERS)
     for k in keys:

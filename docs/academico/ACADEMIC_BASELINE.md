@@ -73,11 +73,11 @@ Candidatos en [`../v1.1/scope-preliminary.md`](../v1.1/scope-preliminary.md), si
 
 | Formato | Estado |
 |---|---|
-| F2 a F8 | **Pendientes de desarrollo formal.** Solo existen las plantillas oficiales vacías |
-| F9 | **Completo.** Entregable final v1.1 en [`phase-24/output/`](phase-24/README.md) (DOCX y PDF), con el histórico v1.0 y su [mapa de fuentes](phase-24/source-map.md) |
+| F2 a F8 | **Desarrollados en la F27B**, sobre las plantillas oficiales ([`practica-02`](practica-02/README.md) a [`practica-08`](practica-08/README.md)). **Pendientes de la auditoría F27C.** Los diagramas BPMN y de CU son borradores; se formalizan en PowerDesigner en la F29 ([worklist](POWERDESIGNER_WORKLIST.md)) |
+| F9 | **Completo.** Entregable final v1.1 en [`phase-24/output/`](phase-24/README.md) (DOCX y PDF), con el histórico v1.0 y su [mapa de fuentes](phase-24/source-map.md). No se modifica; la [adenda post-release](practica-09/F9_POST_RELEASE_ADDENDUM.md) (F27B) registra el estado posterior y las divergencias resueltas |
 | F11 | **Pendiente.** No hay plantilla oficial (ver la regla anterior) |
 
-**Insumos existentes.** Se clasificarán en la F27B; no son todavía formatos:
+**Insumos usados en la F27B** (trazabilidad completa en [`trazabilidad/F2-F9-traceability.md`](trazabilidad/F2-F9-traceability.md)):
 
 - el análisis de requerimientos de la v1.0 ([`../final-report/04-requerimientos.md`](../final-report/04-requerimientos.md));
 - los informes BPMN AS-IS y TO-BE, y el de casos de uso ([`../final-report/diagram-reports/`](../final-report/diagram-reports/));
@@ -94,7 +94,7 @@ Candidatos en [`../v1.1/scope-preliminary.md`](../v1.1/scope-preliminary.md), si
 
 Nada se presenta como «validado por la institución» sin evidencia explícita, y no se inventan hechos institucionales del Colegio Andino. Todos los datos son ficticios.
 
-## Observaciones para la F27B
+## Observaciones (F27B-0; vigentes en la F27B)
 
-- **`CLAUDE.md` y `docs/PROGRESS.md` siguen en el estado previo al release** en la base `c712539`. Dicen que la etiqueta v1.1 no se ha creado y que la F26 está pendiente de auditoría. Esta fase no los modifica porque quedan fuera de su alcance. Conviene sincronizarlos en un cambio de gobierno autorizado.
+- **`CLAUDE.md` y `docs/PROGRESS.md` siguen en el estado previo al release** en la base `c712539`. Dicen que la etiqueta v1.1 no se ha creado y que la F26 está pendiente de auditoría. Esta fase no los modifica porque quedan fuera de su alcance. Conviene sincronizarlos en un cambio de gobierno autorizado. Detalle en [`GOVERNANCE_DEBT.md`](GOVERNANCE_DEBT.md).
 - **La Guía 04 dice «Formato 43»** donde corresponde el Formato 04. Es una errata del original y no se corrige.

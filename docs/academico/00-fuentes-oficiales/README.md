@@ -25,7 +25,7 @@ Inventario con los hashes: [`inventory.md`](inventory.md). Estado académico gen
 - **Guías 01 y 10 y Formatos 01 y 10:** no forman parte de estas fuentes.
 - **Formatos desarrollados por el equipo:**
   - el F9 entregado (histórico y final v1.1) vive en [`../phase-24/`](../phase-24/);
-  - los Formatos 02 a 08 están pendientes (Fase 27B).
+  - los Formatos 02 a 08 desarrollados por el equipo (Fase 27B) viven en `docs/academico/practica-02/` a `practica-08/`.
 - **Material generado:** diagramas, BPMN, modelos de PowerDesigner y exportaciones viven en `docs/final-report/` y `docs/v1.1/`.
 
 ## Política de preservación
