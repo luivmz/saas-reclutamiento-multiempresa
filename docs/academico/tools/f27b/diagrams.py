@@ -294,62 +294,54 @@ class Swimlanes:
 
 
 def use_case_diagram(path, title, subtitle, actors_left, actors_right, cases, links, includes, note=''):
-    """actors_*: [(id, nombre)]; cases: [(id, nombre, columna 0|1)]; links: [(actor, cu)];
-    includes: [(base, incluido, estereotipo)]."""
-    W, H = 1900, 150 + 110 * max(len([c for c in cases if c[2] == 0]), len([c for c in cases if c[2] == 1])) + 120
+    """actors_*: [(id, nombre)]; cases: [(id, nombre, columna 0|1|2, fila)]; links: [(actor, cu)];
+    includes: [(base, incluido, estereotipo)]. El actor se ubica a la altura media de sus casos."""
+    RH, ew, eh = 108, 330, 76
+    rows = max(c[3] for c in cases) + 1
+    W, H = 1900, int(190 + RH * rows + 90)
     img = Image.new('RGB', (W, H), 'white')
     d = ImageDraw.Draw(img)
     d.text((40, 14), title, font=font(28, bold=True), fill=INK)
     d.text((40, 50), subtitle, font=font(17, italic=True), fill=MUTED)
-    mark = 'BORRADOR DE REVISIÓN — no es el modelo formal de PowerDesigner'
-    d.text((40, 76), mark, font=font(16, bold=True), fill=WARN)
-    bx0, bx1, by0, by1 = 380, W - 380, 110, H - 70
+    d.text((40, 76), 'BORRADOR DE REVISIÓN — no es el modelo formal de PowerDesigner', font=font(16, bold=True), fill=WARN)
+    bx0, bx1, by0, by1 = 390, W - 390, 110, H - 60
     d.rounded_rectangle([bx0, by0, bx1, by1], radius=18, outline=TASK_LINE, width=3, fill=(250, 252, 255))
-    d.text((bx0 + 16, by0 + 10), 'Plataforma SaaS de reclutamiento, evaluación y selección (línea base RF-01 a RF-27)',
+    d.text((bx0 + 16, by0 + 10), 'Plataforma SaaS de reclutamiento, evaluación y selección — línea base RF-01 a RF-27',
            font=font(17, bold=True), fill=TASK_LINE)
-    pos = {}
-    cols = {0: [c for c in cases if c[2] == 0], 1: [c for c in cases if c[2] == 1]}
-    ew, eh = 430, 74
-    for col, lst in cols.items():
-        cx = bx0 + 60 + ew / 2 if col == 0 else bx1 - 60 - ew / 2
-        for i, (cid, name, _) in enumerate(lst):
-            cy = by0 + 80 + i * 110
-            pos[cid] = (cx, cy)
+    colx = {0: bx0 + 30 + ew / 2, 1: (bx0 + bx1) / 2 - 70, 2: bx1 - 30 - ew / 2}
+    pos = {cid: (colx[col], by0 + 90 + row * RH) for cid, name, col, row in cases}
     apos = {}
     for side, lst in ((0, actors_left), (1, actors_right)):
-        n = len(lst)
-        for i, (aid, name) in enumerate(lst):
-            ax = 180 if side == 0 else W - 180
-            ay = by0 + (by1 - by0) * (i + 0.5) / n
-            apos[aid] = (ax, ay, side, name)
+        for aid, name in lst:
+            ys = [pos[c][1] for a, c in links if a == aid]
+            apos[aid] = (170 if side == 0 else W - 170, sum(ys) / len(ys), side, name)
     for a, c in links:
         ax, ay, side, _ = apos[a]
         cx, cy = pos[c]
-        ex = cx - ew / 2 if (side == 0) == (cx < W / 2) or True else cx
         tx = cx - ew / 2 if ax < cx else cx + ew / 2
-        d.line([(ax + (40 if side == 0 else -40), ay - 10), (tx, cy)], fill=(90, 100, 115), width=2)
+        d.line([(ax + (38 if side == 0 else -38), ay - 12), (tx, cy)], fill=(95, 105, 120), width=2)
     for base, inc, st in includes:
         (x0, y0), (x1, y1) = pos[base], pos[inc]
-        p0 = (x0 + (ew / 2 if x1 > x0 else -ew / 2) * 0.6, y0 + (eh / 2 if y1 > y0 else -eh / 2))
-        p1 = (x1 + (-ew / 2 if x1 > x0 else ew / 2) * 0.6 if x1 != x0 else x1 + 40, y1 + (-eh / 2 if y1 > y0 else eh / 2))
-        dashed(d, [p0, p1], MUTED, width=2)
-        arrowhead(d, p0, p1, MUTED, open_=True)
+        p0 = (x0 + (ew / 2 if x1 > x0 else -ew / 2), y0)
+        p1 = (x1 + (-ew / 2 + 40 if x1 > x0 else ew / 2 - 40), y1 + (-eh / 2 + 6 if y1 > y0 else eh / 2 - 6))
+        dashed(d, [p0, p1], (150, 90, 0), width=2)
+        arrowhead(d, p0, p1, (150, 90, 0), open_=True)
         mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
         lab = f'«{st}»'
-        w = d.textlength(lab, font=font(13, italic=True))
-        d.rectangle([mx - w / 2 - 2, my - 9, mx + w / 2 + 2, my + 9], fill='white')
-        d.text((mx - w / 2, my - 8), lab, font=font(13, italic=True), fill=MUTED)
-    for cid, name, col in cases:
+        w = d.textlength(lab, font=font(14, italic=True))
+        d.rectangle([mx - w / 2 - 3, my - 10, mx + w / 2 + 3, my + 10], fill='white')
+        d.text((mx - w / 2, my - 9), lab, font=font(14, italic=True), fill=(150, 90, 0))
+    for cid, name, col, row in cases:
         cx, cy = pos[cid]
         d.ellipse([cx - ew / 2, cy - eh / 2, cx + ew / 2, cy + eh / 2], fill='white', outline=TASK_LINE, width=3)
-        text_block(d, cx, cy, f'{cid}\n{name}', font(16), ew - 70)
+        text_block(d, cx, cy, f'{cid}' + chr(10) + f'{name}', font(16), ew - 64)
     for aid, (ax, ay, side, name) in apos.items():
-        d.ellipse([ax - 16, ay - 70, ax + 16, ay - 38], outline=INK, width=3)
+        d.ellipse([ax - 16, ay - 70, ax + 16, ay - 38], outline=INK, width=3, fill='white')
         d.line([(ax, ay - 38), (ax, ay + 5)], fill=INK, width=3)
         d.line([(ax - 30, ay - 22), (ax + 30, ay - 22)], fill=INK, width=3)
         d.line([(ax, ay + 5), (ax - 22, ay + 40)], fill=INK, width=3)
         d.line([(ax, ay + 5), (ax + 22, ay + 40)], fill=INK, width=3)
-        text_block(d, ax, ay + 66, f'{aid}\n{name}', font(16, bold=True), 300)
+        text_block(d, ax, ay + 70, f'{aid}' + chr(10) + f'{name}', font(16, bold=True), 300)
     if note:
         d.text((40, H - 44), note, font=font(15, italic=True), fill=MUTED)
     img.save(path, optimize=True)

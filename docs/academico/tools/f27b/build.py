@@ -775,6 +775,99 @@ def build_f7():
     ])
 
 
+# --------------------------------------------------------------------------- F8 (casos de uso)
+import m_cu as U  # noqa: E402
+
+CUD = {c[0]: c for c in U.CU}
+ACTN = {a[0]: a[1] for a in U.ACTORES}
+
+
+def f9_image(index, out_name, n):
+    """Copia sin modificar una imagen del F9 v1.0 (orden: logotipo, anexo A, anexo B, anexo C)."""
+    import zipfile
+    import re
+    src = os.path.join(ACAD, 'phase-24', 'F9_Alcance_Proyecto_Software_Colegio_Andino_NRC30180.docx')
+    z = zipfile.ZipFile(src)
+    doc = z.read('word/document.xml').decode('utf-8')
+    rels = dict(re.findall(r'Id="(rId\d+)"[^>]*Target="([^"]+)"', z.read('word/_rels/document.xml.rels').decode()))
+    ids = [rels[i] for i in re.findall(r'r:embed="(rId\d+)"', doc)]
+    out = os.path.join(pdir(n, 'evidencias'), out_name)
+    with open(out, 'wb') as f:
+        f.write(z.read('word/' + ids[index]))
+    return out
+
+
+@builder('f8')
+def build_f8():
+    left = [(a, ACTN[a]) for a in ('ACT-01', 'ACT-04', 'ACT-05')]
+    right = [(a, ACTN[a]) for a in ('ACT-02', 'ACT-03')]
+    links = [(a, c[0]) for c in U.CU for a in c[3]]
+    diag = os.path.join(pdir(8, 'diagramas', 'draft'), 'F8-casos-de-uso-academico.png')
+    dg.use_case_diagram(diag, 'F8 · Diagrama de casos de uso — vista académica (CU-01 a CU-20)',
+                        'Cinco actores y veinte casos de la línea base RF-01 a RF-27. Nombres de CU asignados en la F27B (O-F8-01).',
+                        left, right, [(c[0], c[1], c[8], c[9]) for c in U.CU], links, U.INCLUDES,
+                        'CU-16 es un caso incluido, sin actor directo. RF-28 y RF-29 no forman parte de esta vista.')
+    ante = f9_image(2, 'antecedente-cu-f9-v1.0-anexo-B.png', 8)
+    uc01 = os.path.join(ROOT, 'docs', 'v1.1', 'powerdesigner', 'exports', 'UC-01-casos-de-uso.png')
+    d = Doc()
+    estado(d, [f'Los casos de uso representan el **{C.SI}** de la línea base RF-01 a RF-27. El diagrama académico es un '
+               '**borrador**. La vista técnica formal es UC-01 de PowerDesigner (F23), que no se modifica.'])
+    d.h('Descripción general del sistema')
+    d.instr('Describir brevemente el sistema a desarrollar.')
+    sistema_desc(d)
+    d.sub('Funcionalidades principales.')
+    d.bullets(['Requerimientos de personal (CU-01 a CU-03).', 'Vacantes (CU-04 a CU-06).',
+               'Cuenta y postulación (CU-07 a CU-09).', 'Seguimiento de postulaciones (CU-10 a CU-12).',
+               'Evaluación y entrevista (CU-13 a CU-15).', 'Comparación y ranking (CU-16 y CU-17).',
+               'Decisión humana, selección y cierre (CU-18 a CU-20), con auditoría.'])
+    d.sub('Relación con los requerimientos funcionales.')
+    d.box(['Los 20 CU cubren los 27 RF del Formato 06 sin RF adicionales. Cada CU indica sus RF, y cada RF tiene al menos '
+           'un CU (sección 8). RF-28 y RF-29 son extensiones fuera de esta vista.'])
+    d.h('Identificación de actores')
+    d.table(['ID', 'Actor', 'Descripción'], U.ACTORES, widths=[10, 22, 68])
+    d.p(U.NOTA_ACTORES)
+    d.h('Identificación de casos de uso')
+    d.table(['ID', 'Caso de uso', 'Descripción'], [(c[0], c[1], c[2]) for c in U.CU], widths=[9, 33, 58], sz=17)
+    d.h('Relación actores-casos de uso')
+    rows = [(f'{a[0]} {a[1]}', ', '.join(c[0] for c in U.CU if a[0] in c[3])) for a in U.ACTORES]
+    rows.append(('— (caso incluido)', 'CU-16, incluido por CU-05, CU-15 y CU-17'))
+    d.table(['Actor', 'Caso de uso'], rows, widths=[35, 65])
+    d.h('Diagrama de casos de uso')
+    d.instr('Insertar aquí el diagrama elaborado con herramienta UML.')
+    d.img(diag, 'Figura 1. Diagrama de casos de uso, vista académica (CU-01 a CU-20). Borrador de revisión.', 16.5)
+    d.img(uc01, 'Figura 2. Referencia técnica: UC-01 de PowerDesigner (F23), un caso por RF. Exportación versionada, sin cambios.', 16.5)
+    d.p('La adaptación formal de la vista académica en PowerDesigner está en `POWERDESIGNER_PENDING.md`. No se modificó '
+        'el OOM de la F23.')
+    d.h('Relación con los requerimientos y correspondencia de vistas')
+    d.table(['CU académico (F9)', 'CU agrupado (v1.0)', 'UC-RF (F22/F23)', 'Actor', 'RF', 'Alcance (F9)'],
+            [(f'{c[0]} {c[1]}', c[5], c[6], ', '.join(c[3]) or '— (incluido)', ', '.join(c[4]), c[7]) for c in U.CU],
+            widths=[24, 16, 20, 13, 13, 14], sz=15)
+    d.sub('Los 13 CU agrupados de v1.0 (se conservan)')
+    d.table(['CU (v1.0)', 'Caso de uso', 'Actor', 'RF'], U.AGRUPADOS, widths=[12, 38, 25, 25], sz=16)
+    d.p('Las tres vistas se conservan: 20 CU académicos (F9), 13 CU agrupados (informe v1.0) y 29 UC-RF técnicos '
+        '(F22/F23, uno por RF, con UC-RF28 candidato y UC-RF29 experimental). No se renumera ninguna.')
+    d.h('Observaciones')
+    d.table(['ID', 'Tema', 'Observación'], U.OBSERVACIONES, widths=[11, 20, 69], sz=16)
+    d.img(ante, 'Figura 3. Antecedente superado: diagrama de CU del F9 v1.0 (anexo B, copia sin modificar). Incluye '
+                'actores fuera del alcance (O-F8-06).', 15)
+    emit(8, 'F8_Diagrama_Casos_de_Uso_Colegio_Andino', 'Formato_08_Diagrama_de_casos_de_uso.docx', 'modulo', d,
+         'Formato 08 — Diagrama de casos de uso')
+    write_evidence(8, 'Formato 08', [
+        ('docs/academico/phase-24/output/F9_Alcance_Proyecto_Software_Colegio_Andino_FINAL_v1.1.docx',
+         'Vista A: 20 CU académicos, actores ACT-01 a ACT-05 y bloques IN (tablas 5 y 8)'),
+        ('docs/final-report/04-requerimientos.md', 'Vista B: 13 CU agrupados (§4.4)'),
+        ('docs/final-report/diagram-reports/03-use-case-report.md', 'Informe de CU de v1.0 y rutas reales por CU'),
+        ('docs/v1.1/uml/use-cases.md', 'Vista C: 29 UC-RF, actores, include/extend y semántica crítica'),
+        ('docs/v1.1/powerdesigner/exports/UC-01-casos-de-uso.png', 'UC-01 de PowerDesigner (F23), referencia técnica'),
+        ('docs/academico/practica-08/evidencias/antecedente-cu-f9-v1.0-anexo-B.png', 'Antecedente superado (anexo B del F9 v1.0)'),
+        ('docs/academico/practica-08/diagramas/draft/F8-casos-de-uso-academico.png', 'Borrador del diagrama académico'),
+        ('docs/academico/tools/f27b/m_cu.py', 'Modelo de datos de los CU usado por el generador'),
+        ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_08.docx', 'Guía oficial de la Práctica 08'),
+        ('docs/academico/00-fuentes-oficiales/formatos-originales/Formato_08_Diagrama_de_casos_de_uso.docx',
+         'Plantilla oficial del Formato 08 (solo lectura)'),
+    ])
+
+
 if __name__ == '__main__':
     keys = sys.argv[1:] or list(BUILDERS)
     for k in keys:
