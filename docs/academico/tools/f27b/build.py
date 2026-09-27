@@ -641,6 +641,140 @@ def build_f5():
     ])
 
 
+# --------------------------------------------------------------------------- F6 (RF)
+import m_rf as R  # noqa: E402
+import m_rnf as N  # noqa: E402
+
+RFD = {r[0]: r for r in R.RF}
+
+
+def sistema_desc(d, rel_rf=True):
+    d.sub('Objetivo del sistema.')
+    d.box(['Gestionar de forma centralizada, trazable y multiempresa el ciclo de reclutamiento, evaluación y selección de '
+           'personal: desde el requerimiento hasta el cierre de la convocatoria. Los datos de cada organización quedan '
+           'aislados y la decisión final de selección se reserva a una persona autorizada (Aprobador / Dirección).'])
+
+
+@builder('f6')
+def build_f6():
+    d = Doc()
+    estado(d, [f'Los RF-01 a RF-27 describen el **{C.SI}** v1.1 (27 de 27 trazados a código y pruebas). La prioridad es '
+               f'una **{R.PRIORIZACION}**. RF-28 y RF-29 están en una sección aparte y **no** forman parte de la línea base.'])
+    d.h('Descripción general del sistema')
+    d.instr('Describir brevemente el sistema a desarrollar.')
+    sistema_desc(d)
+    d.sub('Usuarios principales.')
+    d.table(['Actor', 'Rol en el sistema', 'Tipo'], [(a[1], f'`{a[2]}`', a[3]) for a in C.ACTORES_SISTEMA], widths=[40, 35, 25])
+    d.p('El Sistema valida, calcula, notifica y audita, pero **nunca selecciona**. No existe un rol de superadministrador.')
+    d.sub('Relación con el proceso TO-BE.')
+    d.box(['Cada RF soporta al menos una actividad del TO-BE del Formato 05 (TB-01 a TB-30). La tabla de la sección 5 '
+           'muestra la relación completa. La actividad TB-F1 («cerrar sin selección») es una propuesta futura y no '
+           'tiene RF en la línea base.'])
+    d.h('Lista de requerimientos funcionales')
+    d.table(['ID', 'Nombre del requerimiento', 'Descripción', 'Actor', 'Entradas', 'Salidas', 'Prioridad'],
+            [(r[0], r[1], r[2], r[3], r[4], r[5], r[6]) for r in R.RF], widths=[7, 16, 20, 11, 18, 17, 11], sz=14)
+    d.p(f'La prioridad es una {R.PRIORIZACION}: **Alta** si el RF está en el camino principal del proceso y **Media** si '
+        'es una notificación derivada de otra acción. Los 27 RF son de la línea base y están implementados.')
+    d.sub('Nombres canónicos y alias históricos')
+    d.table(['ID', 'Nombre canónico', 'Alias en el F9 (v1.0 y v1.1)', 'Alias en el informe v1.0 (cap. 4)'],
+            [(k, RFD[k][1], v[0] or '—', v[1] or '—') for k, v in R.ALIAS.items()], widths=[9, 35, 28, 28], sz=16)
+    d.p('Los IDs no cambian. La Fase 24 registró «seis rótulos abreviados» en el Formato 09 (observación L-02). La '
+        'comparación completa contra el catálogo canónico encuentra **13** rótulos distintos en el F9: 11 abreviaturas y '
+        '2 variantes (RF-19 y RF-23). En el informe v1.0 hay 8. Todos quedan resueltos aquí con su alias; el F9 publicado '
+        'no se modifica.')
+    d.h('Detalle de requerimientos funcionales')
+    for r in R.RF:
+        d.sub(f'{r[0]}: {r[1]}')
+        d.kv([('Descripción', r[2]), ('Actor principal', r[3]), ('Precondiciones', r[7]),
+              ('Flujo principal', '\n'.join(f'{i}. {x}' for i, x in enumerate(r[8], start=1))),
+              ('Flujo alternativo', '\n'.join(r[9])), ('Postcondiciones', r[10]),
+              ('Actividad TO-BE', ', '.join(r[11])), ('Evidencia de implementación', r[12])], widths=(24, 76), sz=16)
+    d.h('Trazabilidad con el proceso TO-BE')
+    d.table(['Actividad del proceso (TO-BE)', 'Requerimiento funcional asociado'],
+            [(f'{t[0]} {t[2]}', ', '.join(t[5]) or '— (propuesta futura, sin RF)') for t in T.ACTIVIDADES + T.FUTURAS],
+            widths=[70, 30], sz=16)
+    d.h('Extensiones posteriores al baseline')
+    d.p('Estas extensiones **no** forman parte de RF-01 a RF-27, no se mezclan con la tabla principal y su promoción es '
+        'una decisión pendiente del equipo (`docs/v1.1/scope-preliminary.md`, preguntas 12 y 13).')
+    d.table(['ID', 'Nombre', 'Estado', 'Descripción', 'Fuente'], R.EXTENSIONES, widths=[8, 17, 17, 38, 20], sz=16)
+    emit(6, 'F6_Requerimientos_Funcionales_Colegio_Andino', 'Formato_06_Requerimientos_funcionales.docx', 'clave', d,
+         'Formato 06 — Requerimientos funcionales')
+    write_evidence(6, 'Formato 06', [
+        ('docs/final-report/04-requerimientos.md', 'RF-01 a RF-27 implementados (§4.2), actores (§4.1) y reglas críticas (§4.5)'),
+        ('docs/final-report/traceability-master.md', 'Trazabilidad RF → backend, frontend, PHPUnit y Cypress (27/27)'),
+        ('docs/rf-implementation-matrix.md', 'RF → archivos de implementación'),
+        ('docs/assumptions.md', 'Reglas A-01 a A-36 citadas en las fichas'),
+        ('docs/v1.1/uml/use-cases.md', 'Nombres canónicos de RF-01 a RF-29 (UC-RF01 a UC-RF29)'),
+        ('docs/v1.1/phase-25-final-qa.md', 'QA global: PHPUnit 411 superadas, Cypress 85/85'),
+        ('docs/v1.1/scope-preliminary.md', 'RF-28 y RF-29 como candidatos (decisión 11)'),
+        ('app/Http/Requests', 'Campos y validaciones reales de las entradas'),
+        ('docs/academico/tools/f27b/m_rf.py', 'Modelo de datos de las fichas usado por el generador'),
+        ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_06.docx', 'Guía oficial de la Práctica 06'),
+        ('docs/academico/00-fuentes-oficiales/formatos-originales/Formato_06_Requerimientos_funcionales.docx',
+         'Plantilla oficial del Formato 06 (solo lectura)'),
+    ])
+
+
+# --------------------------------------------------------------------------- F7 (RNF)
+@builder('f7')
+def build_f7():
+    d = Doc()
+    estado(d, [f'La prioridad es una **{N.PRIORIZACION}**. Cada RNF declara su **estado real de validación**: '
+               'verificado, evidencia parcial, no verificado o propuesto. Las pruebas exploratorias no se presentan como '
+               'SLA, y RNF-C no se presenta como requisito implementado.'])
+    d.h('Descripción general del sistema')
+    d.instr('Describir brevemente el sistema a desarrollar.')
+    sistema_desc(d)
+    d.sub('Funcionalidades principales.')
+    d.bullets(['Requerimientos de personal con validación y aprobación (RF-01 a RF-04).',
+               'Vacantes con perfil, criterios ponderados, validación y publicación (RF-05 a RF-07).',
+               'Cuenta, perfil, CV y postulación del postulante (RF-08 a RF-11).',
+               'Revisión, etapas y notificaciones (RF-12 a RF-15).',
+               'Evaluaciones y entrevistas con convocatoria y registro de resultados (RF-16 a RF-20).',
+               'Ranking y comparación explicables, decisión humana, selección, cierre y resultado (RF-21 a RF-26).',
+               'Auditoría de solo inserción (RF-27).'])
+    d.sub('Relación con los requerimientos funcionales.')
+    d.box(['Los RNF son **transversales**: se aplican a los 27 RF del Formato 06 y no crean módulos propios. La matriz de '
+           'trazabilidad F2–F9 indica los RNF más relevantes para cada RF.'])
+    d.h('Lista de requerimientos no funcionales')
+    d.table(['ID', 'Categoría', 'Nombre del requerimiento', 'Descripción', 'Métrica / Criterio', 'Prioridad'],
+            [(x[0], x[1], x[2], x[3], x[4], x[5]) for x in N.RNF], widths=[8, 14, 15, 21, 30, 12], sz=15)
+    d.h('Detalle de requerimientos no funcionales')
+    for x in N.RNF:
+        d.sub(f'{x[0]}: {x[2]}')
+        d.kv([('Categoría', x[1]), ('Descripción', x[3]), ('Métrica o criterio de aceptación', x[4]),
+              ('Justificación', x[6]), ('Método de verificación', x[7]), ('Estado real de validación', f'**{x[8]}**'),
+              ('Evidencia y límites', x[9])], widths=(26, 74), sz=16)
+    d.h('Clasificación por atributos de calidad')
+    d.table(['Categoría', 'Requerimientos asociados'], N.CLASIFICACION, widths=[35, 65])
+    d.sub('Matriz de equivalencia: RNF académico ↔ RNF técnico ↔ evidencia ↔ estado')
+    d.table(['RNF académico (F9)', 'RNF técnico (informe v1.0, cap. 4 §4.3)', 'Relación', 'Estado'],
+            N.EQUIVALENCIA, widths=[28, 44, 12, 16], sz=16)
+    d.p('La relación **no es 1:1**. Tres RNF académicos (RNF-06, RNF-07 y RNF-08) no tienen equivalente técnico, y dos '
+        'RNF técnicos no tienen equivalente académico. Unificar los catálogos es una decisión del equipo (F24 L-01).')
+    d.table(['RNF técnico sin equivalente académico', 'Requerimiento', 'Estado'], N.TECNICOS_SIN_EQUIVALENTE,
+            widths=[22, 48, 30], sz=16)
+    d.sub('Candidatos fuera de la línea base')
+    d.table(['ID', 'Candidato', 'Estado', 'Observación'], N.CANDIDATOS, widths=[8, 37, 13, 42], sz=16)
+    emit(7, 'F7_Requerimientos_No_Funcionales_Colegio_Andino', 'Formato_07_Requerimientos_no_funcionales.docx', 'modulo',
+         d, 'Formato 07 — Requerimientos no funcionales')
+    write_evidence(7, 'Formato 07', [
+        ('docs/final-report/04-requerimientos.md', 'Catálogo técnico RNF-01 a RNF-11 (§4.3): sin SLA ni pruebas de carga'),
+        ('docs/academico/phase-24/output/F9_Alcance_Proyecto_Software_Colegio_Andino_FINAL_v1.1.docx',
+         'Catálogo académico RNF-01 a RNF-10 (F9 v1.1)'),
+        ('docs/v1.1/phase-25-final-qa.md', 'QA global: suites, seguridad, multitenencia y rendimiento exploratorio (§21)'),
+        ('docs/v1.1/phase-21-visual-qa.md', 'QA visual y de accesibilidad (usabilidad, evidencia parcial)'),
+        ('docs/manual-smoke-test.md', 'Recorrido manual de usabilidad (v1.0)'),
+        ('docs/defects.md', 'DEF-07, DEF-08 y DEF-09'),
+        ('docs/docker.md', 'Portabilidad (RNF técnico sin equivalente académico)'),
+        ('docs/v1.1/scope-preliminary.md', 'Candidatos RNF-A, RNF-B y RNF-C (propuestas)'),
+        ('docs/academico/tools/f27b/m_rnf.py', 'Modelo de datos de los RNF usado por el generador'),
+        ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_07.docx', 'Guía oficial de la Práctica 07'),
+        ('docs/academico/00-fuentes-oficiales/formatos-originales/Formato_07_Requerimientos_no_funcionales.docx',
+         'Plantilla oficial del Formato 07 (solo lectura)'),
+    ])
+
+
 if __name__ == '__main__':
     keys = sys.argv[1:] or list(BUILDERS)
     for k in keys:
