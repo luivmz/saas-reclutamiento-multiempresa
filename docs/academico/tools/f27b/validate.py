@@ -128,7 +128,7 @@ def checks():
     flagged = []
     patt = re.compile(r'[^.\n]*\b(validad[oa]s? (?:por|con) (?:la institución|RR\. HH\.|el Colegio)|validación institucional'
                       r'|aprobad[oa] por (?:la institución|el Colegio))[^.\n]*', re.I)
-    for md in glob.glob(os.path.join(ACAD, 'practica-0*', 'F*_Colegio_Andino.md')):
+    for md in glob.glob(os.path.join(ACAD, 'practica-*', 'F*_Colegio_Andino.md')):
         for m in patt.finditer(open(md, encoding='utf-8').read()):
             frag = m.group(0)
             if not re.search(r'\b(no|sin|ninguna|ningún|nada|pendiente|sujet[oa]|falta|antes|hasta|depende|condición|confirmarán|a validar)\b', frag, re.I):
@@ -147,7 +147,7 @@ def checks():
                     encontradas.append(f'{os.path.basename(f)}: «{m.group(0)}»')
     check('F3/F5: no quedan variantes de nombre retiradas (glosario único)', not encontradas, ' | '.join(encontradas))
     # Integridad de los DOCX
-    for docx in sorted(glob.glob(os.path.join(ACAD, 'practica-0*', 'F*_Colegio_Andino.docx'))):
+    for docx in sorted(glob.glob(os.path.join(ACAD, 'practica-*', 'F*_Colegio_Andino.docx'))):
         name = os.path.basename(docx)
         z = zipfile.ZipFile(docx)
         ok = z.testzip() is None
@@ -166,11 +166,136 @@ def checks():
     return res
 
 
+# ---------------------------------------------------------------------------------------------------------------
+# Fase 28 — validación de la arquitectura conceptual (F11 adaptado)
+def _ids(text, prefix):
+    """Extrae IDs (RF-xx, CU-xx, Cxx) de un texto; expande «RF-01..RF-27» y «C04 a C11»."""
+    out = set()
+    for a, b in re.findall(rf'{prefix}-?(\d+)\s*(?:\.\.|a)\s*{prefix}-?(\d+)', text):
+        out |= {f'{prefix}-{i:02d}' if prefix != 'C' else f'C{i:02d}' for i in range(int(a), int(b) + 1)}
+    for x in re.findall(rf'\b{prefix}-?(\d\d)\b', text):
+        out.add(f'{prefix}-{x}' if prefix != 'C' else f'C{x}')
+    return out
+
+
+def f11_model():
+    import m_arch as AR
+    comp = {c[0]: c for c in AR.COMPONENTES}
+    rf_of = {c[0]: (_ids(' '.join(c[4]), 'RF') if not any('RF-01..RF-27' in r for r in c[4]) else set()) for c in AR.COMPONENTES}
+    cu_of = {c[0]: _ids(c[5], 'CU') for c in AR.COMPONENTES}
+    edges = []
+    for r in AR.RELACIONES:
+        for s in sorted(_ids(r[1], 'C')):
+            for t in sorted(_ids(r[2], 'C')):
+                if s != t:
+                    edges.append((s, t, r[0]))
+    return AR, comp, rf_of, cu_of, edges
+
+
+def f11_checks():
+    """Devuelve (criterio, fuente, resultado, evidencia, observación)."""
+    AR, comp, rf_of, cu_of, edges = f11_model()
+    res = []
+    add = lambda *r: res.append(r)
+    # A) RF
+    cubiertos = set().union(*rf_of.values())
+    faltan = sorted(set(BASE_RF) - cubiertos)
+    add('A. Cobertura funcional RF-01..RF-27', 'F6; COMPONENTS.md', 'PASS' if not faltan else 'FALLA',
+        f'{len(set(BASE_RF) & cubiertos)}/27 RF asignados a componentes de negocio o transversales', ', '.join(faltan))
+    extra = sorted(r for r in cubiertos if r not in BASE_RF and r != 'RF-29')
+    add('A. Ningún RF fuera de la línea base (salvo RF-29 experimental en C17)', 'F6; scope-preliminary.md',
+        'PASS' if not extra else 'FALLA', 'RF-29 solo en C17', ', '.join(extra))
+    # B) CU
+    cus = set().union(*cu_of.values())
+    cat = {f'CU-{i:02d}' for i in range(1, 21)}
+    add('B. Cobertura CU-01..CU-20', 'F8', 'PASS' if cat <= cus else 'FALLA', f'{len(cat & cus)}/20 CU',
+        ', '.join(sorted(cat - cus)))
+    add('B. Ningún CU nuevo; CU-21 sigue DIFERIDO', 'F8 (D-CU-03)', 'PASS' if not (cus - cat) else 'FALLA',
+        'Sin CU-21 ni otros', ', '.join(sorted(cus - cat)))
+    # C) Alcance
+    ins = {c[7] for c in U.CU} | {t['inb'] for t in U.TRANSVERSAL.values()}
+    ins = {x.strip() for i in ins for x in i.split('·')}
+    add('C. Alcance incluido IN-01..IN-08 representado', 'F9 §5', 'PASS' if {f'IN-0{i}' for i in range(1, 9)} <= ins else 'FALLA',
+        'Todos los bloques IN tienen componente (vía CU/RF)', '')
+    prohibidos = re.compile(r'(factura|suscrip|superadmin|banco de talentos|kubernetes|meilisearch|microservicio|nube|recomendador)', re.I)
+    malos = [c[0] for c in AR.COMPONENTES if prohibidos.search(c[1] + ' ' + c[3]) and 'No hay' not in c[3] and 'sin microservicios' not in c[3]]
+    add('C. Ningún componente fuera de alcance (OUT-01..OUT-11)', 'F9 §6', 'PASS' if not malos else 'FALLA',
+        'Exclusiones listadas aparte (X-01..X-04), no como componentes', ', '.join(malos))
+    # D) RNF
+    rnf_ok = len(AR.RNF_ARQ) == 10 and all(r[2] and r[3] for r in AR.RNF_ARQ)
+    add('D. Los 10 RNF académicos relacionados con decisiones y componentes', 'F7', 'PASS' if rnf_ok else 'FALLA',
+        '10/10 con decisión (DA) y componente', '')
+    for r in AR.RNF_ARQ:
+        if r[4] == 'NO VERIFICADO':
+            add(f'D. {r[0]} {r[1]}', 'F7', 'NO VERIFICADO', f'Soporte arquitectónico: {r[2]}; {r[3].split(".")[0]}',
+                'Sin evidencia de medición; no se afirma validado')
+        elif r[4] == 'EVIDENCIA PARCIAL':
+            add(f'D. {r[0]} {r[1]}', 'F7', 'PASS CON OBSERVACIÓN', f'{r[2]}; {r[3]}', 'Evidencia parcial según F7')
+    # E) Fronteras
+    rf23 = [c for c, s in rf_of.items() if 'RF-23' in s]
+    add('E. RF-23: decisión final humana en un componente propio (C10), distinto del ranking',
+        'ADR-002; F6 RF-23; F8 CU-18', 'PASS' if rf23 == ['C10'] and 'humana' in comp['C10'][1].lower() else 'FALLA',
+        'C10 «Decisión final humana»; R-10: el ranking no elige', '')
+    c17_rel = {t for s, t, _ in edges if s == 'C17'} | {s for s, t, _ in edges if t == 'C17'}
+    add('E. RF-29 experimental y separado de ranking, decisión y selección', 'ADR-001; ADR-004; OUT-11',
+        'PASS' if comp['C17'][7] == 'EXPERIMENTAL' and not (c17_rel & {'C09', 'C10', 'C11'}) else 'FALLA',
+        f'C17 EXPERIMENTAL; relaciones solo con {", ".join(sorted(c17_rel))}', '')
+    rf28 = [c for c in AR.COMPONENTES if 'RF-28' in ' '.join(c[4])]
+    add('E. RF-28 no implementado: sin componente productivo', 'scope-preliminary.md; OUT-07',
+        'PASS' if not rf28 and any('RF-28' in x[2] for x in AR.EXCLUIDOS) else 'FALLA', 'X-01 lo registra como NO IMPLEMENTADO', '')
+    # F, G, H
+    r03 = {t for s, t, rid in edges if rid == 'R-03'}
+    add('F. Multitenencia: C03 autoriza y filtra todos los módulos de negocio', 'cap. 7 §7.3; RNF-02',
+        'PASS' if {f'C{i:02d}' for i in range(4, 12)} <= r03 else 'FALLA', 'R-03 C03 → C04..C11, C13', 'Sin RLS (DA-02)')
+    r13 = {s for s, t, rid in edges if rid == 'R-13'}
+    add('G. Auditoría transversal de las acciones críticas', 'RF-27; A-33, A-34', 'PASS' if {f'C{i:02d}' for i in range(4, 12)} <= r13 else 'FALLA',
+        'R-13 C04..C11 → C13; trigger de solo inserción', 'Consulta: capacidad técnica (CU-21 diferido)')
+    add('H. Privacidad del CV: almacenamiento privado y descarga autorizada', 'A-12, A-15; RNF-04',
+        'PASS' if any(rid == 'R-17' and t == 'C15' for s, t, rid in edges) else 'FALLA', 'C15; R-17; DA-05', '')
+    # Componentes
+    sin_just = [c[0] for c in AR.COMPONENTES if not (rf_of[c[0]] or cu_of[c[0]] or c[7] in ('TRANSVERSAL',) or 'Soporte' in ' '.join(c[4]) or c[0] in ('C01',))]
+    add('Componentes: todos con RF/CU o justificación transversal o de soporte', 'COMPONENTS.md', 'PASS' if not sin_just else 'FALLA',
+        f'{len(AR.COMPONENTES)} componentes', ', '.join(sin_just))
+    # Relaciones: aislados y ciclos entre módulos de negocio
+    tocados = {s for s, t, _ in edges} | {t for s, t, _ in edges}
+    aislados = sorted(set(comp) - tocados)
+    add('Relaciones: ningún componente aislado', 'RELATIONSHIPS.md', 'PASS' if not aislados else 'FALLA',
+        f'{len(AR.RELACIONES)} relaciones', ', '.join(aislados))
+    neg = {f'C{i:02d}' for i in range(4, 12)}
+    g = {}
+    for s, t, _ in edges:
+        if s in neg and t in neg:
+            g.setdefault(s, set()).add(t)
+    ciclo = []
+
+    def dfs(n, path):
+        for m in g.get(n, ()):
+            if m in path:
+                ciclo.append(path[path.index(m):] + [m])
+            elif not ciclo:
+                dfs(m, path + [m])
+    for n in sorted(g):
+        if not ciclo:
+            dfs(n, [n])
+    add('Relaciones: sin dependencias circulares entre módulos de negocio', 'RELATIONSHIPS.md', 'PASS' if not ciclo else 'FALLA',
+        'Grafo C04..C11 acíclico', ' → '.join(ciclo[0]) if ciclo else '')
+    cadena = [('C04', 'C05'), ('C05', 'C07'), ('C06', 'C07'), ('C08', 'C07'), ('C08', 'C09'), ('C09', 'C10'), ('C10', 'C11'), ('C11', 'C07')]
+    falt = [f'{a}→{b}' for a, b in cadena if (a, b) not in {(s, t) for s, t, _ in edges}]
+    add('Relaciones: flujo completo requerimiento → vacante → postulación → evaluación → ranking → decisión → selección',
+        'F5 (TO-BE); RELATIONSHIPS.md', 'PASS' if not falt else 'FALLA', 'R-05..R-12', ', '.join(falt))
+    return res
+
+
 if __name__ == '__main__':
     sys.stdout.reconfigure(encoding='utf-8')
     fails = 0
     for rule, r, det in checks():
         print(f'{r:5} {rule}' + (f' — {det}' if det else ''))
         fails += r != 'OK'
+    print()
+    print('--- F11 (Fase 28): arquitectura conceptual')
+    for crit, fuente, r, ev, obs in f11_checks():
+        print(f'{r:21} {crit} — {ev}' + (f' ({obs})' if obs else ''))
+        fails += r == 'FALLA'
     print(f'\n{fails} fallas')
     sys.exit(1 if fails else 0)

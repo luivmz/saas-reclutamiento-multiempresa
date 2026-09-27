@@ -2,6 +2,7 @@
 
 | Archivo | Contenido |
 |---|---|
+| [`F11-architecture-traceability.md`](F11-architecture-traceability.md) | Arquitectura (F28): componente → RF → CU → RNF → alcance F9 → artefacto técnico |
 | [`F2-F9-traceability.md`](F2-F9-traceability.md) | Cadena completa, vistas por actividad y por RF, RNF transversales, resultado de la validación y pendientes T-01 a T-12 con su resolución |
 
 Se genera con `python docs/academico/tools/f27b/build.py trace` desde los mismos modelos que los Formatos 02 a 08.

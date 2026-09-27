@@ -140,7 +140,7 @@ RF-23 va a CU-18 «Registrar decisión final humana» → UC-RF23 (IN-07). RF-27
 
 ## 5. Validación de coherencia estructural (§17 del encargo)
 
-Resultado de `docs/academico/tools/f27b/validate.py` al generar este documento: **37 de 37 reglas OK, 0 fallas.**
+Resultado de `docs/academico/tools/f27b/validate.py` al generar este documento: **38 de 38 reglas OK, 0 fallas.**
 
 Es una validación **estructural**. En la F27D, además, se revisaron a mano F3, F5, F8 y esta trazabilidad (ver [`README.md`](README.md)).
 
@@ -183,6 +183,7 @@ Es una validación **estructural**. En la F27D, además, se revisaron a mano F3,
 | DOCX F6_Requerimientos_Funcionales_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 0 imágenes |
 | DOCX F7_Requerimientos_No_Funcionales_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 0 imágenes |
 | DOCX F8_Diagrama_Casos_de_Uso_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 3 imágenes |
+| DOCX F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla | OK | 2 imágenes |
 
 ## 6. Rupturas y pendientes conocidos (historial y resolución)
 
