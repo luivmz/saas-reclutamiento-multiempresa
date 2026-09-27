@@ -25,7 +25,7 @@ PROBLEMAS = [
          causa='Ausencia de un registro único por convocatoria',
          causa_desc='Cada etapa conserva su información por separado. No existe un expediente común que reúna la '
                     'necesidad, el perfil, los CV, las evaluaciones y la decisión.',
-         bpmn='Pool del Colegio: AS-02 (lane Área solicitante), AS-05, AS-06 y AS-08 (lane RR. HH.) y el mensaje de '
+         bpmn='Pool del Colegio: AS-02 (lane Área solicitante), AS-05, AS-06 y AS-08 (lane RR. HH.) y el mensaje MF-02 de '
               'postulación y CV (Postulante → AS-08).',
          validacion='RR. HH.'),
     dict(id='P2', nombre='Seguimiento manual', actividades=['AS-02', 'AS-03', 'AS-04', 'AS-09'],
@@ -38,7 +38,7 @@ PROBLEMAS = [
          causa='Estados del proceso no definidos ni registrados',
          causa_desc='Las etapas del requerimiento y de la postulación no están formalizadas como estados con sus '
                     'transiciones, y los cambios no quedan registrados con autor y fecha.',
-         bpmn='AS-02 → AS-03 → AS-04 y la compuerta G-01 (parte 1); AS-09 y la compuerta G-02 (parte 2).',
+         bpmn='AS-02 → AS-03 → AS-04 y la compuerta G-01 (parte 1); AS-09 y la compuerta G-02 dentro de SP-01 (parte 2).',
          validacion='RR. HH.'),
     dict(id='P3', nombre='Evaluaciones heterogéneas', actividades=['AS-11', 'AS-12'],
          tipo='Calidad', tipos_sec=['Control'],
@@ -50,7 +50,7 @@ PROBLEMAS = [
          causa='Criterios de evaluación no definidos antes de evaluar',
          causa_desc='El perfil no fija criterios con ponderación y rango, y los resultados no se registran con una '
                     'escala común por criterio.',
-         bpmn='AS-11 (lane Evaluadores) y AS-12 (lane RR. HH.), parte 2.',
+         bpmn='AS-11 (lane Evaluadores, dentro de SP-01) y AS-12 (lane RR. HH.), parte 2.',
          validacion='RR. HH. / Dirección'),
     dict(id='P4', nombre='Comunicación manual', actividades=['AS-07', 'AS-10', 'AS-14'],
          tipo='Tiempo', tipos_sec=['Control'],
@@ -63,7 +63,7 @@ PROBLEMAS = [
          causa='Avisos que dependen de una gestión manual en cada evento',
          causa_desc='Cada aviso requiere que alguien lo redacte y envíe. No hay un disparador asociado a cada evento '
                     'del proceso ni constancia del envío.',
-         bpmn='Flujos de mensaje de AS-06 (convocatoria), AS-07/AS-08 (recepción), AS-10 (citación) y AS-14 (resultado).',
+         bpmn='Flujos de mensaje MF-01 (AS-06, convocatoria), MF-02 (AS-07 → AS-08, recepción), MF-03 (AS-10, citación) y MF-04 (AS-14, resultado).',
          validacion='RR. HH.'),
     dict(id='P5', nombre='Indicadores limitados', actividades=['AS-12', 'AS-13'],
          tipo='Control', tipos_sec=['Otros: información de gestión'],

@@ -92,12 +92,17 @@ class Swimlanes:
             self.TOP = 112
         self.nodes, self.edges = {}, []
         self.badges = {}
+        self.groups = []
+
+    def group(self, lane0, lane1, row0, row1, label, style='subprocess'):
+        """Contenedor de subproceso expandido (o grupo transversal) detrás de los nodos."""
+        self.groups.append((lane0, lane1, row0, row1, label, style))
 
     def node(self, nid, kind, lane, row, label='', style='normal', off=0):
         self.nodes[nid] = dict(kind=kind, lane=lane, row=row, label=label, style=style, off=off)
 
-    def edge(self, src, dst, label='', kind='seq', side=None):
-        self.edges.append(dict(src=src, dst=dst, label=label, kind=kind, side=side))
+    def edge(self, src, dst, label='', kind='seq', side=None, lpos=None):
+        self.edges.append(dict(src=src, dst=dst, label=label, kind=kind, side=side, lpos=lpos))
 
     def _center(self, n):
         return (self.LEFT + n['lane'] * self.CW + self.CW / 2 + n['off'], self.TOP + n['row'] * self.RH + self.RH / 2)
@@ -109,10 +114,12 @@ class Swimlanes:
             return cx - self.TW / 2, cy - self.TH / 2, cx + self.TW / 2, cy + self.TH / 2
         if k == 'gateway':
             return cx - 38, cy - 38, cx + 38, cy + 38
+        if k == 'bnd':
+            return cx, cy, cx, cy
         return cx - 24, cy - 24, cx + 24, cy + 24
 
     def render(self, path, note=''):
-        rows = max(n['row'] for n in self.nodes.values()) + 1
+        rows = max([n['row'] for n in self.nodes.values()] + [g[3] for g in self.groups]) + 1
         W = self.LEFT * 2 + self.CW * len(self.lanes) + 40
         H = self.TOP + rows * self.RH + 90
         img = Image.new('RGB', (int(W), int(H)), 'white')
@@ -143,6 +150,24 @@ class Swimlanes:
                 x0, x1 = self.LEFT + a * self.CW, self.LEFT + (b + 1) * self.CW
                 d.rectangle([x0, 104, x1, H - 60], outline=TASK_LINE, width=3)
         # Aristas primero
+        for l0, l1, r0, r1, label, style in self.groups:
+            x0 = self.LEFT + l0 * self.CW + 8
+            x1 = self.LEFT + (l1 + 1) * self.CW - 8
+            y0 = self.TOP + r0 * self.RH + 4
+            y1 = self.TOP + (r1 + 1) * self.RH - 4
+            col = {'transversal': (46, 125, 50), 'future': (130, 130, 130)}.get(style, (120, 80, 160))
+            fill = {'transversal': (244, 250, 244), 'future': (246, 246, 246)}.get(style, (250, 246, 255))
+            d.rounded_rectangle([x0, y0, x1, y1], radius=18, fill=fill)
+            dashed(d, [(x0, y0), (x1, y0), (x1, y1), (x0, y1), (x0, y0)], col, width=3, dash=14, gap=6)
+            fl = font(self.FS - 2, bold=True)
+            yy = y0 + 6
+            for ln in wrap(d, label, fl, x1 - x0 - 24):
+                d.text((x0 + 12, yy), ln, font=fl, fill=col)
+                yy += self.FS
+            if style == 'subprocess':
+                mx = (x0 + x1) / 2
+                for dx in (-8, 0, 8):
+                    d.line([(mx + dx, y1 - 26), (mx + dx, y1 - 8)], fill=col, width=3)
         gutter_used = {}
         self._labels = []
         for e in self.edges:
@@ -172,6 +197,8 @@ class Swimlanes:
         sysn = n['style'] == 'system'
         line = FUT if fut else (SYS_LINE if sysn else TASK_LINE)
         k = n['kind']
+        if k == 'bnd':
+            return
         if k == 'task':
             d.rounded_rectangle([x0, y0, x1, y1], radius=14, fill=(245, 245, 245) if fut else (SYS_FILL if sysn else TASK_FILL),
                                 outline=line, width=3)
@@ -226,7 +253,11 @@ class Swimlanes:
     def _draw_edge(self, d, e, gutter_used):
         s, t = self.nodes[e['src']], self.nodes[e['dst']]
         color = FUT if (e['kind'] == 'future') else (MUTED if e['kind'] == 'msg' else INK)
-        if e['side'] == 'lgutter':
+        if e['side'] == 'lr':
+            p0, p1 = self._anchor(s, 'left'), self._anchor(t, 'right')
+            gx = p1[0] + 40
+            pts = [p0, (gx, p0[1]), (gx, p1[1]), p1]
+        elif e['side'] == 'lgutter':
             lane = min(s['lane'], t['lane'])
             k = gutter_used.get(('l', lane), 0)
             gutter_used[('l', lane)] = k + 1
@@ -284,7 +315,8 @@ class Swimlanes:
             if e['side'] in ('gutter', 'lgutter'):
                 p0, p1 = pts[1], pts[2]
                 w = d.textlength(e['label'], font=fx)
-                lx = p0[0] + 6 if e['side'] == 'lgutter' else p0[0] - w - 6
+                pos = e['lpos'] or ('vr' if e['side'] == 'lgutter' else 'vl')
+                lx = p0[0] + 6 if pos == 'vr' else p0[0] - w - 6
                 ly = (p0[1] + p1[1]) / 2 - 8
             else:
                 p0, p1 = pts[0], pts[1]

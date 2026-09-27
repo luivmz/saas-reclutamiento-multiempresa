@@ -71,7 +71,8 @@ ACTIVIDADES = [
      'Preselecciona o descarta. El descarte lleva un motivo interno, que no se envía al postulante.',
      'RR. HH.', ['RF-13'], ['AS-09']),
     ('TB-17', 'D', 'Notificar el cambio de etapa al postulante',
-     'Aviso de cada cambio de etapa, sin observaciones internas.',
+     'Aviso de preselección o descarte, sin observaciones internas. Los avisos de finalista o de descarte tras la '
+     'evaluación los emiten EFP-02 y EFP-03 (mismo comportamiento, RF-15).',
      'Sistema', ['RF-15'], ['AS-09']),
     ('TB-18', 'D', 'Programar la evaluación',
      'Evaluador de la organización, fecha futura, modalidad y lugar.',
@@ -89,7 +90,8 @@ ACTIVIDADES = [
      'Rechaza puntajes fuera de rango o de criterios ajenos.',
      'Sistema', ['RF-20'], ['AS-11']),
     ('TB-23', 'D', 'Actualizar la etapa de la postulación (finalista o descarte)',
-     'Cambios de etapa según la máquina de estados, con historial.',
+     'Registra el cambio de etapa a «finalista» o «descartado» según la máquina de estados, con historial. La '
+     'compuerta GF «¿Finalista?» decide cómo termina la instancia de SP-P.',
      'RR. HH.', ['RF-14'], ['AS-11']),
     ('TB-24', 'E', 'Calcular el ranking ponderado explicable',
      'Ranking determinista con aportes por criterio, empates marcados y candidatos incompletos aparte. '
@@ -118,9 +120,10 @@ ACTIVIDADES = [
 
 FUTURAS = [
     ('TB-F1', 'E', 'Cerrar la convocatoria sin selección (convocatoria desierta)',
-     '**Propuesta futura, NO implementada.** Figura en el TO-BE original del equipo (anexo A del F9 v1.0). El '
-     'prototipo solo cierra con selección (A-30, RF-25). Para implementarla hace falta un cambio de alcance con un '
-     'RF nuevo o una redefinición aprobada de RF-25, y sus pruebas.',
+     '**Propuesta futura, NO implementada y desconectada del flujo.** Figura en el TO-BE original del equipo (anexo A '
+     'del F9 v1.0). El prototipo solo cierra con selección (A-30, RF-25) y no tiene ninguna condición que dispare este '
+     'camino. Para implementarla hace falta un cambio de alcance con un RF nuevo o una redefinición aprobada de RF-25, '
+     'y sus pruebas.',
      'RR. HH.', [], []),
 ]
 
@@ -180,4 +183,60 @@ CORRECCIONES = [
     ('C-03', 'Ranking', 'Se presenta como apoyo que calcula, ordena y compara. No selecciona (A-23 a A-27).'),
     ('C-04', 'Riesgo operacional (RF-29)', 'Queda fuera del TO-BE base: es experimental y no evalúa personas.'),
     ('C-05', 'Indicadores de gestión (P5)', 'No se presentan como resueltos: RF-28 es un candidato no implementado.'),
+]
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# Estructura BPMN del TO-BE (F27D, hallazgos F27C H-03, H-04 y H-05). Nombres oficiales únicos.
+NIVELES = [
+    ('Nivel vacante (convocatoria)', 'Una instancia por requerimiento o vacante',
+     'Subprocesos A y B (TB-01 a TB-10), SP-P y subproceso E (TB-24 a TB-29). TB-30 es transversal'),
+    ('Nivel postulación (candidato)', 'SP-P: una instancia por postulación registrada (instancia múltiple paralela)',
+     'Subprocesos C y D. En el pool de la organización: TB-14 a TB-23. En el pool del Postulante: TB-11 a TB-13'),
+]
+
+SP_P = ('**SP-P «Gestionar la postulación»** es un subproceso expandido de **instancia múltiple paralela** en el pool de '
+        'la organización. Cada postulación registrada (mensaje MT-02) genera una instancia, que termina en EFP-01, EFP-02 '
+        'o EFP-03. El nivel vacante continúa en TB-24 cuando todas las instancias terminaron. **El flujo principal supone '
+        'al menos una postulación finalista.** El caso sin finalistas no tiene camino implementado (A-30) y no se modela '
+        'como regla del sistema: la única referencia es la propuesta futura TB-F1, desconectada.')
+
+EVENTOS = [
+    ('EI', 'Inicio (nivel vacante)', 'Necesidad de personal identificada'),
+    ('EFA', 'Fin (nivel vacante)', 'Requerimiento rechazado'),
+    ('EFE', 'Fin (nivel vacante)', 'Convocatoria cerrada con selección'),
+    ('SIP', 'Inicio de SP-P', 'Postulación registrada'),
+    ('EFP-01', 'Fin de SP-P', 'Postulación descartada en la preselección'),
+    ('EFP-02', 'Fin de mensaje de SP-P (envía MT-06)', 'Postulación finalista'),
+    ('EFP-03', 'Fin de mensaje de SP-P (envía MT-07)', 'Postulación descartada tras la evaluación'),
+    ('EP-01', 'Inicio de mensaje (pool Postulante)', 'Vacante publicada'),
+    ('EP-02', 'Fin (pool Postulante)', 'Postulación presentada'),
+]
+
+COMPUERTAS = [
+    ('GA1', 'Exclusiva', 'RR. HH.', '¿Requerimiento conforme?', 'Observado → TB-04 (→ TB-02) · Validado → TB-05'),
+    ('GA2', 'Exclusiva', 'Aprobador / Dirección', '¿Requerimiento aprobado?', 'No → TB-06 → EFA · Sí → TB-07'),
+    ('GB1', 'Exclusiva', 'Plataforma', '¿Configuración válida?', 'No → TB-08 · Sí → TB-10'),
+    ('GD1', 'Exclusiva (SP-P)', 'RR. HH.', '¿Candidato preseleccionado?', 'No → EFP-01 · Sí → GM1'),
+    ('GM1', 'Unión exclusiva (SP-P)', 'RR. HH.', 'Unión antes de programar', 'Entradas: GD1 [Sí] y GD3 [Sí] → GD2'),
+    ('GD2', 'Exclusiva (SP-P)', 'RR. HH.', '¿Qué sesión se programa?', 'Evaluación → TB-18 · Entrevista → TB-20'),
+    ('GM2', 'Unión exclusiva (SP-P)', 'Plataforma', 'Unión de sesiones programadas', 'Entradas: TB-18 y TB-20 → TB-19'),
+    ('GV', 'Exclusiva (SP-P)', 'Plataforma', '¿Puntajes válidos?',
+     'No → TB-21 (el sistema rechaza y el evaluador corrige y reenvía; no se guarda nada) · Sí → GD3'),
+    ('GD3', 'Exclusiva (SP-P)', 'RR. HH.', '¿Otra sesión?', 'Sí → GM1 · No → TB-23'),
+    ('GF', 'Exclusiva (SP-P)', 'RR. HH.', '¿Finalista?', 'Sí → EFP-02 · No → EFP-03'),
+]
+
+MENSAJES = [
+    ('MT-01', 'TB-10 Publicar la vacante (organización)', 'Postulante', 'EP-01 Vacante publicada', 'Vacante publicada en el portal'),
+    ('MT-02', 'TB-13 Registrar la postulación (Postulante)', 'Organización', 'Borde de SP-P (crea una instancia)', 'Postulación'),
+    ('MT-03', 'TB-14 Confirmar la postulación (Plataforma, SP-P)', 'Postulante', 'Borde del pool Postulante', 'Confirmación y código'),
+    ('MT-04', 'TB-17 Notificar el cambio de etapa (Plataforma, SP-P)', 'Postulante', 'Borde del pool Postulante',
+     'Aviso de preselección o de descarte'),
+    ('MT-05', 'TB-19 Enviar la convocatoria (Plataforma, SP-P)', 'Postulante', 'Borde del pool Postulante',
+     'Convocatoria (el aviso al evaluador es interno al pool)'),
+    ('MT-06', 'EFP-02 Postulación finalista (fin de mensaje)', 'Postulante', 'Borde del pool Postulante', 'Aviso de etapa: finalista (RF-15)'),
+    ('MT-07', 'EFP-03 Postulación descartada tras la evaluación (fin de mensaje)', 'Postulante', 'Borde del pool Postulante',
+     'Aviso de etapa: descarte (RF-15)'),
+    ('MT-08', 'TB-29 Notificar el resultado (Plataforma)', 'Postulante', 'Borde del pool Postulante', 'Resultado propio'),
 ]

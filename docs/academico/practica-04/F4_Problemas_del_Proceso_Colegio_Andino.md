@@ -107,10 +107,10 @@ Las causas son **hipótesis del equipo** derivadas del análisis. Se confirmará
 
 | N° | Problema | Ubicación en el BPMN AS-IS (Formato 03) | Actividades |
 |---|---|---|---|
-| P1 | Información distribuida | Pool del Colegio: AS-02 (lane Área solicitante), AS-05, AS-06 y AS-08 (lane RR. HH.) y el mensaje de postulación y CV (Postulante → AS-08). | AS-02, AS-05, AS-06, AS-08 |
-| P2 | Seguimiento manual | AS-02 → AS-03 → AS-04 y la compuerta G-01 (parte 1); AS-09 y la compuerta G-02 (parte 2). | AS-02, AS-03, AS-04, AS-09 |
-| P3 | Evaluaciones heterogéneas | AS-11 (lane Evaluadores) y AS-12 (lane RR. HH.), parte 2. | AS-11, AS-12 |
-| P4 | Comunicación manual | Flujos de mensaje de AS-06 (convocatoria), AS-07/AS-08 (recepción), AS-10 (citación) y AS-14 (resultado). | AS-07, AS-10, AS-14 |
+| P1 | Información distribuida | Pool del Colegio: AS-02 (lane Área solicitante), AS-05, AS-06 y AS-08 (lane RR. HH.) y el mensaje MF-02 de postulación y CV (Postulante → AS-08). | AS-02, AS-05, AS-06, AS-08 |
+| P2 | Seguimiento manual | AS-02 → AS-03 → AS-04 y la compuerta G-01 (parte 1); AS-09 y la compuerta G-02 dentro de SP-01 (parte 2). | AS-02, AS-03, AS-04, AS-09 |
+| P3 | Evaluaciones heterogéneas | AS-11 (lane Evaluadores, dentro de SP-01) y AS-12 (lane RR. HH.), parte 2. | AS-11, AS-12 |
+| P4 | Comunicación manual | Flujos de mensaje MF-01 (AS-06, convocatoria), MF-02 (AS-07 → AS-08, recepción), MF-03 (AS-10, citación) y MF-04 (AS-14, resultado). | AS-07, AS-10, AS-14 |
 | P5 | Indicadores limitados | AS-12 (lane RR. HH.) y AS-13 (lane Dirección), parte 2. | AS-12, AS-13 |
 
 ## 7. Conclusiones del análisis

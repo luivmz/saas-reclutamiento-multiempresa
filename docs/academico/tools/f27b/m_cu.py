@@ -55,8 +55,9 @@ CU = [
      [], ['RF-20'], 'CU-04 · CU-09', 'UC-RF20', 'IN-06', 1, 6.5),
     ('CU-17', 'Consultar ranking y comparación', 'Ranking y comparación explicables. No selecciona.',
      ['ACT-02', 'ACT-03'], ['RF-21', 'RF-22'], 'CU-10', 'UC-RF21, UC-RF22', 'IN-06', 2, 11),
-    ('CU-18', 'Registrar decisión final', '**Decisión humana** con confirmación y justificación. Según el F9, incluye el registro de auditoría.',
-     ['ACT-03'], ['RF-23', 'RF-27'], 'CU-11 · CU-13 (consulta de auditoría)', 'UC-RF23 «human decision», UC-RF27', 'IN-07 · IN-08', 2, 13),
+    ('CU-18', 'Registrar decisión final humana', '**Decisión humana** del Aprobador / Dirección, con confirmación explícita y '
+     'justificación. El ranking no elige.',
+     ['ACT-03'], ['RF-23'], 'CU-11', 'UC-RF23 «human decision»', 'IN-07', 2, 13),
     ('CU-19', 'Registrar selección', 'RR. HH. aplica la decisión registrada.',
      ['ACT-02'], ['RF-24'], 'CU-12', 'UC-RF24', 'IN-07', 2, 8),
     ('CU-20', 'Cerrar convocatoria y notificar resultado', 'RR. HH. cierra con selección; cada postulante recibe su resultado.',
@@ -83,11 +84,12 @@ AGRUPADOS = [
 ]
 
 OBSERVACIONES = [
-    ('O-F8-01', 'Nombres de CU-01 a CU-20', 'El F9 no registra los nombres, solo la numeración y los RF. La F27B asigna el '
-     'nombre del RF principal que agrupa cada CU, sin renumerar. El equipo debe confirmarlos.'),
-    ('O-F8-02', 'Consulta de auditoría', 'En la vista de 20 CU, RF-27 figura «incluido en CU-18» (F9). La consulta de '
-     'auditoría del Aprobador existe (CU-13 agrupado, UC-RF27), pero no tiene un CU académico propio. **Propuesta, '
-     'pendiente de decisión del equipo:** CU-21 «Consultar auditoría». No se crea en esta fase.'),
+    ('O-F8-01', 'Nombres de CU-01 a CU-20', '**Resuelto (decisión del equipo, F27D).** El F9 solo numeraba los CU; la F27B '
+     'les asignó el nombre del RF principal que agrupan. El equipo aprobó los 20 CU, con CU-18 renombrado a «Registrar '
+     'decisión final humana».'),
+    ('O-F8-02', 'Consulta de auditoría', '**CU-21 «Consultar auditoría»: DIFERIDO (decisión del equipo, F27D).** No se '
+     'añade al catálogo de esta versión. Consulta de auditoría vinculada a RF-27 y ACT-03; cubierta por la vista técnica '
+     'UC-RF27 y fuera del catálogo académico CU-01..CU-20 de esta versión.'),
     ('O-F8-03', 'CU-16 sin actor directo', 'Es un caso incluido («include») por CU-05, CU-15 y CU-17. Sus actores '
      'indirectos son RR. HH. (al configurar) y el Evaluador (al registrar). En UML es válido; no es un caso huérfano.'),
     ('O-F8-04', 'CU-10 y el Aprobador', 'El F9 asigna CU-10 solo a RR. HH. La implementación también permite la consulta '
@@ -100,3 +102,20 @@ OBSERVACIONES = [
     ('O-F8-07', 'Extensiones', 'RF-28 (candidato) y RF-29 (experimental) no forman parte de los 20 CU. Solo aparecen en la '
      'vista técnica UC-RF (UC-RF28 «propuesto v1.1», UC-RF29 «experimental»).'),
 ]
+
+# Decisión del equipo sobre los casos de uso (F27D, tras la auditoría F27C)
+DECISION = [
+    ('D-CU-01', 'Los 20 casos de uso académicos (CU-01 a CU-20) quedan **aprobados**. No se amplía el catálogo.'),
+    ('D-CU-02', 'CU-18 se renombra a **«Registrar decisión final humana»**. RF-23 conserva su ID. Alias histórico: '
+                '«Registrar decisión final» (F27B y CU-11 agrupado de v1.0).'),
+    ('D-CU-03', 'CU-21 «Consultar auditoría»: **DIFERIDO**. No forma parte del catálogo de esta versión.'),
+    ('D-CU-04', 'La consulta de auditoría se documenta como **capacidad técnica vinculada a RF-27**, sin crear un CU académico.'),
+]
+NOTA_AUDITORIA = ('Consulta de auditoría vinculada a RF-27 y ACT-03; cubierta por la vista técnica UC-RF27 y fuera del '
+                  'catálogo académico CU-01..CU-20 de esta versión.')
+
+# RF transversal sin CU académico propio (H-07): no se mezcla con RF-23
+TRANSVERSAL = {
+    'RF-27': dict(cu='— (transversal; fuera del catálogo CU-01..CU-20)', agrupado='CU-13', uc='UC-RF27', actor='Sistema (registro) · ACT-03 (consulta)',
+                  inb='IN-08', f9='El F9 lo rotula «Incluido en CU-18»; desde la F27D se separa de RF-23 (decisión D-CU-04)'),
+}

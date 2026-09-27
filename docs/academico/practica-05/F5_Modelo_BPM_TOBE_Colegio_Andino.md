@@ -45,7 +45,9 @@
 
 > **Inicio:** un área identifica una necesidad de personal y registra el requerimiento (TB-01).
 >
-> **Fin:** la convocatoria se cierra con selección y cada postulante recibe su resultado (TB-28 y TB-29). Caminos alternativos: requerimiento rechazado (TB-06) y postulación descartada (TB-16/TB-17).
+> **Fin:** la convocatoria se cierra con selección y cada postulante recibe su resultado (TB-28, TB-29 y EFE). Caminos alternativos: requerimiento rechazado (TB-06 y EFA). Para cada postulación, dentro de SP-P: descartada en la preselección (EFP-01), descartada tras la evaluación (EFP-03) o finalista (EFP-02).
+>
+> **Dos niveles:** el nivel vacante (A, B, E y TB-30) y el nivel postulación (SP-P, de instancia múltiple, con C y D). El flujo principal supone al menos un finalista; el caso sin finalistas no tiene camino implementado (A-30).
 
 **Principales mejoras respecto al proceso actual (AS-IS).**
 
@@ -103,19 +105,74 @@ Los objetivos **no se cuantifican** (por ejemplo, «reducir X % el tiempo»): no
 
 *Inserte el diagrama BPM del proceso mejorado.*
 
-![Figura 1. BPMN TO-BE propuesto, parte 1 de 3. Borrador de revisión.](diagramas/draft/F5-bpmn-to-be-parte1.png)
+![Figura 1. BPMN TO-BE propuesto, parte 1: nivel vacante (requerimiento y convocatoria). Borrador de revisión.](diagramas/draft/F5-bpmn-to-be-parte1.png)
 
-*Figura 1. BPMN TO-BE propuesto, parte 1 de 3. Borrador de revisión.*
+*Figura 1. BPMN TO-BE propuesto, parte 1: nivel vacante (requerimiento y convocatoria). Borrador de revisión.*
 
-![Figura 2. BPMN TO-BE propuesto, parte 2 de 3. Borrador de revisión.](diagramas/draft/F5-bpmn-to-be-parte2.png)
+![Figura 2. BPMN TO-BE propuesto, parte 2a: SP-P por postulación (1 de 2) y pool Postulante. Borrador de revisión.](diagramas/draft/F5-bpmn-to-be-parte2a.png)
 
-*Figura 2. BPMN TO-BE propuesto, parte 2 de 3. Borrador de revisión.*
+*Figura 2. BPMN TO-BE propuesto, parte 2a: SP-P por postulación (1 de 2) y pool Postulante. Borrador de revisión.*
 
-![Figura 3. BPMN TO-BE propuesto, parte 3 de 3. Borrador de revisión.](diagramas/draft/F5-bpmn-to-be-parte3.png)
+![Figura 3. BPMN TO-BE propuesto, parte 2b: SP-P por postulación (2 de 2). Borrador de revisión.](diagramas/draft/F5-bpmn-to-be-parte2b.png)
 
-*Figura 3. BPMN TO-BE propuesto, parte 3 de 3. Borrador de revisión.*
+*Figura 3. BPMN TO-BE propuesto, parte 2b: SP-P por postulación (2 de 2). Borrador de revisión.*
 
-Borrador dibujado desde la especificación de este formato. La versión formal se modelará en PowerDesigner (`POWERDESIGNER_PENDING.md`) después de la auditoría F27C.
+![Figura 4. BPMN TO-BE propuesto, parte 3: nivel vacante (selección y cierre). Borrador de revisión.](diagramas/draft/F5-bpmn-to-be-parte3.png)
+
+*Figura 4. BPMN TO-BE propuesto, parte 3: nivel vacante (selección y cierre). Borrador de revisión.*
+
+Borrador dibujado desde la especificación de este formato (corregida en la F27D tras la auditoría F27C). La versión formal se modelará en PowerDesigner en la F29 (`POWERDESIGNER_PENDING.md`).
+
+**Estructura del modelo: niveles**
+
+| Nivel | Instancias | Contenido |
+|---|---|---|
+| Nivel vacante (convocatoria) | Una instancia por requerimiento o vacante | Subprocesos A y B (TB-01 a TB-10), SP-P y subproceso E (TB-24 a TB-29). TB-30 es transversal |
+| Nivel postulación (candidato) | SP-P: una instancia por postulación registrada (instancia múltiple paralela) | Subprocesos C y D. En el pool de la organización: TB-14 a TB-23. En el pool del Postulante: TB-11 a TB-13 |
+
+**SP-P «Gestionar la postulación»** es un subproceso expandido de **instancia múltiple paralela** en el pool de la organización. Cada postulación registrada (mensaje MT-02) genera una instancia, que termina en EFP-01, EFP-02 o EFP-03. El nivel vacante continúa en TB-24 cuando todas las instancias terminaron. **El flujo principal supone al menos una postulación finalista.** El caso sin finalistas no tiene camino implementado (A-30) y no se modela como regla del sistema: la única referencia es la propuesta futura TB-F1, desconectada.
+
+**Eventos (nombres oficiales)**
+
+| ID | Tipo | Nombre oficial |
+|---|---|---|
+| EI | Inicio (nivel vacante) | Necesidad de personal identificada |
+| EFA | Fin (nivel vacante) | Requerimiento rechazado |
+| EFE | Fin (nivel vacante) | Convocatoria cerrada con selección |
+| SIP | Inicio de SP-P | Postulación registrada |
+| EFP-01 | Fin de SP-P | Postulación descartada en la preselección |
+| EFP-02 | Fin de mensaje de SP-P (envía MT-06) | Postulación finalista |
+| EFP-03 | Fin de mensaje de SP-P (envía MT-07) | Postulación descartada tras la evaluación |
+| EP-01 | Inicio de mensaje (pool Postulante) | Vacante publicada |
+| EP-02 | Fin (pool Postulante) | Postulación presentada |
+
+**Compuertas (incluidas las uniones explícitas)**
+
+| ID | Tipo | Lane | Nombre | Salidas |
+|---|---|---|---|---|
+| GA1 | Exclusiva | RR. HH. | ¿Requerimiento conforme? | Observado → TB-04 (→ TB-02) · Validado → TB-05 |
+| GA2 | Exclusiva | Aprobador / Dirección | ¿Requerimiento aprobado? | No → TB-06 → EFA · Sí → TB-07 |
+| GB1 | Exclusiva | Plataforma | ¿Configuración válida? | No → TB-08 · Sí → TB-10 |
+| GD1 | Exclusiva (SP-P) | RR. HH. | ¿Candidato preseleccionado? | No → EFP-01 · Sí → GM1 |
+| GM1 | Unión exclusiva (SP-P) | RR. HH. | Unión antes de programar | Entradas: GD1 [Sí] y GD3 [Sí] → GD2 |
+| GD2 | Exclusiva (SP-P) | RR. HH. | ¿Qué sesión se programa? | Evaluación → TB-18 · Entrevista → TB-20 |
+| GM2 | Unión exclusiva (SP-P) | Plataforma | Unión de sesiones programadas | Entradas: TB-18 y TB-20 → TB-19 |
+| GV | Exclusiva (SP-P) | Plataforma | ¿Puntajes válidos? | No → TB-21 (el sistema rechaza y el evaluador corrige y reenvía; no se guarda nada) · Sí → GD3 |
+| GD3 | Exclusiva (SP-P) | RR. HH. | ¿Otra sesión? | Sí → GM1 · No → TB-23 |
+| GF | Exclusiva (SP-P) | RR. HH. | ¿Finalista? | Sí → EFP-02 · No → EFP-03 |
+
+**Flujos de mensaje (lista cerrada, unidireccional)**
+
+| ID | Origen | Destino | Elemento receptor | Contenido |
+|---|---|---|---|---|
+| MT-01 | TB-10 Publicar la vacante (organización) | Postulante | EP-01 Vacante publicada | Vacante publicada en el portal |
+| MT-02 | TB-13 Registrar la postulación (Postulante) | Organización | Borde de SP-P (crea una instancia) | Postulación |
+| MT-03 | TB-14 Confirmar la postulación (Plataforma, SP-P) | Postulante | Borde del pool Postulante | Confirmación y código |
+| MT-04 | TB-17 Notificar el cambio de etapa (Plataforma, SP-P) | Postulante | Borde del pool Postulante | Aviso de preselección o de descarte |
+| MT-05 | TB-19 Enviar la convocatoria (Plataforma, SP-P) | Postulante | Borde del pool Postulante | Convocatoria (el aviso al evaluador es interno al pool) |
+| MT-06 | EFP-02 Postulación finalista (fin de mensaje) | Postulante | Borde del pool Postulante | Aviso de etapa: finalista (RF-15) |
+| MT-07 | EFP-03 Postulación descartada tras la evaluación (fin de mensaje) | Postulante | Borde del pool Postulante | Aviso de etapa: descarte (RF-15) |
+| MT-08 | TB-29 Notificar el resultado (Plataforma) | Postulante | Borde del pool Postulante | Resultado propio |
 
 ## 6. Descripción de actividades del proceso
 
@@ -137,13 +194,13 @@ Borrador dibujado desde la especificación de este formato. La versión formal s
 | TB-14 | Confirmar la postulación | Código de seguimiento y aviso de recepción al postulante. | Sistema | RF-11 |
 | TB-15 | Revisar las postulaciones y el expediente | Listado por vacante y expediente con datos, CV e historial. | RR. HH. | RF-12 |
 | TB-16 | Preseleccionar o descartar | Preselecciona o descarta. El descarte lleva un motivo interno, que no se envía al postulante. | RR. HH. | RF-13 |
-| TB-17 | Notificar el cambio de etapa al postulante | Aviso de cada cambio de etapa, sin observaciones internas. | Sistema | RF-15 |
+| TB-17 | Notificar el cambio de etapa al postulante | Aviso de preselección o descarte, sin observaciones internas. Los avisos de finalista o de descarte tras la evaluación los emiten EFP-02 y EFP-03 (mismo comportamiento, RF-15). | Sistema | RF-15 |
 | TB-18 | Programar la evaluación | Evaluador de la organización, fecha futura, modalidad y lugar. | RR. HH. | RF-16 |
 | TB-19 | Enviar la convocatoria al postulante y el aviso al evaluador | Convocatoria automática con fecha, modalidad, lugar e indicaciones. | Sistema | RF-17 |
 | TB-20 | Programar la entrevista | Entrevista con evaluador asignado. Usa la misma convocatoria que la evaluación. | RR. HH. | RF-18 |
 | TB-21 | Registrar puntajes, resultado y observaciones | El evaluador asignado registra una sola vez los puntajes de todos los criterios de la etapa. | Evaluador | RF-19 |
 | TB-22 | Validar los puntajes dentro del rango de cada criterio | Rechaza puntajes fuera de rango o de criterios ajenos. | Sistema | RF-20 |
-| TB-23 | Actualizar la etapa de la postulación (finalista o descarte) | Cambios de etapa según la máquina de estados, con historial. | RR. HH. | RF-14 |
+| TB-23 | Actualizar la etapa de la postulación (finalista o descarte) | Registra el cambio de etapa a «finalista» o «descartado» según la máquina de estados, con historial. La compuerta GF «¿Finalista?» decide cómo termina la instancia de SP-P. | RR. HH. | RF-14 |
 | TB-24 | Calcular el ranking ponderado explicable | Ranking determinista con aportes por criterio, empates marcados y candidatos incompletos aparte. **No selecciona ni cambia estados.** | Sistema | RF-21 |
 | TB-25 | Presentar la comparación de candidatos | Comparación con criterios, promedios, aportes, total y posición. La consultan RR. HH. y el Aprobador / Dirección. | Sistema | RF-22 |
 | TB-26 | Registrar la decisión final humana | **Decisión humana** con confirmación explícita y justificación. Puede recaer en un finalista que no sea el primero del ranking. Es única e inmutable por vacante. | Aprobador / Dirección | RF-23 |
@@ -151,7 +208,7 @@ Borrador dibujado desde la especificación de este formato. La versión formal s
 | TB-28 | Cerrar la convocatoria (con selección) | Solo después de la selección. Las demás postulaciones activas pasan a «no seleccionado». | RR. HH. | RF-25 |
 | TB-29 | Notificar el resultado a cada postulante | Resultado propio de cada postulante, solo al cerrar, sin puntajes ni datos de otros candidatos. | Sistema | RF-26 |
 | TB-30 | Registrar la auditoría de las acciones críticas | Registro de solo inserción de cada acción crítica. Lo consulta el Aprobador / Dirección. | Sistema | RF-27 |
-| TB-F1 | Cerrar la convocatoria sin selección (convocatoria desierta) | **Propuesta futura, NO implementada.** Figura en el TO-BE original del equipo (anexo A del F9 v1.0). El prototipo solo cierra con selección (A-30, RF-25). Para implementarla hace falta un cambio de alcance con un RF nuevo o una redefinición aprobada de RF-25, y sus pruebas. | RR. HH. | — |
+| TB-F1 | Cerrar la convocatoria sin selección (convocatoria desierta) | **Propuesta futura, NO implementada y desconectada del flujo.** Figura en el TO-BE original del equipo (anexo A del F9 v1.0). El prototipo solo cierra con selección (A-30, RF-25) y no tiene ninguna condición que dispare este camino. Para implementarla hace falta un cambio de alcance con un RF nuevo o una redefinición aprobada de RF-25, y sus pruebas. | RR. HH. | — |
 
 **Correcciones conceptuales respecto del TO-BE original del equipo**
 
@@ -177,9 +234,9 @@ Borrador dibujado desde la especificación de este formato. La versión formal s
 
 *Adjuntar capturas del diagrama BPM mejorado.*
 
-![Figura 4. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la rama «cerrar sin selección», no implementada.](evidencias/antecedente-to-be-f9-v1.0-anexo-A.png)
+![Figura 5. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la rama «cerrar sin selección», no implementada.](evidencias/antecedente-to-be-f9-v1.0-anexo-A.png)
 
-*Figura 4. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la rama «cerrar sin selección», no implementada.*
+*Figura 5. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la rama «cerrar sin selección», no implementada.*
 
 - TO-BE escrito e implementado: `docs/final-report/03-procesos-negocio.md` §3.3–3.5 y `docs/final-report/diagram-reports/02-bpmn-to-be-report.md`.
 - Reglas: `docs/assumptions.md` (A-05, A-13, A-16, A-23 a A-31). Verificación del flujo completo: E2E-13 y la QA de la Fase 25 (`docs/v1.1/phase-25-final-qa.md`).

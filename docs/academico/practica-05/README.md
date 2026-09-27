@@ -11,8 +11,8 @@ Entregable de la Práctica 05 (Fase 27B): proceso mejorado de reclutamiento, eva
 | [`F5_Modelo_BPM_TOBE_Colegio_Andino.docx`](F5_Modelo_BPM_TOBE_Colegio_Andino.docx) | **Entregable**, sobre la plantilla oficial del Formato 05 |
 | [`F5_Modelo_BPM_TOBE_Colegio_Andino.pdf`](F5_Modelo_BPM_TOBE_Colegio_Andino.pdf) | Copia en PDF exportada con Microsoft Word |
 | [`F5_Modelo_BPM_TOBE_Colegio_Andino.md`](F5_Modelo_BPM_TOBE_Colegio_Andino.md) | Espejo en Markdown del mismo contenido |
-| [`diagramas/draft/`](diagramas/draft/) | **Borrador** BPMN TO-BE en tres partes: requerimiento y convocatoria; postulación y evaluación; selección y cierre |
-| [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md) | Especificación para modelarlo formalmente en PowerDesigner (Fase 29) |
+| [`diagramas/draft/`](diagramas/draft/) | **Borrador** BPMN TO-BE en cuatro imágenes: parte 1 (nivel vacante: requerimiento y convocatoria); partes 2a y 2b (SP-P por postulación); parte 3 (nivel vacante: selección y cierre) |
+| [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md) | Especificación cerrada para PowerDesigner (**READY FOR POWERDESIGNER**, Fase 29) |
 | [`evidencias/`](evidencias/README.md) | Evidencias, incluida una copia sin modificar del TO-BE original del equipo (anexo A del F9 v1.0) |
 
 ## TO-BE
@@ -40,11 +40,21 @@ Coincide con [`02-contexto-problema.md`](../../final-report/02-contexto-problema
 | ID | Corrección |
 |---|---|
 | C-01 | La **decisión final es humana** y la registra el **Aprobador / Dirección** (TB-26, RF-23). RR. HH. solo aplica la decisión (TB-27) y cierra (TB-28). |
-| C-02 | **«Cerrar sin selección»:** el TO-BE original del equipo lo incluía, pero no está implementado (A-30). Queda como **propuesta futura** (TB-F1), fuera del flujo principal y dibujada en gris. |
+| C-02 | **«Cerrar sin selección»:** el TO-BE original del equipo lo incluía, pero no está implementado (A-30). Queda como **propuesta futura** (TB-F1), **desconectada**: sin flujo de entrada ni de salida, sin condición del sistema y en un grupo gris aparte. |
 | C-03 | **Ranking (TB-24):** calcula, ordena y compara; **no selecciona ni cambia estados**. |
 | C-04 | **RF-29 (riesgo operacional, experimental):** no forma parte del TO-BE base. |
 | C-05 | **Indicadores de gestión (P5):** no se dan por resueltos, porque RF-28 es un candidato no implementado. |
 
+## Estructura corregida en la F27D
+
+| Hallazgo | Corrección |
+|---|---|
+| H-03 | Dos niveles explícitos: **vacante** y **postulación**. El nivel postulación es **SP-P**, un subproceso de instancia múltiple paralela. Uniones explícitas GM1 y GM2; TB-15 tiene una sola entrada. La compuerta **GF «¿Finalista?»** tras TB-23 termina en EFP-02 (finalista) o EFP-03 (descartada), ambos fines de mensaje. El rechazo de TB-22 tiene camino: **GV «¿Puntajes válidos?» No → TB-21** |
+| H-04 | TB-F1 está desconectado y aparte, marcado como «Propuesta futura (A-30)». No sale de TB-25 ni representa una condición «sin candidato elegible» |
+| H-05 | Etiquetas de las ramas de entrevista corregidas; TB-18 y TB-20 → GM2 → TB-19; MT-01 → EP-01 «Vacante publicada»; TB-30 en un grupo transversal, sin secuencia |
+
+Los eventos, las compuertas y los mensajes (MT-01 a MT-08) están en el formato y en [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md).
+
 ## ¿Requiere PowerDesigner?
 
-**Sí, para la versión formal**, en la Fase 29 y después de la auditoría F27C. En esta fase no se abrió PowerDesigner. El diagrama de actividad AC-01 de la F23 describe el software implementado y **no** se reemplaza.
+**Sí, para la versión formal**, en la Fase 29. La especificación está **lista para PowerDesigner** desde la F27D. En esta fase no se abrió PowerDesigner. El diagrama de actividad AC-01 de la F23 describe el software implementado y **no** se reemplaza.

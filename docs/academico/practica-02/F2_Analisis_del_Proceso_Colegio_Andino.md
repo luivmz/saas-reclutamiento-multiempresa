@@ -71,7 +71,7 @@ Diagrama de flujo con símbolos básicos (inicio/fin, proceso, decisión). **Bor
 | AS-06 | Difundir la convocatoria | RR. HH. da a conocer la convocatoria. Los medios de difusión no están verificados. | Actividad macro 3 — desagregación F27B |
 | AS-07 | Presentar la postulación y el CV | La persona interesada presenta su postulación y su CV. | Actividad macro 4 — desagregación F27B |
 | AS-08 | Recibir y reunir postulaciones y CV | RR. HH. recibe y reúne las postulaciones de la convocatoria. | Actividad macro 4 |
-| AS-09 | Revisar y preseleccionar candidatos | RR. HH. revisa los CV y decide qué candidatos continúan. No está verificado si se informa a quienes no continúan. | Actividad macro 5 |
+| AS-09 | Revisar el CV y preseleccionar al candidato | RR. HH. revisa el CV de cada candidato y decide si continúa (dentro de SP-01, una vez por candidato). No está verificado si se informa a quien no continúa. | Actividad macro 5 |
 | AS-10 | Coordinar evaluaciones y entrevistas | RR. HH. coordina fechas y participantes, y cita a los candidatos preseleccionados. | Actividad macro 6 — desagregación F27B |
 | AS-11 | Realizar evaluaciones y entrevistas | Los evaluadores evalúan y entrevistan a los candidatos y entregan sus resultados. No hay constancia de criterios, ponderaciones ni rangos comunes definidos de antemano. | Actividad macro 6 — desagregación F27B |
 | AS-12 | Consolidar resultados y comparar candidatos | RR. HH. reúne los resultados de cada candidato y los compara. | Actividad macro 7 |
@@ -87,10 +87,12 @@ La F27B desagrega las 8 actividades macro versionadas en 14 sin añadir hechos: 
 | AA-01 | Área solicitante | Interno | Detecta la necesidad de personal y la comunica a RR. HH. |
 | AA-02 | Recursos Humanos (RR. HH.) | Interno | Revisa la necesidad, define el perfil, difunde la convocatoria, recibe postulaciones, preselecciona, coordina evaluaciones y entrevistas, consolida resultados y comunica el resultado. |
 | AA-03 | Dirección | Interno | Aprueba o no la necesidad de personal y decide el candidato a contratar. |
-| AA-04 | Evaluadores | Interno | Realizan las evaluaciones y entrevistas que se les encargan. Quiénes son en concreto (cargo, área) no está verificado. |
-| AA-05 | Postulante | Externo | Postula con su CV, participa en evaluaciones y entrevistas y recibe el resultado. |
+| AA-04 | Evaluadores | Interno (supuesto de modelado) | Realizan las evaluaciones y entrevistas que se les encargan. Quiénes son en concreto (cargo, área) no está verificado. |
+| AA-05 | Postulante | Externo (supuesto de modelado) | Postula con su CV, participa en evaluaciones y entrevistas y recibe el resultado. |
 
 Tipo «Sistemas»: el AS-IS preliminar **no identifica** ninguna herramienta informática específica del Colegio. No se afirma que el proceso sea en papel, por correo ni con otra herramienta: queda pendiente de validación.
+
+«Supuesto de modelado»: la fuente (cap. 3 §3.1) nombra a los evaluadores y a los postulantes, pero no dice si los evaluadores son personal del Colegio ni describe la relación del postulante con la institución. El tipo lo asigna el equipo para modelar; no es un hecho institucional verificado.
 
 ## 6. Relación actividades-actores
 
@@ -108,7 +110,7 @@ Tipo «Sistemas»: el AS-IS preliminar **no identifica** ninguna herramienta inf
 | 10 | AS-07 Presentar la postulación y el CV | Postulante | Ejecuta |
 | 11 | AS-07 Presentar la postulación y el CV | RR. HH. | Recibe |
 | 12 | AS-08 Recibir y reunir postulaciones y CV | RR. HH. | Ejecuta |
-| 13 | AS-09 Revisar y preseleccionar candidatos | RR. HH. | Ejecuta |
+| 13 | AS-09 Revisar el CV y preseleccionar al candidato | RR. HH. | Ejecuta |
 | 14 | AS-10 Coordinar evaluaciones y entrevistas | RR. HH. | Ejecuta |
 | 15 | AS-10 Coordinar evaluaciones y entrevistas | Evaluadores | Recibe |
 | 16 | AS-10 Coordinar evaluaciones y entrevistas | Postulante | Recibe |

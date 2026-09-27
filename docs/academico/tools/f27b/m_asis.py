@@ -28,14 +28,17 @@ ACTORES = [
      'Revisa la necesidad, define el perfil, difunde la convocatoria, recibe postulaciones, preselecciona, '
      'coordina evaluaciones y entrevistas, consolida resultados y comunica el resultado.'),
     ('AA-03', 'Dirección', 'Interno', 'Aprueba o no la necesidad de personal y decide el candidato a contratar.'),
-    ('AA-04', 'Evaluadores', 'Interno',
+    ('AA-04', 'Evaluadores', 'Interno (supuesto de modelado)',
      'Realizan las evaluaciones y entrevistas que se les encargan. Quiénes son en concreto (cargo, área) '
      'no está verificado.'),
-    ('AA-05', 'Postulante', 'Externo', 'Postula con su CV, participa en evaluaciones y entrevistas y recibe el resultado.'),
+    ('AA-05', 'Postulante', 'Externo (supuesto de modelado)', 'Postula con su CV, participa en evaluaciones y entrevistas y recibe el resultado.'),
 ]
 NOTA_SISTEMAS = ('Tipo «Sistemas»: el AS-IS preliminar **no identifica** ninguna herramienta informática '
                  'específica del Colegio. No se afirma que el proceso sea en papel, por correo ni con otra '
                  'herramienta: queda pendiente de validación.')
+NOTA_SUPUESTOS = ('«Supuesto de modelado»: la fuente (cap. 3 §3.1) nombra a los evaluadores y a los postulantes, pero no '
+                  'dice si los evaluadores son personal del Colegio ni describe la relación del postulante con la '
+                  'institución. El tipo lo asigna el equipo para modelar; no es un hecho institucional verificado.')
 
 # Actividades AS-IS: id, nombre, descripción, macro, actores [(actor, rol)], problemas, origen
 ACTIVIDADES = [
@@ -63,9 +66,9 @@ ACTIVIDADES = [
     ('AS-08', 'Recibir y reunir postulaciones y CV',
      'RR. HH. recibe y reúne las postulaciones de la convocatoria.', 4,
      [('RR. HH.', 'Ejecuta')], ['P1'], 'macro 4'),
-    ('AS-09', 'Revisar y preseleccionar candidatos',
-     'RR. HH. revisa los CV y decide qué candidatos continúan. No está verificado si se informa a quienes '
-     'no continúan.', 5,
+    ('AS-09', 'Revisar el CV y preseleccionar al candidato',
+     'RR. HH. revisa el CV de cada candidato y decide si continúa (dentro de SP-01, una vez por candidato). No está '
+     'verificado si se informa a quien no continúa.', 5,
      [('RR. HH.', 'Ejecuta')], ['P2'], 'macro 5'),
     ('AS-10', 'Coordinar evaluaciones y entrevistas',
      'RR. HH. coordina fechas y participantes, y cita a los candidatos preseleccionados.', 6,
@@ -102,22 +105,69 @@ OBSERVACIONES = [
              'actividad deben confirmarse con RR. HH. / Administración del Colegio.', '—', 'Todas'),
 ]
 
-# Elementos BPMN del AS-IS (Formato 03)
+# Elementos BPMN del AS-IS (Formato 03). Especificación cerrada: F27D, hallazgos F27C H-01, H-02 y H-13.
+# Nombres oficiales únicos (glosario). Cualquier artefacto (formato, borrador, pendiente de PowerDesigner) usa estos.
+GLOSARIO = [
+    ('EI-01', 'Evento de inicio (pool Colegio)', 'Necesidad de personal identificada'),
+    ('G-01', 'Compuerta exclusiva', '¿Necesidad aprobada?'),
+    ('EF-01', 'Evento de fin del proceso', 'Necesidad no aprobada'),
+    ('SP-01', 'Subproceso de instancia múltiple (paralela), una instancia por candidato',
+     'Evaluar al candidato'),
+    ('SI-01', 'Evento de inicio de SP-01', 'Candidato a evaluar'),
+    ('G-02', 'Compuerta exclusiva (dentro de SP-01)', '¿Candidato preseleccionado?'),
+    ('EF-02', 'Evento de fin de SP-01', 'El candidato no continúa'),
+    ('EF-04', 'Evento de fin de SP-01', 'Candidato evaluado'),
+    ('EF-03', 'Evento de fin del proceso', 'Resultado comunicado'),
+    ('EP-01', 'Evento de inicio de mensaje (pool Postulante)', 'Convocatoria recibida'),
+    ('EP-02', 'Evento de fin (pool Postulante)', 'Postulación presentada'),
+]
+NOMBRE = {g[0]: g[2] for g in GLOSARIO}
+
+POOL_POSTULANTE = (
+    'Pool **Postulante**: participante externo **visible (caja blanca), con comportamiento mínimo**. Contiene: '
+    f'EP-01 «{NOMBRE["EP-01"]}» (inicio de mensaje) → AS-07 «Presentar la postulación y el CV» → EP-02 '
+    f'«{NOMBRE["EP-02"]}» (fin). No es un pool de caja negra. Los mensajes posteriores (citación y resultado) '
+    'llegan al **borde del pool**, sin evento interno, porque el AS-IS no documenta cómo reacciona el postulante; '
+    'dibujar esa reacción sería inventarla.'
+)
+
+SUBPROCESO = (
+    f'**SP-01 «{NOMBRE["SP-01"]}»** es un **subproceso expandido de instancia múltiple paralela**, con una instancia por '
+    'candidato cuya postulación reunió AS-08. Contiene SI-01 → AS-09 → G-02 → [No] EF-02 | [Sí] AS-10 → AS-11 → EF-04. '
+    'La secuencia del pool continúa hacia AS-12 cuando **todas** las instancias terminaron. No hay otra opción de '
+    'modelado.'
+)
+
+# Flujos de mensaje: id, origen, destino (participante), elemento receptor, contenido. Todos unidireccionales.
+MENSAJES = [
+    ('MF-01', 'AS-06 Difundir la convocatoria (Colegio, RR. HH.)', 'Postulante', 'EP-01 Convocatoria recibida', 'Convocatoria'),
+    ('MF-02', 'AS-07 Presentar la postulación y el CV (Postulante)', 'Colegio, RR. HH.', 'AS-08 (tarea de recepción)',
+     'Postulación y CV'),
+    ('MF-03', 'AS-10 Coordinar evaluaciones y entrevistas (Colegio, RR. HH., dentro de SP-01)', 'Postulante',
+     'Borde del pool Postulante', 'Citación'),
+    ('MF-04', 'AS-14 Comunicar el resultado (Colegio, RR. HH.)', 'Postulante', 'Borde del pool Postulante', 'Resultado'),
+]
+
 ELEMENTOS_BPMN = [
     ('Pool (participante)', 'Contenedor de un participante del proceso.',
-     '«Colegio Andino de Huancayo — reclutamiento y selección (AS-IS preliminar)» y «Postulante» (externo).'),
+     '«Colegio Andino de Huancayo — reclutamiento y selección (AS-IS preliminar)», caja blanca con cuatro lanes, y '
+     '«Postulante», participante externo visible con comportamiento mínimo (EP-01 → AS-07 → EP-02).'),
     ('Lane (carril)', 'Subdivisión de un pool por responsable.',
-     'Área solicitante, RR. HH., Dirección y Evaluadores dentro del pool del Colegio.'),
-    ('Evento de inicio', 'Punto donde empieza el proceso.', 'EI-01 «Necesidad de personal identificada» (Área solicitante).'),
+     'Área solicitante, RR. HH., Dirección y Evaluadores, dentro del pool del Colegio.'),
+    ('Evento de inicio', 'Punto donde empieza el proceso.', f'EI-01 «{NOMBRE["EI-01"]}» (Área solicitante).'),
+    ('Evento de inicio de mensaje', 'Inicio disparado por un mensaje.', f'EP-01 «{NOMBRE["EP-01"]}» (pool Postulante, por MF-01).'),
     ('Tarea', 'Trabajo que realiza un actor.', 'AS-01 a AS-14.'),
+    ('Tarea de recepción', 'Tarea que espera un mensaje.', 'AS-08 «Recibir y reunir postulaciones y CV» recibe MF-02.'),
+    ('Subproceso de instancia múltiple', 'Subproceso que se ejecuta una vez por elemento de una colección.',
+     f'SP-01 «{NOMBRE["SP-01"]}», paralelo, una instancia por candidato (AS-09 a AS-11).'),
     ('Compuerta exclusiva', 'Decisión con una sola salida posible.',
-     'G-01 «¿Necesidad aprobada?» (Dirección) y G-02 «¿Candidato preseleccionado?» (RR. HH., por candidato).'),
-    ('Evento de fin', 'Punto donde termina un camino del proceso.',
-     'EF-01 «Necesidad no aprobada», EF-02 «Candidato no continúa» y EF-03 «Resultado comunicado».'),
-    ('Flujo de secuencia', 'Orden de ejecución dentro de un pool.', 'Conecta las tareas y compuertas del Colegio.'),
-    ('Flujo de mensaje', 'Comunicación entre pools.',
-     'Convocatoria (AS-06 → Postulante), postulación y CV (AS-07 → AS-08), citación (AS-10 → Postulante) y '
-     'resultado (AS-14 → Postulante).'),
+     f'G-01 «{NOMBRE["G-01"]}» (Dirección) y G-02 «{NOMBRE["G-02"]}» (RR. HH., dentro de SP-01).'),
+    ('Evento de fin', 'Punto donde termina un camino.',
+     f'Del proceso: EF-01 «{NOMBRE["EF-01"]}» y EF-03 «{NOMBRE["EF-03"]}». De SP-01: EF-02 «{NOMBRE["EF-02"]}» y '
+     f'EF-04 «{NOMBRE["EF-04"]}». Del Postulante: EP-02 «{NOMBRE["EP-02"]}».'),
+    ('Flujo de secuencia', 'Orden de ejecución dentro de un pool.',
+     'Dentro de cada pool. Incluye AS-06 → AS-08: la tarea de recepción sigue a la difusión.'),
+    ('Flujo de mensaje', 'Comunicación entre pools, unidireccional.', 'MF-01 a MF-04 (tabla de mensajes).'),
     ('Anotación', 'Texto aclaratorio.', 'Marca «AS-IS preliminar, sujeto a validación institucional».'),
 ]
 
@@ -130,17 +180,21 @@ LANES = [
 ]
 
 FLUJO = [
-    'El proceso inicia cuando el **Área solicitante** identifica una necesidad de personal (EI-01, AS-01) y la '
-    'comunica a RR. HH. (AS-02).',
-    '**RR. HH.** revisa la necesidad (AS-03) y la eleva a **Dirección**, que decide si procede (AS-04). En la '
-    'compuerta G-01, si no se aprueba, el camino termina (EF-01) y el área recibe la respuesta.',
-    'Si se aprueba, RR. HH. define el perfil del puesto (AS-05) y difunde la convocatoria (AS-06), que llega al '
-    '**Postulante** como mensaje.',
-    'El Postulante presenta su postulación y CV (AS-07). RR. HH. los recibe y reúne (AS-08).',
-    'RR. HH. revisa los CV y preselecciona (AS-09). En G-02, que se evalúa por candidato, quien no es '
-    'preseleccionado no continúa (EF-02). **No está verificado** si se le informa.',
-    'Para los preseleccionados, RR. HH. coordina evaluaciones y entrevistas y cita a los candidatos (AS-10). Los '
-    '**Evaluadores** las realizan y entregan sus resultados (AS-11).',
-    'RR. HH. consolida y compara los resultados (AS-12). Dirección decide el candidato seleccionado (AS-13).',
-    'RR. HH. comunica el resultado a los postulantes (AS-14) y el proceso termina (EF-03).',
+    f'El proceso inicia cuando el **Área solicitante** identifica una necesidad de personal (EI-01 «{NOMBRE["EI-01"]}», '
+    'AS-01) y la comunica a RR. HH. (AS-02).',
+    f'**RR. HH.** revisa la necesidad (AS-03) y **Dirección** decide si procede (AS-04). En G-01 «{NOMBRE["G-01"]}», si no '
+    f'se aprueba, el proceso termina en EF-01 «{NOMBRE["EF-01"]}».',
+    'Si se aprueba, RR. HH. define el perfil del puesto (AS-05) y difunde la convocatoria (AS-06). MF-01 lleva la '
+    f'convocatoria al pool **Postulante**, donde inicia EP-01 «{NOMBRE["EP-01"]}».',
+    f'El Postulante presenta su postulación y su CV (AS-07), que llegan a RR. HH. por MF-02; su pool termina en EP-02 '
+    f'«{NOMBRE["EP-02"]}». En el pool del Colegio, AS-06 continúa en **AS-08**, una tarea de recepción que reúne las '
+    'postulaciones recibidas.',
+    f'Con las postulaciones reunidas se ejecuta **SP-01 «{NOMBRE["SP-01"]}»**, una instancia por candidato. RR. HH. '
+    f'revisa el CV (AS-09); en G-02 «{NOMBRE["G-02"]}», si no se preselecciona, la instancia termina en EF-02 '
+    f'«{NOMBRE["EF-02"]}». **No está verificado** si se informa a ese candidato.',
+    'Si se preselecciona, RR. HH. coordina evaluaciones y entrevistas y cita al candidato (AS-10, MF-03). Los '
+    f'**Evaluadores** las realizan y entregan sus resultados (AS-11), y la instancia termina en EF-04 «{NOMBRE["EF-04"]}».',
+    'Cuando todas las instancias de SP-01 terminaron, RR. HH. consolida y compara los resultados (AS-12) y Dirección '
+    'decide el candidato seleccionado (AS-13).',
+    f'RR. HH. comunica el resultado (AS-14, MF-04) y el proceso termina en EF-03 «{NOMBRE["EF-03"]}».',
 ]

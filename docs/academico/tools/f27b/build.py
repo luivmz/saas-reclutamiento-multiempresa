@@ -80,16 +80,16 @@ AS = {a[0]: a for a in A.ACTIVIDADES}
 
 def asis_flowchart():
     """Diagrama de flujo AS-IS (símbolos básicos) en dos partes, para el Formato 02."""
-    out = []
     kw = dict(show_lanes=False, CW=470, RH=118, TW=410, TH=84, FS=20)
     lab = lambda i: f'{i} · {AS[i][1]}\n({", ".join(a for a, r in AS[i][4] if r in ("Ejecuta", "Valida"))})'
+    N_ = A.NOMBRE
     p1 = dg.Swimlanes('F2 · Flujo del proceso actual (AS-IS preliminar) — parte 1 de 2',
                       [('', ''), ('', '')], 'Sujeto a validación institucional. Actor responsable entre paréntesis.', **kw)
-    p1.node('ini', 'terminator', 0, 0, 'Inicio: necesidad de personal identificada')
+    p1.node('ini', 'terminator', 0, 0, f'Inicio: {N_["EI-01"].lower()}')
     for r, i in enumerate(['AS-01', 'AS-02', 'AS-03', 'AS-04'], start=1):
         p1.node(i, 'task', 0, r, lab(i))
-    p1.node('g1', 'gateway', 0, 5, '¿Necesidad aprobada?')
-    p1.node('f1', 'terminator', 1, 5, 'Fin: necesidad no aprobada')
+    p1.node('g1', 'gateway', 0, 5, f'G-01 {N_["G-01"]}')
+    p1.node('f1', 'terminator', 1, 5, f'Fin: {N_["EF-01"].lower()}')
     for r, i in enumerate(['AS-05', 'AS-06', 'AS-07', 'AS-08'], start=6):
         p1.node(i, 'task', 0, r, lab(i))
     p1.node('c1', 'terminator', 0, 10, 'Continúa en la parte 2 (A)')
@@ -100,79 +100,84 @@ def asis_flowchart():
     path1 = os.path.join(pdir(2, 'diagramas', 'draft'), 'F2-flujo-as-is-parte1.png')
     p1.render(path1, 'Fuente: docs/final-report/03-procesos-negocio.md §3.1 (8 actividades macro), desagregadas en AS-01 a AS-14.')
     p2 = dg.Swimlanes('F2 · Flujo del proceso actual (AS-IS preliminar) — parte 2 de 2',
-                      [('', ''), ('', '')], 'Sujeto a validación institucional. Actor responsable entre paréntesis.', **kw)
+                      [('', ''), ('', '')], 'Sujeto a validación institucional. AS-09 a AS-11 se repiten por cada candidato.', **kw)
     p2.node('c2', 'terminator', 0, 0, 'Viene de la parte 1 (A)')
     p2.node('AS-09', 'task', 0, 1, lab('AS-09'))
-    p2.node('g2', 'gateway', 0, 2, '¿Candidato preseleccionado? (por candidato)')
-    p2.node('f2', 'terminator', 1, 2, 'Fin: el candidato no continúa')
+    p2.node('g2', 'gateway', 0, 2, f'G-02 {N_["G-02"]}')
+    p2.node('f2', 'terminator', 1, 2, f'Fin (para ese candidato): {N_["EF-02"].lower()}')
     for r, i in enumerate(['AS-10', 'AS-11', 'AS-12', 'AS-13', 'AS-14'], start=3):
         p2.node(i, 'task', 0, r, lab(i))
-    p2.node('f3', 'terminator', 0, 8, 'Fin: resultado comunicado')
+    p2.node('f3', 'terminator', 0, 8, f'Fin: {N_["EF-03"].lower()}')
     seq = ['c2', 'AS-09', 'g2', 'AS-10', 'AS-11', 'AS-12', 'AS-13', 'AS-14', 'f3']
     for a, b in zip(seq, seq[1:]):
         p2.edge(a, b, 'Sí' if a == 'g2' else '')
     p2.edge('g2', 'f2', 'No')
     path2 = os.path.join(pdir(2, 'diagramas', 'draft'), 'F2-flujo-as-is-parte2.png')
-    p2.render(path2, 'Borrador de revisión (F27B). La formalización BPMN está en el Formato 03.')
+    p2.render(path2, 'Borrador de revisión. La formalización BPMN (con SP-01 por candidato) está en el Formato 03.')
     return [path1, path2]
 
 
 def asis_bpmn(n=3, prefix='F3-bpmn-as-is', badges=None, tag='F3'):
-    """BPMN AS-IS en carriles verticales, dos partes unidas por un evento de enlace."""
+    """BPMN AS-IS en carriles verticales, dos partes unidas por un evento de enlace (especificación F27D)."""
     badges = badges or {}
     lanes = A.LANES
+    N_ = A.NOMBRE
     kw = dict(CW=310, RH=122, TW=262, TH=92, FS=19)
     sub = 'BPMN AS-IS preliminar derivado del análisis del equipo — sujeto a validación institucional'
-    b1 = dg.Swimlanes(f'{tag} · BPMN del proceso actual (AS-IS preliminar) — parte 1 de 2', lanes, sub, **kw)
     t = lambda i: f'{i}\n{AS[i][1]}'
-    b1.node('EI-01', 'start', 0, 0, 'EI-01 Necesidad de personal identificada')
+    b1 = dg.Swimlanes(f'{tag} · BPMN del proceso actual (AS-IS preliminar) — parte 1 de 2', lanes, sub, **kw)
+    b1.node('EI-01', 'start', 0, 0, f'EI-01 {N_["EI-01"]}')
     b1.node('AS-01', 'task', 0, 1, t('AS-01'))
     b1.node('AS-02', 'task', 0, 2, t('AS-02'))
     b1.node('AS-03', 'task', 1, 3, t('AS-03'))
     b1.node('AS-04', 'task', 2, 4, t('AS-04'))
-    b1.node('G-01', 'gateway', 2, 5, 'G-01 ¿Necesidad aprobada?', off=-70)
-    b1.node('EF-01', 'end', 2, 5, 'EF-01 Necesidad no aprobada', off=70)
+    b1.node('G-01', 'gateway', 2, 5, f'G-01 {N_["G-01"]}', off=-70)
+    b1.node('EF-01', 'end', 2, 5, f'EF-01 {N_["EF-01"]}', off=70)
     b1.node('AS-05', 'task', 1, 6, t('AS-05'))
     b1.node('AS-06', 'task', 1, 7, t('AS-06'))
+    b1.node('EP-01', 'start', 4, 7, f'EP-01 {N_["EP-01"]}', off=-100)
     b1.node('AS-07', 'task', 4, 8, t('AS-07'))
-    b1.node('AS-08', 'task', 1, 9, t('AS-08'))
+    b1.node('EP-02', 'end', 4, 9, f'EP-02 {N_["EP-02"]}', off=-100)
+    b1.node('AS-08', 'task', 1, 9, t('AS-08') + '\n(tarea de recepción)')
     b1.node('L-A', 'link', 1, 10, 'Enlace A → parte 2')
     for a, b_ in [('EI-01', 'AS-01'), ('AS-01', 'AS-02'), ('AS-02', 'AS-03'), ('AS-03', 'AS-04'), ('AS-04', 'G-01'),
-                  ('AS-08', 'L-A')]:
+                  ('AS-05', 'AS-06'), ('AS-06', 'AS-08'), ('AS-08', 'L-A'), ('EP-01', 'AS-07'), ('AS-07', 'EP-02')]:
         b1.edge(a, b_)
     b1.edge('G-01', 'EF-01', 'No')
     b1.edge('G-01', 'AS-05', 'Sí', side='left')
-    b1.edge('AS-05', 'AS-06')
-    b1.edge('AS-06', 'AS-07', 'convocatoria', kind='msg')
-    b1.edge('AS-07', 'AS-08', 'postulación y CV', kind='msg')
+    b1.edge('AS-06', 'EP-01', 'MF-01 convocatoria', kind='msg')
+    b1.edge('AS-07', 'AS-08', 'MF-02 postulación y CV', kind='msg', side='lr')
     b1.badges = {k: v for k, v in badges.items() if k in b1.nodes}
     path1 = os.path.join(pdir(n, 'diagramas', 'draft'), f'{prefix}-parte1.png')
-    b1.render(path1, 'Líneas discontinuas: flujos de mensaje entre pools. Fuente: F2 (AS-01 a AS-14) y §3.1 del informe v1.0.')
+    b1.render(path1, 'Discontinuas: flujos de mensaje (MF-01, MF-02). AS-06 → AS-08 es secuencia: AS-08 espera las postulaciones.')
     b2 = dg.Swimlanes(f'{tag} · BPMN del proceso actual (AS-IS preliminar) — parte 2 de 2', lanes, sub, **kw)
     b2.node('L-A2', 'link', 1, 0, 'Enlace A (desde parte 1)')
-    b2.node('AS-09', 'task', 1, 1, t('AS-09'))
-    b2.node('G-02', 'gateway', 1, 2, 'G-02 ¿Preseleccionado? (por candidato)', off=-70)
-    b2.node('EF-02', 'end', 1, 2, 'EF-02 El candidato no continúa', off=80)
-    b2.node('AS-10', 'task', 1, 3, t('AS-10'))
-    b2.node('M-01', 'inter', 4, 3, 'Citación recibida')
-    b2.node('AS-11', 'task', 3, 4, t('AS-11'))
-    b2.node('M-02', 'inter', 4, 4, 'Participa en la evaluación o entrevista')
-    b2.node('AS-12', 'task', 1, 5, t('AS-12'))
-    b2.node('AS-13', 'task', 2, 6, t('AS-13'))
-    b2.node('AS-14', 'task', 1, 7, t('AS-14'))
-    b2.node('M-03', 'inter', 4, 7, 'Resultado recibido')
-    b2.node('EF-03', 'end', 1, 8, 'EF-03 Resultado comunicado')
-    for a, b_ in [('L-A2', 'AS-09'), ('AS-09', 'G-02'), ('AS-10', 'AS-11'), ('AS-11', 'AS-12'), ('AS-12', 'AS-13'),
-                  ('AS-13', 'AS-14'), ('AS-14', 'EF-03')]:
+    b2.node('IN', 'bnd', 1, 0.62)
+    b2.group(1, 3, 1, 6, f'SP-01 {N_["SP-01"]} — subproceso de instancia múltiple paralela: una instancia por candidato')
+    b2.node('SI-01', 'start', 1, 1.25, f'SI-01 {N_["SI-01"]}')
+    b2.node('AS-09', 'task', 1, 2.2, t('AS-09'))
+    b2.node('G-02', 'gateway', 1, 3.2, f'G-02 {N_["G-02"]}', off=-70)
+    b2.node('EF-02', 'end', 1, 3.2, f'EF-02 {N_["EF-02"]}', off=85)
+    b2.node('AS-10', 'task', 1, 4.2, t('AS-10'))
+    b2.node('AS-11', 'task', 3, 5.2, t('AS-11'))
+    b2.node('EF-04', 'end', 3, 6.1, f'EF-04 {N_["EF-04"]}', off=-90)
+    b2.node('OUT', 'bnd', 1, 6.52)
+    b2.node('P-MF03', 'bnd', 4, 4.2, off=-155)
+    b2.node('AS-12', 'task', 1, 7.3, t('AS-12'))
+    b2.node('AS-13', 'task', 2, 8.3, t('AS-13'))
+    b2.node('AS-14', 'task', 1, 9.3, t('AS-14'))
+    b2.node('P-MF04', 'bnd', 4, 9.3, off=-155)
+    b2.node('EF-03', 'end', 1, 10.3, f'EF-03 {N_["EF-03"]}')
+    for a, b_ in [('L-A2', 'IN'), ('SI-01', 'AS-09'), ('AS-09', 'G-02'), ('AS-10', 'AS-11'), ('AS-11', 'EF-04'),
+                  ('OUT', 'AS-12'), ('AS-12', 'AS-13'), ('AS-13', 'AS-14'), ('AS-14', 'EF-03')]:
         b2.edge(a, b_)
     b2.edge('G-02', 'EF-02', 'No')
     b2.edge('G-02', 'AS-10', 'Sí')
-    b2.edge('AS-10', 'M-01', 'citación', kind='msg')
-    b2.edge('AS-11', 'M-02', '', kind='msg')
-    b2.edge('AS-14', 'M-03', 'resultado', kind='msg')
+    b2.edge('AS-10', 'P-MF03', 'MF-03 citación', kind='msg')
+    b2.edge('AS-14', 'P-MF04', 'MF-04 resultado', kind='msg')
     b2.badges = {k: v for k, v in badges.items() if k in b2.nodes}
     path2 = os.path.join(pdir(n, 'diagramas', 'draft'), f'{prefix}-parte2.png')
-    b2.render(path2, 'G-02 se evalúa por candidato (a detallar como instancia múltiple en PowerDesigner, F29).')
+    b2.render(path2, 'SP-01 termina cuando todas sus instancias terminaron; entonces sigue AS-12. MF-03 y MF-04 llegan al borde del pool Postulante.')
     return [path1, path2]
 
 
@@ -238,6 +243,7 @@ def build_f2():
     d.table(['N°', 'Actor', 'Tipo (Interno / Externo / Sistemas)', 'Rol en el proceso'],
             [(a[0], a[1], a[2], a[3]) for a in A.ACTORES], widths=[10, 22, 18, 50])
     d.p(A.NOTA_SISTEMAS)
+    d.p(A.NOTA_SUPUESTOS)
     d.h('Relación actividades-actores')
     rows, n = [], 0
     for a in A.ACTIVIDADES:
@@ -280,26 +286,36 @@ def build_f3():
     d.box([f'**Proceso:** {C.PROCESO} en el {C.INSTITUCION}.',
            '**Propósito:** cubrir necesidades de personal con una decisión final de la Dirección.',
            '**Alcance:** desde que un área identifica una necesidad de personal (EI-01) hasta que se comunica el '
-           'resultado a los postulantes (EF-03). Caminos alternativos: necesidad no aprobada (EF-01) y candidato '
-           'no preseleccionado (EF-02).',
+           'resultado a los postulantes (EF-03). Caminos alternativos: necesidad no aprobada (EF-01) y, para cada '
+           'candidato dentro de SP-01, candidato no preseleccionado (EF-02).',
            '**Contexto:** representa las 14 actividades del Formato 02 (AS-01 a AS-14). Es un modelo preliminar, sin '
            'canales, herramientas ni tiempos reales verificados.'])
     d.h('Diagrama BPM del proceso actual (AS-IS)')
     d.instr('Inserte el diagrama BPM elaborado utilizando notación BPMN.')
     d.img(bp[0], 'Figura 1. BPMN AS-IS preliminar, parte 1 (EI-01 a AS-08).', 16)
     d.img(bp[1], 'Figura 2. BPMN AS-IS preliminar, parte 2 (AS-09 a EF-03).', 16)
-    d.p('Borrador de revisión dibujado desde la especificación de este formato. La versión formal se modelará en '
-        'PowerDesigner cuando la auditoría F27C apruebe el contenido.')
+    d.p('Borrador de revisión dibujado desde la especificación de este formato (corregida en la F27D tras la auditoría '
+        'F27C). La versión formal se modelará en PowerDesigner en la F29.')
     d.h('Elementos BPMN utilizados')
     d.table(['N°', 'Elemento BPMN', 'Descripción', 'Uso en el proceso'],
             [(str(i), e, ds, u) for i, (e, ds, u) in enumerate(A.ELEMENTOS_BPMN, start=1)], widths=[7, 20, 28, 45])
+    d.sub('Glosario de nombres oficiales')
+    d.table(['ID', 'Tipo', 'Nombre oficial'], A.GLOSARIO, widths=[12, 50, 38], sz=17)
+    d.p('Cada ID tiene **un solo nombre**, que se usa igual en el formato, el borrador, el README y el pendiente de '
+        'PowerDesigner.')
+    d.sub('Pool del Postulante y subproceso por candidato')
+    d.p(A.POOL_POSTULANTE)
+    d.p(A.SUBPROCESO)
+    d.sub('Flujos de mensaje (lista cerrada, unidireccional)')
+    d.table(['ID', 'Origen', 'Destino', 'Elemento receptor', 'Contenido'], A.MENSAJES, widths=[9, 33, 16, 26, 16], sz=17)
     d.h('Identificación de actores (Pools / Lanes)')
     d.table(['N°', 'Actor', 'Tipo (Interno / Externo / Sistemas)', 'Lane asignado'],
             [('1', 'Área solicitante', 'Interno', 'Lane «Área solicitante» (pool del Colegio)'),
              ('2', 'Recursos Humanos', 'Interno', 'Lane «RR. HH.» (pool del Colegio)'),
              ('3', 'Dirección', 'Interno', 'Lane «Dirección» (pool del Colegio)'),
-             ('4', 'Evaluadores', 'Interno', 'Lane «Evaluadores» (pool del Colegio)'),
-             ('5', 'Postulante', 'Externo', 'Pool «Postulante» (externo), comunicado por flujos de mensaje')],
+             ('4', 'Evaluadores', 'Interno (supuesto de modelado)', 'Lane «Evaluadores» (pool del Colegio)'),
+             ('5', 'Postulante', 'Externo (supuesto de modelado)',
+              'Pool «Postulante»: participante visible con EP-01 → AS-07 → EP-02')],
             widths=[7, 25, 23, 45])
     d.p('No hay lane de «Sistemas»: el AS-IS preliminar no identifica ninguna herramienta informática del Colegio.')
     d.h('Descripción del flujo del proceso')
@@ -309,14 +325,17 @@ def build_f3():
     d.instr('Marque con un aspa (X) si se cumplen los enunciados. Se aplica a la especificación y al borrador de '
             'este formato.')
     d.table(['Enunciado', 'X', 'Comprobación'], [
-        ('El proceso tiene evento de inicio y fin claramente definidos.', 'X', 'EI-01; EF-01, EF-02 y EF-03.'),
+        ('El proceso tiene evento de inicio y fin claramente definidos.', 'X',
+         'Proceso: EI-01; EF-01 y EF-03. SP-01: SI-01; EF-02 y EF-04. Postulante: EP-01; EP-02.'),
         ('Todas las actividades están conectadas correctamente.', 'X',
-         'AS-01 a AS-14 tienen entrada y salida; las partes 1 y 2 se unen con el enlace A.'),
+         'AS-01 a AS-14 tienen entrada y salida de secuencia; AS-06 → AS-08 es secuencia (AS-08 es tarea de recepción); '
+         'AS-07 está entre EP-01 y EP-02; las partes 1 y 2 se unen con el enlace A.'),
         ('Se utilizan correctamente los elementos BPMN.', 'X',
-         'Secuencia dentro del pool y mensajes entre pools. G-02 por candidato queda anotada para modelarse como '
-         'instancia múltiple en PowerDesigner.'),
+         'Secuencia solo dentro de cada pool; MF-01 a MF-04 unidireccionales entre pools; SP-01 de instancia múltiple '
+         'paralela por candidato.'),
         ('Cada actividad tiene un actor asignado.', 'X', 'Cada tarea está en el lane de su actor (tabla 5).'),
-        ('El flujo es coherente y entendible.', 'X', 'Coincide con las 8 actividades macro de §3.1 y con el Formato 02.'),
+        ('El flujo es coherente y entendible.', 'X', 'Coincide con las 8 actividades macro de §3.1, con el Formato 02 y '
+         'con el glosario de nombres.'),
     ], widths=[45, 6, 49])
     d.p('La validación es **interna del equipo**. Falta la validación institucional del contenido del AS-IS.')
     d.h('Evidencias')
@@ -451,87 +470,126 @@ TOBE_LANES = [
 
 
 def tobe_bpmn():
+    """BPMN TO-BE (especificación F27D): nivel vacante (partes 1 y 3) y SP-P por postulación (partes 2a y 2b)."""
     kw = dict(CW=292, RH=118, TW=240, TH=92, FS=18)
     sub = 'TO-BE propuesto por el equipo, soportado por la plataforma v1.1. Verde: tareas del sistema. Gris: propuesta futura.'
     lab = lambda i: f'{i}\n{TB[i][2]}'
     sysl = lambda i: 'system' if TB[i][4] == 'Sistema' else 'normal'
+    E = {e[0]: e[2] for e in T.EVENTOS}
+    G = {g[0]: g[3] for g in T.COMPUERTAS}
+    out = os.path.join(pdir(5, 'diagramas', 'draft'))
     paths = []
-    # Parte 1: A + B
-    b = dg.Swimlanes('F5 · BPMN del proceso mejorado (TO-BE) — parte 1 de 3: requerimiento y convocatoria',
-                     TOBE_LANES, sub, **kw)
-    b.node('EI', 'start', 0, 0, 'Necesidad de personal identificada')
-    for tid, lane, row in [('TB-01', 0, 1), ('TB-02', 0, 2), ('TB-03', 1, 3), ('TB-04', 0, 4), ('TB-05', 2, 5),
+    # Parte 1 — nivel vacante: A + B hasta SP-P
+    b = dg.Swimlanes('F5 · BPMN TO-BE — parte 1: nivel vacante (requerimiento y convocatoria)', TOBE_LANES, sub, **kw)
+    b.node('EI', 'start', 0, 0, E['EI'])
+    for tid, lane, row in [('TB-01', 0, 1), ('TB-02', 0, 2), ('TB-03', 1, 3), ('TB-04', 0, 4.9), ('TB-05', 2, 5),
                            ('TB-06', 4, 6), ('TB-07', 1, 7), ('TB-08', 1, 8), ('TB-09', 4, 9), ('TB-10', 1, 11)]:
         b.node(tid, 'task', lane, row, lab(tid), style=sysl(tid))
-    b.node('GA1', 'gateway', 1, 4, '¿Requerimiento conforme?', off=-70)
-    b.node('GA2', 'gateway', 2, 6, '¿Aprobado?', off=-70)
-    b.node('EFA', 'end', 4, 7, 'Requerimiento rechazado')
-    b.node('GB1', 'gateway', 4, 10, '¿Configuración válida?', off=-70)
-    b.node('LA', 'link', 1, 12, 'Enlace A → parte 2')
+    b.node('GA1', 'gateway', 1, 4, f'GA1 {G["GA1"]}', off=-70)
+    b.node('GA2', 'gateway', 2, 6, f'GA2 {G["GA2"]}', off=-70)
+    b.node('EFA', 'end', 4, 7, f'EFA {E["EFA"]}')
+    b.node('GB1', 'gateway', 4, 10, f'GB1 {G["GB1"]}', off=-70)
+    b.node('P-MT01', 'bnd', 5, 11, off=-146)
+    b.node('SP-P', 'task', 1, 12.3, 'SP-P Gestionar la postulación\n(instancia múltiple |||, ver partes 2a y 2b)')
+    b.node('LB', 'link', 1, 13.5, 'Enlace B → parte 3 (cuando terminaron todas las instancias)')
     for a_, c_ in [('EI', 'TB-01'), ('TB-01', 'TB-02'), ('TB-02', 'TB-03'), ('TB-03', 'GA1'), ('TB-05', 'GA2'),
-                   ('TB-06', 'EFA'), ('TB-07', 'TB-08'), ('TB-08', 'TB-09'), ('TB-09', 'GB1'), ('TB-10', 'LA')]:
+                   ('TB-06', 'EFA'), ('TB-07', 'TB-08'), ('TB-08', 'TB-09'), ('TB-09', 'GB1'), ('TB-10', 'SP-P'),
+                   ('SP-P', 'LB')]:
         b.edge(a_, c_)
-    b.edge('GA1', 'TB-04', 'Observado')
+    b.edge('GA1', 'TB-04', 'Observado', side='left')
     b.edge('TB-04', 'TB-02', 'corrige y reenvía', side='gutter')
     b.edge('GA1', 'TB-05', 'Validado', side='right')
     b.edge('GA2', 'TB-06', 'No (motivo)')
     b.edge('GA2', 'TB-07', 'Sí', side='left')
-    b.edge('GB1', 'TB-08', 'No', side='gutter')
+    b.edge('GB1', 'TB-08', 'No', side='gutter', lpos='vr')
     b.edge('GB1', 'TB-10', 'Sí', side='left')
-    paths.append(os.path.join(pdir(5, 'diagramas', 'draft'), 'F5-bpmn-to-be-parte1.png'))
-    b.render(paths[-1], 'El área corrige y reenvía (TB-04 → TB-02). La vacante no se publica si la configuración no es válida (A-06).')
-    # Parte 2: C + D
-    b = dg.Swimlanes('F5 · BPMN del proceso mejorado (TO-BE) — parte 2 de 3: postulación y evaluación',
-                     TOBE_LANES, sub, **kw)
-    b.node('LA2', 'link', 1, 0, 'Enlace A (desde parte 1)')
-    b.node('SP', 'inter', 5, 0, 'Vacante publicada (portal)')
-    for tid, lane, row in [('TB-11', 5, 1), ('TB-12', 5, 2), ('TB-13', 5, 3), ('TB-14', 4, 4), ('TB-15', 1, 5),
-                           ('TB-16', 1, 6), ('TB-17', 4, 7), ('TB-18', 1, 10), ('TB-20', 1, 11), ('TB-19', 4, 12),
-                           ('TB-21', 3, 13), ('TB-22', 4, 14), ('TB-23', 1, 16)]:
-        b.node(tid, 'task', lane, row, lab(tid), style=sysl(tid))
-    b.node('MP1', 'inter', 5, 4, 'Confirmación recibida')
-    b.node('MP2', 'inter', 5, 7, 'Aviso de etapa recibido')
-    b.node('MP3', 'inter', 5, 12, 'Convocatoria recibida')
-    b.node('GD1', 'gateway', 1, 8, '¿Preseleccionado?', off=-70)
-    b.node('EFD', 'end', 1, 8, 'Postulación descartada', off=85)
-    b.node('GD2', 'gateway', 1, 9, '¿Qué sesión se programa?', off=-70)
-    b.node('GD3', 'gateway', 1, 15, '¿Otra sesión?', off=-70)
-    b.node('LB', 'link', 1, 17, 'Enlace B → parte 3')
-    for a_, c_ in [('SP', 'TB-11'), ('TB-11', 'TB-12'), ('TB-12', 'TB-13'), ('LA2', 'TB-15'), ('TB-14', 'TB-15'),
-                   ('TB-15', 'TB-16'), ('TB-16', 'TB-17'), ('TB-17', 'GD1'), ('TB-19', 'TB-21'), ('TB-21', 'TB-22'),
-                   ('TB-22', 'GD3'), ('TB-23', 'LB')]:
+    b.edge('TB-10', 'P-MT01', 'MT-01 vacante publicada (→ EP-01)', kind='msg')
+    paths.append(os.path.join(out, 'F5-bpmn-to-be-parte1.png'))
+    b.render(paths[-1], 'Nivel vacante. SP-P se ejecuta una vez por postulación registrada (MT-02) y se detalla en las partes 2a y 2b.')
+    # Parte 2a — SP-P (1 de 2) y pool Postulante
+    b = dg.Swimlanes('F5 · BPMN TO-BE — parte 2a: SP-P «Gestionar la postulación» (nivel postulación)', TOBE_LANES, sub, **kw)
+    b.node('EP-01', 'start', 5, 0, f'EP-01 {E["EP-01"]}')
+    for tid, row in [('TB-11', 1), ('TB-12', 2), ('TB-13', 3)]:
+        b.node(tid, 'task', 5, row, lab(tid))
+    b.node('EP-02', 'end', 5, 4.1, f'EP-02 {E["EP-02"]}')
+    b.group(1, 4, 3.55, 11.2, 'SP-P Gestionar la postulación — subproceso de instancia múltiple paralela: una instancia por postulación (1 de 2)')
+    b.node('SP-IN', 'bnd', 4, 3.62, off=60)
+    b.node('SIP', 'start', 4, 4.3, f'SIP {E["SIP"]}')
+    b.node('TB-14', 'task', 4, 5.2, lab('TB-14'), style='system')
+    b.node('P-MT03', 'bnd', 5, 5.2, off=-146)
+    b.node('TB-15', 'task', 1, 6.2, lab('TB-15'))
+    b.node('TB-16', 'task', 1, 7.2, lab('TB-16'))
+    b.node('TB-17', 'task', 4, 8.2, lab('TB-17'), style='system')
+    b.node('P-MT04', 'bnd', 5, 8.2, off=-146)
+    b.node('GD1', 'gateway', 1, 9.1, f'GD1 {G["GD1"]}', off=-70)
+    b.node('EFP-01', 'end', 1, 9.1, f'EFP-01 {E["EFP-01"]}', off=85)
+    b.node('GM1', 'gateway', 1, 10.3, 'GM1 unión', off=-70)
+    b.node('LD2', 'link', 1, 10.3, 'Enlace D (desde GD3 «Sí»)', off=95)
+    b.node('LC', 'link', 1, 11.1, 'Enlace C → parte 2b', off=-70)
+    for a_, c_ in [('EP-01', 'TB-11'), ('TB-11', 'TB-12'), ('TB-12', 'TB-13'), ('TB-13', 'EP-02'), ('SIP', 'TB-14'),
+                   ('TB-14', 'TB-15'), ('TB-15', 'TB-16'), ('TB-16', 'TB-17'), ('TB-17', 'GD1'), ('GM1', 'LC')]:
         b.edge(a_, c_)
-    b.edge('TB-13', 'TB-14', 'postulación', kind='msg')
-    b.edge('TB-14', 'MP1', '', kind='msg')
-    b.edge('TB-17', 'MP2', '', kind='msg')
-    b.edge('TB-19', 'MP3', '', kind='msg')
-    b.edge('GD1', 'EFD', 'No')
-    b.edge('GD1', 'GD2', 'Sí')
+    b.edge('TB-13', 'SP-IN', 'MT-02 postulación', kind='msg', side='lr')
+    b.edge('TB-14', 'P-MT03', 'MT-03', kind='msg')
+    b.edge('TB-17', 'P-MT04', 'MT-04', kind='msg')
+    b.edge('GD1', 'EFP-01', 'No')
+    b.edge('GD1', 'GM1', 'Sí')
+    b.edge('LD2', 'GM1', '')
+    paths.append(os.path.join(out, 'F5-bpmn-to-be-parte2a.png'))
+    b.render(paths[-1], 'GM1 también recibe el retorno «¿Otra sesión? Sí» de la parte 2b. MT-03 y MT-04 llegan al borde del pool Postulante.')
+    # Parte 2b — SP-P (2 de 2)
+    b = dg.Swimlanes('F5 · BPMN TO-BE — parte 2b: SP-P «Gestionar la postulación» (continuación)', TOBE_LANES, sub, **kw)
+    b.group(1, 4, 0.55, 12.2, 'SP-P Gestionar la postulación — subproceso de instancia múltiple paralela (2 de 2)')
+    b.node('LC2', 'link', 1, 1.2, 'Enlace C (desde GM1, parte 2a)', off=-70)
+    b.node('GD2', 'gateway', 1, 2.1, f'GD2 {G["GD2"]}', off=-70)
+    b.node('TB-18', 'task', 1, 3.1, lab('TB-18'))
+    b.node('TB-20', 'task', 1, 4.1, lab('TB-20'))
+    b.node('GM2', 'gateway', 4, 5.0, 'GM2 unión', off=-70)
+    b.node('TB-19', 'task', 4, 6.0, lab('TB-19'), style='system')
+    b.node('P-MT05', 'bnd', 5, 6.0, off=-146)
+    b.node('TB-21', 'task', 3, 7.0, lab('TB-21'))
+    b.node('TB-22', 'task', 4, 8.0, lab('TB-22'), style='system')
+    b.node('GV', 'gateway', 4, 8.9, f'GV {G["GV"]}', off=-70)
+    b.node('GD3', 'gateway', 1, 9.7, f'GD3 {G["GD3"]}', off=-70)
+    b.node('LD', 'link', 1, 9.7, 'Enlace D → GM1 (parte 2a)', off=95)
+    b.node('TB-23', 'task', 1, 10.7, lab('TB-23'))
+    b.node('GF', 'gateway', 1, 11.6, f'GF {G["GF"]}', off=-70)
+    b.node('EFP-03', 'end', 1, 11.6, f'EFP-03 {E["EFP-03"]} (MT-07)', off=85)
+    b.node('EFP-02', 'end', 3, 11.6, f'EFP-02 {E["EFP-02"]} (MT-06)', off=-60)
+    for a_, c_ in [('LC2', 'GD2'), ('GM2', 'TB-19'), ('TB-19', 'TB-21'), ('TB-21', 'TB-22'), ('TB-22', 'GV'),
+                   ('TB-23', 'GF')]:
+        b.edge(a_, c_)
     b.edge('GD2', 'TB-18', 'Evaluación')
-    b.edge('GD2', 'TB-20', 'Entrevista', side='gutter')
-    b.edge('TB-18', 'TB-19', '', side='right')
-    b.edge('TB-20', 'TB-19', '', side='right')
-    b.edge('GD3', 'GD2', 'Sí', side='lgutter')
+    b.edge('GD2', 'TB-20', 'Entrevista', side='lgutter', lpos='vl')
+    b.edge('TB-18', 'GM2', '', side='right')
+    b.edge('TB-20', 'GM2', '', side='right')
+    b.edge('TB-19', 'P-MT05', 'MT-05 convocatoria', kind='msg')
+    b.edge('GV', 'TB-21', 'No (rechazo)', side='gutter', lpos='vr')
+    b.edge('GV', 'GD3', 'Sí')
     b.edge('GD3', 'TB-23', 'No')
-    paths.append(os.path.join(pdir(5, 'diagramas', 'draft'), 'F5-bpmn-to-be-parte2.png'))
-    b.render(paths[-1], 'TB-17 también avisa los cambios de TB-23. Al programar, la etapa avanza sola y se envía la convocatoria (A-16).')
-    # Parte 3: E
-    b = dg.Swimlanes('F5 · BPMN del proceso mejorado (TO-BE) — parte 3 de 3: selección y cierre',
-                     TOBE_LANES, sub, **kw)
-    b.node('LB2', 'link', 1, 0, 'Enlace B (desde parte 2)')
+    b.edge('GD3', 'LD', 'Sí')
+    b.edge('GF', 'EFP-03', 'No')
+    b.edge('GF', 'EFP-02', 'Sí')
+    paths.append(os.path.join(out, 'F5-bpmn-to-be-parte2b.png'))
+    b.render(paths[-1], 'GV «No»: el sistema rechaza los puntajes y el evaluador corrige y reenvía. EFP-02 y EFP-03 son fines de mensaje (aviso de etapa, RF-15).')
+    # Parte 3 — nivel vacante: selección y cierre
+    b = dg.Swimlanes('F5 · BPMN TO-BE — parte 3: nivel vacante (selección y cierre)', TOBE_LANES, sub, **kw)
+    b.node('LB2', 'link', 1, 0, 'Enlace B (SP-P completado)')
     for tid, lane, row in [('TB-24', 4, 1), ('TB-25', 4, 2), ('TB-26', 2, 3), ('TB-27', 1, 4), ('TB-28', 1, 5),
-                           ('TB-29', 4, 6), ('TB-30', 4, 8)]:
+                           ('TB-29', 4, 6)]:
         b.node(tid, 'task', lane, row, lab(tid), style=sysl(tid))
-    b.node('TB-F1', 'task', 1, 2, 'TB-F1 Cerrar sin selección\nPROPUESTA FUTURA — no implementada (A-30)', style='future')
-    b.node('MP4', 'inter', 5, 6, 'Resultado recibido')
-    b.node('EFE', 'end', 4, 7, 'Convocatoria cerrada con selección')
+    b.node('P-MT08', 'bnd', 5, 6, off=-146)
+    b.node('EFE', 'end', 4, 7, f'EFE {E["EFE"]}')
+    b.group(3, 4, 8.45, 9.55, 'Transversal (no es un paso de la secuencia): se ejecuta en cada acción crítica', style='transversal')
+    b.node('TB-30', 'task', 4, 9.1, lab('TB-30'), style='system')
+    b.group(0, 1, 8.45, 9.55, 'Propuesta futura (A-30) — desconectada del flujo', style='future')
+    b.node('TB-F1', 'task', 0, 9.1, 'TB-F1 Cerrar la convocatoria sin selección\nPROPUESTA FUTURA, no implementada', style='future', off=146)
     for a_, c_ in [('LB2', 'TB-24'), ('TB-24', 'TB-25'), ('TB-25', 'TB-26'), ('TB-26', 'TB-27'), ('TB-27', 'TB-28'),
                    ('TB-28', 'TB-29'), ('TB-29', 'EFE')]:
         b.edge(a_, c_)
-    b.edge('TB-29', 'MP4', 'resultado', kind='msg')
-    b.edge('TB-25', 'TB-F1', 'sin candidato elegible', kind='future')
-    paths.append(os.path.join(pdir(5, 'diagramas', 'draft'), 'F5-bpmn-to-be-parte3.png'))
-    b.render(paths[-1], 'TB-26 es la decisión HUMANA (RF-23). El ranking no elige. TB-30 es transversal: audita todas las acciones críticas.')
+    b.edge('TB-29', 'P-MT08', 'MT-08 resultado', kind='msg')
+    paths.append(os.path.join(out, 'F5-bpmn-to-be-parte3.png'))
+    b.render(paths[-1], 'TB-26 es la decisión HUMANA (RF-23): el ranking no elige. TB-F1 no tiene flujo de entrada ni condición del sistema.')
     return paths
 
 
@@ -566,8 +624,12 @@ def build_f5():
            'autorizada (Aprobador / Dirección).'])
     d.sub('Alcance (inicio y fin).')
     d.box(['**Inicio:** un área identifica una necesidad de personal y registra el requerimiento (TB-01).',
-           '**Fin:** la convocatoria se cierra con selección y cada postulante recibe su resultado (TB-28 y TB-29). '
-           'Caminos alternativos: requerimiento rechazado (TB-06) y postulación descartada (TB-16/TB-17).'])
+           '**Fin:** la convocatoria se cierra con selección y cada postulante recibe su resultado (TB-28, TB-29 y EFE). '
+           'Caminos alternativos: requerimiento rechazado (TB-06 y EFA). Para cada postulación, dentro de SP-P: '
+           'descartada en la preselección (EFP-01), descartada tras la evaluación (EFP-03) o finalista (EFP-02).',
+           '**Dos niveles:** el nivel vacante (A, B, E y TB-30) y el nivel postulación (SP-P, de instancia múltiple, '
+           'con C y D). El flujo principal supone al menos un finalista; el caso sin finalistas no tiene camino '
+           'implementado (A-30).'])
     d.sub('Principales mejoras respecto al proceso actual (AS-IS).')
     d.bullets([f'{s[1]}: {s[3]} ({s[0]}).' for s in T.SOLUCIONES])
     d.sub('Reglas del TO-BE')
@@ -586,10 +648,21 @@ def build_f5():
             [(s[0], s[1], ', '.join(s[4]), ', '.join(s[5])) for s in T.SOLUCIONES], widths=[14, 12, 44, 30], sz=17)
     d.h('Diagrama BPM mejorado (TO-BE)')
     d.instr('Inserte el diagrama BPM del proceso mejorado.')
-    for i, pth in enumerate(bp, start=1):
-        d.img(pth, f'Figura {i}. BPMN TO-BE propuesto, parte {i} de 3. Borrador de revisión.', 16.5)
-    d.p('Borrador dibujado desde la especificación de este formato. La versión formal se modelará en PowerDesigner '
-        '(`POWERDESIGNER_PENDING.md`) después de la auditoría F27C.')
+    caps = ['parte 1: nivel vacante (requerimiento y convocatoria)', 'parte 2a: SP-P por postulación (1 de 2) y pool Postulante',
+            'parte 2b: SP-P por postulación (2 de 2)', 'parte 3: nivel vacante (selección y cierre)']
+    for i, (pth, cap) in enumerate(zip(bp, caps), start=1):
+        d.img(pth, f'Figura {i}. BPMN TO-BE propuesto, {cap}. Borrador de revisión.', 16.5)
+    d.p('Borrador dibujado desde la especificación de este formato (corregida en la F27D tras la auditoría F27C). La '
+        'versión formal se modelará en PowerDesigner en la F29 (`POWERDESIGNER_PENDING.md`).')
+    d.sub('Estructura del modelo: niveles')
+    d.table(['Nivel', 'Instancias', 'Contenido'], T.NIVELES, widths=[22, 33, 45], sz=17)
+    d.p(T.SP_P)
+    d.sub('Eventos (nombres oficiales)')
+    d.table(['ID', 'Tipo', 'Nombre oficial'], T.EVENTOS, widths=[12, 45, 43], sz=17)
+    d.sub('Compuertas (incluidas las uniones explícitas)')
+    d.table(['ID', 'Tipo', 'Lane', 'Nombre', 'Salidas'], T.COMPUERTAS, widths=[8, 16, 16, 24, 36], sz=16)
+    d.sub('Flujos de mensaje (lista cerrada, unidireccional)')
+    d.table(['ID', 'Origen', 'Destino', 'Elemento receptor', 'Contenido'], T.MENSAJES, widths=[8, 32, 13, 24, 23], sz=16)
     d.h('Descripción de actividades del proceso')
     d.table(['N°', 'Actividad', 'Descripción', 'Actor responsable', 'RF'],
             [(t[0], t[2], t[3], t[4], ', '.join(t[5]) or '—') for t in T.ACTIVIDADES + T.FUTURAS],
@@ -610,7 +683,7 @@ def build_f5():
     ])
     d.h('Evidencias')
     d.instr('Adjuntar capturas del diagrama BPM mejorado.')
-    d.img(ante, 'Figura 4. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la '
+    d.img(ante, 'Figura 5. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la '
                 'rama «cerrar sin selección», no implementada.', 16)
     d.bullets([
         'TO-BE escrito e implementado: `docs/final-report/03-procesos-negocio.md` §3.3–3.5 y '
@@ -633,7 +706,8 @@ def build_f5():
         ('docs/v1.1/powerdesigner/exports/AC-01-proceso-reclutamiento.png', 'Comportamiento implementado (referencia, no TO-BE)'),
         ('docs/academico/tools/f27b/m_tobe.py', 'Modelo de datos del TO-BE usado por el generador'),
         ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte1.png', 'Borrador BPMN TO-BE, parte 1'),
-        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte2.png', 'Borrador BPMN TO-BE, parte 2'),
+        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte2a.png', 'Borrador BPMN TO-BE, parte 2a (SP-P)'),
+        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte2b.png', 'Borrador BPMN TO-BE, parte 2b (SP-P)'),
         ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte3.png', 'Borrador BPMN TO-BE, parte 3'),
         ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_05.docx', 'Guía oficial de la Práctica 05'),
         ('docs/academico/00-fuentes-oficiales/formatos-originales/Formato_05_Modelo_BPM_mejorado.docx',
@@ -821,8 +895,12 @@ def build_f8():
                'Evaluación y entrevista (CU-13 a CU-15).', 'Comparación y ranking (CU-16 y CU-17).',
                'Decisión humana, selección y cierre (CU-18 a CU-20), con auditoría.'])
     d.sub('Relación con los requerimientos funcionales.')
-    d.box(['Los 20 CU cubren los 27 RF del Formato 06 sin RF adicionales. Cada CU indica sus RF, y cada RF tiene al menos '
-           'un CU (sección 8). RF-28 y RF-29 son extensiones fuera de esta vista.'])
+    d.box(['Los 20 CU cubren RF-01 a RF-26 del Formato 06, sin RF adicionales. **RF-27** (auditoría) es transversal: su '
+           'registro ocurre en todas las acciones críticas y su consulta es una capacidad técnica (UC-RF27), fuera del '
+           'catálogo académico (decisión D-CU-04). RF-28 y RF-29 son extensiones fuera de esta vista.'])
+    d.sub('Decisión del equipo sobre los casos de uso (F27D)')
+    d.table(['ID', 'Decisión'], U.DECISION, widths=[14, 86])
+    d.p('**Nota técnica.** ' + U.NOTA_AUDITORIA)
     d.h('Identificación de actores')
     d.table(['ID', 'Actor', 'Descripción'], U.ACTORES, widths=[10, 22, 68])
     d.p(U.NOTA_ACTORES)
@@ -840,8 +918,10 @@ def build_f8():
         'el OOM de la F23.')
     d.h('Relación con los requerimientos y correspondencia de vistas')
     d.table(['CU académico (F9)', 'CU agrupado (v1.0)', 'UC-RF (F22/F23)', 'Actor', 'RF', 'Alcance (F9)'],
-            [(f'{c[0]} {c[1]}', c[5], c[6], ', '.join(c[3]) or '— (incluido)', ', '.join(c[4]), c[7]) for c in U.CU],
+            [(f'{c[0]} {c[1]}', c[5], c[6], ', '.join(c[3]) or '— (incluido)', ', '.join(c[4]), c[7]) for c in U.CU] +
+            [(t['cu'], t['agrupado'], t['uc'], t['actor'], rf, t['inb']) for rf, t in U.TRANSVERSAL.items()],
             widths=[24, 16, 20, 13, 13, 14], sz=15)
+    d.p('RF-27: ' + U.TRANSVERSAL['RF-27']['f9'] + '. RF-23 queda solo en CU-18 → UC-RF23.')
     d.sub('Los 13 CU agrupados de v1.0 (se conservan)')
     d.table(['CU (v1.0)', 'Caso de uso', 'Actor', 'RF'], U.AGRUPADOS, widths=[12, 38, 25, 25], sz=16)
     d.p('Las tres vistas se conservan: 20 CU académicos (F9), 13 CU agrupados (informe v1.0) y 29 UC-RF técnicos '

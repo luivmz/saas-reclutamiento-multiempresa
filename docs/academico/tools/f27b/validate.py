@@ -96,7 +96,11 @@ def checks():
     check('F7: RNF-C figura solo como propuesta', all(c[2] == 'PROPUESTO' for c in N.CANDIDATOS if c[0] == 'RNF-C'))
     # F6 → F8
     rf_cu = {r for c in U.CU for r in c[4]}
-    check('F8: todo RF-01..RF-27 está en algún CU', set(BASE_RF) <= rf_cu, ', '.join(sorted(set(BASE_RF) - rf_cu)))
+    cubiertos = rf_cu | set(U.TRANSVERSAL)
+    check('F8: todo RF-01..RF-27 está en algún CU o declarado transversal (RF-27)', set(BASE_RF) <= cubiertos,
+          ', '.join(sorted(set(BASE_RF) - cubiertos)))
+    check('F8: RF-23 solo en el CU de decisión final humana y sin RF-27',
+          [c[0] for c in U.CU if 'RF-23' in c[4]] == ['CU-18'] and 'RF-27' not in rf_cu and 'humana' in dict((c[0], c[1]) for c in U.CU)['CU-18'])
     check('F8: ningún CU usa RF fuera de la línea base', rf_cu <= set(BASE_RF))
     inc = {i[1] for i in U.INCLUDES}
     sin_actor_cu = [c[0] for c in U.CU if not c[3] and c[0] not in inc]
@@ -108,13 +112,18 @@ def checks():
     check('F9: se leyó la tabla RF → CU del F9 publicado (27 filas)', len(f9) == 27, str(len(f9)))
     div = []
     for rf, (cu9, in9) in f9.items():
+        if rf in U.TRANSVERSAL:
+            if U.TRANSVERSAL[rf]['inb'] != in9:
+                div.append(f'{rf}: bloque F9 {in9} / transversal {U.TRANSVERSAL[rf]["inb"]}')
+            continue
         mine = [c for c in U.CU if rf in c[4]]
         cus = {c[0] for c in mine}
         if not any(x.strip() in cus for x in re.split(r'[,y]', cu9.replace('Incluido en', ''))):
             div.append(f'{rf}: F9 {cu9} / F8 {sorted(cus)}')
         if not any(in9 in c[7] for c in mine):
             div.append(f'{rf}: bloque F9 {in9}')
-    check('F8 ↔ F9: la relación RF → CU → bloque IN coincide con el F9 publicado', not div, '; '.join(div))
+    check('F8 ↔ F9: la relación RF → CU → bloque IN coincide con el F9 publicado (RF-27: solo el bloque, divergencia '
+          'de CU documentada en D-CU-04)', not div, '; '.join(div))
     # Afirmaciones institucionales
     flagged = []
     patt = re.compile(r'[^.\n]*\b(validad[oa]s? (?:por|con) (?:la institución|RR\. HH\.|el Colegio)|validación institucional'
@@ -125,6 +134,18 @@ def checks():
             if not re.search(r'\b(no|sin|ninguna|ningún|nada|pendiente|sujet[oa]|falta|antes|hasta|depende|condición|confirmarán|a validar)\b', frag, re.I):
                 flagged.append(f'{os.path.basename(md)}: «{frag.strip()[:120]}»')
     check('Ninguna afirmación de validación institucional sin negación o condición', not flagged, ' | '.join(flagged))
+    # Nomenclatura (H-13): variantes retiradas no deben reaparecer en F2 a F5 ni en sus README/pendientes
+    variantes = [r'(?<!Candidato )¿Preseleccionado\?', r'Citación recibida', r'Participa en la evaluación',
+                 r'Resultado recibido', r'sin candidato elegible']
+    encontradas = []
+    for f in glob.glob(os.path.join(ACAD, 'practica-0[2-5]', '*.md')):
+        txt = open(f, encoding='utf-8').read()
+        for v in variantes:
+            for m in re.finditer(v, txt):
+                ctx = txt[max(0, m.start() - 40):m.end() + 10]
+                if not re.search(r'(retir|no se representa|no representa|ni representa|H-13|H-04|variante)', ctx, re.I):
+                    encontradas.append(f'{os.path.basename(f)}: «{m.group(0)}»')
+    check('F3/F5: no quedan variantes de nombre retiradas (glosario único)', not encontradas, ' | '.join(encontradas))
     # Integridad de los DOCX
     for docx in sorted(glob.glob(os.path.join(ACAD, 'practica-0*', 'F*_Colegio_Andino.docx'))):
         name = os.path.basename(docx)
