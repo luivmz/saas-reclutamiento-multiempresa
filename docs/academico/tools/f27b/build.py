@@ -117,12 +117,13 @@ def asis_flowchart():
     return [path1, path2]
 
 
-def asis_bpmn():
+def asis_bpmn(n=3, prefix='F3-bpmn-as-is', badges=None, tag='F3'):
     """BPMN AS-IS en carriles verticales, dos partes unidas por un evento de enlace."""
+    badges = badges or {}
     lanes = A.LANES
     kw = dict(CW=310, RH=122, TW=262, TH=92, FS=19)
     sub = 'BPMN AS-IS preliminar derivado del análisis del equipo — sujeto a validación institucional'
-    b1 = dg.Swimlanes('F3 · BPMN del proceso actual (AS-IS preliminar) — parte 1 de 2', lanes, sub, **kw)
+    b1 = dg.Swimlanes(f'{tag} · BPMN del proceso actual (AS-IS preliminar) — parte 1 de 2', lanes, sub, **kw)
     t = lambda i: f'{i}\n{AS[i][1]}'
     b1.node('EI-01', 'start', 0, 0, 'EI-01 Necesidad de personal identificada')
     b1.node('AS-01', 'task', 0, 1, t('AS-01'))
@@ -144,9 +145,10 @@ def asis_bpmn():
     b1.edge('AS-05', 'AS-06')
     b1.edge('AS-06', 'AS-07', 'convocatoria', kind='msg')
     b1.edge('AS-07', 'AS-08', 'postulación y CV', kind='msg')
-    path1 = os.path.join(pdir(3, 'diagramas', 'draft'), 'F3-bpmn-as-is-parte1.png')
+    b1.badges = {k: v for k, v in badges.items() if k in b1.nodes}
+    path1 = os.path.join(pdir(n, 'diagramas', 'draft'), f'{prefix}-parte1.png')
     b1.render(path1, 'Líneas discontinuas: flujos de mensaje entre pools. Fuente: F2 (AS-01 a AS-14) y §3.1 del informe v1.0.')
-    b2 = dg.Swimlanes('F3 · BPMN del proceso actual (AS-IS preliminar) — parte 2 de 2', lanes, sub, **kw)
+    b2 = dg.Swimlanes(f'{tag} · BPMN del proceso actual (AS-IS preliminar) — parte 2 de 2', lanes, sub, **kw)
     b2.node('L-A2', 'link', 1, 0, 'Enlace A (desde parte 1)')
     b2.node('AS-09', 'task', 1, 1, t('AS-09'))
     b2.node('G-02', 'gateway', 1, 2, 'G-02 ¿Preseleccionado? (por candidato)', off=-70)
@@ -168,7 +170,8 @@ def asis_bpmn():
     b2.edge('AS-10', 'M-01', 'citación', kind='msg')
     b2.edge('AS-11', 'M-02', '', kind='msg')
     b2.edge('AS-14', 'M-03', 'resultado', kind='msg')
-    path2 = os.path.join(pdir(3, 'diagramas', 'draft'), 'F3-bpmn-as-is-parte2.png')
+    b2.badges = {k: v for k, v in badges.items() if k in b2.nodes}
+    path2 = os.path.join(pdir(n, 'diagramas', 'draft'), f'{prefix}-parte2.png')
     b2.render(path2, 'G-02 se evalúa por candidato (a detallar como instancia múltiple en PowerDesigner, F29).')
     return [path1, path2]
 
@@ -330,6 +333,311 @@ def build_f3():
         ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_03.docx', 'Guía oficial de la Práctica 03'),
         ('docs/academico/00-fuentes-oficiales/formatos-originales/Formato_03_Diagrama_BPM.docx',
          'Plantilla oficial del Formato 03 (solo lectura)'),
+    ])
+
+
+# --------------------------------------------------------------------------- F4 (problemas)
+import m_problems as PR  # noqa: E402
+import m_tobe as T  # noqa: E402
+
+TB = {t[0]: t for t in T.ACTIVIDADES + T.FUTURAS}
+
+
+def md_table(headers, rows):
+    esc = lambda x: str(x).replace('|', '\\|').replace('\n', '<br>')
+    out = ['| ' + ' | '.join(headers) + ' |', '|' + '---|' * len(headers)]
+    out += ['| ' + ' | '.join(esc(c) for c in r) + ' |' for r in rows]
+    return '\n'.join(out)
+
+
+def write_text(path, text):
+    with open(path, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(text.rstrip() + '\n')
+
+
+@builder('f4')
+def build_f4():
+    badges = {}
+    for p in PR.PROBLEMAS:
+        for a in p['actividades']:
+            badges[a] = (badges.get(a, '') + ' ' + p['id']).strip()
+    ann = asis_bpmn(4, 'F4-bpmn-as-is-problemas', badges, 'F4')
+    d = Doc()
+    estado(d, [f'Los problemas son **{C.ASP}**. La prioridad es una **{PR.PRIORIZACION}** y las causas son hipótesis '
+               'del equipo; ninguna está validada por la institución.'])
+    d.h('Descripción general del proceso')
+    d.instr('Describir de manera breve el proceso analizado (AS-IS), indicando su propósito, alcance (inicio y fin) '
+            'y contexto organizacional.')
+    d.box(['**Proceso analizado:** reclutamiento, evaluación y selección de personal (AS-IS preliminar de los Formatos '
+           '02 y 03).',
+           '**Propósito:** cubrir necesidades de personal con una decisión final de la Dirección.',
+           '**Alcance:** desde que un área identifica una necesidad (EI-01) hasta que se comunica el resultado (EF-03).',
+           '**Contexto organizacional:** Colegio Andino de Huancayo, caso de estudio académico. Intervienen el área '
+           'solicitante, RR. HH., la Dirección, los evaluadores y los postulantes. No hay documentación institucional '
+           'verificada.'])
+    d.h('Listado de problemas identificados')
+    d.table(['N°', 'Actividad del proceso', 'Problema identificado', 'Tipo de problema', 'Descripción del problema',
+             'Impacto', 'Prioridad (Alta/Media/Baja)'],
+            [(p['id'], ', '.join(p['actividades']), p['nombre'],
+              p['tipo'] + (' (sec.: ' + ', '.join(p['tipos_sec']) + ')' if p['tipos_sec'] else ''),
+              p['descripcion'], p['impacto'], f"{p['prioridad']}\n({PR.PRIORIZACION})")
+             for p in PR.PROBLEMAS], widths=[6, 12, 12, 13, 22, 22, 13], sz=16)
+    d.sub('Justificación de la prioridad y estado de la evidencia')
+    d.table(['N°', 'Prioridad', 'Justificación (analítica)', 'Estado de la evidencia'],
+            [(p['id'], p['prioridad'], p['justif'], PR.ESTADO_EVIDENCIA.format(v=p['validacion']))
+             for p in PR.PROBLEMAS], widths=[7, 10, 43, 40], sz=16)
+    d.h('Clasificación de problemas')
+    d.instr('Clasificar los problemas según su naturaleza.')
+    for k, v in PR.CLASIFICACION.items():
+        d.sub(k)
+        d.box([v])
+    d.h('Análisis de causas')
+    d.table(['N°', 'Problema identificado', 'Causa principal', 'Descripción de la causa'],
+            [(p['id'], p['nombre'], p['causa'], p['causa_desc']) for p in PR.PROBLEMAS], widths=[7, 18, 25, 50], sz=17)
+    d.p('Las causas son **hipótesis del equipo** derivadas del análisis. Se confirmarán o corregirán en la validación '
+        'institucional.')
+    d.h('Relación con el diagrama BPM')
+    d.instr('Describir en qué parte del diagrama BPM se encuentra cada problema identificado.')
+    d.table(['N°', 'Problema', 'Ubicación en el BPMN AS-IS (Formato 03)', 'Actividades'],
+            [(p['id'], p['nombre'], p['bpmn'], ', '.join(p['actividades'])) for p in PR.PROBLEMAS],
+            widths=[7, 18, 55, 20], sz=17)
+    d.h('Conclusiones del análisis')
+    d.box(PR.CONCLUSION)
+    d.h('Evidencias')
+    d.instr('Adjuntar capturas del diagrama BPM donde se evidencien los problemas identificados.')
+    d.img(ann[0], 'Figura 1. BPMN AS-IS preliminar con la ubicación de los problemas (parte 1). Borrador.', 16)
+    d.img(ann[1], 'Figura 2. BPMN AS-IS preliminar con la ubicación de los problemas (parte 2). Borrador.', 16)
+    d.bullets([
+        'Problemas P1–P5: `docs/final-report/02-contexto-problema.md` §2.2–2.3 y tabla 3.2 del F9 v1.0 '
+        '(`docs/academico/phase-24/`).',
+        'Matriz consolidada con todas las columnas: `docs/academico/practica-04/matriz-problemas.md`.',
+        'El documento original de identificación de problemas del equipo **no está versionado** '
+        '(`docs/final-report/evidence-index.md`).',
+    ])
+    emit(4, 'F4_Problemas_del_Proceso_Colegio_Andino', 'Formato_04_Identificacion_de_problemas.docx', 'proceso', d,
+         'Formato 04 — Identificación de problemas del proceso')
+    rows = [(p['id'], ', '.join(p['actividades']), p['nombre'],
+             p['tipo'] + (' / ' + ', '.join(p['tipos_sec']) if p['tipos_sec'] else ''), p['descripcion'], p['impacto'],
+             f"{p['prioridad']} ({PR.PRIORIZACION})", p['causa'], p['causa_desc'], p['bpmn'],
+             PR.ESTADO_EVIDENCIA.format(v=p['validacion'])) for p in PR.PROBLEMAS]
+    write_text(os.path.join(pdir(4), 'matriz-problemas.md'),
+               '# Matriz consolidada de problemas (F4)\n\nGenerada desde `docs/academico/tools/f27b/m_problems.py`, '
+               'el mismo modelo del Formato 04. Todo es **AS-IS preliminar**: prioridad analítica del equipo, causas '
+               'hipotéticas y validación institucional pendiente.\n\n'
+               + md_table(['ID', 'Actividad afectada', 'Problema', 'Tipo', 'Descripción', 'Impacto', 'Prioridad',
+                           'Causa principal', 'Descripción de la causa', 'Ubicación en AS-IS/BPMN',
+                           'Estado de evidencia'], rows))
+    write_evidence(4, 'Formato 04', EVID_ASIS[:4] + [
+        ('docs/academico/tools/f27b/m_problems.py', 'Modelo de datos de P1–P5 usado por el generador'),
+        ('docs/academico/phase-24/F9_Alcance_Proyecto_Software_Colegio_Andino_NRC30180.docx',
+         'F9 v1.0 del equipo: tabla 3.2 «Problemas oficiales» con su impacto'),
+        ('docs/academico/practica-04/diagramas/draft/F4-bpmn-as-is-problemas-parte1.png', 'BPMN anotado con P1–P5, parte 1'),
+        ('docs/academico/practica-04/diagramas/draft/F4-bpmn-as-is-problemas-parte2.png', 'BPMN anotado con P1–P5, parte 2'),
+        ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_04.docx', 'Guía oficial de la Práctica 04'),
+        ('docs/academico/00-fuentes-oficiales/formatos-originales/Formato_04_Identificacion_de_problemas.docx',
+         'Plantilla oficial del Formato 04 (solo lectura)'),
+    ])
+
+
+# --------------------------------------------------------------------------- F5 (TO-BE)
+TOBE_LANES = [
+    ('Organización cliente (Colegio) con la plataforma — TO-BE propuesto', 'Área solicitante'),
+    ('Organización cliente (Colegio) con la plataforma — TO-BE propuesto', 'RR. HH.'),
+    ('Organización cliente (Colegio) con la plataforma — TO-BE propuesto', 'Aprobador / Dirección'),
+    ('Organización cliente (Colegio) con la plataforma — TO-BE propuesto', 'Evaluador'),
+    ('Organización cliente (Colegio) con la plataforma — TO-BE propuesto', 'Plataforma SaaS (sistema)'),
+    ('Postulante (externo)', 'Postulante'),
+]
+
+
+def tobe_bpmn():
+    kw = dict(CW=292, RH=118, TW=240, TH=92, FS=18)
+    sub = 'TO-BE propuesto por el equipo, soportado por la plataforma v1.1. Verde: tareas del sistema. Gris: propuesta futura.'
+    lab = lambda i: f'{i}\n{TB[i][2]}'
+    sysl = lambda i: 'system' if TB[i][4] == 'Sistema' else 'normal'
+    paths = []
+    # Parte 1: A + B
+    b = dg.Swimlanes('F5 · BPMN del proceso mejorado (TO-BE) — parte 1 de 3: requerimiento y convocatoria',
+                     TOBE_LANES, sub, **kw)
+    b.node('EI', 'start', 0, 0, 'Necesidad de personal identificada')
+    for tid, lane, row in [('TB-01', 0, 1), ('TB-02', 0, 2), ('TB-03', 1, 3), ('TB-04', 0, 4), ('TB-05', 2, 5),
+                           ('TB-06', 4, 6), ('TB-07', 1, 7), ('TB-08', 1, 8), ('TB-09', 4, 9), ('TB-10', 1, 11)]:
+        b.node(tid, 'task', lane, row, lab(tid), style=sysl(tid))
+    b.node('GA1', 'gateway', 1, 4, '¿Requerimiento conforme?', off=-70)
+    b.node('GA2', 'gateway', 2, 6, '¿Aprobado?', off=-70)
+    b.node('EFA', 'end', 4, 7, 'Requerimiento rechazado')
+    b.node('GB1', 'gateway', 4, 10, '¿Configuración válida?', off=-70)
+    b.node('LA', 'link', 1, 12, 'Enlace A → parte 2')
+    for a_, c_ in [('EI', 'TB-01'), ('TB-01', 'TB-02'), ('TB-02', 'TB-03'), ('TB-03', 'GA1'), ('TB-05', 'GA2'),
+                   ('TB-06', 'EFA'), ('TB-07', 'TB-08'), ('TB-08', 'TB-09'), ('TB-09', 'GB1'), ('TB-10', 'LA')]:
+        b.edge(a_, c_)
+    b.edge('GA1', 'TB-04', 'Observado')
+    b.edge('TB-04', 'TB-02', 'corrige y reenvía', side='gutter')
+    b.edge('GA1', 'TB-05', 'Validado', side='right')
+    b.edge('GA2', 'TB-06', 'No (motivo)')
+    b.edge('GA2', 'TB-07', 'Sí', side='left')
+    b.edge('GB1', 'TB-08', 'No', side='gutter')
+    b.edge('GB1', 'TB-10', 'Sí', side='left')
+    paths.append(os.path.join(pdir(5, 'diagramas', 'draft'), 'F5-bpmn-to-be-parte1.png'))
+    b.render(paths[-1], 'El área corrige y reenvía (TB-04 → TB-02). La vacante no se publica si la configuración no es válida (A-06).')
+    # Parte 2: C + D
+    b = dg.Swimlanes('F5 · BPMN del proceso mejorado (TO-BE) — parte 2 de 3: postulación y evaluación',
+                     TOBE_LANES, sub, **kw)
+    b.node('LA2', 'link', 1, 0, 'Enlace A (desde parte 1)')
+    b.node('SP', 'inter', 5, 0, 'Vacante publicada (portal)')
+    for tid, lane, row in [('TB-11', 5, 1), ('TB-12', 5, 2), ('TB-13', 5, 3), ('TB-14', 4, 4), ('TB-15', 1, 5),
+                           ('TB-16', 1, 6), ('TB-17', 4, 7), ('TB-18', 1, 10), ('TB-20', 1, 11), ('TB-19', 4, 12),
+                           ('TB-21', 3, 13), ('TB-22', 4, 14), ('TB-23', 1, 16)]:
+        b.node(tid, 'task', lane, row, lab(tid), style=sysl(tid))
+    b.node('MP1', 'inter', 5, 4, 'Confirmación recibida')
+    b.node('MP2', 'inter', 5, 7, 'Aviso de etapa recibido')
+    b.node('MP3', 'inter', 5, 12, 'Convocatoria recibida')
+    b.node('GD1', 'gateway', 1, 8, '¿Preseleccionado?', off=-70)
+    b.node('EFD', 'end', 1, 8, 'Postulación descartada', off=85)
+    b.node('GD2', 'gateway', 1, 9, '¿Qué sesión se programa?', off=-70)
+    b.node('GD3', 'gateway', 1, 15, '¿Otra sesión?', off=-70)
+    b.node('LB', 'link', 1, 17, 'Enlace B → parte 3')
+    for a_, c_ in [('SP', 'TB-11'), ('TB-11', 'TB-12'), ('TB-12', 'TB-13'), ('LA2', 'TB-15'), ('TB-14', 'TB-15'),
+                   ('TB-15', 'TB-16'), ('TB-16', 'TB-17'), ('TB-17', 'GD1'), ('TB-19', 'TB-21'), ('TB-21', 'TB-22'),
+                   ('TB-22', 'GD3'), ('TB-23', 'LB')]:
+        b.edge(a_, c_)
+    b.edge('TB-13', 'TB-14', 'postulación', kind='msg')
+    b.edge('TB-14', 'MP1', '', kind='msg')
+    b.edge('TB-17', 'MP2', '', kind='msg')
+    b.edge('TB-19', 'MP3', '', kind='msg')
+    b.edge('GD1', 'EFD', 'No')
+    b.edge('GD1', 'GD2', 'Sí')
+    b.edge('GD2', 'TB-18', 'Evaluación')
+    b.edge('GD2', 'TB-20', 'Entrevista', side='gutter')
+    b.edge('TB-18', 'TB-19', '', side='right')
+    b.edge('TB-20', 'TB-19', '', side='right')
+    b.edge('GD3', 'GD2', 'Sí', side='lgutter')
+    b.edge('GD3', 'TB-23', 'No')
+    paths.append(os.path.join(pdir(5, 'diagramas', 'draft'), 'F5-bpmn-to-be-parte2.png'))
+    b.render(paths[-1], 'TB-17 también avisa los cambios de TB-23. Al programar, la etapa avanza sola y se envía la convocatoria (A-16).')
+    # Parte 3: E
+    b = dg.Swimlanes('F5 · BPMN del proceso mejorado (TO-BE) — parte 3 de 3: selección y cierre',
+                     TOBE_LANES, sub, **kw)
+    b.node('LB2', 'link', 1, 0, 'Enlace B (desde parte 2)')
+    for tid, lane, row in [('TB-24', 4, 1), ('TB-25', 4, 2), ('TB-26', 2, 3), ('TB-27', 1, 4), ('TB-28', 1, 5),
+                           ('TB-29', 4, 6), ('TB-30', 4, 8)]:
+        b.node(tid, 'task', lane, row, lab(tid), style=sysl(tid))
+    b.node('TB-F1', 'task', 1, 2, 'TB-F1 Cerrar sin selección\nPROPUESTA FUTURA — no implementada (A-30)', style='future')
+    b.node('MP4', 'inter', 5, 6, 'Resultado recibido')
+    b.node('EFE', 'end', 4, 7, 'Convocatoria cerrada con selección')
+    for a_, c_ in [('LB2', 'TB-24'), ('TB-24', 'TB-25'), ('TB-25', 'TB-26'), ('TB-26', 'TB-27'), ('TB-27', 'TB-28'),
+                   ('TB-28', 'TB-29'), ('TB-29', 'EFE')]:
+        b.edge(a_, c_)
+    b.edge('TB-29', 'MP4', 'resultado', kind='msg')
+    b.edge('TB-25', 'TB-F1', 'sin candidato elegible', kind='future')
+    paths.append(os.path.join(pdir(5, 'diagramas', 'draft'), 'F5-bpmn-to-be-parte3.png'))
+    b.render(paths[-1], 'TB-26 es la decisión HUMANA (RF-23). El ranking no elige. TB-30 es transversal: audita todas las acciones críticas.')
+    return paths
+
+
+def antecedente_tobe():
+    """Copia a evidencias la imagen del TO-BE original del equipo (anexo A del F9 v1.0), sin modificarla."""
+    import zipfile
+    import re
+    src = os.path.join(ACAD, 'phase-24', 'F9_Alcance_Proyecto_Software_Colegio_Andino_NRC30180.docx')
+    z = zipfile.ZipFile(src)
+    doc = z.read('word/document.xml').decode('utf-8')
+    rels = dict(re.findall(r'Id="(rId\d+)"[^>]*Target="([^"]+)"', z.read('word/_rels/document.xml.rels').decode()))
+    ids = [rels[i] for i in re.findall(r'r:embed="(rId\d+)"', doc)]
+    anexo_a = ids[1]  # orden: logotipo, anexo A (TO-BE), anexo B (CU), anexo C (arquitectura)
+    out = os.path.join(pdir(5, 'evidencias'), 'antecedente-to-be-f9-v1.0-anexo-A.png')
+    with open(out, 'wb') as f:
+        f.write(z.read('word/' + anexo_a))
+    return out
+
+
+@builder('f5')
+def build_f5():
+    bp = tobe_bpmn()
+    ante = antecedente_tobe()
+    d = Doc()
+    estado(d, [f'El proceso de este formato es **{C.TBP}**: está soportado por el **{C.SI}** v1.1, salvo TB-F1 '
+               '(propuesta futura no implementada). RF-29 (experimental) no forma parte del TO-BE base.'])
+    d.h('Descripción general del proceso')
+    d.instr('Describir de manera clara el proceso mejorado.')
+    d.sub('Objetivo del proceso.')
+    d.box(['Gestionar el reclutamiento, la evaluación y la selección de personal de forma centralizada, trazable y '
+           'multiempresa: el sistema calcula, ordena y compara, y la decisión final la toma y justifica una persona '
+           'autorizada (Aprobador / Dirección).'])
+    d.sub('Alcance (inicio y fin).')
+    d.box(['**Inicio:** un área identifica una necesidad de personal y registra el requerimiento (TB-01).',
+           '**Fin:** la convocatoria se cierra con selección y cada postulante recibe su resultado (TB-28 y TB-29). '
+           'Caminos alternativos: requerimiento rechazado (TB-06) y postulación descartada (TB-16/TB-17).'])
+    d.sub('Principales mejoras respecto al proceso actual (AS-IS).')
+    d.bullets([f'{s[1]}: {s[3]} ({s[0]}).' for s in T.SOLUCIONES])
+    d.sub('Reglas del TO-BE')
+    d.bullets(T.REGLAS_TOBE)
+    d.h('Objetivos de mejora')
+    d.instr('Detallar los objetivos que se buscan con el rediseño del proceso.')
+    d.table(['ID', 'Objetivo de mejora', 'Problema (F4)'], T.OBJETIVOS_MEJORA, widths=[10, 75, 15])
+    d.p('Los objetivos **no se cuantifican** (por ejemplo, «reducir X % el tiempo»): no hay una línea base medida '
+        'del AS-IS. Cuantificarlos exige medir el proceso real con la institución.')
+    d.h('Relación Problema-Solución')
+    d.table(['N°', 'Problema identificado (F4)', 'Solución propuesta', 'Mejora aplicada'],
+            [(s[0], next(p['nombre'] for p in PR.PROBLEMAS if p['id'] == s[0]), s[2], s[3]) for s in T.SOLUCIONES],
+            widths=[7, 18, 55, 20], sz=17)
+    d.sub('Matriz problema → solución → actividad TO-BE → RF')
+    d.table(['Problema (F4)', 'Solución', 'Actividades TO-BE', 'RF asociados'],
+            [(s[0], s[1], ', '.join(s[4]), ', '.join(s[5])) for s in T.SOLUCIONES], widths=[14, 12, 44, 30], sz=17)
+    d.h('Diagrama BPM mejorado (TO-BE)')
+    d.instr('Inserte el diagrama BPM del proceso mejorado.')
+    for i, pth in enumerate(bp, start=1):
+        d.img(pth, f'Figura {i}. BPMN TO-BE propuesto, parte {i} de 3. Borrador de revisión.', 16.5)
+    d.p('Borrador dibujado desde la especificación de este formato. La versión formal se modelará en PowerDesigner '
+        '(`POWERDESIGNER_PENDING.md`) después de la auditoría F27C.')
+    d.h('Descripción de actividades del proceso')
+    d.table(['N°', 'Actividad', 'Descripción', 'Actor responsable', 'RF'],
+            [(t[0], t[2], t[3], t[4], ', '.join(t[5]) or '—') for t in T.ACTIVIDADES + T.FUTURAS],
+            widths=[8, 22, 42, 15, 13], sz=16)
+    d.sub('Correcciones conceptuales respecto del TO-BE original del equipo')
+    d.table(['ID', 'Tema', 'Corrección'], T.CORRECCIONES, widths=[8, 20, 72], sz=17)
+    d.h('Conclusiones del rediseño')
+    d.box([
+        '**Qué cambia respecto del AS-IS:** el TO-BE sustituye un proceso con información dispersa, seguimiento manual, '
+        'evaluaciones heterogéneas y avisos manuales por un flujo con registro único, estados e historial, criterios '
+        'ponderados definidos de antemano, notificaciones automáticas y auditoría.',
+        '**Qué se mantiene:** la decisión sigue siendo **humana y de la Dirección**; el sistema solo aporta un ranking y '
+        'una comparación explicables como apoyo.',
+        '**Qué queda fuera:** el cierre sin selección es una propuesta futura, y los indicadores de gestión (P5) no se '
+        'resuelven (RF-28 es un candidato).',
+        '**Qué no está demostrado:** el impacto en tiempos o costos no está medido, y la adopción en el Colegio no está '
+        'validada.',
+    ])
+    d.h('Evidencias')
+    d.instr('Adjuntar capturas del diagrama BPM mejorado.')
+    d.img(ante, 'Figura 4. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la '
+                'rama «cerrar sin selección», no implementada.', 16)
+    d.bullets([
+        'TO-BE escrito e implementado: `docs/final-report/03-procesos-negocio.md` §3.3–3.5 y '
+        '`docs/final-report/diagram-reports/02-bpmn-to-be-report.md`.',
+        'Reglas: `docs/assumptions.md` (A-05, A-13, A-16, A-23 a A-31). Verificación del flujo completo: E2E-13 y la QA de la '
+        'Fase 25 (`docs/v1.1/phase-25-final-qa.md`).',
+        'Comportamiento implementado de referencia (no es el TO-BE institucional): AC-01 '
+        '(`docs/v1.1/powerdesigner/exports/AC-01-proceso-reclutamiento.png`).',
+    ])
+    emit(5, 'F5_Modelo_BPM_TOBE_Colegio_Andino', 'Formato_05_Modelo_BPM_mejorado.docx', 'proceso', d,
+         'Formato 05 — Modelo BPM mejorado (proceso TO-BE)')
+    write_evidence(5, 'Formato 05', [
+        ('docs/final-report/03-procesos-negocio.md', 'TO-BE propuesto (§3.3), flujo implementado y reglas (§3.3–3.5)'),
+        ('docs/final-report/diagram-reports/02-bpmn-to-be-report.md', 'Informe del TO-BE: el BPMN original no está versionado'),
+        ('docs/assumptions.md', 'Reglas A-05, A-13, A-16 y A-23 a A-31 (cierre solo con selección: A-30)'),
+        ('docs/final-report/02-contexto-problema.md', 'Relación problema → RF (§2.3)'),
+        ('docs/academico/practica-05/evidencias/antecedente-to-be-f9-v1.0-anexo-A.png',
+         'TO-BE original del equipo (copia del anexo A del F9 v1.0)'),
+        ('docs/academico/phase-24/F9_Alcance_Proyecto_Software_Colegio_Andino_NRC30180.docx', 'F9 v1.0, fuente del anexo A'),
+        ('docs/v1.1/powerdesigner/exports/AC-01-proceso-reclutamiento.png', 'Comportamiento implementado (referencia, no TO-BE)'),
+        ('docs/academico/tools/f27b/m_tobe.py', 'Modelo de datos del TO-BE usado por el generador'),
+        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte1.png', 'Borrador BPMN TO-BE, parte 1'),
+        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte2.png', 'Borrador BPMN TO-BE, parte 2'),
+        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte3.png', 'Borrador BPMN TO-BE, parte 3'),
+        ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_05.docx', 'Guía oficial de la Práctica 05'),
+        ('docs/academico/00-fuentes-oficiales/formatos-originales/Formato_05_Modelo_BPM_mejorado.docx',
+         'Plantilla oficial del Formato 05 (solo lectura)'),
     ])
 
 

@@ -91,6 +91,7 @@ class Swimlanes:
         if not show_lanes:
             self.TOP = 112
         self.nodes, self.edges = {}, []
+        self.badges = {}
 
     def node(self, nid, kind, lane, row, label='', style='normal', off=0):
         self.nodes[nid] = dict(kind=kind, lane=lane, row=row, label=label, style=style, off=off)
@@ -143,10 +144,22 @@ class Swimlanes:
                 d.rectangle([x0, 104, x1, H - 60], outline=TASK_LINE, width=3)
         # Aristas primero
         gutter_used = {}
+        self._labels = []
         for e in self.edges:
             self._draw_edge(d, e, gutter_used)
         for nid, n in self.nodes.items():
             self._draw_node(d, n)
+        for lx, ly, text, fut in self._labels:
+            fx = font(14, bold=True)
+            w = d.textlength(text, font=fx)
+            d.rectangle([lx - 2, ly, lx + w + 2, ly + 17], fill='white')
+            d.text((lx, ly), text, font=fx, fill=WARN if fut else INK)
+        for nid, text in self.badges.items():
+            x0, y0, x1, y1 = self._bbox(self.nodes[nid])
+            fb = font(self.FS - 2, bold=True)
+            w = d.textlength(text, font=fb)
+            d.rounded_rectangle([x1 - w - 14, y0 - 14, x1 + 2, y0 + self.FS - 6], radius=8, fill=WARN)
+            d.text((x1 - w - 6, y0 - 13), text, font=fb, fill='white')
         if note:
             d.text((self.LEFT, H - 48), note, font=font(15, italic=True), fill=MUTED)
         img.save(path, optimize=True)
@@ -174,7 +187,7 @@ class Swimlanes:
             d.line(pts + [pts[0]], fill=FUT if fut else (168, 120, 0), width=3)
             d.text((cx - 9, cy - 16), 'X', font=font(26, bold=True), fill=(168, 120, 0))
             lab = wrap(d, n['label'], font(self.FS - 3, bold=True), 190)
-            yy = y1 - 10
+            yy = y0 + 4 - self.FS * len(lab)
             for ln in lab:
                 w = d.textlength(ln, font=font(self.FS - 3, bold=True))
                 d.rectangle([x1 + 4, yy, x1 + 8 + w, yy + self.FS], fill='white')
@@ -192,7 +205,7 @@ class Swimlanes:
                 d.rectangle([cx - 10, cy - 7, cx + 10, cy + 7], outline=INK, width=2)
                 d.line([(cx - 10, cy - 7), (cx, cy + 1), (cx + 10, cy - 7)], fill=INK, width=2)
             f3 = font(self.FS - 3)
-            if k == 'inter':
+            if k in ('inter', 'end'):
                 lab = wrap(d, n['label'], f3, self.CW - 30)
                 yy = y1 + 4
                 for ln in lab:
@@ -213,7 +226,21 @@ class Swimlanes:
     def _draw_edge(self, d, e, gutter_used):
         s, t = self.nodes[e['src']], self.nodes[e['dst']]
         color = FUT if (e['kind'] == 'future') else (MUTED if e['kind'] == 'msg' else INK)
-        if t['row'] > s['row']:
+        if e['side'] == 'lgutter':
+            lane = min(s['lane'], t['lane'])
+            k = gutter_used.get(('l', lane), 0)
+            gutter_used[('l', lane)] = k + 1
+            gx = self.LEFT + lane * self.CW + 10 + 9 * k
+            p0, p1 = self._anchor(s, 'left'), self._anchor(t, 'left')
+            pts = [p0, (gx, p0[1]), (gx, p1[1]), p1]
+        elif e['side'] == 'gutter':
+            lane = max(s['lane'], t['lane'])
+            k = gutter_used.get(lane, 0)
+            gutter_used[lane] = k + 1
+            gx = self.LEFT + (lane + 1) * self.CW - 10 - 9 * k
+            p0, p1 = self._anchor(s, 'right'), self._anchor(t, 'right')
+            pts = [p0, (gx, p0[1]), (gx, p1[1]), p1]
+        elif t['row'] > s['row']:
             if s['lane'] == t['lane'] and e['side'] is None:
                 p0, p1 = self._anchor(s, 'bottom'), self._anchor(t, 'top')
                 if abs(p0[0] - p1[0]) < 2:
@@ -254,12 +281,16 @@ class Swimlanes:
             arrowhead(d, pts[-2], pts[-1], color)
         if e['label']:
             fx = font(14, bold=True)
-            p0, p1 = pts[0], pts[1]
-            lx = (p0[0] + p1[0]) / 2 + 6
-            ly = (p0[1] + p1[1]) / 2 - 20
-            w = d.textlength(e['label'], font=fx)
-            d.rectangle([lx - 2, ly, lx + w + 2, ly + 17], fill='white')
-            d.text((lx, ly), e['label'], font=fx, fill=WARN if e['kind'] == 'future' else INK)
+            if e['side'] in ('gutter', 'lgutter'):
+                p0, p1 = pts[1], pts[2]
+                w = d.textlength(e['label'], font=fx)
+                lx = p0[0] + 6 if e['side'] == 'lgutter' else p0[0] - w - 6
+                ly = (p0[1] + p1[1]) / 2 - 8
+            else:
+                p0, p1 = pts[0], pts[1]
+                lx = (p0[0] + p1[0]) / 2 + 6
+                ly = (p0[1] + p1[1]) / 2 - 20
+            self._labels.append((lx, ly, e['label'], e['kind'] == 'future'))
 
 
 def use_case_diagram(path, title, subtitle, actors_left, actors_right, cases, links, includes, note=''):

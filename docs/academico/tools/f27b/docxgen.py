@@ -23,14 +23,17 @@ W_TEXT = 8216  # ancho útil de las tablas de la plantilla, en twips
 def _runs(text, bold=False, italic=False, sz=None, color=None):
     """Convierte texto con **negrita** en runs de WordprocessingML."""
     out = []
-    parts = re.split(r'(\*\*[^*]+\*\*)', text)
+    parts = re.split(r'(\*\*[^*]+\*\*|`[^`]+`)', text)
     for part in parts:
         if not part:
             continue
         b = bold
+        mono = False
         if part.startswith('**') and part.endswith('**'):
             part, b = part[2:-2], True
-        rpr = ''
+        elif part.startswith('`') and part.endswith('`') and len(part) > 1:
+            part, mono = part[1:-1], True
+        rpr = '<w:rFonts w:ascii="Consolas" w:hAnsi="Consolas"/>' if mono else ''
         if b:
             rpr += '<w:b/><w:bCs/>'
         if italic:
@@ -190,7 +193,7 @@ def build_docx(template, out_path, datos, doc, title=None):
         if k == 'h':
             parts.append(heading(it[1]))
         elif k == 'instr':
-            parts.append(para(it[1], italic=True, sz=18, color='595959', after=80))
+            parts.append(para(it[1], italic=True, sz=18, color='595959', after=80, keep_next=True))
         elif k == 'sub':
             parts.append(para(it[1], bold=True, after=60, keep_next=True))
         elif k == 'p':
