@@ -76,7 +76,13 @@ function Set-P($o, $p, $v) { $o.GetType().InvokeMember($p, 'SetProperty', $null,
 # Colecciones COM: la coma evita que PowerShell las desenrolle al devolverlas.
 function Get-C($o, $p) { , $o.GetType().InvokeMember($p, 'GetProperty', $null, $o, $null) }
 
-function Set-Rect($sym, [int]$l, [int]$t, [int]$r, [int]$b) { Set-P $sym 'Rect' ($Pd.NewRect($l, $t, $r, $b)) }
+# Fija el rectángulo de un símbolo y desactiva el ajuste automático al texto: con él
+# activado (valor por defecto) PowerDesigner vuelve a dimensionar el símbolo al abrir el
+# modelo y la geometría guardada deja de coincidir con la exportada (F29B).
+function Set-Rect($sym, [int]$l, [int]$t, [int]$r, [int]$b) {
+    try { Set-P $sym 'AutoAdjustToText' $false } catch {}
+    Set-P $sym 'Rect' ($Pd.NewRect($l, $t, $r, $b))
+}
 function Get-Rect($sym) {
     $r = Get-P $sym 'Rect'
     [pscustomobject]@{ L = Get-P $r 'Left'; T = Get-P $r 'Top'; R = Get-P $r 'Right'; B = Get-P $r 'Bottom' }
@@ -181,7 +187,12 @@ function Get-OrthoPoints($symA, $symB, $via, $endB = $null) {
     , $pts
 }
 
+# Rutas fijadas por vínculo (ObjectID del objeto): se reutilizan al reflejar un subproceso
+# compuesto en su subdiagrama.
+$Global:F29LinkPts = @{}
+
 function Set-LinkPoints($ls, $pts, $center = @(0, 1), $source = $null) {
+    try { $o = Get-P $ls 'Object'; if ($o) { $Global:F29LinkPts[$o.ObjectID] = @($pts, $center, $source) } } catch {}
     $pl = $Pd.NewPtList()
     foreach ($p in $pts) { $pl.Add($Pd.NewPoint([int]$p[0], [int]$p[1])) | Out-Null }
     Set-P $ls 'CornerStyle' 0
@@ -590,4 +601,147 @@ function Test-F29OomCheck($model) {
     $ok = $isoOk -and ((@($all | ForEach-Object { "$($_.Category)/$($_.Check)" }) -join ',') -eq ($expected -join ','))
     if ($ok -and $all.Count) { $lines += '  El único hallazgo se debe a CU-16 del F8, sin actor directo por especificación.' }
     [pscustomobject]@{ Ok = $ok; Lines = $lines }
+}
+
+# ---------------------------------------------------------------- F29B: subprocesos y reproducibilidad
+
+# Subprocesos expandidos (F29B). PowerDesigner 16.6 dibuja la vista compuesta de forma
+# distinta según quién la pinte:
+#   - el editor dibuja solo el contenido del diagrama por defecto del proceso compuesto;
+#   - la exportación (ExportImage) dibuja los subsímbolos del diagrama padre y, además,
+#     el diagrama por defecto reajustado al recuadro (lo duplicaría).
+# Ninguna representación satisface a los dos (F29B-OBS-01). Se conserva la vista compuesta
+# con sus subsímbolos (exportación correcta, sin duplicados) y el diagrama por defecto
+# vacío, y el contenido se representa además en un diagrama de detalle del mismo proceso
+# (no por defecto), con los mismos objetos y sin duplicar ninguno. El detalle se abre en el
+# editor y no lo dibuja la exportación del diagrama padre.
+function Sync-CompositeSubDiagram($spSym, [string]$detailName, [string]$title = '') {
+    $sp = Get-P $spSym 'Object'
+    $def = Get-P $sp 'DefaultDiagram'
+    foreach ($s in @($def.Symbols)) { if ($s) { $s.Delete() | Out-Null } }
+    foreach ($x in @($sp.GetCollectionByName('BusinessProcessDiagrams'))) {
+        if ($x -and $x.ObjectID -ne $def.ObjectID) { $x.Delete() | Out-Null }
+    }
+    $sd = $sp.GetCollectionByName('BusinessProcessDiagrams').CreateNew()
+    $sd.Name = $detailName
+    if ((Get-P $sp 'DefaultDiagram').ObjectID -ne $def.ObjectID) { throw "El detalle de $($sp.Name) quedó como diagrama por defecto" }
+    $before = (Get-C $spSym 'SubSymbols').Count
+    # El detalle es un diagrama propio: conserva la disposición de la vista compuesta, pero
+    # desplazada junto al origen, que es donde el editor abre un diagrama.
+    $sp0 = Get-Rect $spSym
+    $dx = 2000 - $sp0.L; $dy = -6000 - $sp0.T
+    $map = @{}
+    $links = @()
+    foreach ($s in (Get-C $spSym 'SubSymbols')) {
+        $o = Get-P $s 'Object'
+        if ((Get-P $s 'ClassName') -like '*Flow*') { $links += , @($s, $o); continue }
+        $r = Get-Rect $s
+        $n = $sd.AttachObject($o)
+        Set-Rect $n ($r.L + $dx) ($r.T + $dy) ($r.R + $dx) ($r.B + $dy)
+        $map[$o.ObjectID] = $n
+    }
+    foreach ($l in $links) {
+        $o = $l[1]
+        $a = $map[(Get-P $o 'Source').ObjectID]; $b = $map[(Get-P $o 'Destination').ObjectID]
+        $ls = $sd.AttachLinkObject($o, $a, $b)
+        $p = $Global:F29LinkPts[$o.ObjectID]
+        if ($p) {
+            $pts = @($p[0] | ForEach-Object { , @(($_[0] + $dx), ($_[1] + $dy)) })
+            $keep = $Global:F29LinkPts[$o.ObjectID]
+            Set-LinkPoints $ls $pts $p[1] $p[2]
+            $Global:F29LinkPts[$o.ObjectID] = $keep
+        }
+    }
+    if ($title) { Add-Text $sd $title 2000 (-1000) ($sp0.R - $sp0.L + 2000) (-5000) | Out-Null }
+    $after = (Get-C $spSym 'SubSymbols').Count
+    if ($after -ne $before) { throw "El detalle de $($sp.Name) alteró la vista compuesta ($before -> $after subsímbolos)" }
+    [pscustomobject]@{ Diagram = $sd.Name; Nodes = $map.Count; Links = $links.Count; Default = $def.Name; DefaultSymbols = $def.Symbols.Count }
+}
+
+# Instantánea de la geometría de un diagrama: cada símbolo (y sus subsímbolos) con su clase,
+# el código de su objeto (o el orden si es un símbolo libre) y su rectángulo.
+function Get-SymbolSnapshot($diagram) {
+    $rows = New-Object System.Collections.ArrayList
+    $free = @{}
+    function Walk($coll, [string]$path) {
+        foreach ($s in $coll) {
+            if (-not $s) { continue }
+            $cls = Get-P $s 'ClassName'
+            $code = $null; try { $code = (Get-P $s 'Object').Code } catch {}
+            if (-not $code) { $free[$cls] = 1 + [int]$free[$cls]; $code = '#' + $free[$cls] }
+            # Vínculos: su ruta (lista de puntos). El rectángulo de un vínculo en memoria no se
+            # recalcula al fijar la ruta, así que no sirve para comparar.
+            $geo = $null
+            try { $geo = $s.GetAttributeText('ListOfPoints') } catch {}
+            if (-not $geo) { $r = Get-Rect $s; $geo = "$($r.L),$($r.T),$($r.R),$($r.B)" }
+            [void]$rows.Add([pscustomobject]@{ Key = "$path/$cls|$code"; Geo = $geo })
+            $subs = $null; try { $subs = Get-C $s 'SubSymbols' } catch {}
+            if ($subs -and $subs.Count) { Walk $subs "$path/$code" }
+        }
+    }
+    Walk (Get-C $diagram 'Symbols') ''
+    , $rows
+}
+
+# Diagrama por nombre dentro del paquete de la vista, incluidos los subdiagramas de los
+# procesos compuestos (pertenecen al proceso, no al paquete).
+function Find-F29Diagram($model, [string]$pkgCode, [string]$name) {
+    function InProc($c) {
+        foreach ($pr in $c.GetCollectionByName('Processes')) {
+            if (-not (Get-P $pr 'Composite')) { continue }
+            foreach ($d in $pr.GetCollectionByName('BusinessProcessDiagrams')) { if ($d.Name -eq $name) { return $d } }
+            $r = InProc $pr; if ($r) { return $r }
+        }
+        $null
+    }
+    foreach ($pk in $model.GetCollectionByName('Packages')) {
+        if ($pk.Code -ne $pkgCode) { continue }
+        foreach ($d in $pk.AllDiagrams) { if ($d.Name -eq $name) { return $d } }
+        try { $r = InProc $pk; if ($r) { return $r } } catch {}
+    }
+    $null
+}
+
+# Publica una vista de forma reproducible: guarda, cierra y reabre el modelo desde el disco,
+# compara la geometría de cada símbolo antes y después (tolerancia 0), exporta desde el
+# modelo reabierto y comprueba que una segunda recarga reproduce la misma exportación SVG.
+# Devuelve las líneas del informe y si todo coincide.
+function Publish-F29View($model, [string]$pkgCode, [string]$diagramName, [string]$exportBase, [string[]]$subDiagrams = @()) {
+    $file = [System.IO.Path]::GetFullPath($model.FileName)
+    $d = Find-F29Diagram $model $pkgCode $diagramName
+    $snaps = @{ $diagramName = Get-SymbolSnapshot $d }
+    foreach ($sn in $subDiagrams) { $snaps[$sn] = Get-SymbolSnapshot (Find-F29Diagram $model $pkgCode $sn) }
+    Save-F29Model $model
+    $model.Close() | Out-Null
+    $m2 = Get-F29Model $file
+    $lines = @(); $ok = $true
+    foreach ($name in $snaps.Keys) {
+        $before = $snaps[$name]; $after = Get-SymbolSnapshot (Find-F29Diagram $m2 $pkgCode $name)
+        $idx = @{}; foreach ($r in $after) { $idx[$r.Key] = $r }
+        $moved = @(); $missing = @()
+        foreach ($r in $before) {
+            $a = $idx[$r.Key]
+            if (-not $a) { $missing += $r.Key; continue }
+            if ($a.Geo -ne $r.Geo) { $moved += "$($r.Key) ($($r.Geo) -> $($a.Geo))" }
+        }
+        $same = (-not $moved.Count) -and (-not $missing.Count) -and ($before.Count -eq $after.Count)
+        if (-not $same) { $ok = $false }
+        $lines += "Recarga «$name»: $($before.Count) símbolos antes de guardar, $($after.Count) tras reabrir; cambiados: $($moved.Count); ausentes: $($missing.Count) (tolerancia 0)"
+        foreach ($x in ($moved + $missing | Select-Object -First 8)) { $lines += "   $x" }
+    }
+    Export-F29 (Find-F29Diagram $m2 $pkgCode $diagramName) $exportBase
+    $m2.Close() | Out-Null
+    $m3 = Get-F29Model $file
+    $tmp = Join-Path $env:TEMP ('f29b_' + [guid]::NewGuid().ToString('N'))
+    New-Item -ItemType Directory -Force $tmp | Out-Null
+    (Find-F29Diagram $m3 $pkgCode $diagramName).ExportImage((Join-Path $tmp "$exportBase.svg"))
+    # Mismo contenido: las mismas líneas del SVG. PowerDesigner puede cambiar entre cargas el
+    # orden en que escribe algunos vínculos; el orden no altera la geometría.
+    $a = @([System.IO.File]::ReadAllText((Join-Path $F29Exports "$exportBase.svg")).Replace("`r`n", "`n") -split "`n" | Sort-Object)
+    $b = @([System.IO.File]::ReadAllText((Join-Path $tmp "$exportBase.svg")).Replace("`r`n", "`n") -split "`n" | Sort-Object)
+    Remove-Item -Recurse -Force $tmp
+    $same = (($a -join "`n") -ceq ($b -join "`n"))
+    if (-not $same) { $ok = $false }
+    $lines += "Exportación desde el modelo reabierto: $exportBase.svg/.png; una segunda recarga reproduce el mismo SVG (mismas $($a.Count) líneas, el orden puede variar): $same"
+    [pscustomobject]@{ Ok = $ok; Lines = $lines; Model = $m3 }
 }

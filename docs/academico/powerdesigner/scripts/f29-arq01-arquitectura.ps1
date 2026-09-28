@@ -48,6 +48,8 @@ try {
         $gSym[$g[0]] = $s
     }
     try { Set-P $gSym['EXP'] 'DashStyle' 2 } catch { Write-Warning 'Sin borde discontinuo en el paquete experimental' }
+    # Cada paquete nuevo trae un diagrama vacío por defecto: se elimina (F29B).
+    foreach ($g in $groups) { foreach ($x in @($gObj[$g[0]].AllDiagrams)) { if ($x -and $x.Symbols.Count -eq 0) { $x.Delete() | Out-Null } } }
 
     # ------------------------------------------------------------ componentes (17)
     # id, nombre exacto (COMPONENTS.md), agrupación, estereotipo, x, y
@@ -188,11 +190,24 @@ try {
     $ck = Test-F29OomCheck $m
     $out += $ck.Lines
     if (-not $ck.Ok) { $fail += 'Check Model: hallazgos no explicados por la especificación' }
+    # F29B: publicación reproducible (guardar, cerrar, reabrir, comparar geometría y
+    # exportar desde el modelo reabierto; una segunda recarga debe reproducir el SVG).
+    $pub = Publish-F29View $m 'ARQ01' 'ARQ-01 - Arquitectura Conceptual' 'ARQ-01_Arquitectura_Conceptual' @()
+    $out += $pub.Lines
+    if (-not $pub.Ok) { $fail += 'reproducibilidad tras recarga' }
+    # Geometría de las 6 agrupaciones: la pedida por el script frente a la del modelo reabierto.
+    $out += 'Agrupaciones (X izquierda, Y superior, ancho, alto) pedidas -> tras reabrir desde el disco:'
+    $dr = Find-F29Diagram $pub.Model 'ARQ01' 'ARQ-01 - Arquitectura Conceptual'
+    foreach ($g in $groups | Where-Object { $_[0] -ne 'ACT' }) {
+        $sym = $null
+        foreach ($x in (Get-C $dr 'Symbols')) { try { if ((Get-P $x 'Object').Code -eq ('ARQ01_' + $g[0])) { $sym = $x } } catch {} }
+        $r = Get-Rect $sym
+        $want = "$($g[2]), $($g[3]), $($g[4] - $g[2]), $($g[3] - $g[5])"; $got = "$($r.L), $($r.T), $($r.R - $r.L), $($r.T - $r.B)"
+        $out += "  $($g[1]): $want -> $got" + $(if ($want -eq $got) { ' (igual)' } else { ' (DISTINTA)' })
+        if ($want -ne $got) { $fail += "geometría de $($g[1])" }
+    }
     $out += ''
     if ($fail.Count) { $out += 'RESULTADO: FALLA'; $out += $fail } else { $out += 'RESULTADO: PASS' }
     Write-F29Report (Join-Path $F29Root 'validation\ARQ01_model_check.txt') $out
     $out | ForEach-Object { Write-Host "  $_" }
-
-    Save-F29Model $m
-    Export-F29 $d 'ARQ-01_Arquitectura_Conceptual'
 } finally { Close-F29 }

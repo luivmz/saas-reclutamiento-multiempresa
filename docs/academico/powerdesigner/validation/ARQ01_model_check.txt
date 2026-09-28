@@ -1,4 +1,4 @@
-F29 - verificación de la vista ARQ-01 - Arquitectura Conceptual (2026-09-27 21:23)
+F29 - verificación de la vista ARQ-01 - Arquitectura Conceptual (2026-09-27 22:34)
 Modelo: docs/academico/powerdesigner/models/F29_UML_Academico.oom; paquete ARQ01; diagrama «ARQ-01 - Arquitectura Conceptual»
 
 Componentes: 17 (17) · agrupaciones: 6 (6) · grupo de actores fuera del sistema: 5 actores (los del F8), una sola relación «usan» con C01
@@ -11,5 +11,14 @@ Check Model del OOM completo (sin autocorrección): 1 hallazgos: Use Case/Single
   Aislamiento (CU-16 del F8 asociado a un actor de forma temporal): ninguno
   Tras retirar la asociación temporal: Use Case/Single/sev1
   El único hallazgo se debe a CU-16 del F8, sin actor directo por especificación.
+Recarga «ARQ-01 - Arquitectura Conceptual»: 55 símbolos antes de guardar, 55 tras reabrir; cambiados: 0; ausentes: 0 (tolerancia 0)
+Exportación desde el modelo reabierto: ARQ-01_Arquitectura_Conceptual.svg/.png; una segunda recarga reproduce el mismo SVG (mismas 700 líneas, el orden puede variar): True
+Agrupaciones (X izquierda, Y superior, ancho, alto) pedidas -> tras reabrir desde el disco:
+  Capa de presentación: 22000, 88000, 22000, 18000 -> 22000, 88000, 22000, 18000 (igual)
+  Capa de acceso y seguridad: 50000, 88000, 48000, 18000 -> 50000, 88000, 48000, 18000 (igual)
+  Experimental (opcional): 108000, 88000, 30000, 18000 -> 108000, 88000, 30000, 18000 (igual)
+  Capa de negocio: 22000, 62000, 116000, 32000 -> 22000, 62000, 116000, 32000 (igual)
+  Servicios transversales: 22000, 25000, 94000, 14000 -> 22000, 25000, 94000, 14000 (igual)
+  Persistencia e infraestructura: 22000, 7000, 116000, 14000 -> 22000, 7000, 116000, 14000 (igual)
 
 RESULTADO: PASS

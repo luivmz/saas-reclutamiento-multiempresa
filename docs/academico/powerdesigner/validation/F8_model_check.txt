@@ -1,4 +1,4 @@
-F29 - verificación de la vista F8 - Casos de Uso Academicos (2026-09-27 20:50)
+F29 - verificación de la vista F8 - Casos de Uso Academicos (2026-09-27 22:33)
 Modelo: docs/academico/powerdesigner/models/F29_UML_Academico.oom; paquete F8; diagrama «F8 - Casos de Uso Academicos»
 
 Actores: 5 (5) · casos de uso: 20 (20)
@@ -10,5 +10,7 @@ Check Model del OOM completo (sin autocorrección): 1 hallazgos: Use Case/Single
   Aislamiento (CU-16 del F8 asociado a un actor de forma temporal): ninguno
   Tras retirar la asociación temporal: Use Case/Single/sev1
   El único hallazgo se debe a CU-16 del F8, sin actor directo por especificación.
+Recarga «F8 - Casos de Uso Academicos»: 67 símbolos antes de guardar, 67 tras reabrir; cambiados: 0; ausentes: 0 (tolerancia 0)
+Exportación desde el modelo reabierto: F8_Casos_de_Uso_Academicos.svg/.png; una segunda recarga reproduce el mismo SVG (mismas 418 líneas, el orden puede variar): True
 
 RESULTADO: PASS

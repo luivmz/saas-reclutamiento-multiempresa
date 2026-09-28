@@ -152,11 +152,13 @@ try {
     $ck = Test-F29OomCheck $m
     $out += $ck.Lines
     if (-not $ck.Ok) { $fail += 'Check Model: hallazgos no explicados por la especificación' }
+    # F29B: publicación reproducible (guardar, cerrar, reabrir, comparar geometría y
+    # exportar desde el modelo reabierto; una segunda recarga debe reproducir el SVG).
+    $pub = Publish-F29View $m 'F8' 'F8 - Casos de Uso Academicos' 'F8_Casos_de_Uso_Academicos' @()
+    $out += $pub.Lines
+    if (-not $pub.Ok) { $fail += 'reproducibilidad tras recarga' }
     $out += ''
     if ($fail.Count) { $out += 'RESULTADO: FALLA'; $out += $fail } else { $out += 'RESULTADO: PASS' }
     Write-F29Report (Join-Path $F29Root 'validation\F8_model_check.txt') $out
     $out | ForEach-Object { Write-Host "  $_" }
-
-    Save-F29Model $m
-    Export-F29 $d 'F8_Casos_de_Uso_Academicos'
 } finally { Close-F29 }
