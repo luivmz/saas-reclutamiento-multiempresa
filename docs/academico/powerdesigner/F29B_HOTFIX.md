@@ -1,6 +1,8 @@
 # F29B — Hotfix de reproducibilidad de PowerDesigner
 
-**Estado:** implementado, pendiente de la auditoría F29B. Alcance: los dos modelos de la F29, sus scripts, exportaciones, informes y esta documentación. **No se tocaron** los DOCX y PDF de F3, F5, F8 y F11, ni la F23, el F9, el runtime, el ML, las etiquetas o el release.
+**Estado:** AUDITED / APPROVED (auditoría F29B de Codex). Integración posterior (28/09/2026): se tomaron las 7 capturas, se integraron las exportaciones en los Formatos 03, 05, 08 y 11, y la F29 quedó cerrada con observaciones documentadas ([`README.md`](README.md)). Lo que sigue describe el hotfix tal como se implementó.
+
+**Alcance del hotfix:** los dos modelos de la F29, sus scripts, exportaciones, informes y esta documentación. **No se tocaron** los DOCX y PDF de F3, F5, F8 y F11, ni la F23, el F9, el runtime, el ML, las etiquetas o el release.
 
 ## Problema
 
@@ -108,6 +110,14 @@ Hashes en [`MANIFEST.md`](MANIFEST.md).
 | `F8_Casos_de_Uso_PowerDesigner.png` | **RETAKE REQUIRED** | Muestra los casos de uso redimensionados al abrir (el defecto A). Tras el hotfix, el editor muestra la geometría exacta de la exportación |
 
 Las cinco capturas se conservan en el árbol de trabajo, sin versionar y sin borrar, y no se registran como evidencia final. Hacen falta dos capturas nuevas: los diagramas de detalle de SP-01 y SP-P. Instrucciones en [`evidencias/capturas/CAPTURAS_PENDIENTES.md`](evidencias/capturas/CAPTURAS_PENDIENTES.md).
+
+**Actualización (28/09/2026): capturas completadas.** Las cinco capturas se sustituyeron, con los mismos nombres, por capturas reales tomadas después del hotfix, y se añadieron las dos de detalle. Las 7 muestran:
+
+- la geometría exacta de las exportaciones;
+- en ARQ-01, las 6 agrupaciones con su tamaño;
+- en los diagramas de detalle, el contenido de SP-01 y SP-P.
+
+Registro en [`evidencias/capturas/CAPTURAS_PENDIENTES.md`](evidencias/capturas/CAPTURAS_PENDIENTES.md).
 
 ## Limitaciones restantes
 

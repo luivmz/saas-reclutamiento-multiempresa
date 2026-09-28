@@ -101,8 +101,18 @@ T.append('Generado por [`powerdesigner/scripts/make_f29_docs.py`](../powerdesign
 T.append('**«Dibujado»** indica que el objeto tiene símbolo en el diagrama de su vista. **«Carril»** es el responsable '
          '(atributo *Organization Unit*) guardado en el modelo.\n')
 T.append('## Vistas\n')
-T.append('| Vista | Especificación | Modelo · paquete | Diagrama | Exportaciones | Verificación |')
-T.append('|---|---|---|---|---|---|')
+T.append('**Estado (28/09/2026):** las cuatro vistas están auditadas (F29 y F29B) y su exportación formal es el diagrama '
+         'principal del Formato (FORMAL EXPORT INTEGRATED). Las 7 capturas reales de PowerDesigner están registradas en el '
+         '[manifiesto](../powerdesigner/MANIFEST.md) (POWERDESIGNER EVIDENCE CAPTURED).\n')
+T.append('| Vista | Especificación | Modelo · paquete | Diagrama | Exportaciones | Verificación | Formato (DOCX / PDF) | Capturas | Estado |')
+T.append('|---|---|---|---|---|---|---|---|---|')
+DELIV = {
+    'F3': ('practica-03/F3_Diagrama_BPM_ASIS_Colegio_Andino', ['F3_BPMN_ASIS_PowerDesigner.png', 'F3_SP-01_detalle_PowerDesigner.png']),
+    'F5': ('practica-05/F5_Modelo_BPM_TOBE_Colegio_Andino', ['F5_BPMN_TOBE_PowerDesigner_parte1.png',
+                                                           'F5_BPMN_TOBE_PowerDesigner_parte2.png', 'F5_SP-P_detalle_PowerDesigner.png']),
+    'F8': ('practica-08/F8_Diagrama_Casos_de_Uso_Colegio_Andino', ['F8_Casos_de_Uso_PowerDesigner.png']),
+    'F11 ARQ-01': ('practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino', ['ARQ01_Arquitectura_Conceptual_PowerDesigner.png']),
+}
 views = [
     ('F3', '../practica-03/POWERDESIGNER_PENDING.md', 'F29_BPM_Academico.bpm · F3', 'F3 - BPMN AS-IS', 'F3_BPMN_ASIS', 'F3_model_check.txt'),
     ('F5', '../practica-05/POWERDESIGNER_PENDING.md', 'F29_BPM_Academico.bpm · F5', 'F5 - BPMN TO-BE', 'F5_BPMN_TOBE', 'F5_model_check.txt'),
@@ -110,9 +120,12 @@ views = [
     ('F11 ARQ-01', '../practica-11/POWERDESIGNER_PENDING.md', 'F29_UML_Academico.oom · ARQ01', 'ARQ-01 - Arquitectura Conceptual', 'ARQ-01_Arquitectura_Conceptual', 'ARQ01_model_check.txt'),
 ]
 for v in views:
+    stem, caps = DELIV[v[0]]
     T.append(f'| {v[0]} | [`POWERDESIGNER_PENDING.md`]({v[1]}) | `{v[2]}` | «{v[3]}» | '
              f'[PNG](../powerdesigner/exports/{v[4]}.png) · [SVG](../powerdesigner/exports/{v[4]}.svg) | '
-             f'[`{v[5]}`](../powerdesigner/validation/{v[5]}) |')
+             f'[`{v[5]}`](../powerdesigner/validation/{v[5]}) | [DOCX](../{stem}.docx) · [PDF](../{stem}.pdf) | '
+             + ' · '.join(f'[{i}](../powerdesigner/evidencias/capturas/{c})' for i, c in enumerate(caps, start=1))
+             + ' | FORMAL EXPORT INTEGRATED · POWERDESIGNER EVIDENCE CAPTURED |')
 
 T.append('\n## F3 — BPMN AS-IS\n')
 T.append('| ID | Nombre oficial | Tipo (estereotipo) | Carril | Dibujado | Problemas / origen |')
@@ -181,7 +194,9 @@ M.append('# Manifiesto F29 — modelos y exportaciones de PowerDesigner\n')
 M.append('Generado por [`scripts/make_f29_docs.py`](scripts/make_f29_docs.py). **SHA-256 del contenido versionado** '
          '(`git show :<ruta>`, el blob que se confirma): git normaliza a LF los finales de línea de `.bpm`, `.oom` y `.svg`, así que el hash '
          'del archivo de trabajo en Windows (CRLF) puede diferir; el del blob es reproducible en cualquier checkout.\n')
-M.append('**Estado:** FORMALIZADO en la F29 (auditada con observaciones) y corregido por el hotfix F29B (reproducibilidad tras recarga), pendiente de la auditoría F29B. Ningún formato (DOCX o PDF) se sustituyó todavía.\n')
+M.append('**Estado (28/09/2026): F29 CLOSED WITH DOCUMENTED OBSERVATIONS.** F29 AUDITED (con observaciones), F29B AUDITED / '
+         'APPROVED, capturas COMPLETED (7, reales), exportaciones formales INTEGRATED en los Formatos 03, 05, 08 y 11 y sus '
+         'DOCX y PDF UPDATED. Observaciones abiertas para la F31: F29-L01, F29-L02 y F29B-OBS-01 (LOW).\n')
 M.append('## Modelos y exportaciones\n')
 M.append('| Artefacto | Tipo | Modelo fuente | Diagrama | Formato | SHA-256 | Estado |')
 M.append('|---|---|---|---|---|---|---|')
@@ -195,7 +210,8 @@ for v in views:
     rows.append((f'exports/{v[4]}.svg', 'Exportación', mf, v[3], 'SVG (exportación nativa)'))
 for r in rows:
     p = F29 / r[0]
-    M.append(f'| [`{r[0]}`]({r[0]}) | {r[1]} | {r[2]} | {r[3]} | {r[4]} | `{blob_sha(p) or "sin confirmar"}` | FORMALIZADO |')
+    st = 'AUDITED' if r[0].startswith('models/') else 'AUDITED · INTEGRATED'
+    M.append(f'| [`{r[0]}`]({r[0]}) | {r[1]} | {r[2]} | {r[3]} | {r[4]} | `{blob_sha(p) or "sin confirmar"}` | {st} |')
 M.append('\n## Recursos, scripts e informes\n')
 M.append('| Archivo | Uso | SHA-256 |')
 M.append('|---|---|---|')
@@ -215,19 +231,44 @@ for p in extra:
         use = 'Informe de verificación (salida de los scripts)'
     M.append(f'| [`{rel(p).replace("docs/academico/powerdesigner/", "")}`]({rel(p).replace("docs/academico/powerdesigner/", "")}) | {use} | `{blob_sha(p) or "sin confirmar"}` |')
 M.append('\n## Capturas de PowerDesigner\n')
-M.append('**PENDING RETAKE.** Las capturas manuales del equipo se tomaron antes del hotfix F29B y muestran el estado anterior de '
-         'los modelos (geometría reajustada al abrir y subprocesos sin contenido en el editor). No se registran como evidencia '
-         'final ni se versionan todavía; se repiten según [`evidencias/capturas/CAPTURAS_PENDIENTES.md`](evidencias/capturas/CAPTURAS_PENDIENTES.md). '
-         'Detalle en [`F29B_HOTFIX.md`](F29B_HOTFIX.md).\n')
-M.append('| Captura | Vista | Estado |')
+M.append('**COMPLETED.** Son capturas reales de la ventana de PowerDesigner 16.6, tomadas el 28/09/2026 con los modelos reabiertos '
+         'desde el disco ([`scripts/capture_f29_views.ps1`](scripts/capture_f29_views.ps1), registro en '
+         '[`evidencias/capturas/CAPTURAS_PENDIENTES.md`](evidencias/capturas/CAPTURAS_PENDIENTES.md)). Ninguna es simulada. Sustituyen a '
+         'las cinco anteriores al hotfix F29B (RETAKE REQUIRED, nunca versionadas).\n')
+M.append('| Captura | Tipo | Modelo fuente | Vista | SHA-256 | Estado |')
+M.append('|---|---|---|---|---|---|')
+for cap, mf, view in (('F3_BPMN_ASIS_PowerDesigner.png', 'F29_BPM_Academico.bpm', 'F3 - BPMN AS-IS'),
+                      ('F3_SP-01_detalle_PowerDesigner.png', 'F29_BPM_Academico.bpm', 'SP-01 Evaluar al candidato — detalle (F29B-OBS-01)'),
+                      ('F5_BPMN_TOBE_PowerDesigner_parte1.png', 'F29_BPM_Academico.bpm', 'F5 - BPMN TO-BE, parte 1'),
+                      ('F5_BPMN_TOBE_PowerDesigner_parte2.png', 'F29_BPM_Academico.bpm', 'F5 - BPMN TO-BE, parte 2'),
+                      ('F5_SP-P_detalle_PowerDesigner.png', 'F29_BPM_Academico.bpm', 'SP-P Gestionar la postulación — detalle (F29B-OBS-01)'),
+                      ('F8_Casos_de_Uso_PowerDesigner.png', 'F29_UML_Academico.oom', 'F8 - Casos de Uso Academicos'),
+                      ('ARQ01_Arquitectura_Conceptual_PowerDesigner.png', 'F29_UML_Academico.oom', 'ARQ-01 - Arquitectura Conceptual')):
+    cp = F29 / 'evidencias' / 'capturas' / cap
+    M.append(f'| [`evidencias/capturas/{cap}`](evidencias/capturas/{cap}) | Captura PNG | {mf} | {view} | '
+             f'`{blob_sha(cp) or "sin confirmar"}` | VALID |')
+
+M.append('\n## Formatos integrados\n')
+M.append('El diagrama principal de cada formato es la exportación formal de esta tabla de modelos. Los DOCX se generan con '
+         '[`tools/f27b/build.py`](../tools/f27b/build.py) y los PDF, con Microsoft Word '
+         '([`tools/f27b/topdf.ps1`](../tools/f27b/topdf.ps1)).\n')
+M.append('| Formato | Tipo | Exportación integrada | SHA-256 | Estado |')
+M.append('|---|---|---|---|---|')
+for stem, exp in (('practica-03/F3_Diagrama_BPM_ASIS_Colegio_Andino', 'F3_BPMN_ASIS.png'),
+                  ('practica-05/F5_Modelo_BPM_TOBE_Colegio_Andino', 'F5_BPMN_TOBE.png'),
+                  ('practica-08/F8_Diagrama_Casos_de_Uso_Colegio_Andino', 'F8_Casos_de_Uso_Academicos.png'),
+                  ('practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino', 'ARQ-01_Arquitectura_Conceptual.png')):
+    for ext in ('docx', 'pdf'):
+        fp = ROOT / 'docs' / 'academico' / f'{stem}.{ext}'
+        M.append(f'| [`{stem}.{ext}`](../{stem}.{ext}) | {ext.upper()} | `{exp}` | `{blob_sha(fp) or "sin confirmar"}` | UPDATED |')
+
+M.append('\n## Documentación de validación y del hotfix\n')
+M.append('| Documento | Contenido | SHA-256 |')
 M.append('|---|---|---|')
-for cap, view in (('F3_BPMN_ASIS_PowerDesigner.png', 'F3 (vista principal)'),
-                  ('F5_BPMN_TOBE_PowerDesigner_parte1.png', 'F5 (vista principal, parte 1)'),
-                  ('F5_BPMN_TOBE_PowerDesigner_parte2.png', 'F5 (vista principal, parte 2)'),
-                  ('F8_Casos_de_Uso_PowerDesigner.png', 'F8'),
-                  ('ARQ01_Arquitectura_Conceptual_PowerDesigner.png', 'ARQ-01'),
-                  ('F3_SP-01_detalle_PowerDesigner.png', 'F3, diagrama de detalle de SP-01 (nueva)'),
-                  ('F5_SP-P_detalle_PowerDesigner.png', 'F5, diagrama de detalle de SP-P (nueva)')):
-    M.append(f'| `{cap}` | {view} | PENDING RETAKE |')
+for doc, what in (('README.md', 'Estado, contenido, reproducción y decisiones de modelado'),
+                  ('F29_VALIDATION.md', 'Resultado PASS/OBS por vista'),
+                  ('F29B_HOTFIX.md', 'Hotfix F29B: causa raíz, corrección, pruebas de recarga y F29B-OBS-01'),
+                  ('evidencias/capturas/CAPTURAS_PENDIENTES.md', 'Registro de las capturas (STATUS: COMPLETED)')):
+    M.append(f'| [`{doc}`]({doc}) | {what} | `{blob_sha(F29 / doc) or "sin confirmar"}` |')
 (F29 / 'MANIFEST.md').write_text('\n'.join(M) + '\n', encoding='utf-8', newline='\n')
 print('MANIFEST.md y F29-powerdesigner-traceability.md generados')

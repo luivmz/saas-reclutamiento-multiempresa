@@ -1,5 +1,7 @@
 # Pendiente de PowerDesigner — F11 arquitectura conceptual (ARQ-01)
 
+**Actualización posterior a la F29 (28/09/2026): FORMALIZED / INTEGRATED / DONE.** Auditada en la F29 y en la F29B, la exportación formal es el diagrama principal del DOCX y el PDF del Formato, y el criterio de aceptación de exportación queda cumplido. Hay capturas reales de PowerDesigner en [`../powerdesigner/evidencias/capturas/`](../powerdesigner/evidencias/capturas/CAPTURAS_PENDIENTES.md).
+
 **Actualización F29 (27/09/2026): FORMALIZED / DONE**, pendiente de la auditoría F29. Diagrama «ARQ-01 - Arquitectura Conceptual» en [`F29_UML_Academico.oom`](../powerdesigner/models/F29_UML_Academico.oom) (paquete ARQ01); exportaciones [PNG](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png) y [SVG](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.svg); verificación en [`F29_VALIDATION.md`](../powerdesigner/F29_VALIDATION.md). El estado anterior se conserva a continuación.
 
 **Estado: READY FOR POWERDESIGNER, condicionado a la auditoría de la F28.** Se modela en la **Fase 29**. En la F28 no se abrió PowerDesigner ni se modificó ningún `.oom`, `.pdm` o exportación de la F23.

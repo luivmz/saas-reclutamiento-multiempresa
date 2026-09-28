@@ -24,7 +24,7 @@
 >
 > **EXPERIMENTAL / PROPUESTO:** RF-28 (candidato, no implementado), RF-29 (experimental, solo sobre el proceso) y RNF-C (propuesta). No forman parte de la línea base RF-01 a RF-27.
 >
-> Los casos de uso representan el **SOFTWARE IMPLEMENTADO** de la línea base RF-01 a RF-27. El diagrama académico es un **borrador**. La vista técnica formal es UC-01 de PowerDesigner (F23), que no se modifica.
+> Los casos de uso representan el **SOFTWARE IMPLEMENTADO** de la línea base RF-01 a RF-27. El diagrama académico está formalizado en PowerDesigner (F29): diagrama «F8 - Casos de Uso Academicos». La vista técnica UC-01 de PowerDesigner (F23) se conserva como referencia y no se modifica.
 >
 > La plataforma **nunca** selecciona, descarta ni contrata automáticamente: el ranking calcula, ordena y compara.
 >
@@ -117,15 +117,27 @@ El Sistema no es un actor: valida, calcula, notifica y audita como parte de los 
 
 *Insertar aquí el diagrama elaborado con herramienta UML.*
 
-![Figura 1. Diagrama de casos de uso, vista académica (CU-01 a CU-20). Borrador de revisión.](diagramas/draft/F8-casos-de-uso-academico.png)
+Diagrama formal modelado en **PowerDesigner 16.6** (Fase 29): diagrama «F8 - Casos de Uso Academicos» del modelo `F29_UML_Academico.oom`, paquete F8. Cinco actores, CU-01 a CU-20 en cinco áreas funcionales y CU-16 incluido desde CU-05, CU-15 y CU-17. Las figuras 2 y 3 amplían sus dos mitades y no añaden contenido.
 
-*Figura 1. Diagrama de casos de uso, vista académica (CU-01 a CU-20). Borrador de revisión.*
+![Figura 1. Diagrama de casos de uso, vista académica (CU-01 a CU-20): exportación formal de PowerDesigner (F29), `F8_Casos_de_Uso_Academicos.png`.](../powerdesigner/exports/F8_Casos_de_Uso_Academicos.png)
 
-![Figura 2. Referencia técnica: UC-01 de PowerDesigner (F23), un caso por RF. Exportación versionada, sin cambios.](../../v1.1/powerdesigner/exports/UC-01-casos-de-uso.png)
+*Figura 1. Diagrama de casos de uso, vista académica (CU-01 a CU-20): exportación formal de PowerDesigner (F29), `F8_Casos_de_Uso_Academicos.png`.*
 
-*Figura 2. Referencia técnica: UC-01 de PowerDesigner (F23), un caso por RF. Exportación versionada, sin cambios.*
+*Figura 2. Ampliación de la figura 1 (franja del 0 % al 55 % del ancho): actores ACT-01, ACT-04 y ACT-05 y áreas A a E. Recorte sin retoque de la exportación formal.* (En el DOCX: ampliación de la franja del 0 % al 55 % del ancho de [`F8_Casos_de_Uso_Academicos.png`](../powerdesigner/exports/F8_Casos_de_Uso_Academicos.png).)
 
-La adaptación formal de la vista académica en PowerDesigner está en `POWERDESIGNER_PENDING.md`. No se modificó el OOM de la F23.
+*Figura 3. Ampliación de la figura 1 (franja del 45 % al 100 % del ancho): áreas A a E y actores ACT-02 y ACT-03. Recorte sin retoque de la exportación formal.* (En el DOCX: ampliación de la franja del 45 % al 100 % del ancho de [`F8_Casos_de_Uso_Academicos.png`](../powerdesigner/exports/F8_Casos_de_Uso_Academicos.png).)
+
+PowerDesigner señala CU-16 como caso sin actor directo (Check Model): es esperado, porque CU-16 es un caso incluido. CU-21 «Consultar auditoría» sigue **DIFERIDO** y no aparece en el diagrama. El borrador de la F27B–F28 (`diagramas/draft/`) queda como antecedente: DRAFT / SUPERSEDED BY F29 FORMAL EXPORT.
+
+![Figura 4. Referencia técnica: UC-01 de PowerDesigner (F23), un caso por RF. Exportación versionada, sin cambios.](../../v1.1/powerdesigner/exports/UC-01-casos-de-uso.png)
+
+*Figura 4. Referencia técnica: UC-01 de PowerDesigner (F23), un caso por RF. Exportación versionada, sin cambios.*
+
+No se modificó el OOM de la F23. Captura real de PowerDesigner, tomada con el modelo reabierto desde el disco:
+
+![Figura 5. Captura de PowerDesigner: diagrama «F8 - Casos de Uso Academicos» y paquete F8 en el Object Browser.](../powerdesigner/evidencias/capturas/F8_Casos_de_Uso_PowerDesigner.png)
+
+*Figura 5. Captura de PowerDesigner: diagrama «F8 - Casos de Uso Academicos» y paquete F8 en el Object Browser.*
 
 ## 7. Relación con los requerimientos y correspondencia de vistas
 
@@ -187,6 +199,6 @@ Las tres vistas se conservan: 20 CU académicos (F9), 13 CU agrupados (informe v
 | O-F8-06 | Antecedente superado | El diagrama de CU del F9 v1.0 (anexo B) mostraba al Administrador de la Organización, al Superadministrador SaaS, suscripciones y banco de talentos, que están fuera del alcance. La F24 lo sustituyó por UC-01 (D-04). Se conserva solo como antecedente. |
 | O-F8-07 | Extensiones | RF-28 (candidato) y RF-29 (experimental) no forman parte de los 20 CU. Solo aparecen en la vista técnica UC-RF (UC-RF28 «propuesto v1.1», UC-RF29 «experimental»). |
 
-![Figura 3. Antecedente superado: diagrama de CU del F9 v1.0 (anexo B, copia sin modificar). Incluye actores fuera del alcance (O-F8-06).](evidencias/antecedente-cu-f9-v1.0-anexo-B.png)
+![Figura 6. Antecedente superado: diagrama de CU del F9 v1.0 (anexo B, copia sin modificar). Incluye actores fuera del alcance (O-F8-06).](evidencias/antecedente-cu-f9-v1.0-anexo-B.png)
 
-*Figura 3. Antecedente superado: diagrama de CU del F9 v1.0 (anexo B, copia sin modificar). Incluye actores fuera del alcance (O-F8-06).*
+*Figura 6. Antecedente superado: diagrama de CU del F9 v1.0 (anexo B, copia sin modificar). Incluye actores fuera del alcance (O-F8-06).*

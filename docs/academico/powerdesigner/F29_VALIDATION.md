@@ -25,8 +25,9 @@ Ninguna vista queda en FALLA.
 
 Observaciones transversales a las cuatro vistas:
 
-- **Capturas de PowerDesigner:** pendientes ([instrucciones](evidencias/capturas/CAPTURAS_PENDIENTES.md)).
-- **Formatos DOCX y PDF:** sin sustituir hasta la auditoría.
+- **Capturas de PowerDesigner:** COMPLETED (28/09/2026). Son 7 capturas reales, tomadas después del hotfix F29B ([registro](evidencias/capturas/CAPTURAS_PENDIENTES.md)). Hasta entonces estaban pendientes.
+- **Formatos DOCX y PDF:** UPDATED (28/09/2026). Tras las auditorías F29 y F29B, las exportaciones formales son el diagrama principal de los Formatos 03, 05, 08 y 11. Hasta entonces no se habían sustituido.
+- **Cierre:** F29 CLOSED WITH DOCUMENTED OBSERVATIONS. Quedan para la F31, como LOW, F29-L01, F29-L02 y F29B-OBS-01.
 
 ## F3 — «F3 - BPMN AS-IS» ([informe](validation/F3_model_check.txt))
 

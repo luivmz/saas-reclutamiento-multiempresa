@@ -137,6 +137,77 @@ def image_xml(rid, docpr_id, name, cx, cy):
 
 PAGEBREAK = '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'
 
+EMU_CM = 914400 / 2.54
+TWIP_CM = 1440 / 2.54
+
+
+def image_data(path, crop=None):
+    """Bytes y tamaño en píxeles de un PNG; con crop=(x0, x1), la franja horizontal indicada (recorte sin retoque)."""
+    if not crop:
+        w, h = png_size(path)
+        with open(path, 'rb') as f:
+            return f.read(), w, h
+    import io
+    from PIL import Image
+    im = Image.open(path)
+    part = im.crop((int(im.width * crop[0]), 0, int(im.width * crop[1]), im.height))
+    buf = io.BytesIO()
+    part.save(buf, 'PNG')
+    return buf.getvalue(), part.width, part.height
+
+
+def sect_variant(sect, landscape=False, keep_first=True):
+    """Copia de las propiedades de sección de la plantilla: apaisada (ancho y alto intercambiados) o sin la
+    cabecera y el pie de primera página (para que no se repitan al empezar cada sección nueva)."""
+    s = sect
+    if not keep_first:
+        s = s.replace('<w:titlePg/>', '')
+        s = re.sub(r'<w:(?:header|footer)Reference w:type="first" r:id="rId\d+"/>', '', s)
+    if landscape:
+        m = re.search(r'<w:pgSz w:w="(\d+)" w:h="(\d+)"\s*/>', s)
+        s = s.replace(m.group(0), f'<w:pgSz w:w="{m.group(2)}" w:h="{m.group(1)}" w:orient="landscape"/>')
+    return s
+
+
+def landscape_size_cm(sect):
+    """Ancho y alto útiles (cm) de la página apaisada que resulta de las propiedades de sección."""
+    w = int(re.search(r'<w:pgSz w:w="(\d+)"', sect).group(1))
+    h = int(re.search(r'<w:pgSz w:w="\d+" w:h="(\d+)"', sect).group(1))
+    mar = {k: int(v) for k, v in re.findall(r'w:(top|right|bottom|left)="(\d+)"', re.search(r'<w:pgMar[^>]*/>', sect).group(0))}
+    return (h - mar['left'] - mar['right']) / TWIP_CM, (w - mar['top'] - mar['bottom']) / TWIP_CM
+
+
+def with_sect(paragraph, sect):
+    """Añade propiedades de sección a un párrafo: la sección termina en él."""
+    return paragraph.replace('</w:pPr>', sect + '</w:pPr>', 1)
+
+
+def wide_image_parts(sect, first, rid, docpr, name, w, h, caption_xml, close_prev=True):
+    """Página horizontal con una imagen: cierra la sección anterior (vertical), dibuja la imagen al ancho útil y
+    termina la sección apaisada en el pie de figura. Si la anterior ya era una página horizontal (close_prev=False),
+    no hay sección vertical que cerrar."""
+    tw, th = landscape_size_cm(sect)
+    cx = int(tw * 0.99 * EMU_CM)
+    cy = int(cx * h / w)
+    max_cy = int((th - 2.2) * EMU_CM)
+    if cy > max_cy:
+        cy = max_cy
+        cx = int(cy * w / h)
+    close = ['<w:p><w:pPr><w:spacing w:after="0"/>' + sect_variant(sect, keep_first=first) + '</w:pPr></w:p>'] if close_prev else []
+    return close + [image_xml(rid, docpr, name, cx, cy),
+            with_sect(caption_xml, sect_variant(sect, landscape=True, keep_first=False))]
+
+
+def keep_image_resolution(settings):
+    """Marca «No comprimir las imágenes del archivo» para que las exportaciones conserven su resolución."""
+    if 'w:doNotAutoCompressPictures' in settings:
+        return settings
+    for anchor in ('<w:forceUpgrade', '<w:captions', '<w:shapeDefaults', '<w:decimalSymbol', '<w:listSeparator',
+                   '</w:settings>'):
+        if anchor in settings:
+            return settings.replace(anchor, '<w:doNotAutoCompressPictures/>' + anchor, 1)
+    return settings
+
 
 def _fill_datos(tbl, values):
     """Rellena la tercera celda de cada fila de la tabla «Datos generales»."""
@@ -168,7 +239,16 @@ class Doc:
     def kv(self, rows, widths=(28, 72), sz=18): self.items.append(('kv', rows, widths, sz)); return self
     def box(self, lines): self.items.append(('box', list(lines))); return self
     def note(self, title, lines): self.items.append(('note', title, list(lines))); return self
-    def img(self, path, caption, width_cm=16.0): self.items.append(('img', path, caption, width_cm)); return self
+    def img(self, path, caption, width_cm=16.0, crop=None):
+        """Imagen en la página vertical. crop=(x0, x1): ampliación de esa franja del ancho, sin retoque."""
+        self.items.append(('img', path, caption, width_cm) + ((crop,) if crop else ()))
+        return self
+
+    def wide_img(self, path, caption, crop=None):
+        """Imagen en su propia página horizontal (sección apaisada), al ancho útil de la página. crop=(x0, x1),
+        fracciones del ancho: ampliación de esa franja de la imagen, sin retoque (recorte en memoria)."""
+        self.items.append(('wimg', path, caption, crop))
+        return self
     def pagebreak(self): self.items.append(('pb',)); return self
 
 
@@ -188,8 +268,10 @@ def build_docx(template, out_path, datos, doc, title=None):
     media = []
     rid_n = 100
     docpr = 100
-    for it in doc.items:
+    wide = 0
+    for i, it in enumerate(doc.items):
         k = it[0]
+        prev = doc.items[i - 1][0] if i else None
         if k == 'h':
             parts.append(heading(it[1]))
         elif k == 'instr':
@@ -210,28 +292,35 @@ def build_docx(template, out_path, datos, doc, title=None):
             parts.append(box(it[1]))
         elif k == 'note':
             parts.append(box([f'**{it[1]}**'] + it[2], sz=18, fill='FFF2CC'))
-        elif k == 'img':
-            path, caption, width_cm = it[1], it[2], it[3]
-            w, h = png_size(path)
+        elif k in ('img', 'wimg'):
+            path, caption = it[1], it[2]
+            data, w, h = image_data(path, it[3] if k == 'wimg' else (it[4] if len(it) > 4 else None))
+            rid_n += 1
+            docpr += 1
+            rid = f'rId{rid_n}'
+            target = f'media/f27b_{len(media) + 1}.png'
+            media.append((target, data))
+            rels = rels.replace('</Relationships>',
+                                f'<Relationship Id="{rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/'
+                                f'relationships/image" Target="{target}"/></Relationships>')
+            cap = para(caption, italic=True, sz=18, jc='center', after=160)
+            if k == 'wimg':
+                parts += wide_image_parts(sect, not wide, rid, docpr, os.path.basename(path), w, h, cap,
+                                          close_prev=prev != 'wimg')
+                wide += 1
+                continue
+            width_cm = it[3]
             cx = int(width_cm / 2.54 * 914400)
             cy = int(cx * h / w)
             max_cy = int(22.5 / 2.54 * 914400)
             if cy > max_cy:
                 cy = max_cy
                 cx = int(cy * w / h)
-            rid_n += 1
-            docpr += 1
-            rid = f'rId{rid_n}'
-            target = f'media/f27b_{len(media) + 1}.png'
-            media.append((target, path))
-            rels = rels.replace('</Relationships>',
-                                f'<Relationship Id="{rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/'
-                                f'relationships/image" Target="{target}"/></Relationships>')
             parts.append(image_xml(rid, docpr, os.path.basename(path), cx, cy))
-            parts.append(para(caption, italic=True, sz=18, jc='center', after=160))
+            parts.append(cap)
         elif k == 'pb':
             parts.append(PAGEBREAK)
-    parts.append(sect)
+    parts.append(sect_variant(sect, keep_first=not wide))
     new_doc = head + '<w:body>' + ''.join(parts) + '</w:body>' + tail
     core = zin.read('docProps/core.xml').decode('utf-8')
     if title:
@@ -250,12 +339,13 @@ def build_docx(template, out_path, datos, doc, title=None):
                 data = rels.encode('utf-8')
             elif info.filename == 'docProps/core.xml':
                 data = core.encode('utf-8')
+            elif info.filename == 'word/settings.xml' and wide:
+                data = keep_image_resolution(data.decode('utf-8')).encode('utf-8')
             zout.writestr(info, data)
-        for target, path in media:
+        for target, data in media:
             info = zipfile.ZipInfo('word/' + target, date_time=(2026, 9, 26, 0, 0, 0))
             info.compress_type = zipfile.ZIP_DEFLATED
-            with open(path, 'rb') as f:
-                zout.writestr(info, f.read())
+            zout.writestr(info, data)
 
 
 def _md_cell(x):
@@ -301,8 +391,12 @@ def build_md(out_path, title, datos, doc, preface='', start=None):
             for l in it[2]:
                 lines += [f'> {l}', '>']
             lines[-1] = ''
-        elif k == 'img':
+        elif (k == 'img' and len(it) < 5) or (k == 'wimg' and not it[3]):
             lines += [f'![{it[2]}]({rel(it[1])})', '', f'*{it[2]}*', '']
+        elif k in ('img', 'wimg'):
+            crop = it[3] if k == 'wimg' else it[4]
+            lines += [f'*{it[2]}* (En el DOCX: ampliación de la franja del {round(crop[0] * 100)} % al '
+                      f'{round(crop[1] * 100)} % del ancho de [`{os.path.basename(it[1])}`]({rel(it[1])}).)', '']
     text = '\n'.join(lines).rstrip() + '\n'
     text = re.sub(r'\n{3,}', '\n\n', text)
     with open(out_path, 'w', encoding='utf-8', newline='\n') as f:
@@ -385,9 +479,10 @@ def build_docx_f9(base, out_path, cover, cover_note, header_text, doc, props, co
     parts = [cover_xml, _f9_heading('Contenido', 1, page_break=True)]
     for c in contents:
         parts.append(para(c, ind=0, after=40))
-    media, rid_n, docpr, n = [], 900, 900, 0
-    for it in doc.items:
+    media, rid_n, docpr, n, wide = [], 900, 900, 0, 0
+    for i, it in enumerate(doc.items):
         k = it[0]
+        prev = doc.items[i - 1][0] if i else None
         if k == 'h':
             n += 1
             parts.append(_f9_heading(f'{n}. {it[1]}', 1, page_break=(n == 1)))
@@ -409,27 +504,34 @@ def build_docx_f9(base, out_path, cover, cover_note, header_text, doc, props, co
             parts.append(box(it[1]).replace('<w:tblInd w:w="284" w:type="dxa"/>', ''))
         elif k == 'note':
             parts.append(box([f'**{it[1]}**'] + it[2], sz=18, fill='FFF2CC').replace('<w:tblInd w:w="284" w:type="dxa"/>', ''))
-        elif k == 'img':
-            path, caption, width_cm = it[1], it[2], it[3]
-            w, h = png_size(path)
+        elif k in ('img', 'wimg'):
+            path, caption = it[1], it[2]
+            data, w, h = image_data(path, it[3] if k == 'wimg' else (it[4] if len(it) > 4 else None))
+            rid_n += 1
+            docpr += 1
+            rid = f'rId{rid_n}'
+            target = f'media/f28_{len(media) + 1}.png'
+            media.append((target, data))
+            rels = rels.replace('</Relationships>', f'<Relationship Id="{rid}" Type="http://schemas.openxmlformats.org/'
+                                f'officeDocument/2006/relationships/image" Target="{target}"/></Relationships>')
+            cap = para(caption, italic=True, sz=18, jc='center', after=160, ind=0)
+            if k == 'wimg':
+                parts += wide_image_parts(sect, not wide, rid, docpr, os.path.basename(path), w, h, cap,
+                                          close_prev=prev != 'wimg')
+                wide += 1
+                continue
+            width_cm = it[3]
             cx = int(width_cm / 2.54 * 914400)
             cy = int(cx * h / w)
             max_cy = int(22.0 / 2.54 * 914400)
             if cy > max_cy:
                 cy = max_cy
                 cx = int(cy * w / h)
-            rid_n += 1
-            docpr += 1
-            rid = f'rId{rid_n}'
-            target = f'media/f28_{len(media) + 1}.png'
-            media.append((target, path))
-            rels = rels.replace('</Relationships>', f'<Relationship Id="{rid}" Type="http://schemas.openxmlformats.org/'
-                                f'officeDocument/2006/relationships/image" Target="{target}"/></Relationships>')
             parts.append(image_xml(rid, docpr, os.path.basename(path), cx, cy))
-            parts.append(para(caption, italic=True, sz=18, jc='center', after=160, ind=0))
+            parts.append(cap)
         elif k == 'pb':
             parts.append(PAGEBREAK)
-    parts.append(sect)
+    parts.append(sect_variant(sect, keep_first=not wide))
     new_doc = head + '<w:body>' + ''.join(parts) + '</w:body>' + tail
     used = set(re.findall(r'r:(?:embed|id|link|pict)="(rId\d+)"', new_doc))
     drop = set()
@@ -462,11 +564,12 @@ def build_docx_f9(base, out_path, cover, cover_note, header_text, doc, props, co
                 data = header.encode('utf-8')
             elif info.filename == 'docProps/core.xml':
                 data = core.encode('utf-8')
+            elif info.filename == 'word/settings.xml' and wide:
+                data = keep_image_resolution(data.decode('utf-8')).encode('utf-8')
             zi = zipfile.ZipInfo(info.filename, date_time=fixed)
             zi.compress_type = zipfile.ZIP_DEFLATED
             zout.writestr(zi, data)
-        for target, path in media:
+        for target, data in media:
             zi = zipfile.ZipInfo('word/' + target, date_time=fixed)
             zi.compress_type = zipfile.ZIP_DEFLATED
-            with open(path, 'rb') as f:
-                zout.writestr(zi, f.read())
+            zout.writestr(zi, data)

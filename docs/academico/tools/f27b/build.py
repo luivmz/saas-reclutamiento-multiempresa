@@ -35,26 +35,54 @@ def pdir(n, *parts):
     return d
 
 
-def write_evidence(n, title, items):
-    """evidencias/README.md: cada evidencia con ruta relativa y SHA-256 del archivo en el árbol de trabajo."""
+# Archivos de texto que git versiona con finales de línea LF (.gitattributes: text=auto eol=lf). PowerDesigner los
+# escribe con CRLF; el SHA-256 se calcula sobre el contenido versionado, igual que en el manifiesto de la F29.
+TEXT_EXT = ('.md', '.svg', '.bpm', '.oom', '.py', '.ps1', '.txt', '.json', '.csv')
+
+
+def sha256_versioned(full):
     import hashlib
+    with open(full, 'rb') as f:
+        data = f.read()
+    if full.lower().endswith(TEXT_EXT):
+        data = data.replace(b'\r\n', b'\n')
+    return hashlib.sha256(data).hexdigest()
+
+
+def write_evidence(n, title, items, note=None):
+    """evidencias/README.md: cada evidencia con ruta relativa y SHA-256 del contenido versionado."""
     out = os.path.join(pdir(n, 'evidencias'), 'README.md')
     lines = [f'# Evidencias — {title}', '',
              'Evidencias reales del repositorio que respaldan el formato. Rutas relativas a la raíz del repositorio. '
              'SHA-256 calculado en la Fase 27B sobre el archivo versionado. No hay capturas institucionales ni firmas: '
-             'no existen en el repositorio y no se simulan.', '',
-             '| Evidencia | Ruta | SHA-256 | Qué respalda |', '|---|---|---|---|']
+             'no existen en el repositorio y no se simulan.', '']
+    if note:
+        lines += [note, '']
+    lines += ['| Evidencia | Ruta | SHA-256 | Qué respalda |', '|---|---|---|---|']
     for path, what in items:
         full = os.path.join(ROOT, path)
         if os.path.isdir(full):
             h = '(carpeta)'
         else:
-            with open(full, 'rb') as f:
-                h = '`' + hashlib.sha256(f.read()).hexdigest() + '`'
+            h = '`' + sha256_versioned(full) + '`'
         link = os.path.relpath(full, os.path.dirname(out)).replace(os.sep, '/')
         lines.append(f'| {os.path.basename(path.rstrip("/"))} | [`{path}`]({link}) | {h} | {what} |')
     with open(out, 'w', encoding='utf-8', newline='\n') as f:
         f.write('\n'.join(lines) + '\n')
+
+
+# --------------------------------------------------------------------------- PowerDesigner (F29, integración post-F29)
+PD = 'docs/academico/powerdesigner'
+SUPERSEDED = 'DRAFT / SUPERSEDED BY F29 FORMAL EXPORT'
+NOTA_EVID_F29 = ('**Integración posterior a la F29 (28/09/2026):** el diagrama principal del formato es la exportación formal '
+                 'de PowerDesigner, auditada en la F29 y en el hotfix F29B. Las capturas de PowerDesigner son reales: se '
+                 'tomaron de la ventana de PowerDesigner 16.6 con los modelos reabiertos desde el disco, sin simulación ni '
+                 'retoque. Los borradores quedan como antecedente (' + SUPERSEDED + '). SHA-256 recalculado en esta '
+                 'integración; en los archivos de texto, sobre el contenido versionado (LF).')
+
+
+def pd(*parts):
+    return os.path.join(ROOT, *PD.split('/'), *parts)
 
 
 def estado(doc, extra=()):
@@ -278,8 +306,8 @@ def build_f3():
     bp = asis_bpmn()
     d = Doc()
     estado(d, ['Este BPMN es un **BPMN AS-IS preliminar derivado del análisis del equipo**. No está validado por '
-               'la institución y no es el modelo formal de PowerDesigner (pendiente para la Fase 29, ver '
-               '`POWERDESIGNER_PENDING.md`).'])
+               'la institución. Su modelo formal es el diagrama «F3 - BPMN AS-IS» de PowerDesigner (F29, con el hotfix '
+               'F29B): formalizarlo no cambia su condición de preliminar.'])
     d.h('Descripción general del proceso')
     d.instr('Describir brevemente el proceso que será representado en el diagrama BPM, indicando su propósito, '
             'alcance (inicio y fin) y contexto.')
@@ -292,10 +320,21 @@ def build_f3():
            'canales, herramientas ni tiempos reales verificados.'])
     d.h('Diagrama BPM del proceso actual (AS-IS)')
     d.instr('Inserte el diagrama BPM elaborado utilizando notación BPMN.')
-    d.img(bp[0], 'Figura 1. BPMN AS-IS preliminar, parte 1 (EI-01 a AS-08).', 16)
-    d.img(bp[1], 'Figura 2. BPMN AS-IS preliminar, parte 2 (AS-09 a EF-03).', 16)
-    d.p('Borrador de revisión dibujado desde la especificación de este formato (corregida en la F27D tras la auditoría '
-        'F27C). La versión formal se modelará en PowerDesigner en la F29.')
+    exp = pd('exports', 'F3_BPMN_ASIS.png')
+    d.p('Diagrama formal modelado en **PowerDesigner 16.6** (Fase 29): diagrama «F3 - BPMN AS-IS» del modelo '
+        '`F29_BPM_Academico.bpm`, paquete F3. La figura 1 es la exportación completa; las figuras 2 y 3 amplían sus dos '
+        'mitades para leerlas mejor y no añaden contenido.')
+    d.wide_img(exp, 'Figura 1. BPMN AS-IS preliminar: exportación formal de PowerDesigner (F29), diagrama «F3 - BPMN '
+                    'AS-IS» (`F3_BPMN_ASIS.png`).')
+    d.wide_img(exp, 'Figura 2. Ampliación de la figura 1 (franja del 0 % al 55 % del ancho): EI-01 a AS-08 y pool '
+                    'Postulante. Recorte sin retoque de la exportación formal.', crop=(0.0, 0.55))
+    d.wide_img(exp, 'Figura 3. Ampliación de la figura 1 (franja del 45 % al 100 % del ancho): SP-01, AS-12 a AS-14 y '
+                    'EF-03. Recorte sin retoque de la exportación formal.', crop=(0.45, 1.0))
+    d.p('SP-01 es un subproceso expandido de instancia múltiple paralela (marcador |||) con SI-01, AS-09, G-02, AS-10, '
+        'AS-11, EF-02 y EF-04 dentro. PowerDesigner 16.6 no dibuja ese contenido en la vista principal del editor '
+        '(limitación F29B-OBS-01): se consulta en el diagrama «SP-01 Evaluar al candidato — detalle», con los mismos '
+        'objetos. La exportación, reproducible, es la evidencia formal.')
+    d.p('El borrador de revisión de la F27B–F28 (`diagramas/draft/`) queda como antecedente: ' + SUPERSEDED + '.')
     d.h('Elementos BPMN utilizados')
     d.table(['N°', 'Elemento BPMN', 'Descripción', 'Uso en el proceso'],
             [(str(i), e, ds, u) for i, (e, ds, u) in enumerate(A.ELEMENTOS_BPMN, start=1)], widths=[7, 20, 28, 45])
@@ -322,14 +361,15 @@ def build_f3():
     d.instr('Describir paso a paso cómo se desarrolla el proceso según el diagrama BPM.')
     d.box([f'{i}. {t}' for i, t in enumerate(A.FLUJO, start=1)])
     d.h('Validación del modelo')
-    d.instr('Marque con un aspa (X) si se cumplen los enunciados. Se aplica a la especificación y al borrador de '
-            'este formato.')
+    d.instr('Marque con un aspa (X) si se cumplen los enunciados. Se aplica a la especificación y al modelo formal '
+            'de PowerDesigner (F29), verificado en `docs/academico/powerdesigner/F29_VALIDATION.md`.')
     d.table(['Enunciado', 'X', 'Comprobación'], [
         ('El proceso tiene evento de inicio y fin claramente definidos.', 'X',
          'Proceso: EI-01; EF-01 y EF-03. SP-01: SI-01; EF-02 y EF-04. Postulante: EP-01; EP-02.'),
         ('Todas las actividades están conectadas correctamente.', 'X',
          'AS-01 a AS-14 tienen entrada y salida de secuencia; AS-06 → AS-08 es secuencia (AS-08 es tarea de recepción); '
-         'AS-07 está entre EP-01 y EP-02; las partes 1 y 2 se unen con el enlace A.'),
+         'AS-07 está entre EP-01 y EP-02; el modelo formal es un solo diagrama (el borrador unía sus dos partes con '
+         'el enlace A).'),
         ('Se utilizan correctamente los elementos BPMN.', 'X',
          'Secuencia solo dentro de cada pool; MF-01 a MF-04 unidireccionales entre pools; SP-01 de instancia múltiple '
          'paralela por candidato.'),
@@ -340,19 +380,37 @@ def build_f3():
     d.p('La validación es **interna del equipo**. Falta la validación institucional del contenido del AS-IS.')
     d.h('Evidencias')
     d.bullets(evidencias_asis() + [
-        'Borradores: `docs/academico/practica-03/diagramas/draft/F3-bpmn-as-is-parte1.png` y `…parte2.png`.',
-        'Pendiente de modelado formal: `docs/academico/practica-03/POWERDESIGNER_PENDING.md`.',
+        'Modelo formal: `docs/academico/powerdesigner/models/F29_BPM_Academico.bpm` (paquete F3); exportaciones '
+        '`F3_BPMN_ASIS.png` y `F3_BPMN_ASIS.svg` en `docs/academico/powerdesigner/exports/`; validación en '
+        '`F29_VALIDATION.md` y `F29B_HOTFIX.md`.',
+        'Especificación de PowerDesigner: `docs/academico/practica-03/POWERDESIGNER_PENDING.md` (FORMALIZED / DONE).',
+        'Borradores: `docs/academico/practica-03/diagramas/draft/F3-bpmn-as-is-parte1.png` y `…parte2.png` '
+        '(' + SUPERSEDED + ').',
     ])
+    d.p('Capturas reales de PowerDesigner, tomadas con el modelo reabierto desde el disco:')
+    d.img(pd('evidencias', 'capturas', 'F3_BPMN_ASIS_PowerDesigner.png'),
+          'Figura 4. Captura de PowerDesigner: diagrama «F3 - BPMN AS-IS» y paquete F3 en el Object Browser.', 16)
+    d.img(pd('evidencias', 'capturas', 'F3_SP-01_detalle_PowerDesigner.png'),
+          'Figura 5. Captura de PowerDesigner: diagrama «SP-01 Evaluar al candidato — detalle» (contenido de SP-01; '
+          'F29B-OBS-01).', 16)
     emit(3, 'F3_Diagrama_BPM_ASIS_Colegio_Andino', 'Formato_03_Diagrama_BPM.docx', 'proceso', d,
          'Formato 03 — Diagrama BPM del proceso actual (AS-IS preliminar)')
     write_evidence(3, 'Formato 03', EVID_ASIS + [
-        ('docs/academico/practica-03/diagramas/draft/F3-bpmn-as-is-parte1.png', 'Borrador BPMN AS-IS, parte 1'),
-        ('docs/academico/practica-03/diagramas/draft/F3-bpmn-as-is-parte2.png', 'Borrador BPMN AS-IS, parte 2'),
+        (f'{PD}/exports/F3_BPMN_ASIS.png', 'Exportación formal PNG del diagrama «F3 - BPMN AS-IS» (figura principal)'),
+        (f'{PD}/exports/F3_BPMN_ASIS.svg', 'Exportación formal SVG (nativa de PowerDesigner)'),
+        (f'{PD}/models/F29_BPM_Academico.bpm', 'Modelo fuente de PowerDesigner (paquete F3)'),
+        (f'{PD}/evidencias/capturas/F3_BPMN_ASIS_PowerDesigner.png', 'Captura real de PowerDesigner: vista principal'),
+        (f'{PD}/evidencias/capturas/F3_SP-01_detalle_PowerDesigner.png',
+         'Captura real de PowerDesigner: detalle de SP-01 (F29B-OBS-01)'),
+        (f'{PD}/F29_VALIDATION.md', 'Validación de la vista (F29)'),
+        (f'{PD}/F29B_HOTFIX.md', 'Hotfix de reproducibilidad (F29B) y F29B-OBS-01'),
+        ('docs/academico/practica-03/diagramas/draft/F3-bpmn-as-is-parte1.png', 'Borrador BPMN AS-IS, parte 1 — ' + SUPERSEDED),
+        ('docs/academico/practica-03/diagramas/draft/F3-bpmn-as-is-parte2.png', 'Borrador BPMN AS-IS, parte 2 — ' + SUPERSEDED),
         ('docs/academico/practica-02/F2_Analisis_del_Proceso_Colegio_Andino.docx', 'Formato 02 del que deriva el BPMN'),
         ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_03.docx', 'Guía oficial de la Práctica 03'),
         ('docs/academico/00-fuentes-oficiales/formatos-originales/Formato_03_Diagrama_BPM.docx',
          'Plantilla oficial del Formato 03 (solo lectura)'),
-    ])
+    ], note=NOTA_EVID_F29)
 
 
 # --------------------------------------------------------------------------- F4 (problemas)
@@ -615,7 +673,8 @@ def build_f5():
     ante = antecedente_tobe()
     d = Doc()
     estado(d, [f'El proceso de este formato es **{C.TBP}**: está soportado por el **{C.SI}** v1.1, salvo TB-F1 '
-               '(propuesta futura no implementada). RF-29 (experimental) no forma parte del TO-BE base.'])
+               '(propuesta futura no implementada). RF-29 (experimental) no forma parte del TO-BE base. Su modelo formal '
+               'es el diagrama «F5 - BPMN TO-BE» de PowerDesigner (F29, con el hotfix F29B).'])
     d.h('Descripción general del proceso')
     d.instr('Describir de manera clara el proceso mejorado.')
     d.sub('Objetivo del proceso.')
@@ -648,12 +707,38 @@ def build_f5():
             [(s[0], s[1], ', '.join(s[4]), ', '.join(s[5])) for s in T.SOLUCIONES], widths=[14, 12, 44, 30], sz=17)
     d.h('Diagrama BPM mejorado (TO-BE)')
     d.instr('Inserte el diagrama BPM del proceso mejorado.')
-    caps = ['parte 1: nivel vacante (requerimiento y convocatoria)', 'parte 2a: SP-P por postulación (1 de 2) y pool Postulante',
-            'parte 2b: SP-P por postulación (2 de 2)', 'parte 3: nivel vacante (selección y cierre)']
-    for i, (pth, cap) in enumerate(zip(bp, caps), start=1):
-        d.img(pth, f'Figura {i}. BPMN TO-BE propuesto, {cap}. Borrador de revisión.', 16.5)
-    d.p('Borrador dibujado desde la especificación de este formato (corregida en la F27D tras la auditoría F27C). La '
-        'versión formal se modelará en PowerDesigner en la F29 (`POWERDESIGNER_PENDING.md`).')
+    exp = pd('exports', 'F5_BPMN_TOBE.png')
+    d.p('Diagrama formal modelado en **PowerDesigner 16.6** (Fase 29): diagrama «F5 - BPMN TO-BE» del modelo '
+        '`F29_BPM_Academico.bpm`, paquete F5. Por su anchura, la figura 1 muestra la exportación completa en una página '
+        'horizontal y las figuras 2 a 5 amplían cuatro franjas consecutivas, que se solapan para no cortar ningún '
+        'elemento. Las ampliaciones son recortes sin retoque y no añaden contenido.')
+    d.wide_img(exp, 'Figura 1. BPMN TO-BE propuesto: exportación formal de PowerDesigner (F29), diagrama «F5 - BPMN '
+                    'TO-BE» (`F5_BPMN_TOBE.png`), completo.')
+    franjas = [((0.0, 0.28), 'nivel vacante: requerimiento, aprobación y configuración (EI a GB1, TB-01 a TB-09)'),
+               ((0.24, 0.52), 'publicación (TB-10), pool Postulante (EP-01, TB-11 a TB-13, EP-02) e inicio de SP-P '
+                              '(SIP, TB-14 a TB-17)'),
+               ((0.48, 0.76), 'SP-P, continuación: sesiones, evaluación y entrevista (TB-18 a TB-23)'),
+               ((0.72, 1.0), 'fin de SP-P y nivel vacante: ranking, decisión humana, selección y cierre (TB-24 a TB-29, '
+                             'EFE), TB-30 y TB-F1')]
+    for i, (crop, txt) in enumerate(franjas, start=2):
+        d.wide_img(exp, f'Figura {i}. Ampliación de la figura 1 (franja del {round(crop[0] * 100)} % al '
+                        f'{round(crop[1] * 100)} % del ancho): {txt}. Recorte sin retoque de la exportación formal.', crop=crop)
+    d.sub('Observaciones del modelo formal (Check Model de PowerDesigner)')
+    d.table(['Elemento', 'Hallazgo de PowerDesigner', 'Tratamiento'], [
+        ('TB-30 Registrar la auditoría de las acciones críticas', 'Proceso sin flujos de entrada ni de salida',
+         'Esperado: es **transversal** (se ejecuta en cada acción crítica) y se representa desconectado a propósito'),
+        ('TB-F1 Cerrar la convocatoria sin selección', 'Proceso sin flujos de entrada ni de salida',
+         'Esperado: es una **propuesta futura** (A-30), no implementada y desconectada del flujo'),
+        ('MT-02 Postulación', 'Advertencia de mensaje incoherente (CheckFlowIncohMsg)',
+         'Advertencia **aceptada** de la herramienta: MT-02 llega al borde de SP-P con su formato de mensaje, y '
+         'PowerDesigner no permite declarar un mensaje recibido en un subproceso compuesto'),
+    ], widths=[26, 28, 46], sz=16)
+    d.p('Ninguno de estos hallazgos es una falla funcional del TO-BE: los tres se aceptaron en la auditoría de la F29. '
+        'SP-P es un subproceso expandido de instancia múltiple paralela; PowerDesigner 16.6 no dibuja su contenido en '
+        'la vista principal del editor (limitación F29B-OBS-01) y se consulta en el diagrama «SP-P Gestionar la '
+        'postulación — detalle», con los mismos objetos.')
+    d.p('El borrador de revisión de la F27B–F28 (`diagramas/draft/`, partes 1, 2a, 2b y 3) queda como antecedente: '
+        + SUPERSEDED + '.')
     d.sub('Estructura del modelo: niveles')
     d.table(['Nivel', 'Instancias', 'Contenido'], T.NIVELES, widths=[22, 33, 45], sz=17)
     d.p(T.SP_P)
@@ -683,7 +768,16 @@ def build_f5():
     ])
     d.h('Evidencias')
     d.instr('Adjuntar capturas del diagrama BPM mejorado.')
-    d.img(ante, 'Figura 5. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la '
+    d.p('Capturas reales de PowerDesigner, tomadas con el modelo reabierto desde el disco. La vista principal se capturó '
+        'en dos partes por su anchura.')
+    d.img(pd('evidencias', 'capturas', 'F5_BPMN_TOBE_PowerDesigner_parte1.png'),
+          'Figura 6. Captura de PowerDesigner: diagrama «F5 - BPMN TO-BE», parte 1 (nivel vacante hasta el inicio de SP-P).', 16)
+    d.img(pd('evidencias', 'capturas', 'F5_BPMN_TOBE_PowerDesigner_parte2.png'),
+          'Figura 7. Captura de PowerDesigner: diagrama «F5 - BPMN TO-BE», parte 2 (SP-P hasta el cierre, TB-30 y TB-F1).', 16)
+    d.img(pd('evidencias', 'capturas', 'F5_SP-P_detalle_PowerDesigner.png'),
+          'Figura 8. Captura de PowerDesigner: diagrama «SP-P Gestionar la postulación — detalle» (contenido de SP-P; '
+          'F29B-OBS-01).', 16)
+    d.img(ante, 'Figura 9. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la '
                 'rama «cerrar sin selección», no implementada.', 16)
     d.bullets([
         'TO-BE escrito e implementado: `docs/final-report/03-procesos-negocio.md` §3.3–3.5 y '
@@ -692,6 +786,9 @@ def build_f5():
         'Fase 25 (`docs/v1.1/phase-25-final-qa.md`).',
         'Comportamiento implementado de referencia (no es el TO-BE institucional): AC-01 '
         '(`docs/v1.1/powerdesigner/exports/AC-01-proceso-reclutamiento.png`).',
+        'Modelo formal: `docs/academico/powerdesigner/models/F29_BPM_Academico.bpm` (paquete F5); exportaciones '
+        '`F5_BPMN_TOBE.png` y `F5_BPMN_TOBE.svg`; validación en `F29_VALIDATION.md` y `F29B_HOTFIX.md`.',
+        'Borradores: `docs/academico/practica-05/diagramas/draft/` (' + SUPERSEDED + ').',
     ])
     emit(5, 'F5_Modelo_BPM_TOBE_Colegio_Andino', 'Formato_05_Modelo_BPM_mejorado.docx', 'proceso', d,
          'Formato 05 — Modelo BPM mejorado (proceso TO-BE)')
@@ -705,14 +802,23 @@ def build_f5():
         ('docs/academico/phase-24/F9_Alcance_Proyecto_Software_Colegio_Andino_NRC30180.docx', 'F9 v1.0, fuente del anexo A'),
         ('docs/v1.1/powerdesigner/exports/AC-01-proceso-reclutamiento.png', 'Comportamiento implementado (referencia, no TO-BE)'),
         ('docs/academico/tools/f27b/m_tobe.py', 'Modelo de datos del TO-BE usado por el generador'),
-        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte1.png', 'Borrador BPMN TO-BE, parte 1'),
-        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte2a.png', 'Borrador BPMN TO-BE, parte 2a (SP-P)'),
-        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte2b.png', 'Borrador BPMN TO-BE, parte 2b (SP-P)'),
-        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte3.png', 'Borrador BPMN TO-BE, parte 3'),
+        (f'{PD}/exports/F5_BPMN_TOBE.png', 'Exportación formal PNG del diagrama «F5 - BPMN TO-BE» (figura principal)'),
+        (f'{PD}/exports/F5_BPMN_TOBE.svg', 'Exportación formal SVG (nativa de PowerDesigner)'),
+        (f'{PD}/models/F29_BPM_Academico.bpm', 'Modelo fuente de PowerDesigner (paquete F5)'),
+        (f'{PD}/evidencias/capturas/F5_BPMN_TOBE_PowerDesigner_parte1.png', 'Captura real de PowerDesigner: vista principal, parte 1'),
+        (f'{PD}/evidencias/capturas/F5_BPMN_TOBE_PowerDesigner_parte2.png', 'Captura real de PowerDesigner: vista principal, parte 2'),
+        (f'{PD}/evidencias/capturas/F5_SP-P_detalle_PowerDesigner.png',
+         'Captura real de PowerDesigner: detalle de SP-P (F29B-OBS-01)'),
+        (f'{PD}/F29_VALIDATION.md', 'Validación de la vista y hallazgos aceptados (TB-30, TB-F1, MT-02)'),
+        (f'{PD}/F29B_HOTFIX.md', 'Hotfix de reproducibilidad (F29B) y F29B-OBS-01'),
+        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte1.png', 'Borrador BPMN TO-BE, parte 1 — ' + SUPERSEDED),
+        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte2a.png', 'Borrador BPMN TO-BE, parte 2a (SP-P) — ' + SUPERSEDED),
+        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte2b.png', 'Borrador BPMN TO-BE, parte 2b (SP-P) — ' + SUPERSEDED),
+        ('docs/academico/practica-05/diagramas/draft/F5-bpmn-to-be-parte3.png', 'Borrador BPMN TO-BE, parte 3 — ' + SUPERSEDED),
         ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_05.docx', 'Guía oficial de la Práctica 05'),
         ('docs/academico/00-fuentes-oficiales/formatos-originales/Formato_05_Modelo_BPM_mejorado.docx',
          'Plantilla oficial del Formato 05 (solo lectura)'),
-    ])
+    ], note=NOTA_EVID_F29)
 
 
 # --------------------------------------------------------------------------- F6 (RF)
@@ -891,8 +997,9 @@ def build_f8():
     ante = f9_image(2, 'antecedente-cu-f9-v1.0-anexo-B.png', 8)
     uc01 = os.path.join(ROOT, 'docs', 'v1.1', 'powerdesigner', 'exports', 'UC-01-casos-de-uso.png')
     d = Doc()
-    estado(d, [f'Los casos de uso representan el **{C.SI}** de la línea base RF-01 a RF-27. El diagrama académico es un '
-               '**borrador**. La vista técnica formal es UC-01 de PowerDesigner (F23), que no se modifica.'])
+    estado(d, [f'Los casos de uso representan el **{C.SI}** de la línea base RF-01 a RF-27. El diagrama académico está '
+               'formalizado en PowerDesigner (F29): diagrama «F8 - Casos de Uso Academicos». La vista técnica UC-01 de '
+               'PowerDesigner (F23) se conserva como referencia y no se modifica.'])
     d.h('Descripción general del sistema')
     d.instr('Describir brevemente el sistema a desarrollar.')
     sistema_desc(d)
@@ -919,10 +1026,23 @@ def build_f8():
     d.table(['Actor', 'Caso de uso'], rows, widths=[35, 65])
     d.h('Diagrama de casos de uso')
     d.instr('Insertar aquí el diagrama elaborado con herramienta UML.')
-    d.img(diag, 'Figura 1. Diagrama de casos de uso, vista académica (CU-01 a CU-20). Borrador de revisión.', 16.5)
-    d.img(uc01, 'Figura 2. Referencia técnica: UC-01 de PowerDesigner (F23), un caso por RF. Exportación versionada, sin cambios.', 16.5)
-    d.p('La adaptación formal de la vista académica en PowerDesigner está en `POWERDESIGNER_PENDING.md`. No se modificó '
-        'el OOM de la F23.')
+    exp = pd('exports', 'F8_Casos_de_Uso_Academicos.png')
+    d.p('Diagrama formal modelado en **PowerDesigner 16.6** (Fase 29): diagrama «F8 - Casos de Uso Academicos» del modelo '
+        '`F29_UML_Academico.oom`, paquete F8. Cinco actores, CU-01 a CU-20 en cinco áreas funcionales y CU-16 incluido '
+        'desde CU-05, CU-15 y CU-17. Las figuras 2 y 3 amplían sus dos mitades y no añaden contenido.')
+    d.img(exp, 'Figura 1. Diagrama de casos de uso, vista académica (CU-01 a CU-20): exportación formal de PowerDesigner '
+               '(F29), `F8_Casos_de_Uso_Academicos.png`.', 15.5)
+    d.img(exp, 'Figura 2. Ampliación de la figura 1 (franja del 0 % al 55 % del ancho): actores ACT-01, ACT-04 y ACT-05 '
+               'y áreas A a E. Recorte sin retoque de la exportación formal.', 15.5, crop=(0.0, 0.55))
+    d.img(exp, 'Figura 3. Ampliación de la figura 1 (franja del 45 % al 100 % del ancho): áreas A a E y actores ACT-02 y '
+               'ACT-03. Recorte sin retoque de la exportación formal.', 15.5, crop=(0.45, 1.0))
+    d.p('PowerDesigner señala CU-16 como caso sin actor directo (Check Model): es esperado, porque CU-16 es un caso '
+        'incluido. CU-21 «Consultar auditoría» sigue **DIFERIDO** y no aparece en el diagrama. El borrador de la F27B–F28 '
+        '(`diagramas/draft/`) queda como antecedente: ' + SUPERSEDED + '.')
+    d.img(uc01, 'Figura 4. Referencia técnica: UC-01 de PowerDesigner (F23), un caso por RF. Exportación versionada, sin cambios.', 16.5)
+    d.p('No se modificó el OOM de la F23. Captura real de PowerDesigner, tomada con el modelo reabierto desde el disco:')
+    d.img(pd('evidencias', 'capturas', 'F8_Casos_de_Uso_PowerDesigner.png'),
+          'Figura 5. Captura de PowerDesigner: diagrama «F8 - Casos de Uso Academicos» y paquete F8 en el Object Browser.', 16)
     d.h('Relación con los requerimientos y correspondencia de vistas')
     d.table(['CU académico (F9)', 'CU agrupado (v1.0)', 'UC-RF (F22/F23)', 'Actor', 'RF', 'Alcance (F9)'],
             [(f'{c[0]} {c[1]}', c[5], c[6], ', '.join(c[3]) or '— (incluido)', ', '.join(c[4]), c[7]) for c in U.CU] +
@@ -935,7 +1055,7 @@ def build_f8():
         '(F22/F23, uno por RF, con UC-RF28 candidato y UC-RF29 experimental). No se renumera ninguna.')
     d.h('Observaciones')
     d.table(['ID', 'Tema', 'Observación'], U.OBSERVACIONES, widths=[11, 20, 69], sz=16)
-    d.img(ante, 'Figura 3. Antecedente superado: diagrama de CU del F9 v1.0 (anexo B, copia sin modificar). Incluye '
+    d.img(ante, 'Figura 6. Antecedente superado: diagrama de CU del F9 v1.0 (anexo B, copia sin modificar). Incluye '
                 'actores fuera del alcance (O-F8-06).', 15)
     emit(8, 'F8_Diagrama_Casos_de_Uso_Colegio_Andino', 'Formato_08_Diagrama_de_casos_de_uso.docx', 'modulo', d,
          'Formato 08 — Diagrama de casos de uso')
@@ -947,12 +1067,18 @@ def build_f8():
         ('docs/v1.1/uml/use-cases.md', 'Vista C: 29 UC-RF, actores, include/extend y semántica crítica'),
         ('docs/v1.1/powerdesigner/exports/UC-01-casos-de-uso.png', 'UC-01 de PowerDesigner (F23), referencia técnica'),
         ('docs/academico/practica-08/evidencias/antecedente-cu-f9-v1.0-anexo-B.png', 'Antecedente superado (anexo B del F9 v1.0)'),
-        ('docs/academico/practica-08/diagramas/draft/F8-casos-de-uso-academico.png', 'Borrador del diagrama académico'),
+        (f'{PD}/exports/F8_Casos_de_Uso_Academicos.png', 'Exportación formal PNG del diagrama académico (figura principal)'),
+        (f'{PD}/exports/F8_Casos_de_Uso_Academicos.svg', 'Exportación formal SVG (nativa de PowerDesigner)'),
+        (f'{PD}/models/F29_UML_Academico.oom', 'Modelo fuente de PowerDesigner (paquete F8)'),
+        (f'{PD}/evidencias/capturas/F8_Casos_de_Uso_PowerDesigner.png', 'Captura real de PowerDesigner: vista principal'),
+        (f'{PD}/F29_VALIDATION.md', 'Validación de la vista (F29) y hallazgo aceptado de CU-16'),
+        (f'{PD}/F29B_HOTFIX.md', 'Hotfix de reproducibilidad (F29B)'),
+        ('docs/academico/practica-08/diagramas/draft/F8-casos-de-uso-academico.png', 'Borrador del diagrama académico — ' + SUPERSEDED),
         ('docs/academico/tools/f27b/m_cu.py', 'Modelo de datos de los CU usado por el generador'),
         ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_08.docx', 'Guía oficial de la Práctica 08'),
         ('docs/academico/00-fuentes-oficiales/formatos-originales/Formato_08_Diagrama_de_casos_de_uso.docx',
          'Plantilla oficial del Formato 08 (solo lectura)'),
-    ])
+    ], note=NOTA_EVID_F29)
 
 
 # --------------------------------------------------------------------------- Trazabilidad F2 → F9
@@ -1196,7 +1322,9 @@ def build_f11():
     d.kv([('Proyecto', C.PROYECTO), ('Curso', 'Pruebas y Calidad de Software'), ('NRC', '28607'), ('Docente', C.DOCENTE),
           ('Equipo', C.EQUIPO), ('Formato', 'Formato 11 – Arquitectura del sistema (adaptación académica; sin plantilla oficial)'),
           ('Fuente normativa', 'Guía de Práctica N.° 11 (docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_11.docx)'),
-          ('Fecha', '27/09/2026'), ('Estado', 'Versión 1.0, lista para auditoría (Fase 28). Sin aprobación institucional')],
+          ('Fecha', '28/09/2026'),
+          ('Estado', 'Versión 1.1: integra la vista formal ARQ-01 de PowerDesigner (F29, con el hotfix F29B). La versión '
+                     '1.0 se auditó en la Fase 28. Sin aprobación institucional')],
          widths=(26, 74), sz=17)
     d.sub('Correspondencia con la Guía 11')
     d.table(['ID', 'Exigencia de la guía', 'Apartado de la guía', 'Sección de este documento'],
@@ -1234,8 +1362,20 @@ def build_f11():
     d.h('Arquitectura conceptual')
     d.table(['Capa conceptual', 'Componentes'], AR.CAPAS, widths=[45, 55])
     d.p(AR.NOTA_CAPAS)
-    d.img(diag, 'Figura 1. Arquitectura conceptual del sistema (borrador). La vista formal ARQ-01 se modelará en '
-                'PowerDesigner en la F29.', 17)
+    exp = pd('exports', 'ARQ-01_Arquitectura_Conceptual.png')
+    d.p('Vista formal **ARQ-01** modelada en **PowerDesigner 16.6** (Fase 29): diagrama «ARQ-01 - Arquitectura '
+        'Conceptual» del modelo `F29_UML_Academico.oom`, paquete ARQ01. Muestra los 17 componentes dentro de sus 6 '
+        'agrupaciones y las relaciones R-01 a R-20. La figura 1 va en una página horizontal; las figuras 2 y 3 amplían '
+        'sus dos mitades y no añaden contenido.')
+    d.wide_img(exp, 'Figura 1. Arquitectura conceptual del sistema: vista formal ARQ-01, exportación de PowerDesigner '
+                    '(F29), `ARQ-01_Arquitectura_Conceptual.png`.')
+    d.img(exp, 'Figura 2. Ampliación de la figura 1 (franja del 0 % al 55 % del ancho). Recorte sin retoque de la '
+               'exportación formal.', 16.5, crop=(0.0, 0.55))
+    d.img(exp, 'Figura 3. Ampliación de la figura 1 (franja del 45 % al 100 % del ancho), con C17 (RF-29, experimental) '
+               'y las notas del diagrama. Recorte sin retoque de la exportación formal.', 16.5, crop=(0.45, 1.0))
+    d.p('C10 es la decisión **humana** (RF-23); C09 calcula, ordena y compara, sin seleccionar. RF-28 no se implementó y '
+        'no es un componente. C17 (RF-29) es experimental y no se relaciona con C09, C10 ni C11. El borrador de la F28 '
+        '(`diagramas/draft/`) queda como antecedente: ' + SUPERSEDED + '.')
     d.sub('Arquitectura técnica de referencia (implementación actual)')
     d.p('Esta sección documenta cómo está construido el sistema. **No es la vista conceptual principal** ni un despliegue.')
     d.kv(AR.TECNICA, widths=(24, 76), sz=16)
@@ -1264,7 +1404,14 @@ def build_f11():
         'Referencias técnicas sin modificar: CO-01 y PK-01 (`docs/v1.1/uml/component-model.md`), DE-01 '
         '(`deployment-model.md`), UC-01, SEQ-07 y SEQ-08 (`docs/v1.1/uml/`); exportaciones de la F23.',
         'Manifiesto con SHA-256: `docs/academico/practica-11/evidencias/README.md`.',
+        'Vista formal ARQ-01: modelo `docs/academico/powerdesigner/models/F29_UML_Academico.oom` (paquete ARQ01), '
+        'exportaciones `ARQ-01_Arquitectura_Conceptual.png` y `.svg`; validación en `F29_VALIDATION.md` y `F29B_HOTFIX.md`.',
+        'Borrador de la F28: `docs/academico/practica-11/diagramas/draft/F11-arquitectura-conceptual.png` (' + SUPERSEDED + ').',
     ])
+    d.p('Captura real de PowerDesigner, tomada con el modelo reabierto desde el disco:')
+    d.img(pd('evidencias', 'capturas', 'ARQ01_Arquitectura_Conceptual_PowerDesigner.png'),
+          'Figura 4. Captura de PowerDesigner: diagrama «ARQ-01 - Arquitectura Conceptual» y paquete ARQ01 en el Object '
+          'Browser.', 16)
     d.h('Trazabilidad')
     d.table(['Componente', 'RF', 'CU', 'RNF', 'Alcance F9', 'Artefacto técnico'], f11_trace_rows(),
             widths=[18, 17, 15, 14, 12, 24], sz=14)
@@ -1273,7 +1420,7 @@ def build_f11():
     out_docx = os.path.join(pdir(11), F11_STEM + '.docx')
     build_docx_f9(F9_BASE, out_docx,
                   cover=[('ALCANCE DEL PROYECTO SOFTWARE F9', 'ARQUITECTURA DEL SISTEMA — FORMATO 11 (ADAPTACIÓN ACADÉMICA)'),
-                         ('Versión 1.1 · septiembre de 2026', 'Versión 1.0 · septiembre de 2026')],
+                         ('Versión 1.1 · septiembre de 2026', 'Versión 1.1 · septiembre de 2026')],
                   cover_note=AR.NOTA_ADAPTACION,
                   header_text='F11 ADAPTADO | PRUEBAS Y CALIDAD DE SOFTWARE',
                   doc=d, props={'dc:title': title, 'dc:subject': 'Arquitectura conceptual — adaptación académica de la Guía 11',
@@ -1362,8 +1509,16 @@ def build_f11():
         ('docs/v1.1/architecture-decisions/ADR-001-ml-boundary.md', 'Frontera del ML (DA-07)'),
         ('docs/v1.1/architecture-decisions/ADR-002-human-oversight.md', 'Decisión humana (DA-03)'),
         ('docs/academico/tools/f27b/m_arch.py', 'Modelo de datos de la arquitectura'),
-        ('docs/academico/practica-11/diagramas/draft/F11-arquitectura-conceptual.png', 'Borrador del diagrama conceptual'),
-    ])
+        (f'{PD}/exports/ARQ-01_Arquitectura_Conceptual.png', 'Exportación formal PNG de ARQ-01 (figura principal)'),
+        (f'{PD}/exports/ARQ-01_Arquitectura_Conceptual.svg', 'Exportación formal SVG (nativa de PowerDesigner)'),
+        (f'{PD}/models/F29_UML_Academico.oom', 'Modelo fuente de PowerDesigner (paquete ARQ01)'),
+        (f'{PD}/evidencias/capturas/ARQ01_Arquitectura_Conceptual_PowerDesigner.png',
+         'Captura real de PowerDesigner: vista ARQ-01 con sus 6 agrupaciones'),
+        (f'{PD}/F29_VALIDATION.md', 'Validación de la vista (F29)'),
+        (f'{PD}/F29B_HOTFIX.md', 'Hotfix de reproducibilidad (F29B): geometría de las agrupaciones'),
+        ('docs/academico/practica-11/diagramas/draft/F11-arquitectura-conceptual.png',
+         'Borrador del diagrama conceptual — ' + SUPERSEDED),
+    ], note=NOTA_EVID_F29)
 
 
 if __name__ == '__main__':

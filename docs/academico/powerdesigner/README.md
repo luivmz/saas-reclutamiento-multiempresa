@@ -7,7 +7,18 @@ Formalización en **PowerDesigner 16.6** de las cuatro vistas académicas especi
 - F8 casos de uso;
 - ARQ-01, la arquitectura conceptual del F11.
 
-**Estado:** FORMALIZADO en la F29 (auditada con observaciones) y corregido por el **hotfix F29B** ([`F29B_HOTFIX.md`](F29B_HOTFIX.md)): los modelos reabiertos desde el disco reproducen exactamente sus exportaciones. Pendiente de la auditoría F29B. Ningún Formato (DOCX o PDF) se sustituyó todavía: según el criterio de aceptación de cada especificación y la regla 3 de la [lista de trabajo](../POWERDESIGNER_WORKLIST.md), el borrador de cada Formato se sustituye **solo después de una nueva auditoría**.
+**Estado (28/09/2026): F29 CLOSED WITH DOCUMENTED OBSERVATIONS.**
+
+| Elemento | Estado |
+|---|---|
+| F29: formalización de F3, F5, F8 y ARQ-01 | **AUDITED** (aprobada con observaciones) |
+| F29B: hotfix de reproducibilidad ([`F29B_HOTFIX.md`](F29B_HOTFIX.md)) | **AUDITED / APPROVED** |
+| Capturas de PowerDesigner (7, reales) | **COMPLETED** ([registro](evidencias/capturas/CAPTURAS_PENDIENTES.md)) |
+| Exportaciones formales en los Formatos 03, 05, 08 y 11 | **INTEGRATED**: son el diagrama principal de cada formato |
+| DOCX y PDF de F3, F5, F8 y F11 | **UPDATED**: se regeneraron con el generador `tools/f27b/` |
+| Observaciones abiertas | F29-L01, F29-L02 y F29B-OBS-01 (LOW, para la F31), además de H-14 y F28-L01, que ya venían de fases anteriores |
+
+Los modelos reabiertos desde el disco reproducen exactamente sus exportaciones (hotfix F29B). La integración aplicó la regla 3 de la [lista de trabajo](../POWERDESIGNER_WORKLIST.md): el borrador de cada Formato se sustituyó por la exportación formal solo después de las auditorías F29 y F29B.
 
 Los modelos de la F23 ([`docs/v1.1/powerdesigner/`](../../v1.1/powerdesigner/README.md)) no se abrieron para editarlos ni se modificaron: UC-01, CO-01, PK-01, DE-01, AC-01 y el resto de sus 22 vistas y exportaciones siguen igual.
 
@@ -24,7 +35,7 @@ Los modelos de la F23 ([`docs/v1.1/powerdesigner/`](../../v1.1/powerdesigner/REA
 | [`F29_VALIDATION.md`](F29_VALIDATION.md) | Resultado PASS/OBS por vista |
 | [`F29B_HOTFIX.md`](F29B_HOTFIX.md) | Hotfix F29B: causa raíz, corrección y pruebas de reproducibilidad tras la recarga |
 | [`evidencias/f29b/`](evidencias/f29b/) | Evidencia diagnóstica del hotfix (capturas reales del editor y exportaciones de prueba) |
-| [`evidencias/capturas/`](evidencias/capturas/CAPTURAS_PENDIENTES.md) | Capturas de PowerDesigner del equipo: **PENDING RETAKE** tras el hotfix, con instrucciones |
+| [`evidencias/capturas/`](evidencias/capturas/CAPTURAS_PENDIENTES.md) | 7 capturas reales de PowerDesigner (vistas principales, F5 en dos partes y los detalles de SP-01 y SP-P): **COMPLETED** |
 
 Trazabilidad por elemento (especificación → objeto del modelo → carril o agrupación → RF → exportación): [`../trazabilidad/F29-powerdesigner-traceability.md`](../trazabilidad/F29-powerdesigner-traceability.md).
 
@@ -49,6 +60,17 @@ Cada script hace tres cosas:
 3. **Guarda el modelo y exporta** el PNG y el SVG.
 
 `f29lib.ps1` se niega a abrir o guardar cualquier archivo que no sea uno de los dos modelos de la F29.
+
+**Capturas y formatos.** Con la ventana de PowerDesigner maximizada, se vuelven a tomar las capturas y se regeneran los formatos:
+
+```powershell
+. .\docs\academico\powerdesigner\scripts\capture_f29_views.ps1
+Save-F29Captures
+python docs/academico/tools/f27b/build.py f3 f5 f8 f11
+powershell -ExecutionPolicy Bypass -File docs/academico/tools/f27b/topdf.ps1 <DOCX de F3, F5, F8 y F11>
+```
+
+`Save-F29Captures` reabre los modelos desde el disco y nunca los guarda. `build.py` inserta en los DOCX las exportaciones de `exports/` y las capturas.
 
 ## Decisiones de modelado
 
@@ -83,9 +105,12 @@ Durante la investigación se detectaron y borraron del modelo BPM 9 objetos hué
 
 ## Limitaciones y observaciones
 
-- **Capturas de PowerDesigner:** las cinco capturas que aportó el equipo son anteriores al hotfix F29B y quedan en **PENDING RETAKE**, junto con dos nuevas de los diagramas de detalle ([instrucciones](evidencias/capturas/CAPTURAS_PENDIENTES.md)). No se incluye ninguna captura simulada.
+- **Capturas de PowerDesigner:** COMPLETED. Son 7 capturas reales de la ventana de PowerDesigner, tomadas con los modelos reabiertos desde el disco ([`scripts/capture_f29_views.ps1`](scripts/capture_f29_views.ps1) y [registro](evidencias/capturas/CAPTURAS_PENDIENTES.md)). Sustituyen a las cinco anteriores al hotfix F29B, que nunca se versionaron. Ninguna es simulada.
 - **F29B-OBS-01 (herramienta):** en la vista principal del editor, los recuadros de SP-01 y SP-P aparecen sin contenido. Su contenido se ve en los diagramas de detalle y en las exportaciones reproducibles. Ver [`F29B_HOTFIX.md`](F29B_HOTFIX.md).
-- **Formatos DOCX y PDF:** siguen con los borradores. La sustitución por las exportaciones formales queda para después de la auditoría F29.
+- **Formatos DOCX y PDF:** UPDATED. En F3, F5, F8 y F11 el diagrama principal es la exportación formal, completa y en página horizontal cuando es muy ancha, seguida de ampliaciones sin retoque. Microsoft Word reduce las imágenes del PDF a unos 200 ppp; el DOCX conserva la resolución original de la exportación. Los borradores quedan como antecedente (DRAFT / SUPERSEDED BY F29 FORMAL EXPORT).
 - **Diagrama raíz vacío:** cada modelo conserva el diagrama raíz que PowerDesigner creó con él, vacío.
 - **Finales de línea:** git normaliza a LF los `.bpm`, `.oom` y `.svg`. El manifiesto da el SHA-256 del contenido versionado.
-- **LOW heredados:** H-14 y F28-L01 (cabeceras de PDF) siguen asignados a la F31; esta fase no los aborda.
+- **LOW heredados:** H-14 y F28-L01 (cabeceras de PDF) siguen asignados a la F31; esta fase no los aborda. También van a la F31:
+  - F29-L01: `RepositoryFilename` con ruta local;
+  - F29-L02: rótulos de ARQ-01 que rozan líneas o bordes;
+  - F29B-OBS-01: contenido de los subprocesos compuestos, que no se ve en la vista principal del editor.

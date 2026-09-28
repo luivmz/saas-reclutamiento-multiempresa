@@ -1,5 +1,7 @@
 # Pendiente de PowerDesigner — F8 casos de uso (vista académica)
 
+**Actualización posterior a la F29 (28/09/2026): FORMALIZED / INTEGRATED / DONE.** Auditada en la F29 y en la F29B, la exportación formal es el diagrama principal del DOCX y el PDF del Formato, y el criterio de aceptación de exportación queda cumplido. Hay capturas reales de PowerDesigner en [`../powerdesigner/evidencias/capturas/`](../powerdesigner/evidencias/capturas/CAPTURAS_PENDIENTES.md).
+
 **Actualización F29 (27/09/2026): FORMALIZED / DONE**, pendiente de la auditoría F29. Diagrama «F8 - Casos de Uso Academicos» en [`F29_UML_Academico.oom`](../powerdesigner/models/F29_UML_Academico.oom) (paquete F8); exportaciones [PNG](../powerdesigner/exports/F8_Casos_de_Uso_Academicos.png) y [SVG](../powerdesigner/exports/F8_Casos_de_Uso_Academicos.svg); verificación en [`F29_VALIDATION.md`](../powerdesigner/F29_VALIDATION.md). El estado anterior se conserva a continuación.
 
 **Estado: READY FOR POWERDESIGNER (adaptación).** La decisión del equipo de la F27D cerró el catálogo:

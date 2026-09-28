@@ -4,7 +4,7 @@ Entregable de la Fase 28: la arquitectura conceptual del sistema.
 
 > **Documento adaptado académicamente a partir de la Guía de Práctica N.° 11. La institución no proporcionó un Formato 11 oficial.** Ningún archivo de esta carpeta es una plantilla oficial ni pretende serlo.
 
-**Estado:** versión 1.0, lista para auditoría. La validación es estructural, académica e interna del equipo: **no hay aprobación institucional**.
+**Estado:** versión 1.1 (28/09/2026). Integra la vista formal ARQ-01 de PowerDesigner (F29 y F29B); la versión 1.0 se auditó en la F28. La validación es estructural, académica e interna del equipo: **no hay aprobación institucional**.
 
 ## Fuentes
 
@@ -26,7 +26,8 @@ Entregable de la Fase 28: la arquitectura conceptual del sistema.
 | [`RELATIONSHIPS.md`](RELATIONSHIPS.md) | 20 relaciones: tipo, información, dependencia, RF/CU y observación. Incluye el flujo de información y el de RF-29 aparte |
 | [`VALIDATION.md`](VALIDATION.md) | Matriz de validación (A–H), validación de componentes y de relaciones |
 | [`F28_VALIDATION.md`](F28_VALIDATION.md) | Exigencias de la Guía 11 frente a la evidencia |
-| [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md) | Especificación de la vista ARQ-01 para la F29 |
+| [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md) | Especificación de la vista ARQ-01 para la F29 (**FORMALIZED / INTEGRATED / DONE**) |
+| [`ARQ01_Arquitectura_Conceptual_PowerDesigner.png`](../powerdesigner/evidencias/capturas/ARQ01_Arquitectura_Conceptual_PowerDesigner.png) | Captura real de PowerDesigner de la vista ARQ-01 |
 | [`diagramas/draft/`](diagramas/draft/) | Borrador del diagrama conceptual (PNG) — **DRAFT / SUPERSEDED BY F29 FORMAL EXPORT** |
 | [`../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png`](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png) · [SVG](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.svg) | **Exportación formal de PowerDesigner (F29)**, diagrama «ARQ-01 - Arquitectura Conceptual» |
 | [`evidencias/`](evidencias/README.md) | Manifiesto de evidencias: archivo, ruta, SHA-256 y uso |
@@ -71,7 +72,7 @@ Trazabilidad componente → RF → CU → RNF → alcance → artefacto: [`../tr
 - **RF-28:** no implementado.
 - **RF-29:** experimental.
 - **Aprobación:** no hay aprobación institucional.
-- **Diagrama:** el del F11 es un borrador; la vista formal ARQ-01 se formalizó en la F29 (ver «Formalización F29»). El DOCX y el PDF la incorporan tras la auditoría F29.
+- **Diagrama:** el DOCX y el PDF usan la vista formal ARQ-01 de la F29 (ver «Formalización F29»). Algunos rótulos rozan líneas o bordes: F29-L02, LOW para la F31. Hasta el 28/09/2026 usaban el borrador.
 
 ## Relación con la F29 (estado al cierre de la F28)
 
@@ -81,4 +82,4 @@ La vista ARQ-01 está especificada en [`POWERDESIGNER_PENDING.md`](POWERDESIGNER
 
 La vista se formalizó en PowerDesigner en la F29: diagrama «ARQ-01 - Arquitectura Conceptual» del modelo [`F29_UML_Academico.oom`](../powerdesigner/models/F29_UML_Academico.oom), paquete ARQ01, con exportaciones [PNG](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png) y [SVG](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.svg). Validación en [`F29_VALIDATION.md`](../powerdesigner/F29_VALIDATION.md) y trazabilidad por elemento en [`F29-powerdesigner-traceability.md`](../trazabilidad/F29-powerdesigner-traceability.md).
 
-El borrador de [`diagramas/draft/`](diagramas/draft/) queda como **DRAFT / SUPERSEDED BY F29 FORMAL EXPORT**. El DOCX y el PDF del Formato siguen con el borrador: se sustituyen solo después de la auditoría F29 (criterio de aceptación de [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md)).
+**Integración posterior a la F29 (28/09/2026): FORMALIZED / INTEGRATED / DONE.** Tras las auditorías F29 y F29B, el DOCX y el PDF del Formato usan la exportación formal como diagrama principal (figura 1: vista ARQ-01 completa en página horizontal; figuras 2 y 3: ampliaciones de sus dos mitades). Criterio de aceptación de [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md) cumplido. Capturas reales de PowerDesigner: [`ARQ01_Arquitectura_Conceptual_PowerDesigner.png`](../powerdesigner/evidencias/capturas/ARQ01_Arquitectura_Conceptual_PowerDesigner.png). Las fuentes, con su SHA-256, están en [`evidencias/`](evidencias/README.md). El borrador de [`diagramas/draft/`](diagramas/draft/) se conserva como antecedente: **DRAFT / SUPERSEDED BY F29 FORMAL EXPORT**.

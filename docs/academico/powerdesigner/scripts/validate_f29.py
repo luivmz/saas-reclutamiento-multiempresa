@@ -6,8 +6,10 @@ las fuentes versionadas del contenido:
   - F5: docs/academico/tools/f27b/m_tobe.py (ACTIVIDADES, FUTURAS, EVENTOS, COMPUERTAS)
   - F8: docs/academico/tools/f27b/m_cu.py (ACTORES, CU, INCLUDES)
   - ARQ-01: docs/academico/practica-11/COMPONENTS.md y RELATIONSHIPS.md
-Comprueba además las exportaciones (PNG y SVG válidos, con su contenido) y que la F23 no
-cambió (git). Complementa, no sustituye, los informes de validation/*.txt.
+Comprueba además las exportaciones (PNG y SVG válidos, con su contenido), la integración
+posterior a la F29 (capturas, exportaciones dentro de los DOCX y PDF de los Formatos 03, 05, 08
+y 11, y manifiesto) y que la F23 no cambió (git). Complementa, no sustituye, los informes de
+validation/*.txt.
 
 Uso (raíz del repositorio): python docs/academico/powerdesigner/scripts/validate_f29.py
 """
@@ -224,6 +226,108 @@ for rep in ('F3_model_check.txt', 'F5_model_check.txt', 'F8_model_check.txt', 'A
     ok = bool(recs) and all(a == b and c == '0' and d == '0' for a, b, c, d in recs)
     check(ok and 'reproduce el mismo SVG' in t and ': True' in t.split('reproduce el mismo SVG')[1][:80] and 'RESULTADO: PASS' in t,
           f'{rep}: recarga sin cambios ({len(recs)} diagramas) y exportación reproducible')
+
+# ------------------------------------------------------------------ integración posterior a la F29
+# Capturas reales, exportaciones formales dentro de los DOCX y PDF de los Formatos 03, 05, 08 y 11, y manifiesto.
+import hashlib  # noqa: E402
+import zipfile  # noqa: E402
+
+ACAD = ROOT / 'docs' / 'academico'
+BASE_REF = 'e49b313'   # último commit antes de la integración (F29B)
+CAPS = {
+    'F3': ['F3_BPMN_ASIS_PowerDesigner.png', 'F3_SP-01_detalle_PowerDesigner.png'],
+    'F5': ['F5_BPMN_TOBE_PowerDesigner_parte1.png', 'F5_BPMN_TOBE_PowerDesigner_parte2.png', 'F5_SP-P_detalle_PowerDesigner.png'],
+    'F8': ['F8_Casos_de_Uso_PowerDesigner.png'],
+    'F11': ['ARQ01_Arquitectura_Conceptual_PowerDesigner.png'],
+}
+FORMATS = {   # formato: (DOCX sin extensión, exportación formal, borradores sustituidos, páginas horizontales)
+    'F3': ('practica-03/F3_Diagrama_BPM_ASIS_Colegio_Andino', 'F3_BPMN_ASIS.png',
+           ['practica-03/diagramas/draft/F3-bpmn-as-is-parte1.png', 'practica-03/diagramas/draft/F3-bpmn-as-is-parte2.png'], True),
+    'F5': ('practica-05/F5_Modelo_BPM_TOBE_Colegio_Andino', 'F5_BPMN_TOBE.png',
+           [f'practica-05/diagramas/draft/F5-bpmn-to-be-parte{x}.png' for x in ('1', '2a', '2b', '3')], True),
+    'F8': ('practica-08/F8_Diagrama_Casos_de_Uso_Colegio_Andino', 'F8_Casos_de_Uso_Academicos.png',
+           ['practica-08/diagramas/draft/F8-casos-de-uso-academico.png'], False),
+    'F11': ('practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino', 'ARQ-01_Arquitectura_Conceptual.png',
+            ['practica-11/diagramas/draft/F11-arquitectura-conceptual.png'], True),
+}
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def png_dims(data):
+    return int.from_bytes(data[16:20], 'big'), int.from_bytes(data[20:24], 'big')
+
+
+export_sha = {e.name: sha(e.read_bytes()) for e in (F29 / 'exports').glob('*.png')}
+
+# 1) Las 7 capturas: PNG válidos del tamaño de una ventana, distintos de cualquier exportación.
+for fmt, caps in CAPS.items():
+    for cap in caps:
+        f = F29 / 'evidencias' / 'capturas' / cap
+        data = f.read_bytes() if f.exists() else b''
+        w, h = png_dims(data) if data[:8] == b'\x89PNG\r\n\x1a\n' else (0, 0)
+        check(w >= 1000 and h >= 600 and sha(data) not in export_sha.values(),
+              f'Captura {cap}: PNG válido de ventana ({w}x{h}), distinto de las exportaciones')
+check('STATUS: COMPLETED' in (F29 / 'evidencias' / 'capturas' / 'CAPTURAS_PENDIENTES.md').read_text(encoding='utf-8'),
+      'CAPTURAS_PENDIENTES.md: STATUS: COMPLETED')
+
+# 2) DOCX: exportación formal y capturas incrustadas, sin borradores, con tablas y encabezados conservados.
+for fmt, (stem, exp, drafts, landscape) in FORMATS.items():
+    path = ACAD / f'{stem}.docx'
+    z = zipfile.ZipFile(path)
+    okzip = z.testzip() is None
+    try:
+        for n in z.namelist():
+            if n.endswith(('.xml', '.rels')):
+                ET.fromstring(z.read(n))
+        okxml = True
+    except ET.ParseError:
+        okxml = False
+    doc = z.read('word/document.xml').decode('utf-8')
+    rels = z.read('word/_rels/document.xml.rels').decode('utf-8')
+    embeds = re.findall(r'r:embed="(rId\d+)"', doc)
+    targets = dict(re.findall(r'Id="(rId\d+)"[^>]*Target="([^"]+)"', rels))
+    media = {t: z.read('word/' + t) for t in (targets.get(e) for e in embeds) if t and ('word/' + t) in z.namelist()}
+    media_sha = {sha(b) for b in media.values()}
+    check(okzip and okxml and len(media) == len(set(targets.get(e) for e in embeds)),
+          f'{fmt} DOCX: ZIP y XML válidos, {len(embeds)} imágenes con su relación')
+    check(export_sha[exp] in media_sha, f'{fmt} DOCX: incrusta la exportación formal {exp} sin modificar')
+    draft_sha = {sha((ACAD / d).read_bytes()) for d in drafts}
+    check(not (draft_sha & media_sha), f'{fmt} DOCX: ningún borrador (diagramas/draft) incrustado')
+    cap_sha = {sha((F29 / 'evidencias' / 'capturas' / c).read_bytes()) for c in CAPS[fmt]}
+    check(cap_sha <= media_sha, f'{fmt} DOCX: incrusta sus {len(cap_sha)} capturas de PowerDesigner')
+    core = z.read('docProps/core.xml').decode('utf-8')
+    check(bool(re.search(r'<dc:title>Formato \d+', core)) and '____' not in doc, f'{fmt} DOCX: título y sin campos vacíos')
+    old = subprocess.run(['git', 'show', f'{BASE_REF}:docs/academico/{stem}.docx'], cwd=ROOT, capture_output=True).stdout
+    old_doc = zipfile.ZipFile(__import__('io').BytesIO(old)).read('word/document.xml').decode('utf-8')
+    head_pat = r'<w:numId w:val="1"/>' if fmt != 'F11' else r'w:val="Ttulo1"'
+    check(doc.count('<w:tbl>') >= old_doc.count('<w:tbl>') and doc.count(head_pat) == old_doc.count(head_pat),
+          f'{fmt} DOCX: tablas ({old_doc.count("<w:tbl>")} → {doc.count("<w:tbl>")}) y encabezados numerados '
+          f'({doc.count(head_pat)}) conservados')
+    n_land = doc.count('w:orient="landscape"')
+    check(n_land > 0 if landscape else n_land == 0, f'{fmt} DOCX: {n_land} páginas horizontales para diagramas anchos')
+
+    # 3) PDF: válido, con la exportación (misma proporción) y las páginas horizontales.
+    pdf = (ACAD / f'{stem}.pdf').read_bytes()
+    pages = re.findall(rb'/Type\s*/Page[^s]', pdf)
+    boxes = re.findall(rb'/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)\s*\]', pdf)
+    land = sum(1 for w, h in boxes if float(w) > float(h))
+    ew, eh = png_dims((F29 / 'exports' / exp).read_bytes())
+    imgs = [(int(a), int(b)) for a, b in re.findall(rb'/Subtype\s*/Image[^>]*?/Width\s+(\d+)\s*/Height\s+(\d+)', pdf)]
+    has_exp = any(abs(w / h - ew / eh) < 0.01 * ew / eh for w, h in imgs if h)
+    check(pdf[:5] == b'%PDF-' and b'%%EOF' in pdf[-1024:] and len(pages) > 0 and has_exp and (land > 0) == landscape,
+          f'{fmt} PDF: válido, {len(pages)} páginas ({land} horizontales), exportación formal presente')
+
+# 4) Manifiesto: capturas VALID con el SHA-256 del archivo, y formatos UPDATED.
+man = (F29 / 'MANIFEST.md').read_text(encoding='utf-8')
+for caps in CAPS.values():
+    for cap in caps:
+        h = sha((F29 / 'evidencias' / 'capturas' / cap).read_bytes())
+        check(re.search(rf'{re.escape(cap)}`\]\([^)]*\) \| Captura PNG \|[^\n]*`{h}` \| VALID \|', man) is not None,
+              f'MANIFEST: {cap} VALID con su SHA-256')
+check(man.count('| UPDATED |') == 8, 'MANIFEST: 8 entregables (DOCX y PDF de F3, F5, F8 y F11) UPDATED')
 
 # ------------------------------------------------------------------ F23 intacta
 r = subprocess.run(['git', 'status', '--porcelain', '--', 'docs/v1.1/powerdesigner'], cwd=ROOT, capture_output=True, text=True)

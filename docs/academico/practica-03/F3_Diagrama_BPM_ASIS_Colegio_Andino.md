@@ -25,7 +25,7 @@
 >
 > **EXPERIMENTAL / PROPUESTO:** RF-28 (candidato, no implementado), RF-29 (experimental, solo sobre el proceso) y RNF-C (propuesta). No forman parte de la línea base RF-01 a RF-27.
 >
-> Este BPMN es un **BPMN AS-IS preliminar derivado del análisis del equipo**. No está validado por la institución y no es el modelo formal de PowerDesigner (pendiente para la Fase 29, ver `POWERDESIGNER_PENDING.md`).
+> Este BPMN es un **BPMN AS-IS preliminar derivado del análisis del equipo**. No está validado por la institución. Su modelo formal es el diagrama «F3 - BPMN AS-IS» de PowerDesigner (F29, con el hotfix F29B): formalizarlo no cambia su condición de preliminar.
 >
 > La plataforma **nunca** selecciona, descarta ni contrata automáticamente: el ranking calcula, ordena y compara.
 >
@@ -49,15 +49,19 @@
 
 *Inserte el diagrama BPM elaborado utilizando notación BPMN.*
 
-![Figura 1. BPMN AS-IS preliminar, parte 1 (EI-01 a AS-08).](diagramas/draft/F3-bpmn-as-is-parte1.png)
+Diagrama formal modelado en **PowerDesigner 16.6** (Fase 29): diagrama «F3 - BPMN AS-IS» del modelo `F29_BPM_Academico.bpm`, paquete F3. La figura 1 es la exportación completa; las figuras 2 y 3 amplían sus dos mitades para leerlas mejor y no añaden contenido.
 
-*Figura 1. BPMN AS-IS preliminar, parte 1 (EI-01 a AS-08).*
+![Figura 1. BPMN AS-IS preliminar: exportación formal de PowerDesigner (F29), diagrama «F3 - BPMN AS-IS» (`F3_BPMN_ASIS.png`).](../powerdesigner/exports/F3_BPMN_ASIS.png)
 
-![Figura 2. BPMN AS-IS preliminar, parte 2 (AS-09 a EF-03).](diagramas/draft/F3-bpmn-as-is-parte2.png)
+*Figura 1. BPMN AS-IS preliminar: exportación formal de PowerDesigner (F29), diagrama «F3 - BPMN AS-IS» (`F3_BPMN_ASIS.png`).*
 
-*Figura 2. BPMN AS-IS preliminar, parte 2 (AS-09 a EF-03).*
+*Figura 2. Ampliación de la figura 1 (franja del 0 % al 55 % del ancho): EI-01 a AS-08 y pool Postulante. Recorte sin retoque de la exportación formal.* (En el DOCX: ampliación de la franja del 0 % al 55 % del ancho de [`F3_BPMN_ASIS.png`](../powerdesigner/exports/F3_BPMN_ASIS.png).)
 
-Borrador de revisión dibujado desde la especificación de este formato (corregida en la F27D tras la auditoría F27C). La versión formal se modelará en PowerDesigner en la F29.
+*Figura 3. Ampliación de la figura 1 (franja del 45 % al 100 % del ancho): SP-01, AS-12 a AS-14 y EF-03. Recorte sin retoque de la exportación formal.* (En el DOCX: ampliación de la franja del 45 % al 100 % del ancho de [`F3_BPMN_ASIS.png`](../powerdesigner/exports/F3_BPMN_ASIS.png).)
+
+SP-01 es un subproceso expandido de instancia múltiple paralela (marcador |||) con SI-01, AS-09, G-02, AS-10, AS-11, EF-02 y EF-04 dentro. PowerDesigner 16.6 no dibuja ese contenido en la vista principal del editor (limitación F29B-OBS-01): se consulta en el diagrama «SP-01 Evaluar al candidato — detalle», con los mismos objetos. La exportación, reproducible, es la evidencia formal.
+
+El borrador de revisión de la F27B–F28 (`diagramas/draft/`) queda como antecedente: DRAFT / SUPERSEDED BY F29 FORMAL EXPORT.
 
 ## 4. Elementos BPMN utilizados
 
@@ -143,12 +147,12 @@ No hay lane de «Sistemas»: el AS-IS preliminar no identifica ninguna herramien
 
 ## 7. Validación del modelo
 
-*Marque con un aspa (X) si se cumplen los enunciados. Se aplica a la especificación y al borrador de este formato.*
+*Marque con un aspa (X) si se cumplen los enunciados. Se aplica a la especificación y al modelo formal de PowerDesigner (F29), verificado en `docs/academico/powerdesigner/F29_VALIDATION.md`.*
 
 | Enunciado | X | Comprobación |
 |---|---|---|
 | El proceso tiene evento de inicio y fin claramente definidos. | X | Proceso: EI-01; EF-01 y EF-03. SP-01: SI-01; EF-02 y EF-04. Postulante: EP-01; EP-02. |
-| Todas las actividades están conectadas correctamente. | X | AS-01 a AS-14 tienen entrada y salida de secuencia; AS-06 → AS-08 es secuencia (AS-08 es tarea de recepción); AS-07 está entre EP-01 y EP-02; las partes 1 y 2 se unen con el enlace A. |
+| Todas las actividades están conectadas correctamente. | X | AS-01 a AS-14 tienen entrada y salida de secuencia; AS-06 → AS-08 es secuencia (AS-08 es tarea de recepción); AS-07 está entre EP-01 y EP-02; el modelo formal es un solo diagrama (el borrador unía sus dos partes con el enlace A). |
 | Se utilizan correctamente los elementos BPMN. | X | Secuencia solo dentro de cada pool; MF-01 a MF-04 unidireccionales entre pools; SP-01 de instancia múltiple paralela por candidato. |
 | Cada actividad tiene un actor asignado. | X | Cada tarea está en el lane de su actor (tabla 5). |
 | El flujo es coherente y entendible. | X | Coincide con las 8 actividades macro de §3.1, con el Formato 02 y con el glosario de nombres. |
@@ -162,5 +166,16 @@ La validación es **interna del equipo**. Falta la validación institucional del
 - Informe del BPMN AS-IS v1.0: `docs/final-report/diagram-reports/01-bpmn-as-is-report.md` (el diagrama original del equipo **no está versionado**; estado «evidencia externa pendiente»).
 - Guía oficial: `docs/academico/00-fuentes-oficiales/guias/` (Prácticas 02 y 03) y plantillas oficiales de los Formatos 02 y 03 (SHA-256 en `docs/academico/00-fuentes-oficiales/inventory.md`).
 - Modelo de datos del documento y generador reproducible: `docs/academico/tools/f27b/` (`m_asis.py`, `build.py`).
-- Borradores: `docs/academico/practica-03/diagramas/draft/F3-bpmn-as-is-parte1.png` y `…parte2.png`.
-- Pendiente de modelado formal: `docs/academico/practica-03/POWERDESIGNER_PENDING.md`.
+- Modelo formal: `docs/academico/powerdesigner/models/F29_BPM_Academico.bpm` (paquete F3); exportaciones `F3_BPMN_ASIS.png` y `F3_BPMN_ASIS.svg` en `docs/academico/powerdesigner/exports/`; validación en `F29_VALIDATION.md` y `F29B_HOTFIX.md`.
+- Especificación de PowerDesigner: `docs/academico/practica-03/POWERDESIGNER_PENDING.md` (FORMALIZED / DONE).
+- Borradores: `docs/academico/practica-03/diagramas/draft/F3-bpmn-as-is-parte1.png` y `…parte2.png` (DRAFT / SUPERSEDED BY F29 FORMAL EXPORT).
+
+Capturas reales de PowerDesigner, tomadas con el modelo reabierto desde el disco:
+
+![Figura 4. Captura de PowerDesigner: diagrama «F3 - BPMN AS-IS» y paquete F3 en el Object Browser.](../powerdesigner/evidencias/capturas/F3_BPMN_ASIS_PowerDesigner.png)
+
+*Figura 4. Captura de PowerDesigner: diagrama «F3 - BPMN AS-IS» y paquete F3 en el Object Browser.*
+
+![Figura 5. Captura de PowerDesigner: diagrama «SP-01 Evaluar al candidato — detalle» (contenido de SP-01; F29B-OBS-01).](../powerdesigner/evidencias/capturas/F3_SP-01_detalle_PowerDesigner.png)
+
+*Figura 5. Captura de PowerDesigner: diagrama «SP-01 Evaluar al candidato — detalle» (contenido de SP-01; F29B-OBS-01).*

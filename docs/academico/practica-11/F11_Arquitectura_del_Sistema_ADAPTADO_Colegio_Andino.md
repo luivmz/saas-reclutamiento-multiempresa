@@ -21,8 +21,8 @@
 | Equipo | Coronacion Meza Fredy; Peña Arroyo Anthony; Vila Meza Luis Antonio |
 | Formato | Formato 11 – Arquitectura del sistema (adaptación académica; sin plantilla oficial) |
 | Fuente normativa | Guía de Práctica N.° 11 (docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_11.docx) |
-| Fecha | 27/09/2026 |
-| Estado | Versión 1.0, lista para auditoría (Fase 28). Sin aprobación institucional |
+| Fecha | 28/09/2026 |
+| Estado | Versión 1.1: integra la vista formal ARQ-01 de PowerDesigner (F29, con el hotfix F29B). La versión 1.0 se auditó en la Fase 28. Sin aprobación institucional |
 
 **Correspondencia con la Guía 11**
 
@@ -205,9 +205,17 @@ Precisión respecto del esquema del encargo: el requerimiento lo **registra el �
 
 Organización conceptual para leer la arquitectura. No es una arquitectura física obligatoria ni un despliegue: el despliegue real está en DE-01 (F23).
 
-![Figura 1. Arquitectura conceptual del sistema (borrador). La vista formal ARQ-01 se modelará en PowerDesigner en la F29.](diagramas/draft/F11-arquitectura-conceptual.png)
+Vista formal **ARQ-01** modelada en **PowerDesigner 16.6** (Fase 29): diagrama «ARQ-01 - Arquitectura Conceptual» del modelo `F29_UML_Academico.oom`, paquete ARQ01. Muestra los 17 componentes dentro de sus 6 agrupaciones y las relaciones R-01 a R-20. La figura 1 va en una página horizontal; las figuras 2 y 3 amplían sus dos mitades y no añaden contenido.
 
-*Figura 1. Arquitectura conceptual del sistema (borrador). La vista formal ARQ-01 se modelará en PowerDesigner en la F29.*
+![Figura 1. Arquitectura conceptual del sistema: vista formal ARQ-01, exportación de PowerDesigner (F29), `ARQ-01_Arquitectura_Conceptual.png`.](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png)
+
+*Figura 1. Arquitectura conceptual del sistema: vista formal ARQ-01, exportación de PowerDesigner (F29), `ARQ-01_Arquitectura_Conceptual.png`.*
+
+*Figura 2. Ampliación de la figura 1 (franja del 0 % al 55 % del ancho). Recorte sin retoque de la exportación formal.* (En el DOCX: ampliación de la franja del 0 % al 55 % del ancho de [`ARQ-01_Arquitectura_Conceptual.png`](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png).)
+
+*Figura 3. Ampliación de la figura 1 (franja del 45 % al 100 % del ancho), con C17 (RF-29, experimental) y las notas del diagrama. Recorte sin retoque de la exportación formal.* (En el DOCX: ampliación de la franja del 45 % al 100 % del ancho de [`ARQ-01_Arquitectura_Conceptual.png`](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png).)
+
+C10 es la decisión **humana** (RF-23); C09 calcula, ordena y compara, sin seleccionar. RF-28 no se implementó y no es un componente. C17 (RF-29) es experimental y no se relaciona con C09, C10 ni C11. El borrador de la F28 (`diagramas/draft/`) queda como antecedente: DRAFT / SUPERSEDED BY F29 FORMAL EXPORT.
 
 **Arquitectura técnica de referencia (implementación actual)**
 
@@ -295,7 +303,7 @@ Validación estructural y académica de la arquitectura (22 criterios): **17 PAS
 - RF-28: candidato **no implementado**; no se modela como componente.
 - RF-29: **experimental**, opcional y fuera de la línea base; solo evalúa el proceso.
 - Sin aprobación institucional: la validación de este documento es interna del equipo y académica.
-- El diagrama es un **borrador**; la vista formal ARQ-01 se modelará en PowerDesigner (F29).
+- El diagrama conceptual es la vista formal ARQ-01 de PowerDesigner (F29, con el hotfix F29B de reproducibilidad). Algunos rótulos de relaciones rozan líneas o bordes (F29-L02, LOW pendiente para la F31).
 
 ## 12. Conclusiones
 
@@ -307,7 +315,7 @@ Validación estructural y académica de la arquitectura (22 criterios): **17 PAS
 >
 > Corresponde con la arquitectura técnica implementada (monolito modular Laravel + Inertia/React, PostgreSQL, Redis) sin confundirla con el despliegue.
 >
-> Queda lista para su formalización como vista ARQ-01 en PowerDesigner (F29), después de la auditoría de la F28.
+> Está formalizada como vista ARQ-01 en PowerDesigner (F29) y su exportación es reproducible (hotfix F29B).
 
 ## 13. Evidencias
 
@@ -316,6 +324,14 @@ Validación estructural y académica de la arquitectura (22 criterios): **17 PAS
 - Casos de uso, RF y RNF: Formatos 06, 07 y 08 (`docs/academico/practica-06` a `practica-08`).
 - Referencias técnicas sin modificar: CO-01 y PK-01 (`docs/v1.1/uml/component-model.md`), DE-01 (`deployment-model.md`), UC-01, SEQ-07 y SEQ-08 (`docs/v1.1/uml/`); exportaciones de la F23.
 - Manifiesto con SHA-256: `docs/academico/practica-11/evidencias/README.md`.
+- Vista formal ARQ-01: modelo `docs/academico/powerdesigner/models/F29_UML_Academico.oom` (paquete ARQ01), exportaciones `ARQ-01_Arquitectura_Conceptual.png` y `.svg`; validación en `F29_VALIDATION.md` y `F29B_HOTFIX.md`.
+- Borrador de la F28: `docs/academico/practica-11/diagramas/draft/F11-arquitectura-conceptual.png` (DRAFT / SUPERSEDED BY F29 FORMAL EXPORT).
+
+Captura real de PowerDesigner, tomada con el modelo reabierto desde el disco:
+
+![Figura 4. Captura de PowerDesigner: diagrama «ARQ-01 - Arquitectura Conceptual» y paquete ARQ01 en el Object Browser.](../powerdesigner/evidencias/capturas/ARQ01_Arquitectura_Conceptual_PowerDesigner.png)
+
+*Figura 4. Captura de PowerDesigner: diagrama «ARQ-01 - Arquitectura Conceptual» y paquete ARQ01 en el Object Browser.*
 
 ## 14. Trazabilidad
 

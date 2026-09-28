@@ -25,7 +25,7 @@
 >
 > **EXPERIMENTAL / PROPUESTO:** RF-28 (candidato, no implementado), RF-29 (experimental, solo sobre el proceso) y RNF-C (propuesta). No forman parte de la línea base RF-01 a RF-27.
 >
-> El proceso de este formato es **TO-BE PROPUESTO**: está soportado por el **SOFTWARE IMPLEMENTADO** v1.1, salvo TB-F1 (propuesta futura no implementada). RF-29 (experimental) no forma parte del TO-BE base.
+> El proceso de este formato es **TO-BE PROPUESTO**: está soportado por el **SOFTWARE IMPLEMENTADO** v1.1, salvo TB-F1 (propuesta futura no implementada). RF-29 (experimental) no forma parte del TO-BE base. Su modelo formal es el diagrama «F5 - BPMN TO-BE» de PowerDesigner (F29, con el hotfix F29B).
 >
 > La plataforma **nunca** selecciona, descarta ni contrata automáticamente: el ranking calcula, ordena y compara.
 >
@@ -105,23 +105,31 @@ Los objetivos **no se cuantifican** (por ejemplo, «reducir X % el tiempo»): no
 
 *Inserte el diagrama BPM del proceso mejorado.*
 
-![Figura 1. BPMN TO-BE propuesto, parte 1: nivel vacante (requerimiento y convocatoria). Borrador de revisión.](diagramas/draft/F5-bpmn-to-be-parte1.png)
+Diagrama formal modelado en **PowerDesigner 16.6** (Fase 29): diagrama «F5 - BPMN TO-BE» del modelo `F29_BPM_Academico.bpm`, paquete F5. Por su anchura, la figura 1 muestra la exportación completa en una página horizontal y las figuras 2 a 5 amplían cuatro franjas consecutivas, que se solapan para no cortar ningún elemento. Las ampliaciones son recortes sin retoque y no añaden contenido.
 
-*Figura 1. BPMN TO-BE propuesto, parte 1: nivel vacante (requerimiento y convocatoria). Borrador de revisión.*
+![Figura 1. BPMN TO-BE propuesto: exportación formal de PowerDesigner (F29), diagrama «F5 - BPMN TO-BE» (`F5_BPMN_TOBE.png`), completo.](../powerdesigner/exports/F5_BPMN_TOBE.png)
 
-![Figura 2. BPMN TO-BE propuesto, parte 2a: SP-P por postulación (1 de 2) y pool Postulante. Borrador de revisión.](diagramas/draft/F5-bpmn-to-be-parte2a.png)
+*Figura 1. BPMN TO-BE propuesto: exportación formal de PowerDesigner (F29), diagrama «F5 - BPMN TO-BE» (`F5_BPMN_TOBE.png`), completo.*
 
-*Figura 2. BPMN TO-BE propuesto, parte 2a: SP-P por postulación (1 de 2) y pool Postulante. Borrador de revisión.*
+*Figura 2. Ampliación de la figura 1 (franja del 0 % al 28 % del ancho): nivel vacante: requerimiento, aprobación y configuración (EI a GB1, TB-01 a TB-09). Recorte sin retoque de la exportación formal.* (En el DOCX: ampliación de la franja del 0 % al 28 % del ancho de [`F5_BPMN_TOBE.png`](../powerdesigner/exports/F5_BPMN_TOBE.png).)
 
-![Figura 3. BPMN TO-BE propuesto, parte 2b: SP-P por postulación (2 de 2). Borrador de revisión.](diagramas/draft/F5-bpmn-to-be-parte2b.png)
+*Figura 3. Ampliación de la figura 1 (franja del 24 % al 52 % del ancho): publicación (TB-10), pool Postulante (EP-01, TB-11 a TB-13, EP-02) e inicio de SP-P (SIP, TB-14 a TB-17). Recorte sin retoque de la exportación formal.* (En el DOCX: ampliación de la franja del 24 % al 52 % del ancho de [`F5_BPMN_TOBE.png`](../powerdesigner/exports/F5_BPMN_TOBE.png).)
 
-*Figura 3. BPMN TO-BE propuesto, parte 2b: SP-P por postulación (2 de 2). Borrador de revisión.*
+*Figura 4. Ampliación de la figura 1 (franja del 48 % al 76 % del ancho): SP-P, continuación: sesiones, evaluación y entrevista (TB-18 a TB-23). Recorte sin retoque de la exportación formal.* (En el DOCX: ampliación de la franja del 48 % al 76 % del ancho de [`F5_BPMN_TOBE.png`](../powerdesigner/exports/F5_BPMN_TOBE.png).)
 
-![Figura 4. BPMN TO-BE propuesto, parte 3: nivel vacante (selección y cierre). Borrador de revisión.](diagramas/draft/F5-bpmn-to-be-parte3.png)
+*Figura 5. Ampliación de la figura 1 (franja del 72 % al 100 % del ancho): fin de SP-P y nivel vacante: ranking, decisión humana, selección y cierre (TB-24 a TB-29, EFE), TB-30 y TB-F1. Recorte sin retoque de la exportación formal.* (En el DOCX: ampliación de la franja del 72 % al 100 % del ancho de [`F5_BPMN_TOBE.png`](../powerdesigner/exports/F5_BPMN_TOBE.png).)
 
-*Figura 4. BPMN TO-BE propuesto, parte 3: nivel vacante (selección y cierre). Borrador de revisión.*
+**Observaciones del modelo formal (Check Model de PowerDesigner)**
 
-Borrador dibujado desde la especificación de este formato (corregida en la F27D tras la auditoría F27C). La versión formal se modelará en PowerDesigner en la F29 (`POWERDESIGNER_PENDING.md`).
+| Elemento | Hallazgo de PowerDesigner | Tratamiento |
+|---|---|---|
+| TB-30 Registrar la auditoría de las acciones críticas | Proceso sin flujos de entrada ni de salida | Esperado: es **transversal** (se ejecuta en cada acción crítica) y se representa desconectado a propósito |
+| TB-F1 Cerrar la convocatoria sin selección | Proceso sin flujos de entrada ni de salida | Esperado: es una **propuesta futura** (A-30), no implementada y desconectada del flujo |
+| MT-02 Postulación | Advertencia de mensaje incoherente (CheckFlowIncohMsg) | Advertencia **aceptada** de la herramienta: MT-02 llega al borde de SP-P con su formato de mensaje, y PowerDesigner no permite declarar un mensaje recibido en un subproceso compuesto |
+
+Ninguno de estos hallazgos es una falla funcional del TO-BE: los tres se aceptaron en la auditoría de la F29. SP-P es un subproceso expandido de instancia múltiple paralela; PowerDesigner 16.6 no dibuja su contenido en la vista principal del editor (limitación F29B-OBS-01) y se consulta en el diagrama «SP-P Gestionar la postulación — detalle», con los mismos objetos.
+
+El borrador de revisión de la F27B–F28 (`diagramas/draft/`, partes 1, 2a, 2b y 3) queda como antecedente: DRAFT / SUPERSEDED BY F29 FORMAL EXPORT.
 
 **Estructura del modelo: niveles**
 
@@ -234,10 +242,26 @@ Borrador dibujado desde la especificación de este formato (corregida en la F27D
 
 *Adjuntar capturas del diagrama BPM mejorado.*
 
-![Figura 5. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la rama «cerrar sin selección», no implementada.](evidencias/antecedente-to-be-f9-v1.0-anexo-A.png)
+Capturas reales de PowerDesigner, tomadas con el modelo reabierto desde el disco. La vista principal se capturó en dos partes por su anchura.
 
-*Figura 5. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la rama «cerrar sin selección», no implementada.*
+![Figura 6. Captura de PowerDesigner: diagrama «F5 - BPMN TO-BE», parte 1 (nivel vacante hasta el inicio de SP-P).](../powerdesigner/evidencias/capturas/F5_BPMN_TOBE_PowerDesigner_parte1.png)
+
+*Figura 6. Captura de PowerDesigner: diagrama «F5 - BPMN TO-BE», parte 1 (nivel vacante hasta el inicio de SP-P).*
+
+![Figura 7. Captura de PowerDesigner: diagrama «F5 - BPMN TO-BE», parte 2 (SP-P hasta el cierre, TB-30 y TB-F1).](../powerdesigner/evidencias/capturas/F5_BPMN_TOBE_PowerDesigner_parte2.png)
+
+*Figura 7. Captura de PowerDesigner: diagrama «F5 - BPMN TO-BE», parte 2 (SP-P hasta el cierre, TB-30 y TB-F1).*
+
+![Figura 8. Captura de PowerDesigner: diagrama «SP-P Gestionar la postulación — detalle» (contenido de SP-P; F29B-OBS-01).](../powerdesigner/evidencias/capturas/F5_SP-P_detalle_PowerDesigner.png)
+
+*Figura 8. Captura de PowerDesigner: diagrama «SP-P Gestionar la postulación — detalle» (contenido de SP-P; F29B-OBS-01).*
+
+![Figura 9. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la rama «cerrar sin selección», no implementada.](evidencias/antecedente-to-be-f9-v1.0-anexo-A.png)
+
+*Figura 9. Antecedente: TO-BE original del equipo (anexo A del F9 v1.0, copia sin modificar). Incluye la rama «cerrar sin selección», no implementada.*
 
 - TO-BE escrito e implementado: `docs/final-report/03-procesos-negocio.md` §3.3–3.5 y `docs/final-report/diagram-reports/02-bpmn-to-be-report.md`.
 - Reglas: `docs/assumptions.md` (A-05, A-13, A-16, A-23 a A-31). Verificación del flujo completo: E2E-13 y la QA de la Fase 25 (`docs/v1.1/phase-25-final-qa.md`).
 - Comportamiento implementado de referencia (no es el TO-BE institucional): AC-01 (`docs/v1.1/powerdesigner/exports/AC-01-proceso-reclutamiento.png`).
+- Modelo formal: `docs/academico/powerdesigner/models/F29_BPM_Academico.bpm` (paquete F5); exportaciones `F5_BPMN_TOBE.png` y `F5_BPMN_TOBE.svg`; validación en `F29_VALIDATION.md` y `F29B_HOTFIX.md`.
+- Borradores: `docs/academico/practica-05/diagramas/draft/` (DRAFT / SUPERSEDED BY F29 FORMAL EXPORT).

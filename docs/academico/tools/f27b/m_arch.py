@@ -279,7 +279,8 @@ LIMITACIONES = [
     'RF-28: candidato **no implementado**; no se modela como componente.',
     'RF-29: **experimental**, opcional y fuera de la línea base; solo evalúa el proceso.',
     'Sin aprobación institucional: la validación de este documento es interna del equipo y académica.',
-    'El diagrama es un **borrador**; la vista formal ARQ-01 se modelará en PowerDesigner (F29).',
+    'El diagrama conceptual es la vista formal ARQ-01 de PowerDesigner (F29, con el hotfix F29B de reproducibilidad). '
+    'Algunos rótulos de relaciones rozan líneas o bordes (F29-L02, LOW pendiente para la F31).',
 ]
 
 CONCLUSIONES = [
@@ -290,5 +291,5 @@ CONCLUSIONES = [
     'es transversal y el riesgo operacional (C17) es **experimental y aislado** de la selección.',
     'Corresponde con la arquitectura técnica implementada (monolito modular Laravel + Inertia/React, PostgreSQL, Redis) '
     'sin confundirla con el despliegue.',
-    'Queda lista para su formalización como vista ARQ-01 en PowerDesigner (F29), después de la auditoría de la F28.',
+    'Está formalizada como vista ARQ-01 en PowerDesigner (F29) y su exportación es reproducible (hotfix F29B).',
 ]
