@@ -86,7 +86,20 @@ Observaciones transversales a las cuatro vistas:
 | Exportación | [PNG](exports/ARQ-01_Arquitectura_Conceptual.png) (4862 × 2862) y [SVG](exports/ARQ-01_Arquitectura_Conceptual.svg) válidos | PASS |
 | Check Model | Solo *Use Case/Single* de CU-16 del F8; ninguno de la vista ARQ-01 | PASS |
 
-## Persistencia
+## Reproducibilidad tras la recarga (hotfix F29B)
+
+La prueba de persistencia original de la F29 (abajo) solo contaba símbolos y diagramas. La integración posterior detectó que la **geometría** cambiaba al reabrir: agrupaciones de ARQ-01 reducidas, casos de uso y tareas redimensionados. También detectó que el editor no mostraba el contenido de SP-01 y SP-P. El hotfix F29B lo corrige ([`F29B_HOTFIX.md`](F29B_HOTFIX.md)). Ahora cada script guarda, cierra y reabre el modelo, compara la geometría de cada símbolo (tolerancia 0), exporta desde el modelo reabierto y comprueba que una segunda recarga reproduce el SVG.
+
+| Vista | Diagramas comprobados | Cambios tras reabrir | Exportación reproducible | Resultado |
+|---|---|---|---|---|
+| F3 | Principal (75 símbolos) y detalle de SP-01 (14) | 0 | Sí | PASS |
+| F5 | Principal (156) y detalle de SP-P (45) | 0 | Sí | PASS |
+| F8 | Principal (67) | 0 | Sí | PASS |
+| ARQ-01 | Principal (55); las 6 agrupaciones conservan X, Y, ancho y alto | 0 | Sí | PASS |
+
+La limitación que queda (**F29B-OBS-01**) está documentada: en la vista principal del editor, los recuadros de SP-01 y SP-P aparecen sin contenido. Su contenido se ve en los diagramas de detalle y en las exportaciones.
+
+## Persistencia (F29, antes del hotfix)
 
 Los dos modelos se cerraron y se volvieron a abrir desde el disco, y conservaron sus vistas:
 
@@ -103,7 +116,7 @@ Los dos modelos se cerraron y se volvieron a abrir desde el disco, y conservaron
 - la validez de los PNG y SVG y de sus recursos;
 - que la F23 no cambió.
 
-Resultado: **157 comprobaciones correctas, 0 fallas**.
+Resultado en la F29: 157 comprobaciones correctas, 0 fallas. Con el hotfix F29B se añadieron comprobaciones (ajuste automático al texto desactivado, geometría de las agrupaciones, diagramas de detalle, ausencia de duplicados en las exportaciones y recarga registrada en los informes), sin rebajar ninguna: **177 comprobaciones correctas, 0 fallas**.
 
 ## Seguridad del alcance
 

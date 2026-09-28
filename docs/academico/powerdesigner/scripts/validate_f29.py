@@ -170,6 +170,61 @@ for base, words in expected.items():
     else:
         check(png.exists() and png.stat().st_size > 0, f'{base}.png existe')
 
+# ------------------------------------------------------------------ F29B: reproducibilidad
+# 1) Ajuste automático al texto desactivado en todo símbolo de nodo: con él activado,
+#    PowerDesigner vuelve a dimensionar el símbolo al abrir el modelo.
+LINKS = {'o_FlowSymbol', 'o_DependencySymbol', 'o_UseCaseAssociationSymbol', 'o_SwimlaneSubGroupSymbol', 'o_SwimpoolSymbol'}
+for name, root in (('BPM', bpm), ('OOM', oom)):
+    bad = [el.tag for el in root.iter() if el.tag.endswith('Symbol') and el.tag not in LINKS
+           and el.find('a_Rect') is not None and el.findtext('a_AutoAdjustToText') != '0']
+    check(not bad, f'{name}: ajuste automático al texto desactivado en todos los símbolos de nodo ({len(bad)} activos)')
+
+# 2) ARQ-01: cada agrupación conserva en el XML la geometría que declara el script.
+arq_script = (F29 / 'scripts' / 'f29-arq01-arquitectura.ps1').read_text(encoding='utf-8-sig')
+declared = {c: tuple(int(x) for x in v) for c, v in
+            ((m.group(1), m.group(2, 3, 4, 5)) for m in re.finditer(r"@\('(\w+)', '[^']+', (-?\d+), (-?\d+), (-?\d+), (-?\d+)\)", arq_script))}
+pkg_ids = {el.get('Id'): el.findtext('a_Code') for el in oom.iter('o_Package') if el.get('Id')}
+saved = {}
+for el in oom.iter('o_PackageSymbol'):
+    ref = el.find('c_Object/o_Package')
+    code = pkg_ids.get(ref.get('Ref')) if ref is not None else None
+    if code and code.startswith('ARQ01_'):
+        nums = [int(x) for x in re.findall(r'-?\d+', el.findtext('a_Rect'))]   # ((L,B),(R,T))
+        saved[code.replace('ARQ01_', '')] = (nums[0], nums[3], nums[2], nums[1])
+for g in ('PRE', 'ACC', 'EXP', 'NEG', 'TRA', 'INF'):
+    check(declared.get(g) is not None and saved.get(g) == declared.get(g),
+          f'ARQ-01 agrupación {g}: geometría guardada {saved.get(g)} = declarada {declared.get(g)}')
+
+# 3) Subprocesos expandidos (F29B-OBS-01): el diagrama de detalle del proceso compuesto
+#    representa todos sus hijos (mismos objetos, sin duplicarlos) y los demás diagramas del
+#    proceso (el de la vista compuesta) quedan vacíos; así la exportación no duplica nada.
+for code, tasks in (('F3_SP_01', ['AS-09', 'AS-10', 'AS-11']),
+                    ('F5_SP_P', ['TB-14', 'TB-15', 'TB-16', 'TB-17', 'TB-18', 'TB-19', 'TB-20', 'TB-21', 'TB-22', 'TB-23'])):
+    sp = next(el for el in bpm.iter('o_Process') if el.findtext('a_Code') == code)
+    kids = {el.get('Id') for coll in ('c_Processes', 'c_ProcessStarts', 'c_ProcessEnds', 'c_ProcessDecisions', 'c_Flows')
+            for el in sp.findall(f'{coll}/*') if el.get('Id')}
+    diagrams = sp.findall('c_BusinessProcessDiagrams/o_BusinessProcessDiagram')
+    detail = [dg for dg in diagrams if (dg.findtext('a_Name') or '').endswith('— detalle')]
+    others = [dg for dg in diagrams if dg not in detail]
+    refs = {r.get('Ref') for r in detail[0].iter() if r.get('Ref')} if detail else set()
+    check(len(detail) == 1 and bool(kids) and kids <= refs,
+          f'{code}: diagrama de detalle con los {len(kids)} hijos representados ({len(kids & refs)})')
+    check(all(dg.find('c_Symbols') is None or len(dg.find('c_Symbols')) == 0 for dg in others),
+          f'{code}: diagrama de la vista compuesta vacío ({len(others)})')
+    names = [el.findtext('a_Name') for el in sp.iter('o_Process') if el.get('Id')]   # definiciones, no referencias
+    check(len(names) == len(set(names)), f'{code}: sin objetos duplicados en el subproceso')
+    svg = (F29 / 'exports' / ('F3_BPMN_ASIS.svg' if code.startswith('F3') else 'F5_BPMN_TOBE.svg')).read_text(encoding='utf-8')
+    counts = {t: len(re.findall(rf'>{t} ', svg)) for t in tasks}
+    check(all(c == 1 for c in counts.values()), f'{code}: la exportación dibuja cada tarea del subproceso una sola vez {counts}')
+
+# 4) Publicación reproducible registrada en los informes de las cuatro vistas.
+for rep in ('F3_model_check.txt', 'F5_model_check.txt', 'F8_model_check.txt', 'ARQ01_model_check.txt'):
+    t = (F29 / 'validation' / rep).read_text(encoding='utf-8')
+    recs = re.findall(r'Recarga «[^»]+»: (\d+) símbolos antes de guardar, (\d+) tras reabrir; cambiados: (\d+); ausentes: (\d+)', t)
+    ok = bool(recs) and all(a == b and c == '0' and d == '0' for a, b, c, d in recs)
+    check(ok and 'reproduce el mismo SVG' in t and ': True' in t.split('reproduce el mismo SVG')[1][:80] and 'RESULTADO: PASS' in t,
+          f'{rep}: recarga sin cambios ({len(recs)} diagramas) y exportación reproducible')
+
 # ------------------------------------------------------------------ F23 intacta
 r = subprocess.run(['git', 'status', '--porcelain', '--', 'docs/v1.1/powerdesigner'], cwd=ROOT, capture_output=True, text=True)
 check(r.returncode == 0 and r.stdout.strip() == '', 'F23 (docs/v1.1/powerdesigner) sin cambios en git')

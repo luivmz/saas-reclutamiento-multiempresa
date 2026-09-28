@@ -181,7 +181,7 @@ M.append('# Manifiesto F29 — modelos y exportaciones de PowerDesigner\n')
 M.append('Generado por [`scripts/make_f29_docs.py`](scripts/make_f29_docs.py). **SHA-256 del contenido versionado** '
          '(`git show :<ruta>`, el blob que se confirma): git normaliza a LF los finales de línea de `.bpm`, `.oom` y `.svg`, así que el hash '
          'del archivo de trabajo en Windows (CRLF) puede diferir; el del blob es reproducible en cualquier checkout.\n')
-M.append('**Estado:** FORMALIZADO — pendiente de la auditoría F29. Ningún formato (DOCX o PDF) se sustituyó todavía.\n')
+M.append('**Estado:** FORMALIZADO en la F29 (auditada con observaciones) y corregido por el hotfix F29B (reproducibilidad tras recarga), pendiente de la auditoría F29B. Ningún formato (DOCX o PDF) se sustituyó todavía.\n')
 M.append('## Modelos y exportaciones\n')
 M.append('| Artefacto | Tipo | Modelo fuente | Diagrama | Formato | SHA-256 | Estado |')
 M.append('|---|---|---|---|---|---|---|')
@@ -199,7 +199,8 @@ for r in rows:
 M.append('\n## Recursos, scripts e informes\n')
 M.append('| Archivo | Uso | SHA-256 |')
 M.append('|---|---|---|')
-extra = sorted((F29 / 'exports').glob('*_svg_Files/*.png')) + sorted((F29 / 'scripts').glob('*')) + sorted((F29 / 'validation').glob('*.txt'))
+extra = (sorted((F29 / 'exports').glob('*_svg_Files/*.png')) + sorted((F29 / 'scripts').glob('*')) + sorted((F29 / 'validation').glob('*.txt'))
+         + sorted((F29 / 'evidencias' / 'f29b').glob('*.png')))
 for p in extra:
     if p.name.startswith('__') or p.is_dir():
         continue
@@ -208,11 +209,25 @@ for p in extra:
         use = 'Icono referenciado por el SVG (exportado por PowerDesigner)'
     elif p.parent.name == 'scripts':
         use = 'Script de construcción o validación'
+    elif p.parent.name == 'f29b':
+        use = 'Evidencia diagnóstica del hotfix F29B (captura real del editor o exportación de prueba)'
     else:
         use = 'Informe de verificación (salida de los scripts)'
     M.append(f'| [`{rel(p).replace("docs/academico/powerdesigner/", "")}`]({rel(p).replace("docs/academico/powerdesigner/", "")}) | {use} | `{blob_sha(p) or "sin confirmar"}` |')
 M.append('\n## Capturas de PowerDesigner\n')
-M.append('No se incluyen capturas: no fue posible tomarlas de forma fiable desde la sesión automatizada. Instrucciones para '
-         'tomarlas a mano en [`evidencias/capturas/CAPTURAS_PENDIENTES.md`](evidencias/capturas/CAPTURAS_PENDIENTES.md).')
+M.append('**PENDING RETAKE.** Las capturas manuales del equipo se tomaron antes del hotfix F29B y muestran el estado anterior de '
+         'los modelos (geometría reajustada al abrir y subprocesos sin contenido en el editor). No se registran como evidencia '
+         'final ni se versionan todavía; se repiten según [`evidencias/capturas/CAPTURAS_PENDIENTES.md`](evidencias/capturas/CAPTURAS_PENDIENTES.md). '
+         'Detalle en [`F29B_HOTFIX.md`](F29B_HOTFIX.md).\n')
+M.append('| Captura | Vista | Estado |')
+M.append('|---|---|---|')
+for cap, view in (('F3_BPMN_ASIS_PowerDesigner.png', 'F3 (vista principal)'),
+                  ('F5_BPMN_TOBE_PowerDesigner_parte1.png', 'F5 (vista principal, parte 1)'),
+                  ('F5_BPMN_TOBE_PowerDesigner_parte2.png', 'F5 (vista principal, parte 2)'),
+                  ('F8_Casos_de_Uso_PowerDesigner.png', 'F8'),
+                  ('ARQ01_Arquitectura_Conceptual_PowerDesigner.png', 'ARQ-01'),
+                  ('F3_SP-01_detalle_PowerDesigner.png', 'F3, diagrama de detalle de SP-01 (nueva)'),
+                  ('F5_SP-P_detalle_PowerDesigner.png', 'F5, diagrama de detalle de SP-P (nueva)')):
+    M.append(f'| `{cap}` | {view} | PENDING RETAKE |')
 (F29 / 'MANIFEST.md').write_text('\n'.join(M) + '\n', encoding='utf-8', newline='\n')
 print('MANIFEST.md y F29-powerdesigner-traceability.md generados')
