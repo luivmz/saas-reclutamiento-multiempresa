@@ -1,0 +1,14 @@
+F29 - verificación de la vista F3 - BPMN AS-IS (2026-09-27 20:12)
+Modelo: docs/academico/powerdesigner/models/F29_BPM_Academico.bpm; paquete F3; diagrama «F3 - BPMN AS-IS»
+
+Tareas: 14 (esperadas 14) · subprocesos: 1 (1, Multi-Instance Parallel) · compuertas: 2 (2) · eventos: 8 (6 + 2)
+Flujos de secuencia: 22 (esperados 22) · flujos de mensaje: 4 (4, unidireccionales)
+Conectividad: todas las actividades y compuertas tienen entrada y salida; AS-06 -> AS-08 es flujo de secuencia: True
+Responsable (carril) por nodo: AS-01=Área solicitante; AS-02=Área solicitante; AS-03=RR. HH.; AS-04=Dirección; AS-05=RR. HH.; AS-06=RR. HH.; AS-08=RR. HH.; AS-09=RR. HH.; AS-10=RR. HH.; AS-11=Evaluadores; AS-12=RR. HH.; AS-13=Dirección; AS-14=RR. HH.; EF-01=Dirección; EF-02=RR. HH.; EF-03=RR. HH.; EF-04=Evaluadores; EI-01=Área solicitante; G-01=Dirección; G-02=RR. HH.; SI-01=RR. HH.; SP-01=RR. HH.
+Check Model del BPM completo (sin autocorrección): 3 hallazgos: Process/CheckPrcsInputFlow/sev1, Process/CheckPrcsOutputFlow/sev1, Flow/CheckFlowIncohMsg/sev0
+  1) TB-30 y TB-F1 conectados de forma temporal: Flow/CheckFlowIncohMsg/sev0
+  2) Y MT-02 sin formato de mensaje: ninguno
+  3) Deshecho (formato de MT-02 restituido: True): Process/CheckPrcsInputFlow/sev1, Process/CheckPrcsOutputFlow/sev1, Flow/CheckFlowIncohMsg/sev0
+  Los hallazgos se deben solo a TB-30 y TB-F1 (desconectados por especificación, errores) y a MT-02 con formato hacia el borde de SP-P (advertencia por límite de PowerDesigner; la especificación exige ese destino).
+
+RESULTADO: PASS

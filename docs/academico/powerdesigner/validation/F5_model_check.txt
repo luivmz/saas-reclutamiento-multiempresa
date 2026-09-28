@@ -1,0 +1,25 @@
+F29 - verificación de la vista F5 - BPMN TO-BE (2026-09-27 20:25)
+Modelo: docs/academico/powerdesigner/models/F29_BPM_Academico.bpm; paquete F5; diagrama «F5 - BPMN TO-BE»
+
+Tareas TB: 31 (esperadas 31: TB-01 a TB-30 y TB-F1) · SP-P: Multi-Instance Parallel · compuertas: 10 (10) · eventos: 9 (9)
+Flujos de secuencia: 51 (esperados 51) · flujos de mensaje: 8 (8, unidireccionales)
+  [OK] TB-15 tiene una sola entrada (desde TB-14)
+  [OK] GM1 une GD1 [Sí] y GD3 [Sí]
+  [OK] GM2 une TB-18 y TB-20
+  [OK] GV [No] vuelve a TB-21 (rechazo de TB-22)
+  [OK] GF «¿Finalista?»: Sí -> EFP-02, No -> EFP-03
+  [OK] TB-F1 sin flujo de entrada ni de salida
+  [OK] TB-F1 no está conectado desde TB-25
+  [OK] TB-30 transversal, sin flujo de secuencia
+  [OK] TB-26 en el carril Aprobador / Dirección
+  [OK] MT-01 sale de TB-10 hacia EP-01 «Vacante publicada»
+  [OK] Sin RF-29 ni riesgo operacional en el TO-BE
+Conectividad: toda actividad, compuerta y evento (salvo TB-30 y TB-F1, fuera de la secuencia por especificación) tiene entrada y salida.
+Responsable (carril) por nodo: EFA=Plataforma SaaS (sistema); EFE=Plataforma SaaS (sistema); EFP-01=RR. HH.; EFP-02=RR. HH.; EFP-03=Plataforma SaaS (sistema); EI=Área solicitante; GA1=RR. HH.; GA2=Aprobador / Dirección; GB1=Plataforma SaaS (sistema); GD1=RR. HH.; GD2=RR. HH.; GD3=RR. HH.; GF=RR. HH.; GM1=RR. HH.; GM2=Plataforma SaaS (sistema); GV=Plataforma SaaS (sistema); SIP=Plataforma SaaS (sistema); SP-P=RR. HH.; TB-01=Área solicitante; TB-02=Área solicitante; TB-03=RR. HH.; TB-04=Área solicitante; TB-05=Aprobador / Dirección; TB-06=Plataforma SaaS (sistema); TB-07=RR. HH.; TB-08=RR. HH.; TB-09=Plataforma SaaS (sistema); TB-10=RR. HH.; TB-14=Plataforma SaaS (sistema); TB-15=RR. HH.; TB-16=RR. HH.; TB-17=Plataforma SaaS (sistema); TB-18=RR. HH.; TB-19=Plataforma SaaS (sistema); TB-20=RR. HH.; TB-21=Evaluador; TB-22=Plataforma SaaS (sistema); TB-23=RR. HH.; TB-24=Plataforma SaaS (sistema); TB-25=Plataforma SaaS (sistema); TB-26=Aprobador / Dirección; TB-27=RR. HH.; TB-28=RR. HH.; TB-29=Plataforma SaaS (sistema); TB-30=Plataforma SaaS (sistema); TB-F1=RR. HH.
+Check Model del BPM completo (sin autocorrección): 3 hallazgos: Process/CheckPrcsInputFlow/sev1, Process/CheckPrcsOutputFlow/sev1, Flow/CheckFlowIncohMsg/sev0
+  1) TB-30 y TB-F1 conectados de forma temporal: Flow/CheckFlowIncohMsg/sev0
+  2) Y MT-02 sin formato de mensaje: ninguno
+  3) Deshecho (formato de MT-02 restituido: True): Process/CheckPrcsInputFlow/sev1, Process/CheckPrcsOutputFlow/sev1, Flow/CheckFlowIncohMsg/sev0
+  Los hallazgos se deben solo a TB-30 y TB-F1 (desconectados por especificación, errores) y a MT-02 con formato hacia el borde de SP-P (advertencia por límite de PowerDesigner; la especificación exige ese destino).
+
+RESULTADO: PASS
