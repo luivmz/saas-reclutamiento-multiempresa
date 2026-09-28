@@ -264,12 +264,17 @@ try {
         Move-ToFront $d (Add-Note $d $nt[0] $nt[1] $nt[2] $nt[3] $nt[4])
     }
 
+    # F29B: el contenido del subproceso se representa también en un diagrama de detalle
+    # (ver Sync-CompositeSubDiagram en f29lib.ps1).
+    $subInfo = Sync-CompositeSubDiagram $spSym 'SP-P Gestionar la postulación — detalle' "SP-P Gestionar la postulación — detalle`r`nMismos objetos que la vista compuesta del diagrama «F5 - BPMN TO-BE» (instancia múltiple paralela, una por postulación). La banda superior corresponde a RR. HH., la central a la Plataforma SaaS (sistema) y la inferior al Evaluador."
+
     # ================================================================ verificación
     $g = Get-BpmGraph $pk
     function Id($code) { if ($code -like 'F5_*') { ($code.Substring(3) -replace '_', '-') -replace '^SP-P$', 'SP-P' } else { $code } }
     $fail = @(); $out = @()
     $out += "F29 - verificación de la vista F5 - BPMN TO-BE ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))"
     $out += "Modelo: docs/academico/powerdesigner/models/F29_BPM_Academico.bpm; paquete F5; diagrama «$($d.Name)»"
+    $out += "Diagrama de detalle «$($subInfo.Diagram)»: $($subInfo.Nodes) nodos y $($subInfo.Links) flujos, los mismos objetos de la vista compuesta (sin duplicar); diagrama por defecto «$($subInfo.Default)» vacío ($($subInfo.DefaultSymbols) símbolos) para que la exportación no duplique"
     $out += ''
     foreach ($nd in $nodeData) {
         $x = $g.Nodes['F5_' + ($nd[0] -replace '-', '_')]
@@ -322,11 +327,13 @@ try {
     $ck = Test-F29BpmCheck $m
     $out += $ck.Lines
     if (-not $ck.Ok) { $fail += 'Check Model: hallazgos no explicados por la especificación' }
+    # F29B: publicación reproducible (guardar, cerrar, reabrir, comparar geometría y
+    # exportar desde el modelo reabierto; una segunda recarga debe reproducir el SVG).
+    $pub = Publish-F29View $m 'F5' 'F5 - BPMN TO-BE' 'F5_BPMN_TOBE' @('SP-P Gestionar la postulación — detalle')
+    $out += $pub.Lines
+    if (-not $pub.Ok) { $fail += 'reproducibilidad tras recarga' }
     $out += ''
     if ($fail.Count) { $out += 'RESULTADO: FALLA'; $out += $fail } else { $out += 'RESULTADO: PASS' }
     Write-F29Report (Join-Path $F29Root 'validation\F5_model_check.txt') $out
     $out | ForEach-Object { Write-Host "  $_" }
-
-    Save-F29Model $m
-    Export-F29 $d 'F5_BPMN_TOBE'
 } finally { Close-F29 }

@@ -1,5 +1,6 @@
-F29 - verificación de la vista F5 - BPMN TO-BE (2026-09-27 20:25)
+F29 - verificación de la vista F5 - BPMN TO-BE (2026-09-27 23:01)
 Modelo: docs/academico/powerdesigner/models/F29_BPM_Academico.bpm; paquete F5; diagrama «F5 - BPMN TO-BE»
+Diagrama de detalle «SP-P Gestionar la postulación — detalle»: 21 nodos y 23 flujos, los mismos objetos de la vista compuesta (sin duplicar); diagrama por defecto «BusinessProcessDiagram_1» vacío (0 símbolos) para que la exportación no duplique
 
 Tareas TB: 31 (esperadas 31: TB-01 a TB-30 y TB-F1) · SP-P: Multi-Instance Parallel · compuertas: 10 (10) · eventos: 9 (9)
 Flujos de secuencia: 51 (esperados 51) · flujos de mensaje: 8 (8, unidireccionales)
@@ -21,5 +22,8 @@ Check Model del BPM completo (sin autocorrección): 3 hallazgos: Process/CheckPr
   2) Y MT-02 sin formato de mensaje: ninguno
   3) Deshecho (formato de MT-02 restituido: True): Process/CheckPrcsInputFlow/sev1, Process/CheckPrcsOutputFlow/sev1, Flow/CheckFlowIncohMsg/sev0
   Los hallazgos se deben solo a TB-30 y TB-F1 (desconectados por especificación, errores) y a MT-02 con formato hacia el borde de SP-P (advertencia por límite de PowerDesigner; la especificación exige ese destino).
+Recarga «F5 - BPMN TO-BE»: 156 símbolos antes de guardar, 156 tras reabrir; cambiados: 0; ausentes: 0 (tolerancia 0)
+Recarga «SP-P Gestionar la postulación — detalle»: 45 símbolos antes de guardar, 45 tras reabrir; cambiados: 0; ausentes: 0 (tolerancia 0)
+Exportación desde el modelo reabierto: F5_BPMN_TOBE.svg/.png; una segunda recarga reproduce el mismo SVG (mismas 1696 líneas, el orden puede variar): True
 
 RESULTADO: PASS

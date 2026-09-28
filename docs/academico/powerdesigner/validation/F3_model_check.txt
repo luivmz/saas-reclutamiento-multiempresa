@@ -1,5 +1,6 @@
-F29 - verificación de la vista F3 - BPMN AS-IS (2026-09-27 20:12)
+F29 - verificación de la vista F3 - BPMN AS-IS (2026-09-27 22:57)
 Modelo: docs/academico/powerdesigner/models/F29_BPM_Academico.bpm; paquete F3; diagrama «F3 - BPMN AS-IS»
+Diagrama de detalle «SP-01 Evaluar al candidato — detalle»: 7 nodos y 6 flujos, los mismos objetos de la vista compuesta (sin duplicar); diagrama por defecto «BusinessProcessDiagram_1» vacío (0 símbolos) para que la exportación no duplique
 
 Tareas: 14 (esperadas 14) · subprocesos: 1 (1, Multi-Instance Parallel) · compuertas: 2 (2) · eventos: 8 (6 + 2)
 Flujos de secuencia: 22 (esperados 22) · flujos de mensaje: 4 (4, unidireccionales)
@@ -10,5 +11,8 @@ Check Model del BPM completo (sin autocorrección): 3 hallazgos: Process/CheckPr
   2) Y MT-02 sin formato de mensaje: ninguno
   3) Deshecho (formato de MT-02 restituido: True): Process/CheckPrcsInputFlow/sev1, Process/CheckPrcsOutputFlow/sev1, Flow/CheckFlowIncohMsg/sev0
   Los hallazgos se deben solo a TB-30 y TB-F1 (desconectados por especificación, errores) y a MT-02 con formato hacia el borde de SP-P (advertencia por límite de PowerDesigner; la especificación exige ese destino).
+Recarga «F3 - BPMN AS-IS»: 75 símbolos antes de guardar, 75 tras reabrir; cambiados: 0; ausentes: 0 (tolerancia 0)
+Recarga «SP-01 Evaluar al candidato — detalle»: 14 símbolos antes de guardar, 14 tras reabrir; cambiados: 0; ausentes: 0 (tolerancia 0)
+Exportación desde el modelo reabierto: F3_BPMN_ASIS.svg/.png; una segunda recarga reproduce el mismo SVG (mismas 923 líneas, el orden puede variar): True
 
 RESULTADO: PASS

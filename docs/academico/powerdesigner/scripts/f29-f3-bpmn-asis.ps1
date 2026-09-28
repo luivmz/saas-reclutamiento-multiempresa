@@ -214,6 +214,10 @@ try {
         Move-ToFront $d $ns
     }
 
+    # F29B: el contenido del subproceso se representa también en un diagrama de detalle
+    # (ver Sync-CompositeSubDiagram en f29lib.ps1).
+    $subInfo = Sync-CompositeSubDiagram $spSym 'SP-01 Evaluar al candidato — detalle' "SP-01 Evaluar al candidato — detalle`r`nMismos objetos que la vista compuesta del diagrama «F3 - BPMN AS-IS» (instancia múltiple paralela). Responsables: SI-01, AS-09, G-02, EF-02 y AS-10 en RR. HH.; AS-11 y EF-04 en Evaluadores."
+
     # ================================================================ verificación
     $g = Get-BpmGraph $pk
     $expNames = @{
@@ -237,6 +241,7 @@ try {
     $fail = @(); $out = @()
     $out += "F29 - verificación de la vista F3 - BPMN AS-IS ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))"
     $out += "Modelo: docs/academico/powerdesigner/models/F29_BPM_Academico.bpm; paquete F3; diagrama «$($d.Name)»"
+    $out += "Diagrama de detalle «$($subInfo.Diagram)»: $($subInfo.Nodes) nodos y $($subInfo.Links) flujos, los mismos objetos de la vista compuesta (sin duplicar); diagrama por defecto «$($subInfo.Default)» vacío ($($subInfo.DefaultSymbols) símbolos) para que la exportación no duplique"
     $out += ''
     # Nombres literales.
     foreach ($id in $expNames.Keys | Sort-Object) {
@@ -279,12 +284,14 @@ try {
     $ck = Test-F29BpmCheck $m
     $out += $ck.Lines
     if (-not $ck.Ok) { $fail += 'Check Model: hallazgos no explicados por la especificación' }
+    # F29B: publicación reproducible (guardar, cerrar, reabrir, comparar geometría y
+    # exportar desde el modelo reabierto; una segunda recarga debe reproducir el SVG).
+    $pub = Publish-F29View $m 'F3' 'F3 - BPMN AS-IS' 'F3_BPMN_ASIS' @('SP-01 Evaluar al candidato — detalle')
+    $out += $pub.Lines
+    if (-not $pub.Ok) { $fail += 'reproducibilidad tras recarga' }
     $out += ''
     if ($fail.Count) { $out += 'RESULTADO: FALLA'; $out += $fail } else { $out += 'RESULTADO: PASS' }
     Write-F29Report (Join-Path $F29Root 'validation\F3_model_check.txt') $out
     $out | ForEach-Object { Write-Host "  $_" }
-
-    Save-F29Model $m
-    Export-F29 $d 'F3_BPMN_ASIS'
     Write-Host "  nodos: $($pos.Count) + SP-01; flujos: $($flows.Count)"
 } finally { Close-F29 }
