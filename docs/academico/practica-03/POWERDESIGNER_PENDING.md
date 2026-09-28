@@ -1,5 +1,7 @@
 # Pendiente de PowerDesigner — F3 BPMN AS-IS
 
+**Actualización F29 (27/09/2026): FORMALIZED / DONE**, pendiente de la auditoría F29. Diagrama «F3 - BPMN AS-IS» en [`F29_BPM_Academico.bpm`](../powerdesigner/models/F29_BPM_Academico.bpm) (paquete F3); exportaciones [PNG](../powerdesigner/exports/F3_BPMN_ASIS.png) y [SVG](../powerdesigner/exports/F3_BPMN_ASIS.svg); verificación en [`F29_VALIDATION.md`](../powerdesigner/F29_VALIDATION.md). El estado anterior se conserva a continuación.
+
 **Estado: READY FOR POWERDESIGNER.** Especificación cerrada en la F27D, que resolvió los hallazgos H-01, H-02 y H-13 de la auditoría F27C. Se modela en la **Fase 29**. En las F27B y F27D no se abrió PowerDesigner ni se tocó ningún `.oom` o `.pdm`, y las 22 vistas de la F23 siguen igual.
 
 Esta especificación permite construir el modelo **sin reinterpretar nada**. Si algo del modelo no está aquí, no se agrega.

@@ -1,5 +1,7 @@
 # Pendiente de PowerDesigner — F5 BPMN TO-BE
 
+**Actualización F29 (27/09/2026): FORMALIZED / DONE**, pendiente de la auditoría F29. Diagrama «F5 - BPMN TO-BE» en [`F29_BPM_Academico.bpm`](../powerdesigner/models/F29_BPM_Academico.bpm) (paquete F5); exportaciones [PNG](../powerdesigner/exports/F5_BPMN_TOBE.png) y [SVG](../powerdesigner/exports/F5_BPMN_TOBE.svg); verificación en [`F29_VALIDATION.md`](../powerdesigner/F29_VALIDATION.md). El estado anterior se conserva a continuación.
+
 **Estado: READY FOR POWERDESIGNER.** Especificación cerrada en la F27D, que resolvió los hallazgos H-03, H-04 y H-05 de la auditoría F27C. Se modela en la **Fase 29**. En las F27B y F27D no se abrió PowerDesigner ni se modificó ningún `.oom`, `.pdm` o exportación de la F23.
 
 La especificación permite construir el modelo sin reinterpretar nada. Es un modelo de negocio, **distinto** de AC-01 (diagrama de actividad UML del software implementado, F23), que se conserva sin cambios.

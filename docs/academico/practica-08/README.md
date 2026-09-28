@@ -9,7 +9,8 @@ Entregable de la Práctica 08 (Fase 27B): actores y casos de uso de la línea ba
 | [`F8_Diagrama_Casos_de_Uso_Colegio_Andino.docx`](F8_Diagrama_Casos_de_Uso_Colegio_Andino.docx) | **Entregable**, sobre la plantilla oficial del Formato 08 |
 | [`F8_Diagrama_Casos_de_Uso_Colegio_Andino.pdf`](F8_Diagrama_Casos_de_Uso_Colegio_Andino.pdf) | Copia en PDF exportada con Microsoft Word |
 | [`F8_Diagrama_Casos_de_Uso_Colegio_Andino.md`](F8_Diagrama_Casos_de_Uso_Colegio_Andino.md) | Espejo en Markdown del mismo contenido |
-| [`diagramas/draft/`](diagramas/draft/) | **Borrador** del diagrama académico con los 5 actores y los 20 CU |
+| [`diagramas/draft/`](diagramas/draft/) | **Borrador** del diagrama académico con los 5 actores y los 20 CU — **DRAFT / SUPERSEDED BY F29 FORMAL EXPORT** |
+| [`../powerdesigner/exports/F8_Casos_de_Uso_Academicos.png`](../powerdesigner/exports/F8_Casos_de_Uso_Academicos.png) · [SVG](../powerdesigner/exports/F8_Casos_de_Uso_Academicos.svg) | **Exportación formal de PowerDesigner (F29)**, diagrama «F8 - Casos de Uso Academicos» |
 | [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md) | Adaptación formal de la vista académica (Fase 29) |
 | [`evidencias/`](evidencias/README.md) | Evidencias, incluida una copia del antecedente del anexo B del F9 v1.0 |
 
@@ -63,3 +64,9 @@ En la trazabilidad, RF-23 va solo a CU-18 → UC-RF23 (bloque IN-07). RF-27 es t
 ## ¿Requiere PowerDesigner?
 
 Para una **adaptación formal** de la vista académica, sí. Está **lista para PowerDesigner** ([`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md)) y se hará en la Fase 29. **UC-01 de la F23 no se modifica**: se usa como referencia técnica en el formato.
+
+## Formalización F29
+
+La vista se formalizó en PowerDesigner en la F29: diagrama «F8 - Casos de Uso Academicos» del modelo [`F29_UML_Academico.oom`](../powerdesigner/models/F29_UML_Academico.oom), paquete F8, con exportaciones [PNG](../powerdesigner/exports/F8_Casos_de_Uso_Academicos.png) y [SVG](../powerdesigner/exports/F8_Casos_de_Uso_Academicos.svg). Validación en [`F29_VALIDATION.md`](../powerdesigner/F29_VALIDATION.md) y trazabilidad por elemento en [`F29-powerdesigner-traceability.md`](../trazabilidad/F29-powerdesigner-traceability.md).
+
+El borrador de [`diagramas/draft/`](diagramas/draft/) queda como **DRAFT / SUPERSEDED BY F29 FORMAL EXPORT**. El DOCX y el PDF del Formato siguen con el borrador: se sustituyen solo después de la auditoría F29 (criterio de aceptación de [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md)).

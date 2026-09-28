@@ -2,6 +2,7 @@
 
 | Archivo | Contenido |
 |---|---|
+| [`F29-powerdesigner-traceability.md`](F29-powerdesigner-traceability.md) | Formalización en PowerDesigner (F29): cada elemento de F3, F5, F8 y ARQ-01 → objeto del modelo → carril o agrupación → RF → exportación. Se genera con `python docs/academico/powerdesigner/scripts/make_f29_docs.py` |
 | [`F11-architecture-traceability.md`](F11-architecture-traceability.md) | Arquitectura (F28): componente → RF → CU → RNF → alcance F9 → artefacto técnico |
 | [`F2-F9-traceability.md`](F2-F9-traceability.md) | Cadena completa, vistas por actividad y por RF, RNF transversales, resultado de la validación y pendientes T-01 a T-12 con su resolución |
 

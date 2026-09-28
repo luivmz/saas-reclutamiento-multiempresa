@@ -11,8 +11,9 @@ Entregable de la Práctica 03: modelado BPMN del proceso actual analizado en el 
 | [`F3_Diagrama_BPM_ASIS_Colegio_Andino.docx`](F3_Diagrama_BPM_ASIS_Colegio_Andino.docx) | **Entregable**, sobre la plantilla oficial del Formato 03 |
 | [`F3_Diagrama_BPM_ASIS_Colegio_Andino.pdf`](F3_Diagrama_BPM_ASIS_Colegio_Andino.pdf) | Copia en PDF exportada con Microsoft Word |
 | [`F3_Diagrama_BPM_ASIS_Colegio_Andino.md`](F3_Diagrama_BPM_ASIS_Colegio_Andino.md) | Espejo en Markdown del mismo contenido |
-| [`diagramas/draft/`](diagramas/draft/) | **Borrador** BPMN en carriles verticales, en dos partes unidas por el enlace A |
-| [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md) | Especificación cerrada para modelarlo en PowerDesigner (**READY FOR POWERDESIGNER**, Fase 29) |
+| [`diagramas/draft/`](diagramas/draft/) | **Borrador** BPMN en carriles verticales, en dos partes unidas por el enlace A — **DRAFT / SUPERSEDED BY F29 FORMAL EXPORT** |
+| [`../powerdesigner/exports/F3_BPMN_ASIS.png`](../powerdesigner/exports/F3_BPMN_ASIS.png) · [SVG](../powerdesigner/exports/F3_BPMN_ASIS.svg) | **Exportación formal de PowerDesigner (F29)**, diagrama «F3 - BPMN AS-IS» |
+| [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md) | Especificación cerrada para modelarlo en PowerDesigner (**FORMALIZED / DONE** en la F29; antes READY FOR POWERDESIGNER) |
 | [`evidencias/`](evidencias/README.md) | Evidencias del repositorio con su ruta y su SHA-256 |
 
 ## Especificación BPMN (resumen)
@@ -42,3 +43,9 @@ El **glosario** de nombres oficiales está en el formato y en [`POWERDESIGNER_PE
 - **Base del modelo:** hereda las limitaciones del AS-IS preliminar del Formato 02.
 - **Tipos de actor:** el de los evaluadores y el del postulante son **supuestos de modelado**.
 - **Validación:** la validación del formato es interna del equipo; falta la validación institucional.
+
+## Formalización F29
+
+La vista se formalizó en PowerDesigner en la F29: diagrama «F3 - BPMN AS-IS» del modelo [`F29_BPM_Academico.bpm`](../powerdesigner/models/F29_BPM_Academico.bpm), paquete F3, con exportaciones [PNG](../powerdesigner/exports/F3_BPMN_ASIS.png) y [SVG](../powerdesigner/exports/F3_BPMN_ASIS.svg). Validación en [`F29_VALIDATION.md`](../powerdesigner/F29_VALIDATION.md) y trazabilidad por elemento en [`F29-powerdesigner-traceability.md`](../trazabilidad/F29-powerdesigner-traceability.md).
+
+El borrador de [`diagramas/draft/`](diagramas/draft/) queda como **DRAFT / SUPERSEDED BY F29 FORMAL EXPORT**. El DOCX y el PDF del Formato siguen con el borrador: se sustituyen solo después de la auditoría F29 (criterio de aceptación de [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md)).

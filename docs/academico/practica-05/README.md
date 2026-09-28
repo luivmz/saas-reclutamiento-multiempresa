@@ -11,8 +11,9 @@ Entregable de la Práctica 05 (Fase 27B): proceso mejorado de reclutamiento, eva
 | [`F5_Modelo_BPM_TOBE_Colegio_Andino.docx`](F5_Modelo_BPM_TOBE_Colegio_Andino.docx) | **Entregable**, sobre la plantilla oficial del Formato 05 |
 | [`F5_Modelo_BPM_TOBE_Colegio_Andino.pdf`](F5_Modelo_BPM_TOBE_Colegio_Andino.pdf) | Copia en PDF exportada con Microsoft Word |
 | [`F5_Modelo_BPM_TOBE_Colegio_Andino.md`](F5_Modelo_BPM_TOBE_Colegio_Andino.md) | Espejo en Markdown del mismo contenido |
-| [`diagramas/draft/`](diagramas/draft/) | **Borrador** BPMN TO-BE en cuatro imágenes: parte 1 (nivel vacante: requerimiento y convocatoria); partes 2a y 2b (SP-P por postulación); parte 3 (nivel vacante: selección y cierre) |
-| [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md) | Especificación cerrada para PowerDesigner (**READY FOR POWERDESIGNER**, Fase 29) |
+| [`diagramas/draft/`](diagramas/draft/) | **Borrador** BPMN TO-BE en cuatro imágenes: parte 1 (nivel vacante: requerimiento y convocatoria); partes 2a y 2b (SP-P por postulación); parte 3 (nivel vacante: selección y cierre) — **DRAFT / SUPERSEDED BY F29 FORMAL EXPORT** |
+| [`../powerdesigner/exports/F5_BPMN_TOBE.png`](../powerdesigner/exports/F5_BPMN_TOBE.png) · [SVG](../powerdesigner/exports/F5_BPMN_TOBE.svg) | **Exportación formal de PowerDesigner (F29)**, diagrama «F5 - BPMN TO-BE» |
+| [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md) | Especificación cerrada para PowerDesigner (**FORMALIZED / DONE** en la F29; antes READY FOR POWERDESIGNER) |
 | [`evidencias/`](evidencias/README.md) | Evidencias, incluida una copia sin modificar del TO-BE original del equipo (anexo A del F9 v1.0) |
 
 ## TO-BE
@@ -58,3 +59,9 @@ Los eventos, las compuertas y los mensajes (MT-01 a MT-08) están en el formato 
 ## ¿Requiere PowerDesigner?
 
 **Sí, para la versión formal**, en la Fase 29. La especificación está **lista para PowerDesigner** desde la F27D. En esta fase no se abrió PowerDesigner. El diagrama de actividad AC-01 de la F23 describe el software implementado y **no** se reemplaza.
+
+## Formalización F29
+
+La vista se formalizó en PowerDesigner en la F29: diagrama «F5 - BPMN TO-BE» del modelo [`F29_BPM_Academico.bpm`](../powerdesigner/models/F29_BPM_Academico.bpm), paquete F5, con exportaciones [PNG](../powerdesigner/exports/F5_BPMN_TOBE.png) y [SVG](../powerdesigner/exports/F5_BPMN_TOBE.svg). Validación en [`F29_VALIDATION.md`](../powerdesigner/F29_VALIDATION.md) y trazabilidad por elemento en [`F29-powerdesigner-traceability.md`](../trazabilidad/F29-powerdesigner-traceability.md).
+
+El borrador de [`diagramas/draft/`](diagramas/draft/) queda como **DRAFT / SUPERSEDED BY F29 FORMAL EXPORT**. El DOCX y el PDF del Formato siguen con el borrador: se sustituyen solo después de la auditoría F29 (criterio de aceptación de [`POWERDESIGNER_PENDING.md`](POWERDESIGNER_PENDING.md)).
