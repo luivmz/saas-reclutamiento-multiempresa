@@ -1,0 +1,15 @@
+F29 - verificación de la vista ARQ-01 - Arquitectura Conceptual (2026-09-27 21:23)
+Modelo: docs/academico/powerdesigner/models/F29_UML_Academico.oom; paquete ARQ01; diagrama «ARQ-01 - Arquitectura Conceptual»
+
+Componentes: 17 (17) · agrupaciones: 6 (6) · grupo de actores fuera del sistema: 5 actores (los del F8), una sola relación «usan» con C01
+Agrupación de cada componente: C01=Capa de presentación; C02=Capa de acceso y seguridad; C03=Capa de acceso y seguridad; C17=Experimental (opcional); C04=Capa de negocio; C05=Capa de negocio; C07=Capa de negocio; C06=Capa de negocio; C08=Capa de negocio; C09=Capa de negocio; C10=Capa de negocio; C11=Capa de negocio; C12=Servicios transversales; C13=Servicios transversales; C16=Persistencia e infraestructura; C14=Persistencia e infraestructura; C15=Persistencia e infraestructura
+Relaciones: R-01 a R-20 presentes: 20 (20) en 24 dependencias, incluida «usan» (R-03, R-16 y R-17 con dos trazos)
+Relaciones de C17: R-19:C05>C17, R-20:C17>C01 (solo R-19 y R-20)
+Cadena principal C04 -> C05 -> C07 -> C08 -> C09 -> C10 -> C11 (y C11 -> C07): completa
+Elementos prohibidos (facturación, suscripciones, superadministración, banco de talentos, Kubernetes, Meilisearch, nube, API REST aparte, microservicios, reportes / RF-28, motor de selección): 0
+Check Model del OOM completo (sin autocorrección): 1 hallazgos: Use Case/Single/sev1
+  Aislamiento (CU-16 del F8 asociado a un actor de forma temporal): ninguno
+  Tras retirar la asociación temporal: Use Case/Single/sev1
+  El único hallazgo se debe a CU-16 del F8, sin actor directo por especificación.
+
+RESULTADO: PASS
