@@ -392,8 +392,285 @@ def f11r_checks():
     return res
 
 
+# ---------------------------------------------------------------------------------------------------------------
+# Fase F29C — variables y matriz de operacionalización (guía E1/L1)
+def f29c_checks():
+    """Devuelve (criterio, resultado, detalle). Comprueba las reglas de la guía E1/L1 sobre m_variables.py, la
+    correspondencia con RF, CU, RNF y variables de RF-29, y que los artefactos generados coinciden con una
+    regeneración (DOCX, Markdown, diagramas) sin afirmar resultados de chatbots."""
+    import hashlib
+    import subprocess
+    import tempfile
+    import m_common as C
+    import m_variables as V
+    import f29c
+    res = []
+    add = lambda crit, ok, det='': res.append((crit, 'PASS' if ok else 'FALLA', det))
+    src = os.path.join(ACAD, '00-fuentes-oficiales')
+    inv = open(os.path.join(src, 'inventory.md'), encoding='utf-8').read()
+    guias = ['L1_Definicion_de_proyecto_software_con_IA.pdf', 'E1_Desarrollo_de_software_con_IA.pdf']
+    hashes = {g: hashlib.sha256(open(os.path.join(src, 'guias-ia', g), 'rb').read()).hexdigest() for g in guias}
+    add('Guías E1 y L1 presentes y registradas en el inventario con su SHA-256',
+        all(h in inv and g in inv for g, h in hashes.items()), ', '.join(h[:12] for h in hashes.values()))
+    tipos = [v['tipo'] for v in V.VARIABLES]
+    add('Una variable independiente (la solución), una dependiente (el problema) y variables intermedias',
+        tipos.count('Independiente') == 1 and tipos.count('Dependiente') == 1 and tipos.count('Intermedia') >= 1,
+        f'{len(tipos)} variables')
+    add('Cada variable con definición conceptual y operacional',
+        all(v['conceptual'].strip() and v['operacional'].strip() for v in V.VARIABLES))
+    dims = [(v['id'], len(v['dimensiones'])) for v in V.VARIABLES]
+    add('Cada variable tiene varias dimensiones (≥ 2)', all(n >= 2 for _, n in dims),
+        ', '.join(f'{i}: {n}' for i, n in dims))
+    pocas = [d['id'] for v in V.VARIABLES for d in v['dimensiones'] if len(d['indicadores']) < 2]
+    add('Cada dimensión tiene varios indicadores (≥ 2)', not pocas, ', '.join(pocas))
+    inds = [(v, d, i) for v in V.VARIABLES for d in v['dimensiones'] for i in d['indicadores']]
+    pocos = [i['id'] for _, _, i in inds if len(i['items']) < 2]
+    add('Cada indicador tiene varios ítems de medición (≥ 2)', not pocos,
+        f'{len(inds)} indicadores, {sum(len(i["items"]) for _, _, i in inds)} ítems' + (': ' + ', '.join(pocos) if pocos else ''))
+    ids = [x['id'] for v in V.VARIABLES for x in [v] + v['dimensiones'] + [i for d in v['dimensiones'] for i in d['indicadores']]]
+    add('Identificadores únicos de variables, dimensiones e indicadores', len(ids) == len(set(ids)), f'{len(ids)} IDs')
+    def partes(instr):  # «Lista de cotejo y Cuestionario Likert (RR. HH.)» → dos instrumentos, sin el paréntesis
+        return re.split(r' y | / ', re.sub(r'\s*\([^)]*\)', '', instr))
+    malos = [i['id'] for _, _, i in inds
+             if not all(any(p.lower() == g.lower() for g in V.INSTRUMENTOS_GUIA) for p in partes(i['instrumento']))]
+    add('Instrumentos de la guía: ficha de observación, lista de cotejo o cuestionario Likert', not malos, ', '.join(malos))
+    add('Cada indicador tiene escala de medición', all(i['escala'].strip() for _, _, i in inds))
+    estados = {C.HV, C.ASP, C.TBP, C.SI, C.EXP}
+    fuera = [x for x in [v['estado'] for v in V.VARIABLES] + [i['estado'] for _, _, i in inds]
+             if not all(p.replace('uso predictivo ', '') in estados for p in x.split(' · '))]
+    add('Estados solo de la leyenda (HV, AS-IS PRELIMINAR, TO-BE PROPUESTO, SOFTWARE IMPLEMENTADO, EXPERIMENTAL)',
+        not fuera, ', '.join(sorted(set(fuera))))
+    likert_hv = [i['id'] for _, _, i in inds if 'Likert' in i['instrumento'] and C.HV in i['estado']]
+    add('Sin mediciones afirmadas: todo indicador con cuestionario Likert es TO-BE PROPUESTO (no aplicado)',
+        not likert_hv and all(C.TBP in i['estado'] for _, _, i in inds if 'Likert' in i['instrumento']), ', '.join(likert_hv))
+    vd = next(v for v in V.VARIABLES if v['tipo'] == 'Dependiente')
+    add('La variable dependiente sigue siendo AS-IS PRELIMINAR y sus indicadores TO-BE PROPUESTO',
+        vd['estado'] == C.ASP and all(i['estado'].startswith(C.TBP) for d in vd['dimensiones'] for i in d['indicadores']))
+    rf_ok = {f'RF-{i:02d}' for i in range(1, 28)}
+    rnf_ok = {x[0] for x in N.RNF}
+    contrato = open(os.path.join(ROOT, 'docs', 'v1.1', 'ml', 'feature-contract.md'), encoding='utf-8').read()
+    ml_ok = set(re.findall(r'ML-FEAT-\d\d', contrato))
+    rfs = set().union(*[i['rf'] for _, _, i in inds])
+    rnfs = set().union(*[i['rnf'] for _, _, i in inds])
+    mls = set().union(*[i['ml'] for _, _, i in inds])
+    add('Los RF citados existen en la línea base RF-01..RF-27', rfs <= rf_ok, f'{len(rfs)} RF; fuera: {sorted(rfs - rf_ok)}')
+    add('Los RNF citados existen en el F7 (RNF-01..RNF-10)', rnfs <= rnf_ok, f'{len(rnfs)} RNF; fuera: {sorted(rnfs - rnf_ok)}')
+    add('Las variables de RF-29 citadas existen en el contrato de features', mls <= ml_ok,
+        f'{len(mls)} citadas de {len(ml_ok)} del contrato; fuera: {sorted(mls - ml_ok)}')
+    exp = next(v for v in V.VARIABLES if v['estado'] == C.EXP)
+    usados = set().union(*[i['ml'] for d in exp['dimensiones'] for i in d['indicadores']])
+    vd_ml = set().union(*[i['ml'] for d in vd['dimensiones'] for i in d['indicadores']])
+    add('Guía: los indicadores de la variable dependiente contienen todas las variables que usa el modelo RF-29',
+        usados and usados <= vd_ml and len(usados) == 15, f'{len(usados & vd_ml)}/{len(usados)}')
+    cus = set().union(*[f29c.cu_of(i['rf']) for _, _, i in inds])
+    todos_cu = {f'CU-{i:02d}' for i in range(1, 21)}
+    add('Cobertura: RF-01..RF-27 y CU-01..CU-20 (CU derivados de los RF con la tabla del F8, sin CU nuevos)',
+        rfs == rf_ok and cus == todos_cu, f'RF {len(rfs & rf_ok)}/27, CU {len(cus & todos_cu)}/20')
+    rel = {(a, b) for a, b, _, _ in V.RELACIONES}
+    vi = next(v for v in V.VARIABLES if v['tipo'] == 'Independiente')
+    add('Relaciones del diagrama: intermedias → VI, VI → VD (TO-BE PROPUESTO, no medida), RF-29 → VD (EXPERIMENTAL)',
+        (vi['id'], vd['id']) in rel and all(r[3] == C.TBP for r in V.RELACIONES if r[:2] == (vi['id'], vd['id']))
+        and all(r[3] == C.EXP for r in V.RELACIONES if r[0] == exp['id']), f'{len(rel)} relaciones')
+    texto = ' '.join(str(x) for v in V.VARIABLES for x in [v['conceptual'], v['operacional']] +
+                     [it for d in v['dimensiones'] for i in d['indicadores'] for it in i['items']])
+    add('Sin Scrum, DevOps ni SOLID como variables (sin evidencia en el repositorio)',
+        not re.search(r'\b(Scrum|DevOps|SOLID)\b', ' '.join(v['nombre'] for v in V.VARIABLES)))
+    add('Salvaguardas explícitas: el ranking no cambia estados y RF-29 no toca personas, ranking ni decisión',
+        'no evalúa, puntúa, ordena ni selecciona personas' in texto
+        and '¿El ranking cambia el estado de alguna postulación? (esperado: No)' in texto
+        and '¿El resultado modifica el ranking, la decisión o la selección? (esperado: No)' in texto)
+    out = os.path.join(ACAD, 'operacionalizacion')
+    tmp = tempfile.mkdtemp()
+    stem, diag = 'F29C_Operacionalizacion_Variables', 'F29C_diagrama_conceptual_variables'
+    tmp_png = os.path.join(tmp, diag + '.png')    # mismo nombre: el DOCX guarda el nombre de la imagen
+    f29c.render_png(tmp_png)
+    f29c.render_svg(os.path.join(tmp, 'd.svg'))
+    f29c.build_md(os.path.join(tmp, 'm.md'), f'diagramas/{diag}.png', f'diagramas/{diag}.svg', 'ACTIVIDAD_IA_COMPARACION.md')
+    f29c.build_activity(os.path.join(tmp, 'a.md'))
+    f29c.build_docx(os.path.join(src, 'formatos-originales', 'Formato_11_Arquitectura_del_sistema.docx'),
+                    tmp_png, os.path.join(tmp, 'x.docx'))
+    pares = [(diag + '.png', f'diagramas/{diag}.png'), ('d.svg', f'diagramas/{diag}.svg'), ('m.md', stem + '.md'),
+             ('a.md', 'ACTIVIDAD_IA_COMPARACION.md'), ('x.docx', stem + '.docx')]
+    distintos = [b for a, b in pares if open(os.path.join(tmp, a), 'rb').read() != open(os.path.join(out, b), 'rb').read()]
+    add('Reproducible: la regeneración produce los mismos bytes (PNG, SVG, Markdown y DOCX)', not distintos, ', '.join(distintos))
+    svg = open(os.path.join(out, 'diagramas', diag + '.svg'), encoding='utf-8').read()
+    xml.dom.minidom.parseString(svg.encode('utf-8'))
+    add('Diagrama conceptual: SVG válido con todas las variables', all(f'>{v["id"]} ·' in svg for v in V.VARIABLES))
+    z = zipfile.ZipFile(os.path.join(out, stem + '.docx'))
+    tpl = zipfile.ZipFile(os.path.join(src, 'formatos-originales', 'Formato_11_Arquitectura_del_sistema.docx'))
+    for n in z.namelist():
+        if n.endswith(('.xml', '.rels')):
+            xml.dom.minidom.parseString(z.read(n))
+    doc = z.read('word/document.xml').decode('utf-8')
+    plain = ''.join(re.findall(r'<w:t(?:\s[^>]*)?>([^<]*)</w:t>', doc))
+    add('DOCX: ZIP y XML válidos, cabecera institucional de la plantilla y página horizontal',
+        z.testzip() is None and z.read('word/header1.xml') == tpl.read('word/header1.xml') and 'w:orient="landscape"' in doc)
+    heads = ''.join(re.findall(r'<w:t(?:\s[^>]*)?>([^<]*)</w:t>', re.search(r'<w:tblHeader/>.*?</w:tr>', doc[doc.index('Anexo 1.'):], re.S).group(0)))
+    add('Anexo 1: matriz con las 8 columnas pedidas y todas las filas', heads == ''.join(f29c.MATRIX_HEAD) and
+        all(i['id'] in plain for _, _, i in inds), f'{len(inds)} indicadores')
+    png = open(os.path.join(out, 'diagramas', diag + '.png'), 'rb').read()
+    add('Anexo 2: el diagrama incrustado es el PNG generado', 'Anexo 2. Diseño conceptual de variables' in plain
+        and png in [z.read(n) for n in z.namelist() if n.startswith('word/media/')])
+    pdf = open(os.path.join(out, stem + '.pdf'), 'rb').read()
+    boxes = re.findall(rb'/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)\s*\]', pdf)
+    npag = len(re.findall(rb'/Type\s*/Page[^s]', pdf))
+    add('PDF: válido y en páginas horizontales', pdf[:5] == b'%PDF-' and b'%%EOF' in pdf[-1024:] and boxes
+        and all(float(w) > float(h) for w, h in boxes), f'{npag} páginas')
+    protegidos = ['app', 'resources', 'routes', 'database', 'tests', 'ml-service', 'docs/v1.1', 'docs/final-report',
+                  'docs/academico/phase-24/output', 'docs/academico/practica-11', 'docs/academico/powerdesigner']
+    r = subprocess.run(['git', 'status', '--porcelain', '--'] + protegidos, cwd=ROOT, capture_output=True, text=True)
+    add('Alcance: sin cambios en runtime, ML, F9 publicado, F11, F23/F29 ni en el informe v1.0', r.returncode == 0
+        and not r.stdout.strip(), r.stdout.strip()[:120])
+    return res
+
+
+def f29c_actividad_checks():
+    """Actividad E1/L1 según el ALCANCE EFECTIVO del entregable (m_variables.REQUISITOS). Devuelve (criterio, resultado,
+    detalle) con resultado:
+      PASS / FALLA  — integridad: paquete, registro, datos escritos, elementos NO REQUERIDO nunca presentados como
+                      ejecutados, integración sin evidencia;
+      PENDIENTE     — requisito del alcance efectivo sin evidencia completa: estado de trabajo, no falla, pero impide
+                      el cierre (`--cierre-f29c`);
+      NO REQ        — requisito de la guía fuera del alcance efectivo: se informa, no se valida como ejecutado ni
+                      cuenta para el cierre."""
+    import datetime
+    import subprocess
+    import m_common as C
+    import m_variables as V
+    import f29c
+    res = []
+    add = lambda crit, st, det='': res.append((crit, st, det))
+    ok = lambda b: 'PASS' if b else 'FALLA'
+    out = os.path.join(ACAD, 'operacionalizacion')
+    act = open(os.path.join(out, 'ACTIVIDAD_IA_COMPARACION.md'), encoding='utf-8').read()
+    bloques = re.findall(r'```text\n(.*?)\n```', act, re.S)
+    cats = all(f'## {n}. {c}' in act for n, (c, _) in enumerate(f29c.CATEGORIAS, 1))
+    no_req = [r for r in V.REQUISITOS if r[3] == V.NO_REQUERIDO]
+    add('Paquete: requisito de la guía, alcance efectivo, evidencia ejecutada y NO REQUERIDO distinguidos; P-01 a P-06 '
+        'listos para copiar',
+        ok([p[3] for p in V.PROMPTS] == bloques and cats and V.CRITERIO_DOCENTE in act and V.CHAT_DOCENTE in act
+           and all(e[0] in act for e in V.ENUNCIADOS) and all(r[0] in act and r[2] in act for r in V.REQUISITOS)
+           and 'informado por el equipo' in V.CRITERIO_DOCENTE and 'No es contenido de la guía' in V.CRITERIO_DOCENTE
+           and V.TITULO_BASE == C.PROYECTO and V.TITULO_BASE in V.PROMPTS[1][3]),
+        f'{len(bloques)} prompts; {len(V.REQUISITOS)} requisitos de la guía, {len(no_req)} NO REQUERIDO')
+    reg_path = os.path.join(out, V.REGISTRO)
+    if not os.path.exists(reg_path):
+        add('Registro de ejecuciones presente', 'FALLA', V.REGISTRO + ' no existe (build.py f29c lo crea vacío)')
+        return res
+    R = f29c.leer_registro(reg_path)
+    reg_dir = os.path.dirname(reg_path)
+    P = f29c.PEND
+    requeridas, no_requeridas = V.EJECUCIONES_REQUERIDAS, V.EJECUCIONES_NO_REQUERIDAS
+    estructura = ([(k, r['Chatbot'], r['Prompt']) for k, r in R['runs'].items()] == requeridas
+                  and [(k, r['Chatbot'], r['Prompt']) for k, r in R['no_req_runs'].items()] == no_requeridas
+                  and [(k, a['bot'], a['prompt_id']) for k, a in R['answers'].items()] == requeridas
+                  and [(c[0], c[1], c[2]) for c in R['integracion']] == V.CAPITULOS
+                  and len(R['no_req']) == len(f29c.NO_REQ_ITEMS))
+    add('Registro: estructura intacta (alcance efectivo, integración, NO REQUERIDO y respuestas)', ok(estructura),
+        f'{len(R["runs"])} ejecuciones requeridas, {len(R["no_req_runs"])} NO REQUERIDO')
+    if not estructura:
+        return res
+    hoy = datetime.date.today()
+    prompts = {p[0]: p[3] for p in V.PROMPTS}
+
+    def fecha_ok(v):
+        m = re.fullmatch(r'(\d\d)/(\d\d)/(\d{4})', v)
+        try:
+            return bool(m) and datetime.date(int(m.group(3)), int(m.group(2)), int(m.group(1))) <= hoy
+        except ValueError:
+            return False
+
+    def capturas_ok(v):
+        rutas = [x.strip() for x in v.split(';') if x.strip()]
+        return rutas and all(re.search(r'\.(png|jpe?g|pdf)$', x, re.I) and os.path.isfile(os.path.join(reg_dir, x))
+                             for x in rutas)
+
+    completas, errores, solo_texto = set(), [], []
+    for rid, bot, pid in requeridas:
+        r, a = R['runs'][rid], R['answers'][rid]
+        e = []
+        if r['Fecha'] != P and not fecha_ok(r['Fecha']):
+            e.append(f'fecha «{r["Fecha"]}» no es DD/MM/AAAA o es futura')
+        if r['Enlace'] not in (P, 'No disponible') and not re.fullmatch(r'https://\S+', r['Enlace']):
+            e.append(f'enlace «{r["Enlace"]}» no es https:// ni «No disponible»')
+        if r['Captura'] not in (P, 'No disponible', 'No aplica') and not capturas_ok(r['Captura']):
+            e.append(f'captura inexistente o de formato no admitido: {r["Captura"]}')
+        if r['Captura'] == 'No aplica' and not r['Enlace'].startswith('https://'):
+            e.append('«No aplica» en captura solo vale con enlace')
+        if r['Prompt usado'] not in (P, 'Sin cambios', 'Modificado'):
+            e.append(f'«Prompt usado» = «{r["Prompt usado"]}»')
+        if r['Prompt usado'] == 'Modificado' and (not a['prompt'] or not a['motivo'] or a['prompt'] == prompts[pid]):
+            e.append('prompt «Modificado» sin el prompt real distinto del oficial o sin «Motivo del cambio»')
+        if r['Estado'] not in (P, 'Completo'):
+            e.append(f'estado «{r["Estado"]}» no admitido en el alcance efectivo')
+        if r['Estado'] == 'Completo':
+            faltan = [k for k in ('Modelo / versión', 'Plan', 'Fecha', 'Prompt usado', 'Enlace', 'Captura')
+                      if r[k] in ('', P, '—')]
+            if faltan:
+                e.append('marcada Completo con campos pendientes: ' + ', '.join(faltan))
+            if not a['respuesta'] or a['respuesta'] == P or len(a['respuesta']) < 20:
+                e.append('marcada Completo sin la respuesta pegada')
+        if e:
+            errores.append(f'{rid}: ' + '; '.join(e))
+        elif r['Estado'] == 'Completo':
+            completas.add(rid)
+            if r['Enlace'] == 'No disponible' and r['Captura'] == 'No disponible':
+                solo_texto.append(rid)
+    add('Registro: los datos escritos son coherentes (fechas, enlaces, capturas, estados, prompts)', ok(not errores),
+        ' | '.join(errores)[:400])
+
+    # NO REQUERIDO: nunca ejecutado ni citado como ejecutado.
+    campos = ['Modelo / versión', 'Plan', 'Fecha', 'Prompt usado', 'Enlace', 'Captura']
+    mal_nr = [rid for rid, _, _ in no_requeridas
+              if R['no_req_runs'][rid]['Estado'] != V.NO_REQUERIDO or any(R['no_req_runs'][rid][k] != '—' for k in campos)]
+    mal_nr += [t[:40] for t in R['no_req'] if not t.endswith(f'**{V.NO_REQUERIDO}**')]
+    mal_nr += [rid for rid, _, _ in no_requeridas if f'### {rid} ' in R['text']]
+    citados = set(re.findall(r'\b(R-(?:0[5-9]|1[0-6])|T-01)\b', ' '.join(' '.join(c[3:]) for c in R['integracion'])))
+    mal_nr += sorted(citados)
+    mal_nr += [rid for rid, _, _ in requeridas if R['runs'][rid]['Estado'] == V.NO_REQUERIDO]
+    add('NO REQUERIDO: R-05 a R-16 y las comparaciones sin datos ni respuestas, nunca citados ni marcados como ejecutados',
+        ok(not mal_nr and not (completas & {e[0] for e in no_requeridas})), ', '.join(mal_nr))
+
+    # Integración de P-05 y P-06 con los capítulos 1 y 2: la fuente canónica no se sustituye.
+    int_pend, int_mal = 0, []
+    for cap, fuente, rid, *resto in R['integracion']:
+        if not os.path.isfile(os.path.join(ROOT, fuente)):
+            int_mal.append(f'{fuente} no existe')
+        if all(x == P for x in resto):
+            int_pend += 1
+        elif any(x == P for x in resto) or rid not in completas:
+            int_mal.append(f'{cap[:10]}: escrita sin {rid} completa o con celdas pendientes')
+    fuentes_intactas = subprocess.run(['git', 'status', '--porcelain', '--'] + [c[1] for c in V.CAPITULOS], cwd=ROOT,
+                                      capture_output=True, text=True).stdout.strip() == ''
+    add('Integración con los capítulos 1 y 2: sin evidencia no se escribe; la fuente canónica no se modifica',
+        ok(not int_mal and fuentes_intactas), '; '.join(int_mal) + ('' if fuentes_intactas else ' capítulo canónico modificado'))
+
+    def estado(completo, falla=False):
+        return 'FALLA' if falla else ('PASS' if completo else 'PENDIENTE')
+    e1 = {'R-01', 'R-02', 'R-03', 'R-04'}
+    e4 = {'R-17', 'R-18'}
+    def obs(ids):
+        t = sorted(set(solo_texto) & ids)
+        return f'; evidencia solo textual (sin enlace ni captura): {", ".join(t)}' if t else ''
+    add('REQ-01 · Enunciado 1: evidencia de ChatGPT P-01 a P-04 (R-01 a R-04)', estado(e1 <= completas),
+        f'{len(e1 & completas)}/4 completas' + obs(e1))
+    doc_md = open(os.path.join(out, 'F29C_Operacionalizacion_Variables.md'), encoding='utf-8').read()
+    add('REQ-02 · Enunciado 1: matriz y definición conceptual documentadas en el informe (F29C)',
+        ok('Anexo 1. Matriz de Operacionalización de Variables' in doc_md and '*Conceptual:*' in doc_md
+           and os.path.isfile(os.path.join(out, 'F29C_Operacionalizacion_Variables.docx'))))
+    add('REQ-06 · Enunciado 4: evidencia de ChatGPT P-05 y P-06 (R-17, R-18)', estado(e4 <= completas),
+        f'{len(e4 & completas)}/2 completas' + obs(e4))
+    add('REQ-07 · Enunciado 4: P-05 y P-06 integradas frente a los capítulos 1 y 2 canónicos',
+        estado(int_pend == 0 and not int_mal, bool(int_mal)), f'{len(V.CAPITULOS) - int_pend}/{len(V.CAPITULOS)} capítulos')
+    for r in no_req:
+        add(f'{r[0]} · {r[1]}: {r[2]}', 'NO REQ', 'fuera del alcance efectivo (criterio docente informado por el equipo); '
+                                                  'no ejecutado')
+    return res
+
+
 if __name__ == '__main__':
     sys.stdout.reconfigure(encoding='utf-8')
+    cierre = '--cierre-f29c' in sys.argv[1:]
     fails = 0
     for rule, r, det in checks():
         print(f'{r:5} {rule}' + (f' — {det}' if det else ''))
@@ -408,5 +685,25 @@ if __name__ == '__main__':
     for crit, r, det in f11r_checks():
         print(f'{r:5} {crit}' + (f' — {det}' if det else ''))
         fails += r == 'FALLA'
+    print()
+    print('--- F29C: variables y matriz de operacionalización (guía E1/L1)')
+    for crit, r, det in f29c_checks():
+        print(f'{r:5} {crit}' + (f' — {det}' if det else ''))
+        fails += r == 'FALLA'
+    print()
+    print('--- F29C: actividad E1/L1 según el alcance efectivo del entregable')
+    pendientes = 0
+    for crit, r, det in f29c_actividad_checks():
+        print(f'{r:9} {crit}' + (f' — {det}' if det else ''))
+        fails += r == 'FALLA'
+        pendientes += r == 'PENDIENTE'
+    if pendientes:
+        print(f'\nF29C ABIERTA: {pendientes} comprobaciones PENDIENTES. Es un estado de trabajo válido, '
+              'pero la F29C no puede cerrarse hasta completarlas con evidencia real.')
+    else:
+        print('\nF29C: actividad completa; se puede auditar para el cierre.')
+    if cierre:
+        print(f'Modo --cierre-f29c: las pendientes cuentan como fallas → cierre {"RECHAZADO" if pendientes or fails else "ADMITIDO"}.')
+        fails += pendientes
     print(f'\n{fails} fallas')
     sys.exit(1 if fails else 0)

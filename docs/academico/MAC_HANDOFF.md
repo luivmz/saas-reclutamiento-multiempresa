@@ -118,6 +118,7 @@ Laravel solo llama al servicio si `ML_SERVICE_ENABLED=true`. Sin él, la aplicac
 | F8 Casos de uso | [`practica-08/`](practica-08/README.md) | DOCX y PDF con la exportación formal |
 | F9 Alcance (publicado) | [`phase-24/output/`](phase-24/README.md) · adenda en [`practica-09/`](practica-09/F9_POST_RELEASE_ADDENDUM.md) | Solo lectura |
 | F11 Arquitectura | [`practica-11/`](practica-11/README.md) | Definitivo: DOCX y PDF sobre la plantilla oficial (F11-R), con la vista ARQ-01. Se conserva además la adaptación histórica de la F28 |
+| F29C Variables y operacionalización | [`operacionalizacion/`](operacionalizacion/README.md) | DOCX y PDF con el Anexo 1 (matriz) y el Anexo 2 (diagrama conceptual), espejo `.md` y paquete de ejecución de la actividad E1 y registro de la evidencia de ChatGPT (P-01 a P-06; el resto es NO REQUERIDO). `validate.py --cierre-f29c` pasa. **Lista para auditoría** |
 
 **PowerDesigner (F29):**
 
@@ -152,7 +153,7 @@ python3 docs/academico/tools/f27b/validate.py                  # coherencia F2 �
 python3 docs/academico/powerdesigner/scripts/validate_f29.py   # modelos, exportaciones, capturas, integración y F23
 ```
 
-Resultado esperado al cierre: `validate.py`, 0 fallas; `validate_f29.py`, 225 comprobaciones correctas y 0 fallas. Ninguno de los dos necesita PowerDesigner. `validate_f29.py` usa `git`.
+Resultado esperado: `validate.py`, 0 fallas (los requisitos fuera del alcance efectivo de la F29C aparecen como NO REQ; con `--cierre-f29c`, un PENDIENTE contaría como falla); `validate_f29.py`, 225 comprobaciones correctas y 0 fallas. Ninguno de los dos necesita PowerDesigner. `validate_f29.py` usa `git`.
 
 ## Forma de trabajar con Git
 
