@@ -1555,6 +1555,31 @@ def build_f11r():
     print('OK', os.path.relpath(out_docx, ROOT))
 
 
+# --------------------------------------------------------------------------- F29C variables y operacionalización
+F29C_DIR = os.path.join(ACAD, 'operacionalizacion')
+F29C_STEM = 'F29C_Operacionalizacion_Variables'
+F29C_DIAG = 'F29C_diagrama_conceptual_variables'
+
+
+@builder('f29c')
+def build_f29c():
+    """Variables, matriz de operacionalización y diagrama conceptual (guía E1/L1), desde m_variables.py."""
+    import f29c
+    ddir = os.path.join(F29C_DIR, 'diagramas')
+    os.makedirs(ddir, exist_ok=True)
+    png = os.path.join(ddir, F29C_DIAG + '.png')
+    f29c.render_png(png)
+    f29c.render_svg(os.path.join(ddir, F29C_DIAG + '.svg'))
+    f29c.build_md(os.path.join(F29C_DIR, F29C_STEM + '.md'), f'diagramas/{F29C_DIAG}.png', f'diagramas/{F29C_DIAG}.svg',
+                  'ACTIVIDAD_IA_COMPARACION.md')
+    f29c.build_activity(os.path.join(F29C_DIR, 'ACTIVIDAD_IA_COMPARACION.md'))
+    if f29c.build_registro(os.path.join(F29C_DIR, f29c.V.REGISTRO)):   # solo si no existe: es evidencia del equipo
+        print('OK registro de ejecuciones creado (vacío)')
+    out_docx = os.path.join(F29C_DIR, F29C_STEM + '.docx')
+    f29c.build_docx(os.path.join(FMT, 'Formato_11_Arquitectura_del_sistema.docx'), png, out_docx)
+    print('OK', os.path.relpath(out_docx, ROOT))
+
+
 if __name__ == '__main__':
     keys = sys.argv[1:] or list(BUILDERS)
     for k in keys:

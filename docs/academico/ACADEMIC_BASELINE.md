@@ -58,7 +58,7 @@ Candidatos en [`../v1.1/scope-preliminary.md`](../v1.1/scope-preliminary.md), si
 
 ## Fuentes oficiales disponibles
 
-**Formatos 02 a 09 y 11** (plantillas vacías) y **Guías 02 a 09 y 11**, en [`00-fuentes-oficiales/`](00-fuentes-oficiales/README.md). Hashes en su [inventario](00-fuentes-oficiales/inventory.md).
+**Formatos 02 a 09 y 11** (plantillas vacías) y **Guías 02 a 09 y 11**, en [`00-fuentes-oficiales/`](00-fuentes-oficiales/README.md). Hashes en su [inventario](00-fuentes-oficiales/inventory.md). Desde la F29C también la **guía de laboratorio E1** sobre desarrollo de software con IA y su equivalente **L1** (Taller de Investigación 2), en [`00-fuentes-oficiales/guias-ia/`](00-fuentes-oficiales/guias-ia/).
 
 ## Formato 11
 
@@ -84,6 +84,7 @@ Candidatos en [`../v1.1/scope-preliminary.md`](../v1.1/scope-preliminary.md), si
 | F9 | **Completo.** Entregable final v1.1 en [`phase-24/output/`](phase-24/README.md) (DOCX y PDF), con el histórico v1.0 y su [mapa de fuentes](phase-24/source-map.md). No se modifica; la [adenda post-release](practica-09/F9_POST_RELEASE_ADDENDUM.md) (F27B) registra el estado posterior y las divergencias resueltas |
 | F29 | **Formalización en PowerDesigner** de F3, F5, F8 y ARQ-01 ([`powerdesigner/`](powerdesigner/README.md)): **CLOSED WITH DOCUMENTED OBSERVATIONS** (28/09/2026). F29 y F29B auditadas; las exportaciones formales son el diagrama principal de los DOCX y PDF de F3, F5, F8 y F11; hay 7 capturas reales de PowerDesigner. Los borradores quedan como DRAFT / SUPERSEDED BY F29 FORMAL EXPORT. LOW para la F31: F29-L01, F29-L02 y F29B-OBS-01. *Antes: FORMALIZED / DONE, pendiente de la auditoría F29* |
 | F11 | **Regularizado sobre la plantilla oficial en la fase F11-R** (29/09/2026): [`F11_Arquitectura_del_Sistema_Colegio_Andino.docx`](practica-11/F11_Arquitectura_del_Sistema_Colegio_Andino.docx). Es la misma arquitectura, con CMP-01 a CMP-17 equivalentes a C01 a C17. **Pendiente de auditoría.** La adaptación académica de la F28 se conserva como versión histórica ([registro](practica-11/F11R_REGULARIZACION.md)). *Antes: adaptación académica desarrollada en la F28, sin plantilla oficial* |
+| F29C | **Variables y matriz de operacionalización** según la guía E1 ([`operacionalizacion/`](operacionalizacion/README.md), 30/09/2026): VI, VD y cuatro variables intermedias con definición conceptual y operacional, Anexo 1 (matriz de 8 columnas) y Anexo 2 (diagrama conceptual), en DOCX, PDF y Markdown. Sin valores medidos; la relación VI → VD es TO-BE PROPUESTO. Evidencia de ChatGPT P-01 a P-06 registrada (texto del equipo, sin enlace ni captura) e integrada frente a los capítulos 1 y 2 sin modificarlos. Alcance efectivo según el criterio docente informado por el equipo: Gemini, DeepSeek, Copilot y el chat del docente quedan NO REQUERIDOS, aunque la guía los propone. `validate.py --cierre-f29c` pasa. **Lista para auditoría** |
 
 **Insumos usados en la F27B** (trazabilidad completa en [`trazabilidad/F2-F9-traceability.md`](trazabilidad/F2-F9-traceability.md)):
 

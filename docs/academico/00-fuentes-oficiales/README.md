@@ -10,6 +10,7 @@ Inventario con los hashes: [`inventory.md`](inventory.md). Estado académico gen
 |---|---|
 | [`guias/`](guias/) | 9 guías oficiales: prácticas 02, 03, 04, 05, 06, 07, 08, 09 y 11 (`GUIA_PRACTICA_XX.docx`) |
 | [`formatos-originales/`](formatos-originales/) | 9 plantillas oficiales vacías: Formatos 02 a 09 y 11 (`Formato_XX_<descripción>.docx`). El Formato 11 se incorporó al repositorio el 29/09/2026 |
+| [`guias-ia/`](guias-ia/) | 2 guías de laboratorio sobre desarrollo de software con IA (30/09/2026): la E1 del curso y la L1 de Taller de Investigación 2, con el mismo contenido. Fuente de la matriz de operacionalización de la F29C ([`../operacionalizacion/`](../operacionalizacion/)) |
 | [`plantillas-proyecto/`](plantillas-proyecto/), [`plan-pruebas/`](plan-pruebas/), [`material-referencia/`](material-referencia/) | Fuentes para fases posteriores (proyecto final y plan de pruebas), todavía sin usar: dos plantillas del curso, una plantilla externa de referencia y un ejemplo externo no normativo. Procedencia de cada una en el [inventario](inventory.md) |
 
 **Identificación verificada:**
@@ -37,7 +38,7 @@ Inventario con los hashes: [`inventory.md`](inventory.md). Estado académico gen
 3. **Cada cambio de esta carpeta** se refleja en [`inventory.md`](inventory.md), con su SHA-256.
 4. **Los hashes se verifican con:**
    ```
-   sha256sum docs/academico/00-fuentes-oficiales/*/*.docx
+   sha256sum docs/academico/00-fuentes-oficiales/*/*.docx docs/academico/00-fuentes-oficiales/*/*.pdf
    ```
 
 ## Relación con `phase-24`

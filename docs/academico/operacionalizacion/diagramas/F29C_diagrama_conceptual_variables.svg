@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1260" width="2000" height="1260" font-family="Arial, Helvetica, sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>
+<rect width="2000" height="1260" fill="white"/>
+<text x="1000" y="62" font-size="34" font-weight="bold" text-anchor="middle" fill="#1F1F1F">Diseño conceptual de variables — Colegio Andino de Huancayo</text>
+<text x="1000" y="108" font-size="22" text-anchor="middle" fill="#444444">Plataforma SaaS multiempresa de reclutamiento, evaluación y selección (F29C, guía E1/L1)</text>
+<rect x="60" y="190" width="500" height="200" fill="#FFF2CC" stroke="#8A6D1F" stroke-width="3"/>
+<text x="76" y="224" font-size="22" font-weight="bold" fill="#8A6D1F">VIN-1 · Variable intermedia</text>
+<text x="76" y="262" font-size="22" font-weight="bold" fill="#1F1F1F">Aseguramiento de la calidad con desarrollo</text>
+<text x="76" y="289" font-size="22" font-weight="bold" fill="#1F1F1F">guiado por pruebas (TDD) y pruebas</text>
+<text x="76" y="316" font-size="22" font-weight="bold" fill="#1F1F1F">automatizadas</text>
+<text x="76" y="344" font-size="19" fill="#1F1F1F">Estado: HECHO VERIFICADO</text>
+<rect x="60" y="420" width="500" height="200" fill="#FFF2CC" stroke="#8A6D1F" stroke-width="3"/>
+<text x="76" y="454" font-size="22" font-weight="bold" fill="#8A6D1F">VIN-2 · Variable intermedia</text>
+<text x="76" y="492" font-size="22" font-weight="bold" fill="#1F1F1F">Modelo de calidad del producto ISO/IEC</text>
+<text x="76" y="519" font-size="22" font-weight="bold" fill="#1F1F1F">25010 (marco de referencia)</text>
+<text x="76" y="547" font-size="19" fill="#1F1F1F">Estado: HECHO VERIFICADO</text>
+<rect x="60" y="650" width="500" height="200" fill="#FFF2CC" stroke="#8A6D1F" stroke-width="3"/>
+<text x="76" y="684" font-size="22" font-weight="bold" fill="#8A6D1F">VIN-3 · Variable intermedia</text>
+<text x="76" y="722" font-size="22" font-weight="bold" fill="#1F1F1F">Arquitectura modular multiempresa y</text>
+<text x="76" y="749" font-size="22" font-weight="bold" fill="#1F1F1F">entorno reproducible</text>
+<text x="76" y="777" font-size="19" fill="#1F1F1F">Estado: HECHO VERIFICADO</text>
+<rect x="680" y="190" width="500" height="660" fill="#DCE9F7" stroke="#2F5F8F" stroke-width="3"/>
+<text x="696" y="224" font-size="22" font-weight="bold" fill="#2F5F8F">VI · Variable independiente</text>
+<text x="696" y="262" font-size="22" font-weight="bold" fill="#1F1F1F">Plataforma SaaS multiempresa de</text>
+<text x="696" y="289" font-size="22" font-weight="bold" fill="#1F1F1F">reclutamiento, evaluación y selección de</text>
+<text x="696" y="316" font-size="22" font-weight="bold" fill="#1F1F1F">personal</text>
+<text x="696" y="344" font-size="19" fill="#1F1F1F">Estado: SOFTWARE IMPLEMENTADO</text>
+<text x="696" y="369" font-size="19" fill="#1F1F1F"></text>
+<text x="696" y="394" font-size="19" fill="#1F1F1F">Dimensiones:</text>
+<text x="696" y="419" font-size="19" fill="#1F1F1F">D1 Registro centralizado de la convocatoria (S-01)</text>
+<text x="696" y="444" font-size="19" fill="#1F1F1F">D2 Control del flujo por estados e historial (S-02)</text>
+<text x="696" y="469" font-size="19" fill="#1F1F1F">D3 Evaluación estructurada y ranking de apoyo (S-03)</text>
+<text x="696" y="494" font-size="19" fill="#1F1F1F">D4 Comunicación automática (S-04)</text>
+<text x="696" y="519" font-size="19" fill="#1F1F1F">D5 Decisión humana, trazabilidad y seguridad (S-05)</text>
+<text x="696" y="544" font-size="19" fill="#1F1F1F"></text>
+<text x="696" y="569" font-size="19" fill="#1F1F1F">10 indicadores y 25 ítems (Anexo 1).</text>
+<text x="696" y="594" font-size="19" fill="#1F1F1F">Instrumentos: lista de cotejo; cuestionario Likert.</text>
+<rect x="1420" y="190" width="520" height="660" fill="#E2F0D9" stroke="#3D6B2E" stroke-width="3"/>
+<text x="1436" y="224" font-size="22" font-weight="bold" fill="#3D6B2E">VD · Variable dependiente</text>
+<text x="1436" y="262" font-size="22" font-weight="bold" fill="#1F1F1F">Gestión del proceso de reclutamiento,</text>
+<text x="1436" y="289" font-size="22" font-weight="bold" fill="#1F1F1F">evaluación y selección de personal</text>
+<text x="1436" y="317" font-size="19" fill="#1F1F1F">Estado: AS-IS PRELIMINAR</text>
+<text x="1436" y="342" font-size="19" fill="#1F1F1F"></text>
+<text x="1436" y="367" font-size="19" fill="#1F1F1F">Dimensiones:</text>
+<text x="1436" y="392" font-size="19" fill="#1F1F1F">D1 Centralización de la información (P1; OM-01)</text>
+<text x="1436" y="417" font-size="19" fill="#1F1F1F">D2 Seguimiento y oportunidad del proceso (P2; OM-02)</text>
+<text x="1436" y="442" font-size="19" fill="#1F1F1F">D3 Uniformidad de la evaluación (P3; OM-03)</text>
+<text x="1436" y="467" font-size="19" fill="#1F1F1F">D4 Comunicación con los postulantes (P4; OM-04)</text>
+<text x="1436" y="492" font-size="19" fill="#1F1F1F">D5 Sustento y trazabilidad de la decisión (P5; OM-05)</text>
+<text x="1436" y="517" font-size="19" fill="#1F1F1F"></text>
+<text x="1436" y="542" font-size="19" fill="#1F1F1F">11 indicadores y 30 ítems (Anexo 1).</text>
+<text x="1436" y="567" font-size="19" fill="#1F1F1F">Instrumentos: lista de cotejo; ficha de observación;</text>
+<text x="1436" y="592" font-size="19" fill="#1F1F1F">cuestionario Likert.</text>
+<rect x="1420" y="930" width="520" height="200" fill="#EEEEEE" stroke="#666666" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1436" y="964" font-size="22" font-weight="bold" fill="#666666">VIN-4 · Variable intermedia</text>
+<text x="1436" y="1002" font-size="22" font-weight="bold" fill="#1F1F1F">Aprendizaje automático experimental para el</text>
+<text x="1436" y="1029" font-size="22" font-weight="bold" fill="#1F1F1F">riesgo operacional del proceso (RF-29)</text>
+<text x="1436" y="1057" font-size="19" fill="#1F1F1F">Estado: EXPERIMENTAL / PROPUESTO</text>
+<polyline points="560,290 680,290" fill="none" stroke="#1F1F1F" stroke-width="3" marker-end="url(#a)"/>
+<text x="620" y="278" font-size="18" font-style="italic" text-anchor="middle" fill="#1F1F1F">condiciona</text>
+<polyline points="560,520 680,520" fill="none" stroke="#1F1F1F" stroke-width="3" marker-end="url(#a)"/>
+<text x="620" y="508" font-size="18" font-style="italic" text-anchor="middle" fill="#1F1F1F">orienta</text>
+<polyline points="560,750 680,750" fill="none" stroke="#1F1F1F" stroke-width="3" marker-end="url(#a)"/>
+<text x="620" y="738" font-size="18" font-style="italic" text-anchor="middle" fill="#1F1F1F">estructura</text>
+<polyline points="1180,520 1420,520" fill="none" stroke="#1F1F1F" stroke-width="3" marker-end="url(#a)"/>
+<rect x="1202" y="477" width="197" height="26" fill="white"/>
+<text x="1300" y="496" font-size="18" font-style="italic" text-anchor="middle" fill="#1F1F1F">se propone que mejore</text>
+<polyline points="1680,930 1680,850" fill="none" stroke="#555555" stroke-width="3" stroke-dasharray="10 7" marker-end="url(#a)"/>
+<rect x="1506" y="877" width="349" height="26" fill="white"/>
+<text x="1680" y="896" font-size="18" font-style="italic" text-anchor="middle" fill="#555555">estima el riesgo de demora (experimental)</text>
+<text x="60" y="1196" font-size="19" fill="#333333">Relación VI → VD: hipótesis de trabajo (TO-BE PROPUESTO), sin línea base ni mediciones. La decisión final de selección es humana (RF-23).</text>
+<text x="60" y="1228" font-size="19" fill="#555555">Discontinuo: EXPERIMENTAL / PROPUESTO (RF-29, fuera de la línea base).</text>
+</svg>

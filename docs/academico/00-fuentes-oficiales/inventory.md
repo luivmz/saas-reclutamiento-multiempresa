@@ -8,6 +8,8 @@ Los hashes son SHA-256 del archivo, verificados con `sha256sum` en esta fase. Lo
 
 **Actualización de fuentes para fases posteriores (29/09/2026):** se registran cuatro fuentes incorporadas por el equipo junto con el Formato 11, con su procedencia. No se usan en la F11-R.
 
+**Actualización F29C (30/09/2026):** se registran las dos guías de laboratorio sobre desarrollo de software con IA, incorporadas por el equipo en `guias-ia/`. Son la fuente normativa de la matriz de operacionalización de la F29C. Rama `feature/f29c-operationalization-matrix` creada desde `develop` `1abd405`.
+
 **Estados:**
 
 | Estado | Significado |
@@ -59,6 +61,15 @@ Las incorporó el equipo junto con el Formato 11. **No se usan en la F11-R** ni 
 | Plantilla | Plantilla externa de referencia (PMOInformática) | Plan de pruebas de software | `PMOInformatica_Plantilla_de_Plan_de_Pruebas_de_Software.doc` | `docs/academico/00-fuentes-oficiales/plan-pruebas/` | `3d2bb6f87c43ea1a3484ddff88a60980e3ea8a703911d4709663fbd103686f76` | REFERENCIA EXTERNA | Nombre recibido: `PMOInformatica Plantilla de Plan de Pruebas de Software (1).doc`. 89 600 B. Formato Word 97-2003. No es una plantilla del curso |
 | Material de referencia | Ejemplo externo, no normativo | Ejemplo de plan de pruebas | `Ejemplo_Plan_de_Pruebas_de_Software.pdf` | `docs/academico/00-fuentes-oficiales/material-referencia/` | `1b77a9618cddba1db9fa5158a50542eb659f1c424c3d2099237df3e70c3f5554` | REFERENCIA EXTERNA | Nombre recibido: `Ejemplo Plan de Pruebas de Software (1).pdf`. 180 308 B. Ejemplo; no fija la estructura de ningún entregable |
 
+## Guías de laboratorio con IA (registradas el 30/09/2026, F29C)
+
+Las incorporó el equipo con estos nombres, ya en ASCII y sin espacios. El contenido no se modificó. Tratan el mismo tema con el mismo docente: definir el proyecto con IA generativa, sus variables, la matriz de operacionalización y el diagrama conceptual. La E1 es la del curso; la L1 lleva la cabecera de otro curso del mismo docente y se usa solo como fuente complementaria.
+
+| Tipo | Procedencia | Uso | Archivo | Ruta | SHA-256 | Estado | Observaciones |
+|---|---|---|---|---|---|---|---|
+| Guía de laboratorio | Pruebas y Calidad de Software, Dr. Maglioni Arana Caparachin | Fuente normativa de la F29C | `E1_Desarrollo_de_software_con_IA.pdf` | `docs/academico/00-fuentes-oficiales/guias-ia/` | `696b2bd79ef584eb3d60fb2ca59ccb3fba3225b5d4b20ffb94306307039b7695` | OFICIAL | 897 027 B. Cabecera: «Pruebas y Calidad de Software. Guía Laboratorio 01: Desarrollo de Software con Inteligencia Artificial». No cita el NRC |
+| Guía de laboratorio | Taller de Investigación 2 (Ingeniería de Sistemas e Informática), mismo docente | Fuente complementaria de la F29C | `L1_Definicion_de_proyecto_software_con_IA.pdf` | `docs/academico/00-fuentes-oficiales/guias-ia/` | `178096fb10f7bc706c0358d4dde81b0d6053b2c13eb73b5098c9f631918be7a9` | REFERENCIA EXTERNA | 915 686 B. Cabecera: «Taller de Investigación 2. Laboratorio 01: Desarrollo de Software con Inteligencia Artificial». Mismas reglas y actividades que la E1. No es una guía de este curso |
+
 ## Evidencia histórica de la Fase 24 (se conserva intacta)
 
 | Tipo | Práctica | Archivo | Ruta | SHA-256 | Estado | Observaciones |
@@ -71,7 +82,7 @@ Las incorporó el equipo junto con el Formato 11. **No se usan en la F11-R** ni 
 
 ## Duplicados detectados
 
-Hay 22 archivos inventariados con 20 hashes distintos (F27B-0; con el Formato 11 y las cuatro fuentes para fases posteriores son 27 archivos y 25 hashes, sin duplicados nuevos). Los dos duplicados son intencionados y byte a byte:
+Hay 22 archivos inventariados con 20 hashes distintos (F27B-0; con el Formato 11 y las cuatro fuentes para fases posteriores son 27 archivos y 25 hashes; con las dos guías de IA de la F29C, 29 archivos y 27 hashes, sin duplicados nuevos). Los dos duplicados son intencionados y byte a byte:
 
 | SHA-256 | Archivos equivalentes | Cuál prevalece |
 |---|---|---|
