@@ -286,6 +286,112 @@ def f11_checks():
     return res
 
 
+# ---------------------------------------------------------------------------------------------------------------
+# Fase F11-R — Formato 11 oficial regularizado sobre la plantilla recibida después de la F28
+def f11r_checks():
+    """Devuelve (criterio, resultado, detalle). Comprueba que el F11 oficial deriva de la plantilla, conserva la
+    arquitectura del F11 adaptado (C01..C17 ↔ CMP-01..CMP-17, R-01..R-20, ARQ-01) y no deja texto de plantilla."""
+    import hashlib
+    import subprocess
+    import m_arch as AR
+    import m_f11r as F
+    res = []
+    add = lambda crit, ok, det='': res.append((crit, 'PASS' if ok else 'FALLA', det))
+    tpl_path = os.path.join(ACAD, '00-fuentes-oficiales', 'formatos-originales', 'Formato_11_Arquitectura_del_sistema.docx')
+    out = os.path.join(ACAD, 'practica-11', 'F11_Arquitectura_del_Sistema_Colegio_Andino')
+    tpl_sha = hashlib.sha256(open(tpl_path, 'rb').read()).hexdigest()
+    inv = open(os.path.join(ACAD, '00-fuentes-oficiales', 'inventory.md'), encoding='utf-8').read()
+    add('Plantilla oficial del Formato 11 presente y registrada en el inventario (OFICIAL)',
+        tpl_sha in inv and 'Formato_11_Arquitectura_del_sistema.docx' in inv, tpl_sha[:16])
+    tpl, z = zipfile.ZipFile(tpl_path), zipfile.ZipFile(out + '.docx')
+    ok = z.testzip() is None
+    for n in z.namelist():
+        if n.endswith(('.xml', '.rels')):
+            xml.dom.minidom.parseString(z.read(n))
+    doc = z.read('word/document.xml').decode('utf-8')
+    rels = z.read('word/_rels/document.xml.rels').decode('utf-8')
+    embeds = re.findall(r'r:embed="(rId\d+)"', doc)
+    targets = dict(re.findall(r'Id="(rId\d+)"[^>]*Target="([^"]+)"', rels))
+    add('DOCX: ZIP y XML válidos; toda imagen tiene relación y archivo',
+        ok and all(e in targets and ('word/' + targets[e]) in z.namelist() for e in embeds), f'{len(embeds)} imágenes')
+    same = [n for n in ('word/header1.xml', 'word/styles.xml', 'word/numbering.xml', 'word/media/image1.png')
+            if tpl.read(n) == z.read(n)]
+    add('Deriva de la plantilla: cabecera (logotipo y asignatura), estilos y numeración idénticos', len(same) == 4,
+        ', '.join(same))
+
+    def numbered(d):
+        out_ = []
+        for par in re.findall(r'<w:p[ >](?:(?!</w:p>).)*?<w:numPr>.*?</w:p>', d, re.S):
+            num = (re.findall(r'w:numId w:val="(\d+)"', par) or ['-'])[0]
+            out_.append(num + '|' + ''.join(re.findall(r'<w:t(?:\s[^>]*)?>([^<]*)</w:t>', par)).strip())
+        return out_
+    tpl_doc = tpl.read('word/document.xml').decode('utf-8')
+    tpl_heads = [t for t in numbered(tpl_doc) if not set(t.split('|', 1)[1]) <= {'_'}]
+    new_heads = [t for t in numbered(doc) if t.startswith(('1|', '5|')) and not t.split('|', 1)[1].startswith('DA-')]
+    add('Estructura oficial: las 8 secciones y sus viñetas, en el mismo orden y con los mismos títulos',
+        tpl_heads == new_heads,
+        f'{sum(1 for t in new_heads if t.startswith("1|"))} secciones, {sum(1 for t in new_heads if t.startswith("5|"))} viñetas')
+    plain = ''.join(re.findall(r'<w:t(?:\s[^>]*)?>([^<]*)</w:t>', doc))
+    leftovers = [x for x in ('Describir brevemente', 'Seleccionar y justificar', 'Insertar aquí',
+                             'Registrar decisiones clave', '____', '[', '…') if x in plain]
+    add('Sin instrucciones, líneas para completar ni marcadores de la plantilla', not leftovers, ', '.join(leftovers))
+    tbls = re.findall(r'<w:tbl>.*?</w:tbl>', doc, re.S)
+
+    def cell_rows(t):
+        return [[''.join(re.findall(r'<w:t(?:\s[^>]*)?>([^<]*)</w:t>', c)) for c in re.findall(r'<w:tc>.*?</w:tc>', r, re.S)]
+                for r in re.findall(r'<w:tr[ >].*?</w:tr>', t, re.S)]
+
+    def table_with(word):
+        return next(cell_rows(t) for t in tbls if word in ''.join(re.findall(r'<w:t(?:\s[^>]*)?>([^<]*)</w:t>', t)))
+    datos = cell_rows(tbls[0])
+    add('Datos generales: los 5 campos oficiales completos', len(datos) == 5 and all(r[-1].strip() for r in datos),
+        '; '.join(r[0] for r in datos))
+    comp = table_with('Funcionalidades asociadas')
+    exp = [(F.CMP[c[0]] + f'({c[0]})', c[1]) for c in AR.COMPONENTES]
+    got = [(r[0], r[1]) for r in comp[1:]]
+    add('Componentes: CMP-01..CMP-17 = C01..C17, con los nombres canónicos y las columnas oficiales',
+        comp[0] == ['ID', 'Componente', 'Descripción', 'Funcionalidades asociadas'] and len(got) == 17 and
+        all(g[0] == e[0] and g[1].startswith(e[1]) for g, e in zip(got, exp)), f'{len(got)} filas')
+    rel = table_with('Tipo de interacción')
+    ids = [m.group(1) if (m := re.match(r'(R-\d\d)\.', r[3])) else '?' for r in rel[1:]]
+    same_ends = all(r[0] == F.cmp_ref(x[1]) and r[1] == F.cmp_ref(x[2]) and r[2] == x[3]
+                    for r, x in zip(rel[1:], AR.RELACIONES))
+    add('Relaciones: R-01..R-20 sin renumerar ni añadir, con el origen, el destino y el tipo de RELATIONSHIPS.md',
+        ids == [f'R-{i:02d}' for i in range(1, 21)] and same_ends and
+        rel[0] == ['Componente origen', 'Componente destino', 'Tipo de interacción', 'Descripción'], f'{len(ids)} relaciones')
+    arq = open(os.path.join(ACAD, 'powerdesigner', 'exports', 'ARQ-01_Arquitectura_Conceptual.png'), 'rb').read()
+    media = [z.read('word/' + targets[e]) for e in embeds if e in targets]
+    add('ARQ-01: la exportación formal F29/F29B está incrustada sin modificar, en una página horizontal',
+        arq in media and 'w:orient="landscape"' in doc)
+    add('Estilo: monolito modular adoptado; microservicios no adoptados; sin RLS',
+        'MONOLITO MODULAR' in plain and 'No adoptado.' in plain and 'RLS no está implementado' in plain)
+    add('Decisiones de diseño con su estado (DA-01 a DA-11)',
+        all(re.search(re.escape(d[0]) + r' [^\n]*?Estado:', plain) for d in F.DECISIONES), f'{len(F.DECISIONES)} decisiones')
+    no_metric = not re.search(r'\d+(?:[.,]\d+)?\s*(?:ms\b|segundos|usuarios concurrentes|% de disponibilidad)', plain)
+    add('Restricciones: RNF-06 y RNF-07 NO VERIFICADOS, RNF-D propuesto, sin SLA ni métricas afirmadas',
+        'RNF-06 Rendimiento: NO VERIFICADO' in plain and 'RNF-07 Disponibilidad y recuperabilidad: NO VERIFICADO' in plain
+        and 'RNF-D Observabilidad:' in plain and no_metric)
+    rfs = {f'RF-{i:02d}' for i in range(1, 28)}
+    _, _, rf_of, _, _ = f11_model()
+    covered = set().union(*rf_of.values())
+    cus = {f'CU-{i:02d}' for i in range(1, 21)}
+    add('Trazabilidad: RF-01..RF-27 y CU-01..CU-20 cubiertos por CMP-01..CMP-17 y presentes en el documento',
+        covered >= rfs and all(r in plain for r in rfs) and all(c in plain for c in cus),
+        f'RF {len(covered & rfs)}/27, CU {sum(c in plain for c in cus)}/20')
+    add('RF-23 humano, ranking como apoyo, RF-28 no implementado y RF-29 experimental',
+        'Decisión final humana' in plain and 'no selecciona' in plain and 'NO IMPLEMENTADO' in plain
+        and 'EXPERIMENTAL / PROPUESTO' in plain)
+    pdf = open(out + '.pdf', 'rb').read()
+    boxes = re.findall(rb'/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)\s*\]', pdf)
+    pages = len(re.findall(rb'/Type\s*/Page[^s]', pdf))
+    add('PDF: válido y con una página horizontal',
+        pdf[:5] == b'%PDF-' and b'%%EOF' in pdf[-1024:] and any(float(w) > float(h) for w, h in boxes), f'{pages} páginas')
+    adapted = ['docs/academico/practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.' + e for e in ('docx', 'pdf', 'md')]
+    r = subprocess.run(['git', 'status', '--porcelain', '--'] + adapted, cwd=ROOT, capture_output=True, text=True)
+    add('F11 adaptado histórico intacto (DOCX, PDF y Markdown sin cambios en git)', r.returncode == 0 and not r.stdout.strip())
+    return res
+
+
 if __name__ == '__main__':
     sys.stdout.reconfigure(encoding='utf-8')
     fails = 0
@@ -296,6 +402,11 @@ if __name__ == '__main__':
     print('--- F11 (Fase 28): arquitectura conceptual')
     for crit, fuente, r, ev, obs in f11_checks():
         print(f'{r:21} {crit} — {ev}' + (f' ({obs})' if obs else ''))
+        fails += r == 'FALLA'
+    print()
+    print('--- F11-R: Formato 11 oficial regularizado')
+    for crit, r, det in f11r_checks():
+        print(f'{r:5} {crit}' + (f' — {det}' if det else ''))
         fails += r == 'FALLA'
     print(f'\n{fails} fallas')
     sys.exit(1 if fails else 0)

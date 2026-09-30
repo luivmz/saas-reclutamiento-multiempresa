@@ -1,8 +1,19 @@
-# Práctica 11 — Formato 11: Arquitectura del sistema (adaptación académica)
+# Práctica 11 — Formato 11: Arquitectura del sistema
+
+Arquitectura conceptual del sistema. La carpeta contiene dos versiones del entregable:
+
+| Versión | Entregable | Estado |
+|---|---|---|
+| **Definitiva** (fase F11-R, 29/09/2026) | [`F11_Arquitectura_del_Sistema_Colegio_Andino.docx`](F11_Arquitectura_del_Sistema_Colegio_Andino.docx) · [PDF](F11_Arquitectura_del_Sistema_Colegio_Andino.pdf) · [espejo `.md`](F11_Arquitectura_del_Sistema_Colegio_Andino.md) | Regularizada sobre la **plantilla oficial del Formato 11**, recibida después de la F28. Misma arquitectura. Pendiente de auditoría. Registro: [`F11R_REGULARIZACION.md`](F11R_REGULARIZACION.md) |
+| **Histórica** (Fases 28 y 29) | [`F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx`](F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx) · [PDF](F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.pdf) | Adaptación académica hecha cuando el Formato 11 oficial no estaba disponible. Válida en esas condiciones y **conservada sin cambios**. El resto de este README la describe tal como se entregó |
+
+**Equivalencia de identificadores.** La versión definitiva usa CMP-01 a CMP-17, que exige el formato oficial. Equivalen uno a uno a los identificadores históricos C01 a C17, que conservan `COMPONENTS.md`, `RELATIONSHIPS.md` y el diagrama ARQ-01. Las relaciones R-01 a R-20 no cambian.
+
+## Versión histórica: adaptación académica (Fase 28)
 
 Entregable de la Fase 28: la arquitectura conceptual del sistema.
 
-> **Documento adaptado académicamente a partir de la Guía de Práctica N.° 11. La institución no proporcionó un Formato 11 oficial.** Ningún archivo de esta carpeta es una plantilla oficial ni pretende serlo.
+> **Documento adaptado académicamente a partir de la Guía de Práctica N.° 11, porque durante la F28 la institución no había proporcionado el Formato 11 oficial.** La versión adaptada no es una plantilla oficial ni pretende serlo. La plantilla oficial se incorporó al repositorio el 29/09/2026 y es la base de la versión definitiva (F11-R).
 
 **Estado:** versión 1.1 (28/09/2026). Integra la vista formal ARQ-01 de PowerDesigner (F29 y F29B); la versión 1.0 se auditó en la F28. La validación es estructural, académica e interna del equipo: **no hay aprobación institucional**.
 
@@ -19,7 +30,9 @@ Entregable de la Fase 28: la arquitectura conceptual del sistema.
 
 | Archivo | Contenido |
 |---|---|
-| [`F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx`](F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx) | **Entregable**: portada con la nota de adaptación y 14 secciones |
+| [`F11_Arquitectura_del_Sistema_Colegio_Andino.docx`](F11_Arquitectura_del_Sistema_Colegio_Andino.docx) · [PDF](F11_Arquitectura_del_Sistema_Colegio_Andino.pdf) · [`.md`](F11_Arquitectura_del_Sistema_Colegio_Andino.md) | **Entregable definitivo (F11-R)**, sobre la plantilla oficial: 8 secciones oficiales |
+| [`F11R_REGULARIZACION.md`](F11R_REGULARIZACION.md) | Registro de la regularización: matriz de correspondencia, CMP ↔ C, R-01 a R-20, diferencias y fuentes con SHA-256 |
+| [`F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx`](F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx) | **Entregable histórico** (F28 y F29): portada con la nota de adaptación y 14 secciones |
 | [`F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.pdf`](F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.pdf) | Copia en PDF exportada con Microsoft Word |
 | [`F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.md`](F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.md) | Espejo en Markdown del mismo contenido |
 | [`COMPONENTS.md`](COMPONENTS.md) | 17 componentes: responsabilidad, RF, CU, actores, estado y fuente. Incluye las exclusiones y las capas |
@@ -64,7 +77,7 @@ Trazabilidad componente → RF → CU → RNF → alcance → artefacto: [`../tr
 
 ## Limitaciones
 
-- **Formato:** es una adaptación académica; no existe Formato 11 oficial.
+- **Formato:** es una adaptación académica, porque en la F28 no se disponía del Formato 11 oficial. Se incorporó el 29/09/2026 y la F11-R regularizó el entregable sobre él.
 - **Punto de partida:** el AS-IS (F2 a F4) es preliminar.
 - **RNF no verificados:** RNF-06 (rendimiento) y RNF-07 (disponibilidad y recuperabilidad).
 - **H-14:** la cabecera del PDF del F4 queda como LOW para la F31.

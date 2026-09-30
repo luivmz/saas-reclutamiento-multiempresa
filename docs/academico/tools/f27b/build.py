@@ -1521,6 +1521,40 @@ def build_f11():
     ], note=NOTA_EVID_F29)
 
 
+# --------------------------------------------------------------------------- F11 oficial regularizado (fase F11-R)
+F11R_STEM = 'F11_Arquitectura_del_Sistema_Colegio_Andino'
+# Fuentes del registro de la regularización (F11R_REGULARIZACION.md), con su SHA-256.
+F11R_SOURCES = [
+    ('docs/academico/00-fuentes-oficiales/formatos-originales/Formato_11_Arquitectura_del_sistema.docx',
+     'Plantilla oficial del Formato 11 (fuente formal principal, solo lectura)'),
+    ('docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_11.docx', 'Guía de Práctica 11 (fuente complementaria)'),
+    ('docs/academico/practica-11/COMPONENTS.md', 'Componentes C01 a C17 (F28)'),
+    ('docs/academico/practica-11/RELATIONSHIPS.md', 'Relaciones R-01 a R-20 (F28)'),
+    ('docs/academico/powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png', 'Diagrama ARQ-01 (F29 y F29B)'),
+    ('docs/academico/powerdesigner/models/F29_UML_Academico.oom', 'Modelo fuente de ARQ-01 (sin cambios)'),
+    ('docs/academico/practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx', 'F11 adaptado histórico (sin cambios)'),
+    ('docs/academico/practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.pdf', 'PDF del F11 adaptado histórico (sin cambios)'),
+    ('docs/academico/tools/f27b/m_arch.py', 'Modelo de datos de la arquitectura (sin cambios)'),
+    ('docs/academico/tools/f27b/m_f11r.py', 'Contenido del F11 oficial: CMP-xx, estilo, decisiones y restricciones'),
+    ('docs/academico/tools/f27b/f11r.py', 'Relleno de la plantilla oficial y espejo en Markdown'),
+    ('docs/final-report/07-arquitectura-tecnologica.md', 'Estilo, multitenencia, seguridad, PostgreSQL, Redis y despliegue'),
+    ('docs/academico/practica-07/F7_Requerimientos_No_Funcionales_Colegio_Andino.md', 'Estado de los RNF (RNF-06 y RNF-07 no verificados; RNF-D propuesto)'),
+]
+
+
+@builder('f11r')
+def build_f11r():
+    """Formato 11 oficial sobre la plantilla recibida después de la F28. No toca el F11 adaptado (builder «f11»)."""
+    import f11r
+    out_docx = os.path.join(pdir(11), F11R_STEM + '.docx')
+    arq = pd('exports', 'ARQ-01_Arquitectura_Conceptual.png')
+    f11r.build(os.path.join(FMT, 'Formato_11_Arquitectura_del_sistema.docx'), arq, out_docx)
+    out_md = os.path.join(pdir(11), F11R_STEM + '.md')
+    f11r.build_md(out_md, F11R_STEM + '.docx', os.path.relpath(arq, pdir(11)).replace(os.sep, '/'))
+    f11r.build_registro(os.path.join(pdir(11), 'F11R_REGULARIZACION.md'), ROOT, F11R_SOURCES)
+    print('OK', os.path.relpath(out_docx, ROOT))
+
+
 if __name__ == '__main__':
     keys = sys.argv[1:] or list(BUILDERS)
     for k in keys:
