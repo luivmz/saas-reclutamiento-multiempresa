@@ -58,17 +58,23 @@ Candidatos en [`../v1.1/scope-preliminary.md`](../v1.1/scope-preliminary.md), si
 
 ## Fuentes oficiales disponibles
 
-**Formatos 02 a 09** (plantillas vacías) y **Guías 02 a 09 y 11**, en [`00-fuentes-oficiales/`](00-fuentes-oficiales/README.md). Hashes en su [inventario](00-fuentes-oficiales/inventory.md).
+**Formatos 02 a 09 y 11** (plantillas vacías) y **Guías 02 a 09 y 11**, en [`00-fuentes-oficiales/`](00-fuentes-oficiales/README.md). Hashes en su [inventario](00-fuentes-oficiales/inventory.md).
 
 ## Formato 11
 
-**No disponible oficialmente.** La Guía 11 («arquitectura conceptual del sistema») remite a un «Formato 11: Arquitectura del sistema», pero esa plantilla no se recibió.
+**Histórico (Fases 27B-0 a 28).** El Formato 11 oficial no estaba disponible: la Guía 11 remitía a un «Formato 11: Arquitectura del sistema» cuya plantilla no se había recibido. Por eso la F28 elaboró el F11 como **adaptación académica explícita** de la Guía 11, identificada como tal ([`F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx`](practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx)). Esa adaptación fue válida en esas condiciones, no es un error y se conserva sin cambios como evidencia histórica.
 
-## Regla para el F11 futuro
+**Estado actual:**
 
-- **Forma:** el F11 se crea como **adaptación académica explícita** del equipo, basada en la Guía 11 y en la estructura común de los Formatos 02 a 09. Nunca se presenta como plantilla oficial.
-- **Identificación:** el propio documento dirá que es una adaptación y por qué, y figurará como GENERADO en el inventario.
-- **Contenido:** la arquitectura que describa debe coincidir con el sistema implementado y con los modelos de la F22 y la F23. No se inventan componentes.
+- **Plantilla oficial:** se incorporó al repositorio el **29/09/2026** y está registrada como fuente **OFICIAL** en el [inventario](00-fuentes-oficiales/inventory.md). El 29/09/2026 es la fecha de incorporación al repositorio: no se conoce una fecha de publicación institucional.
+- **Entregable definitivo actual:** la fase F11-R regularizó el entregable sobre esa plantilla. [`F11_Arquitectura_del_Sistema_Colegio_Andino.docx`](practica-11/F11_Arquitectura_del_Sistema_Colegio_Andino.docx) es el definitivo, con la misma arquitectura: CMP-01 a CMP-17 equivalentes a C01 a C17, R-01 a R-20 y ARQ-01. Registro en [`practica-11/F11R_REGULARIZACION.md`](practica-11/F11R_REGULARIZACION.md).
+- **Validación:** interna y académica; no hay aprobación institucional.
+
+**Reglas vigentes para el F11:**
+
+- La arquitectura debe coincidir con el sistema implementado y con los modelos de la F22, la F23 y la F29 (ARQ-01). No se inventan componentes ni relaciones.
+- Todo cambio del F11 se hace sobre la plantilla oficial.
+- El F11 adaptado histórico no se modifica.
 
 ## Estado documental actual
 
@@ -77,7 +83,7 @@ Candidatos en [`../v1.1/scope-preliminary.md`](../v1.1/scope-preliminary.md), si
 | F2 a F8 | **Desarrollados en la F27B**, sobre las plantillas oficiales ([`practica-02`](practica-02/README.md) a [`practica-08`](practica-08/README.md)). **Pendientes de la auditoría F27C.** Los diagramas BPMN y de CU son borradores; se formalizan en PowerDesigner en la F29 ([worklist](POWERDESIGNER_WORKLIST.md)) |
 | F9 | **Completo.** Entregable final v1.1 en [`phase-24/output/`](phase-24/README.md) (DOCX y PDF), con el histórico v1.0 y su [mapa de fuentes](phase-24/source-map.md). No se modifica; la [adenda post-release](practica-09/F9_POST_RELEASE_ADDENDUM.md) (F27B) registra el estado posterior y las divergencias resueltas |
 | F29 | **Formalización en PowerDesigner** de F3, F5, F8 y ARQ-01 ([`powerdesigner/`](powerdesigner/README.md)): **CLOSED WITH DOCUMENTED OBSERVATIONS** (28/09/2026). F29 y F29B auditadas; las exportaciones formales son el diagrama principal de los DOCX y PDF de F3, F5, F8 y F11; hay 7 capturas reales de PowerDesigner. Los borradores quedan como DRAFT / SUPERSEDED BY F29 FORMAL EXPORT. LOW para la F31: F29-L01, F29-L02 y F29B-OBS-01. *Antes: FORMALIZED / DONE, pendiente de la auditoría F29* |
-| F11 | **Adaptación académica desarrollada en la F28** ([`practica-11`](practica-11/README.md)), sin plantilla oficial y según la regla anterior. **Pendiente de la auditoría de la F28** |
+| F11 | **Regularizado sobre la plantilla oficial en la fase F11-R** (29/09/2026): [`F11_Arquitectura_del_Sistema_Colegio_Andino.docx`](practica-11/F11_Arquitectura_del_Sistema_Colegio_Andino.docx). Es la misma arquitectura, con CMP-01 a CMP-17 equivalentes a C01 a C17. **Pendiente de auditoría.** La adaptación académica de la F28 se conserva como versión histórica ([registro](practica-11/F11R_REGULARIZACION.md)). *Antes: adaptación académica desarrollada en la F28, sin plantilla oficial* |
 
 **Insumos usados en la F27B** (trazabilidad completa en [`trazabilidad/F2-F9-traceability.md`](trazabilidad/F2-F9-traceability.md)):
 
