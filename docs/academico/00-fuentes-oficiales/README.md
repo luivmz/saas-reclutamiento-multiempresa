@@ -9,19 +9,20 @@ Inventario con los hashes: [`inventory.md`](inventory.md). Estado académico gen
 | Carpeta | Contenido |
 |---|---|
 | [`guias/`](guias/) | 9 guías oficiales: prácticas 02, 03, 04, 05, 06, 07, 08, 09 y 11 (`GUIA_PRACTICA_XX.docx`) |
-| [`formatos-originales/`](formatos-originales/) | 8 plantillas oficiales vacías: Formatos 02 a 09 (`Formato_XX_<descripción>.docx`) |
+| [`formatos-originales/`](formatos-originales/) | 9 plantillas oficiales vacías: Formatos 02 a 09 y 11 (`Formato_XX_<descripción>.docx`). El Formato 11 se incorporó al repositorio el 29/09/2026 |
 
 **Identificación verificada:**
 
 - Las nueve guías citan el NRC 28607, al docente y el curso.
-- Las ocho plantillas citan el curso, pero no el NRC ni al docente: son formularios en blanco.
+- Las nueve plantillas oficiales (Formatos 02 a 09 y 11) citan el curso, pero no el NRC ni al docente: son formularios en blanco.
 - Cada archivo abre con el título de su práctica o de su formato.
 
 **Nombres de archivo.** Se normalizaron a ASCII y sin espacios para tener rutas estables. El nombre original de cada archivo figura en el inventario. El contenido no se modificó: el SHA-256 se comprobó antes y después de cada renombrado.
 
+**Formato 11.** No estuvo disponible durante la elaboración de la F28: la Guía 11 remitía a él, pero la plantilla no se había recibido. Por eso el F11 de la F28 se hizo como **adaptación académica explícita**, que se conserva como evidencia histórica en `docs/academico/practica-11/`. La plantilla se incorporó al repositorio el 29/09/2026 (fecha de incorporación; no se conoce una fecha de publicación institucional), está registrada como OFICIAL y la fase F11-R regularizó el entregable sobre ella, sin cambiar la arquitectura.
+
 ## Qué no contiene
 
-- **Formato 11 oficial: NO DISPONIBLE.** La Guía 11 existe y remite a un «Formato 11: Arquitectura del sistema», pero esa plantilla no forma parte de las fuentes recibidas. Si se desarrolla el F11, será una **adaptación académica explícita** hecha por el equipo, nunca una plantilla oficial. Se desarrolló en la Fase 28 como adaptación académica, en `docs/academico/practica-11/`, identificada como tal.
 - **Guías 01 y 10 y Formatos 01 y 10:** no forman parte de estas fuentes.
 - **Formatos desarrollados por el equipo:**
   - el F9 entregado (histórico y final v1.1) vive en [`../phase-24/`](../phase-24/);

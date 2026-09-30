@@ -117,7 +117,7 @@ Laravel solo llama al servicio si `ML_SERVICE_ENABLED=true`. Sin él, la aplicac
 | F6 RF y F7 RNF | [`practica-06/`](practica-06/README.md) · [`practica-07/`](practica-07/README.md) | DOCX, PDF y espejo `.md` |
 | F8 Casos de uso | [`practica-08/`](practica-08/README.md) | DOCX y PDF con la exportación formal |
 | F9 Alcance (publicado) | [`phase-24/output/`](phase-24/README.md) · adenda en [`practica-09/`](practica-09/F9_POST_RELEASE_ADDENDUM.md) | Solo lectura |
-| F11 Arquitectura (adaptación) | [`practica-11/`](practica-11/README.md) | DOCX y PDF con la vista ARQ-01 |
+| F11 Arquitectura | [`practica-11/`](practica-11/README.md) | Definitivo: DOCX y PDF sobre la plantilla oficial (F11-R), con la vista ARQ-01. Se conserva además la adaptación histórica de la F28 |
 
 **PowerDesigner (F29):**
 

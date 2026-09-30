@@ -4,6 +4,8 @@ Inventario de la Fase 27B-0 (26/09/2026), rama `feature/phase-27-academic-f2-f11
 
 Los hashes son SHA-256 del archivo, verificados con `sha256sum` en esta fase. Los tamaños están en bytes.
 
+**Actualización F11-R (29/09/2026):** se registra el Formato 11 oficial, incorporado al repositorio por el equipo. Rama `feature/f11-r-official-format` creada desde `develop` `f7017c1`.
+
 **Estados:**
 
 | Estado | Significado |
@@ -26,7 +28,7 @@ Los hashes son SHA-256 del archivo, verificados con `sha256sum` en esta fase. Lo
 | Guía | 07 — Requerimientos no funcionales | `GUIA_PRACTICA_07.docx` | `docs/academico/00-fuentes-oficiales/guias/` | `5ccbfc5444c377735678b1c8a701131ac99ab98b7720a601becc9bb8ba2b0e4f` | OFICIAL | Nombre original: `GUÍA PRÁCTICA 07.docx`. 37 866 B |
 | Guía | 08 — Diagrama de casos de uso | `GUIA_PRACTICA_08.docx` | `docs/academico/00-fuentes-oficiales/guias/` | `43013822ad4ab2e108b40cbe2e732d62001fa289d259f148515c281ccd0793a0` | OFICIAL | Nombre original: `GUÍA PRÁCTICA 08.docx`. 37 844 B |
 | Guía | 09 — Alcance del proyecto software | `GUIA_PRACTICA_09.docx` | `docs/academico/00-fuentes-oficiales/guias/` | `89d3f2783941b11aa7be0ccba7450cec5b6a821c480e528ac23d20e7e6c37c6d` | COPIA CANÓNICA | Idéntica a `docs/academico/phase-24/GUÍA PRÁCTICA 09.docx`. 37 868 B |
-| Guía | 11 — Arquitectura conceptual del sistema | `GUIA_PRACTICA_11.docx` | `docs/academico/00-fuentes-oficiales/guias/` | `c70f913787f81e250eee843eff197c8efb3ecda32896deb40afaabbfdb9689e7` | OFICIAL | Nombre original: `GUÍA PRÁCTICA 11.docx`. 37 554 B. Remite a un «Formato 11: Arquitectura del sistema», que no está disponible (ver abajo) |
+| Guía | 11 — Arquitectura conceptual del sistema | `GUIA_PRACTICA_11.docx` | `docs/academico/00-fuentes-oficiales/guias/` | `c70f913787f81e250eee843eff197c8efb3ecda32896deb40afaabbfdb9689e7` | OFICIAL | Nombre original: `GUÍA PRÁCTICA 11.docx`. 37 554 B. Remite a un «Formato 11: Arquitectura del sistema», que no estuvo disponible durante la F28 y se incorporó al repositorio el 29/09/2026 (ver abajo) |
 
 ## Formatos oficiales (plantillas vacías)
 
@@ -40,7 +42,7 @@ Los hashes son SHA-256 del archivo, verificados con `sha256sum` en esta fase. Lo
 | Formato | 07 — Requerimientos no funcionales | `Formato_07_Requerimientos_no_funcionales.docx` | `docs/academico/00-fuentes-oficiales/formatos-originales/` | `180956b1b2be08713720be8e68a0be8d5e2902a415e504f26a015f605eeda298` | OFICIAL | Nombre original: `Formato 07 Requerimientos no funcionales.docx`. 40 812 B |
 | Formato | 08 — Diagrama de casos de uso | `Formato_08_Diagrama_de_casos_de_uso.docx` | `docs/academico/00-fuentes-oficiales/formatos-originales/` | `ed70b0398a72e0f6a0e88268fd362a75ffa5648f02befd7029d81c652e4e0843` | OFICIAL | Nombre original: `Formato 08 Diagrama de casos de uso.docx`. 39 538 B |
 | Formato | 09 — Alcance del proyecto software | `Formato_09_Alcance_del_proyecto_software.docx` | `docs/academico/00-fuentes-oficiales/formatos-originales/` | `1fe92a08110c9e4cad18644fa01d3baf38cba807a6db054c1a7276a69c0cfc63` | COPIA CANÓNICA | Idéntico a `docs/academico/phase-24/Formato 09 Alcance del proyecto software.docx`. 41 915 B |
-| Formato | 11 — Arquitectura del sistema | — | — | — | NO DISPONIBLE | **FORMATO_11_OFICIAL = NO DISPONIBLE.** Lo cita la Guía 11, pero no se recibió la plantilla. Un F11 futuro será una adaptación académica explícita, no una plantilla oficial |
+| Formato | 11 — Arquitectura del sistema | `Formato_11_Arquitectura_del_sistema.docx` | `docs/academico/00-fuentes-oficiales/formatos-originales/` | `2e671f1384de14f13667156d5925f63a1b20d8231f3ea053570ad1f21b63df78` | OFICIAL | Incorporada al repositorio por el equipo el 29/09/2026 (fase F11-R); no se conoce una fecha de publicación institucional. 41 391 B. Cita el curso, pero no el NRC ni al docente, como las demás plantillas. Base del F11 definitivo (`practica-11/F11_Arquitectura_del_Sistema_Colegio_Andino.docx`). *No estuvo disponible durante la elaboración de la F28 (NO DISPONIBLE desde la F27B-0). Por eso el F11 de la F28 se hizo como adaptación académica, que se conserva como evidencia histórica, y la F11-R regularizó después el entregable sobre esta plantilla* |
 
 ## Evidencia histórica de la Fase 24 (se conserva intacta)
 
@@ -54,7 +56,7 @@ Los hashes son SHA-256 del archivo, verificados con `sha256sum` en esta fase. Lo
 
 ## Duplicados detectados
 
-Hay 22 archivos inventariados con 20 hashes distintos. Los dos duplicados son intencionados y byte a byte:
+Hay 22 archivos inventariados con 20 hashes distintos (F27B-0; con el Formato 11 son 23 archivos y 21 hashes, sin duplicados nuevos). Los dos duplicados son intencionados y byte a byte:
 
 | SHA-256 | Archivos equivalentes | Cuál prevalece |
 |---|---|---|
