@@ -6,6 +6,8 @@ Los hashes son SHA-256 del archivo, verificados con `sha256sum` en esta fase. Lo
 
 **Actualización F11-R (29/09/2026):** se registra el Formato 11 oficial, incorporado al repositorio por el equipo. Rama `feature/f11-r-official-format` creada desde `develop` `f7017c1`.
 
+**Actualización de fuentes para fases posteriores (29/09/2026):** se registran cuatro fuentes incorporadas por el equipo junto con el Formato 11, con su procedencia. No se usan en la F11-R.
+
 **Estados:**
 
 | Estado | Significado |
@@ -15,6 +17,8 @@ Los hashes son SHA-256 del archivo, verificados con `sha256sum` en esta fase. Lo
 | **HISTÓRICO** | Archivo de una fase cerrada; forma parte de la evidencia del release y no se modifica |
 | **GENERADO** | Entregable producido por el equipo |
 | **NO DISPONIBLE** | Fuente citada por el curso que no se recibió |
+| **DISPONIBLE (fase posterior)** | Plantilla del curso recibida para una fase futura; se registra, pero todavía no se usa |
+| **REFERENCIA EXTERNA** | Material ajeno al curso (plantilla o ejemplo de terceros); solo orienta, no es normativo |
 
 ## Guías de práctica
 
@@ -44,6 +48,17 @@ Los hashes son SHA-256 del archivo, verificados con `sha256sum` en esta fase. Lo
 | Formato | 09 — Alcance del proyecto software | `Formato_09_Alcance_del_proyecto_software.docx` | `docs/academico/00-fuentes-oficiales/formatos-originales/` | `1fe92a08110c9e4cad18644fa01d3baf38cba807a6db054c1a7276a69c0cfc63` | COPIA CANÓNICA | Idéntico a `docs/academico/phase-24/Formato 09 Alcance del proyecto software.docx`. 41 915 B |
 | Formato | 11 — Arquitectura del sistema | `Formato_11_Arquitectura_del_sistema.docx` | `docs/academico/00-fuentes-oficiales/formatos-originales/` | `2e671f1384de14f13667156d5925f63a1b20d8231f3ea053570ad1f21b63df78` | OFICIAL | Incorporada al repositorio por el equipo el 29/09/2026 (fase F11-R); no se conoce una fecha de publicación institucional. 41 391 B. Cita el curso, pero no el NRC ni al docente, como las demás plantillas. Base del F11 definitivo (`practica-11/F11_Arquitectura_del_Sistema_Colegio_Andino.docx`). *No estuvo disponible durante la elaboración de la F28 (NO DISPONIBLE desde la F27B-0). Por eso el F11 de la F28 se hizo como adaptación académica, que se conserva como evidencia histórica, y la F11-R regularizó después el entregable sobre esta plantilla* |
 
+## Fuentes para fases posteriores (registradas el 29/09/2026)
+
+Las incorporó el equipo junto con el Formato 11. **No se usan en la F11-R** ni se mezclan con su estructura. Sus nombres se normalizaron a ASCII y sin espacios, como el resto de esta carpeta. El nombre recibido figura en «Observaciones» y el contenido no cambió: el SHA-256 es el mismo antes y después del renombrado. Su procedencia es la que declaró el equipo; no son fuentes oficiales equivalentes entre sí.
+
+| Tipo | Procedencia | Uso previsto | Archivo | Ruta | SHA-256 | Estado | Observaciones |
+|---|---|---|---|---|---|---|---|
+| Plantilla | Plantilla académica del curso | Estructura del proyecto final | `Plantilla_Estructura_de_proyecto_final.docx` | `docs/academico/00-fuentes-oficiales/plantillas-proyecto/` | `b26cfb21ca627c46d65f8f683422ffca1e022ec60c75132f0d7843b01a03fcda` | DISPONIBLE (fase posterior) | Nombre recibido: `Plantilla Estructura de proyecto final.docx`. 139 633 B. Portada de la Universidad Continental con el asesor Dr. Maglioni Arana Caparachin y campos para completar |
+| Plantilla | Plantilla del curso | Plan de pruebas de software | `Plantilla_de_Plan_de_Pruebas_de_Software.pdf` | `docs/academico/00-fuentes-oficiales/plan-pruebas/` | `2dfd714e806b05908dbcd0fd3029292d82f4019dba4b839686d3f9a8e7d3856d` | DISPONIBLE (fase posterior) | Nombre recibido: `Plantilla de Plan de Pruebas de Software.pdf`. 268 897 B |
+| Plantilla | Plantilla externa de referencia (PMOInformática) | Plan de pruebas de software | `PMOInformatica_Plantilla_de_Plan_de_Pruebas_de_Software.doc` | `docs/academico/00-fuentes-oficiales/plan-pruebas/` | `3d2bb6f87c43ea1a3484ddff88a60980e3ea8a703911d4709663fbd103686f76` | REFERENCIA EXTERNA | Nombre recibido: `PMOInformatica Plantilla de Plan de Pruebas de Software (1).doc`. 89 600 B. Formato Word 97-2003. No es una plantilla del curso |
+| Material de referencia | Ejemplo externo, no normativo | Ejemplo de plan de pruebas | `Ejemplo_Plan_de_Pruebas_de_Software.pdf` | `docs/academico/00-fuentes-oficiales/material-referencia/` | `1b77a9618cddba1db9fa5158a50542eb659f1c424c3d2099237df3e70c3f5554` | REFERENCIA EXTERNA | Nombre recibido: `Ejemplo Plan de Pruebas de Software (1).pdf`. 180 308 B. Ejemplo; no fija la estructura de ningún entregable |
+
 ## Evidencia histórica de la Fase 24 (se conserva intacta)
 
 | Tipo | Práctica | Archivo | Ruta | SHA-256 | Estado | Observaciones |
@@ -56,7 +71,7 @@ Los hashes son SHA-256 del archivo, verificados con `sha256sum` en esta fase. Lo
 
 ## Duplicados detectados
 
-Hay 22 archivos inventariados con 20 hashes distintos (F27B-0; con el Formato 11 son 23 archivos y 21 hashes, sin duplicados nuevos). Los dos duplicados son intencionados y byte a byte:
+Hay 22 archivos inventariados con 20 hashes distintos (F27B-0; con el Formato 11 y las cuatro fuentes para fases posteriores son 27 archivos y 25 hashes, sin duplicados nuevos). Los dos duplicados son intencionados y byte a byte:
 
 | SHA-256 | Archivos equivalentes | Cuál prevalece |
 |---|---|---|

@@ -10,6 +10,7 @@ Inventario con los hashes: [`inventory.md`](inventory.md). Estado académico gen
 |---|---|
 | [`guias/`](guias/) | 9 guías oficiales: prácticas 02, 03, 04, 05, 06, 07, 08, 09 y 11 (`GUIA_PRACTICA_XX.docx`) |
 | [`formatos-originales/`](formatos-originales/) | 9 plantillas oficiales vacías: Formatos 02 a 09 y 11 (`Formato_XX_<descripción>.docx`). El Formato 11 se incorporó al repositorio el 29/09/2026 |
+| [`plantillas-proyecto/`](plantillas-proyecto/), [`plan-pruebas/`](plan-pruebas/), [`material-referencia/`](material-referencia/) | Fuentes para fases posteriores (proyecto final y plan de pruebas), todavía sin usar: dos plantillas del curso, una plantilla externa de referencia y un ejemplo externo no normativo. Procedencia de cada una en el [inventario](inventory.md) |
 
 **Identificación verificada:**
 
