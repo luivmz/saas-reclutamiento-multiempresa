@@ -4,6 +4,7 @@
 |---|---|
 | [`F29-powerdesigner-traceability.md`](F29-powerdesigner-traceability.md) | Formalización en PowerDesigner (F29): cada elemento de F3, F5, F8 y ARQ-01 → objeto del modelo → carril o agrupación → RF → exportación. Se genera con `python docs/academico/powerdesigner/scripts/make_f29_docs.py` |
 | [`F11-architecture-traceability.md`](F11-architecture-traceability.md) | Arquitectura (F28): componente → RF → CU → RNF → alcance F9 → artefacto técnico. En el F11 oficial (F11-R), el componente Cxx se llama CMP-xx: ver [`../practica-11/F11R_REGULARIZACION.md`](../practica-11/F11R_REGULARIZACION.md) |
+| [`../operacionalizacion/F29C_Operacionalizacion_Variables.md`](../operacionalizacion/F29C_Operacionalizacion_Variables.md) (§4) | Variables y operacionalización (F29C): indicador → RF → CU → RNF → variable de RF-29 → estado → fuente. Se genera con `python docs/academico/tools/f27b/build.py f29c` |
 | [`F2-F9-traceability.md`](F2-F9-traceability.md) | Cadena completa, vistas por actividad y por RF, RNF transversales, resultado de la validación y pendientes T-01 a T-12 con su resolución |
 
 Se genera con `python docs/academico/tools/f27b/build.py trace` desde los mismos modelos que los Formatos 02 a 08.
