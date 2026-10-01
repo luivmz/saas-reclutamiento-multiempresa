@@ -1,0 +1,14 @@
+# paso: 10-git-post
+# comando: git status --porcelain && echo "git status tras la QA: revisado"
+# inicio: 2026-09-30 11:02:12 -0500
+
+ M docs/academico/tools/f27b/build.py
+?? docs/academico/plan-pruebas/
+?? docs/academico/tools/f27b/docxpkg.py
+?? docs/academico/tools/f27b/f29d.py
+?? docs/academico/tools/f27b/m_plan.py
+?? docs/academico/tools/f27b/topdf_toc.ps1
+git status tras la QA: revisado
+
+# fin: 2026-09-30 11:02:12 -0500
+# código de salida: 0

@@ -1,0 +1,24 @@
+# paso: 11-pint (lint, medición de F25-L03)
+# comando: docker compose exec -T app vendor/bin/pint --test
+# inicio: 2026-09-30 11:10:52 -0500
+
+
+  ............................................................................
+  ..........................⨯...............⨯...⨯............................⨯
+  .............................................⨯.......⨯.....⨯................
+  ................⨯...........
+
+  ──────────────────────────────────────────────────────────────────── Laravel  
+    FAIL   ......................................... 256 files, 8 style issues  
+  ⨯ app/Models/Vacancy.php       fully_qualified_strict_types, ordered_imports  
+  ⨯ app/Providers/AppServiceProvider.php unary_operator_spaces, not_operator_…  
+  ⨯ app/Services/Assessments/AssessmentResultRecorder.php fully_qualified_str…  
+  ⨯ bootstrap/app.php                                          ordered_imports  
+  ⨯ database/seeders/DemoSeeder.php fully_qualified_strict_types, braces_posi…  
+  ⨯ routes/web.php                                             ordered_imports  
+  ⨯ tests/Feature/Audit/AuditLoggerTest.php                  no_unused_imports  
+  ⨯ tests/Feature/Tenancy/CrossTenantAccessTest.php            ordered_imports  
+
+
+# fin: 2026-09-30 11:11:32 -0500
+# código de salida: 1

@@ -1,0 +1,612 @@
+# paso: 04-phpunit
+# comando: docker compose exec -T app php artisan test
+# inicio: 2026-09-30 10:53:05 -0500
+
+
+   PASS  Tests\Unit\Assessments\ScoreSheetValidatorTest
+  ✓ complete sheet within ranges has no errors                           0.04s  
+  ✓ boundary values are accepted
+  ✓ missing scores are reported per criterion
+  ✓ scores outside the range are reported
+  ✓ scores for unknown criteria are rejected
+
+   PASS  Tests\Unit\Enums\ApplicationStatusTest
+  ✓ transition rules with data set "postulado → preseleccionado"         0.01s  
+  ✓ transition rules with data set "postulado → descartado"
+  ✓ transition rules with data set "postulado → finalista"
+  ✓ transition rules with data set "preseleccionado → en evaluacion"
+  ✓ transition rules with data set "preseleccionado → en entrevista"
+  ✓ transition rules with data set "en evaluacion → en entrevista"
+  ✓ transition rules with data set "en evaluacion → finalista"
+  ✓ transition rules with data set "en entrevista → finalista"
+  ✓ transition rules with data set "finalista → seleccionado"
+  ✓ transition rules with data set "finalista → no seleccionado"
+  ✓ transition rules with data set "seleccionado → descartado"
+  ✓ transition rules with data set "descartado → preseleccionado"
+  ✓ transition rules with data set "no seleccionado → finalista"
+  ✓ transition rules with data set "rf25 cierre: postulado → no seleccionado"
+  ✓ transition rules with data set "rf25 cierre: preseleccionado → no seleccionado"
+  ✓ transition rules with data set "rf25 cierre: en evaluacion → no seleccionado"
+  ✓ transition rules with data set "rf25 cierre: en entrevista → no seleccionado"
+  ✓ transition rules with data set "descartado → no seleccionado"
+  ✓ transition rules with data set "rf24 solo finalista → seleccionado: en entrevista → seleccionado"
+  ✓ selection outcomes are not manual targets
+  ✓ terminal statuses
+
+   PASS  Tests\Unit\Enums\JobRequestStatusTest
+  ✓ transition rules with data set "borrador → enviado"                  0.01s  
+  ✓ transition rules with data set "enviado → observado"
+  ✓ transition rules with data set "enviado → validado"
+  ✓ transition rules with data set "observado → enviado"
+  ✓ transition rules with data set "validado → aprobado"
+  ✓ transition rules with data set "validado → rechazado"
+  ✓ transition rules with data set "borrador → aprobado"
+  ✓ transition rules with data set "enviado → aprobado"
+  ✓ transition rules with data set "observado → validado"
+  ✓ transition rules with data set "aprobado → rechazado"
+  ✓ transition rules with data set "rechazado → enviado"
+  ✓ only draft and observed requests are editable
+  ✓ approved and rejected are terminal
+
+   PASS  Tests\Unit\Evaluation\WeightingValidatorTest
+  ✓ valid configuration has no issues                                    0.02s  
+  ✓ empty configuration is invalid
+  ✓ weight must be greater than zero
+  ✓ score range must be consistent
+  ✓ criterion names must be unique ignoring case and spaces
+  ✓ weights must add up to required total when configured
+  ✓ total comparison tolerates decimal rounding
+  ✓ total rule can be disabled by configuration
+
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true                                                    1.10s  
+
+   PASS  Tests\Unit\Ranking\RankingServiceTest
+  ✓ rf21 single candidate total is the weighted normalized sum           0.07s  
+  ✓ rf21 candidates are ordered by total descending
+  ✓ rf21 weights change the order
+  ✓ rf21 ties share the position and are flagged without being broken
+  ✓ rf21 minimum and maximum scores produce 0 and 100
+  ✓ rf21 multiple scores for a criterion are averaged
+  ✓ rf21 candidates with missing criteria are reported as incomplete an… 0.01s  
+  ✓ rf21 result is deterministic regardless of input order
+  ✓ rf20 weights need not add up to 100 when the rule is disabled
+  ✓ rf20 invalid weight configuration is rejected                        0.03s  
+  ✓ rf20 score outside the configured range is rejected
+  ✓ rf20 scores for criteria outside the vacancy are rejected
+  ✓ rf20 empty criteria are rejected
+  ✓ rf21 duplicate applications are rejected
+
+   PASS  Tests\Feature\Applications\ApplicationReviewTest
+  ✓ rf12 hr lists applications of a vacancy                              0.96s  
+  ✓ rf12 hr reviews the application file                                 0.28s  
+  ✓ rf13 rf15 hr shortlists and the candidate is notified                0.33s  
+  ✓ rf13 discard requires a reason                                       0.93s  
+  ✓ rf14 hr moves application to an allowed stage                        0.31s  
+  ✓ rf14 invalid stage transition is rejected                            0.18s  
+  ✓ rf14 selection outcomes cannot be assigned manually                  0.17s  
+  ✓ stage changes are blocked when the vacancy is closed                 0.18s  
+  ✓ only hr can change stages                                            0.26s  
+  ✓ candidate only sees own applications                                 0.35s  
+
+   PASS  Tests\Feature\Applications\ApplyToVacancyTest
+  ✓ rf10 rf11 candidate applies and receives confirmation                0.20s  
+  ✓ rf10 duplicate application is rejected                               0.16s  
+  ✓ rf10 cannot apply to closed or expired vacancy                       0.17s  
+  ✓ rf10 draft vacancy is not available                                  0.20s  
+  ✓ rf10 incomplete profile or missing cv blocks application             0.16s  
+  ✓ staff users cannot apply                                             0.17s  
+
+   PASS  Tests\Feature\Assessments\EvaluationTest
+  ✓ rf16 rf17 hr schedules evaluation and convocation is sent            0.27s  
+  ✓ rf16 evaluator must be an evaluator of the same organization         0.17s  
+  ✓ rf16 evaluation cannot be scheduled in the past                      0.17s  
+  ✓ rf16 only shortlisted or in evaluation applications can be evaluate… 0.18s  
+  ✓ rf16 only hr can schedule evaluations                                0.19s  
+  ✓ assigned evaluator records evaluation scores                         0.32s  
+  ✓ rf20 out of range or missing scores are rejected                     0.17s  
+  ✓ actors of another organization cannot schedule view or record evalu… 0.23s  
+  ✓ only the assigned evaluator can record results                       0.19s  
+  ✓ results cannot be recorded twice                                     0.17s  
+  ✓ evaluator only lists and views own assignments                       0.34s  
+  ✓ assigned evaluator can download the candidate cv                     0.23s  
+
+   PASS  Tests\Feature\Assessments\InterviewTest
+  ✓ rf18 hr schedules interview and notifies candidate and interviewer   0.19s  
+  ✓ rf18 submitted application cannot be interviewed                     0.17s  
+  ✓ rf19 assigned evaluator records interview and result                 0.27s  
+  ✓ rf19 outcome and observations are required                           0.18s  
+  ✓ rf20 interview score out of range is rejected                        0.16s  
+  ✓ results are blocked once the vacancy is closed                       0.18s  
+  ✓ evaluator of another organization cannot access the interview        0.19s  
+
+   PASS  Tests\Feature\Audit\AuditLogViewTest
+  ✓ rf27 approver views the organization audit trail latest first        0.25s  
+  ✓ rf27 unauthorized roles cannot view the audit trail                  0.19s  
+  ✓ rf27 organization never sees audit logs of another organization      0.17s  
+  ✓ rf27 logs without organization are not listed                        0.15s  
+  ✓ rf27 audit trail can be filtered by action                           0.14s  
+  ✓ rf27 details show readable labels and local dates instead of raw va… 0.22s  
+  ✓ rf27 view shows only a safe summary                                  0.15s  
+
+   PASS  Tests\Feature\Audit\AuditLoggerTest
+  ✓ records actor action entity and organization                         0.09s  
+  ✓ sensitive metadata is never stored                                   0.08s  
+  ✓ audit logs cannot be updated                                         0.09s  
+  ✓ audit logs cannot be deleted                                         0.08s  
+
+   PASS  Tests\Feature\Audit\AuditTrailTest
+  ✓ rf27 full process generates an audit trail with tenant actor and en… 0.69s  
+  ✓ rf27 audit logs are append only at database level                    0.09s  
+  ✓ rf27 deleting a user keeps the audit record without the actor refer… 0.11s  
+  ✓ rf27 sensitive values are never stored in metadata                   0.10s  
+  ✓ rf27 audit trail is exposed read only                                0.08s  
+
+   PASS  Tests\Feature\Auth\AuthenticationTest
+  ✓ login screen can be rendered                                         0.14s  
+  ✓ users can authenticate using the login screen                        0.10s  
+  ✓ users with two factor enabled are redirected to two factor challeng… 0.09s  
+  ✓ users can not authenticate with invalid password                     0.10s  
+  ✓ users can logout                                                     0.09s  
+  ✓ users are rate limited                                               0.12s  
+
+   PASS  Tests\Feature\Auth\CandidateRegistrationTest
+  ✓ self registration creates a candidate account without organization   0.14s  
+  ✓ self registration cannot escalate role or organization               0.09s  
+  ✓ registration is audited without password                             0.09s  
+
+   WARN  Tests\Feature\Auth\EmailVerificationTest
+  - email verification screen can be rendered → Fortify feature [email-verification] is not enabled.
+  - email can be verified → Fortify feature [email-verification] is not enabled.
+  - email is not verified with invalid hash → Fortify feature [email-verification] is not enabled.
+  - email is not verified with invalid user id → Fortify feature [email-verification] is not enabled.
+  - verified user is redirected to dashboard from verification prompt → Fortify feature [email-verification] is not enabled.
+  - already verified user visiting verification link is redirected without firing event again → Fortify feature [email-verification] is not enabled.
+
+   PASS  Tests\Feature\Auth\PasswordConfirmationTest
+  ✓ confirm password screen can be rendered                              0.13s  
+  ✓ password confirmation requires authentication                        0.08s  
+
+   PASS  Tests\Feature\Auth\PasswordResetTest
+  ✓ reset password link screen can be rendered                           0.12s  
+  ✓ reset password link can be requested                                 0.30s  
+  ✓ reset password screen can be rendered                                0.32s  
+  ✓ password can be reset with valid token                               0.31s  
+  ✓ password cannot be reset with invalid token                          0.29s  
+
+   PASS  Tests\Feature\Auth\RegistrationTest
+  ✓ registration screen can be rendered                                  0.11s  
+  ✓ new users can register                                               0.09s  
+
+   PASS  Tests\Feature\Auth\RoleMiddlewareTest
+  ✓ guest is redirected to login                                         0.08s  
+  ✓ user without allowed role is forbidden                               0.12s  
+  ✓ user with allowed role passes                                        0.09s  
+
+   PASS  Tests\Feature\Auth\TwoFactorChallengeTest
+  ✓ two factor challenge redirects to login when not authenticated       0.09s  
+  ✓ two factor challenge can be rendered                                 0.13s  
+
+   WARN  Tests\Feature\Auth\VerificationNotificationTest
+  - sends verification notification → Fortify feature [email-verification] is not enabled.
+  - does not send verification notification if email is verified → Fortify feature [email-verification] is not enabled.
+
+   PASS  Tests\Feature\Candidates\CandidateProfileTest
+  ✓ rf09 candidate updates profile                                       0.15s  
+  ✓ rf09 profile fields are validated                                    0.10s  
+  ✓ rf09 cv is stored privately with a safe generated name               0.15s  
+  ✓ rf09 cv rejects invalid type and oversized files                     0.11s  
+  ✓ rf09 staff cannot use candidate profile routes                       0.13s  
+  ✓ cv download is restricted to owner and organizations where candidat… 0.19s  
+
+   PASS  Tests\Feature\DashboardTest
+  ✓ guests are redirected to the login page                              0.09s  
+  ✓ authenticated users can visit the dashboard                          0.14s  
+
+   PASS  Tests\Feature\ExampleTest
+  ✓ returns a successful response                                        0.11s  
+
+   PASS  Tests\Feature\Frontend\AppTimezoneTest
+  ✓ root view exposes the application timezone for date formatting       0.11s  
+  ✓ public pages also expose the application timezone                    0.12s  
+
+   PASS  Tests\Feature\JobRequests\JobRequestWorkflowTest
+  ✓ rf01 requester registers a job request                               0.10s  
+  ✓ rf01 required fields are validated                                   0.10s  
+  ✓ rf02 hr observes and requester corrects and resubmits                0.12s  
+  ✓ rf02 observation requires a comment                                  0.12s  
+  ✓ rf03 hr validates and approver approves                              0.11s  
+  ✓ rf04 rejection notifies the requester                                0.12s  
+  ✓ rf04 rejection requires a comment                                    0.09s  
+  ✓ invalid transition is rejected and state is kept                     0.08s  
+  ✓ submitted request cannot be edited                                   0.08s  
+  ✓ roles without permission are forbidden                               0.13s  
+  ✓ requester only lists own requests and cannot view others             0.15s  
+[2026-09-30 10:53:27] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":25} 
+[2026-09-30 10:53:27] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:28] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+
+   PASS  Tests\Feature\Ml\MlCrossTenantValidationTest
+  ✓ each organization gets its own counts                                0.27s  
+  ✓ adding data to b does not move the vector of a                       0.37s  
+  ✓ concurrent vacancies never count another organization                0.22s  
+  ✓ there is no leakage without a session                                0.21s  
+  ✓ the vector of a is unchanged when b is wiped                         0.22s  
+  ✓ hr of a cannot reach the vacancy of b                                0.20s  
+  ✓ the denial does not reveal whether the vacancy exists                0.20s  
+  ✓ each organization sees only its own risk                             0.29s  
+  ✓ the payload sent for a carries only its own counts                   0.20s  
+  ✓ the policy denies across organizations                               0.19s  
+[2026-09-30 10:53:28] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:28] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:28] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:28] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:28] testing.WARNING: ml.risk.predict {"outcome":"connection_failed","status":null,"duration_ms":1} 
+[2026-09-30 10:53:28] testing.WARNING: ml.risk.predict {"outcome":"timeout","status":null,"duration_ms":1} 
+[2026-09-30 10:53:28] testing.WARNING: ml.risk.predict {"outcome":"model_unavailable","status":503,"duration_ms":0} 
+[2026-09-30 10:53:28] testing.WARNING: ml.risk.predict {"outcome":"payload_rejected","status":422,"duration_ms":0} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"server_error","status":401,"duration_ms":0} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"server_error","status":500,"duration_ms":0} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"invalid_json","status":200,"duration_ms":0} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"fingerprint_mismatch"} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_mismatch"} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_mismatch"} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_out_of_range"} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_out_of_range"} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":1,"detail":"score_not_numeric"} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"flag_not_boolean"} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"flag_inconsistent_with_threshold"} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_experimental"} 
+[2026-09-30 10:53:29] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:risk_score"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:risk_flag"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:threshold"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:model_version"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:freeze_fingerprint"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_empty"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_empty"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_mismatch"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"} 
+[2026-09-30 10:53:30] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"freeze_fingerprint_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"freeze_fingerprint_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"freeze_fingerprint_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"freeze_fingerprint_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":1,"detail":"freeze_fingerprint_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"freeze_fingerprint_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":1,"detail":"status_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_string"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"} 
+[2026-09-30 10:53:31] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"} 
+[2026-09-30 10:53:32] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":1,"detail":"score_not_numeric"} 
+[2026-09-30 10:53:32] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"} 
+[2026-09-30 10:53:32] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"} 
+[2026-09-30 10:53:32] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_not_numeric"} 
+[2026-09-30 10:53:32] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_not_numeric"} 
+[2026-09-30 10:53:32] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_not_numeric"} 
+[2026-09-30 10:53:32] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_not_numeric"} 
+[2026-09-30 10:53:32] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_not_numeric"} 
+[2026-09-30 10:53:32] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:status"} 
+[2026-09-30 10:53:32] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:32] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":1} 
+[2026-09-30 10:53:32] testing.WARNING: ml.risk.predict {"outcome":"model_unavailable","status":503,"duration_ms":2} 
+
+   PASS  Tests\Feature\Ml\MlRiskClientTest
+  ✓ a valid response produces a prediction                               0.08s  
+  ✓ it sends only the fifteen features                                   0.07s  
+  ✓ it attaches the internal token when configured                       0.08s  
+  ✓ it sends no token header when none is configured                     0.08s  
+  ✓ a disabled service never calls out                                   0.07s  
+  ✓ a connection failure falls back                                      0.08s  
+  ✓ a timeout is reported as such                                        0.08s  
+  ✓ a 503 means the model is unavailable                                 0.07s  
+  ✓ a 422 means our payload was wrong                                    0.07s  
+  ✓ a 401 falls back without breaking                                    0.07s  
+  ✓ a 500 falls back                                                     0.07s  
+  ✓ invalid json falls back                                              0.07s  
+  ✓ a wrong freeze fingerprint is rejected                               0.07s  
+  ✓ a wrong threshold is rejected                                        0.07s  
+  ✓ a rounded threshold is rejected                                      0.07s  
+  ✓ an invalid score is rejected with data set "negativo"                0.07s  
+  ✓ an invalid score is rejected with data set "mayor que uno"           0.07s  
+  ✓ an invalid score is rejected with data set "texto"                   0.07s  
+  ✓ an invalid score is rejected with data set "nulo"                    0.08s  
+  ✓ a non boolean flag is rejected                                       0.07s  
+  ✓ a flag inconsistent with the threshold is rejected                   0.07s  
+  ✓ a response that stops declaring itself experimental is rejected      0.07s  
+  ✓ a missing key is rejected with data set "risk score"                 0.07s  
+  ✓ a missing key is rejected with data set "risk flag"                  0.07s  
+  ✓ a missing key is rejected with data set "threshold"                  0.08s  
+  ✓ a missing key is rejected with data set "model version"              0.07s  
+  ✓ a missing key is rejected with data set "freeze fingerprint"         0.07s  
+  ✓ an empty model version is rejected                                   0.07s  
+  ✓ a blank model version is rejected                                    0.07s  
+  ✓ a different model version is rejected                                0.07s  
+  ✓ a non string model version is rejected with data set "numero"        0.07s  
+  ✓ a non string model version is rejected with data set "decimal"       0.08s  
+  ✓ a non string model version is rejected with data set "booleano"      0.07s  
+  ✓ a non string model version is rejected with data set "nulo"          0.07s  
+  ✓ a non string model version is rejected with data set "array"         0.07s  
+  ✓ a non string model version is rejected with data set "objeto"        0.07s  
+  ✓ a non string fingerprint is rejected with data set "numero"          0.07s  
+  ✓ a non string fingerprint is rejected with data set "decimal"         0.07s  
+  ✓ a non string fingerprint is rejected with data set "booleano"        0.07s  
+  ✓ a non string fingerprint is rejected with data set "nulo"            0.07s  
+  ✓ a non string fingerprint is rejected with data set "array"           0.07s  
+  ✓ a non string fingerprint is rejected with data set "objeto"          0.07s  
+  ✓ a non string status is rejected with data set "numero"               0.07s  
+  ✓ a non string status is rejected with data set "decimal"              0.08s  
+  ✓ a non string status is rejected with data set "booleano"             0.08s  
+  ✓ a non string status is rejected with data set "nulo"                 0.07s  
+  ✓ a non string status is rejected with data set "array"                0.07s  
+  ✓ a non string status is rejected with data set "objeto"               0.07s  
+  ✓ a non numeric score is rejected with data set "texto"                0.07s  
+  ✓ a non numeric score is rejected with data set "array"                0.07s  
+  ✓ a non numeric score is rejected with data set "objeto"               0.07s  
+  ✓ a non numeric score is rejected with data set "booleano"             0.07s  
+  ✓ a non numeric score is rejected with data set "nulo"                 0.08s  
+  ✓ a non numeric threshold is rejected with data set "texto"            0.08s  
+  ✓ a non numeric threshold is rejected with data set "array"            0.07s  
+  ✓ a non numeric threshold is rejected with data set "objeto"           0.07s  
+  ✓ a non numeric threshold is rejected with data set "booleano"         0.08s  
+  ✓ a non numeric threshold is rejected with data set "nulo"             0.08s  
+  ✓ a missing status is rejected                                         0.08s  
+  ✓ the valid response is still accepted                                 0.07s  
+  ✓ a transient failure is retried once                                  0.07s  
+  ✓ an error response is not retried                                     0.08s  
+  ✓ health reports the service state                                     0.07s  
+  ✓ health survives a dead service                                       0.07s  
+[2026-09-30 10:53:33] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:33] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:33] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:33] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+
+   PASS  Tests\Feature\Ml\OperationalRiskAuthorizationTest
+  ✓ human resources is authorised                                        0.14s  
+  ✓ the approver is authorised                                           0.11s  
+  ✓ other roles are denied with data set "postulante"                    0.10s  
+  ✓ other roles are denied with data set "evaluador"                     0.10s  
+  ✓ other roles are denied with data set "area solicitante"              0.10s  
+  ✓ a guest is denied                                                    0.10s  
+  ✓ a candidate with an application is still denied                      0.10s  
+  ✓ an evaluator assigned to the process is still denied                 0.10s  
+  ✓ the route and the policy agree for every role                        0.13s  
+  ✓ the denial leaks nothing about the process                           0.10s  
+  ✓ every role in the system is covered by this suite                    0.10s  
+[2026-09-30 10:53:35] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":1} 
+[2026-09-30 10:53:36] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+
+   PASS  Tests\Feature\Ml\OperationalRiskCheckpointTest
+  ✓ the checkpoint is the start of the day after the close               0.10s  
+  ✓ only events up to the checkpoint enter the vector                    0.12s  
+  ✓ sessions respect the same boundary                                   0.14s  
+  ✓ the vector is identical whenever it is rebuilt                       0.12s  
+  ✓ days remaining is measured from the checkpoint                       0.10s  
+  ✓ concurrent open vacancies is reconstructed at the checkpoint         0.10s  
+  ✓ the last operational event uses the closed list                      0.11s  
+  ✓ an event after the checkpoint does not become the latest             0.14s  
+  ✓ a column outside the closed list does not affect the feature         0.15s  
+  ✓ without events the fallback is the publication                       0.10s  
+  ✓ the query window spans from the checkpoint to the target             0.16s  
+  ✓ a query days after the checkpoint still predicts                     0.11s  
+  ✓ events after the checkpoint do not alter a later query               0.14s  
+  ✓ a late query means outside the window not after the checkpoint day   0.09s  
+  ✓ a query after the target falls back                                  0.09s  
+  ✓ closing the vacancy ends the window before the target                0.10s  
+  ✓ reconstruction and eligibility are separate questions                0.10s  
+  ✓ at the checkpoint the query is eligible                              0.10s  
+  ✓ a second before the checkpoint the query is not eligible             0.09s  
+  ✓ a closed vacancy is not eligible even inside the window              0.09s  
+  ✓ a target that does not survive the checkpoint is not eligible        0.09s  
+
+   PASS  Tests\Feature\Ml\OperationalRiskFeatureBuilderTest
+  ✓ it produces exactly the fifteen contract features                    0.11s  
+  ✓ every value is an integer                                            0.09s  
+  ✓ no identifier or personal attribute leaves the builder               0.10s  
+  ✓ an incomplete feature set is rejected                                0.08s  
+  ✓ an unexpected feature is rejected                                    0.08s  
+  ✓ configuration features come from the vacancy                         0.09s  
+  ✓ the application window falls back to the publication date            0.10s  
+  ✓ applications and stage moves are counted                             0.12s  
+  ✓ stage moves are not broken down by destination                       0.12s  
+  ✓ sessions are counted as scheduled completed and overdue              0.13s  
+  ✓ the interview outcome is never read                                  0.12s  
+  ✓ nothing after the checkpoint is counted                              0.12s  
+  ✓ days since last event uses the latest closed list event              0.11s  
+  ✓ without events the last event is the publication                     0.09s  
+  ✓ days remaining to target counts whole days                           0.09s  
+  ✓ an expired target is not clamped                                     0.10s  
+  ✓ concurrent vacancies exclude the vacancy itself                      0.11s  
+  ✓ concurrent vacancies ignore other organizations                      0.11s  
+  ✓ counts ignore rows belonging to another organization                 0.13s  
+[2026-09-30 10:53:38] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:38] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:38] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:38] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:39] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:39] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:39] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:40] testing.WARNING: ml.risk.predict {"outcome":"connection_failed","status":null,"duration_ms":0} 
+[2026-09-30 10:53:40] testing.WARNING: ml.risk.predict {"outcome":"connection_failed","status":null,"duration_ms":0} 
+[2026-09-30 10:53:40] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"fingerprint_mismatch"} 
+
+   PASS  Tests\Feature\Ml\OperationalRiskServiceTest
+  ✓ an assessable vacancy gets a prediction                              0.11s  
+  ✓ the assessment declares what it is and is not                        0.10s  
+  ✓ a low score produces no flag                                         0.09s  
+  ✓ the flag message stays neutral                                       0.11s  
+  ✓ without a target there is no prediction                              0.09s  
+  ✓ an expired target falls back instead of extrapolating                0.09s  
+  ✓ before the checkpoint there is no prediction                         0.09s  
+  ✓ the checkpoint is the day after the application close                0.09s  
+  ✓ a vacancy without a close date has no checkpoint                     0.09s  
+  ✓ events after the checkpoint do not change the vector                 0.12s  
+  ✓ the eligible case sends the fifteen features                         0.11s  
+  ✓ a closed vacancy gets no late prediction                             0.09s  
+  ✓ a late query gets no prediction                                      0.09s  
+  ✓ a target that does not survive the checkpoint is out of scope        0.11s  
+  ✓ an unpublished vacancy falls back                                    0.09s  
+  ✓ a dead service does not break the flow                               0.10s  
+  ✓ no score is invented when there is no prediction                     0.10s  
+  ✓ an incompatible response falls back                                  0.11s  
+  ✓ a disabled integration returns the descriptive panel                 0.09s  
+
+   PASS  Tests\Feature\Ml\TargetCompletionTest
+  ✓ the column exists and is nullable                                    0.10s  
+  ✓ the value is cast to a datetime                                      0.09s  
+  ✓ the database rejects a target before the application close           0.09s  
+  ✓ existing vacancies keep working without a target                     0.09s  
+  ✓ hr can register a target completion date                             0.11s  
+  ✓ the target must be after the application close                       0.10s  
+  ✓ the target is optional                                               0.10s  
+  ✓ the target cannot be changed once published                          0.10s  
+  ✓ the model reports when the target is editable                        0.10s  
+  ✓ the target is recorded in the audit trail                            0.10s  
+  ✓ the edit form receives the current target                            0.14s  
+  ✓ the edit form receives null when there is no target                  0.13s  
+  ✓ the detail view exposes the target                                   0.14s  
+  ✓ the form component offers the field                                  0.11s  
+  ✓ an update in draft can change the target                             0.11s  
+  ✓ hr cannot set a target on another organizations vacancy              0.11s  
+[2026-09-30 10:53:42] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:42] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:42] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:43] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0} 
+[2026-09-30 10:53:43] testing.WARNING: ml.risk.predict {"outcome":"connection_failed","status":null,"duration_ms":0} 
+[2026-09-30 10:53:43] testing.WARNING: ml.risk.predict {"outcome":"connection_failed","status":null,"duration_ms":1} 
+
+   PASS  Tests\Feature\Ml\VacancyOperationalRiskRouteTest
+  ✓ hr can query the operational risk                                    0.11s  
+  ✓ the approver can query it                                            0.11s  
+  ✓ a candidate cannot query it                                          0.10s  
+  ✓ an evaluator cannot query it                                         0.10s  
+  ✓ a guest cannot query it                                              0.10s  
+  ✓ hr cannot query another organizations vacancy                        0.10s  
+  ✓ the policy denies a foreign vacancy even without the global scope    0.10s  
+  ✓ the response declares the experimental nature                        0.11s  
+  ✓ the response never mentions candidates or decisions                  0.11s  
+  ✓ a dead service still returns a usable panel                          0.10s  
+  ✓ a vacancy without a target returns the descriptive panel             0.11s  
+  ✓ the response leaks no paths or traces                                0.10s  
+
+   PASS  Tests\Feature\Notifications\ProcessResultNotificationTest
+  ✓ rf26 selected candidate receives the result when the vacancy closes  0.25s  
+  ✓ rf26 not selected candidates receive the result when the vacancy cl… 0.25s  
+  ✓ rf26 no final result is sent before the vacancy is closed            0.32s  
+  ✓ rf26 only candidates of the closed vacancy are notified              0.32s  
+  ✓ rf26 closing a vacancy of another organization does not notify this… 0.29s  
+  ✓ rf26 result notification does not expose scores ranking or internal… 0.65s  
+  ✓ rf26 final result is not sent twice when closure is repeated         0.31s  
+  ✓ rf26 rf27 result notifications are audited without personal data     0.27s  
+
+   PASS  Tests\Feature\Routing\NumericRouteParametersTest
+  ✓ non numeric identifiers respond not found instead of a server error  0.26s  
+  ✓ the localized create route still works                               0.21s  
+
+   PASS  Tests\Feature\Selection\FinalDecisionTest
+  ✓ rf23 approver records the final decision for a ranked finalist       0.21s  
+  ✓ rf23 approver may choose a candidate who is not first in the rankin… 0.20s  
+  ✓ rf23 explicit human confirmation and justification are required      0.25s  
+  ✓ rf23 candidate of another vacancy is rejected                        0.26s  
+  ✓ rf23 candidate of another tenant is rejected                         0.24s  
+  ✓ rf23 non finalist or incompletely evaluated candidates are rejected  0.29s  
+  ✓ rf23 recorded decision cannot be replaced                            0.20s  
+  ✓ rf23 only the approver can record the decision                       0.28s  
+  ✓ rf23 approver of another organization cannot decide                  0.22s  
+  ✓ rf23 decision is rejected for a closed vacancy                       0.26s  
+
+   PASS  Tests\Feature\Selection\RankingComparisonTest
+  ✓ rf21 rf22 hr views the comparison ordered by weighted total          0.31s  
+  ✓ rf22 approver can view the comparison but other roles cannot         0.29s  
+  ✓ rf23 calculating the ranking never selects a candidate               0.34s  
+  ✓ rf21 discarded and other vacancy applications are not ranked         0.29s  
+  ✓ rf21 application of another tenant is never ranked even if linked t… 0.21s  
+  ✓ rf21 candidates without complete results are listed as incomplete    0.26s  
+  ✓ rf20 invalid weight configuration is reported instead of a ranking   0.22s  
+  ✓ rf22 hr of other organization cannot view the comparison             0.20s  
+
+   PASS  Tests\Feature\Selection\SelectionRegistrationTest
+  ✓ rf24 hr registers the selection after the human decision             0.25s  
+  ✓ rf24 selection requires a recorded human decision                    0.20s  
+  ✓ rf24 selection cannot be registered twice                            0.22s  
+  ✓ rf24 only hr can register the selection                              0.25s  
+  ✓ rf24 hr of another organization cannot register the selection        0.22s  
+  ✓ rf24 manual stage changes are blocked after the final decision       0.23s  
+  ✓ rf24 database prevents two selected candidates in the same vacancy   0.22s  
+
+   PASS  Tests\Feature\Selection\VacancyClosureTest
+  ✓ rf25 hr closes the vacancy after the selection is registered         0.57s  
+  ✓ rf25 closure without a registered selection is rejected              0.25s  
+  ✓ rf25 only hr can close the vacancy                                   0.29s  
+  ✓ rf25 hr of another organization cannot close the vacancy             0.28s  
+  ✓ rf25 closed vacancy rejects incompatible operations                  0.60s  
+
+   PASS  Tests\Feature\Settings\ProfileUpdateTest
+  ✓ profile page is displayed                                            0.18s  
+  ✓ profile information can be updated                                   0.12s  
+  ✓ email verification status is unchanged when the email address is un… 0.09s  
+  ✓ user can delete their account                                        0.12s  
+  ✓ correct password must be provided to delete account                  0.12s  
+
+   PASS  Tests\Feature\Settings\SecurityTest
+  ✓ security page is displayed                                           0.16s  
+  ✓ security page requires password confirmation when enabled            0.09s  
+  ✓ security page renders without two factor when feature is disabled    0.13s  
+  ✓ password can be updated                                              0.11s  
+  ✓ correct password must be provided to update password                 0.09s  
+
+   PASS  Tests\Feature\Tenancy\CrossTenantAccessTest
+  ✓ hr of other organization cannot view or review job requests          0.14s  
+  ✓ approver of other organization cannot decide job requests            0.11s  
+  ✓ job request listing only contains own organization                   0.14s  
+  ✓ hr of other organization cannot view edit or publish vacancies       0.13s  
+  ✓ hr of other organization cannot list view or move applications       0.17s  
+  ✓ rf20 hr of other organization cannot modify vacancy criteria         0.14s  
+  ✓ hr cannot create vacancy from another organization request           0.12s  
+
+   PASS  Tests\Feature\Tenancy\OrganizationScopeTest
+  ✓ staff user only sees records of own organization                     0.09s  
+  ✓ scope is not applied without authenticated staff user                0.08s  
+  ✓ database rejects staff user without organization                     0.08s  
+  ✓ database rejects candidate linked to an organization                 0.08s  
+
+   PASS  Tests\Feature\Testing\E2eEnvironmentTest
+  ✓ detects whether the active database is the configured e2e database   0.10s  
+  ✓ reset never touches a database that is not the e2e database          0.08s  
+
+   PASS  Tests\Feature\Testing\E2eSupportTest
+  ✓ endpoints do not exist when e2e support is disabled                  0.11s  
+  ✓ endpoints do not exist in production even if enabled                 0.07s  
+  ✓ enabled endpoints reject a missing or wrong token                    0.08s  
+  ✓ reset endpoint restores the known demo state                         0.07s  
+  ✓ reset endpoint refuses when the active database is not the e2e data… 0.08s  
+  ✓ queue endpoint reports pending jobs                                  0.07s  
+  ✓ reset command runs against the e2e database                          0.08s  
+  ✓ reset command refuses a database that is not the e2e database        0.07s  
+  ✓ reset command refuses to run in production                           0.07s  
+
+   PASS  Tests\Feature\Vacancies\VacancyPublicationTest
+  ✓ rf05 rf06 hr creates vacancy with profile and criteria from approve… 0.11s  
+  ✓ rf05 vacancy cannot be created from a request that is not approved   0.10s  
+  ✓ rf06 validation report lists issues of an invalid vacancy            0.16s  
+  ✓ rf07 hr publishes a valid vacancy and it becomes public              0.19s  
+  ✓ rf07 invalid weights prevent publication                             0.11s  
+  ✓ rf07 vacancy without criteria or with expired deadline cannot be pu… 0.12s  
+  ✓ draft vacancies are not public                                       0.11s  
+  ✓ published vacancy configuration cannot be modified                   0.11s  
+  ✓ non hr roles cannot manage vacancies                                 0.15s  
+
+  Tests:    8 skipped, 411 passed (1498 assertions)
+  Duration: 53.11s
+
+
+# fin: 2026-09-30 10:53:59 -0500
+# código de salida: 0

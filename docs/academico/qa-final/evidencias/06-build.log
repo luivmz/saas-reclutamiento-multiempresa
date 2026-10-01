@@ -1,0 +1,126 @@
+# paso: 06-build
+# comando: docker compose exec -T app npm run build
+# inicio: 2026-09-30 10:54:08 -0500
+
+
+> build
+> vp build
+
+[plugin @laravel/vite-plugin-wayfinder] Types generated for actions, routes, form variants
+[plugin laravel:fonts] Optimized font fallbacks require the optional "fontaine" package. Install it, or set "optimizedFallbacks: false" on your fonts to disable the feature.
+transforming...
+✓ 2375 modules transformed.
+rendering chunks...
+computing gzip size...
+public/build/fonts-manifest.json                               11.48 kB │ gzip:   0.99 kB
+public/build/assets/ibm-plex-mono-400-normal-CvHOgSBP.woff     13.14 kB
+public/build/assets/ibm-plex-mono-500-normal-CB9ihrfo.woff     13.15 kB
+public/build/assets/ibm-plex-mono-400-normal-DMJ8VG8y.woff2    14.70 kB
+public/build/assets/ibm-plex-mono-500-normal-DSY6xOcd.woff2    14.88 kB
+public/build/assets/ibm-plex-serif-600-normal-D3rpGdkS.woff    19.57 kB
+public/build/assets/ibm-plex-serif-600-normal-DAxitmSu.woff2   20.51 kB
+public/build/assets/ibm-plex-sans-400-normal-CYLoc0-x.woff     22.10 kB
+public/build/assets/ibm-plex-sans-400-normal-CDDApCn2.woff2    22.58 kB
+public/build/assets/ibm-plex-sans-600-normal-Cu4Hd6ag.woff     23.87 kB
+public/build/assets/ibm-plex-sans-500-normal-BgVn5rGT.woff     23.91 kB
+public/build/assets/ibm-plex-sans-500-normal-6ng42L7E.woff2    24.18 kB
+public/build/assets/ibm-plex-sans-600-normal-CuJfVYMP.woff2    24.25 kB
+public/build/manifest.json                                     30.31 kB │ gzip:   3.34 kB
+public/build/assets/fonts-Dz3mPwWM.css                          4.74 kB │ gzip:   0.51 kB
+public/build/assets/app-CPxRW8OV.css                          100.16 kB │ gzip:  16.62 kB
+public/build/assets/check-ByzHBvkC.js                           0.11 kB │ gzip:   0.13 kB
+public/build/assets/loader-circle-D2ZguTJ3.js                   0.13 kB │ gzip:   0.14 kB
+public/build/assets/plus-p6s0uIk8.js                            0.14 kB │ gzip:   0.14 kB
+public/build/assets/circle-check-AS98AYXa.js                    0.17 kB │ gzip:   0.16 kB
+public/build/assets/lock-DUJCSKKx.js                            0.19 kB │ gzip:   0.18 kB
+public/build/assets/briefcase-D8W9uHdg.js                       0.21 kB │ gzip:   0.19 kB
+public/build/assets/external-link-DhZbZ59m.js                   0.24 kB │ gzip:   0.19 kB
+public/build/assets/map-pin-BhfeGlcT.js                         0.25 kB │ gzip:   0.21 kB
+public/build/assets/triangle-alert-DQi7Oiss.js                  0.25 kB │ gzip:   0.20 kB
+public/build/assets/file-plus-2-CFI8D4sr.js                     0.27 kB │ gzip:   0.20 kB
+public/build/assets/input-error-DJfVMQ3q.js                     0.28 kB │ gzip:   0.23 kB
+public/build/assets/clipboard-check-DFvoYYlC.js                 0.29 kB │ gzip:   0.23 kB
+public/build/assets/users-Bx1o6Sr-.js                           0.29 kB │ gzip:   0.22 kB
+public/build/assets/file-text-DC4u6MdJ.js                       0.32 kB │ gzip:   0.21 kB
+public/build/assets/text-link-D9i9rWen.js                       0.32 kB │ gzip:   0.23 kB
+public/build/assets/trash-2-BMqIPPWD.js                         0.35 kB │ gzip:   0.24 kB
+public/build/assets/confirm-C6xJkb_D.js                         0.36 kB │ gzip:   0.22 kB
+public/build/assets/calendar-clock-BLtuse2N.js                  0.37 kB │ gzip:   0.25 kB
+public/build/assets/clipboard-list-uv2Pgmby.js                  0.40 kB │ gzip:   0.25 kB
+public/build/assets/pencil-DSIjys4M.js                          0.42 kB │ gzip:   0.29 kB
+public/build/assets/spinner-DNjSW7OP.js                         0.43 kB │ gzip:   0.32 kB
+public/build/assets/workflow-alert-D7YIdkuo.js                  0.63 kB │ gzip:   0.42 kB
+public/build/assets/dist-W8R8mDoc.js                            0.70 kB │ gzip:   0.47 kB
+public/build/assets/filter-chips-Tl-Y_yus.js                    0.78 kB │ gzip:   0.45 kB
+public/build/assets/textarea-BOCCATyc.js                        0.81 kB │ gzip:   0.50 kB
+public/build/assets/VacancyApplicationController-BxdXWeBm.js    0.85 kB │ gzip:   0.41 kB
+public/build/assets/ApplicationController-CjHKNfIw.js           0.88 kB │ gzip:   0.40 kB
+public/build/assets/label-I8ab3LQR.js                           0.89 kB │ gzip:   0.57 kB
+public/build/assets/format-BMcx9DsG.js                          0.99 kB │ gzip:   0.47 kB
+public/build/assets/empty-state-HZvnp1KQ.js                     1.00 kB │ gzip:   0.56 kB
+public/build/assets/status-badge-CU2duDk2.js                    1.20 kB │ gzip:   0.61 kB
+public/build/assets/appearance-Kcd8Up2Y.js                      1.40 kB │ gzip:   0.80 kB
+public/build/assets/status-timeline-DkRhmRes.js                 1.45 kB │ gzip:   0.78 kB
+public/build/assets/edit-Cb8Lx8Jb.js                            1.46 kB │ gzip:   0.85 kB
+public/build/assets/create-BL8VIbCw.js                          1.48 kB │ gzip:   0.78 kB
+public/build/assets/NotificationController-CH--JoqW.js          1.59 kB │ gzip:   0.67 kB
+public/build/assets/choice-B_YngWLF.js                          1.64 kB │ gzip:   0.66 kB
+public/build/assets/alert-BTAs5sJq.js                           1.66 kB │ gzip:   0.75 kB
+public/build/assets/create-C-XANqJQ.js                          1.71 kB │ gzip:   0.96 kB
+public/build/assets/passkey-verify-C9GPCXcH.js                  1.88 kB │ gzip:   1.09 kB
+public/build/assets/password-input-CO_x_AYL.js                  1.90 kB │ gzip:   1.06 kB
+public/build/assets/pagination-Cjx9PYev.js                      1.92 kB │ gzip:   0.94 kB
+public/build/assets/form-controls-C6_utDhb.js                   1.95 kB │ gzip:   1.05 kB
+public/build/assets/forgot-password-eTgxWrBg.js                 2.01 kB │ gzip:   1.00 kB
+public/build/assets/edit-BgCpwClq.js                            2.22 kB │ gzip:   1.19 kB
+public/build/assets/applications-DuvI1wnw.js                    2.35 kB │ gzip:   1.12 kB
+public/build/assets/confirm-password-CsdBlpR_.js                2.38 kB │ gzip:   1.04 kB
+public/build/assets/reset-password-Bf4VO3eB.js                  2.42 kB │ gzip:   1.00 kB
+public/build/assets/recruitment-scene-D9EDeQAi.js               2.51 kB │ gzip:   1.26 kB
+public/build/assets/assessments-BrB8jmiS.js                     2.56 kB │ gzip:   1.13 kB
+public/build/assets/notifications-D4-rxuXL.js                   2.69 kB │ gzip:   1.37 kB
+public/build/assets/two-factor-challenge-Da7u6SXy.js            2.70 kB │ gzip:   1.26 kB
+public/build/assets/password-CG0BCmoK.js                        2.73 kB │ gzip:   0.73 kB
+public/build/assets/job-request-fields-OSPQZ_Ms.js              2.85 kB │ gzip:   1.30 kB
+public/build/assets/dist-BajZVrd5.js                            2.87 kB │ gzip:   1.27 kB
+public/build/assets/data-table-CkZQpTY-.js                      2.92 kB │ gzip:   1.49 kB
+public/build/assets/vacancies-D_iYtWej.js                       2.98 kB │ gzip:   1.49 kB
+public/build/assets/register-rhh21I75.js                        3.08 kB │ gzip:   1.19 kB
+public/build/assets/dashboard-BA00yu5o.js                       3.15 kB │ gzip:   1.49 kB
+public/build/assets/job-requests-Bs4ud9bh.js                    3.17 kB │ gzip:   1.54 kB
+public/build/assets/criteria-table-DqZixv1W.js                  3.21 kB │ gzip:   1.31 kB
+public/build/assets/audit-CfM-nXTc.js                           3.43 kB │ gzip:   1.58 kB
+public/build/assets/dialog-DGTzgGbA.js                          4.05 kB │ gzip:   1.25 kB
+public/build/assets/show-COE3gCvW.js                            4.13 kB │ gzip:   1.95 kB
+public/build/assets/jobs-CX5kYn6v.js                            4.29 kB │ gzip:   1.81 kB
+public/build/assets/applications-C1zdedKX.js                    4.32 kB │ gzip:   1.98 kB
+public/build/assets/profile-gvqI99uo.js                         5.61 kB │ gzip:   2.01 kB
+public/build/assets/profile-CHQ8vOQt.js                         6.70 kB │ gzip:   2.82 kB
+public/build/assets/dist-Cmx9SLy_.js                            6.97 kB │ gzip:   2.69 kB
+public/build/assets/show-PQB-Xftn.js                            7.39 kB │ gzip:   3.00 kB
+public/build/assets/login-D9ul_R9n.js                           8.18 kB │ gzip:   3.33 kB
+public/build/assets/vacancy-form-5dRJJ9X4.js                    9.68 kB │ gzip:   3.06 kB
+public/build/assets/welcome-CdwYLvcR.js                        10.21 kB │ gzip:   3.84 kB
+public/build/assets/show-B6w4uuEd.js                           11.16 kB │ gzip:   3.98 kB
+public/build/assets/show-CnC190GX.js                           12.77 kB │ gzip:   4.31 kB
+public/build/assets/react-_x-aPTzd.js                          13.85 kB │ gzip:   4.59 kB
+public/build/assets/comparison-Bk9FjL0t.js                     14.15 kB │ gzip:   4.81 kB
+public/build/assets/show-BiDUY0Ut.js                           14.54 kB │ gzip:   5.56 kB
+public/build/assets/use-two-factor-auth-B75RiZYb.js            17.06 kB │ gzip:   6.17 kB
+public/build/assets/show-PFVRsiMx.js                           21.30 kB │ gzip:   6.76 kB
+public/build/assets/security-DoyYWKD_.js                       28.23 kB │ gzip:   9.22 kB
+public/build/assets/utils-BzuURSrH.js                          36.79 kB │ gzip:  12.10 kB
+public/build/assets/app-BWMURKwW.js                           204.31 kB │ gzip:  59.93 kB
+public/build/assets/wayfinder-BRtPaOhN.js                     338.83 kB │ gzip: 106.15 kB
+
+✓ built in 33.80s
+[PLUGIN_TIMINGS] Your build spent 97% of 33.8s inside plugin hooks (32.9s).
+Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+  - @tailwindcss/vite:generate:build transform (58%, 19.5s, 1 call)
+  - @laravel/vite-plugin-wayfinder buildStart (30%, 10.1s, 1 call)
+  - @rolldown/plugin-babel transform (9%, 2.9s, 151 calls)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+
+
+# fin: 2026-09-30 10:54:44 -0500
+# código de salida: 0

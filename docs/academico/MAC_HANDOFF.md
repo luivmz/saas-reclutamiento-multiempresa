@@ -119,6 +119,11 @@ Laravel solo llama al servicio si `ML_SERVICE_ENABLED=true`. Sin él, la aplicac
 | F9 Alcance (publicado) | [`phase-24/output/`](phase-24/README.md) · adenda en [`practica-09/`](practica-09/F9_POST_RELEASE_ADDENDUM.md) | Solo lectura |
 | F11 Arquitectura | [`practica-11/`](practica-11/README.md) | Definitivo: DOCX y PDF sobre la plantilla oficial (F11-R), con la vista ARQ-01. Se conserva además la adaptación histórica de la F28 |
 | F29C Variables y operacionalización | [`operacionalizacion/`](operacionalizacion/README.md) | DOCX y PDF con el Anexo 1 (matriz) y el Anexo 2 (diagrama conceptual), espejo `.md` y paquete de ejecución de la actividad E1 y registro de la evidencia de ChatGPT (P-01 a P-06; el resto es NO REQUERIDO). `validate.py --cierre-f29c` pasa. **Lista para auditoría** |
+| F29D Plan de Pruebas | [`plan-pruebas/`](plan-pruebas/README.md) | DOCX, PDF y espejo `.md` sobre la plantilla del curso |
+| F29E Casos de prueba | [`casos-prueba/`](casos-prueba/README.md) | Catálogo de 128 CP, matriz de trazabilidad y CSV |
+| F29F Ejecución QA | [`qa-final/`](qa-final/README.md) | Resultados y evidencias reales (registros, JUnit y CI) |
+| F29G Defectos y métricas | [`metricas-calidad/`](metricas-calidad/README.md) | Registro final de defectos y métricas |
+| F29H Informe Final v1 | [`informe-final/`](informe-final/README.md) | DOCX y PDF sobre la plantilla del proyecto final |
 
 **PowerDesigner (F29):**
 

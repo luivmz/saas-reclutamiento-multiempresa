@@ -1,0 +1,12 @@
+paso	comando	inicio	fin	salida
+01-git	git rev-parse HEAD && git status --porcelain && git log --oneline -1	2026-09-30 10:53:03 -0500	2026-09-30 10:53:03 -0500	0
+02-entorno	docker version --format "Docker {{.Server.Version}}" && docker compose version && docker compose ps --format "table {{.Service}}\t{{.Image}}\t{{.Status}}" && docker compose exec -T app php -v && docker compose exec -T app node --version && docker compose exec -T postgres postgres --version && docker compose exec -T redis redis-server --version	2026-09-30 10:53:03 -0500	2026-09-30 10:53:05 -0500	0
+03-compose-config	docker compose config --quiet && echo "docker compose config: OK"	2026-09-30 10:53:05 -0500	2026-09-30 10:53:05 -0500	0
+04-phpunit	docker compose exec -T app php artisan test	2026-09-30 10:53:05 -0500	2026-09-30 10:53:59 -0500	0
+05-tsc	docker compose exec -T app npx tsc --noEmit && echo "tsc: sin errores"	2026-09-30 10:53:59 -0500	2026-09-30 10:54:08 -0500	0
+06-build	docker compose exec -T app npm run build	2026-09-30 10:54:08 -0500	2026-09-30 10:54:44 -0500	0
+07-vitest	docker compose exec -T app npx vp test --run	2026-09-30 10:54:44 -0500	2026-09-30 10:54:57 -0500	0
+08-pytest	cd ml-service && .venv/Scripts/python.exe -m pytest -q	2026-09-30 10:54:57 -0500	2026-09-30 10:56:05 -0500	0
+09-cypress	npm run cy:run	2026-09-30 10:56:05 -0500	2026-09-30 11:02:12 -0500	0
+10-git-post	git status --porcelain && echo "git status tras la QA: revisado"	2026-09-30 11:02:12 -0500	2026-09-30 11:02:12 -0500	0
+QA terminada
