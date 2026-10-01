@@ -10,7 +10,7 @@ Los hashes son SHA-256 del archivo, verificados con `sha256sum` en esta fase. Lo
 
 **Actualización F29C (30/09/2026):** se registran las dos guías de laboratorio sobre desarrollo de software con IA, incorporadas por el equipo en `guias-ia/`. Son la fuente normativa de la matriz de operacionalización de la F29C. Rama `feature/f29c-operationalization-matrix` creada desde `develop` `1abd405`.
 
-**Actualización F29D (30/09/2026):** la plantilla del Plan de Pruebas (PDF) pasa a OFICIAL porque ya se usa en la F29D. La referencia PMO y el ejemplo externo siguen siendo no normativos. Rama `feature/f29d-h-finalization`, creada desde `develop` `bc44303`.
+**Actualización F29D–F29H (30/09/2026):** la plantilla del Plan de Pruebas (PDF) y la de estructura del proyecto final pasan a OFICIAL porque ya se usan en la F29D y la F29H. La referencia PMO y el ejemplo externo siguen siendo no normativos. Rama `feature/f29d-h-finalization`, creada desde `develop` `bc44303`.
 
 **Estados:**
 
@@ -58,7 +58,7 @@ Las incorporó el equipo junto con el Formato 11. **No se usan en la F11-R** ni 
 
 | Tipo | Procedencia | Uso previsto | Archivo | Ruta | SHA-256 | Estado | Observaciones |
 |---|---|---|---|---|---|---|---|
-| Plantilla | Plantilla académica del curso | Estructura del proyecto final | `Plantilla_Estructura_de_proyecto_final.docx` | `docs/academico/00-fuentes-oficiales/plantillas-proyecto/` | `b26cfb21ca627c46d65f8f683422ffca1e022ec60c75132f0d7843b01a03fcda` | DISPONIBLE (fase posterior) | Nombre recibido: `Plantilla Estructura de proyecto final.docx`. 139 633 B. Portada de la Universidad Continental con el asesor Dr. Maglioni Arana Caparachin y campos para completar |
+| Plantilla | Plantilla académica del curso | Estructura del proyecto final | `Plantilla_Estructura_de_proyecto_final.docx` | `docs/academico/00-fuentes-oficiales/plantillas-proyecto/` | `b26cfb21ca627c46d65f8f683422ffca1e022ec60c75132f0d7843b01a03fcda` | OFICIAL (usada en la F29H, 30/09/2026) | Nombre recibido: `Plantilla Estructura de proyecto final.docx`. 139 633 B. Portada de la Universidad Continental con el asesor Dr. Maglioni Arana Caparachin y campos para completar |
 | Plantilla | Plantilla del curso | Plan de pruebas de software | `Plantilla_de_Plan_de_Pruebas_de_Software.pdf` | `docs/academico/00-fuentes-oficiales/plan-pruebas/` | `2dfd714e806b05908dbcd0fd3029292d82f4019dba4b839686d3f9a8e7d3856d` | OFICIAL (usada en la F29D, 30/09/2026) | Nombre recibido: `Plantilla de Plan de Pruebas de Software.pdf`. 268 897 B |
 | Plantilla | Plantilla externa de referencia (PMOInformática) | Plan de pruebas de software | `PMOInformatica_Plantilla_de_Plan_de_Pruebas_de_Software.doc` | `docs/academico/00-fuentes-oficiales/plan-pruebas/` | `3d2bb6f87c43ea1a3484ddff88a60980e3ea8a703911d4709663fbd103686f76` | REFERENCIA EXTERNA | Nombre recibido: `PMOInformatica Plantilla de Plan de Pruebas de Software (1).doc`. 89 600 B. Formato Word 97-2003. No es una plantilla del curso |
 | Material de referencia | Ejemplo externo, no normativo | Ejemplo de plan de pruebas | `Ejemplo_Plan_de_Pruebas_de_Software.pdf` | `docs/academico/00-fuentes-oficiales/material-referencia/` | `1b77a9618cddba1db9fa5158a50542eb659f1c424c3d2099237df3e70c3f5554` | REFERENCIA EXTERNA | Nombre recibido: `Ejemplo Plan de Pruebas de Software (1).pdf`. 180 308 B. Ejemplo; no fija la estructura de ningún entregable |

@@ -668,9 +668,194 @@ def f29c_actividad_checks():
     return res
 
 
+# ---------------------------------------------------------------------------------------------------------------
+# F29D a F29H — plan de pruebas, casos, ejecución QA, defectos y métricas, informe final
+def f29dh_checks():
+    """Devuelve (fase, criterio, resultado, detalle) con resultado PASS, FALLA, PENDIENTE u OBS. OBS informa una
+    deuda registrada que no bloquea (la CI de main); PENDIENTE y FALLA impiden el cierre (`--cierre-f29`)."""
+    import hashlib
+    import shutil
+    import tempfile
+    import m_common as C
+    import m_plan as MP
+    import qa_data as Q
+    res = []
+    add = lambda fase, crit, ok, det='': res.append((fase, crit, 'PASS' if ok else 'FALLA', det))
+    tmp = tempfile.mkdtemp()
+    txt = lambda x: ''.join(re.findall(r'<w:t(?:\s[^>]*)?>([^<]*)</w:t>', x))
+
+    def exists(fase, rels):
+        falt = [r for r in rels if not os.path.isfile(os.path.join(ACAD, r))]
+        add(fase, 'Entregables presentes', not falt, 'faltan: ' + ', '.join(falt) if falt else f'{len(rels)} archivos')
+        return not falt
+
+    def pdf_ok(path, min_pages=1):
+        pdf = open(path, 'rb').read()
+        n = len(re.findall(rb'/Type\s*/Page[^s]', pdf))
+        return pdf[:5] == b'%PDF-' and b'%%EOF' in pdf[-1024:] and n >= min_pages, n
+
+    def docx_xml_ok(path):
+        z = zipfile.ZipFile(path)
+        for n in z.namelist():
+            if n.endswith(('.xml', '.rels')):
+                xml.dom.minidom.parseString(z.read(n))
+        return z.testzip() is None, z
+
+    def same(a, b):
+        return open(a, 'rb').read() == open(b, 'rb').read()
+
+    # ------------------------------------------------------------------ F29D
+    import f29d
+    d_dir = 'plan-pruebas/'
+    if exists('F29D', [d_dir + f29d.STEM + e for e in ('.docx', '.pdf', '.md')] + [d_dir + 'F29D_REGISTRO.md', d_dir + 'README.md']):
+        ok, z = docx_xml_ok(os.path.join(ACAD, d_dir, f29d.STEM + '.docx'))
+        doc = z.read('word/document.xml').decode('utf-8')
+        heads = [(1 if s == 'Heading1' else 2, txt(x)) for s, x in re.findall(
+            r'<w:p><w:pPr><w:pStyle w:val="(Heading[12])"/></w:pPr>(.*?)</w:p>', doc)]
+        add('F29D', 'Estructura de la plantilla del curso: los 29 títulos en orden', ok and heads == MP.SECCIONES, f'{len(heads)} títulos')
+        hdr = txt(z.read('word/header1.xml').decode('utf-8'))
+        add('F29D', 'Cabecera de la plantilla del curso (Área Informática, docente)',
+            'Área Informática' in hdr and 'Maglioni Arana Caparachin' in hdr)
+        plain = txt(doc)
+        add('F29D', 'Sin aprobación simulada: aprobaciones «Pendiente — sin firma», sin validación institucional',
+            plain.count(MP.SIN_APROBACION) >= 2 and 'no está aprobado ni firmado' in plain and 'Firmado' not in plain)
+        add('F29D', 'Criterios de aceptación CA-01 a CA-07, riesgos con probabilidad, impacto, mitigación y contingencia',
+            all(f'CA-0{i}' in plain for i in range(1, 8)) and all(f'R-0{i}' in plain for i in range(1, 8)) and 'Contingencia' in plain)
+        inv = open(os.path.join(ACAD, '00-fuentes-oficiales', 'inventory.md'), encoding='utf-8').read()
+        tpl = os.path.join(ACAD, '00-fuentes-oficiales', 'plan-pruebas', 'Plantilla_de_Plan_de_Pruebas_de_Software.pdf')
+        add('F29D', 'Plantilla del curso registrada en el inventario con su SHA-256',
+            hashlib.sha256(open(tpl, 'rb').read()).hexdigest() in inv)
+        f29d.build(os.path.join(tmp, 'd'))
+        add('F29D', 'Reproducible: DOCX y Markdown regenerados con los mismos bytes',
+            all(same(os.path.join(tmp, 'd', f29d.STEM + e), os.path.join(ACAD, d_dir, f29d.STEM + e)) for e in ('.docx', '.md')))
+        ok, n = pdf_ok(os.path.join(ACAD, d_dir, f29d.STEM + '.pdf'), 8)
+        add('F29D', 'PDF válido', ok, f'{n} páginas')
+
+    # ------------------------------------------------------------------ F29E
+    import f29e
+    e_dir = 'casos-prueba/'
+    if exists('F29E', [e_dir + x for x in ('F29E_Casos_de_Prueba.md', 'F29E_Matriz_Trazabilidad.md', 'F29E_Casos_de_Prueba.csv', 'README.md')]):
+        cs = f29e.casos()
+        ids = [c['id'] for c in cs]
+        add('F29E', 'IDs CP-001… consecutivos y únicos', ids == [f'CP-{i:03d}' for i in range(1, len(cs) + 1)], f'{len(cs)} CP')
+        cov = f29e.cobertura_rf(cs)
+        sin = [rf for rf, v in cov.items() if not v[0]]
+        add('F29E', 'Cobertura: RF-01 a RF-27 con al menos un CP automatizado aprobado', not sin, f'{27 - len(sin)}/27' + (f'; sin: {sin}' if sin else ''))
+        cus = {cu for rf, v in cov.items() if v[0] for cu in f29e.cu_of([rf])}
+        add('F29E', 'CU-01 a CU-20 cubiertos a través de sus RF', len(cus) == 20, f'{len(cus)}/20')
+        falt = [c['id'] for c in cs if c['auto'] == f29e.AUTO and c['suite'] not in ('Estática', 'CI')
+                and not os.path.exists(os.path.join(ROOT, c['prueba'].split(' (')[0]))]
+        add('F29E', 'Automatización real: cada CP AUTOMATIZADA apunta a una prueba que existe', not falt, ', '.join(falt))
+        manual_mal = [c['id'] for c in cs if c['auto'] != f29e.AUTO and (c['n'] or c['estado'].startswith('APROBADO'))]
+        add('F29E', 'Casos manuales sin resultados atribuidos (ejecución histórica o NO EJECUTADO)', not manual_mal, ', '.join(manual_mal))
+        junit = Q.phpunit_junit()
+        tot = lambda s: sum(c['n'] for c in cs if c['suite'] == s)
+        cy = Q.cypress_results()[1]
+        add('F29E', 'Cada prueba ejecutada pertenece a un CP: los totales cuadran con la ejecución',
+            tot('PHPUnit') == sum(v['n'] for v in junit.values()) and str(tot('Cypress')) == cy.group(3)
+            and str(tot('Vitest')) == Q.vitest_results()[1].group(2) and tot('pytest') == sum(v['n'] for v in Q.pytest_results().values()),
+            f'PHPUnit {tot("PHPUnit")}, Cypress {tot("Cypress")}, Vitest {tot("Vitest")}, pytest {tot("pytest")}')
+        f29e.build(os.path.join(tmp, 'e'))
+        add('F29E', 'Reproducible: catálogo, matriz y CSV regenerados con los mismos bytes',
+            all(same(os.path.join(tmp, 'e', x), os.path.join(ACAD, e_dir, x)) for x in
+                ('F29E_Casos_de_Prueba.md', 'F29E_Matriz_Trazabilidad.md', 'F29E_Casos_de_Prueba.csv')))
+
+    # ------------------------------------------------------------------ F29F
+    import f29f
+    f_dir = 'qa-final/'
+    logs = ['01-git', '02-entorno', '03-compose-config', '04-phpunit', '04b-phpunit-junit', '05-tsc', '06-build',
+            '07-vitest', '08-pytest', '08b-pytest', '09-cypress', '10-git-post', '11-pint', '12-vp-check']
+    if exists('F29F', [f_dir + 'F29F_Ejecucion_QA.md', f_dir + 'README.md'] + [f_dir + 'evidencias/' + l + '.log' for l in logs]
+              + [f_dir + 'evidencias/' + x for x in ('phpunit-junit.xml', 'pytest-junit.xml', 'ci-github-actions.json', '00-resumen.tsv')]):
+        sin_rc = [l for l in logs if not re.search(r'# código de salida: \d+', Q.log(l + '.log'))]
+        add('F29F', 'Cada registro trae comando, horas y código de salida', not sin_rc, ', '.join(sin_rc))
+        g = Q.log('01-git.log').split('\n')
+        add('F29F', 'Commit probado registrado y árbol limpio al iniciar', g[4].startswith('bc44303') and g[5].startswith('bc44303 '),
+            g[4].strip()[:12])
+        crit = f29f.criterios(f29e.casos(), f29f.resultados()[2])
+        add('F29F', 'Criterios de aceptación CA-01 a CA-07 cumplidos', all(c[2] for c in crit),
+            ', '.join(c[0] for c in crit if not c[2]))
+        evid = ''.join(open(os.path.join(Q.EVID, f), encoding='utf-8', errors='replace').read() for f in os.listdir(Q.EVID))
+        fuga = [p for p in (r'APP_KEY=base64', r'E2E_TOKEN=\S', r'DESKTOP-[A-Z0-9]+', r'jobs[\\/]61b97500') if re.search(p, evid)]
+        add('F29F', 'Evidencia sin secretos, nombre del equipo ni rutas temporales', not fuga, ', '.join(fuga))
+        f29f.build(os.path.join(tmp, 'f'))
+        add('F29F', 'Reproducible: el resumen regenerado desde la evidencia da los mismos bytes',
+            same(os.path.join(tmp, 'f', 'F29F_Ejecucion_QA.md'), os.path.join(ACAD, f_dir, 'F29F_Ejecucion_QA.md')))
+        dev, _ = Q.ci_estado('develop')
+        add('F29F', 'CI en verde en develop (commit probado)', bool(dev) and dev['conclusion'] == 'success')
+        main, main_sha = Q.ci_estado('main')
+        res.append(('F29F', 'CI de main', 'OBS' if not main else ('PASS' if main['conclusion'] == 'success' else 'FALLA'),
+                    'CI main F29C pendiente de ejecución manual (OBS-F29F-04; deuda registrada, no bloquea)' if not main
+                    else main['conclusion']))
+
+    # ------------------------------------------------------------------ F29G
+    import f29g
+    import m_defectos as MD
+    g_dir = 'metricas-calidad/'
+    if exists('F29G', [g_dir + 'F29G_Defectos_y_Metricas.md', g_dir + 'README.md']):
+        defs = MD.registro()
+        campos = ('id', 'descripcion', 'severidad', 'prioridad', 'origen', 'estado', 'version', 'evidencia', 'resolucion', 'regresion')
+        add('F29G', 'Cada defecto con los diez campos exigidos', all(all(d.get(k) for k in campos) for d in defs), f'{len(defs)} registros')
+        add('F29G', 'Defectos v1.0 = docs/defects.md (DEF-01 a DEF-13), sin defectos inventados',
+            [d['id'] for d in defs if d['id'].startswith('DEF-')] == [f'DEF-{i:02d}' for i in range(1, 14)])
+        altos = [d['id'] for d in defs if d['severidad'] in ('Crítica', 'Alta') and not d['estado'].startswith('Cerrado')]
+        add('F29G', 'Sin defectos Críticos o Altos abiertos', not altos, ', '.join(altos))
+        md = open(os.path.join(ACAD, g_dir, 'F29G_Defectos_y_Metricas.md'), encoding='utf-8').read()
+        add('F29G', 'Cobertura de código declarada NO MEDIDA y sin certificación ISO/IEC 25010',
+            'Cobertura de código (líneas o ramas) | **NO MEDIDA**' in md and 'no se declara certificación' in md)
+        f29g.build(os.path.join(tmp, 'g'))
+        add('F29G', 'Reproducible: el documento regenerado da los mismos bytes',
+            same(os.path.join(tmp, 'g', 'F29G_Defectos_y_Metricas.md'), os.path.join(ACAD, g_dir, 'F29G_Defectos_y_Metricas.md')))
+
+    # ------------------------------------------------------------------ F29H
+    import f29h
+    h_dir = 'informe-final/'
+    if exists('F29H', [h_dir + f29h.STEM + e for e in ('.docx', '.pdf', '.md')] + [h_dir + 'F29H_REGISTRO.md', h_dir + 'README.md']):
+        ok, z = docx_xml_ok(os.path.join(ACAD, h_dir, f29h.STEM + '.docx'))
+        doc = z.read('word/document.xml').decode('utf-8')
+        tz = zipfile.ZipFile(os.path.join(ROOT, f29h.TEMPLATE))
+        tdoc = tz.read('word/document.xml').decode('utf-8')
+
+        def heads(d):
+            return [(s, txt(p).strip()) for p in re.findall(r'<w:p[ >](?:(?!</w:p>).)*?</w:p>', d, re.S)
+                    for s in re.findall(r'<w:pStyle w:val="(Ttulo[12])"/>', p)]
+        add('F29H', 'Estructura oficial: los 87 títulos de la plantilla (14 capítulos, 53 secciones y apartados finales)',
+            ok and heads(doc) == heads(tdoc), f'{len(heads(doc))} títulos')
+        add('F29H', 'Sin texto guía (rojo) ni marcadores de la plantilla',
+            'w:val="FF0000"' not in doc and '[Título del proyecto del Equipo]' not in doc and 'Aclaración Importante' not in doc)
+        plain = txt(doc)
+        add('F29H', 'Portada con el título del proyecto y los tres integrantes',
+            C.PROYECTO.replace('–', '–') in plain and all(n in plain for n in C.EQUIPO.split('; ')))
+        # Cada sección (Título 2 y apartados finales) tiene contenido propio antes del siguiente título.
+        vacias = []
+        partes = re.split(r'(<w:p[ >](?:(?!</w:p>).)*?<w:pStyle w:val="Ttulo[12]"/>.*?</w:p>)', doc, flags=re.S)
+        for k in range(1, len(partes) - 1, 2):
+            h = txt(partes[k]).strip()
+            if 'Ttulo2' in partes[k] or h in f29h.FINALES:
+                if len(txt(partes[k + 1]).strip()) < 40 and '<w:drawing' not in partes[k + 1]:
+                    vacias.append(h)
+        add('F29H', 'Cada sección tiene contenido', not vacias, ', '.join(vacias))
+        add('F29H', 'Logotipo, figuras de PowerDesigner y anexos A a C en páginas horizontales',
+            'word/media/image1.png' in z.namelist() and sum(1 for n in z.namelist() if n.startswith('word/media/f29h_')) == 7
+            and doc.count('w:orient="landscape"') >= 3)
+        fut = re.findall(r'\bF(?:3\d|4[0-3])\b', plain)
+        faltan = [x for x in ('no evalúa', 'decisión final', 'NO MEDIDA', 'sin certificación', 'EXPERIMENTAL',
+                              'no hay beneficios medidos', 'Trabajo futuro') if x.lower() not in plain.lower()]
+        add('F29H', 'Límites declarados: RF-23 humano, RF-29 experimental, sin beneficios medidos, sin certificación, '
+                    'cobertura no medida, trabajo futuro', not faltan and not fut, ', '.join(faltan + fut))
+        f29h.build(ROOT, os.path.join(tmp, 'h'))
+        add('F29H', 'Reproducible: DOCX y Markdown regenerados con los mismos bytes',
+            all(same(os.path.join(tmp, 'h', f29h.STEM + e), os.path.join(ACAD, h_dir, f29h.STEM + e)) for e in ('.docx', '.md')))
+        ok, n = pdf_ok(os.path.join(ACAD, h_dir, f29h.STEM + '.pdf'), 20)
+        add('F29H', 'PDF válido', ok, f'{n} páginas')
+    shutil.rmtree(tmp, ignore_errors=True)
+    return res
+
+
 if __name__ == '__main__':
     sys.stdout.reconfigure(encoding='utf-8')
-    cierre = '--cierre-f29c' in sys.argv[1:]
+    cierre = '--cierre-f29c' in sys.argv[1:] or '--cierre-f29' in sys.argv[1:]
+    cierre_f29 = '--cierre-f29' in sys.argv[1:]
     fails = 0
     for rule, r, det in checks():
         print(f'{r:5} {rule}' + (f' — {det}' if det else ''))
@@ -705,5 +890,15 @@ if __name__ == '__main__':
     if cierre:
         print(f'Modo --cierre-f29c: las pendientes cuentan como fallas → cierre {"RECHAZADO" if pendientes or fails else "ADMITIDO"}.')
         fails += pendientes
+    print()
+    print('--- F29D a F29H: plan, casos, ejecución QA, defectos y métricas, informe final')
+    for fase, crit, r, det in f29dh_checks():
+        print(f'{r:5} {fase} · {crit}' + (f' — {det}' if det else ''))
+        fails += r == 'FALLA'
+        if cierre_f29 and r == 'PENDIENTE':
+            fails += 1
+    if cierre_f29:
+        print(f'\nModo --cierre-f29: cierre de F29 completo {"RECHAZADO" if fails else "ADMITIDO"} '
+              '(la CI de main se informa como OBS: deuda registrada, no bloquea).')
     print(f'\n{fails} fallas')
     sys.exit(1 if fails else 0)

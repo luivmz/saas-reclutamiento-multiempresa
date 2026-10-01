@@ -1580,6 +1580,55 @@ def build_f29c():
     print('OK', os.path.relpath(out_docx, ROOT))
 
 
+# --------------------------------------------------------------------------- F29D plan de pruebas
+F29D_DIR = os.path.join(ACAD, 'plan-pruebas')
+
+
+@builder('f29d')
+def build_f29d():
+    """Plan de Pruebas sobre la plantilla del curso (PDF): DOCX generado, espejo Markdown y registro."""
+    import f29d
+    f29d.build(F29D_DIR)
+    f29d.build_registro(os.path.join(F29D_DIR, 'F29D_REGISTRO.md'), ROOT)
+    print('OK', os.path.relpath(os.path.join(F29D_DIR, f29d.STEM + '.docx'), ROOT))
+
+
+# --------------------------------------------------------------------------- F29E, F29F y F29G
+@builder('f29e')
+def build_f29e():
+    """Casos de prueba y matriz de trazabilidad, derivados del código de pruebas y de la evidencia F29F."""
+    import f29e
+    cs = f29e.build(os.path.join(ACAD, 'casos-prueba'))
+    print('OK casos-prueba:', len(cs), 'CP')
+
+
+@builder('f29f')
+def build_f29f():
+    """Resumen de la ejecución QA final, criterios de aceptación y matriz CP → resultado."""
+    import f29f
+    crit = f29f.build(os.path.join(ACAD, 'qa-final'))
+    print('OK qa-final:', sum(1 for c in crit if c[2]), 'de', len(crit), 'criterios cumplidos')
+
+
+@builder('f29g')
+def build_f29g():
+    """Registro final de defectos y métricas calculadas con datos reales."""
+    import f29g
+    defs = f29g.build(os.path.join(ACAD, 'metricas-calidad'))
+    print('OK metricas-calidad:', len(defs), 'registros de defectos')
+
+
+# --------------------------------------------------------------------------- F29H informe final v1
+@builder('f29h')
+def build_f29h():
+    """Informe Final v1 sobre la plantilla oficial del proyecto final, con espejo Markdown y registro."""
+    import f29h
+    out_dir = os.path.join(ACAD, 'informe-final')
+    heads = f29h.build(ROOT, out_dir)
+    f29h.build_registro(os.path.join(out_dir, 'F29H_REGISTRO.md'), ROOT)
+    print('OK', os.path.relpath(os.path.join(out_dir, f29h.STEM + '.docx'), ROOT), '—', len(heads), 'títulos')
+
+
 if __name__ == '__main__':
     keys = sys.argv[1:] or list(BUILDERS)
     for k in keys:
