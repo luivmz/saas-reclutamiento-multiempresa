@@ -1,0 +1,4667 @@
+{
+ "fuente": "OpenAlex (https://api.openalex.org)",
+ "fecha": "2026-09-30",
+ "criterio": "orden por relevancia; 25 primeros resultados de cada consulta como conjunto cribado",
+ "temas": [
+  {
+   "codigo": "A",
+   "tema": "AI in recruitment / algorithmic hiring",
+   "consulta": "algorithmic hiring artificial intelligence recruitment",
+   "total": 20662,
+   "cribados": [
+    {
+     "openalex": "W4247155454",
+     "doi": "10.5465/amr.2018.0072",
+     "titulo": "Artificial Intelligence and Management: The Automation–Augmentation Paradox",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Academy of Management Review",
+     "citas": 2509
+    },
+    {
+     "openalex": "W4386714740",
+     "doi": "10.1057/s41599-023-02079-x",
+     "titulo": "Ethics and discrimination in artificial intelligence-enabled recruitment practices",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Humanities and Social Sciences Communications",
+     "citas": 430
+    },
+    {
+     "openalex": "W3195625625",
+     "doi": "10.1007/s10796-021-10186-w",
+     "titulo": "Artificial Intelligence and Business Value: a Literature Review",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Information Systems Frontiers",
+     "citas": 1006
+    },
+    {
+     "openalex": "W4366989571",
+     "doi": "10.1111/1748-8583.12511",
+     "titulo": "Algorithmic inclusion: Shaping the predictive algorithms of artificial intelligence in hiring",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Human Resource Management Journal",
+     "citas": 99
+    },
+    {
+     "openalex": "W4390229867",
+     "doi": "10.3390/sci6010003",
+     "titulo": "Fairness and Bias in Artificial Intelligence: A Brief Survey of Sources, Impacts, and Mitigation Strategies",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Sci",
+     "citas": 839
+    },
+    {
+     "openalex": "W4385484319",
+     "doi": "10.1002/job.2735",
+     "titulo": "A multilevel review of artificial intelligence in organizations: Implications for organizational behavior research and practice",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Journal of Organizational Behavior",
+     "citas": 739
+    },
+    {
+     "openalex": "W4283730300",
+     "doi": "10.1016/j.hrmr.2022.100925",
+     "titulo": "An artificial intelligence algorithmic approach to ethical decision-making in human resource management processes",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Human Resource Management Review",
+     "citas": 446
+    },
+    {
+     "openalex": "W4220820301",
+     "doi": "10.1201/9781003278290-44",
+     "titulo": "Amazon Scraps Secret AI Recruiting Tool that Showed Bias against Women *",
+     "anio": 2022,
+     "tipo": "book-chapter",
+     "fuente": "Auerbach Publications eBooks",
+     "citas": 1183
+    },
+    {
+     "openalex": "W4293229829",
+     "doi": "10.1016/j.hrmr.2022.100899",
+     "titulo": "Unlocking the value of artificial intelligence in human resource management through AI capability framework",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Human Resource Management Review",
+     "citas": 896
+    },
+    {
+     "openalex": "W4391598857",
+     "doi": "10.3390/ai5010019",
+     "titulo": "A Comprehensive Review of AI Techniques for Addressing Algorithmic Bias in Job Hiring",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "AI",
+     "citas": 141
+    },
+    {
+     "openalex": "W4383913712",
+     "doi": "10.1111/1748-8583.12524",
+     "titulo": "Human resource management in the age of generative artificial intelligence: Perspectives and research directions on ChatGPT",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Human Resource Management Journal",
+     "citas": 887
+    },
+    {
+     "openalex": "W4210271404",
+     "doi": "10.1002/smj.3387",
+     "titulo": "Artificial intelligence and the changing sources of competitive advantage",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Strategic Management Journal",
+     "citas": 581
+    },
+    {
+     "openalex": "W4288391568",
+     "doi": "10.1109/tai.2022.3194503",
+     "titulo": "An Overview of Artificial Intelligence Ethics",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "IEEE Transactions on Artificial Intelligence",
+     "citas": 478
+    },
+    {
+     "openalex": "W4221045317",
+     "doi": "10.6028/nist.sp.1270",
+     "titulo": "Towards a standard for identifying and managing bias in artificial intelligence",
+     "anio": 2022,
+     "tipo": "report",
+     "fuente": null,
+     "citas": 541
+    },
+    {
+     "openalex": "W4381684347",
+     "doi": "10.26668/businessreview/2023.v8i6.2089",
+     "titulo": "The Power of Artificial Intelligence in Recruitment: An Analytical Review of Current AI-Based Recruitment Strategies",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "International Journal of Professional Business Review",
+     "citas": 112
+    },
+    {
+     "openalex": "W4313527987",
+     "doi": "10.1080/10447318.2022.2153320",
+     "titulo": "Six Human-Centered Artificial Intelligence Grand Challenges",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "International Journal of Human-Computer Interaction",
+     "citas": 497
+    },
+    {
+     "openalex": "W2787887017",
+     "doi": "10.17863/cam.22520",
+     "titulo": "The malicious use of artificial intelligence: Forecasting, prevention, and mitigation",
+     "anio": 2018,
+     "tipo": "report",
+     "fuente": "Apollo (University of Cambridge)",
+     "citas": 521
+    },
+    {
+     "openalex": "W4380685454",
+     "doi": "10.3390/app13127082",
+     "titulo": "Re-Thinking Data Strategy and Integration for Artificial Intelligence: Concepts, Opportunities, and Challenges",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Applied Sciences",
+     "citas": 647
+    },
+    {
+     "openalex": "W3043037022",
+     "doi": "10.1177/1042258720934581",
+     "titulo": "Artificial Intelligence and Entrepreneurship: Implications for Venture Creation in the Fourth Industrial Revolution",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Entrepreneurship Theory and Practice",
+     "citas": 530
+    },
+    {
+     "openalex": "W2998069864",
+     "doi": "10.1108/oir-10-2018-0334",
+     "titulo": "Algorithmic equity in the hiring of underrepresented IT job candidates",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Online Information Review",
+     "citas": 123
+    },
+    {
+     "openalex": "W2963377100",
+     "doi": "10.3390/joitmc5030044",
+     "titulo": "Emerging Technology and Business Model Innovation: The Case of Artificial Intelligence",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Journal of Open Innovation Technology Market and Complexity",
+     "citas": 436
+    },
+    {
+     "openalex": "W3104114204",
+     "doi": "10.1007/s40685-020-00134-w",
+     "titulo": "Discriminated by an algorithm: a systematic review of discrimination and fairness by algorithmic decision-making in the context of HR recruitment and HR development",
+     "anio": 2020,
+     "tipo": "review",
+     "fuente": "BuR - Business Research",
+     "citas": 484
+    },
+    {
+     "openalex": "W3203109407",
+     "doi": "10.1007/s10676-021-09615-w",
+     "titulo": "AI recruitment algorithms and the dehumanization problem",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Ethics and Information Technology",
+     "citas": 94
+    },
+    {
+     "openalex": "W3043703715",
+     "doi": "",
+     "titulo": "Automating Talent Acquisition: Smart Recruitment, Predictive Hiring Algorithms, and the Data-driven Nature of Artificial Intelligence",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Psychosociological Issues in Human Resource Management",
+     "citas": 12
+    },
+    {
+     "openalex": "W4381848566",
+     "doi": "10.1016/j.inffus.2023.101896",
+     "titulo": "Connecting the dots in trustworthy Artificial Intelligence: From AI principles, ethics, and key requirements to responsible AI systems and regulation",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 758
+    }
+   ]
+  },
+  {
+   "codigo": "B",
+   "tema": "Candidate-job fit",
+   "consulta": "person-job fit candidate job matching",
+   "total": 40796,
+   "cribados": [
+    {
+     "openalex": "W2942870997",
+     "doi": "10.1093/qje/qjz014",
+     "titulo": "The Effect of Minimum Wages on Low-Wage Jobs*",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "The Quarterly Journal of Economics",
+     "citas": 2710
+    },
+    {
+     "openalex": "W2893564970",
+     "doi": "10.1145/3234465",
+     "titulo": "Person-Job Fit",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "ACM Transactions on Management Information Systems",
+     "citas": 162
+    },
+    {
+     "openalex": "W2070640766",
+     "doi": "10.1080/01944368908976014",
+     "titulo": "Jobs-Housing Balancing and Regional Mobility",
+     "anio": 1989,
+     "tipo": "article",
+     "fuente": "Journal of the American Planning Association",
+     "citas": 576
+    },
+    {
+     "openalex": "W3011595896",
+     "doi": "10.1145/3376927",
+     "titulo": "An Enhanced Neural Network Approach to Person-Job Fit in Talent Recruitment",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "ACM Transactions on Information Systems",
+     "citas": 112
+    },
+    {
+     "openalex": "W2128424290",
+     "doi": "10.1109/hicss.2006.266",
+     "titulo": "Matching People and Jobs: A Bilateral Recommendation Approach",
+     "anio": 2006,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 223
+    },
+    {
+     "openalex": "W4292420207",
+     "doi": "10.1145/3523227.3546752",
+     "titulo": "Modeling Two-Way Selection Preference for Person-Job Fit",
+     "anio": 2022,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 63
+    },
+    {
+     "openalex": "W3094607200",
+     "doi": "10.1145/3340531.3412717",
+     "titulo": "Learning Effective Representations for Person-Job Fit by Feature Fusion",
+     "anio": 2020,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 60
+    },
+    {
+     "openalex": "W1554744956",
+     "doi": "10.1177/001979391006300307",
+     "titulo": "Do Friends and Relatives Really Help in Getting a Good Job?",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "Industrial and Labor Relations Review",
+     "citas": 478
+    },
+    {
+     "openalex": "W3124593884",
+     "doi": "10.1086/ma.20.3585415",
+     "titulo": "Job Loss, Job Finding, and Unemployment in the U.S. Economy over the Past Fifty Years",
+     "anio": 2005,
+     "tipo": "article",
+     "fuente": "NBER Macroeconomics Annual",
+     "citas": 300
+    },
+    {
+     "openalex": "W2747686677",
+     "doi": "10.3389/fpsyg.2017.01548",
+     "titulo": "Job Crafting: Older Workers’ Mechanism for Maintaining Person-Job Fit",
+     "anio": 2017,
+     "tipo": "article",
+     "fuente": "Frontiers in Psychology",
+     "citas": 104
+    },
+    {
+     "openalex": "W4281693291",
+     "doi": "10.1016/j.neucom.2022.06.012",
+     "titulo": "Person-job fit estimation from candidate profile and related recruitment history with co-attention neural networks",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Neurocomputing",
+     "citas": 41
+    },
+    {
+     "openalex": "W2117735303",
+     "doi": "10.1177/000765030003900302",
+     "titulo": "Corporate Social Performance As a Competitive Advantage in Attracting a Quality Workforce",
+     "anio": 2000,
+     "tipo": "article",
+     "fuente": "Business & Society",
+     "citas": 2091
+    },
+    {
+     "openalex": "W2952255427",
+     "doi": "10.48550/arxiv.1810.04040",
+     "titulo": "Person-Job Fit: Adapting the Right Talent for the Right Job with Joint Representation Learning",
+     "anio": 2018,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 23
+    },
+    {
+     "openalex": "W4200604814",
+     "doi": "10.1016/j.iimb.2021.12.003",
+     "titulo": "Person-organisation fit, person-job fit and organisational citizenship behaviour: An examination of the mediating role of job satisfaction",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "IIMB Management Review",
+     "citas": 54
+    },
+    {
+     "openalex": "W1589276701",
+     "doi": "10.1787/5kg59fcz3tkd-en",
+     "titulo": "Right for the Job",
+     "anio": 2011,
+     "tipo": "report",
+     "fuente": "OECD social employment and migration working papers",
+     "citas": 122
+    },
+    {
+     "openalex": "W2019950524",
+     "doi": "10.1111/1468-0432.00047",
+     "titulo": "Occupational Stress, Burnout and Job Status in Female Academics",
+     "anio": 1998,
+     "tipo": "article",
+     "fuente": "Gender Work and Organization",
+     "citas": 183
+    },
+    {
+     "openalex": "W4221153514",
+     "doi": "10.1007/978-3-031-00123-9_3",
+     "titulo": "Leveraging Search History for Improving Person-Job Fit",
+     "anio": 2022,
+     "tipo": "conference-paper",
+     "fuente": "Lecture notes in computer science",
+     "citas": 19
+    },
+    {
+     "openalex": "W2971133212",
+     "doi": "10.18653/v1/d19-1487",
+     "titulo": "Domain Adaptation for Person-Job Fit with Transferable Deep Global Match Network",
+     "anio": 2019,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 56
+    },
+    {
+     "openalex": "W2406953793",
+     "doi": "10.15195/v3.a14",
+     "titulo": "The Strength of Weak Ties in MBA Job Search: A Within--Person Test",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "Sociological Science",
+     "citas": 90
+    },
+    {
+     "openalex": "W2271798596",
+     "doi": "10.1086/705903",
+     "titulo": "Opening the Black Box of the Matching Function: The Power of Words",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "Journal of Labor Economics",
+     "citas": 220
+    },
+    {
+     "openalex": "W2134295053",
+     "doi": "10.1109/comst.2015.2444095",
+     "titulo": "Internet of Things: A Survey on Enabling Technologies, Protocols, and Applications",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "IEEE Communications Surveys & Tutorials",
+     "citas": 8640
+    },
+    {
+     "openalex": "W2111479366",
+     "doi": "10.1177/0018726707081159",
+     "titulo": "Job board toolkits: Internet matchmaking and changes in job advertisements",
+     "anio": 2007,
+     "tipo": "article",
+     "fuente": "Human Relations",
+     "citas": 68
+    },
+    {
+     "openalex": "W2103086757",
+     "doi": "10.1257/app.2.3.96",
+     "titulo": "Do Temporary-Help Jobs Improve Labor Market Outcomes for Low-Skilled Workers? Evidence from “Work First”",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "American Economic Journal Applied Economics",
+     "citas": 228
+    },
+    {
+     "openalex": "W2616774543",
+     "doi": "10.5709/ce.1897-9254.227",
+     "titulo": "Organizational Conditioning of Job Satisfaction. A Model of Job Satisfaction",
+     "anio": 2017,
+     "tipo": "article",
+     "fuente": "Contemporary Economics",
+     "citas": 48
+    },
+    {
+     "openalex": "W3027845964",
+     "doi": "10.3390/ijerph17103711",
+     "titulo": "Exploring Links between Polychronicity and Job Performance from the Person–Environment Fit Perspective—The Mediating Role of Well-Being",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "International Journal of Environmental Research and Public Health",
+     "citas": 61
+    }
+   ]
+  },
+  {
+   "codigo": "C",
+   "tema": "Competency-based assessment",
+   "consulta": "competency modeling personnel selection",
+   "total": 218279,
+   "cribados": [
+    {
+     "openalex": "W1970693217",
+     "doi": "",
+     "titulo": "Multilevel Theory, Research, and Methods in Organizations: Foundations, Extensions, and New Directions",
+     "anio": 2000,
+     "tipo": "article",
+     "fuente": null,
+     "citas": 4924
+    },
+    {
+     "openalex": "W2086103456",
+     "doi": "10.1002/hrm.10043",
+     "titulo": "Developing competency models to promote integrated human resource practices",
+     "anio": 2002,
+     "tipo": "article",
+     "fuente": "Human Resource Management",
+     "citas": 340
+    },
+    {
+     "openalex": "W2021089563",
+     "doi": "10.1108/02621710810840730",
+     "titulo": "Competencies in the 21st century",
+     "anio": 2008,
+     "tipo": "article",
+     "fuente": "Journal of Management Development",
+     "citas": 1179
+    },
+    {
+     "openalex": "W4387368391",
+     "doi": "10.1016/j.chbah.2023.100014",
+     "titulo": "MAILS - Meta AI literacy scale: Development and testing of an AI literacy questionnaire based on well-founded competency models and psychological change- and meta-competencies",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Computers in Human Behavior Artificial Humans",
+     "citas": 378
+    },
+    {
+     "openalex": "W29164706",
+     "doi": "10.5962/bhl.title.8281",
+     "titulo": "The clonal selection theory of acquired immunity",
+     "anio": 1959,
+     "tipo": "book",
+     "fuente": "Vanderbilt University Press eBooks",
+     "citas": 2635
+    },
+    {
+     "openalex": "W2903349465",
+     "doi": "10.7546/crabs.2018.11.11",
+     "titulo": "A Group Decision Making Model Considering Experts Competency: an Application in Personnel Selection",
+     "anio": 2018,
+     "tipo": "report",
+     "fuente": null,
+     "citas": 18
+    },
+    {
+     "openalex": "W2592616934",
+     "doi": "10.7595/management.fon.2015.0029",
+     "titulo": "The MCDM Model for Personnel Selection Based on SWARA and ARAS Methods",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "Management Journal of Sustainable Business and Management Solutions in Emerging Economies",
+     "citas": 104
+    },
+    {
+     "openalex": "W2149929637",
+     "doi": "10.1016/j.ejor.2012.11.029",
+     "titulo": "Personnel scheduling: A literature review",
+     "anio": 2012,
+     "tipo": "article",
+     "fuente": "European Journal of Operational Research",
+     "citas": 812
+    },
+    {
+     "openalex": "W2066484252",
+     "doi": "10.1016/j.scient.2011.03.026",
+     "titulo": "Competency-based selection and assignment of human resources to construction projects",
+     "anio": 2011,
+     "tipo": "article",
+     "fuente": "Scientia Iranica",
+     "citas": 110
+    },
+    {
+     "openalex": "W2331449018",
+     "doi": "10.9790/487x-16111422",
+     "titulo": "Understanding Competencies and Competency Modeling ― A Literature Survey",
+     "anio": 2014,
+     "tipo": "article",
+     "fuente": "IOSR Journal of Business and Management",
+     "citas": 295
+    },
+    {
+     "openalex": "W1968237275",
+     "doi": "10.1016/j.asoc.2011.10.004",
+     "titulo": "Computing with words for hierarchical competency based selection of personnel in construction companies",
+     "anio": 2011,
+     "tipo": "article",
+     "fuente": "Applied Soft Computing",
+     "citas": 75
+    },
+    {
+     "openalex": "W2044858486",
+     "doi": "10.1007/s10488-010-0327-7",
+     "titulo": "Advancing a Conceptual Model of Evidence-Based Practice Implementation in Public Service Sectors",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "Administration and Policy in Mental Health and Mental Health Services Research",
+     "citas": 3375
+    },
+    {
+     "openalex": "W1515825649",
+     "doi": "10.1016/s0010-8804(03)90266-7",
+     "titulo": "Grooming future hospitality leaders: A competencies model",
+     "anio": 2003,
+     "tipo": "article",
+     "fuente": "Cornell Hotel and Restaurant Administration Quarterly",
+     "citas": 256
+    },
+    {
+     "openalex": "W1486848835",
+     "doi": "10.1016/b978-0-08-027533-8.50001-4",
+     "titulo": "HANDBOOK OF INTERCULTURAL TRAINING",
+     "anio": 1983,
+     "tipo": "book-chapter",
+     "fuente": "Elsevier eBooks",
+     "citas": 897
+    },
+    {
+     "openalex": "W3036286111",
+     "doi": "10.9770/jesi.2020.7.4(5)",
+     "titulo": "Manager competency assessment model in the conditions of industry 4.0",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Journal of Entrepreneurship and Sustainability Issues",
+     "citas": 189
+    },
+    {
+     "openalex": "W2112786892",
+     "doi": "10.17705/1cais.02428",
+     "titulo": "Persuasive Systems Design: Key Issues, Process Model, and System Features",
+     "anio": 2009,
+     "tipo": "article",
+     "fuente": "Communications of the Association for Information Systems",
+     "citas": 1735
+    },
+    {
+     "openalex": "W3024942408",
+     "doi": "10.3846/tede.2020.12366",
+     "titulo": "A DATA-DRIVEN MADM MODEL FOR PERSONNEL SELECTION AND IMPROVEMENT",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Technological and Economic Development of Economy",
+     "citas": 39
+    },
+    {
+     "openalex": "W2986660526",
+     "doi": "10.1080/1359432x.2019.1681401",
+     "titulo": "Personnel selection in the digital age: a review of validity and applicant reactions, and future research challenges",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "European Journal of Work and Organizational Psychology",
+     "citas": 221
+    },
+    {
+     "openalex": "W3121143499",
+     "doi": "10.1016/j.jacceco.2014.09.002",
+     "titulo": "A review of archival auditing research",
+     "anio": 2014,
+     "tipo": "article",
+     "fuente": "Journal of Accounting and Economics",
+     "citas": 3109
+    },
+    {
+     "openalex": "W2067232763",
+     "doi": "10.1080/00207590244000205",
+     "titulo": "Managerial competency modelling and the development of organizational psychology: A Chinese approach",
+     "anio": 2003,
+     "tipo": "article",
+     "fuente": "International Journal of Psychology",
+     "citas": 64
+    },
+    {
+     "openalex": "W2022369962",
+     "doi": "10.2337/diacare.25.2.259",
+     "titulo": "Culturally Competent Diabetes Self-Management Education for Mexican Americans",
+     "anio": 2002,
+     "tipo": "article",
+     "fuente": "Diabetes Care",
+     "citas": 442
+    },
+    {
+     "openalex": "W2009046400",
+     "doi": "10.1016/j.ejor.2010.01.041",
+     "titulo": "Multi-objective decision analysis for competence-oriented project portfolio selection",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "European Journal of Operational Research",
+     "citas": 133
+    },
+    {
+     "openalex": "W2076847070",
+     "doi": "10.1002/hrm.10018",
+     "titulo": "Divergence or convergence: a cross‐national comparison of personnel selection practices",
+     "anio": 2002,
+     "tipo": "article",
+     "fuente": "Human Resource Management",
+     "citas": 152
+    },
+    {
+     "openalex": "W2519520263",
+     "doi": "10.1037/apl0000160",
+     "titulo": "The effects of predictor method factors on selection outcomes: A modular approach to personnel selection procedures.",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "Journal of Applied Psychology",
+     "citas": 143
+    },
+    {
+     "openalex": "W1984309241",
+     "doi": "10.1016/j.eswa.2008.08.057",
+     "titulo": "Structuring fuzzy integrated multi-stages evaluation model on academic personnel recruitment in MET institutions",
+     "anio": 2008,
+     "tipo": "article",
+     "fuente": "Expert Systems with Applications",
+     "citas": 79
+    }
+   ]
+  },
+  {
+   "codigo": "D",
+   "tema": "Structured interviews",
+   "consulta": "structured employment interview validity",
+   "total": 403463,
+   "cribados": [
+    {
+     "openalex": "W2149705496",
+     "doi": "10.1111/j.2044-8325.1988.tb00467.x",
+     "titulo": "A meta‐analytic investigation of the impact of interview format and degree of structure on the validity of the employment interview*",
+     "anio": 1988,
+     "tipo": "article",
+     "fuente": "Journal of Occupational Psychology",
+     "citas": 388
+    },
+    {
+     "openalex": "W2139471585",
+     "doi": "10.1037/0021-9010.79.4.599",
+     "titulo": "The validity of employment interviews: A comprehensive review and meta-analysis.",
+     "anio": 1994,
+     "tipo": "article",
+     "fuente": "Journal of Applied Psychology",
+     "citas": 698
+    },
+    {
+     "openalex": "W2089326151",
+     "doi": "10.1037/0021-9010.90.3.536",
+     "titulo": "Assessing Personality With a Structured Employment Interview: Construct-Related Validity and Susceptibility to Response Inflation.",
+     "anio": 2005,
+     "tipo": "article",
+     "fuente": "Journal of Applied Psychology",
+     "citas": 158
+    },
+    {
+     "openalex": "W2010488117",
+     "doi": "10.1002/(sici)1099-1379(199907)20:4<549::aid-job921>3.0.co;2-q",
+     "titulo": "Further analysis of employment interview validity: a quantitative evaluation of interviewer-related structuring methods",
+     "anio": 1999,
+     "tipo": "article",
+     "fuente": "Journal of Organizational Behavior",
+     "citas": 71
+    },
+    {
+     "openalex": "W2054126321",
+     "doi": "10.1006/obhd.1995.1019",
+     "titulo": "Aural and Visual Sources of Validity in Structured Employment Interviews",
+     "anio": 1995,
+     "tipo": "article",
+     "fuente": "Organizational Behavior and Human Decision Processes",
+     "citas": 53
+    },
+    {
+     "openalex": "W2108159352",
+     "doi": "10.1111/j.1744-6570.1988.tb00630.x",
+     "titulo": "STRUCTURED INTERVIEWING: RAISING THE PSYCHOMETRIC PROPERTIES OF THE EMPLOYMENT INTERVIEW",
+     "anio": 1988,
+     "tipo": "article",
+     "fuente": "Personnel Psychology",
+     "citas": 300
+    },
+    {
+     "openalex": "W2085041937",
+     "doi": "10.1037/0021-9010.79.2.184",
+     "titulo": "Hunter and Hunter (1984) revisited: Interview validity for entry-level jobs.",
+     "anio": 1994,
+     "tipo": "article",
+     "fuente": "Journal of Applied Psychology",
+     "citas": 428
+    },
+    {
+     "openalex": "W1977709910",
+     "doi": "10.1037/0021-9010.86.5.897",
+     "titulo": "Identification and meta-analytic assessment of psychological constructs measured in employment interviews.",
+     "anio": 2001,
+     "tipo": "article",
+     "fuente": "Journal of Applied Psychology",
+     "citas": 403
+    },
+    {
+     "openalex": "W2064723369",
+     "doi": "10.1111/1467-8721.ep10773001",
+     "titulo": "Structuring Employment Interviews to Improve Reliability, Validity, and Users' Reactions",
+     "anio": 1998,
+     "tipo": "article",
+     "fuente": "Current Directions in Psychological Science",
+     "citas": 39
+    },
+    {
+     "openalex": "W2063866393",
+     "doi": "10.1037/0021-9010.92.6.1638",
+     "titulo": "Measuring faking in the employment interview: Development and validation of an interview faking behavior scale.",
+     "anio": 2007,
+     "tipo": "article",
+     "fuente": "Journal of Applied Psychology",
+     "citas": 319
+    },
+    {
+     "openalex": "W2115609473",
+     "doi": "10.1002/mpr.168",
+     "titulo": "The World Mental Health (WMH) Survey Initiative version of the World Health Organization (WHO) Composite International Diagnostic Interview (CIDI)",
+     "anio": 2004,
+     "tipo": "article",
+     "fuente": "International Journal of Methods in Psychiatric Research",
+     "citas": 4849
+    },
+    {
+     "openalex": "W2144297246",
+     "doi": "10.1016/j.hrmr.2009.03.006",
+     "titulo": "The employment interview: A review of current studies and directions for future research",
+     "anio": 2009,
+     "tipo": "article",
+     "fuente": "Human Resource Management Review",
+     "citas": 266
+    },
+    {
+     "openalex": "W2020279449",
+     "doi": "10.1901/jaba.1978.11-203",
+     "titulo": "SOCIAL VALIDITY: THE CASE FOR SUBJECTIVE MEASUREMENT or HOW APPLIED BEHAVIOR ANALYSIS IS FINDING ITS HEART 1",
+     "anio": 1978,
+     "tipo": "article",
+     "fuente": "Journal of Applied Behavior Analysis",
+     "citas": 3165
+    },
+    {
+     "openalex": "W2065726697",
+     "doi": "10.1037/0021-9010.81.5.459",
+     "titulo": "A meta-analytic investigation of cognitive ability in employment interview evaluations: Moderating characteristics and implications for incremental validity.",
+     "anio": 1996,
+     "tipo": "article",
+     "fuente": "Journal of Applied Psychology",
+     "citas": 184
+    },
+    {
+     "openalex": "W73657983",
+     "doi": "10.3886/icpsr03510.v1",
+     "titulo": "Quality of Employment Survey, 1972-1973",
+     "anio": 1984,
+     "tipo": "dataset",
+     "fuente": "ICPSR Data Holdings",
+     "citas": 487
+    },
+    {
+     "openalex": "W2126818915",
+     "doi": "10.1111/j.1467-8624.1996.tb01876.x",
+     "titulo": "Discriminant Validity of the Adult Attachment Interview",
+     "anio": 1996,
+     "tipo": "article",
+     "fuente": "Child Development",
+     "citas": 172
+    },
+    {
+     "openalex": "W2019685630",
+     "doi": "10.1136/jech.2003.018085",
+     "titulo": "Validity of Antonovsky’s sense of coherence scale: a systematic review",
+     "anio": 2005,
+     "tipo": "review",
+     "fuente": "Journal of Epidemiology & Community Health",
+     "citas": 1556
+    },
+    {
+     "openalex": "W2148471097",
+     "doi": "10.1016/s1053-4822(00)00033-4",
+     "titulo": "The Employment Interview: A Review of Recent Research and Recommendations for Future Research",
+     "anio": 2000,
+     "tipo": "article",
+     "fuente": "Human Resource Management Review",
+     "citas": 147
+    },
+    {
+     "openalex": "W2023727471",
+     "doi": "10.1111/j.1744-6570.1999.tb00169.x",
+     "titulo": "EXPLORING THE BOUNDARY CONDITIONS FOR INTERVIEW VALIDITY: META‐ANALYTIC VALIDITY FINDINGS FOR A NEW INTERVIEW TYPE",
+     "anio": 1999,
+     "tipo": "article",
+     "fuente": "Personnel Psychology",
+     "citas": 98
+    },
+    {
+     "openalex": "W2086362180",
+     "doi": "10.1037/0021-9010.89.3.553",
+     "titulo": "A Counterintuitive Hypothesis About Employment Interview Validity and Some Supporting Evidence.",
+     "anio": 2004,
+     "tipo": "article",
+     "fuente": "Journal of Applied Psychology",
+     "citas": 95
+    },
+    {
+     "openalex": "W2037298826",
+     "doi": "10.1016/j.obhdp.2006.06.005",
+     "titulo": "Implicit sources of bias in employment interview judgments and decisions",
+     "anio": 2006,
+     "tipo": "article",
+     "fuente": "Organizational Behavior and Human Decision Processes",
+     "citas": 272
+    },
+    {
+     "openalex": "W2097904479",
+     "doi": "10.1111/j.1468-2389.1993.tb00080.x",
+     "titulo": "The Validity of the Employment Interview: A Meta‐Analysis",
+     "anio": 1993,
+     "tipo": "article",
+     "fuente": "International Journal of Selection and Assessment",
+     "citas": 55
+    },
+    {
+     "openalex": "W3113208589",
+     "doi": "10.3390/ijerph17249495",
+     "titulo": "Burnout Assessment Tool (BAT)—Development, Validity, and Reliability",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "International Journal of Environmental Research and Public Health",
+     "citas": 753
+    },
+    {
+     "openalex": "W2082032491",
+     "doi": "10.1136/oem.2009.048967",
+     "titulo": "The Employment Precariousness Scale (EPRES): psychometric properties of a new tool for epidemiological studies among waged and salaried workers",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "Occupational and Environmental Medicine",
+     "citas": 282
+    },
+    {
+     "openalex": "W4206912211",
+     "doi": "10.1787/1815199x",
+     "titulo": "OECD Social, Employment and Migration Working Papers",
+     "anio": 2010,
+     "tipo": "paratext",
+     "fuente": "OECD social employment and migration working papers",
+     "citas": 731
+    }
+   ]
+  },
+  {
+   "codigo": "E",
+   "tema": "CV / resume NLP",
+   "consulta": "resume parsing natural language processing",
+   "total": 11251,
+   "cribados": [
+    {
+     "openalex": "W2031213082",
+     "doi": "10.1002/aris.1440370103",
+     "titulo": "Natural language processing",
+     "anio": 2003,
+     "tipo": "article",
+     "fuente": "Annual Review of Information Science and Technology",
+     "citas": 817
+    },
+    {
+     "openalex": "W4200434928",
+     "doi": "10.36227/techrxiv.17641604",
+     "titulo": "Resume Parser with Natural Language Processing",
+     "anio": 2021,
+     "tipo": "preprint",
+     "fuente": null,
+     "citas": 27
+    },
+    {
+     "openalex": "W4389429017",
+     "doi": "10.1109/csitss60515.2023.10334236",
+     "titulo": "Automated Resume Parsing: A Natural Language Processing Approach",
+     "anio": 2023,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 24
+    },
+    {
+     "openalex": "W4200314661",
+     "doi": "10.36227/techrxiv.17641604.v1",
+     "titulo": "Resume Parser with Natural Language Processing",
+     "anio": 2021,
+     "tipo": "preprint",
+     "fuente": null,
+     "citas": 14
+    },
+    {
+     "openalex": "W4400233628",
+     "doi": "10.1109/aiiot58432.2024.10574696",
+     "titulo": "Automated Resume Parsing and Ranking using Natural Language Processing",
+     "anio": 2024,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 15
+    },
+    {
+     "openalex": "W4391249500",
+     "doi": "10.1109/icacrs58579.2023.10404426",
+     "titulo": "HR Tech Analyst: Automated Resume Parsing and Ranking System through Natural Language Processing",
+     "anio": 2023,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 18
+    },
+    {
+     "openalex": "W2170738476",
+     "doi": "10.48550/arxiv.1503.03244",
+     "titulo": "Convolutional Neural Network Architectures for Matching Natural Language Sentences",
+     "anio": 2015,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 1178
+    },
+    {
+     "openalex": "W2911227954",
+     "doi": "10.1162/tacl_a_00041",
+     "titulo": "Data Statements for Natural Language Processing: Toward Mitigating System Bias and Enabling Better Science",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Transactions of the Association for Computational Linguistics",
+     "citas": 856
+    },
+    {
+     "openalex": "W4224308101",
+     "doi": "10.48550/arxiv.2204.02311",
+     "titulo": "PaLM: Scaling Language Modeling with Pathways",
+     "anio": 2022,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 2096
+    },
+    {
+     "openalex": "W4376881192",
+     "doi": "10.22214/ijraset.2023.52202",
+     "titulo": "Resume Parser Analysis Using Machine Learning and Natural Language Processing",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "International Journal for Research in Applied Science and Engineering Technology",
+     "citas": 9
+    },
+    {
+     "openalex": "W4211234505",
+     "doi": "10.22581/muet1982.2201.07",
+     "titulo": "Resume Classification System using Natural Language Processing and Machine Learning Techniques",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Mehran University Research Journal of Engineering and Technology",
+     "citas": 76
+    },
+    {
+     "openalex": "W4383109590",
+     "doi": "10.1109/iciem59379.2023.10166169",
+     "titulo": "Resumate: A Prototype to Enhance Recruitment Process with NLP based Resume Parsing",
+     "anio": 2023,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 59
+    },
+    {
+     "openalex": "W3032388710",
+     "doi": "10.18653/v1/2020.acl-main.485",
+     "titulo": "Language (Technology) is Power: A Critical Survey of “Bias” in NLP",
+     "anio": 2020,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 1027
+    },
+    {
+     "openalex": "W1608166496",
+     "doi": "10.3389/fpsyg.2015.00731",
+     "titulo": "Timing in turn-taking and its implications for processing models of language",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "Frontiers in Psychology",
+     "citas": 680
+    },
+    {
+     "openalex": "W4405420132",
+     "doi": "10.22399/ijcesen.660",
+     "titulo": "Survey on Resume Parsing Models for JOBCONNECT+: Enhancing Recruitment Efficiency using Natural language processing and Machine Learning",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "International Journal of Computational and Experimental Science and Engineering",
+     "citas": 6
+    },
+    {
+     "openalex": "W2338335491",
+     "doi": "10.1145/130994.130998",
+     "titulo": "Process modeling",
+     "anio": 1992,
+     "tipo": "article",
+     "fuente": "Communications of the ACM",
+     "citas": 1625
+    },
+    {
+     "openalex": "W3018648280",
+     "doi": "10.1080/09720529.2020.1721879",
+     "titulo": "A novel firefly driven scheme for resume parsing and matching based on entity linking paradigm",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Journal of Discrete Mathematical Sciences and Cryptography",
+     "citas": 69
+    },
+    {
+     "openalex": "W4310288849",
+     "doi": "10.48175/ijarsct-7616",
+     "titulo": "Resume Parser using Natural Language Processing",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "International Journal of Advanced Research in Science Communication and Technology",
+     "citas": 2
+    },
+    {
+     "openalex": "W3147421724",
+     "doi": "10.1007/978-981-33-4859-2_21",
+     "titulo": "Resume Screening Using Natural Language Processing and Machine Learning: A Systematic Review",
+     "anio": 2021,
+     "tipo": "review",
+     "fuente": "Advances in intelligent systems and computing",
+     "citas": 41
+    },
+    {
+     "openalex": "W2166776180",
+     "doi": "10.3115/980691.980696",
+     "titulo": "Automatic retrieval and clustering of similar words",
+     "anio": 1998,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 1552
+    },
+    {
+     "openalex": "W4391855109",
+     "doi": "10.1109/access.2024.3365742",
+     "titulo": "A Review on Large Language Models: Architectures, Applications, Taxonomies, Open Issues and Challenges",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "IEEE Access",
+     "citas": 830
+    },
+    {
+     "openalex": "W2109235509",
+     "doi": "10.3389/fpsyg.2013.00505",
+     "titulo": "How robust is the language architecture? The case of mood",
+     "anio": 2013,
+     "tipo": "article",
+     "fuente": "Frontiers in Psychology",
+     "citas": 563
+    },
+    {
+     "openalex": "W3111384986",
+     "doi": "10.26480/etit.02.2020.99.103",
+     "titulo": "AN AUTOMATED RESUME SCREENING SYSTEM USING NATURAL LANGUAGE PROCESSING AND SIMILARITY",
+     "anio": 2020,
+     "tipo": "conference-paper",
+     "fuente": "Ethics and Information Technology",
+     "citas": 68
+    },
+    {
+     "openalex": "W3081109934",
+     "doi": "10.1080/09720510.2020.1799583",
+     "titulo": "Methodology for resume parsing and job domain prediction",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Journal of Statistics and Management Systems",
+     "citas": 33
+    },
+    {
+     "openalex": "W2161047600",
+     "doi": "10.3115/1596276.1596307",
+     "titulo": "Experiments with a multilanguage non-projective dependency parser",
+     "anio": 2006,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 178
+    }
+   ]
+  },
+  {
+   "codigo": "F",
+   "tema": "Semantic matching",
+   "consulta": "semantic matching job postings resumes embeddings",
+   "total": 717,
+   "cribados": [
+    {
+     "openalex": "W1797402740",
+     "doi": "10.1111/j.1467-",
+     "titulo": "Development and Distortion of Malaysian Public- Private Partnerships: Patronage, Privatised Profits and Pitfalls DOI: 10.1111/j.1467- 8500.2009.00655.x",
+     "anio": 2010,
+     "tipo": "dissertation",
+     "fuente": "Intellectum (Universidad de La Sabana)",
+     "citas": 16197
+    },
+    {
+     "openalex": "W4311051464",
+     "doi": "10.3390/bdcc6040147",
+     "titulo": "NLP-Based Bi-Directional Recommendation System: Towards Recommending Jobs to Job Seekers and Resumes to Recruiters",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Big Data and Cognitive Computing",
+     "citas": 50
+    },
+    {
+     "openalex": "W4407701298",
+     "doi": "10.3390/electronics14040794",
+     "titulo": "Resume2Vec: Transforming Applicant Tracking Systems with Intelligent Resume Embeddings for Precise Candidate Matching",
+     "anio": 2025,
+     "tipo": "article",
+     "fuente": "Electronics",
+     "citas": 33
+    },
+    {
+     "openalex": "W3196024535",
+     "doi": "10.1109/access.2021.3106120",
+     "titulo": "A Survey on Skill Identification From Online Job Ads",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "IEEE Access",
+     "citas": 103
+    },
+    {
+     "openalex": "W2781897831",
+     "doi": "10.1109/bigdata.2017.8258088",
+     "titulo": "Help me find a job: A graph-based approach for job recommendation at scale",
+     "anio": 2017,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 76
+    },
+    {
+     "openalex": "W4362454650",
+     "doi": "10.1155/2023/2994779",
+     "titulo": "Exploring Internal and External Interactions for Semi‐Structured Multivariate Attributes in Job‐Resume Matching",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "International Journal of Intelligent Systems",
+     "citas": 14
+    },
+    {
+     "openalex": "W4391598857",
+     "doi": "10.3390/ai5010019",
+     "titulo": "A Comprehensive Review of AI Techniques for Addressing Algorithmic Bias in Job Hiring",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "AI",
+     "citas": 141
+    },
+    {
+     "openalex": "W4292771516",
+     "doi": "10.1016/j.jjimei.2022.100109",
+     "titulo": "AI based suitability measurement and prediction between job description and job seeker profiles",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "International Journal of Information Management Data Insights",
+     "citas": 60
+    },
+    {
+     "openalex": "W4393147839",
+     "doi": "10.1609/aaai.v38i8.28769",
+     "titulo": "Exploring Large Language Model for Graph Data Understanding in Online Job Recommendations",
+     "anio": 2024,
+     "tipo": "conference-paper",
+     "fuente": "Proceedings of the AAAI Conference on Artificial Intelligence",
+     "citas": 68
+    },
+    {
+     "openalex": "W4407180874",
+     "doi": "10.52783/jisem.v10i5s.681",
+     "titulo": "An Intelligent Job Recommendation System based on Semantic Embeddings and Machine Learning",
+     "anio": 2025,
+     "tipo": "article",
+     "fuente": "Journal of Information Systems Engineering & Management",
+     "citas": 9
+    },
+    {
+     "openalex": "W4392986305",
+     "doi": "10.3390/app14062601",
+     "titulo": "Zero-Shot Recommendation AI Models for Efficient Job–Candidate Matching in Recruitment Process",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "Applied Sciences",
+     "citas": 29
+    },
+    {
+     "openalex": "W4286977789",
+     "doi": "10.48550/arxiv.2109.06501",
+     "titulo": "conSultantBERT: Fine-tuned Siamese Sentence-BERT for Matching Jobs and\\n Job Seekers",
+     "anio": 2021,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 12
+    },
+    {
+     "openalex": "W4210867863",
+     "doi": "10.1007/s10551-022-05049-6",
+     "titulo": "Ethics of AI-Enabled Recruiting and Selection: A Review and Research Agenda",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Journal of Business Ethics",
+     "citas": 428
+    },
+    {
+     "openalex": "W4300861033",
+     "doi": "10.1155/2022/8002363",
+     "titulo": "A Bibliometric Perspective on AI Research for Job-Résumé Matching",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "The Scientific World JOURNAL",
+     "citas": 17
+    },
+    {
+     "openalex": "W4386030561",
+     "doi": "10.3390/info14080468",
+     "titulo": "Job Vacancy Ranking with Sentence Embeddings, Keywords, and Named Entities",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Information",
+     "citas": 11
+    },
+    {
+     "openalex": "W4309215243",
+     "doi": "10.3390/computers11110161",
+     "titulo": "Learning-Based Matched Representation System for Job Recommendation",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Computers",
+     "citas": 27
+    },
+    {
+     "openalex": "W2946881920",
+     "doi": "10.1109/ccis48116.2019.9073723",
+     "titulo": "Job Recommendation through Progression of Job Selection",
+     "anio": 2019,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 29
+    },
+    {
+     "openalex": "W4318407310",
+     "doi": "10.1787/2b440821-en",
+     "titulo": "Artificial intelligence and labour market matching",
+     "anio": 2023,
+     "tipo": "report",
+     "fuente": "OECD social employment and migration working papers",
+     "citas": 43
+    },
+    {
+     "openalex": "W2971133212",
+     "doi": "10.18653/v1/d19-1487",
+     "titulo": "Domain Adaptation for Person-Job Fit with Transferable Deep Global Match Network",
+     "anio": 2019,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 56
+    },
+    {
+     "openalex": "W2952255427",
+     "doi": "10.48550/arxiv.1810.04040",
+     "titulo": "Person-Job Fit: Adapting the Right Talent for the Right Job with Joint Representation Learning",
+     "anio": 2018,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 23
+    },
+    {
+     "openalex": "W3149252920",
+     "doi": "10.1038/s41467-021-22215-y",
+     "titulo": "Market-oriented job skill valuation with cooperative composition neural network",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Nature Communications",
+     "citas": 43
+    },
+    {
+     "openalex": "W4306677180",
+     "doi": "10.1007/s00146-022-01574-0",
+     "titulo": "A machine learning approach to recognize bias and discrimination in job advertisements",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "AI & Society",
+     "citas": 39
+    },
+    {
+     "openalex": "W3206946287",
+     "doi": "10.1155/2021/6206288",
+     "titulo": "A Deep‐Learning‐Inspired Person‐Job Matching Model Based on Sentence Vectors and Subject‐Term Graphs",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Complexity",
+     "citas": 22
+    },
+    {
+     "openalex": "W4283264542",
+     "doi": "10.1155/2022/7797548",
+     "titulo": "Technical Job Recommendation System Using APIs and Web Crawling",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Computational Intelligence and Neuroscience",
+     "citas": 48
+    },
+    {
+     "openalex": "W2987988965",
+     "doi": "10.5121/ijnlc.2019.8503",
+     "titulo": "Resume Information Extraction with A Novel Text Block Segmentation Algorithm",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "International Journal on Natural Language Computing",
+     "citas": 33
+    }
+   ]
+  },
+  {
+   "codigo": "G",
+   "tema": "Information extraction",
+   "consulta": "skill extraction job postings information extraction",
+   "total": 8129,
+   "cribados": [
+    {
+     "openalex": "W4224990248",
+     "doi": "10.1086/718327",
+     "titulo": "Artificial Intelligence and Jobs: Evidence from Online Vacancies",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Journal of Labor Economics",
+     "citas": 1030
+    },
+    {
+     "openalex": "W4225106321",
+     "doi": "10.18653/v1/2022.naacl-main.366",
+     "titulo": "SkillSpan: Hard and Soft Skill Extraction from English Job Postings",
+     "anio": 2022,
+     "tipo": "conference-paper",
+     "fuente": "Proceedings of the 2022 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies",
+     "citas": 61
+    },
+    {
+     "openalex": "W2342645056",
+     "doi": "10.1016/j.eswa.2016.04.013",
+     "titulo": "RésuMatcher: A personalized résumé-job matching system",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "Expert Systems with Applications",
+     "citas": 104
+    },
+    {
+     "openalex": "W3121192914",
+     "doi": "10.1016/j.labeco.2021.102002",
+     "titulo": "The demand for AI skills in the labor market",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Labour Economics",
+     "citas": 396
+    },
+    {
+     "openalex": "W1186292795",
+     "doi": "",
+     "titulo": "Recovery: Job Growth and Education Requirements through 2020.",
+     "anio": 2013,
+     "tipo": "article",
+     "fuente": "DigitalGeorgetown (Georgetown University Library)",
+     "citas": 333
+    },
+    {
+     "openalex": "W4367677398",
+     "doi": "10.1111/1911-3846.12870",
+     "titulo": "Technological peer pressure and skill specificity of job postings",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Contemporary Accounting Research",
+     "citas": 47
+    },
+    {
+     "openalex": "W3196024535",
+     "doi": "10.1109/access.2021.3106120",
+     "titulo": "A Survey on Skill Identification From Online Job Ads",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "IEEE Access",
+     "citas": 103
+    },
+    {
+     "openalex": "W4401973691",
+     "doi": "10.3390/info15080496",
+     "titulo": "From Data to Insight: Transforming Online Job Postings into Labor-Market Intelligence",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "Information",
+     "citas": 22
+    },
+    {
+     "openalex": "W2894904181",
+     "doi": "",
+     "titulo": "The future of skills: employment in 2030",
+     "anio": 2017,
+     "tipo": "article",
+     "fuente": null,
+     "citas": 242
+    },
+    {
+     "openalex": "W2772773094",
+     "doi": "10.1145/3132218.3132228",
+     "titulo": "Ontology-guided Job Market Demand Analysis",
+     "anio": 2017,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 31
+    },
+    {
+     "openalex": "W4323309118",
+     "doi": "10.24149/wp2629",
+     "titulo": "Remote Work Across Jobs, Companies and Space",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Federal Reserve Bank of Dallas, Working Papers",
+     "citas": 125
+    },
+    {
+     "openalex": "W2581172406",
+     "doi": "10.3386/w24171",
+     "titulo": "Intermediation as Rent Extraction",
+     "anio": 2017,
+     "tipo": "report",
+     "fuente": "National Bureau of Economic Research",
+     "citas": 42
+    },
+    {
+     "openalex": "W3117669565",
+     "doi": "10.3386/w28257",
+     "titulo": "AI and Jobs: Evidence from Online Vacancies",
+     "anio": 2020,
+     "tipo": "report",
+     "fuente": "National Bureau of Economic Research",
+     "citas": 124
+    },
+    {
+     "openalex": "W4282834709",
+     "doi": "10.21203/rs.3.rs-1649850/v1",
+     "titulo": "Who’s fit for the low-carbon transition? Emerging skills and wage gaps in job ad data",
+     "anio": 2022,
+     "tipo": "preprint",
+     "fuente": "Research Square",
+     "citas": 81
+    },
+    {
+     "openalex": "W4387794313",
+     "doi": "10.1016/j.respol.2023.104898",
+     "titulo": "What is the price of a skill? The value of complementarity",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Research Policy",
+     "citas": 173
+    },
+    {
+     "openalex": "W4304088525",
+     "doi": "10.48550/arxiv.2204.12811",
+     "titulo": "SkillSpan: Hard and Soft Skill Extraction from English Job Postings",
+     "anio": 2022,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 7
+    },
+    {
+     "openalex": "W4296412265",
+     "doi": "10.48550/arxiv.2209.08071",
+     "titulo": "Skill Extraction from Job Postings using Weak Supervision",
+     "anio": 2022,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 6
+    },
+    {
+     "openalex": "W3190091903",
+     "doi": "10.1016/j.jmsy.2021.07.007",
+     "titulo": "Data science skills and domain knowledge requirements in the manufacturing industry: A gap analysis",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Journal of Manufacturing Systems",
+     "citas": 103
+    },
+    {
+     "openalex": "W2987988965",
+     "doi": "10.5121/ijnlc.2019.8503",
+     "titulo": "Resume Information Extraction with A Novel Text Block Segmentation Algorithm",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "International Journal on Natural Language Computing",
+     "citas": 33
+    },
+    {
+     "openalex": "W3149252920",
+     "doi": "10.1038/s41467-021-22215-y",
+     "titulo": "Market-oriented job skill valuation with cooperative composition neural network",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Nature Communications",
+     "citas": 43
+    },
+    {
+     "openalex": "W4283171049",
+     "doi": "10.3390/su14127439",
+     "titulo": "Graph-Community-Enabled Personalized Course-Job Recommendations with Cross-Domain Data Integration",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Sustainability",
+     "citas": 20
+    },
+    {
+     "openalex": "W4286780519",
+     "doi": "10.1016/j.jik.2022.100190",
+     "titulo": "Bridging the skill gap between the acquired university curriculum and the requirements of the job market: A data-driven analysis of scientific literature",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Journal of Innovation & Knowledge",
+     "citas": 78
+    },
+    {
+     "openalex": "W3122228754",
+     "doi": "10.1142/s2010139215500202",
+     "titulo": "Is More News Good News? Media Coverage of CEOs, Firm Value, and Rent Extraction",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "Quarterly Journal of Finance",
+     "citas": 77
+    },
+    {
+     "openalex": "W4407642229",
+     "doi": "10.1080/21681376.2025.2459148",
+     "titulo": "Job relatedness, local skill coherence and economic performance: a job postings approach",
+     "anio": 2025,
+     "tipo": "article",
+     "fuente": "Regional Studies Regional Science",
+     "citas": 13
+    },
+    {
+     "openalex": "W2264500277",
+     "doi": "10.5860/crl.77.1.87",
+     "titulo": "Employer Perceptions of Critical Information Literacy Skills and Digital Badges",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "College & Research Libraries",
+     "citas": 82
+    }
+   ]
+  },
+  {
+   "codigo": "H",
+   "tema": "Ranking / recommendation",
+   "consulta": "job recommender system e-recruitment survey",
+   "total": 261296,
+   "cribados": [
+    {
+     "openalex": "W2113339754",
+     "doi": "10.5897/ijps12.482",
+     "titulo": "A survey of job recommender systems",
+     "anio": 2012,
+     "tipo": "article",
+     "fuente": "International Journal of the Physical Sciences",
+     "citas": 161
+    },
+    {
+     "openalex": "W2152834818",
+     "doi": "",
+     "titulo": "An Online Recruitment System for Economic Experiments",
+     "anio": 2004,
+     "tipo": "report",
+     "fuente": "Munich Personal RePEc Archive (Ludwig Maximilian University of Munich)",
+     "citas": 1279
+    },
+    {
+     "openalex": "W1981665776",
+     "doi": "10.1016/s0140-6736(10)61854-5",
+     "titulo": "Health professionals for a new century: transforming education to strengthen health systems in an interdependent world",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "The Lancet",
+     "citas": 6035
+    },
+    {
+     "openalex": "W1627796000",
+     "doi": "",
+     "titulo": "Recruitment, Job Choice, and Post-Hire Consequences: A Call For New Research Directions",
+     "anio": 1989,
+     "tipo": "preprint",
+     "fuente": "eCommons (Cornell University)",
+     "citas": 618
+    },
+    {
+     "openalex": "W2126980369",
+     "doi": "10.1136/bmj.e1717",
+     "titulo": "Patient safety, satisfaction, and quality of hospital care: cross sectional surveys of nurses and patients in 12 countries in Europe and the United States",
+     "anio": 2012,
+     "tipo": "article",
+     "fuente": "BMJ",
+     "citas": 2076
+    },
+    {
+     "openalex": "W2112856797",
+     "doi": "10.1007/s11257-011-9112-x",
+     "titulo": "Recommender systems: from algorithms to user experience",
+     "anio": 2012,
+     "tipo": "article",
+     "fuente": "User Modeling and User-Adapted Interaction",
+     "citas": 761
+    },
+    {
+     "openalex": "W4292092796",
+     "doi": "10.1145/3556536",
+     "titulo": "Evaluating Recommender Systems: Survey and Framework",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 282
+    },
+    {
+     "openalex": "W4225321042",
+     "doi": "10.1186/s40537-022-00592-5",
+     "titulo": "A systematic review and research perspective on recommender systems",
+     "anio": 2022,
+     "tipo": "review",
+     "fuente": "Journal Of Big Data",
+     "citas": 620
+    },
+    {
+     "openalex": "W2263972221",
+     "doi": "10.1016/j.eswa.2017.12.020",
+     "titulo": "The use of machine learning algorithms in recommender systems: A systematic review",
+     "anio": 2017,
+     "tipo": "review",
+     "fuente": "Expert Systems with Applications",
+     "citas": 742
+    },
+    {
+     "openalex": "W3097821835",
+     "doi": "10.1007/s10115-020-01522-8",
+     "titulo": "e-Recruitment recommender systems: a systematic review",
+     "anio": 2020,
+     "tipo": "review",
+     "fuente": "Knowledge and Information Systems",
+     "citas": 67
+    },
+    {
+     "openalex": "W2145440622",
+     "doi": "10.15195/v1.a19",
+     "titulo": "Comparing Data Characteristics and Results of an Online Factorial Survey between a Population-Based and a Crowdsource-Recruited Sample",
+     "anio": 2014,
+     "tipo": "article",
+     "fuente": "Sociological Science",
+     "citas": 599
+    },
+    {
+     "openalex": "W2136360803",
+     "doi": "10.1002/job.1783",
+     "titulo": "Crafting a job on a daily basis: Contextual correlates and the link to work engagement",
+     "anio": 2012,
+     "tipo": "article",
+     "fuente": "Journal of Organizational Behavior",
+     "citas": 1015
+    },
+    {
+     "openalex": "W4394994587",
+     "doi": "10.1109/tkde.2024.3392335",
+     "titulo": "Recommender Systems in the Era of Large Language Models (LLMs)",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "IEEE Transactions on Knowledge and Data Engineering",
+     "citas": 463
+    },
+    {
+     "openalex": "W4394925050",
+     "doi": "10.1145/3659942",
+     "titulo": "A Challenge-based Survey of E-recruitment Recommendation Systems",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 44
+    },
+    {
+     "openalex": "W2078737722",
+     "doi": "10.2307/2534536",
+     "titulo": "Job Switching and Job Satisfaction in the U.S. Labor Market",
+     "anio": 1988,
+     "tipo": "article",
+     "fuente": "Brookings Papers on Economic Activity",
+     "citas": 505
+    },
+    {
+     "openalex": "W2070476284",
+     "doi": "10.1108/er-08-2012-0059",
+     "titulo": "An exploration of the psychological factors affecting remote e‐worker's job effectiveness, well‐being and work‐life balance",
+     "anio": 2013,
+     "tipo": "article",
+     "fuente": "Employee Relations",
+     "citas": 561
+    },
+    {
+     "openalex": "W2998841004",
+     "doi": "10.1109/i-pact44901.2019.8960231",
+     "titulo": "Job Recommender Systems: A Survey",
+     "anio": 2019,
+     "tipo": "conference-paper",
+     "fuente": "2019 Innovations in Power and Advanced Computing Technologies (i-PACT)",
+     "citas": 26
+    },
+    {
+     "openalex": "W2171811563",
+     "doi": "10.1136/bmj.e7586",
+     "titulo": "SPIRIT 2013 explanation and elaboration: guidance for protocols of clinical trials",
+     "anio": 2013,
+     "tipo": "article",
+     "fuente": "BMJ",
+     "citas": 7140
+    },
+    {
+     "openalex": "W2937764832",
+     "doi": "10.1016/j.respol.2019.03.010",
+     "titulo": "Is this time different? How digitalization influences job creation and destruction",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Research Policy",
+     "citas": 466
+    },
+    {
+     "openalex": "W4377021101",
+     "doi": "10.1037/edu0000783",
+     "titulo": "A classification system for teachers’ motivational behaviors recommended in self-determination theory interventions.",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Journal of Educational Psychology",
+     "citas": 475
+    },
+    {
+     "openalex": "W1984022436",
+     "doi": "10.3758/s13428-011-0124-6",
+     "titulo": "Conducting behavioral research on Amazon’s Mechanical Turk",
+     "anio": 2011,
+     "tipo": "article",
+     "fuente": "Behavior Research Methods",
+     "citas": 3246
+    },
+    {
+     "openalex": "W2145555293",
+     "doi": "10.1136/bmj.g1687",
+     "titulo": "Better reporting of interventions: template for intervention description and replication (TIDieR) checklist and guide",
+     "anio": 2014,
+     "tipo": "article",
+     "fuente": "BMJ",
+     "citas": 11010
+    },
+    {
+     "openalex": "W1452699976",
+     "doi": "10.1109/tlt.2015.2438867",
+     "titulo": "Evaluating Recommender Systems for Technology Enhanced Learning: A Quantitative Survey",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "IEEE Transactions on Learning Technologies",
+     "citas": 147
+    },
+    {
+     "openalex": "W4386714740",
+     "doi": "10.1057/s41599-023-02079-x",
+     "titulo": "Ethics and discrimination in artificial intelligence-enabled recruitment practices",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Humanities and Social Sciences Communications",
+     "citas": 430
+    },
+    {
+     "openalex": "W2114858942",
+     "doi": "10.1016/j.jvb.2014.08.010",
+     "titulo": "Outcomes of work–life balance on job satisfaction, life satisfaction and mental health: A study across seven cultures",
+     "anio": 2014,
+     "tipo": "article",
+     "fuente": "Journal of Vocational Behavior",
+     "citas": 966
+    }
+   ]
+  },
+  {
+   "codigo": "I",
+   "tema": "Multicriteria decision support",
+   "consulta": "multi-criteria decision making personnel selection",
+   "total": 193791,
+   "cribados": [
+    {
+     "openalex": "W2059354089",
+     "doi": "10.1016/j.eswa.2011.03.012",
+     "titulo": "A GRA-based intuitionistic fuzzy multi-criteria group decision making method for personnel selection",
+     "anio": 2011,
+     "tipo": "article",
+     "fuente": "Expert Systems with Applications",
+     "citas": 342
+    },
+    {
+     "openalex": "W2057172398",
+     "doi": "10.1007/s10845-008-0200-7",
+     "titulo": "A hybrid multi-criteria decision-making model for personnel selection in manufacturing systems",
+     "anio": 2008,
+     "tipo": "article",
+     "fuente": "Journal of Intelligent Manufacturing",
+     "citas": 131
+    },
+    {
+     "openalex": "W2003074920",
+     "doi": "10.1016/j.ejor.2009.05.009",
+     "titulo": "Multi-criteria decision making approaches for supplier evaluation and selection: A literature review",
+     "anio": 2009,
+     "tipo": "article",
+     "fuente": "European Journal of Operational Research",
+     "citas": 2193
+    },
+    {
+     "openalex": "W2324929133",
+     "doi": "",
+     "titulo": "Simple Additive Weighting approach to Personnel Selection problem",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": null,
+     "citas": 429
+    },
+    {
+     "openalex": "W2398434116",
+     "doi": "",
+     "titulo": "A Fuzzy DEMATEL-ANP Based Multi Criteria Decision Making Approach for Personnel Selection.",
+     "anio": 2013,
+     "tipo": "article",
+     "fuente": null,
+     "citas": 36
+    },
+    {
+     "openalex": "W2944827699",
+     "doi": "10.7240/jeps.505970",
+     "titulo": "PERSONNEL SELECTION BASED ON INTEGRATED MULTI-CRITERIA DECISION MAKING TECHNIQUES",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "International Journal of Advances in Engineering and Pure Sciences",
+     "citas": 19
+    },
+    {
+     "openalex": "W4283274818",
+     "doi": "10.17559/tv-20210816220137",
+     "titulo": "Personnel Selection with Multi-Criteria Decision Making Methods in the Ready-to-Wear Sector",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Tehnicki vjesnik - Technical Gazette",
+     "citas": 28
+    },
+    {
+     "openalex": "W2912137066",
+     "doi": "10.18092/ulikidince.468486",
+     "titulo": "PERSONNEL SELECTION METHOD BASED ON TOPSIS MULTI-CRITERIA DECISION MAKING METHOD",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Uluslararası İktisadi ve İdari İncelemeler Dergisi",
+     "citas": 27
+    },
+    {
+     "openalex": "W2052729728",
+     "doi": "10.1016/j.eswa.2009.12.013",
+     "titulo": "A new TOPSIS-based multi-criteria approach to personnel selection",
+     "anio": 2009,
+     "tipo": "article",
+     "fuente": "Expert Systems with Applications",
+     "citas": 332
+    },
+    {
+     "openalex": "W2045287851",
+     "doi": "10.1016/j.eswa.2009.11.067",
+     "titulo": "A fuzzy MCDM approach for personnel selection",
+     "anio": 2009,
+     "tipo": "article",
+     "fuente": "Expert Systems with Applications",
+     "citas": 274
+    },
+    {
+     "openalex": "W2302915988",
+     "doi": "10.15837/ijccc.2016.3.2557",
+     "titulo": "Extended EDAS Method for Fuzzy Multi-criteria Decision-making: An Application to Supplier Selection",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "International Journal of Computers Communications & Control",
+     "citas": 382
+    },
+    {
+     "openalex": "W2001110759",
+     "doi": "10.1897/ieam_2004a-015.1",
+     "titulo": "Application of multicriteria decision analysis in environmental decision making",
+     "anio": 2005,
+     "tipo": "article",
+     "fuente": "Integrated Environmental Assessment and Management",
+     "citas": 922
+    },
+    {
+     "openalex": "W2001837191",
+     "doi": "10.1016/j.eswa.2012.01.100",
+     "titulo": "Personnel selection based on computing with words and fuzzy MULTIMOORA",
+     "anio": 2012,
+     "tipo": "article",
+     "fuente": "Expert Systems with Applications",
+     "citas": 234
+    },
+    {
+     "openalex": "W2086460595",
+     "doi": "10.1016/j.eswa.2012.07.066",
+     "titulo": "Group multi-criteria decision making based upon interval-valued fuzzy numbers: An extension of the MULTIMOORA method",
+     "anio": 2012,
+     "tipo": "article",
+     "fuente": "Expert Systems with Applications",
+     "citas": 204
+    },
+    {
+     "openalex": "W2049917276",
+     "doi": "10.3846/20294913.2011.635718",
+     "titulo": "INTEGRATED FUZZY MULTIPLE CRITERIA DECISION MAKING MODEL FOR ARCHITECT SELECTION / INTEGRUOTAS NERAIŠKUSIS DAUGIATIKSLIS SPRENDIMŲ PRIĖMIMO MODELIS ARCHITEKTUI ATRINKTI",
+     "anio": 2012,
+     "tipo": "article",
+     "fuente": "Technological and Economic Development of Economy",
+     "citas": 278
+    },
+    {
+     "openalex": "W2930900166",
+     "doi": "10.1016/j.esr.2019.03.003",
+     "titulo": "A comprehensive review of fuzzy multi criteria decision making methodologies for energy policy making",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Energy Strategy Reviews",
+     "citas": 365
+    },
+    {
+     "openalex": "W2107886799",
+     "doi": "10.1186/1478-7547-4-14",
+     "titulo": "Priority setting of health interventions: the need for multi-criteria decision analysis.",
+     "anio": 2006,
+     "tipo": "article",
+     "fuente": "Cost Effectiveness and Resource Allocation",
+     "citas": 593
+    },
+    {
+     "openalex": "W2342485655",
+     "doi": "10.5194/nhess-16-1019-2016",
+     "titulo": "Multi-criteria decision-making for flood risk management: a survey of the current state of the art",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "Natural hazards and earth system sciences",
+     "citas": 432
+    },
+    {
+     "openalex": "W2464342393",
+     "doi": "10.1007/s00521-016-2436-z",
+     "titulo": "A projection-based TODIM method under multi-valued neutrosophic environments and its application in personnel selection",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "Neural Computing and Applications",
+     "citas": 187
+    },
+    {
+     "openalex": "W2098756964",
+     "doi": "10.1016/j.leaqua.2010.10.010",
+     "titulo": "On making causal claims: A review and recommendations",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "The Leadership Quarterly",
+     "citas": 2433
+    },
+    {
+     "openalex": "W2106135161",
+     "doi": "10.3846/20294913.2011.593291",
+     "titulo": "MULTIPLE CRITERIA DECISION MAKING (MCDM) METHODS IN ECONOMICS: AN OVERVIEW / DAUGIATIKSLIAI SPRENDIMŲ PRIĖMIMO METODAI EKONOMIKOJE: APŽVALGA",
+     "anio": 2011,
+     "tipo": "article",
+     "fuente": "Technological and Economic Development of Economy",
+     "citas": 836
+    },
+    {
+     "openalex": "W2765801959",
+     "doi": "10.1016/j.cie.2017.10.029",
+     "titulo": "Extended TODIM for multi-criteria group decision making based on unbalanced hesitant fuzzy linguistic term sets",
+     "anio": 2017,
+     "tipo": "article",
+     "fuente": "Computers & Industrial Engineering",
+     "citas": 170
+    },
+    {
+     "openalex": "W2099449365",
+     "doi": "10.1183/09031936.00080312",
+     "titulo": "Multi-ethnic reference values for spirometry for the 3–95-yr age range: the global lung function 2012 equations",
+     "anio": 2012,
+     "tipo": "article",
+     "fuente": "European Respiratory Journal",
+     "citas": 6044
+    },
+    {
+     "openalex": "W2793185241",
+     "doi": "10.1007/s40815-018-0474-7",
+     "titulo": "A Fuzzy AHP–TOPSIS-Based Group Decision-Making Approach to IT Personnel Selection",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "International Journal of Fuzzy Systems",
+     "citas": 108
+    },
+    {
+     "openalex": "W2980439458",
+     "doi": "10.1080/20479700.2019.1674005",
+     "titulo": "Hospital site selection with distance-based multi-criteria decision-making methods",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "International Journal of Healthcare Management",
+     "citas": 94
+    }
+   ]
+  },
+  {
+   "codigo": "J",
+   "tema": "Explainable AI",
+   "consulta": "explainable artificial intelligence interpretability survey",
+   "total": 390115,
+   "cribados": [
+    {
+     "openalex": "W2981731882",
+     "doi": "10.1016/j.inffus.2019.12.012",
+     "titulo": "Explainable Artificial Intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 10076
+    },
+    {
+     "openalex": "W2958089299",
+     "doi": "10.1109/tnnls.2020.3027314",
+     "titulo": "A Survey on Explainable Artificial Intelligence (XAI): Toward Medical XAI",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "IEEE Transactions on Neural Networks and Learning Systems",
+     "citas": 2440
+    },
+    {
+     "openalex": "W3116286104",
+     "doi": "10.3390/e23010018",
+     "titulo": "Explainable AI: A Review of Machine Learning Interpretability Methods",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Entropy",
+     "citas": 2925
+    },
+    {
+     "openalex": "W2670253439",
+     "doi": "10.1016/j.artint.2018.07.007",
+     "titulo": "Explanation in artificial intelligence: Insights from the social sciences",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Artificial Intelligence",
+     "citas": 5235
+    },
+    {
+     "openalex": "W4386142022",
+     "doi": "10.1007/s12559-023-10179-8",
+     "titulo": "Interpreting Black-Box Models: A Review on Explainable Artificial Intelligence",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Cognitive Computation",
+     "citas": 2048
+    },
+    {
+     "openalex": "W2809925683",
+     "doi": "10.23919/mipro.2018.8400040",
+     "titulo": "Explainable artificial intelligence: A survey",
+     "anio": 2018,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 1149
+    },
+    {
+     "openalex": "W2962772482",
+     "doi": "10.1145/3236009",
+     "titulo": "A survey of methods for explaining black box models",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "ISTI Open Portal",
+     "citas": 5081
+    },
+    {
+     "openalex": "W4221143046",
+     "doi": "10.48550/arxiv.2201.11903",
+     "titulo": "BNAI, NO-TOKEN, and MIND-UNITY: Pillars of a Systemic Revolution in Artificial Intelligence",
+     "anio": 2022,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 4267
+    },
+    {
+     "openalex": "W4366262984",
+     "doi": "10.1016/j.inffus.2023.101805",
+     "titulo": "Explainable Artificial Intelligence (XAI): What we know and what is left to attain Trustworthy Artificial Intelligence",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 1725
+    },
+    {
+     "openalex": "W2914598080",
+     "doi": "10.1109/dsaa.2018.00018",
+     "titulo": "Explaining Explanations: An Overview of Interpretability of Machine Learning",
+     "anio": 2018,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 2345
+    },
+    {
+     "openalex": "W2954503794",
+     "doi": "10.1609/aimag.v40i2.2850",
+     "titulo": "DARPA's Explainable Artificial Intelligence Program",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "AI Magazine",
+     "citas": 1343
+    },
+    {
+     "openalex": "W2969625533",
+     "doi": "10.1016/j.ijinfomgt.2019.08.002",
+     "titulo": "Artificial Intelligence (AI): Multidisciplinary perspectives on emerging challenges, opportunities, and agenda for research, practice and policy",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "International Journal of Information Management",
+     "citas": 4511
+    },
+    {
+     "openalex": "W2954996726",
+     "doi": "10.1186/s40537-019-0197-0",
+     "titulo": "A survey on Image Data Augmentation for Deep Learning",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Journal Of Big Data",
+     "citas": 13190
+    },
+    {
+     "openalex": "W2962862931",
+     "doi": "10.4230/oasics.dx.2024.27",
+     "titulo": "On a Method to Measure Supervised Multiclass Model’s Interpretability: Application to Degradation Diagnosis (Short Paper)",
+     "anio": 2024,
+     "tipo": "conference-paper",
+     "fuente": "HAL (Le Centre pour la Communication Scientifique Directe)",
+     "citas": 13466
+    },
+    {
+     "openalex": "W3039995705",
+     "doi": "10.1038/s42256-020-00236-4",
+     "titulo": "Drug discovery with explainable artificial intelligence",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Nature Machine Intelligence",
+     "citas": 1104
+    },
+    {
+     "openalex": "W4365143687",
+     "doi": "10.1038/s41586-023-05881-4",
+     "titulo": "Foundation models for generalist medical artificial intelligence",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Nature",
+     "citas": 1955
+    },
+    {
+     "openalex": "W4294559022",
+     "doi": "10.1145/3561048",
+     "titulo": "Explainable AI (XAI): Core Ideas, Techniques, and Solutions",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 1355
+    },
+    {
+     "openalex": "W3183198896",
+     "doi": "10.1016/j.media.2022.102470",
+     "titulo": "Explainable artificial intelligence (XAI) in deep learning-based medical image analysis",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Medical Image Analysis",
+     "citas": 1317
+    },
+    {
+     "openalex": "W2934302500",
+     "doi": "10.1016/j.ijinfomgt.2019.01.021",
+     "titulo": "Artificial intelligence for decision making in the era of Big Data – evolution, challenges and research agenda",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "International Journal of Information Management",
+     "citas": 2595
+    },
+    {
+     "openalex": "W2969896603",
+     "doi": "10.1145/3457607",
+     "titulo": "A Survey on Bias and Fairness in Machine Learning",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 5460
+    },
+    {
+     "openalex": "W3182546273",
+     "doi": "10.1002/widm.1424",
+     "titulo": "Explainable artificial intelligence: an analytical review",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Wiley Interdisciplinary Reviews Data Mining and Knowledge Discovery",
+     "citas": 849
+    },
+    {
+     "openalex": "W2911605224",
+     "doi": "10.3322/caac.21552",
+     "titulo": "Artificial intelligence in cancer imaging: Clinical challenges and applications",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "CA A Cancer Journal for Clinicians",
+     "citas": 1887
+    },
+    {
+     "openalex": "W2807593075",
+     "doi": "10.1016/j.jacc.2018.03.521",
+     "titulo": "Artificial Intelligence in Cardiology",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Journal of the American College of Cardiology",
+     "citas": 1199
+    },
+    {
+     "openalex": "W4295854586",
+     "doi": "10.1109/access.2022.3204051",
+     "titulo": "Explainable Artificial Intelligence Applications in Cyber Security: State-of-the-Art in Research",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "IEEE Access",
+     "citas": 444
+    },
+    {
+     "openalex": "W3004493409",
+     "doi": "10.1002/widm.1356",
+     "titulo": "Bias in data‐driven artificial intelligence systems—An introductory survey",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Wiley Interdisciplinary Reviews Data Mining and Knowledge Discovery",
+     "citas": 1040
+    }
+   ]
+  },
+  {
+   "codigo": "K",
+   "tema": "Fairness / algorithmic bias",
+   "consulta": "algorithmic fairness bias machine learning survey",
+   "total": 161027,
+   "cribados": [
+    {
+     "openalex": "W2969896603",
+     "doi": "10.1145/3457607",
+     "titulo": "A Survey on Bias and Fairness in Machine Learning",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 5460
+    },
+    {
+     "openalex": "W1678356000",
+     "doi": "10.1214/aos/1013203451",
+     "titulo": "Greedy function approximation: A gradient boosting machine.",
+     "anio": 2001,
+     "tipo": "article",
+     "fuente": "The Annals of Statistics",
+     "citas": 30697
+    },
+    {
+     "openalex": "W2964303497",
+     "doi": "10.3390/electronics8080832",
+     "titulo": "Machine Learning Interpretability: A Survey on Methods and Metrics",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Electronics",
+     "citas": 1839
+    },
+    {
+     "openalex": "W2914598080",
+     "doi": "10.1109/dsaa.2018.00018",
+     "titulo": "Explaining Explanations: An Overview of Interpretability of Machine Learning",
+     "anio": 2018,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 2345
+    },
+    {
+     "openalex": "W2746553466",
+     "doi": "10.1609/aaai.v30i1.10295",
+     "titulo": "Deep Reinforcement Learning with Double Q-Learning",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "AAAI Publications (The Association for the Advancement of Artificial Intelligence (AAAI))",
+     "citas": 6343
+    },
+    {
+     "openalex": "W2594475271",
+     "doi": "10.48550/arxiv.1702.08608",
+     "titulo": "Towards A Rigorous Science of Interpretable Machine Learning",
+     "anio": 2017,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 3153
+    },
+    {
+     "openalex": "W3004493409",
+     "doi": "10.1002/widm.1356",
+     "titulo": "Bias in data‐driven artificial intelligence systems—An introductory survey",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Wiley Interdisciplinary Reviews Data Mining and Knowledge Discovery",
+     "citas": 1040
+    },
+    {
+     "openalex": "W2995022099",
+     "doi": "10.1561/2200000083",
+     "titulo": "Advances and Open Problems in Federated Learning",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Foundations and Trends® in Machine Learning",
+     "citas": 6305
+    },
+    {
+     "openalex": "W3092541244",
+     "doi": "10.1145/3616865",
+     "titulo": "Fairness in Machine Learning: A Survey",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 508
+    },
+    {
+     "openalex": "W2099618002",
+     "doi": "10.1109/tsmcc.2007.913919",
+     "titulo": "A Comprehensive Survey of Multiagent Reinforcement Learning",
+     "anio": 2008,
+     "tipo": "article",
+     "fuente": "IEEE Transactions on Systems Man and Cybernetics Part C (Applications and Reviews)",
+     "citas": 2267
+    },
+    {
+     "openalex": "W2968923792",
+     "doi": "10.1038/s41524-019-0221-0",
+     "titulo": "Recent advances and applications of machine learning in solid-state materials science",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "npj Computational Materials",
+     "citas": 2666
+    },
+    {
+     "openalex": "W2168029744",
+     "doi": "10.1214/009053607000000677",
+     "titulo": "Kernel methods in machine learning",
+     "anio": 2008,
+     "tipo": "article",
+     "fuente": "The Annals of Statistics",
+     "citas": 1651
+    },
+    {
+     "openalex": "W2910705748",
+     "doi": "10.1073/pnas.1900654116",
+     "titulo": "Definitions, methods, and applications in interpretable machine learning",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Proceedings of the National Academy of Sciences",
+     "citas": 2177
+    },
+    {
+     "openalex": "W3101981467",
+     "doi": "10.1613/jair.1.12228",
+     "titulo": "A Survey on the Explainability of Supervised Machine Learning",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Journal of Artificial Intelligence Research",
+     "citas": 997
+    },
+    {
+     "openalex": "W2155968351",
+     "doi": "10.1609/aaai.v30i1.10295",
+     "titulo": "Deep Reinforcement Learning with Double Q-Learning",
+     "anio": 2016,
+     "tipo": "conference-paper",
+     "fuente": "Proceedings of the AAAI Conference on Artificial Intelligence",
+     "citas": 3456
+    },
+    {
+     "openalex": "W4394857110",
+     "doi": "10.1136/bmj-2023-078378",
+     "titulo": "TRIPOD+AI statement: updated guidance for reporting clinical prediction models that use regression or machine learning methods",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "BMJ",
+     "citas": 3754
+    },
+    {
+     "openalex": "W2942231644",
+     "doi": "10.1109/access.2019.2912200",
+     "titulo": "Review of Deep Learning Algorithms and Architectures",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "IEEE Access",
+     "citas": 1894
+    },
+    {
+     "openalex": "W4213308398",
+     "doi": "10.1007/978-3-030-05318-5",
+     "titulo": "Automated Machine Learning",
+     "anio": 2019,
+     "tipo": "book",
+     "fuente": "The Springer series on challenges in machine learning",
+     "citas": 1481
+    },
+    {
+     "openalex": "W2981731882",
+     "doi": "10.1016/j.inffus.2019.12.012",
+     "titulo": "Explainable Artificial Intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 10076
+    },
+    {
+     "openalex": "W2809684781",
+     "doi": "10.1186/s13174-018-0087-2",
+     "titulo": "A comprehensive survey on machine learning for networking: evolution, applications and research opportunities",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Journal of Internet Services and Applications",
+     "citas": 1036
+    },
+    {
+     "openalex": "W4390229867",
+     "doi": "10.3390/sci6010003",
+     "titulo": "Fairness and Bias in Artificial Intelligence: A Brief Survey of Sources, Impacts, and Mitigation Strategies",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Sci",
+     "citas": 839
+    },
+    {
+     "openalex": "W3033511014",
+     "doi": "10.1038/s42256-020-0186-1",
+     "titulo": "Secure, privacy-preserving and federated machine learning in medical imaging",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Nature Machine Intelligence",
+     "citas": 1494
+    },
+    {
+     "openalex": "W2786122898",
+     "doi": "10.1145/3287560.3287589",
+     "titulo": "A comparative study of fairness-enhancing interventions in machine learning",
+     "anio": 2019,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 598
+    },
+    {
+     "openalex": "W4402843978",
+     "doi": "10.58248/pn633",
+     "titulo": "Interpretable machine learning",
+     "anio": 2020,
+     "tipo": "report",
+     "fuente": null,
+     "citas": 982
+    },
+    {
+     "openalex": "W4382394524",
+     "doi": "10.1038/s41551-023-01056-8",
+     "titulo": "Algorithmic fairness in artificial intelligence for medicine and healthcare",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Nature Biomedical Engineering",
+     "citas": 720
+    }
+   ]
+  },
+  {
+   "codigo": "L",
+   "tema": "Responsible AI",
+   "consulta": "responsible artificial intelligence governance accountability",
+   "total": 96767,
+   "cribados": [
+    {
+     "openalex": "W2981731882",
+     "doi": "10.1016/j.inffus.2019.12.012",
+     "titulo": "Explainable Artificial Intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 10076
+    },
+    {
+     "openalex": "W2953532875",
+     "doi": "10.7861/futurehosp.6-2-94",
+     "titulo": "The potential for artificial intelligence in healthcare",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Future Healthcare Journal",
+     "citas": 3857
+    },
+    {
+     "openalex": "W2981863007",
+     "doi": "10.1186/s41239-019-0171-0",
+     "titulo": "Systematic review of research on artificial intelligence applications in higher education – where are the educators?",
+     "anio": 2019,
+     "tipo": "review",
+     "fuente": "International Journal of Educational Technology in Higher Education",
+     "citas": 6787
+    },
+    {
+     "openalex": "W3000603264",
+     "doi": "10.1038/s41467-019-14108-y",
+     "titulo": "The role of artificial intelligence in achieving the Sustainable Development Goals",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Nature Communications",
+     "citas": 3232
+    },
+    {
+     "openalex": "W2969625533",
+     "doi": "10.1016/j.ijinfomgt.2019.08.002",
+     "titulo": "Artificial Intelligence (AI): Multidisciplinary perspectives on emerging challenges, opportunities, and agenda for research, practice and policy",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "International Journal of Information Management",
+     "citas": 4511
+    },
+    {
+     "openalex": "W4366262984",
+     "doi": "10.1016/j.inffus.2023.101805",
+     "titulo": "Explainable Artificial Intelligence (XAI): What we know and what is left to attain Trustworthy Artificial Intelligence",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 1725
+    },
+    {
+     "openalex": "W3036911563",
+     "doi": "10.1016/j.giq.2020.101493",
+     "titulo": "Data governance: Organizing data for trustworthy Artificial Intelligence",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Government Information Quarterly",
+     "citas": 780
+    },
+    {
+     "openalex": "W4381848566",
+     "doi": "10.1016/j.inffus.2023.101896",
+     "titulo": "Connecting the dots in trustworthy Artificial Intelligence: From AI principles, ethics, and key requirements to responsible AI systems and regulation",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 758
+    },
+    {
+     "openalex": "W3049338919",
+     "doi": "10.1111/puar.13293",
+     "titulo": "Accountable Artificial Intelligence: Holding Algorithms to Account",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Public Administration Review",
+     "citas": 625
+    },
+    {
+     "openalex": "W4304943299",
+     "doi": "10.1007/s10639-022-11316-w",
+     "titulo": "Ethical principles for artificial intelligence in education",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Education and Information Technologies",
+     "citas": 1192
+    },
+    {
+     "openalex": "W4379470483",
+     "doi": "10.3390/jpm13060951",
+     "titulo": "A Review of the Role of Artificial Intelligence in Healthcare",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Journal of Personalized Medicine",
+     "citas": 899
+    },
+    {
+     "openalex": "W4319348251",
+     "doi": "10.1007/s00146-023-01635-y",
+     "titulo": "Accountability in artificial intelligence: what it is and how it works",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "AI & Society",
+     "citas": 428
+    },
+    {
+     "openalex": "W3139363371",
+     "doi": "10.1016/j.giq.2021.101577",
+     "titulo": "Implications of the use of artificial intelligence in public governance: A systematic literature review and a research agenda",
+     "anio": 2021,
+     "tipo": "review",
+     "fuente": "Government Information Quarterly",
+     "citas": 765
+    },
+    {
+     "openalex": "W3001807593",
+     "doi": "10.1145/3351095.3372873",
+     "titulo": "Closing the AI accountability gap",
+     "anio": 2020,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 1352
+    },
+    {
+     "openalex": "W4317748910",
+     "doi": "10.6028/nist.ai.100-1",
+     "titulo": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
+     "anio": 2023,
+     "tipo": "report",
+     "fuente": null,
+     "citas": 1110
+    },
+    {
+     "openalex": "W3195625625",
+     "doi": "10.1007/s10796-021-10186-w",
+     "titulo": "Artificial Intelligence and Business Value: a Literature Review",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Information Systems Frontiers",
+     "citas": 1006
+    },
+    {
+     "openalex": "W2897178686",
+     "doi": "10.1098/rsta.2018.0085",
+     "titulo": "Ethical governance is essential to building trust in robotics and artificial intelligence systems",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Philosophical Transactions of the Royal Society A Mathematical Physical and Engineering Sciences",
+     "citas": 492
+    },
+    {
+     "openalex": "W3124761574",
+     "doi": "10.1016/j.techsoc.2020.101475",
+     "titulo": "Towards a deliberative framework for responsible innovation in artificial intelligence",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Technology in Society",
+     "citas": 213
+    },
+    {
+     "openalex": "W4400303336",
+     "doi": "10.3389/fhumd.2024.1421273",
+     "titulo": "Transparency and accountability in AI systems: safeguarding wellbeing in the age of algorithmic decision-making",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "Frontiers in Human Dynamics",
+     "citas": 417
+    },
+    {
+     "openalex": "W3002093512",
+     "doi": "10.1007/s11023-020-09539-2",
+     "titulo": "Artificial Intelligence, Values, and Alignment",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Minds and Machines",
+     "citas": 742
+    },
+    {
+     "openalex": "W3090117266",
+     "doi": "10.1007/s12525-020-00441-4",
+     "titulo": "Trustworthy artificial intelligence",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Electronic Markets",
+     "citas": 586
+    },
+    {
+     "openalex": "W4413478458",
+     "doi": "10.25300/misq/2021/16274",
+     "titulo": "Managing Artificial Intelligence",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "MIS Quarterly",
+     "citas": 580
+    },
+    {
+     "openalex": "W4221106857",
+     "doi": "10.3389/fsurg.2022.862322",
+     "titulo": "Legal and Ethical Consideration in Artificial Intelligence in Healthcare: Who Takes Responsibility?",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Frontiers in Surgery",
+     "citas": 931
+    },
+    {
+     "openalex": "W4210605645",
+     "doi": "10.1016/j.socscimed.2022.114782",
+     "titulo": "SHIFTing artificial intelligence to be responsible in healthcare: A systematic review",
+     "anio": 2022,
+     "tipo": "review",
+     "fuente": "Social Science & Medicine",
+     "citas": 359
+    },
+    {
+     "openalex": "W4382394524",
+     "doi": "10.1038/s41551-023-01056-8",
+     "titulo": "Algorithmic fairness in artificial intelligence for medicine and healthcare",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Nature Biomedical Engineering",
+     "citas": 720
+    }
+   ]
+  },
+  {
+   "codigo": "M",
+   "tema": "Human-in-the-loop",
+   "consulta": "human-AI decision making automation bias reliance",
+   "total": 48672,
+   "cribados": [
+    {
+     "openalex": "W2981731882",
+     "doi": "10.1016/j.inffus.2019.12.012",
+     "titulo": "Explainable Artificial Intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 10076
+    },
+    {
+     "openalex": "W4247155454",
+     "doi": "10.5465/amr.2018.0072",
+     "titulo": "Artificial Intelligence and Management: The Automation–Augmentation Paradox",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Academy of Management Review",
+     "citas": 2509
+    },
+    {
+     "openalex": "W4211002924",
+     "doi": "10.1093/jopart/muac007",
+     "titulo": "Human–AI Interactions in Public Sector Decision Making: “Automation Bias” and “Selective Adherence” to Algorithmic Advice",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Journal of Public Administration Research and Theory",
+     "citas": 441
+    },
+    {
+     "openalex": "W2969625533",
+     "doi": "10.1016/j.ijinfomgt.2019.08.002",
+     "titulo": "Artificial Intelligence (AI): Multidisciplinary perspectives on emerging challenges, opportunities, and agenda for research, practice and policy",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "International Journal of Information Management",
+     "citas": 4511
+    },
+    {
+     "openalex": "W2997468044",
+     "doi": "10.1007/s00146-019-00931-w",
+     "titulo": "In AI we trust? Perceptions about automated decision-making by artificial intelligence",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "AI & Society",
+     "citas": 1038
+    },
+    {
+     "openalex": "W4360620450",
+     "doi": "10.1016/j.ijinfomgt.2023.102642",
+     "titulo": "Opinion Paper: “So what if ChatGPT wrote it?” Multidisciplinary perspectives on opportunities, challenges and implications of generative conversational AI for research, practice and policy",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "International Journal of Information Management",
+     "citas": 4405
+    },
+    {
+     "openalex": "W3004612364",
+     "doi": "10.1038/s41746-020-0221-y",
+     "titulo": "An overview of clinical decision support systems: benefits, risks, and strategies for success",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "npj Digital Medicine",
+     "citas": 3110
+    },
+    {
+     "openalex": "W4412013201",
+     "doi": "10.1007/s00146-025-02422-7",
+     "titulo": "Exploring automation bias in human–AI collaboration: a review and implications for explainable AI",
+     "anio": 2025,
+     "tipo": "article",
+     "fuente": "AI & Society",
+     "citas": 175
+    },
+    {
+     "openalex": "W4366003124",
+     "doi": "10.1145/3579605",
+     "titulo": "Explanations Can Reduce Overreliance on AI Systems During Decision-Making",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Proceedings of the ACM on Human-Computer Interaction",
+     "citas": 358
+    },
+    {
+     "openalex": "W4283730300",
+     "doi": "10.1016/j.hrmr.2022.100925",
+     "titulo": "An artificial intelligence algorithmic approach to ethical decision-making in human resource management processes",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Human Resource Management Review",
+     "citas": 446
+    },
+    {
+     "openalex": "W4294243134",
+     "doi": "10.1038/s41598-022-18751-2",
+     "titulo": "Experimental evidence of effective human–AI collaboration in medical decision-making",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Scientific Reports",
+     "citas": 237
+    },
+    {
+     "openalex": "W4293229829",
+     "doi": "10.1016/j.hrmr.2022.100899",
+     "titulo": "Unlocking the value of artificial intelligence in human resource management through AI capability framework",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Human Resource Management Review",
+     "citas": 896
+    },
+    {
+     "openalex": "W4403839497",
+     "doi": "10.1038/s41562-024-02024-1",
+     "titulo": "When combinations of humans and AI are useful: A systematic review and meta-analysis",
+     "anio": 2024,
+     "tipo": "review",
+     "fuente": "Nature Human Behaviour",
+     "citas": 518
+    },
+    {
+     "openalex": "W4384120246",
+     "doi": "10.1177/17456916231181102",
+     "titulo": "Three Challenges for AI-Assisted Decision-Making",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Perspectives on Psychological Science",
+     "citas": 190
+    },
+    {
+     "openalex": "W3093066786",
+     "doi": "10.1145/3512930",
+     "titulo": "Deciding Fast and Slow: The Role of Cognitive Biases in AI-assisted Decision-making",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Proceedings of the ACM on Human-Computer Interaction",
+     "citas": 183
+    },
+    {
+     "openalex": "W4406026056",
+     "doi": "10.3390/soc15010006",
+     "titulo": "AI Tools in Society: Impacts on Cognitive Offloading and the Future of Critical Thinking",
+     "anio": 2025,
+     "tipo": "article",
+     "fuente": "Societies",
+     "citas": 1012
+    },
+    {
+     "openalex": "W3156106752",
+     "doi": "10.1145/3397481.3450650",
+     "titulo": "Are Explanations Helpful? A Comparative Study of the Effects of Explanations in AI-Assisted Decision-Making",
+     "anio": 2021,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 306
+    },
+    {
+     "openalex": "W4391849646",
+     "doi": "10.1016/j.heliyon.2024.e26297",
+     "titulo": "Ethical and regulatory challenges of AI technologies in healthcare: A narrative review",
+     "anio": 2024,
+     "tipo": "review",
+     "fuente": "Heliyon",
+     "citas": 1018
+    },
+    {
+     "openalex": "W3036458852",
+     "doi": "10.2196/15154",
+     "titulo": "Artificial Intelligence and Human Trust in Healthcare: Focus on Clinicians",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Journal of Medical Internet Research",
+     "citas": 849
+    },
+    {
+     "openalex": "W4380365974",
+     "doi": "10.1145/3593013.3594087",
+     "titulo": "Towards a Science of Human-AI Decision Making: An Overview of Design Space in Empirical Human-Subject Studies",
+     "anio": 2023,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 195
+    },
+    {
+     "openalex": "W3096454820",
+     "doi": "10.1016/j.jrt.2020.100005",
+     "titulo": "Legal and human rights issues of AI: Gaps, challenges and vulnerabilities",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Journal of Responsible Technology",
+     "citas": 488
+    },
+    {
+     "openalex": "W4392239564",
+     "doi": "10.1080/03075079.2024.2323593",
+     "titulo": "Human-AI collaboration patterns in AI-assisted academic writing",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "Studies in Higher Education",
+     "citas": 412
+    },
+    {
+     "openalex": "W4380078608",
+     "doi": "10.1057/s41599-023-01787-8",
+     "titulo": "RETRACTED ARTICLE: Impact of artificial intelligence on human loss in decision making, laziness and safety in education",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Humanities and Social Sciences Communications",
+     "citas": 341
+    },
+    {
+     "openalex": "W2984353433",
+     "doi": "10.1609/hcomp.v7i1.5285",
+     "titulo": "Beyond Accuracy: The Role of Mental Models in Human-AI Team Performance",
+     "anio": 2019,
+     "tipo": "conference-paper",
+     "fuente": "Proceedings of the AAAI Conference on Human Computation and Crowdsourcing",
+     "citas": 464
+    },
+    {
+     "openalex": "W4391898528",
+     "doi": "10.51594/ijmer.v6i2.773",
+     "titulo": "REVIEWING THE ETHICAL IMPLICATIONS OF AI IN DECISION MAKING PROCESSES",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "International Journal of Management & Entrepreneurship Research",
+     "citas": 186
+    }
+   ]
+  },
+  {
+   "codigo": "N",
+   "tema": "Uncertainty / calibration",
+   "consulta": "probability calibration classifiers uncertainty",
+   "total": 75737,
+   "cribados": [
+    {
+     "openalex": "W1973333099",
+     "doi": "10.1111/1467-9868.00294",
+     "titulo": "Bayesian Calibration of Computer Models",
+     "anio": 2001,
+     "tipo": "article",
+     "fuente": "Journal of the Royal Statistical Society Series B (Statistical Methodology)",
+     "citas": 4302
+    },
+    {
+     "openalex": "W2626967530",
+     "doi": "10.48550/arxiv.1706.04599",
+     "titulo": "On Calibration of Modern Neural Networks",
+     "anio": 2017,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 2519
+    },
+    {
+     "openalex": "W4391197160",
+     "doi": "10.59161/jcgm100-2008e",
+     "titulo": "Evaluation of measurement data — Guide to the expression of uncertainty in measurement",
+     "anio": 2008,
+     "tipo": "other",
+     "fuente": null,
+     "citas": 2801
+    },
+    {
+     "openalex": "W2963466845",
+     "doi": "10.1609/aaai.v33i01.3301590",
+     "titulo": "CheXpert: A Large Chest Radiograph Dataset with Uncertainty Labels and Expert Comparison",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "AAAI Publications (The Association for the Advancement of Artificial Intelligence (AAAI))",
+     "citas": 2712
+    },
+    {
+     "openalex": "W3102100346",
+     "doi": "10.1016/j.inffus.2021.05.008",
+     "titulo": "A review of uncertainty quantification in deep learning: Techniques, applications and challenges",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 2702
+    },
+    {
+     "openalex": "W3014596384",
+     "doi": "10.1007/s10994-021-05946-3",
+     "titulo": "Aleatoric and epistemic uncertainty in machine learning: an introduction to concepts and methods",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Machine Learning",
+     "citas": 1661
+    },
+    {
+     "openalex": "W3183048323",
+     "doi": "10.1007/s10462-023-10562-9",
+     "titulo": "A survey of uncertainty in deep neural networks",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Artificial Intelligence Review",
+     "citas": 1379
+    },
+    {
+     "openalex": "W4376891107",
+     "doi": "10.1007/s10994-023-06336-7",
+     "titulo": "Classifier calibration: a survey on how to assess and improve predicted class probabilities",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Machine Learning",
+     "citas": 205
+    },
+    {
+     "openalex": "W2061759127",
+     "doi": "10.1088/0004-6256/142/4/112",
+     "titulo": "KEPLERINPUT CATALOG: PHOTOMETRIC CALIBRATION AND STELLAR CLASSIFICATION",
+     "anio": 2011,
+     "tipo": "article",
+     "fuente": "The Astronomical Journal",
+     "citas": 859
+    },
+    {
+     "openalex": "W2945125794",
+     "doi": "10.2172/1525811",
+     "titulo": "On Mixup Training: Improved Calibration and Predictive Uncertainty for Deep Neural Networks",
+     "anio": 2019,
+     "tipo": "report",
+     "fuente": null,
+     "citas": 428
+    },
+    {
+     "openalex": "W209020652",
+     "doi": "10.1016/j.ijar.2015.05.002",
+     "titulo": "Evidential calibration of binary SVM classifiers",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "International Journal of Approximate Reasoning",
+     "citas": 84
+    },
+    {
+     "openalex": "W1991956557",
+     "doi": "10.1080/02786826.2010.516283",
+     "titulo": "Design, Calibration, and Field Performance of a Miniature Diffusion Size Classifier",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "Aerosol Science and Technology",
+     "citas": 285
+    },
+    {
+     "openalex": "W3007453563",
+     "doi": "10.1093/jamia/ocz228",
+     "titulo": "A tutorial on calibration measurements and calibration models for clinical prediction models",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Journal of the American Medical Informatics Association",
+     "citas": 496
+    },
+    {
+     "openalex": "W1761851204",
+     "doi": "10.1029/2004wr003604",
+     "titulo": "Uncertainty assessment of hydrologic model states and parameters: Sequential data assimilation using the particle filter",
+     "anio": 2005,
+     "tipo": "article",
+     "fuente": "Water Resources Research",
+     "citas": 827
+    },
+    {
+     "openalex": "W2051768896",
+     "doi": "10.1145/356810.356816",
+     "titulo": "The Hearsay-II Speech-Understanding System: Integrating Knowledge to Resolve Uncertainty",
+     "anio": 1980,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 1355
+    },
+    {
+     "openalex": "W2225109326",
+     "doi": "10.1016/j.jclinepi.2015.12.005",
+     "titulo": "A calibration hierarchy for risk models was defined: from utopia to empirical data",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "Journal of Clinical Epidemiology",
+     "citas": 916
+    },
+    {
+     "openalex": "W2917792182",
+     "doi": "10.48550/arxiv.1902.06977",
+     "titulo": "Evaluating model calibration in classification",
+     "anio": 2019,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 99
+    },
+    {
+     "openalex": "W2777490647",
+     "doi": "10.3390/w10010006",
+     "titulo": "A Guideline for Successful Calibration and Uncertainty Analysis for Soil and Water Assessment: A Review of Papers from the 2016 International SWAT Conference",
+     "anio": 2017,
+     "tipo": "article",
+     "fuente": "Water",
+     "citas": 456
+    },
+    {
+     "openalex": "W2118254415",
+     "doi": "10.1111/j.1365-2664.2006.01136.x",
+     "titulo": "Error and uncertainty in habitat models",
+     "anio": 2006,
+     "tipo": "article",
+     "fuente": "Journal of Applied Ecology",
+     "citas": 658
+    },
+    {
+     "openalex": "W2988175183",
+     "doi": "10.1613/jair.1.12125",
+     "titulo": "Confident Learning: Estimating Uncertainty in Dataset Labels",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Journal of Artificial Intelligence Research",
+     "citas": 756
+    },
+    {
+     "openalex": "W2073832139",
+     "doi": "10.1086/300499",
+     "titulo": "Observational Evidence from Supernovae for an Accelerating Universe and a Cosmological Constant",
+     "anio": 1998,
+     "tipo": "article",
+     "fuente": "The Astronomical Journal",
+     "citas": 19651
+    },
+    {
+     "openalex": "W2063398787",
+     "doi": "10.1080/02626667.2015.1031761",
+     "titulo": "Facets of uncertainty: epistemic uncertainty, non-stationarity, likelihood, hypothesis testing, and communication",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "Hydrological Sciences Journal",
+     "citas": 395
+    },
+    {
+     "openalex": "W2089719636",
+     "doi": "10.1016/j.advwatres.2005.11.013",
+     "titulo": "A framework for dealing with uncertainty due to model structure error",
+     "anio": 2006,
+     "tipo": "article",
+     "fuente": "Advances in Water Resources",
+     "citas": 547
+    },
+    {
+     "openalex": "W2033686454",
+     "doi": "10.1111/j.0906-7590.2008.5203.x",
+     "titulo": "Modeling of species distributions with Maxent: new extensions and a comprehensive evaluation",
+     "anio": 2008,
+     "tipo": "article",
+     "fuente": "Ecography",
+     "citas": 6969
+    },
+    {
+     "openalex": "W2170852626",
+     "doi": "10.1088/0067-0049/203/1/4",
+     "titulo": "THE FERMI LARGE AREA TELESCOPE ON ORBIT: EVENT CLASSIFICATION, INSTRUMENT RESPONSE FUNCTIONS, AND CALIBRATION",
+     "anio": 2012,
+     "tipo": "article",
+     "fuente": "The Astrophysical Journal Supplement Series",
+     "citas": 516
+    }
+   ]
+  },
+  {
+   "codigo": "O",
+   "tema": "Model monitoring / drift",
+   "consulta": "concept drift dataset shift monitoring machine learning",
+   "total": 32607,
+   "cribados": [
+    {
+     "openalex": "W3163993681",
+     "doi": "10.1038/s42254-021-00314-5",
+     "titulo": "Physics-informed machine learning",
+     "anio": 2021,
+     "tipo": "review",
+     "fuente": "Nature Reviews Physics",
+     "citas": 8160
+    },
+    {
+     "openalex": "W2099419573",
+     "doi": "10.1145/2523813",
+     "titulo": "A survey on concept drift adaptation",
+     "anio": 2014,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 3655
+    },
+    {
+     "openalex": "W3153990350",
+     "doi": "10.1007/s12525-021-00475-2",
+     "titulo": "Machine learning and deep learning",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Electronic Markets",
+     "citas": 2655
+    },
+    {
+     "openalex": "W2995022099",
+     "doi": "10.1561/2200000083",
+     "titulo": "Advances and Open Problems in Federated Learning",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Foundations and Trends® in Machine Learning",
+     "citas": 6305
+    },
+    {
+     "openalex": "W2773446523",
+     "doi": "10.1016/j.patcog.2018.07.023",
+     "titulo": "Wild patterns: Ten years after the rise of adversarial machine learning",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Pattern Recognition",
+     "citas": 1446
+    },
+    {
+     "openalex": "W4210883322",
+     "doi": "10.1038/s41467-022-27980-y",
+     "titulo": "Perspectives in machine learning for wildlife conservation",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Nature Communications",
+     "citas": 730
+    },
+    {
+     "openalex": "W2338318698",
+     "doi": "10.1007/s13748-016-0094-0",
+     "titulo": "Learning from imbalanced data: open challenges and future directions",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "Progress in Artificial Intelligence",
+     "citas": 2508
+    },
+    {
+     "openalex": "W4360995249",
+     "doi": "10.1109/access.2023.3262138",
+     "titulo": "Machine Learning Operations (MLOps): Overview, Definition, and Architecture",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "IEEE Access",
+     "citas": 726
+    },
+    {
+     "openalex": "W2809684781",
+     "doi": "10.1186/s13174-018-0087-2",
+     "titulo": "A comprehensive survey on machine learning for networking: evolution, applications and research opportunities",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Journal of Internet Services and Applications",
+     "citas": 1036
+    },
+    {
+     "openalex": "W4220851938",
+     "doi": "10.1016/j.knosys.2022.108632",
+     "titulo": "From concept drift to model degradation: An overview on performance-aware drift detectors",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Knowledge-Based Systems",
+     "citas": 409
+    },
+    {
+     "openalex": "W4283801824",
+     "doi": "10.1038/s41551-022-00898-y",
+     "titulo": "Shifting machine learning for healthcare from development to deployment and from models to data",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Nature Biomedical Engineering",
+     "citas": 428
+    },
+    {
+     "openalex": "W3133814152",
+     "doi": "10.1109/tnnls.2022.3160699",
+     "titulo": "Towards Personalized Federated Learning",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "IEEE Transactions on Neural Networks and Learning Systems",
+     "citas": 1161
+    },
+    {
+     "openalex": "W4361003621",
+     "doi": "10.1259/bjr.20220878",
+     "titulo": "Data drift in medical machine learning: implications and potential remedies",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "British Journal of Radiology",
+     "citas": 261
+    },
+    {
+     "openalex": "W2473394283",
+     "doi": "10.1007/978-1-4302-5990-9",
+     "titulo": "Efficient Learning Machines: Theories, Concepts, and Applications for Engineers and System Designers",
+     "anio": 2015,
+     "tipo": "book",
+     "fuente": "Directory of Open access Books (OAPEN Foundation)",
+     "citas": 457
+    },
+    {
+     "openalex": "W2969580338",
+     "doi": "10.1016/j.jpdc.2019.07.007",
+     "titulo": "Estimation of energy consumption in machine learning",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Journal of Parallel and Distributed Computing",
+     "citas": 560
+    },
+    {
+     "openalex": "W3104128335",
+     "doi": "10.1145/3533378",
+     "titulo": "Challenges in Deploying Machine Learning: A Survey of Case Studies",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 631
+    },
+    {
+     "openalex": "W4300773606",
+     "doi": "10.1016/j.eswa.2022.118934",
+     "titulo": "A survey on machine learning for recurring concept drifting data streams",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Expert Systems with Applications",
+     "citas": 153
+    },
+    {
+     "openalex": "W3043532440",
+     "doi": "10.1007/s10462-020-09876-9",
+     "titulo": "A review on machine learning in 3D printing: applications, potential, and challenges",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Artificial Intelligence Review",
+     "citas": 652
+    },
+    {
+     "openalex": "W2964101383",
+     "doi": "10.1109/comst.2018.2880039",
+     "titulo": "An Overview on Application of Machine Learning Techniques in Optical Networks",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "IEEE Communications Surveys & Tutorials",
+     "citas": 651
+    },
+    {
+     "openalex": "W2002254092",
+     "doi": "10.1109/tnnls.2015.2404803",
+     "titulo": "Machine Learning Methods for Attack Detection in the Smart Grid",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "IEEE Transactions on Neural Networks and Learning Systems",
+     "citas": 655
+    },
+    {
+     "openalex": "W3027572331",
+     "doi": "10.1038/s41597-020-0495-6",
+     "titulo": "PTB-XL, a large publicly available electrocardiography dataset",
+     "anio": 2020,
+     "tipo": "data-paper",
+     "fuente": "Scientific Data",
+     "citas": 1317
+    },
+    {
+     "openalex": "W3046918297",
+     "doi": "10.1109/rbme.2020.3013489",
+     "titulo": "Secure and robust machine learning for healthcare: A survey",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "UWE Research Repository (UWE Bristol)",
+     "citas": 605
+    },
+    {
+     "openalex": "W2890929258",
+     "doi": "10.1016/j.pmcj.2018.09.003",
+     "titulo": "Mental health monitoring with multimodal sensing and machine learning: A survey",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Pervasive and Mobile Computing",
+     "citas": 368
+    },
+    {
+     "openalex": "W3172365935",
+     "doi": "10.1016/j.ptlrs.2021.05.009",
+     "titulo": "Application of machine learning and artificial intelligence in oil and gas industry",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Petroleum Research",
+     "citas": 550
+    },
+    {
+     "openalex": "W2996806689",
+     "doi": "10.1016/j.jnca.2019.102526",
+     "titulo": "The rise of machine learning for detection and classification of malware: Research developments, trends and challenges",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Journal of Network and Computer Applications",
+     "citas": 629
+    }
+   ]
+  },
+  {
+   "codigo": "P",
+   "tema": "Auditability",
+   "consulta": "algorithmic auditing accountability machine learning",
+   "total": 64390,
+   "cribados": [
+    {
+     "openalex": "W2969896603",
+     "doi": "10.1145/3457607",
+     "titulo": "A Survey on Bias and Fairness in Machine Learning",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 5460
+    },
+    {
+     "openalex": "W2964303497",
+     "doi": "10.3390/electronics8080832",
+     "titulo": "Machine Learning Interpretability: A Survey on Methods and Metrics",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Electronics",
+     "citas": 1839
+    },
+    {
+     "openalex": "W2936573766",
+     "doi": "10.1186/s12874-019-0681-4",
+     "titulo": "Machine learning in medicine: a practical introduction",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "BMC Medical Research Methodology",
+     "citas": 1311
+    },
+    {
+     "openalex": "W4402843978",
+     "doi": "10.58248/pn633",
+     "titulo": "Interpretable machine learning",
+     "anio": 2020,
+     "tipo": "report",
+     "fuente": null,
+     "citas": 982
+    },
+    {
+     "openalex": "W3033511014",
+     "doi": "10.1038/s42256-020-0186-1",
+     "titulo": "Secure, privacy-preserving and federated machine learning in medical imaging",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Nature Machine Intelligence",
+     "citas": 1494
+    },
+    {
+     "openalex": "W3001807593",
+     "doi": "10.1145/3351095.3372873",
+     "titulo": "Closing the AI accountability gap",
+     "anio": 2020,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 1352
+    },
+    {
+     "openalex": "W2981731882",
+     "doi": "10.1016/j.inffus.2019.12.012",
+     "titulo": "Explainable Artificial Intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 10076
+    },
+    {
+     "openalex": "W3101981467",
+     "doi": "10.1613/jair.1.12228",
+     "titulo": "A Survey on the Explainability of Supervised Machine Learning",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Journal of Artificial Intelligence Research",
+     "citas": 997
+    },
+    {
+     "openalex": "W2805992252",
+     "doi": "10.1007/s10551-018-3921-3",
+     "titulo": "Ethical Implications and Accountability of Algorithms",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Journal of Business Ethics",
+     "citas": 737
+    },
+    {
+     "openalex": "W2899768131",
+     "doi": "10.1371/journal.pmed.1002689",
+     "titulo": "Machine learning in medicine: Addressing ethical challenges",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "PLoS Medicine",
+     "citas": 926
+    },
+    {
+     "openalex": "W3049338919",
+     "doi": "10.1111/puar.13293",
+     "titulo": "Accountable Artificial Intelligence: Holding Algorithms to Account",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Public Administration Review",
+     "citas": 625
+    },
+    {
+     "openalex": "W2118020692",
+     "doi": "10.1080/158037042000225245",
+     "titulo": "Informal learning in the workplace",
+     "anio": 2004,
+     "tipo": "article",
+     "fuente": "Studies in Continuing Education",
+     "citas": 2599
+    },
+    {
+     "openalex": "W2926701059",
+     "doi": "10.1109/access.2019.2895334",
+     "titulo": "Deep Learning Approach for Intelligent Intrusion Detection System",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "IEEE Access",
+     "citas": 1925
+    },
+    {
+     "openalex": "W3166254754",
+     "doi": "10.1038/s41551-021-00751-8",
+     "titulo": "Synthetic data in machine learning for medicine and healthcare",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Nature Biomedical Engineering",
+     "citas": 744
+    },
+    {
+     "openalex": "W2619904157",
+     "doi": "10.1007/s13347-017-0263-5",
+     "titulo": "Algorithmic Accountability and Public Reason",
+     "anio": 2017,
+     "tipo": "article",
+     "fuente": "Philosophy & Technology",
+     "citas": 444
+    },
+    {
+     "openalex": "W2973193541",
+     "doi": "10.1145/3351095.3375624",
+     "titulo": "Explainable machine learning in deployment",
+     "anio": 2020,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 609
+    },
+    {
+     "openalex": "W2786122898",
+     "doi": "10.1145/3287560.3287589",
+     "titulo": "A comparative study of fairness-enhancing interventions in machine learning",
+     "anio": 2019,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 598
+    },
+    {
+     "openalex": "W3092541244",
+     "doi": "10.1145/3616865",
+     "titulo": "Fairness in Machine Learning: A Survey",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 508
+    },
+    {
+     "openalex": "W2767837247",
+     "doi": "10.1007/s13347-017-0293-z",
+     "titulo": "Algorithmic Decision-Making Based on Machine Learning from Big Data: Can Transparency Restore Accountability?",
+     "anio": 2017,
+     "tipo": "article",
+     "fuente": "Philosophy & Technology",
+     "citas": 253
+    },
+    {
+     "openalex": "W3102100346",
+     "doi": "10.1016/j.inffus.2021.05.008",
+     "titulo": "A review of uncertainty quantification in deep learning: Techniques, applications and challenges",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 2702
+    },
+    {
+     "openalex": "W4223506650",
+     "doi": "10.1016/s2589-7500(22)00003-6",
+     "titulo": "The medical algorithmic audit",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "The Lancet Digital Health",
+     "citas": 239
+    },
+    {
+     "openalex": "W3135371071",
+     "doi": "10.1145/3442188.3445918",
+     "titulo": "Towards Accountability for Machine Learning Datasets: Practices from Software Engineering and Infrastructure",
+     "anio": 2021,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 250
+    },
+    {
+     "openalex": "W3000463950",
+     "doi": "10.1007/s10614-020-10042-0",
+     "titulo": "Explainable Machine Learning in Credit Risk Management",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Computational Economics",
+     "citas": 477
+    },
+    {
+     "openalex": "W2956281901",
+     "doi": "10.1109/tvcg.2019.2934619",
+     "titulo": "The What-If Tool: Interactive Probing of Machine Learning Models",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "IEEE Transactions on Visualization and Computer Graphics",
+     "citas": 518
+    },
+    {
+     "openalex": "W4210253752",
+     "doi": "10.1016/j.health.2022.100016",
+     "titulo": "An artificial intelligence model for heart disease detection using machine learning algorithms",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Healthcare Analytics",
+     "citas": 320
+    }
+   ]
+  },
+  {
+   "codigo": "Q",
+   "tema": "Recruitment analytics",
+   "consulta": "human resource analytics people analytics",
+   "total": 947321,
+   "cribados": [
+    {
+     "openalex": "W2140905468",
+     "doi": "10.1016/j.jbusvent.2009.09.004",
+     "titulo": "Human capital and entrepreneurial success: A meta-analytical review",
+     "anio": 2009,
+     "tipo": "article",
+     "fuente": "Journal of Business Venturing",
+     "citas": 2054
+    },
+    {
+     "openalex": "W2588008928",
+     "doi": "10.1111/1748-8583.12139",
+     "titulo": "Human resource management and employee well‐being: towards a new analytic framework",
+     "anio": 2017,
+     "tipo": "article",
+     "fuente": "Human Resource Management Journal",
+     "citas": 1343
+    },
+    {
+     "openalex": "W2487200295",
+     "doi": "10.1016/j.jbusres.2016.08.001",
+     "titulo": "Critical analysis of Big Data challenges and analytical methods",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "Journal of Business Research",
+     "citas": 2065
+    },
+    {
+     "openalex": "W2128879035",
+     "doi": "10.1002/tea.20237",
+     "titulo": "Understanding the science experiences of successful women of color: Science identity as an analytic lens",
+     "anio": 2007,
+     "tipo": "article",
+     "fuente": "Journal of Research in Science Teaching",
+     "citas": 2415
+    },
+    {
+     "openalex": "W2170488209",
+     "doi": "10.1080/13504620220145401",
+     "titulo": "Mind the Gap: Why do people act environmentally and what are the barriers to pro-environmental behavior?",
+     "anio": 2002,
+     "tipo": "article",
+     "fuente": "Environmental Education Research",
+     "citas": 8815
+    },
+    {
+     "openalex": "W1940609315",
+     "doi": "10.1111/j.1749-8198.2009.00317.x",
+     "titulo": "Searching for Belonging – An Analytical Framework",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "Geography Compass",
+     "citas": 1231
+    },
+    {
+     "openalex": "W3126118131",
+     "doi": "10.1080/09585192.2020.1847166",
+     "titulo": "Insider econometrics meets people analytics and strategic human resource management",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "The International Journal of Human Resource Management",
+     "citas": 48
+    },
+    {
+     "openalex": "W2967769829",
+     "doi": "10.1080/23311886.2019.1653531",
+     "titulo": "Sustainable development: Meaning, history, principles, pillars, and implications for human action: Literature review",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Cogent Social Sciences",
+     "citas": 1858
+    },
+    {
+     "openalex": "W2217809488",
+     "doi": "10.1038/nature04226",
+     "titulo": "A haplotype map of the human genome",
+     "anio": 2005,
+     "tipo": "article",
+     "fuente": "Nature",
+     "citas": 5958
+    },
+    {
+     "openalex": "W2139967155",
+     "doi": "10.5271/sjweh.1050",
+     "titulo": "Psychosocial work environment and mental health—a meta-analytic review",
+     "anio": 2006,
+     "tipo": "article",
+     "fuente": "Scandinavian Journal of Work Environment & Health",
+     "citas": 1885
+    },
+    {
+     "openalex": "W4389266947",
+     "doi": "10.1177/15344843231217181",
+     "titulo": "Integrative Literature Review on People Analytics and Implications From the Perspective of Human Resource Development",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Human Resource Development Review",
+     "citas": 38
+    },
+    {
+     "openalex": "W2015053255",
+     "doi": "10.1038/nature09440",
+     "titulo": "Global threats to human water security and river biodiversity",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "Nature",
+     "citas": 7666
+    },
+    {
+     "openalex": "W3166103365",
+     "doi": "10.1080/0960085x.2021.1927213",
+     "titulo": "The dark sides of people analytics: reviewing the perils for organisations and employees",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "European Journal of Information Systems",
+     "citas": 323
+    },
+    {
+     "openalex": "W2772457693",
+     "doi": "10.1109/comst.2018.2844341",
+     "titulo": "Deep Learning for IoT Big Data and Streaming Analytics: A Survey",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "IEEE Communications Surveys & Tutorials",
+     "citas": 1478
+    },
+    {
+     "openalex": "W2137652298",
+     "doi": "10.1093/oxfordjournals.oep.a041948",
+     "titulo": "SUPPLY-SIDE ECONOMICS: AN ANALYTICAL REVIEW",
+     "anio": 1990,
+     "tipo": "article",
+     "fuente": "Oxford Economic Papers",
+     "citas": 1142
+    },
+    {
+     "openalex": "W4387873713",
+     "doi": "10.1177/15344843231209362",
+     "titulo": "People Analytics and Human Resource Development – Research Landscape and Future Needs Based on Bibliometrics and Scoping Review",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Human Resource Development Review",
+     "citas": 38
+    },
+    {
+     "openalex": "W2171777347",
+     "doi": "10.1038/nature09534",
+     "titulo": "A map of human genome variation from population-scale sequencing",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "Nature",
+     "citas": 8166
+    },
+    {
+     "openalex": "W2977230566",
+     "doi": "",
+     "titulo": "Human Resource Management: People, Data, and Analytics",
+     "anio": 2019,
+     "tipo": "book",
+     "fuente": null,
+     "citas": 22
+    },
+    {
+     "openalex": "W2805983714",
+     "doi": "10.7554/elife.34408",
+     "titulo": "The MR-Base platform supports systematic causal inference across the human phenome",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "eLife",
+     "citas": 8721
+    },
+    {
+     "openalex": "W2517745273",
+     "doi": "10.1016/j.ijpe.2016.08.018",
+     "titulo": "How to improve firm performance using big data analytics capability and business strategy alignment?",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "International Journal of Production Economics",
+     "citas": 1438
+    },
+    {
+     "openalex": "W2089402107",
+     "doi": "10.1002/1097-0266(200010/11)21:10/11<1105::aid-smj133>3.0.co;2-e",
+     "titulo": "Dynamic capabilities: what are they?",
+     "anio": 2000,
+     "tipo": "article",
+     "fuente": "Strategic Management Journal",
+     "citas": 14807
+    },
+    {
+     "openalex": "W1918839972",
+     "doi": "10.1186/s40537-015-0030-3",
+     "titulo": "Big data analytics: a survey",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "Journal Of Big Data",
+     "citas": 816
+    },
+    {
+     "openalex": "W2157338817",
+     "doi": "10.1017/s0140525x00023992",
+     "titulo": "Sex differences in human mate preferences: Evolutionary hypotheses tested in 37 cultures",
+     "anio": 1989,
+     "tipo": "article",
+     "fuente": "Behavioral and Brain Sciences",
+     "citas": 4531
+    },
+    {
+     "openalex": "W2106277748",
+     "doi": "10.1111/j.1528-1167.2009.02481.x",
+     "titulo": "Estimation of the burden of active and life‐time epilepsy: A meta‐analytic approach",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "Epilepsia",
+     "citas": 1470
+    },
+    {
+     "openalex": "W3000065748",
+     "doi": "10.1002/widm.1355",
+     "titulo": "Educational data mining and learning analytics: An updated survey",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Wiley Interdisciplinary Reviews Data Mining and Knowledge Discovery",
+     "citas": 1107
+    }
+   ]
+  },
+  {
+   "codigo": "R",
+   "tema": "Document understanding",
+   "consulta": "document understanding layout analysis PDF parsing",
+   "total": 7801,
+   "cribados": [
+    {
+     "openalex": "W3113753692",
+     "doi": "10.18653/v1/2020.coling-main.82",
+     "titulo": "DocBank: A Benchmark Dataset for Document Layout Analysis",
+     "anio": 2020,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 206
+    },
+    {
+     "openalex": "W3176851559",
+     "doi": "10.18653/v1/2021.acl-long.201",
+     "titulo": "LayoutLMv2: Multi-modal Pre-training for Visually-rich Document Understanding",
+     "anio": 2021,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 480
+    },
+    {
+     "openalex": "W4226020328",
+     "doi": "10.18653/v1/2022.acl-long.534",
+     "titulo": "LiLT: A Simple yet Effective Language-Independent Layout Transformer for Structured Document Understanding",
+     "anio": 2022,
+     "tipo": "conference-paper",
+     "fuente": "Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+     "citas": 141
+    },
+    {
+     "openalex": "W1963947298",
+     "doi": "10.1109/sp.2013.45",
+     "titulo": "Just-In-Time Code Reuse: On the Effectiveness of Fine-Grained Address Space Layout Randomization",
+     "anio": 2013,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 512
+    },
+    {
+     "openalex": "W2891117443",
+     "doi": "10.18653/v1/d18-1476",
+     "titulo": "Chargrid: Towards Understanding 2D Documents",
+     "anio": 2018,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 203
+    },
+    {
+     "openalex": "W2160697532",
+     "doi": "10.1186/gb-2004-5-10-r80",
+     "titulo": "Bioconductor: open software development for computational biology and bioinformatics",
+     "anio": 2004,
+     "tipo": "article",
+     "fuente": "Genome biology",
+     "citas": 12630
+    },
+    {
+     "openalex": "W2046436395",
+     "doi": "10.1162/089120100561755",
+     "titulo": "The Rhetorical Parsing of Unrestricted Texts: A Surface-based Approach",
+     "anio": 2000,
+     "tipo": "article",
+     "fuente": "Computational Linguistics",
+     "citas": 218
+    },
+    {
+     "openalex": "W2970042171",
+     "doi": "10.18653/v1/d19-1348",
+     "titulo": "Visual Detection with Context for Document Layout Analysis",
+     "anio": 2019,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 67
+    },
+    {
+     "openalex": "W4317796310",
+     "doi": "10.1109/comst.2023.3239220",
+     "titulo": "Understanding O-RAN: Architecture, Interfaces, Algorithms, Security, and Research Challenges",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "IEEE Communications Surveys & Tutorials",
+     "citas": 1050
+    },
+    {
+     "openalex": "W3173306993",
+     "doi": "10.18653/v1/2021.findings-acl.28",
+     "titulo": "Spatial Dependency Parsing for Semi-Structured Document Information Extraction",
+     "anio": 2021,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 76
+    },
+    {
+     "openalex": "W2969860478",
+     "doi": "10.48550/arxiv.1908.07836",
+     "titulo": "PubLayNet: largest dataset ever for document layout analysis",
+     "anio": 2019,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 40
+    },
+    {
+     "openalex": "W4399651498",
+     "doi": "10.1002/imt2.211",
+     "titulo": "JCVI: A versatile toolkit for comparative genomics analysis",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "iMeta",
+     "citas": 467
+    },
+    {
+     "openalex": "W2971747530",
+     "doi": "10.1109/cvprw50498.2020.00280",
+     "titulo": "READ: Recursive Autoencoders for Document Layout Generation",
+     "anio": 2020,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 71
+    },
+    {
+     "openalex": "W2904527529",
+     "doi": "10.1109/icdar.2019.00060",
+     "titulo": "Attend, Copy, Parse End-to-end Information Extraction from Documents",
+     "anio": 2019,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 62
+    },
+    {
+     "openalex": "W4220959955",
+     "doi": "10.1002/cl2.1230",
+     "titulo": "PRISMA2020 : An R package and Shiny app for producing PRISMA 2020‐compliant flow diagrams, with interactivity for optimised digital transparency and Open Synthesis",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "Campbell Systematic Reviews",
+     "citas": 3437
+    },
+    {
+     "openalex": "W2743858238",
+     "doi": "10.1016/j.diin.2017.06.013",
+     "titulo": "DROP (DRone Open source Parser) your drone: Forensic analysis of the DJI Phantom III",
+     "anio": 2017,
+     "tipo": "article",
+     "fuente": "Digital Investigation",
+     "citas": 113
+    },
+    {
+     "openalex": "W2521830278",
+     "doi": "10.1007/s10858-016-0060-y",
+     "titulo": "CcpNmr AnalysisAssign: a flexible platform for integrated NMR analysis",
+     "anio": 2016,
+     "tipo": "article",
+     "fuente": "Journal of Biomolecular NMR",
+     "citas": 568
+    },
+    {
+     "openalex": "W4304192731",
+     "doi": "10.48550/arxiv.2210.03347",
+     "titulo": "Pix2Struct: Screenshot Parsing as Pretraining for Visual Language Understanding",
+     "anio": 2022,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 47
+    },
+    {
+     "openalex": "W2914748536",
+     "doi": "10.1007/s11214-018-0576-4",
+     "titulo": "The Space Physics Environment Data Analysis System (SPEDAS)",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Space Science Reviews",
+     "citas": 559
+    },
+    {
+     "openalex": "W3198673906",
+     "doi": "10.1109/iccv48922.2021.00098",
+     "titulo": "Parsing Table Structures in the Wild",
+     "anio": 2021,
+     "tipo": "conference-paper",
+     "fuente": "2021 IEEE/CVF International Conference on Computer Vision (ICCV)",
+     "citas": 58
+    },
+    {
+     "openalex": "W3092694106",
+     "doi": "10.3390/jimaging6100110",
+     "titulo": "Deep Learning for Historical Document Analysis and Recognition—A Survey",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Journal of Imaging",
+     "citas": 115
+    },
+    {
+     "openalex": "W2888532099",
+     "doi": "10.3847/1538-3881/aabc4f",
+     "titulo": "The Astropy Project: Building an Open-science Project and Status of the v2.0 Core Package *",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "The Astronomical Journal",
+     "citas": 7694
+    },
+    {
+     "openalex": "W2166432938",
+     "doi": "10.1186/1471-2105-11-7",
+     "titulo": "TreeGraph 2: Combining and visualizing evidence from different phylogenetic analyses",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "BMC Bioinformatics",
+     "citas": 1677
+    },
+    {
+     "openalex": "W2574797807",
+     "doi": "10.14722/ndss.2016.23115",
+     "titulo": "Automatically Evading Classifiers: A Case Study on PDF Malware Classifiers",
+     "anio": 2016,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 221
+    },
+    {
+     "openalex": "W2900633536",
+     "doi": "10.1016/j.cose.2018.11.001",
+     "titulo": "Survey of machine learning techniques for malware analysis",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Computers & Security",
+     "citas": 571
+    }
+   ]
+  },
+  {
+   "codigo": "S",
+   "tema": "Speech-to-text for interviews",
+   "consulta": "automatic speech recognition robust weak supervision",
+   "total": 46793,
+   "cribados": [
+    {
+     "openalex": "W4311000453",
+     "doi": "10.48550/arxiv.2212.04356",
+     "titulo": "Robust Speech Recognition via Large-Scale Weak Supervision",
+     "anio": 2022,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 1168
+    },
+    {
+     "openalex": "W1479807131",
+     "doi": "10.7551/mitpress/9780262033589.001.0001",
+     "titulo": "Semi-Supervised Learning",
+     "anio": 2006,
+     "tipo": "book",
+     "fuente": "The MIT Press eBooks",
+     "citas": 4341
+    },
+    {
+     "openalex": "W1553004968",
+     "doi": "",
+     "titulo": "Connectionist Speech Recognition: A Hybrid Approach",
+     "anio": 1993,
+     "tipo": "book",
+     "fuente": "Infoscience (Ecole Polytechnique Fédérale de Lausanne)",
+     "citas": 1127
+    },
+    {
+     "openalex": "W4366208220",
+     "doi": "10.48550/arxiv.2304.07193",
+     "titulo": "DINOv2: Learning Robust Visual Features without Supervision",
+     "anio": 2023,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 1068
+    },
+    {
+     "openalex": "W2984353870",
+     "doi": "10.1007/s10994-019-05855-6",
+     "titulo": "A survey on semi-supervised learning",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Machine Learning",
+     "citas": 2666
+    },
+    {
+     "openalex": "W2076462394",
+     "doi": "10.1007/s10489-014-0629-7",
+     "titulo": "Audio-visual speech recognition using deep learning",
+     "anio": 2014,
+     "tipo": "article",
+     "fuente": "Applied Intelligence",
+     "citas": 593
+    },
+    {
+     "openalex": "W2969889150",
+     "doi": "10.1109/access.2019.2936124",
+     "titulo": "Speech Emotion Recognition Using Deep Learning Techniques: A Review",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "IEEE Access",
+     "citas": 694
+    },
+    {
+     "openalex": "W3093579165",
+     "doi": "10.48550/arxiv.2010.10504",
+     "titulo": "Pushing the Limits of Semi-Supervised Learning for Automatic Speech Recognition",
+     "anio": 2020,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 199
+    },
+    {
+     "openalex": "W4281492411",
+     "doi": "10.1109/jstsp.2022.3207050",
+     "titulo": "Self-Supervised Speech Representation Learning: A Review",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "IEEE Journal of Selected Topics in Signal Processing",
+     "citas": 373
+    },
+    {
+     "openalex": "W1992419399",
+     "doi": "10.1145/331499.331504",
+     "titulo": "Data clustering",
+     "anio": 1999,
+     "tipo": "article",
+     "fuente": "ACM Computing Surveys",
+     "citas": 13280
+    },
+    {
+     "openalex": "W1987048275",
+     "doi": "10.1016/j.specom.2011.01.011",
+     "titulo": "Recognising realistic emotions and affect in speech: State of the art and lessons learnt from the first challenge",
+     "anio": 2011,
+     "tipo": "article",
+     "fuente": "Speech Communication",
+     "citas": 763
+    },
+    {
+     "openalex": "W2040036684",
+     "doi": "10.1371/journal.pcbi.1003915",
+     "titulo": "Deep Supervised, but Not Unsupervised, Models May Explain IT Cortical Representation",
+     "anio": 2014,
+     "tipo": "article",
+     "fuente": "PLoS Computational Biology",
+     "citas": 1392
+    },
+    {
+     "openalex": "W3200318528",
+     "doi": "10.1109/access.2021.3112535",
+     "titulo": "Automatic Speech Recognition: Systematic Literature Review",
+     "anio": 2021,
+     "tipo": "review",
+     "fuente": "IEEE Access",
+     "citas": 167
+    },
+    {
+     "openalex": "W2610935556",
+     "doi": "10.1145/3077136.3080832",
+     "titulo": "Neural Ranking Models with Weak Supervision",
+     "anio": 2017,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 312
+    },
+    {
+     "openalex": "W4392487628",
+     "doi": "10.1016/j.inffus.2024.102422",
+     "titulo": "Automatic speech recognition using advanced deep learning approaches: A survey",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "Information Fusion",
+     "citas": 197
+    },
+    {
+     "openalex": "W1673923490",
+     "doi": "10.48550/arxiv.1312.6199",
+     "titulo": "Intriguing properties of neural networks",
+     "anio": 2013,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 5640
+    },
+    {
+     "openalex": "W4226023758",
+     "doi": "10.1109/access.2022.3159339",
+     "titulo": "Long Short-Term Memory Recurrent Neural Network for Automatic Speech Recognition",
+     "anio": 2022,
+     "tipo": "article",
+     "fuente": "IEEE Access",
+     "citas": 201
+    },
+    {
+     "openalex": "W4388017359",
+     "doi": "10.1109/taslp.2023.3328283",
+     "titulo": "End-to-End Speech Recognition: A Survey",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "IEEE/ACM Transactions on Audio Speech and Language Processing",
+     "citas": 211
+    },
+    {
+     "openalex": "W2886300652",
+     "doi": "10.1145/3240508.3240578",
+     "titulo": "Emotion Recognition in Speech using Cross-Modal Transfer in the Wild",
+     "anio": 2018,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 300
+    },
+    {
+     "openalex": "W2784655662",
+     "doi": "10.1109/taffc.2018.2874986",
+     "titulo": "Survey on Emotional Body Gesture Recognition",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "IEEE Transactions on Affective Computing",
+     "citas": 461
+    },
+    {
+     "openalex": "W2903549000",
+     "doi": "10.1109/cvpr.2019.00794",
+     "titulo": "3D Human Pose Estimation in Video With Temporal Convolutions and Semi-Supervised Training",
+     "anio": 2019,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 1350
+    },
+    {
+     "openalex": "W1981706894",
+     "doi": "10.1016/j.csl.2010.06.003",
+     "titulo": "The subspace Gaussian mixture model—A structured model for speech recognition",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "Computer Speech & Language",
+     "citas": 277
+    },
+    {
+     "openalex": "W2810418809",
+     "doi": "10.3390/s18072074",
+     "titulo": "A Review of Emotion Recognition Using Physiological Signals",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Sensors",
+     "citas": 928
+    },
+    {
+     "openalex": "W3179803166",
+     "doi": "10.1109/asru51503.2021.9688093",
+     "titulo": "Layer-Wise Analysis of a Self-Supervised Speech Representation Model",
+     "anio": 2021,
+     "tipo": "conference-paper",
+     "fuente": "2021 IEEE Automatic Speech Recognition and Understanding Workshop (ASRU)",
+     "citas": 245
+    },
+    {
+     "openalex": "W2132444544",
+     "doi": "10.1016/j.specom.2007.01.006",
+     "titulo": "An evaluation of the robustness of existing supervised machine learning approaches to the classification of emotions in speech",
+     "anio": 2007,
+     "tipo": "article",
+     "fuente": "Speech Communication",
+     "citas": 129
+    }
+   ]
+  },
+  {
+   "codigo": "T",
+   "tema": "Interview transcript evaluation",
+   "consulta": "automated interview assessment transcripts language",
+   "total": 28515,
+   "cribados": [
+    {
+     "openalex": "W2955156490",
+     "doi": "10.1016/j.giq.2019.06.002",
+     "titulo": "Defining digital transformation: Results from expert interviews",
+     "anio": 2019,
+     "tipo": "article",
+     "fuente": "Government Information Quarterly",
+     "citas": 1891
+    },
+    {
+     "openalex": "W3012624518",
+     "doi": "10.1073/pnas.1915768117",
+     "titulo": "Racial disparities in automated speech recognition",
+     "anio": 2020,
+     "tipo": "article",
+     "fuente": "Proceedings of the National Academy of Sciences",
+     "citas": 758
+    },
+    {
+     "openalex": "W1267646904",
+     "doi": "10.1038/npjschz.2015.30",
+     "titulo": "Automated analysis of free speech predicts psychosis onset in high-risk youths",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "Schizophrenia",
+     "citas": 693
+    },
+    {
+     "openalex": "W2791063712",
+     "doi": "10.1002/wps.20491",
+     "titulo": "Prediction of psychosis across protocols and risk cohorts using automated language analysis",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "World Psychiatry",
+     "citas": 404
+    },
+    {
+     "openalex": "W4225323055",
+     "doi": "10.48550/arxiv.2204.14198",
+     "titulo": "Flamingo: a Visual Language Model for Few-Shot Learning",
+     "anio": 2022,
+     "tipo": "preprint",
+     "fuente": "arXiv (Cornell University)",
+     "citas": 1238
+    },
+    {
+     "openalex": "W2063042856",
+     "doi": "10.1016/j.cortex.2012.12.006",
+     "titulo": "Automated classification of primary progressive aphasia subtypes from narrative speech transcripts",
+     "anio": 2012,
+     "tipo": "article",
+     "fuente": "Cortex",
+     "citas": 235
+    },
+    {
+     "openalex": "W2594894191",
+     "doi": "10.3389/fpsyg.2017.00269",
+     "titulo": "Connected Speech in Neurodegenerative Language Disorders: A Review",
+     "anio": 2017,
+     "tipo": "article",
+     "fuente": "Frontiers in Psychology",
+     "citas": 375
+    },
+    {
+     "openalex": "W2594910663",
+     "doi": "10.1080/1463922x.2017.1293187",
+     "titulo": "A human factors perspective on automated driving",
+     "anio": 2017,
+     "tipo": "article",
+     "fuente": "Theoretical Issues in Ergonomics Science",
+     "citas": 321
+    },
+    {
+     "openalex": "W2911227954",
+     "doi": "10.1162/tacl_a_00041",
+     "titulo": "Data Statements for Natural Language Processing: Toward Mitigating System Bias and Enabling Better Science",
+     "anio": 2018,
+     "tipo": "article",
+     "fuente": "Transactions of the Association for Computational Linguistics",
+     "citas": 856
+    },
+    {
+     "openalex": "W4405707338",
+     "doi": "10.1038/s44184-024-00112-8",
+     "titulo": "Harnessing multimodal approaches for depression detection using large language models and facial expressions",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "npj Mental Health Research",
+     "citas": 74
+    },
+    {
+     "openalex": "W3089862415",
+     "doi": "10.2196/15708",
+     "titulo": "Machine Learning and Natural Language Processing in Mental Health: Systematic Review",
+     "anio": 2020,
+     "tipo": "review",
+     "fuente": "Journal of Medical Internet Research",
+     "citas": 590
+    },
+    {
+     "openalex": "W4389793309",
+     "doi": "10.3389/fpsyg.2023.1260843",
+     "titulo": "Enhancing academic writing skills and motivation: assessing the efficacy of ChatGPT in AI-assisted language learning for EFL students",
+     "anio": 2023,
+     "tipo": "article",
+     "fuente": "Frontiers in Psychology",
+     "citas": 684
+    },
+    {
+     "openalex": "W2169270546",
+     "doi": "10.64152/10125/44203",
+     "titulo": "The effects of captioning videos used for foreign language listening activities",
+     "anio": 2010,
+     "tipo": "article",
+     "fuente": "Language learning & technology",
+     "citas": 396
+    },
+    {
+     "openalex": "W2981863007",
+     "doi": "10.1186/s41239-019-0171-0",
+     "titulo": "Systematic review of research on artificial intelligence applications in higher education – where are the educators?",
+     "anio": 2019,
+     "tipo": "review",
+     "fuente": "International Journal of Educational Technology in Higher Education",
+     "citas": 6787
+    },
+    {
+     "openalex": "W4223610593",
+     "doi": "10.1038/s41746-022-00589-7",
+     "titulo": "Natural language processing applied to mental illness detection: a narrative review",
+     "anio": 2022,
+     "tipo": "review",
+     "fuente": "npj Digital Medicine",
+     "citas": 475
+    },
+    {
+     "openalex": "W3147637074",
+     "doi": "10.3758/s13428-021-01623-4",
+     "titulo": "Automated evaluation of psychotherapy skills using speech and language technologies",
+     "anio": 2021,
+     "tipo": "article",
+     "fuente": "Behavior Research Methods",
+     "citas": 102
+    },
+    {
+     "openalex": "W2181445435",
+     "doi": "10.1371/journal.pone.0143055",
+     "titulo": "\"Rate My Therapist\": Automated Detection of Empathy in Drug and Alcohol Counseling via Speech and Language Processing",
+     "anio": 2015,
+     "tipo": "article",
+     "fuente": "PLoS ONE",
+     "citas": 115
+    },
+    {
+     "openalex": "W4393397034",
+     "doi": "10.1038/s44184-024-00056-z",
+     "titulo": "Large language models could change the future of behavioral healthcare: a proposal for responsible development and evaluation",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "npj Mental Health Research",
+     "citas": 359
+    },
+    {
+     "openalex": "W4390938781",
+     "doi": "10.3758/s13428-023-02145-x",
+     "titulo": "Automated scoring of the autobiographical interview with natural language processing",
+     "anio": 2024,
+     "tipo": "article",
+     "fuente": "Behavior Research Methods",
+     "citas": 34
+    },
+    {
+     "openalex": "W2146021259",
+     "doi": "10.1177/1461444814524163b",
+     "titulo": "Discourse 2.0: Language and new media",
+     "anio": 2014,
+     "tipo": "book-review",
+     "fuente": "New Media & Society",
+     "citas": 229
+    },
+    {
+     "openalex": "W4402193006",
+     "doi": "10.2196/57400",
+     "titulo": "Large Language Models for Mental Health Applications: Systematic Review",
+     "anio": 2024,
+     "tipo": "review",
+     "fuente": "JMIR Mental Health",
+     "citas": 259
+    },
+    {
+     "openalex": "W2045571829",
+     "doi": "10.1145/50087.50089",
+     "titulo": "A field study of the software design process for large systems",
+     "anio": 1988,
+     "tipo": "article",
+     "fuente": "Communications of the ACM",
+     "citas": 2090
+    },
+    {
+     "openalex": "W4406026056",
+     "doi": "10.3390/soc15010006",
+     "titulo": "AI Tools in Society: Impacts on Cognitive Offloading and the Future of Critical Thinking",
+     "anio": 2025,
+     "tipo": "article",
+     "fuente": "Societies",
+     "citas": 1012
+    },
+    {
+     "openalex": "W3035250245",
+     "doi": "10.18653/v1/2020.acl-main.2",
+     "titulo": "Predicting Depression in Screening Interviews from Latent Categorization of Interview Prompts",
+     "anio": 2020,
+     "tipo": "conference-paper",
+     "fuente": null,
+     "citas": 21
+    },
+    {
+     "openalex": "W1557074680",
+     "doi": "10.1023/a:1007506220214",
+     "titulo": "Statistical Models for Text Segmentation",
+     "anio": 1999,
+     "tipo": "article",
+     "fuente": "Machine Learning",
+     "citas": 684
+    }
+   ]
+  }
+ ]
+}
