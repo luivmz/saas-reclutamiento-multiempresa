@@ -1,0 +1,742 @@
+# paso: 09-cypress
+# comando: npm run cy:run
+# inicio: 2026-09-30 10:56:05 -0500
+
+
+> cy:run
+> npm run e2e:setup && docker compose --profile e2e run --rm cypress
+
+
+> e2e:setup
+> docker compose run --rm --no-deps --entrypoint sh app docker/php/init-e2e-env.sh
+
+ Container reclutamiento-app-run-4748913a01a8 Creating 
+ Container reclutamiento-app-run-4748913a01a8 Created 
+.env.e2e ya existe; no se modifica.
+ Container reclutamiento-postgres-1 Running 
+ Container reclutamiento-redis-1 Running 
+ Container reclutamiento-app-e2e-1 Running 
+ Container reclutamiento-queue-e2e-1 Running 
+ Container reclutamiento-app-1 Running 
+ Container reclutamiento-postgres-1 Waiting 
+ Container reclutamiento-redis-1 Waiting 
+ Container reclutamiento-redis-1 Healthy 
+ Container reclutamiento-postgres-1 Healthy 
+ Container reclutamiento-app-1 Waiting 
+ Container reclutamiento-app-1 Healthy 
+ Container reclutamiento-app-e2e-1 Waiting 
+ Container reclutamiento-app-e2e-1 Healthy 
+ Container reclutamiento-app-e2e-1 Waiting 
+ Container reclutamiento-queue-e2e-1 Waiting 
+ Container reclutamiento-app-e2e-1 Healthy 
+ Container reclutamiento-queue-e2e-1 Healthy 
+ Container reclutamiento-cypress-run-461b19781115 Creating 
+ Container reclutamiento-cypress-run-461b19781115 Created 
+[15:56:10]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [started]
+[15:56:12]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [COMPLETED]
+[212:0930/155612.519856:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[212:0930/155612.954837:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[212:0930/155612.954895:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[212:0930/155612.956099:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+[212:0930/155612.956137:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+[212:0930/155612.956144:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+[212:0930/155612.956149:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+[212:0930/155612.956157:ERROR:dbus/object_proxy.cc:590] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+
+DevTools listening on ws://127.0.0.1:40935/devtools/browser/19ac008a-2588-4fef-b813-b8864f74b9d4
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        15.3.0                                                                         │
+  │ Browser:        Electron 136 (headless)                                                        │
+  │ Node Version:   v22.20.0 (/usr/local/bin/node)                                                 │
+  │ Specs:          20 found (e2e-00-app-dates.cy.js, e2e-01-login.cy.js, e2e-02-register-job-requ │
+  │                 est.cy.js, e2e-03-approve-job-request.cy.js, e2e-04-configure-publish-vacancy. │
+  │                 cy.js, e2e-05-candidate-apply.cy.js, e2e-06-shortlist-candidate.cy.js, e2e-07- │
+  │                 evaluator-records-resul...)                                                    │
+  │ Searched:       cypress**/*.cy.js                                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-00-app-dates.cy.js                                                         (1 of 20)
+[212:0930/155614.358317:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  Soporte · fechas en la zona horaria de la aplicación
+    ✓ usa la fecha de Lima aunque en UTC ya sea el día siguiente (44ms)
+    ✓ coincide con UTC durante el día en Lima (13ms)
+    ✓ usa America/Lima por defecto (12ms)
+
+
+  3 passing (126ms)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        3                                                                                │
+  │ Passing:      3                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     e2e-00-app-dates.cy.js                                                           │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-01-login.cy.js                                                             (2 of 20)
+[212:0930/155617.560644:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-01 · Inicio de sesión por rol
+    ✓ Área solicitante: inicia sesión y ve solo el menú de su rol (7194ms)
+    ✓ Recursos Humanos: inicia sesión y ve solo el menú de su rol (1431ms)
+    ✓ Aprobador / Dirección: inicia sesión y ve solo el menú de su rol (1436ms)
+    ✓ Evaluador: inicia sesión y ve solo el menú de su rol (1428ms)
+    ✓ Postulante: inicia sesión y ve solo el menú de su rol (1396ms)
+    ✓ rechaza credenciales inválidas sin iniciar sesión (1367ms)
+
+
+  6 passing (14s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        6                                                                                │
+  │ Passing:      6                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     14 seconds                                                                       │
+  │ Spec Ran:     e2e-01-login.cy.js                                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-02-register-job-request.cy.js                                              (3 of 20)
+[212:0930/155633.159725:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-02 · El área solicitante registra un requerimiento (RF-01)
+    ✓ registra el requerimiento y lo envía a RR. HH. (10578ms)
+    ✓ no registra un requerimiento con datos obligatorios vacíos (6317ms)
+
+
+  2 passing (17s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     16 seconds                                                                       │
+  │ Spec Ran:     e2e-02-register-job-request.cy.js                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-03-approve-job-request.cy.js                                               (4 of 20)
+[212:0930/155651.260900:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-03 · El aprobador decide un requerimiento validado (RF-03, RF-04)
+    ✓ aprueba el requerimiento validado por RR. HH. (8221ms)
+    ✓ no permite rechazar sin indicar el motivo (6348ms)
+
+
+  2 passing (15s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     14 seconds                                                                       │
+  │ Spec Ran:     e2e-03-approve-job-request.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-04-configure-publish-vacancy.cy.js                                         (5 of 20)
+[212:0930/155707.025004:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-04 · RR. HH. configura y publica una vacante (RF-05 a RF-07)
+    ✓ genera la vacante desde un requerimiento aprobado, la valida y la publica (13329ms)
+    ✓ impide publicar si las ponderaciones no suman 100 (6573ms)
+
+
+  2 passing (20s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     20 seconds                                                                       │
+  │ Spec Ran:     e2e-04-configure-publish-vacancy.cy.js                                           │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-05-candidate-apply.cy.js                                                   (6 of 20)
+[212:0930/155728.273624:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-05 · El postulante completa su perfil y postula (RF-08 a RF-11)
+    ✓ completa perfil, carga su CV, postula y recibe la confirmación (10630ms)
+
+
+  1 passing (11s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     10 seconds                                                                       │
+  │ Spec Ran:     e2e-05-candidate-apply.cy.js                                                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-06-shortlist-candidate.cy.js                                               (7 of 20)
+[212:0930/155740.099638:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-06 · RR. HH. preselecciona a un candidato (RF-12 a RF-15)
+    ✓ revisa la postulación, la preselecciona y el postulante es notificado (10730ms)
+    ✓ no descarta una postulación sin indicar el motivo (6179ms)
+
+
+  2 passing (17s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     16 seconds                                                                       │
+  │ Spec Ran:     e2e-06-shortlist-candidate.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-07-evaluator-records-results.cy.js                                         (8 of 20)
+[212:0930/155758.238167:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-07 · El evaluador registra resultados (RF-19, RF-20)
+    ✓ registra los puntajes de la evaluación asignada dentro del rango de cada criterio (9032ms)
+
+
+  1 passing (9s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     9 seconds                                                                        │
+  │ Spec Ran:     e2e-07-evaluator-records-results.cy.js                                           │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-08-comparison-ranking.cy.js                                                (9 of 20)
+[212:0930/155808.471359:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-08 · RR. HH. consulta la comparación y el ranking (RF-21, RF-22)
+    ✓ muestra el ranking ponderado y explicable sin seleccionar a nadie (7875ms)
+
+
+  1 passing (8s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     7 seconds                                                                        │
+  │ Spec Ran:     e2e-08-comparison-ranking.cy.js                                                  │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-09-human-final-decision.cy.js                                             (10 of 20)
+[212:0930/155817.551511:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-09 · El aprobador registra la decisión final humana (RF-23)
+    ✓ exige justificación y confirmación humana antes de registrar la decisión (7158ms)
+    ✓ registra la decisión eligiendo a un candidato que no es el primero del ranking (6914ms)
+
+
+  2 passing (14s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     14 seconds                                                                       │
+  │ Spec Ran:     e2e-09-human-final-decision.cy.js                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-10-selection-and-closure.cy.js                                            (11 of 20)
+[212:0930/155832.864554:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-10 · RR. HH. registra la selección y cierra el proceso (RF-24 a RF-26)
+    ✓ registra la selección decidida por Dirección, cierra la convocatoria y notifica el resultado (15218ms)
+
+
+  1 passing (15s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     15 seconds                                                                       │
+  │ Spec Ran:     e2e-10-selection-and-closure.cy.js                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-11-multitenancy.cy.js                                                     (12 of 20)
+[212:0930/155849.253924:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  Multitenancy · aislamiento entre organizaciones
+    ✓ RR. HH. de la organización B solo ve sus vacantes y no accede a recursos de A (7026ms)
+    ✓ RR. HH. de la organización A no ve la vacante de B (1808ms)
+    ✓ la auditoría de cada organización no muestra registros de la otra (3639ms)
+    ✓ rechaza acciones sobre identificadores de otra organización (1913ms)
+
+
+  4 passing (15s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      4                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     14 seconds                                                                       │
+  │ Spec Ran:     e2e-11-multitenancy.cy.js                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-12-negative-rules.cy.js                                                   (13 of 20)
+[212:0930/155904.987160:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  Negativos · permisos y reglas del proceso
+    ✓ un rol sin permiso no accede a pantallas de otros roles (10087ms)
+    ✓ no se puede postular a una vacante cerrada (2465ms)
+    ✓ solo el aprobador puede registrar la decisión final (4552ms)
+    ✓ no se puede registrar una selección después del cierre (731ms)
+
+
+  4 passing (18s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      4                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     17 seconds                                                                       │
+  │ Spec Ran:     e2e-12-negative-rules.cy.js                                                      │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-13-full-recruitment-flow.cy.js                                            (14 of 20)
+[212:0930/155924.086721:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  Flujo integral · de requerimiento a auditoría
+    ✓ 01 el área solicitante registra y envía el requerimiento (9514ms)
+    ✓ 02 RR. HH. valida el requerimiento (1946ms)
+    ✓ 03 el aprobador aprueba el requerimiento (2074ms)
+    ✓ 04 RR. HH. genera, valida y publica la vacante (6069ms)
+    ✓ 05 el postulante completa su perfil, carga su CV y postula (4331ms)
+    ✓ 06 RR. HH. preselecciona y programa evaluación y entrevista (3629ms)
+    ✓ 07 el evaluador registra la evaluación y la entrevista (5381ms)
+    ✓ 08 RR. HH. pasa la postulación a finalista y consulta el ranking (1231ms)
+    ✓ 09 el aprobador registra la decisión final humana (1746ms)
+    ✓ 10 RR. HH. registra la selección y cierra la convocatoria (1086ms)
+    ✓ 11 el postulante ve el resultado y su notificación (1669ms)
+    ✓ 12 el aprobador consulta la auditoría del proceso (545ms)
+
+
+  12 passing (40s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        12                                                                               │
+  │ Passing:      12                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     39 seconds                                                                       │
+  │ Spec Ran:     e2e-13-full-recruitment-flow.cy.js                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-14-target-completion-form.cy.js                                           (15 of 20)
+[212:0930/160004.842891:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-14 · RR. HH. captura el plazo objetivo del proceso (GAP-01)
+    ✓ registra el plazo objetivo al configurar una vacante en borrador (8196ms)
+    ✓ el navegador impide enviar un plazo anterior al cierre (6714ms)
+    ✓ el plazo es opcional: la vacante se guarda y publica sin él (6199ms)
+    ✓ deja de poder editarse una vez publicada la vacante (7036ms)
+
+
+  4 passing (28s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      4                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     28 seconds                                                                       │
+  │ Spec Ran:     e2e-14-target-completion-form.cy.js                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-15-operational-risk-panel.cy.js                                           (16 of 20)
+[212:0930/160034.279534:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-15 · Panel de riesgo operacional (RF-29, experimental)
+    ✓ muestra el panel en una vacante publicada, sin inventar una estimación (7186ms)
+    ✓ declara su naturaleza experimental y que no decide nada (5672ms)
+    ✓ nunca habla de candidatos, ranking ni recomendaciones (5493ms)
+    ✓ evita lenguaje alarmista pese a la tasa de alerta alta (5330ms)
+    ✓ no aparece en una vacante en borrador (5232ms)
+    ✓ el Aprobador también lo ve (6715ms)
+    ✓ un postulante no puede consultar el riesgo por la ruta directa (6360ms)
+    ✓ una organización no alcanza el riesgo de otra (4809ms)
+
+
+  8 passing (47s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        8                                                                                │
+  │ Passing:      8                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     47 seconds                                                                       │
+  │ Spec Ran:     e2e-15-operational-risk-panel.cy.js                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-16-tabla-accesible-movil.cy.js                                            (17 of 20)
+[212:0930/160122.534865:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-16 · La tabla de expedientes conserva su semántica en móvil
+    ✓ requerimientos (7884ms)
+    ✓ vacantes (1073ms)
+    ✓ postulaciones de una vacante (834ms)
+    ✓ ranking de la comparación (997ms)
+    ✓ auditoría (2677ms)
+    ✓ evaluaciones asignadas (2392ms)
+    ✓ en móvil cada celda muestra su etiqueta como texto, no como adorno CSS (468ms)
+
+
+  7 passing (17s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        7                                                                                │
+  │ Passing:      7                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     17 seconds                                                                       │
+  │ Spec Ran:     e2e-16-tabla-accesible-movil.cy.js                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-17-motion-accesible.cy.js                                                 (18 of 20)
+[212:0930/160140.875281:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-17 · El movimiento respeta el teclado y a quien lo reduce
+    ✓ el menú de usuario se abre con teclado y devuelve el foco al cerrarse (7095ms)
+    ✓ la navegación móvil se abre, se cierra con Escape y devuelve el foco (908ms)
+    ✓ el diálogo de eliminar la cuenta atrapa y devuelve el foco (694ms)
+    ✓ usa la curva del sistema y no la del navegador (433ms)
+    ✓ con movimiento reducido no se desplaza nada y la interfaz sigue usable (616ms)
+    ✓ con movimiento reducido el esqueleto deja de latir y el spinner sigue girando (449ms)
+    ✓ con movimiento reducido la tabla conserva su semántica accesible (454ms)
+    ✓ el panel de riesgo aparece con una atenuación, sin latido ni alarma (539ms)
+
+
+  8 passing (11s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        8                                                                                │
+  │ Passing:      8                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     11 seconds                                                                       │
+  │ Spec Ran:     e2e-17-motion-accesible.cy.js                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-18-profundidad-portada.cy.js                                              (19 of 20)
+[212:0930/160153.471463:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-18 · La profundidad de la portada es opcional y nunca estorba
+    ✓ si el fragmento de la escena falla, queda el póster y la portada sigue entera (407ms)
+    ✓ en escritorio la escena se monta desde su propio fragmento (712ms)
+    ✓ no descarga la escena hasta que entra en el viewport (590ms)
+    ✓ con movimiento reducido: póster, sin descargar la escena (297ms)
+    ✓ en móvil: póster, sin descargar la escena y sin desbordar (265ms)
+    ✓ en un equipo modesto: póster (281ms)
+    ✓ sin WebGL la escena se muestra igual: no depende de él (636ms)
+    ✓ es decorativa: oculta, inerte y fuera del orden de tabulación (329ms)
+
+
+  8 passing (4s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        8                                                                                │
+  │ Passing:      8                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     3 seconds                                                                        │
+  │ Spec Ran:     e2e-18-profundidad-portada.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  e2e-19-qa-visual-accesible.cy.js                                              (20 of 20)
+[212:0930/160158.508323:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Address does not contain a colon
+
+
+  E2E-19 · QA visual y accesibilidad de la Fase 21
+    ✓ las páginas públicas no se desbordan a 320 px (WCAG 1.4.10) (6055ms)
+    ✓ cada pantalla de acceso tiene un único contenido principal (835ms)
+    ✓ el enlace de salto enfocado mide al menos 24 px de alto (WCAG 2.5.8) (226ms)
+    ✓ la alerta de rechazo se lee en light (WCAG 1.4.3) (2010ms)
+    ✓ el error de un campo y el botón destructivo se leen en light (796ms)
+    ✓ la alerta de rechazo se lee en dark (WCAG 1.4.3) (605ms)
+    ✓ el error de un campo y el botón destructivo se leen en dark (873ms)
+
+
+  7 passing (12s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        7                                                                                │
+  │ Passing:      7                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     11 seconds                                                                       │
+  │ Spec Ran:     e2e-19-qa-visual-accesible.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  e2e-00-app-dates.cy.js                   131ms        3        3        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-01-login.cy.js                       00:14        6        6        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-02-register-job-request.cy.js        00:16        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-03-approve-job-request.cy.js         00:14        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-04-configure-publish-vacancy.cy      00:20        2        2        -        -        - │
+  │    .js                                                                                         │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-05-candidate-apply.cy.js             00:10        1        1        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-06-shortlist-candidate.cy.js         00:16        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-07-evaluator-records-results.cy      00:09        1        1        -        -        - │
+  │    .js                                                                                         │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-08-comparison-ranking.cy.js          00:07        1        1        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-09-human-final-decision.cy.js        00:14        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-10-selection-and-closure.cy.js       00:15        1        1        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-11-multitenancy.cy.js                00:14        4        4        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-12-negative-rules.cy.js              00:17        4        4        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-13-full-recruitment-flow.cy.js       00:39       12       12        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-14-target-completion-form.cy.js      00:28        4        4        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-15-operational-risk-panel.cy.js      00:47        8        8        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-16-tabla-accesible-movil.cy.js       00:17        7        7        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-17-motion-accesible.cy.js            00:11        8        8        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-18-profundidad-portada.cy.js         00:03        8        8        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-19-qa-visual-accesible.cy.js         00:11        7        7        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        05:31       85       85        -        -        -  
+
+
+# fin: 2026-09-30 11:02:12 -0500
+# código de salida: 0

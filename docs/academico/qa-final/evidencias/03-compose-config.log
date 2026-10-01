@@ -1,0 +1,8 @@
+# paso: 03-compose-config
+# comando: docker compose config --quiet && echo "docker compose config: OK"
+# inicio: 2026-09-30 10:53:05 -0500
+
+docker compose config: OK
+
+# fin: 2026-09-30 10:53:05 -0500
+# código de salida: 0

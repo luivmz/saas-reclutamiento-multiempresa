@@ -1,0 +1,24 @@
+# paso: 02-entorno
+# comando: docker version --format "Docker {{.Server.Version}}" && docker compose version && docker compose ps --format "table {{.Service}}\t{{.Image}}\t{{.Status}}" && docker compose exec -T app php -v && docker compose exec -T app node --version && docker compose exec -T postgres postgres --version && docker compose exec -T redis redis-server --version
+# inicio: 2026-09-30 10:53:03 -0500
+
+Docker 29.7.2
+Docker Compose version v5.5.1
+SERVICE     IMAGE                   STATUS
+app         reclutamiento-php:dev   Up 3 hours (healthy)
+app-e2e     reclutamiento-php:dev   Up 3 hours (healthy)
+postgres    postgres:17.11-alpine   Up 3 hours (healthy)
+queue       reclutamiento-php:dev   Up 15 minutes (healthy)
+queue-e2e   reclutamiento-php:dev   Up 15 minutes (healthy)
+redis       redis:7.4.11-alpine     Up 3 hours (healthy)
+PHP 8.4.25 (cli) (built: Aug 27 2026 20:19:33) (NTS)
+Copyright (c) The PHP Group
+Built by https://github.com/docker-library/php
+Zend Engine v4.4.25, Copyright (c) Zend Technologies
+    with Zend OPcache v8.4.25, Copyright (c), by Zend Technologies
+v22.23.2
+postgres (PostgreSQL) 17.11
+Redis server v=7.4.11 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=fbf7a7d03c2e9219
+
+# fin: 2026-09-30 10:53:05 -0500
+# código de salida: 0
