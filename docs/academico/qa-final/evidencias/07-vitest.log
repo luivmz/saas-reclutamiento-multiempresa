@@ -1,0 +1,22 @@
+# paso: 07-vitest
+# comando: docker compose exec -T app npx vp test --run
+# inicio: 2026-09-30 10:54:44 -0500
+
+
+ RUN  v4.1.11 /var/www/html
+
+ ✓ resources/js/components/data-table.test.tsx (7 tests) 27ms
+ ✓ resources/js/components/experience-3d/experience-3d.test.tsx (13 tests) 23ms
+ ✓ resources/js/components/form-controls.test.tsx (8 tests) 28ms
+ ✓ resources/js/components/password-input.test.tsx (3 tests) 20ms
+ ✓ resources/js/components/motion.test.tsx (5 tests) 23ms
+ ✓ resources/js/components/visual-qa.test.tsx (6 tests) 39ms
+
+ Test Files  6 passed (6)
+      Tests  42 passed (42)
+   Start at  15:54:56
+   Duration  1.39s (transform 2.17s, setup 0ms, import 4.29s, tests 160ms, environment 1ms)
+
+
+# fin: 2026-09-30 10:54:57 -0500
+# código de salida: 0
