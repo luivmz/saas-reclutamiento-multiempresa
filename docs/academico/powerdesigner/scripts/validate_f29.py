@@ -247,7 +247,7 @@ FORMATS = {   # formato: (DOCX sin extensión, exportación formal, borradores s
            [f'practica-05/diagramas/draft/F5-bpmn-to-be-parte{x}.png' for x in ('1', '2a', '2b', '3')], True),
     'F8': ('practica-08/F8_Diagrama_Casos_de_Uso_Colegio_Andino', 'F8_Casos_de_Uso_Academicos.png',
            ['practica-08/diagramas/draft/F8-casos-de-uso-academico.png'], False),
-    'F11': ('practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino', 'ARQ-01_Arquitectura_Conceptual.png',
+    'F11': ('practica-11/F11_Arquitectura_del_Sistema_Colegio_Andino', 'ARQ-01_Arquitectura_Conceptual.png',
             ['practica-11/diagramas/draft/F11-arquitectura-conceptual.png'], True),
 }
 
@@ -297,10 +297,22 @@ for fmt, (stem, exp, drafts, landscape) in FORMATS.items():
     draft_sha = {sha((ACAD / d).read_bytes()) for d in drafts}
     check(not (draft_sha & media_sha), f'{fmt} DOCX: ningún borrador (diagramas/draft) incrustado')
     cap_sha = {sha((F29 / 'evidencias' / 'capturas' / c).read_bytes()) for c in CAPS[fmt]}
-    check(cap_sha <= media_sha, f'{fmt} DOCX: incrusta sus {len(cap_sha)} capturas de PowerDesigner')
+    # El F11 definitivo usa la plantilla oficial: exige ARQ-01, no una captura del editor.
+    # La captura sigue validada y registrada como evidencia F29, fuera del entregable oficial.
+    if fmt == 'F11':
+        evidence = (ACAD / 'practica-11/evidencias/README.md').read_text(encoding='utf-8')
+        manifest = (F29 / 'MANIFEST.md').read_text(encoding='utf-8')
+        check(all(c in evidence and c in manifest and sha((F29 / 'evidencias/capturas' / c).read_bytes())
+                  in evidence and sha((F29 / 'evidencias/capturas' / c).read_bytes()) in manifest
+                  for c in CAPS[fmt]),
+              'F11: captura externa registrada con ruta y SHA-256 correctos en evidencias y MANIFEST')
+    else:
+        check(cap_sha <= media_sha, f'{fmt} DOCX: incrusta sus {len(cap_sha)} capturas de PowerDesigner')
     core = z.read('docProps/core.xml').decode('utf-8')
     check(bool(re.search(r'<dc:title>Formato \d+', core)) and '____' not in doc, f'{fmt} DOCX: título y sin campos vacíos')
-    old = subprocess.run(['git', 'show', f'{BASE_REF}:docs/academico/{stem}.docx'], cwd=ROOT, capture_output=True).stdout
+    # El F11 definitivo apareció en F11-R; el adaptado de e49b313 permanece histórico.
+    baseline = '3661199' if fmt == 'F11' else BASE_REF
+    old = subprocess.run(['git', 'show', f'{baseline}:docs/academico/{stem}.docx'], cwd=ROOT, capture_output=True).stdout
     old_doc = zipfile.ZipFile(__import__('io').BytesIO(old)).read('word/document.xml').decode('utf-8')
     head_pat = r'<w:numId w:val="1"/>' if fmt != 'F11' else r'w:val="Ttulo1"'
     check(doc.count('<w:tbl>') >= old_doc.count('<w:tbl>') and doc.count(head_pat) == old_doc.count(head_pat),

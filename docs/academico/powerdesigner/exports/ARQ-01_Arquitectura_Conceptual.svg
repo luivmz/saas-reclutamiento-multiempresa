@@ -577,123 +577,147 @@
    <a target="_parent" xlink:href="#A7D98E50-9410-44F4-9932-F377E6F6E427">
       <polyline fill="none" points="242,296 361,296" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="348,300 361,296 348,292" stroke="#8080ff" stroke-width="1"/>
-      <text x="301" y="291" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">usan</text>
+      <text x="301" y="267" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">usan</text>
    </a>
    <a target="_parent" xlink:href="#E731CD8D-42C6-4CB8-9325-42C79422CF79">
       <polyline fill="none" points="576,296 721,296" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="708,300 721,296 708,292" stroke="#8080ff" stroke-width="1"/>
-      <text x="648" y="291" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-01 credenciales / sesión</text>
+      <text x="665" y="251" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-01</text>
+      <text x="665" y="263" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">credenciales /</text>
+      <text x="665" y="275" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">sesión</text>
    </a>
    <a target="_parent" xlink:href="#A9AD3DB3-99A7-46AC-BCD5-D9EF064CF55C">
       <polyline fill="none" points="936,296 1094,296" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1081,300 1094,296 1081,292" stroke="#8080ff" stroke-width="1"/>
-      <text x="1015" y="291" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-02 identidad, rol, organización</text>
+      <text x="1015" y="251" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-02</text>
+      <text x="1015" y="263" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">identidad, rol,</text>
+      <text x="1015" y="275" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">organización</text>
    </a>
    <a target="_parent" xlink:href="#6288BED3-FEB3-4289-8B77-4C1B9912CAE1">
       <polyline fill="none" points="1202,343 1202,509" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1198,496 1202,509 1206,496" stroke="#8080ff" stroke-width="1"/>
-      <text x="1202" y="430" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-03 autoriza y filtra por organización</text>
+      <text x="1115" y="421" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-03</text>
+      <text x="1115" y="433" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">autoriza y</text>
+      <text x="1115" y="445" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">filtra por</text>
+      <text x="1115" y="457" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">organización</text>
    </a>
    <a target="_parent" xlink:href="#7ED3B4E6-D719-4EAA-B5B6-42D6AEB08B2B">
       <polyline fill="none" points="1282,343 1282,436 1935,436 1935,1096 1470,1096" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1483,1092 1470,1096 1483,1100" stroke="#8080ff" stroke-width="1"/>
-      <text x="1935" y="439" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-03 autoriza y filtra por organización</text>
+      <text x="1815" y="463" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-03 autoriza y filtra por organización</text>
    </a>
    <a target="_parent" xlink:href="#99BD8566-C34B-4D55-848D-78686433B181">
       <polyline fill="none" points="469,343 469,509" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="465,496 469,509 473,496" stroke="#8080ff" stroke-width="1"/>
-      <text x="468" y="430" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-04 uso (a través de C03)</text>
+      <text x="535" y="430" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-04 uso (a través de C03)</text>
    </a>
    <a target="_parent" xlink:href="#A9441820-6F12-4A76-ABA7-7954D955F845">
       <polyline fill="none" points="590,642 721,642" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="708,646 721,642 708,638" stroke="#8080ff" stroke-width="1"/>
-      <text x="655" y="638" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-05 requerimiento aprobado</text>
+      <text x="655" y="597" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-05</text>
+      <text x="655" y="609" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">requerimiento</text>
+      <text x="655" y="621" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">aprobado</text>
    </a>
    <a target="_parent" xlink:href="#850AF644-84F4-4E6E-A3F2-B738ABE7BB78">
       <polyline fill="none" points="936,642 1068,642" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1054,646 1068,642 1054,638" stroke="#8080ff" stroke-width="1"/>
-      <text x="1002" y="638" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-06 vacante publicada</text>
+      <text x="1002" y="597" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-06</text>
+      <text x="1002" y="609" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">vacante</text>
+      <text x="1002" y="621" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">publicada</text>
    </a>
    <a target="_parent" xlink:href="#CA4EF4C7-99EF-435B-93BC-35B79FED8EEB">
       <polyline fill="none" points="1414,642 1283,642" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1296,638 1283,642 1296,646" stroke="#8080ff" stroke-width="1"/>
-      <text x="1348" y="638" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-07 perfil y CV</text>
+      <text x="1348" y="616" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-07</text>
+      <text x="1348" y="628" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">perfil y CV</text>
    </a>
    <a target="_parent" xlink:href="#BA44DD44-99F6-4844-9447-3BEFCC4DD36E">
       <polyline fill="none" points="482,781 482,736 1122,736 1122,690" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1126,703 1122,690 1118,703" stroke="#8080ff" stroke-width="1"/>
-      <text x="802" y="749" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-08 postulación elegible / avance de </text>
-      <text x="802" y="761" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">etapa</text>
+      <text x="802" y="757" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-08 postulación elegible /</text>
+      <text x="802" y="769" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">avance de etapa</text>
    </a>
    <a target="_parent" xlink:href="#478F9F18-9829-4296-95C1-745F6BAFA428">
       <polyline fill="none" points="590,829 721,829" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="708,833 721,829 708,825" stroke="#8080ff" stroke-width="1"/>
-      <text x="655" y="824" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-09 resultados realizados</text>
+      <text x="655" y="843" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-09</text>
+      <text x="655" y="855" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">resultados</text>
+      <text x="655" y="867" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">realizados</text>
    </a>
    <a target="_parent" xlink:href="#E7B36275-E776-46B4-9E5C-6B9CA10F441E">
       <polyline fill="none" points="936,829 1068,829" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1054,833 1068,829 1054,825" stroke="#8080ff" stroke-width="1"/>
-      <text x="1002" y="824" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-10 comparación (apoyo; no elige)</text>
+      <text x="1002" y="851" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-10</text>
+      <text x="1002" y="863" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">comparación</text>
+      <text x="1002" y="875" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">(apoyo;</text>
+      <text x="1002" y="887" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">no elige)</text>
    </a>
    <a target="_parent" xlink:href="#70D56C81-18AB-44D0-99E2-F6600CC17AF0">
       <polyline fill="none" points="1283,829 1414,829" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1401,833 1414,829 1401,825" stroke="#8080ff" stroke-width="1"/>
-      <text x="1349" y="824" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-11 decisión humana registrada</text>
+      <text x="1348" y="843" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-11</text>
+      <text x="1348" y="855" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">decisión humana</text>
+      <text x="1348" y="867" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">registrada</text>
    </a>
    <a target="_parent" xlink:href="#A118B401-4851-444A-9976-72C737BEC931">
       <polyline fill="none" points="1522,781 1522,736 1229,736 1229,690" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1233,703 1229,690 1225,703" stroke="#8080ff" stroke-width="1"/>
-      <text x="1375" y="733" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-12 transiciones seleccionado / no </text>
-      <text x="1375" y="745" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">seleccionado</text>
+      <text x="1375" y="751" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-12 transiciones</text>
+      <text x="1375" y="763" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">seleccionado /</text>
+      <text x="1375" y="775" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">no seleccionado</text>
    </a>
    <a target="_parent" xlink:href="#C36412EF-E3D3-47CD-9EFB-3F4CC25DF0C4">
       <polyline fill="none" points="1362,936 1362,1048" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1358,1035 1362,1048 1366,1035" stroke="#8080ff" stroke-width="1"/>
-      <text x="1362" y="996" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-13 registro de acciones críticas</text>
+      <text x="1455" y="990" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-13 registro de</text>
+      <text x="1455" y="1002" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">acciones críticas</text>
    </a>
    <a target="_parent" xlink:href="#9E9307D5-6BBC-4383-BCB4-99E529F62074">
       <polyline fill="none" points="562,936 562,1048" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="558,1035 562,1048 566,1035" stroke="#8080ff" stroke-width="1"/>
-      <text x="562" y="996" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-14 eventos de notificación</text>
+      <text x="655" y="990" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-14 eventos de</text>
+      <text x="655" y="1002" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">notificación</text>
    </a>
    <a target="_parent" xlink:href="#9BD6C738-AA2A-4C20-9281-53ECDFF25940">
       <polyline fill="none" points="562,1143 562,1288" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="558,1275 562,1288 566,1275" stroke="#8080ff" stroke-width="1"/>
-      <text x="562" y="1219" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-15 encolado</text>
+      <text x="622" y="1219" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-15 encolado</text>
    </a>
    <a target="_parent" xlink:href="#CF00943D-ECEF-400F-866F-22AE59AB7128">
       <polyline fill="none" points="1282,936 1282,1189 1282,1288" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1278,1275 1282,1288 1286,1275" stroke="#8080ff" stroke-width="1"/>
-      <text x="1282" y="1193" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-16 persistencia</text>
+      <text x="1342" y="1166" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-16 persistencia</text>
    </a>
    <a target="_parent" xlink:href="#85FA9E27-A055-444B-A10B-8B1195AE4589">
       <polyline fill="none" points="1415,1143 1415,1288" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1411,1275 1415,1288 1419,1275" stroke="#8080ff" stroke-width="1"/>
-      <text x="1415" y="1219" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-16 persistencia</text>
+      <text x="1475" y="1219" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-16 persistencia</text>
    </a>
    <a target="_parent" xlink:href="#7C3DE1C2-9E4A-4E75-A1BB-5FFB8B3A9DF1">
       <polyline fill="none" points="1630,642 1682,642 1682,1288" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1678,1275 1682,1288 1686,1275" stroke="#8080ff" stroke-width="1"/>
-      <text x="1722" y="817" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-17 CV (escritura y descarga autorizada)</text>
+      <text x="1602" y="973" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-17 CV (escritura</text>
+      <text x="1602" y="985" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">y descarga</text>
+      <text x="1602" y="997" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">autorizada)</text>
    </a>
    <a target="_parent" xlink:href="#39BBF08D-329E-4F53-A914-FC17E166EEE9">
       <polyline fill="none" points="1175,595 1175,576 1762,576 1762,1288" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="1758,1275 1762,1288 1766,1275" stroke="#8080ff" stroke-width="1"/>
-      <text x="1468" y="563" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-17 CV (escritura y descarga autorizada)</text>
+      <text x="1468" y="587" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-17 CV (escritura y descarga autorizada)</text>
    </a>
    <a target="_parent" xlink:href="#C4FE7ADD-8ADB-4F5B-A92D-9403CBD3CEB3">
       <polyline fill="none" points="802,343 802,442 282,442 282,1336 454,1336" stroke="#8080ff" stroke-width="1"/>
       <polyline fill="none" points="441,1340 454,1336 441,1332" stroke="#8080ff" stroke-width="1"/>
-      <text x="282" y="446" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-18 sesión</text>
+      <text x="335" y="479" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-18 sesión</text>
    </a>
    <a target="_parent" xlink:href="#ED2F430A-942D-4BE6-9DFF-57C46B644ACC">
       <polyline fill="none" points="829,595 829,469 1629,469 1629,343" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
       <polyline fill="none" points="1633,357 1629,343 1625,357" stroke="#8080ff" stroke-width="1"/>
-      <text x="1228" y="473" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-19 15 variables operacionales (opcional)</text>
+      <text x="1015" y="506" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-19 15 variables operacionales (opcional)</text>
    </a>
    <a target="_parent" xlink:href="#50092997-FF87-4A34-82FB-71BF1FA09E98">
       <polyline fill="none" points="1735,248 1735,122 389,122 389,248" stroke="#8080ff" stroke-width="1" stroke-dasharray="16,8"/>
       <polyline fill="none" points="385,235 389,248 393,235" stroke="#8080ff" stroke-width="1"/>
-      <text x="1062" y="118" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-20 información descriptiva de riesgo</text>
+      <text x="1062" y="151" fill="#000000" font-size="12" font-family="'Arial Unicode MS','Arial'" text-anchor="middle">R-20 información descriptiva de riesgo</text>
    </a>
 </svg>

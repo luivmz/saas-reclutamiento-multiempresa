@@ -16,7 +16,7 @@ Formalización en **PowerDesigner 16.6** de las cuatro vistas académicas especi
 | Capturas de PowerDesigner (7, reales) | **COMPLETED** ([registro](evidencias/capturas/CAPTURAS_PENDIENTES.md)) |
 | Exportaciones formales en los Formatos 03, 05, 08 y 11 | **INTEGRATED**: son el diagrama principal de cada formato |
 | DOCX y PDF de F3, F5, F8 y F11 | **UPDATED**: se regeneraron con el generador `tools/f27b/` |
-| Observaciones abiertas | F29-L01, F29-L02 y F29B-OBS-01 (LOW, para la F31), además de H-14 y F28-L01, que ya venían de fases anteriores |
+| Cierre F31 | F29-L02 **RESUELTA**; F29-L01 y F29B-OBS-01 **ACEPTADAS** por limitación de herramienta; H-14 **RESUELTA** y F28-L01 **NO APLICA** |
 
 Los modelos reabiertos desde el disco reproducen exactamente sus exportaciones (hotfix F29B). La integración aplicó la regla 3 de la [lista de trabajo](../POWERDESIGNER_WORKLIST.md): el borrador de cada Formato se sustituyó por la exportación formal solo después de las auditorías F29 y F29B.
 
@@ -106,11 +106,8 @@ Durante la investigación se detectaron y borraron del modelo BPM 9 objetos hué
 ## Limitaciones y observaciones
 
 - **Capturas de PowerDesigner:** COMPLETED. Son 7 capturas reales de la ventana de PowerDesigner, tomadas con los modelos reabiertos desde el disco ([`scripts/capture_f29_views.ps1`](scripts/capture_f29_views.ps1) y [registro](evidencias/capturas/CAPTURAS_PENDIENTES.md)). Sustituyen a las cinco anteriores al hotfix F29B, que nunca se versionaron. Ninguna es simulada.
-- **F29B-OBS-01 (herramienta):** en la vista principal del editor, los recuadros de SP-01 y SP-P aparecen sin contenido. Su contenido se ve en los diagramas de detalle y en las exportaciones reproducibles. Ver [`F29B_HOTFIX.md`](F29B_HOTFIX.md).
+- **F29B-OBS-01 (herramienta, ACEPTADA en F31):** en la vista principal del editor, los recuadros de SP-01 y SP-P aparecen sin contenido. Su contenido se ve en los diagramas de detalle y en las exportaciones reproducibles. Ver [`F29B_HOTFIX.md`](F29B_HOTFIX.md).
 - **Formatos DOCX y PDF:** UPDATED. En F3, F5, F8 y F11 el diagrama principal es la exportación formal, completa y en página horizontal cuando es muy ancha, seguida de ampliaciones sin retoque. Microsoft Word reduce las imágenes del PDF a unos 200 ppp; el DOCX conserva la resolución original de la exportación. Los borradores quedan como antecedente (DRAFT / SUPERSEDED BY F29 FORMAL EXPORT).
 - **Diagrama raíz vacío:** cada modelo conserva el diagrama raíz que PowerDesigner creó con él, vacío.
 - **Finales de línea:** git normaliza a LF los `.bpm`, `.oom` y `.svg`. El manifiesto da el SHA-256 del contenido versionado.
-- **LOW heredados:** H-14 y F28-L01 (cabeceras de PDF) siguen asignados a la F31; esta fase no los aborda. También van a la F31:
-  - F29-L01: `RepositoryFilename` con ruta local;
-  - F29-L02: rótulos de ARQ-01 que rozan líneas o bordes;
-  - F29B-OBS-01: contenido de los subprocesos compuestos, que no se ve en la vista principal del editor.
+- **Cierre F31:** H-14 RESUELTA; F28-L01 NO APLICA; F29-L02 RESUELTA mediante [`scripts/f31-arq01-label-cleanup.ps1`](scripts/f31-arq01-label-cleanup.ps1), con geometría estable tras guardar/reabrir. F29-L01 queda ACEPTADA: `RepositoryFilename` es metadata local que PowerDesigner reescribe al guardar y los scripts no la consumen. F29B-OBS-01 queda ACEPTADA con sus diagramas de detalle y exports como evidencia formal.

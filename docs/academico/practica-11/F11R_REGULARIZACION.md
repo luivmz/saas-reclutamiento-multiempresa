@@ -114,12 +114,12 @@ Se conservan tal como están en [`RELATIONSHIPS.md`](RELATIONSHIPS.md): mismo id
 
 ## ARQ-01
 
-Se reutiliza la exportación formal auditada en la F29 y el hotfix F29B ([`ARQ-01_Arquitectura_Conceptual.png`](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png)), **sin rediseñarla ni retocarla**. Conserva los identificadores C01 a C17; el documento oficial aporta la equivalencia con CMP-xx. En el DOCX:
+Se reutiliza la exportación formal auditada en F29/F29B y saneada visualmente en F31 ([`ARQ-01_Arquitectura_Conceptual.png`](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png)), **sin rediseñarla semánticamente**. F31 ajusta la presentación de sus rótulos. Conserva los identificadores C01 a C17; el documento oficial aporta la equivalencia con CMP-xx. En el DOCX:
 
 - va dentro de la caja de la sección 6, en una página horizontal;
 - le siguen dos ampliaciones, que son recortes sin retoque.
 
-No se modificaron los modelos de PowerDesigner de la F29 ni los de la F23.
+F11-R no modificó modelos de PowerDesigner. F31 ajustó únicamente offsets y saltos de línea de rótulos en ARQ-01; no cambió componentes, relaciones o rutas. Los modelos históricos de F23 permanecen intactos.
 
 ## Diferencias entre el F11 adaptado y el Formato 11 oficial
 
@@ -143,13 +143,13 @@ SHA-256 del contenido versionado. En los archivos de texto se calcula con finale
 | GUIA_PRACTICA_11.docx | [`docs/academico/00-fuentes-oficiales/guias/GUIA_PRACTICA_11.docx`](../00-fuentes-oficiales/guias/GUIA_PRACTICA_11.docx) | `c70f913787f81e250eee843eff197c8efb3ecda32896deb40afaabbfdb9689e7` | Guía de Práctica 11 (fuente complementaria) |
 | COMPONENTS.md | [`docs/academico/practica-11/COMPONENTS.md`](COMPONENTS.md) | `705ffdbee4afe53781b056fe4b2aa2a570b964df29f91bfb7810489d244887be` | Componentes C01 a C17 (F28) |
 | RELATIONSHIPS.md | [`docs/academico/practica-11/RELATIONSHIPS.md`](RELATIONSHIPS.md) | `e21ae3c125a198523e434b0ab00f68c418292f13427f96b5af8c8128d47df141` | Relaciones R-01 a R-20 (F28) |
-| ARQ-01_Arquitectura_Conceptual.png | [`docs/academico/powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png`](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png) | `4084af202f7af08adca7545c4ea3fe3906c8d0d575da3e946385f168047e3ee5` | Diagrama ARQ-01 (F29 y F29B) |
-| F29_UML_Academico.oom | [`docs/academico/powerdesigner/models/F29_UML_Academico.oom`](../powerdesigner/models/F29_UML_Academico.oom) | `9ce5f28d87898f44ec5bc1d2d29e72b8060ef97f1df8f61940dd32c5abdfe0d9` | Modelo fuente de ARQ-01 (sin cambios) |
+| ARQ-01_Arquitectura_Conceptual.png | [`docs/academico/powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png`](../powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png) | `eb4065a2b703413730d13bab1b1567e3cd3b872eba7bee02454d25265bde2e5d` | Diagrama ARQ-01 (F29/F29B; offsets visuales F31) |
+| F29_UML_Academico.oom | [`docs/academico/powerdesigner/models/F29_UML_Academico.oom`](../powerdesigner/models/F29_UML_Academico.oom) | `13465d9ed9cd1f0778803ce7b7cb5f90c6242119ec1bde191eb7307ac33d1574` | Modelo fuente de ARQ-01; semántica preservada en F31 |
 | F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx | [`docs/academico/practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx`](F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.docx) | `ff15834cab9babfddb37bc4f12c1d80d5defb745894ffde7df4a5860fa7859d5` | F11 adaptado histórico (sin cambios) |
 | F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.pdf | [`docs/academico/practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.pdf`](F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino.pdf) | `be590a7ae500ea3b5c164fa2b95ab865bede824458fd309f33393c69262cef1b` | PDF del F11 adaptado histórico (sin cambios) |
 | m_arch.py | [`docs/academico/tools/f27b/m_arch.py`](../tools/f27b/m_arch.py) | `4ed88ac99968677bcd4d2a76ea3117e3256a5d33c5290af132d8aa2be5f420c4` | Modelo de datos de la arquitectura (sin cambios) |
 | m_f11r.py | [`docs/academico/tools/f27b/m_f11r.py`](../tools/f27b/m_f11r.py) | `12e736aac690edb9c0b7d945200a43c277c90bf5b172ee9b39952da490a4bce4` | Contenido del F11 oficial: CMP-xx, estilo, decisiones y restricciones |
-| f11r.py | [`docs/academico/tools/f27b/f11r.py`](../tools/f27b/f11r.py) | `22a4d0058aa4b44c9aa27e7c7515fe6656b34bdca559bc9bcfb99d3c1a6af461` | Relleno de la plantilla oficial y espejo en Markdown |
+| f11r.py | [`docs/academico/tools/f27b/f11r.py`](../tools/f27b/f11r.py) | `407bdb536019d5e44b217b6421c7ad43e1e7782e839d2586f89df787351994c6` | Relleno de la plantilla oficial y espejo en Markdown |
 | 07-arquitectura-tecnologica.md | [`docs/final-report/07-arquitectura-tecnologica.md`](../../final-report/07-arquitectura-tecnologica.md) | `2693c5701162d64d482cd95ef797015f48f12cb9e0752ede0438e014c6507618` | Estilo, multitenencia, seguridad, PostgreSQL, Redis y despliegue |
 | F7_Requerimientos_No_Funcionales_Colegio_Andino.md | [`docs/academico/practica-07/F7_Requerimientos_No_Funcionales_Colegio_Andino.md`](../practica-07/F7_Requerimientos_No_Funcionales_Colegio_Andino.md) | `c58460f8b8c55d1854a86c56a67471196d622d93b76dc603803ac7066a32f1c3` | Estado de los RNF (RNF-06 y RNF-07 no verificados; RNF-D propuesto) |
 
@@ -161,7 +161,7 @@ SHA-256 del contenido versionado. En los archivos de texto se calcula con finale
 - la estructura oficial completa y la ausencia de instrucciones y líneas en blanco;
 - los datos generales;
 - CMP-01 a CMP-17 = C01 a C17 y R-01 a R-20 sin cambios;
-- ARQ-01 incrustado sin modificar;
+- ARQ-01 incrustado desde la exportación formal vigente, sin rediseño semántico;
 - el estilo, las decisiones con estado y las restricciones sin métricas inventadas;
 - la cobertura de RF-01 a RF-27 y CU-01 a CU-20;
 - el PDF;
@@ -179,4 +179,4 @@ La revisión visual de todas las páginas del PDF se registra en el informe de l
 - **Sin validación institucional.** La validación es interna y académica, sin aprobación ni firma de la institución.
 - **RNF sin verificar.** RNF-06 (rendimiento) y RNF-07 (disponibilidad y recuperabilidad) siguen **NO VERIFICADOS**. La escalabilidad es una consideración, no una propiedad validada.
 - **Imágenes del PDF.** Microsoft Word reduce las imágenes del PDF a unos 200 ppp; el DOCX conserva la resolución de la exportación.
-- **LOW para la F31:** H-14, F28-L01, F29-L01, F29-L02 y F29B-OBS-01, sin cambios.
+- **Cierre F31:** H-14 y F29-L02 RESUELTAS; F28-L01 NO APLICA; F29-L01 y F29B-OBS-01 ACEPTADAS como limitaciones de herramienta sin pérdida semántica.

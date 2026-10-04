@@ -21,13 +21,13 @@ Ninguna vista queda en FALLA.
 | F3 BPMN AS-IS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **PASS** |
 | F5 BPMN TO-BE | PASS | PASS | PASS | PASS | PASS | PASS | OBS (advertencia de MT-02) | **PASS con OBS** |
 | F8 Casos de uso | PASS | PASS | PASS | PASS | PASS | PASS | PASS (CU-16 por especificación) | **PASS** |
-| ARQ-01 Arquitectura | PASS | PASS | PASS | PASS | OBS (rótulos rozan líneas) | PASS | PASS | **PASS con OBS** |
+| ARQ-01 Arquitectura | PASS | PASS | PASS | PASS | PASS (offsets F31) | PASS | PASS | **PASS** |
 
 Observaciones transversales a las cuatro vistas:
 
 - **Capturas de PowerDesigner:** COMPLETED (28/09/2026). Son 7 capturas reales, tomadas después del hotfix F29B ([registro](evidencias/capturas/CAPTURAS_PENDIENTES.md)). Hasta entonces estaban pendientes.
 - **Formatos DOCX y PDF:** UPDATED (28/09/2026). Tras las auditorías F29 y F29B, las exportaciones formales son el diagrama principal de los Formatos 03, 05, 08 y 11. Hasta entonces no se habían sustituido.
-- **Cierre:** F29 CLOSED WITH DOCUMENTED OBSERVATIONS. Quedan para la F31, como LOW, F29-L01, F29-L02 y F29B-OBS-01.
+- **Cierre F31:** F29-L02 RESUELTA; F29-L01 y F29B-OBS-01 ACEPTADAS como limitaciones de metadata/presentación de PowerDesigner sin pérdida de modelo ni exportación.
 
 ## F3 — «F3 - BPMN AS-IS» ([informe](validation/F3_model_check.txt))
 
@@ -83,7 +83,7 @@ Observaciones transversales a las cuatro vistas:
 | Fronteras | C17 solo con R-19 (C05 ⇢ C17) y R-20 (C17 ⇢ C01), discontinuas y sin relación con C09, C10 ni C11. C03 es transversal, no gestión de organizaciones. Redis es apoyo (C16), no la base de datos principal | PASS |
 | Exclusiones | Sin facturación, suscripciones, superadministración, banco de talentos, Kubernetes, Meilisearch, almacenamiento en la nube, API REST aparte, microservicios, IA de selección ni RF-28 | PASS |
 | Notas | C10, C09, C17, la nota general «No es un despliegue: ver DE-01» y la de estereotipos | PASS |
-| Legibilidad | Todos los vínculos visibles, llevados al frente de los contenedores. R-03 hacia C13 rodea C17. Algunos rótulos (R-11, R-16, R-17) rozan una línea o un borde sin tapar texto | **OBS** |
+| Legibilidad | Todos los vínculos visibles, llevados al frente de los contenedores. R-03 hacia C13 rodea C17. F31 separó los rótulos de sus líneas y bordes mediante offsets de texto, sin cambiar extremos ni rutas | **PASS** |
 | Exportación | [PNG](exports/ARQ-01_Arquitectura_Conceptual.png) (4862 × 2862) y [SVG](exports/ARQ-01_Arquitectura_Conceptual.svg) válidos | PASS |
 | Check Model | Solo *Use Case/Single* de CU-16 del F8; ninguno de la vista ARQ-01 | PASS |
 
