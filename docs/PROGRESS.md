@@ -1,12 +1,12 @@
 # Progreso del proyecto
 
-Última actualización: 2026-10-04 (F33 CERRADA como fase de diseño tras auditoría final PASS; G0 NO APROBADA).
+Última actualización: 2026-10-04 (F34 CERRADA tras auditoría final PASS; dataset exclusivamente sintético; G0 NO APROBADA).
 
 > El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24; el 25/09/2026, de la Fase 24 a la Fase 25, y ese mismo día, de la Fase 25 a la Fase 26. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
 
 ## Estado de v1.1
 
-Baseline previo a la integración F33, verificado el 04/10/2026: `main` = `origin/main` = `40a79ede949672f6cf96602fce962ba5c0d1e4ab` y `develop` = `origin/develop` = `d6094187f673ba5af0a38abfff5e721478c46259`. F31 y F32 están integradas con CI verde. F33 está cerrada como diseño y su publicación e integración están autorizadas con gates CI; los hashes y resultados finales se consultan en Git/GitHub, no se anticipan en este commit. El cierre técnico v1.1 permanece etiquetado como `v1.1.0-academic` sobre `634f354`; `v1.0.0-academic` sigue en `9a946c2`. F27–F33 son trabajo académico post-release, sin cambios de comportamiento productivo.
+Baseline previo a la integración F34, verificado el 04/10/2026: `main` = `origin/main` = `26ae8b34ed586fe19515dd6041491e8dd72f9a64` y `develop` = `origin/develop` = `288039fbb7eaba9827072e736d2fff4f55d10408`. F31, F32 y F33 están integradas; F34 está CERRADA tras auditoría final PASS y su publicación e integración están autorizadas con gates CI de develop y main. Los hashes de integración y resultados finales se consultan en Git/GitHub, no se anticipan en este commit. El cierre técnico v1.1 permanece etiquetado como `v1.1.0-academic` sobre `634f354`; `v1.0.0-academic` sigue en `9a946c2`. F27–F34 son trabajo académico post-release, sin cambios de comportamiento productivo.
 
 | Fase | Contenido | Estado | Merge en `develop` | Detalle |
 |---|---|---|---|---|
@@ -29,9 +29,10 @@ Baseline previo a la integración F33, verificado el 04/10/2026: `main` = `origi
 | 30 | Investigación científica y tecnológica para IA de reclutamiento | ✅ Auditada e integrada; solo documentación | `2bf2a1e` | `docs/academico/investigacion-ia/README.md` |
 | 31 | Cierre de deuda LOW y saneamiento documental | ✅ CERRADA con observaciones aceptadas/futuras; auditoría final PASS WITH OBSERVATIONS | Integración autorizada con CI obligatorio; hashes en Git | `docs/academico/F31_DOCUMENTATION_DEBT_CLEANUP.md` |
 | 32 | Auditoría académica global y salvaguardas para F33 | ✅ CERRADA CON OBSERVACIONES e integrada; CI develop/main verde | `d6094187` | `docs/academico/auditoria-global/README.md` |
-| 33 | Diseño funcional del motor inteligente y ADR-005 / G0 | ✅ CERRADA; auditoría final PASS; solo diseño | Commit académico `63a36e71a00881f3baa2d306f24a3f766ddf0882`; integración autorizada con gates CI, hashes finales en Git | `docs/academico/diseno-inteligente/README.md` |
+| 33 | Diseño funcional del motor inteligente y ADR-005 / G0 | ✅ CERRADA e integrada; auditoría final PASS; solo diseño | `288039fbb7eaba9827072e736d2fff4f55d10408` (`main`: `26ae8b34`) | `docs/academico/diseno-inteligente/README.md` |
+| 34 | Contrato de datos, dataset sintético y gobernanza | ✅ CERRADA; auditoría final PASS; exclusivamente sintética | Commits A `a4684d196e00fbe8fd3fdd2bea5b04d70f47bc70` y B `cafcbdbb81101fb40f91f0166019a1f5b9965de9`; integración autorizada con gates CI, hashes finales en Git | `docs/academico/datos-sinteticos/README.md` |
 
-**Estado vigente tras la auditoría F33:** **G0 = NO APROBADA** y **ADR-005 = PROPUESTA**. El cierre documental no aprueba G0 ni el ADR. **F34 habilitada solo con datos sintéticos y gobernanza**, sin scoring ni recomendación de personas; **F35–F40 bloqueadas** hasta la aprobación explícita y registrada de G0 para el alcance correspondiente. Los entregables F33 versión 1 se conservan como fueron auditados; sus notas de «pendiente de auditoría» describen su estado al redactarse, no el estado vigente registrado aquí.
+**Estado vigente tras el cierre F34:** **G0 = NO APROBADA** y **ADR-005 = PROPUESTA**. El cierre documental no aprueba G0 ni el ADR. **F34 CERRADA exclusivamente con datos sintéticos y gobernanza**, sin scoring ni recomendación de personas, datos reales ni implementación funcional; **F35–F40 bloqueadas** hasta la aprobación explícita y registrada de G0 para el alcance correspondiente. Los entregables F33 y F34 se conservan como fueron auditados: sus notas de «pendiente de auditoría» o «LISTA PARA AUDITORÍA» describen la fotografía de entrega, no el estado vigente registrado aquí. El consentimiento y el cierre F34 no autorizan datos reales; cualquier uso futuro requiere autorización adicional explícita y revisión contractual, jurídica y de privacidad.
 
 **RF-29** está implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, no validado institucionalmente ni autorizado para producción; no selecciona ni descarta a nadie y no cambia RF-23. RF-28, RF-29 y los RNF nuevos (incluido RNF-C) siguen siendo **candidatos** (`docs/v1.1/scope-preliminary.md`, decisión 11 y preguntas 12–13).
 

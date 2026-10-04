@@ -1,0 +1,2188 @@
+{
+ "profile": "f34-table-schema (inspirado en Frictionless Table Schema)",
+ "schema_version": "f34-schema-1.1.0",
+ "encoding": "utf-8",
+ "missing_values": [
+  ""
+ ],
+ "boolean_values": [
+  "true",
+  "false"
+ ],
+ "date_format": "date: YYYY-MM-DD; datetime: YYYY-MM-DDTHH:MM:SS (America/Lima, sin desplazamiento)",
+ "temporal_semantics": "RF-29: t <= checkpoint_at; vencida: scheduled_at < checkpoint_at; abierta: published_at <= at y (closed_at nulo o > at); días completos = floor(segundos/86400)",
+ "resources": [
+  {
+   "name": "organizations",
+   "path": "organizations.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "organization_token",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^ORG-S\\d$"
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "organization_token",
+    "foreignKeys": []
+   }
+  },
+  {
+   "name": "competencies",
+   "path": "competencies.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "competency_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^CMP-S\\d-\\d{2}$"
+      }
+     },
+     {
+      "name": "organization_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^ORG-S\\d$"
+      }
+     },
+     {
+      "name": "competency_label",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "scope",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "docente",
+        "administrativo",
+        "ambos"
+       ]
+      }
+     },
+     {
+      "name": "catalog_version",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^CAT-S\\d-v\\d+$"
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "competency_id",
+    "foreignKeys": [
+     {
+      "fields": "organization_token",
+      "reference": {
+       "resource": "organizations",
+       "fields": "organization_token"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "vacancies",
+   "path": "vacancies.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "vacancy_token",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^VAC-\\d{4}$"
+      }
+     },
+     {
+      "name": "organization_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^ORG-S\\d$"
+      }
+     },
+     {
+      "name": "area",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "docente",
+        "administrativo"
+       ]
+      }
+     },
+     {
+      "name": "positions_count",
+      "type": "integer",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "minimum": 1,
+       "maximum": 3
+      }
+     },
+     {
+      "name": "published_at",
+      "type": "datetime",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "closes_at",
+      "type": "date",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "target_completion_at",
+      "type": "datetime",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "criteria_version",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^CV-VAC-\\d{4}-\\d+$"
+      }
+     },
+     {
+      "name": "rubric_version",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^RV-VAC-\\d{4}-\\d+$"
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "vacancy_token",
+    "foreignKeys": [
+     {
+      "fields": "organization_token",
+      "reference": {
+       "resource": "organizations",
+       "fields": "organization_token"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "criteria",
+   "path": "criteria.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "criterion_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^CRI-\\d{4}$"
+      }
+     },
+     {
+      "name": "vacancy_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^VAC-\\d{4}$"
+      }
+     },
+     {
+      "name": "competency_id",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^CMP-S\\d-\\d{2}$"
+      }
+     },
+     {
+      "name": "stage",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "evaluacion",
+        "entrevista"
+       ]
+      }
+     },
+     {
+      "name": "method",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "prueba_escrita",
+        "revision_documental",
+        "clase_demostrativa",
+        "entrevista_estructurada"
+       ]
+      }
+     },
+     {
+      "name": "weight",
+      "type": "integer",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "minimum": 1,
+       "maximum": 100
+      }
+     },
+     {
+      "name": "range_min",
+      "type": "integer",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 0
+      }
+     },
+     {
+      "name": "range_max",
+      "type": "integer",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "minimum": 20,
+       "maximum": 20
+      }
+     },
+     {
+      "name": "criteria_version",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^CV-VAC-\\d{4}-\\d+$"
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "criterion_id",
+    "foreignKeys": [
+     {
+      "fields": "vacancy_token",
+      "reference": {
+       "resource": "vacancies",
+       "fields": "vacancy_token"
+      }
+     },
+     {
+      "fields": "competency_id",
+      "reference": {
+       "resource": "competencies",
+       "fields": "competency_id"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "rubric_levels",
+   "path": "rubric_levels.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "rubric_level_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^CRI-\\d{4}-L[1-4]$"
+      }
+     },
+     {
+      "name": "criterion_id",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^CRI-\\d{4}$"
+      }
+     },
+     {
+      "name": "rubric_version",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^RV-VAC-\\d{4}-\\d+$"
+      }
+     },
+     {
+      "name": "level",
+      "type": "integer",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "minimum": 1,
+       "maximum": 4
+      }
+     },
+     {
+      "name": "descriptor",
+      "type": "string",
+      "role": "free_text_synthetic",
+      "constraints": {
+       "required": true,
+       "pattern": "^\\[SINTÉTICO\\] "
+      }
+     },
+     {
+      "name": "rubric_points",
+      "type": "integer",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "minimum": 5,
+       "maximum": 20
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "rubric_level_id",
+    "foreignKeys": [
+     {
+      "fields": "criterion_id",
+      "reference": {
+       "resource": "criteria",
+       "fields": "criterion_id"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "requirements",
+   "path": "requirements.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "requirement_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^REQ-\\d{4}$"
+      }
+     },
+     {
+      "name": "vacancy_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^VAC-\\d{4}$"
+      }
+     },
+     {
+      "name": "requirement_type",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "titulo_profesional",
+        "colegiatura_vigente",
+        "experiencia_minima"
+       ]
+      }
+     },
+     {
+      "name": "min_years",
+      "type": "integer",
+      "role": "context",
+      "constraints": {
+       "required": false,
+       "minimum": 1,
+       "maximum": 5
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "requirement_id",
+    "foreignKeys": [
+     {
+      "fields": "vacancy_token",
+      "reference": {
+       "resource": "vacancies",
+       "fields": "vacancy_token"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "applications",
+   "path": "applications.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "application_token",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^APP-\\d{5}$"
+      }
+     },
+     {
+      "name": "vacancy_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^VAC-\\d{4}$"
+      }
+     },
+     {
+      "name": "organization_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^ORG-S\\d$"
+      }
+     },
+     {
+      "name": "person_token",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^PER-S-\\d{5}$"
+      }
+     },
+     {
+      "name": "submitted_at",
+      "type": "datetime",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "application_state",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "activa",
+        "descartada"
+       ]
+      }
+     },
+     {
+      "name": "years_experience_declared",
+      "type": "integer",
+      "role": "human_record",
+      "constraints": {
+       "required": false,
+       "minimum": 0,
+       "maximum": 20
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "application_token",
+    "foreignKeys": [
+     {
+      "fields": "vacancy_token",
+      "reference": {
+       "resource": "vacancies",
+       "fields": "vacancy_token"
+      }
+     },
+     {
+      "fields": "organization_token",
+      "reference": {
+       "resource": "organizations",
+       "fields": "organization_token"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "requirement_checks",
+   "path": "requirement_checks.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "check_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^CHK-\\d{5}$"
+      }
+     },
+     {
+      "name": "application_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^APP-\\d{5}$"
+      }
+     },
+     {
+      "name": "requirement_id",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^REQ-\\d{4}$"
+      }
+     },
+     {
+      "name": "declared_met",
+      "type": "boolean",
+      "role": "human_record",
+      "constraints": {
+       "required": false
+      }
+     },
+     {
+      "name": "evidence_present",
+      "type": "boolean",
+      "role": "human_record",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "check_id",
+    "foreignKeys": [
+     {
+      "fields": "application_token",
+      "reference": {
+       "resource": "applications",
+       "fields": "application_token"
+      }
+     },
+     {
+      "fields": "requirement_id",
+      "reference": {
+       "resource": "requirements",
+       "fields": "requirement_id"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "sessions",
+   "path": "sessions.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "session_token",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^SES-\\d{5}$"
+      }
+     },
+     {
+      "name": "application_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^APP-\\d{5}$"
+      }
+     },
+     {
+      "name": "vacancy_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^VAC-\\d{4}$"
+      }
+     },
+     {
+      "name": "stage",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "evaluacion",
+        "entrevista"
+       ]
+      }
+     },
+     {
+      "name": "evaluator_token",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^EV-S\\d-\\d{2}$"
+      }
+     },
+     {
+      "name": "created_at",
+      "type": "datetime",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "scheduled_for",
+      "type": "datetime",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "status",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "programada",
+        "realizada"
+       ]
+      }
+     },
+     {
+      "name": "completed_at",
+      "type": "datetime",
+      "role": "context",
+      "constraints": {
+       "required": false
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "session_token",
+    "foreignKeys": [
+     {
+      "fields": "application_token",
+      "reference": {
+       "resource": "applications",
+       "fields": "application_token"
+      }
+     },
+     {
+      "fields": "vacancy_token",
+      "reference": {
+       "resource": "vacancies",
+       "fields": "vacancy_token"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "assessments",
+   "path": "assessments.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "assessment_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^ASM-\\d{5}$"
+      }
+     },
+     {
+      "name": "session_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^SES-\\d{5}$"
+      }
+     },
+     {
+      "name": "application_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^APP-\\d{5}$"
+      }
+     },
+     {
+      "name": "criterion_id",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^CRI-\\d{4}$"
+      }
+     },
+     {
+      "name": "evaluator_token",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^EV-S\\d-\\d{2}$"
+      }
+     },
+     {
+      "name": "human_level",
+      "type": "integer",
+      "role": "human_record",
+      "constraints": {
+       "required": true,
+       "minimum": 1,
+       "maximum": 4
+      }
+     },
+     {
+      "name": "rubric_points",
+      "type": "integer",
+      "role": "human_record",
+      "constraints": {
+       "required": true,
+       "minimum": 5,
+       "maximum": 20
+      }
+     },
+     {
+      "name": "justification",
+      "type": "string",
+      "role": "free_text_synthetic",
+      "constraints": {
+       "required": true,
+       "pattern": "^\\[SINTÉTICO\\] "
+      }
+     },
+     {
+      "name": "evidence_sufficiency",
+      "type": "string",
+      "role": "human_record",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "suficiente",
+        "parcial",
+        "insuficiente"
+       ]
+      }
+     },
+     {
+      "name": "recorded_at",
+      "type": "datetime",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "rubric_version",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^RV-VAC-\\d{4}-\\d+$"
+      }
+     },
+     {
+      "name": "criteria_version",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^CV-VAC-\\d{4}-\\d+$"
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "assessment_id",
+    "foreignKeys": [
+     {
+      "fields": "session_token",
+      "reference": {
+       "resource": "sessions",
+       "fields": "session_token"
+      }
+     },
+     {
+      "fields": "application_token",
+      "reference": {
+       "resource": "applications",
+       "fields": "application_token"
+      }
+     },
+     {
+      "fields": "criterion_id",
+      "reference": {
+       "resource": "criteria",
+       "fields": "criterion_id"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "evidence",
+   "path": "evidence.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "evidence_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^EVD-\\d{6}$"
+      }
+     },
+     {
+      "name": "session_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^SES-\\d{5}$"
+      }
+     },
+     {
+      "name": "application_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^APP-\\d{5}$"
+      }
+     },
+     {
+      "name": "criterion_id",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^CRI-\\d{4}$"
+      }
+     },
+     {
+      "name": "assessment_id",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": false,
+       "pattern": "^ASM-\\d{5}$"
+      }
+     },
+     {
+      "name": "source_type_ev",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "cv",
+        "documento",
+        "prueba",
+        "formulario",
+        "nota_entrevista"
+       ]
+      }
+     },
+     {
+      "name": "source_reference",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "pattern": "^((cv|documento|prueba|formulario):DOC-S-\\d{4}#p\\d|pregunta:PRG-\\d{3})$"
+      }
+     },
+     {
+      "name": "evidence_text",
+      "type": "string",
+      "role": "free_text_synthetic",
+      "constraints": {
+       "required": true,
+       "pattern": "^\\[SINTÉTICO\\] "
+      }
+     },
+     {
+      "name": "provenance",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "registro_humano"
+       ]
+      }
+     },
+     {
+      "name": "registered_by",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^EV-S\\d-\\d{2}$"
+      }
+     },
+     {
+      "name": "registered_at",
+      "type": "datetime",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "state",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "borrador",
+        "vinculada"
+       ]
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "evidence_id",
+    "foreignKeys": [
+     {
+      "fields": "session_token",
+      "reference": {
+       "resource": "sessions",
+       "fields": "session_token"
+      }
+     },
+     {
+      "fields": "application_token",
+      "reference": {
+       "resource": "applications",
+       "fields": "application_token"
+      }
+     },
+     {
+      "fields": "criterion_id",
+      "reference": {
+       "resource": "criteria",
+       "fields": "criterion_id"
+      }
+     },
+     {
+      "fields": "assessment_id",
+      "reference": {
+       "resource": "assessments",
+       "fields": "assessment_id"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "annotations",
+   "path": "annotations.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "annotation_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^ANN-\\d{4}$"
+      }
+     },
+     {
+      "name": "assessment_id",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^ASM-\\d{5}$"
+      }
+     },
+     {
+      "name": "author_token",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^EV-S\\d-\\d{2}$"
+      }
+     },
+     {
+      "name": "created_at",
+      "type": "datetime",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "reason",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "aclaracion",
+        "fuente_adicional"
+       ]
+      }
+     },
+     {
+      "name": "annotation_text",
+      "type": "string",
+      "role": "free_text_synthetic",
+      "constraints": {
+       "required": true,
+       "pattern": "^\\[SINTÉTICO\\] "
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "annotation_id",
+    "foreignKeys": [
+     {
+      "fields": "assessment_id",
+      "reference": {
+       "resource": "assessments",
+       "fields": "assessment_id"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "process_events",
+   "path": "process_events.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "event_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^PEV-\\d{5}$"
+      }
+     },
+     {
+      "name": "vacancy_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^VAC-\\d{4}$"
+      }
+     },
+     {
+      "name": "organization_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^ORG-S\\d$"
+      }
+     },
+     {
+      "name": "event_type",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "vacante_publicada",
+        "postulacion_recibida",
+        "evaluacion_programada",
+        "evaluacion_realizada",
+        "entrevista_programada",
+        "entrevista_realizada",
+        "cambio_etapa",
+        "vacante_cerrada"
+       ]
+      }
+     },
+     {
+      "name": "event_at",
+      "type": "datetime",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "ref_token",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": false
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "event_id",
+    "foreignKeys": [
+     {
+      "fields": "vacancy_token",
+      "reference": {
+       "resource": "vacancies",
+       "fields": "vacancy_token"
+      }
+     },
+     {
+      "fields": "organization_token",
+      "reference": {
+       "resource": "organizations",
+       "fields": "organization_token"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "process_snapshots",
+   "path": "process_snapshots.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "vacancy_token",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^VAC-\\d{4}$"
+      }
+     },
+     {
+      "name": "organization_token",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^ORG-S\\d$"
+      }
+     },
+     {
+      "name": "checkpoint_at",
+      "type": "datetime",
+      "role": "lineage",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "elapsed_days_since_publication",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "application_window_days",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "positions_count",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "applications_received_count",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "configured_criteria_count",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "evaluations_scheduled_count",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "evaluations_completed_count",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "evaluations_overdue_pending_count",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "interviews_scheduled_count",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "interviews_completed_count",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "interviews_overdue_pending_count",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "stage_transition_count",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "days_since_last_operational_event",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "concurrent_open_vacancies_count",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": 0,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "days_remaining_to_target",
+      "type": "integer",
+      "role": "feature_process",
+      "constraints": {
+       "required": true,
+       "minimum": -365,
+       "maximum": 1000
+      }
+     },
+     {
+      "name": "delayed",
+      "type": "integer",
+      "role": "label_process",
+      "constraints": {
+       "required": false,
+       "minimum": 0,
+       "maximum": 1
+      }
+     },
+     {
+      "name": "observation_status",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "completed",
+        "censored"
+       ]
+      }
+     },
+     {
+      "name": "dataset_version",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^f34-synth-\\d+\\.\\d+\\.\\d+$"
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "vacancy_token",
+    "foreignKeys": [
+     {
+      "fields": "vacancy_token",
+      "reference": {
+       "resource": "vacancies",
+       "fields": "vacancy_token"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "process_splits",
+   "path": "process_splits.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "vacancy_token",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^VAC-\\d{4}$"
+      }
+     },
+     {
+      "name": "checkpoint_at",
+      "type": "datetime",
+      "role": "lineage",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "label_known_at",
+      "type": "datetime",
+      "role": "lineage",
+      "constraints": {
+       "required": false
+      }
+     },
+     {
+      "name": "split",
+      "type": "string",
+      "role": "split",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "train",
+        "validation",
+        "test",
+        "purgado",
+        "censurado"
+       ]
+      }
+     },
+     {
+      "name": "split_reason",
+      "type": "string",
+      "role": "split",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "temporal",
+        "etiqueta_no_madura_antes_de_validation",
+        "etiqueta_no_madura_antes_de_test",
+        "sin_cierre_observado"
+       ]
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "vacancy_token",
+    "foreignKeys": [
+     {
+      "fields": "vacancy_token",
+      "reference": {
+       "resource": "process_snapshots",
+       "fields": "vacancy_token"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "analysis_runs",
+   "path": "analysis_runs.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "analysis_run_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      }
+     },
+     {
+      "name": "vacancy_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^VAC-\\d{4}$"
+      }
+     },
+     {
+      "name": "organization_token",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^ORG-S\\d$"
+      }
+     },
+     {
+      "name": "trigger",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "resultado_registrado"
+       ]
+      }
+     },
+     {
+      "name": "rules_version",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "criteria_version",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^CV-VAC-\\d{4}-\\d+$"
+      }
+     },
+     {
+      "name": "rubric_version",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^RV-VAC-\\d{4}-\\d+$"
+      }
+     },
+     {
+      "name": "input_hash_algorithm",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "f34-input-sha256-v1"
+       ]
+      }
+     },
+     {
+      "name": "input_snapshot_hash",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^[0-9a-f]{64}$"
+      }
+     },
+     {
+      "name": "created_at",
+      "type": "datetime",
+      "role": "lineage",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "analysis_run_id",
+    "foreignKeys": [
+     {
+      "fields": "vacancy_token",
+      "reference": {
+       "resource": "vacancies",
+       "fields": "vacancy_token"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "analysis_run_events",
+   "path": "analysis_run_events.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "event_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^ARE-\\d{5}$"
+      }
+     },
+     {
+      "name": "analysis_run_id",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "seq",
+      "type": "integer",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "minimum": 1,
+       "maximum": 10
+      }
+     },
+     {
+      "name": "state",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "pendiente",
+        "en_proceso",
+        "completado",
+        "fallido",
+        "expirado",
+        "invalidado"
+       ]
+      }
+     },
+     {
+      "name": "event_at",
+      "type": "datetime",
+      "role": "lineage",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "error_code",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": false,
+       "enum": [
+        "E-10"
+       ]
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "event_id",
+    "foreignKeys": [
+     {
+      "fields": "analysis_run_id",
+      "reference": {
+       "resource": "analysis_runs",
+       "fields": "analysis_run_id"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "expected_alerts",
+   "path": "expected_alerts.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "alert_id",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^ALR-\\d{5}$"
+      }
+     },
+     {
+      "name": "alert_type",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "requisito_no_evidenciado",
+        "evidencia_faltante",
+        "sesion_vencida",
+        "discrepancia_evaluadores"
+       ]
+      }
+     },
+     {
+      "name": "vacancy_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": true,
+       "pattern": "^VAC-\\d{4}$"
+      }
+     },
+     {
+      "name": "application_token",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": false,
+       "pattern": "^APP-\\d{5}$"
+      }
+     },
+     {
+      "name": "criterion_id",
+      "type": "string",
+      "role": "foreign_key",
+      "constraints": {
+       "required": false,
+       "pattern": "^CRI-\\d{4}$"
+      }
+     },
+     {
+      "name": "ref_id",
+      "type": "string",
+      "role": "context",
+      "constraints": {
+       "required": true
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "alert_id",
+    "foreignKeys": [
+     {
+      "fields": "vacancy_token",
+      "reference": {
+       "resource": "vacancies",
+       "fields": "vacancy_token"
+      }
+     },
+     {
+      "fields": "application_token",
+      "reference": {
+       "resource": "applications",
+       "fields": "application_token"
+      }
+     },
+     {
+      "fields": "criterion_id",
+      "reference": {
+       "resource": "criteria",
+       "fields": "criterion_id"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "fairness_sintetico/synthetic_group_attributes",
+   "path": "fairness_sintetico/synthetic_group_attributes.csv",
+   "schema": {
+    "fields": [
+     {
+      "name": "person_token",
+      "type": "string",
+      "role": "identifier",
+      "constraints": {
+       "required": true,
+       "pattern": "^PER-S-\\d{5}$"
+      }
+     },
+     {
+      "name": "grupo_sintetico",
+      "type": "string",
+      "role": "fairness_synthetic",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "GS-A",
+        "GS-B"
+       ]
+      }
+     },
+     {
+      "name": "source_type",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "enum": [
+        "synthetic"
+       ]
+      }
+     },
+     {
+      "name": "synthetic_record_id",
+      "type": "string",
+      "role": "lineage",
+      "constraints": {
+       "required": true,
+       "pattern": "^SYN-\\d{6}$",
+       "unique": true
+      }
+     }
+    ],
+    "primaryKey": "person_token",
+    "foreignKeys": []
+   }
+  }
+ ]
+}
