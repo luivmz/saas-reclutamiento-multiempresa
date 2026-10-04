@@ -9,7 +9,7 @@
 | `docs/academico/00-fuentes-oficiales/plantillas-proyecto/Plantilla_Estructura_de_proyecto_final.docx` | Plantilla oficial del informe final (estructura, portada, estilos y tabla de contenido) | `b26cfb21ca627c46d65f8f683422ffca1e022ec60c75132f0d7843b01a03fcda` |
 | `docs/academico/tools/f27b/m_informe.py` | Contenido de cada sección | `b81fff2e0d6c065d215cf3ad5aef638af0198d3ff46f2b17389c53b6e4866b7e` |
 | `docs/academico/tools/f27b/f29h.py` | Relleno de la plantilla, anexos horizontales y espejo Markdown | `e6b60dcf186bbad5f38d65e140483f761431fbadc359c9cfa767c2bae3956a54` |
-| `docs/academico/powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png` | Figura 1 (F29) | `4084af202f7af08adca7545c4ea3fe3906c8d0d575da3e946385f168047e3ee5` |
+| `docs/academico/powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png` | Figura 1 (F29) | `eb4065a2b703413730d13bab1b1567e3cd3b872eba7bee02454d25265bde2e5d` |
 | `docs/v1.1/powerdesigner/exports/CL-01-clases-del-dominio.png` | Figura 2 (F23) | `8150e75d13dcee72aa6b518d3cb6b1165a9862345a9ba374ee168312e8600455` |
 | `docs/v1.1/powerdesigner/exports/PDM-01-esquema-completo.png` | Figura 3 (F23) | `ef9da4f84e68560d995b9e56e66dca50c0ec9bcca1c1a81fd9f176bbb4ae24e3` |
 | `docs/v1.1/powerdesigner/exports/DE-01-despliegue.png` | Figura 4 (F23) | `c96f71d083f3e132f6c092e329b0d77ff4794f0a5183b89a84a1cf02bca69206` |

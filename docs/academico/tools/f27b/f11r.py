@@ -322,13 +322,13 @@ def build_registro(out_md, root, sources):
          'destino y tipo, sin desdoblar las relaciones múltiples y sin R-21.', '',
          md_table(['ID', 'Origen', 'Destino', 'Tipo'], [(r[0], F.cmp_ref(r[1]), F.cmp_ref(r[2]), r[3]) for r in AR.RELACIONES]), '',
          '## ARQ-01', '',
-         'Se reutiliza la exportación formal auditada en la F29 y el hotfix F29B ([`ARQ-01_Arquitectura_Conceptual.png`]('
-         + rel('docs/academico/powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png') + ')), **sin rediseñarla ni '
-         'retocarla**. Conserva los identificadores C01 a C17; el documento oficial aporta la equivalencia con CMP-xx. En el '
+         'Se reutiliza la exportación formal auditada en F29/F29B y saneada visualmente en F31 ([`ARQ-01_Arquitectura_Conceptual.png`]('
+         + rel('docs/academico/powerdesigner/exports/ARQ-01_Arquitectura_Conceptual.png') + ')), **sin rediseñarla '
+         'semánticamente**. F31 ajusta la presentación de sus rótulos. Conserva los identificadores C01 a C17; el documento oficial aporta la equivalencia con CMP-xx. En el '
          'DOCX:', '',
          '- va dentro de la caja de la sección 6, en una página horizontal;',
          '- le siguen dos ampliaciones, que son recortes sin retoque.', '',
-         'No se modificaron los modelos de PowerDesigner de la F29 ni los de la F23.', '',
+         'F11-R no modificó modelos de PowerDesigner. F31 ajustó únicamente offsets y saltos de línea de rótulos en ARQ-01; no cambió componentes, relaciones o rutas. Los modelos históricos de F23 permanecen intactos.', '',
          '## Diferencias entre el F11 adaptado y el Formato 11 oficial', '',
          '| Aspecto | F11 adaptado (F28) | F11 oficial (F11-R) |', '|---|---|---|',
          '| Base del documento | Paquete del F9 publicado (portada, cabecera «F11 ADAPTADO», pie de página y borde) | Plantilla oficial del Formato 11 (cabecera con logotipo y asignatura) |',
@@ -349,7 +349,7 @@ def build_registro(out_md, root, sources):
           '- la estructura oficial completa y la ausencia de instrucciones y líneas en blanco;',
           '- los datos generales;',
           '- CMP-01 a CMP-17 = C01 a C17 y R-01 a R-20 sin cambios;',
-          '- ARQ-01 incrustado sin modificar;',
+          '- ARQ-01 incrustado desde la exportación formal vigente, sin rediseño semántico;',
           '- el estilo, las decisiones con estado y las restricciones sin métricas inventadas;',
           '- la cobertura de RF-01 a RF-27 y CU-01 a CU-20;',
           '- el PDF;',
@@ -366,7 +366,7 @@ def build_registro(out_md, root, sources):
           'La escalabilidad es una consideración, no una propiedad validada.',
           '- **Imágenes del PDF.** Microsoft Word reduce las imágenes del PDF a unos 200 ppp; el DOCX conserva la resolución de '
           'la exportación.',
-          '- **LOW para la F31:** H-14, F28-L01, F29-L01, F29-L02 y F29B-OBS-01, sin cambios.']
+          '- **Cierre F31:** H-14 y F29-L02 RESUELTAS; F28-L01 NO APLICA; F29-L01 y F29B-OBS-01 ACEPTADAS como limitaciones de herramienta sin pérdida semántica.']
     text = re.sub(r'\n{3,}', '\n\n', '\n'.join(L)).rstrip() + '\n'
     with open(out_md, 'w', encoding='utf-8', newline='\n') as f:
         f.write(text)

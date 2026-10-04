@@ -1,0 +1,5 @@
+F31 - ajuste incremental de rotulos ARQ-01 (2026-10-03 21:27)
+Dependencias ajustadas: 24
+Recarga «ARQ-01 - Arquitectura Conceptual»: 55 símbolos antes de guardar, 55 tras reabrir; cambiados: 0; ausentes: 0 (tolerancia 0)
+Exportación desde el modelo reabierto: ARQ-01_Arquitectura_Conceptual.svg/.png; una segunda recarga reproduce el mismo SVG (mismas 724 líneas, el orden puede variar): True
+RESULTADO: PASS

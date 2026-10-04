@@ -18,6 +18,8 @@ Qué diagramas académicos deben formalizarse en PowerDesigner y en qué orden.
 
 **Actualización posterior a la F29 (28/09/2026):** tras las auditorías F29 y F29B, F3, F5, F8 y la vista ARQ-01 del F11 pasan a **FORMALIZED / INTEGRATED / DONE**. Los DOCX y PDF de los Formatos 03, 05, 08 y 11 usan la exportación formal como diagrama principal (regla 3 cumplida), los borradores quedan como antecedente (DRAFT / SUPERSEDED BY F29 FORMAL EXPORT) y las 7 capturas reales de PowerDesigner están en [`powerdesigner/evidencias/capturas/`](powerdesigner/evidencias/capturas/CAPTURAS_PENDIENTES.md). La F29 queda cerrada con observaciones documentadas (F29-L01, F29-L02 y F29B-OBS-01, para la F31).
 
+**Actualización F31 (02/10/2026):** F29-L02 queda **RESUELTA** con offsets persistentes de rótulos en ARQ-01; F29-L01 y F29B-OBS-01 quedan **ACEPTADAS** como metadata/limitación de PowerDesigner sin pérdida semántica. El F11 activo es el definitivo sobre la plantilla oficial; el F11 adaptado se conserva como histórico.
+
 **Actualización F29 (27/09/2026):** F3, F5, F8 y la vista ARQ-01 del F11 pasan a **FORMALIZED / DONE**, pendientes de la auditoría F29. Modelos, exportaciones y validación en [`powerdesigner/`](powerdesigner/README.md) ([validación](powerdesigner/F29_VALIDATION.md), [manifiesto](powerdesigner/MANIFEST.md)). Trazabilidad en [`trazabilidad/F29-powerdesigner-traceability.md`](trazabilidad/F29-powerdesigner-traceability.md). La columna «Estado» conserva el estado anterior.
 
 **Actualización F28:** el F11 adaptado se desarrolló y su vista ARQ-01 quedó especificada.

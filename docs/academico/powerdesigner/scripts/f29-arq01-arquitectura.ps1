@@ -15,6 +15,7 @@
 # Requiere f29lib.ps1 cargado. Reemplaza el paquete ARQ01 entero en cada corrida.
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'f31-arq01-label-layout.ps1')
 Open-F29
 try {
     $m = Get-F29Model $F29Oom
@@ -126,15 +127,19 @@ try {
         @('R-20', 'C17', 'C01', 'información descriptiva de riesgo', { @(@(128000, (Rq 'C17').T), @(128000, 91000), @(27000, 91000), @(27000, (Rq 'C01').T)) }, $true)
     )
     $dep = @{}
+    # F31: separa los rotulos de sus lineas y de los bordes de los componentes.
+    # Las coordenadas son offsets del texto, no cambian origen, destino ni ruta.
+    $labelOffset = $ArqLabelOffsets
     foreach ($r in $rels) {
         $x = $pk.CreateObject($OomKind.Dependency)
         $x.Object1 = Obj $r[1]; $x.Object2 = Obj $r[2]
         $label = $(if ($r[0] -eq 'U') { 'usan' } else { ($r[0] -replace 'b$', '') + ' ' + $r[3] })
+        if ($ArqLabelText.ContainsKey($r[0])) { $label = $ArqLabelText[$r[0]] }
         try { $x.Name = $label } catch { $x.Name = $label + ' ' }
         $x.Code = 'ARQ01_' + ($r[0] -replace '-', '_')
         $dep[$r[0]] = $x
         $ls = $d.AttachLinkObject($x, (Sym $r[1]), (Sym $r[2]))
-        $lbl = @(0, 1); if ($r[0] -eq 'R-17') { $lbl = @(3000, -14000) }
+        $lbl = $labelOffset[$r[0]]
         Set-LinkPoints $ls (& $r[4]) $lbl
         if ($r.Count -gt 5 -and $r[5]) { try { Set-P $ls 'DashStyle' 2 } catch {} } else { try { Set-P $ls 'DashStyle' 1 } catch {} }
         Move-ToFront $d $ls

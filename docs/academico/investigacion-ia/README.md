@@ -2,7 +2,7 @@
 
 Investigación documental para decidir **qué puede y qué no debe hacer** un futuro motor inteligente de reclutamiento en el SaaS (caso Colegio Andino de Huancayo), antes de que F33–F40 implementen algo.
 
-**Estado:** versión 1 (30/09/2026), **pendiente de auditoría**. F30 **no implementa nada**: no hay modelos, embeddings, base vectorial, parsing, transcripción, scoring, endpoints, migraciones ni interfaz. Tampoco se instaló ninguna herramienta, skill ni servidor MCP.
+**Estado:** versión 1 (30/09/2026), **auditada e integrada**. F30 **no implementa nada**: no hay modelos, embeddings, base vectorial, parsing, transcripción, scoring, endpoints, migraciones ni interfaz. Tampoco se instaló ninguna herramienta, skill ni servidor MCP.
 
 ## Conclusión en una línea
 

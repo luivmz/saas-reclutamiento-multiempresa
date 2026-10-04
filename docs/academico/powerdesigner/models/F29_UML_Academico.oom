@@ -6698,7 +6698,7 @@ Postulante</a:Text>
 <a:FontName>Arial,8,N</a:FontName>
 </o:TextSymbol>
 <o:DependencySymbol Id="o197">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, 1800)</a:CenterTextOffset>
 <a:Rect>((15600,77300), (25400,79197))</a:Rect>
 <a:ListOfPoints>((16000,78000),(25000,78000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6717,7 +6717,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o199">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(1200, 2200)</a:CenterTextOffset>
 <a:Rect>((40600,77300), (52400,79197))</a:Rect>
 <a:ListOfPoints>((41000,78000),(52000,78000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6736,7 +6736,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o201">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, 2200)</a:CenterTextOffset>
 <a:Rect>((67063,77300), (80937,79197))</a:Rect>
 <a:ListOfPoints>((68000,78000),(80000,78000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6755,7 +6755,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o203">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(-6500, -700)</a:CenterTextOffset>
 <a:Rect>((80163,61600), (95837,74900))</a:Rect>
 <a:ListOfPoints>((88000,74500),(88000,62000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6774,7 +6774,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o205">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(-9000, -1800)</a:CenterTextOffset>
 <a:Rect>((93600,17300), (150837,74900))</a:Rect>
 <a:ListOfPoints>((94000,74500),(94000,67500),(143000,67500),(143000,18000),(108000,18000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6793,7 +6793,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o207">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(5000, 0)</a:CenterTextOffset>
 <a:Rect>((27151,61600), (38850,74900))</a:Rect>
 <a:ListOfPoints>((33000,74500),(33000,62000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6812,7 +6812,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o209">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, 2200)</a:CenterTextOffset>
 <a:Rect>((40588,51300), (53412,53197))</a:Rect>
 <a:ListOfPoints>((42000,52000),(52000,52000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6831,7 +6831,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o211">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, 2200)</a:CenterTextOffset>
 <a:Rect>((67600,51300), (78400,53197))</a:Rect>
 <a:ListOfPoints>((68000,52000),(78000,52000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6850,7 +6850,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o213">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, 1800)</a:CenterTextOffset>
 <a:Rect>((93600,51300), (104400,53197))</a:Rect>
 <a:ListOfPoints>((104000,52000),(94000,52000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6869,7 +6869,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o215">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, -1800)</a:CenterTextOffset>
 <a:Rect>((33600,41100), (82700,48900))</a:Rect>
 <a:ListOfPoints>((34000,41500),(34000,45000),(82000,45000),(82000,48500))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6888,7 +6888,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o217">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, -2200)</a:CenterTextOffset>
 <a:Rect>((41113,37300), (52887,39197))</a:Rect>
 <a:ListOfPoints>((42000,38000),(52000,38000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6907,7 +6907,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o219">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, -2700)</a:CenterTextOffset>
 <a:Rect>((65351,37300), (80650,39197))</a:Rect>
 <a:ListOfPoints>((68000,38000),(78000,38000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6926,7 +6926,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o221">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, -2200)</a:CenterTextOffset>
 <a:Rect>((91763,37300), (106237,39197))</a:Rect>
 <a:ListOfPoints>((94000,38000),(104000,38000))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6945,7 +6945,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o223">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, -1800)</a:CenterTextOffset>
 <a:Rect>((89300,41100), (112400,48900))</a:Rect>
 <a:ListOfPoints>((112000,41500),(112000,45000),(90000,45000),(90000,48500))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6964,7 +6964,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o225">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(7000, 0)</a:CenterTextOffset>
 <a:Rect>((92801,21100), (107200,30400))</a:Rect>
 <a:ListOfPoints>((100000,30000),(100000,21500))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -6983,7 +6983,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o227">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(7000, 0)</a:CenterTextOffset>
 <a:Rect>((33888,21100), (46112,30400))</a:Rect>
 <a:ListOfPoints>((40000,30000),(40000,21500))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -7002,7 +7002,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o229">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(4500, 0)</a:CenterTextOffset>
 <a:Rect>((36663,3100), (43337,14900))</a:Rect>
 <a:ListOfPoints>((40000,14500),(40000,3500))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -7021,7 +7021,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o231">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(4500, 2000)</a:CenterTextOffset>
 <a:Rect>((90026,3100), (97975,30400))</a:Rect>
 <a:ListOfPoints>((94000,30000),(94000,11000),(94000,3500))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -7040,7 +7040,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o233">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(4500, 0)</a:CenterTextOffset>
 <a:Rect>((100026,3100), (107975,14900))</a:Rect>
 <a:ListOfPoints>((104000,14500),(104000,3500))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -7059,7 +7059,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o235">
-<a:CenterTextOffset>(3000, -14000)</a:CenterTextOffset>
+<a:CenterTextOffset>(-6000, -26000)</a:CenterTextOffset>
 <a:Rect>((119600,3100), (133562,52400))</a:Rect>
 <a:ListOfPoints>((120000,52000),(124000,52000),(124000,3500))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -7078,7 +7078,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o237">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, -1800)</a:CenterTextOffset>
 <a:Rect>((85600,3100), (130700,59323))</a:Rect>
 <a:ListOfPoints>((86000,55500),(86000,57000),(130000,57000),(130000,3500))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -7097,7 +7097,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o239">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(4000, -2500)</a:CenterTextOffset>
 <a:Rect>((16151,-700), (58400,74900))</a:Rect>
 <a:ListOfPoints>((58000,74500),(58000,67000),(19000,67000),(19000,0),(32000,0))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -7116,7 +7116,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o241">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(-16000, -2500)</a:CenterTextOffset>
 <a:Rect>((59600,55100), (120700,74900))</a:Rect>
 <a:ListOfPoints>((60000,55500),(60000,65000),(120000,65000),(120000,74500))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -7134,7 +7134,7 @@ Postulante</a:Text>
 </c:Object>
 </o:DependencySymbol>
 <o:DependencySymbol Id="o243">
-<a:CenterTextOffset>(0, 1)</a:CenterTextOffset>
+<a:CenterTextOffset>(0, -2500)</a:CenterTextOffset>
 <a:Rect>((26300,81100), (128400,92197))</a:Rect>
 <a:ListOfPoints>((128000,81500),(128000,91000),(27000,91000),(27000,81500))</a:ListOfPoints>
 <a:ArrowStyle>8</a:ArrowStyle>
@@ -7172,7 +7172,9 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o200">
 <a:ObjectID>E731CD8D-42C6-4CB8-9325-42C79422CF79</a:ObjectID>
-<a:Name>R-01 credenciales / sesión</a:Name>
+<a:Name>R-01
+credenciales /
+sesión</a:Name>
 <a:Code>ARQ01_R_01</a:Code>
 <a:CreationDate>1790566496</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7187,7 +7189,9 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o202">
 <a:ObjectID>A9AD3DB3-99A7-46AC-BCD5-D9EF064CF55C</a:ObjectID>
-<a:Name>R-02 identidad, rol, organización</a:Name>
+<a:Name>R-02
+identidad, rol,
+organización</a:Name>
 <a:Code>ARQ01_R_02</a:Code>
 <a:CreationDate>1790566496</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7202,7 +7206,10 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o204">
 <a:ObjectID>6288BED3-FEB3-4289-8B77-4C1B9912CAE1</a:ObjectID>
-<a:Name>R-03 autoriza y filtra por organización</a:Name>
+<a:Name>R-03
+autoriza y
+filtra por
+organización</a:Name>
 <a:Code>ARQ01_R_03</a:Code>
 <a:CreationDate>1790566496</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7247,7 +7254,9 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o210">
 <a:ObjectID>A9441820-6F12-4A76-ABA7-7954D955F845</a:ObjectID>
-<a:Name>R-05 requerimiento aprobado</a:Name>
+<a:Name>R-05
+requerimiento
+aprobado</a:Name>
 <a:Code>ARQ01_R_05</a:Code>
 <a:CreationDate>1790566496</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7262,7 +7271,9 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o212">
 <a:ObjectID>850AF644-84F4-4E6E-A3F2-B738ABE7BB78</a:ObjectID>
-<a:Name>R-06 vacante publicada</a:Name>
+<a:Name>R-06
+vacante
+publicada</a:Name>
 <a:Code>ARQ01_R_06</a:Code>
 <a:CreationDate>1790566497</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7277,7 +7288,8 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o214">
 <a:ObjectID>CA4EF4C7-99EF-435B-93BC-35B79FED8EEB</a:ObjectID>
-<a:Name>R-07 perfil y CV</a:Name>
+<a:Name>R-07
+perfil y CV</a:Name>
 <a:Code>ARQ01_R_07</a:Code>
 <a:CreationDate>1790566497</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7292,7 +7304,8 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o216">
 <a:ObjectID>BA44DD44-99F6-4844-9447-3BEFCC4DD36E</a:ObjectID>
-<a:Name>R-08 postulación elegible / avance de etapa</a:Name>
+<a:Name>R-08 postulación elegible /
+avance de etapa</a:Name>
 <a:Code>ARQ01_R_08</a:Code>
 <a:CreationDate>1790566497</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7307,7 +7320,9 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o218">
 <a:ObjectID>478F9F18-9829-4296-95C1-745F6BAFA428</a:ObjectID>
-<a:Name>R-09 resultados realizados</a:Name>
+<a:Name>R-09
+resultados
+realizados</a:Name>
 <a:Code>ARQ01_R_09</a:Code>
 <a:CreationDate>1790566497</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7322,7 +7337,10 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o220">
 <a:ObjectID>E7B36275-E776-46B4-9E5C-6B9CA10F441E</a:ObjectID>
-<a:Name>R-10 comparación (apoyo; no elige)</a:Name>
+<a:Name>R-10
+comparación
+(apoyo;
+no elige)</a:Name>
 <a:Code>ARQ01_R_10</a:Code>
 <a:CreationDate>1790566497</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7337,7 +7355,9 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o222">
 <a:ObjectID>70D56C81-18AB-44D0-99E2-F6600CC17AF0</a:ObjectID>
-<a:Name>R-11 decisión humana registrada</a:Name>
+<a:Name>R-11
+decisión humana
+registrada</a:Name>
 <a:Code>ARQ01_R_11</a:Code>
 <a:CreationDate>1790566497</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7352,7 +7372,9 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o224">
 <a:ObjectID>A118B401-4851-444A-9976-72C737BEC931</a:ObjectID>
-<a:Name>R-12 transiciones seleccionado / no seleccionado</a:Name>
+<a:Name>R-12 transiciones
+seleccionado /
+no seleccionado</a:Name>
 <a:Code>ARQ01_R_12</a:Code>
 <a:CreationDate>1790566498</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7367,7 +7389,8 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o226">
 <a:ObjectID>C36412EF-E3D3-47CD-9EFB-3F4CC25DF0C4</a:ObjectID>
-<a:Name>R-13 registro de acciones críticas</a:Name>
+<a:Name>R-13 registro de
+acciones críticas</a:Name>
 <a:Code>ARQ01_R_13</a:Code>
 <a:CreationDate>1790566498</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7382,7 +7405,8 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o228">
 <a:ObjectID>9E9307D5-6BBC-4383-BCB4-99E529F62074</a:ObjectID>
-<a:Name>R-14 eventos de notificación</a:Name>
+<a:Name>R-14 eventos de
+notificación</a:Name>
 <a:Code>ARQ01_R_14</a:Code>
 <a:CreationDate>1790566498</a:CreationDate>
 <a:Creator>user</a:Creator>
@@ -7442,7 +7466,9 @@ Postulante</a:Text>
 </o:Dependency>
 <o:Dependency Id="o236">
 <a:ObjectID>7C3DE1C2-9E4A-4E75-A1BB-5FFB8B3A9DF1</a:ObjectID>
-<a:Name>R-17 CV (escritura y descarga autorizada)</a:Name>
+<a:Name>R-17 CV (escritura
+y descarga
+autorizada)</a:Name>
 <a:Code>ARQ01_R_17</a:Code>
 <a:CreationDate>1790566498</a:CreationDate>
 <a:Creator>user</a:Creator>

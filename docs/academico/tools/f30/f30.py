@@ -598,7 +598,7 @@ def docx():
                header=('Área Informática', 'Pruebas y Calidad de Software — NRC 28607'),
                cover=('F30 — Investigación científica y tecnológica para el motor inteligente de reclutamiento',
                       'SaaS Reclutamiento Multiempresa · Caso Colegio Andino de Huancayo',
-                      'Versión 1 · 30/09/2026 · pendiente de auditoría'),
+                      'Versión 1 · 30/09/2026 · auditada e integrada'),
                footer_extra='F30 — Investigación IA reclutamiento')
     print('escrito', os.path.basename(path))
 

@@ -1,6 +1,6 @@
 # F30 — Estado del arte de la IA en reclutamiento y selección
 
-> Fase F30, versión 1 (30/09/2026), **pendiente de auditoría**. Investigación documental: no implementa nada. Cada afirmación cita su fuente con el identificador de la [matriz de evidencia](F30_Matriz_Evidencia_Cientifica.md) ([S01]–[S89] trabajos científicos, [O01]–[O14] normas y documentos oficiales, [X01]–[X02] fuentes secundarias). Las referencias completas están en [REFERENCIAS.md](REFERENCIAS.md).
+> Fase F30, versión 1 (30/09/2026), auditada e integrada. Investigación documental: no implementa nada. Cada afirmación cita su fuente con el identificador de la [matriz de evidencia](F30_Matriz_Evidencia_Cientifica.md) ([S01]–[S89] trabajos científicos, [O01]–[O16] normas y documentos oficiales, [X01]–[X02] fuentes secundarias). Las referencias completas están en [REFERENCIAS.md](REFERENCIAS.md).
 
 **Convención de este documento.** Se distinguen cuatro tipos de afirmación:
 

@@ -80,12 +80,12 @@ Trazabilidad componente → RF → CU → RNF → alcance → artefacto: [`../tr
 - **Formato:** es una adaptación académica, porque en la F28 no se disponía del Formato 11 oficial. Se incorporó el 29/09/2026 y la F11-R regularizó el entregable sobre él.
 - **Punto de partida:** el AS-IS (F2 a F4) es preliminar.
 - **RNF no verificados:** RNF-06 (rendimiento) y RNF-07 (disponibilidad y recuperabilidad).
-- **H-14:** la cabecera del PDF del F4 queda como LOW para la F31.
-- **Cabecera del PDF del F11 (LOW, mismo caso que H-14):** la extracción de texto de Word no devuelve «F11 ADAPTADO | …». El texto del cuerpo, incluido «Formato 11», sí se extrae, y el DOCX contiene la cabecera. Se revisa junto con H-14 en la F31.
+- **H-14:** RESUELTA en F31 mediante la conservación de la referencia oficial de cabecera del F4.
+- **F28-L01:** NO APLICA. La revisión visual de F31 confirma que el F11 adaptado histórico sí dibuja su encabezado y «Asignatura»; la omisión era propia del extractor usado en F28. El artefacto histórico no se modifica.
 - **RF-28:** no implementado.
 - **RF-29:** experimental.
 - **Aprobación:** no hay aprobación institucional.
-- **Diagrama:** el DOCX y el PDF usan la vista formal ARQ-01 de la F29 (ver «Formalización F29»). Algunos rótulos rozan líneas o bordes: F29-L02, LOW para la F31. Hasta el 28/09/2026 usaban el borrador.
+- **Diagrama:** el DOCX y el PDF definitivo usan la vista formal ARQ-01 de la F29 (ver «Formalización F29»). F29-L02 quedó RESUELTA en F31 mediante offsets de rótulos persistidos y reexportados; el adaptado histórico conserva la exportación que le correspondía. Hasta el 28/09/2026 se usaba el borrador.
 
 ## Relación con la F29 (estado al cierre de la F28)
 
