@@ -18,6 +18,10 @@ Comprueba que los documentos de docs/academico/g0-readiness/:
   ROLE ningún rol no implementado se presenta como vigente;
   XSS amenaza explícita de XSS persistente con sus controles;
 y además que el baseline, ADR-005, el runtime y las dependencias no cambiaron respecto de develop.
+Alcance Git (F34B-M01): en la rama de F34A, o con F34A sin integrar, solo se admite el delta de F34A; en fases
+posteriores se admiten artefactos académicos nuevos y los documentos de F34A deben ser idénticos a su cierre.
+Si Git no responde, falla cerrado. Toda consulta Git comprueba su código de salida (F34B-M01-R1): solo se aceptan los
+códigos declarados para cada consulta y cualquier otro deja el estado en UNKNOWN; los autotests inyectan fallos.
 Los casos negativos (QA) mutan los textos en memoria: cada uno debe ser detectado.
 Uso: python docs/academico/tools/f34a/validate_f34a.py
 """
@@ -555,10 +559,6 @@ CASES = [
 
 
 # ---------------------------------------------------------------- git: alcance, baseline, runtime y dependencias
-def git(*a):
-    return subprocess.run(['git', *a], cwd=ROOT, capture_output=True, text=True, encoding='utf-8').stdout
-
-
 GOVERNANCE_FILES = frozenset({'CLAUDE.md', 'README.md', 'docs/PROGRESS.md',
                               'docs/academico/ACADEMIC_BASELINE.md'})
 CLOSURE_SUBJECTS = [
@@ -578,31 +578,278 @@ def closure_scope(subjects, committed, dirty):
     return frozenset(committed)
 
 
-def git_checks():
+# Alcance Git en dos modos (auditoría F34B-M01):
+#   delta   rama propia de F34A, o F34A aún no integrada en HEAD: solo se admite el delta de F34A (+ cierre autorizado).
+#   post    fase posterior que ya contiene el cierre de F34A: se admiten artefactos académicos nuevos, pero los
+#           documentos de F34A deben ser idénticos a su cierre (invariante permanente).
+#   unknown cualquier consulta Git con un código de salida no previsto: falla cerrado.
+# En todos los modos rigen las invariantes permanentes: runtime, dependencias, baseline, ADR-005 y F34 sin cambios.
+#
+# Códigos de salida (auditoría F34B-M01-R1): toda consulta se ejecuta con `q`, que solo acepta los códigos que esa
+# consulta declara como válidos. Los únicos códigos distintos de 0 que tienen significado son:
+#   `rev-parse --verify --quiet <ref>`   1 = referencia inexistente (solo tras comprobar que el repositorio es válido)
+#   `merge-base --is-ancestor A B`       1 = A no es ancestro de B
+# Cualquier otro código (128, 129, None si Git no se puede ejecutar…) lanza GitError y el resultado es UNKNOWN.
+# Nunca se interpreta la salida vacía de un comando fallido como «sin cambios» ni como «ancla inexistente».
+F34A_BRANCH = 'feature/f34a-g0-readiness'
+F34A_ANCHOR = '417ea4fc4a800d8663e3af7909be59e6ea302f1e'   # merge «close F34A G0 readiness» en develop
+F34A_DELTA = ('docs/academico/g0-readiness/', 'docs/academico/tools/f34a/')
+F34A_IMMUTABLE = ('docs/academico/g0-readiness/',)       # documentos F34A: idénticos al cierre en fases posteriores
+POST_ALLOWED = ('docs/academico/',)                      # artefactos académicos legítimos de fases posteriores
+PROTECTED = ['app', 'routes', 'config', 'database', 'resources', 'tests', 'cypress', 'ml-service', 'composer.json',
+             'composer.lock', 'package.json', 'package-lock.json', 'docker-compose.yml', 'Dockerfile',
+             'docs/v1.1/scope-preliminary.md', 'docs/final-report/traceability-master.md',
+             'docs/rf-implementation-matrix.md', 'docs/assumptions.md',
+             'docs/academico/diseno-inteligente/F33_ADR_005_G0.md', 'docs/academico/datos-sinteticos']
+
+
+class GitError(Exception):
+    """Consulta Git con un código de salida no previsto: el estado es desconocido."""
+
+
+def git_rc(*a):
+    """Ejecuta git y devuelve (código de salida, salida estándar); (None, '') si Git no se puede ejecutar."""
+    try:
+        p = subprocess.run(['git', *a], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
+    except OSError:
+        return None, ''
+    return p.returncode, p.stdout
+
+
+def q(runner, *args, ok=(0,)):
+    """Consulta con código comprobado: devuelve (rc, salida) si rc está en `ok`; si no, GitError."""
+    rc, out = runner(*args)
+    if rc not in ok:
+        raise GitError(f'git {" ".join(args[:4])}{" …" if len(args) > 4 else ""} → código {rc}')
+    return rc, out
+
+
+def paths(out):
+    return {ln.strip() for ln in out.splitlines() if ln.strip()}
+
+
+# Consultas usadas para decidir el modo y el alcance (también las usa el arnés de fallos inyectados).
+def Q_INSIDE():
+    return ('rev-parse', '--is-inside-work-tree')
+
+
+def Q_HEAD():
+    return ('rev-parse', '--verify', '--quiet', 'HEAD^{commit}')
+
+
+def Q_BRANCH():
+    return ('rev-parse', '--abbrev-ref', 'HEAD')
+
+
+def Q_BASE():
+    return ('rev-parse', '--verify', '--quiet', BASE + '^{commit}')
+
+
+def Q_ANCHOR():
+    return ('rev-parse', '--verify', '--quiet', F34A_ANCHOR + '^{commit}')
+
+
+def Q_ANCESTOR():
+    return ('merge-base', '--is-ancestor', F34A_ANCHOR, 'HEAD')
+
+
+def Q_CHANGED():
+    return ('diff', '--name-only', BASE)
+
+
+def Q_UNTRACKED():
+    return ('ls-files', '--others', '--exclude-standard')
+
+
+def Q_PROTECTED():
+    return ('diff', '--name-only', BASE, '--', *PROTECTED)
+
+
+def Q_IMMUTABLE():
+    return ('diff', '--name-only', F34A_ANCHOR, '--', *F34A_IMMUTABLE)
+
+
+def Q_SUBJECTS():
+    return ('log', '-3', '--format=%s')
+
+
+def Q_COMMITTED():
+    return ('diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD')
+
+
+def Q_DIRTY():
+    return ('diff', '--name-only', 'HEAD', '--', *sorted(GOVERNANCE_FILES))
+
+
+def scope_mode(branch, anchor_in_head):
+    """branch: rama actual (None si Git falla); anchor_in_head: True/False, o None si no se pudo determinar."""
+    if branch is None or anchor_in_head is None:
+        return 'unknown'
+    if branch == F34A_BRANCH or not anchor_in_head:
+        return 'delta'
+    return 'post'
+
+
+def evaluate_scope(mode, changed, f34a_changed, protected_changed, governance=frozenset(), detail=''):
+    """Decisión pura sobre el alcance (probada con casos sintéticos en main)."""
+    if mode == 'unknown':
+        return [f'estado Git desconocido: no se puede verificar el alcance (falla cerrado) {detail}'.strip()]
     out = []
-    changed = set(git('diff', '--name-only', BASE).split())
-    changed |= set(git('ls-files', '--others', '--exclude-standard').split())
-    allowed = ('docs/academico/g0-readiness/', 'docs/academico/tools/f34a/')
-    subjects = git('log', '-3', '--format=%s').splitlines()
-    committed = set(git('diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD').splitlines())
-    dirty = set(git('diff', '--name-only', 'HEAD', '--', *sorted(GOVERNANCE_FILES)).splitlines())
-    governance = closure_scope(subjects, committed, dirty)
-    fuera = sorted(p for p in changed if not p.startswith(allowed) and p not in governance)
-    if fuera:
-        out.append(f'cambios fuera del alcance de F34A: {fuera[:5]}')
-    protected = ['app', 'routes', 'config', 'database', 'resources', 'tests', 'cypress', 'ml-service', 'composer.json',
-                 'composer.lock', 'package.json', 'package-lock.json', 'docker-compose.yml', 'Dockerfile',
-                 'docs/v1.1/scope-preliminary.md', 'docs/final-report/traceability-master.md',
-                 'docs/rf-implementation-matrix.md', 'docs/assumptions.md',
-                 'docs/academico/diseno-inteligente/F33_ADR_005_G0.md', 'docs/academico/datos-sinteticos']
-    tocados = git('diff', '--name-only', BASE, '--', *protected).split()
-    if tocados:
-        out.append(f'runtime, dependencias, baseline, ADR-005 o F34 modificados: {tocados[:5]}')
-    adr_text = open(os.path.join(ROOT, 'docs', 'academico', 'diseno-inteligente', 'F33_ADR_005_G0.md'),
-                    encoding='utf-8').read()
+    if mode == 'delta':
+        fuera = sorted(p for p in changed if not p.startswith(F34A_DELTA) and p not in governance)
+        if fuera:
+            out.append(f'cambios fuera del alcance de F34A: {fuera[:5]}')
+    else:
+        if f34a_changed:
+            out.append(f'artefactos F34A modificados después de su cierre: {sorted(f34a_changed)[:5]}')
+        fuera = sorted(p for p in changed if not p.startswith(POST_ALLOWED) and p not in GOVERNANCE_FILES)
+        if fuera:
+            out.append(f'cambios fuera de artefactos académicos: {fuera[:5]}')
+    if protected_changed:
+        out.append(f'runtime, dependencias, baseline, ADR-005 o F34 modificados: {sorted(protected_changed)[:5]}')
+    return out
+
+
+def git_state(runner=git_rc):
+    """(modo, rama, detalle). Lanza GitError ante cualquier código no previsto."""
+    _, inside = q(runner, *Q_INSIDE())
+    if inside.strip() != 'true':
+        raise GitError('no es un árbol de trabajo Git')
+    q(runner, *Q_HEAD())                                   # HEAD inválido o sin commits → GitError (rc 1 o 128)
+    _, branch = q(runner, *Q_BRANCH())
+    branch = branch.strip()
+    if not branch:
+        raise GitError('rama actual vacía')
+    q(runner, *Q_BASE())                                   # sin base no se puede verificar el alcance → GitError
+    rc_a, _ = q(runner, *Q_ANCHOR(), ok=(0, 1))            # 1 = ancla inexistente (repositorio ya verificado)
+    if rc_a == 1:
+        # Sin el ancla solo puede tratarse de la rama propia de F34A antes de su cierre; si no, se desconoce el estado.
+        if branch == F34A_BRANCH:
+            return 'delta', branch, 'ancla F34A inexistente en la rama propia'
+        raise GitError('ancla F34A inexistente fuera de la rama de F34A')
+    rc_anc, _ = q(runner, *Q_ANCESTOR(), ok=(0, 1))        # 0 = ancestro; 1 = no ancestro
+    return scope_mode(branch, rc_anc == 0), branch, ''
+
+
+def git_checks(runner=git_rc, adr_text=None):
+    """(violaciones, modo). Cualquier GitError produce modo «unknown» y una violación (falla cerrado)."""
+    try:
+        mode, _, detail = git_state(runner)
+        changed = paths(q(runner, *Q_CHANGED())[1])
+        untracked = paths(q(runner, *Q_UNTRACKED())[1])
+        protected_changed = paths(q(runner, *Q_PROTECTED())[1]) | {p for p in untracked if p.startswith(tuple(PROTECTED))}
+        changed |= untracked
+        f34a_changed = set()
+        if mode == 'post':
+            f34a_changed = paths(q(runner, *Q_IMMUTABLE())[1]) | {p for p in untracked if p.startswith(F34A_IMMUTABLE)}
+        governance = frozenset()
+        if mode == 'delta':
+            subjects = q(runner, *Q_SUBJECTS())[1].splitlines()
+            committed = paths(q(runner, *Q_COMMITTED())[1])
+            dirty = paths(q(runner, *Q_DIRTY())[1])
+            governance = closure_scope(subjects, committed, dirty)
+    except GitError as e:
+        return evaluate_scope('unknown', set(), set(), set(), detail=str(e)), 'unknown'
+    out = evaluate_scope(mode, changed, f34a_changed, protected_changed, governance, detail)
+    if adr_text is None:
+        adr_text = open(os.path.join(ROOT, 'docs', 'academico', 'diseno-inteligente', 'F33_ADR_005_G0.md'),
+                        encoding='utf-8').read()
     if '- **Estado:** **PROPUESTA**' not in adr_text or 'G0 = NO APROBADA' not in adr_text:
         out.append('ADR-005 ya no figura como PROPUESTA con G0 NO APROBADA')
-    return out
+    return out, mode
+
+
+# ---------------------------------------------------------------- arnés de Git simulado (fallos inyectados)
+ADR_OK = '- **Estado:** **PROPUESTA** … G0 = NO APROBADA'
+F34B_FILES = 'docs/academico/g0-evidence/README.md\ndocs/academico/tools/f34b/validate_f34b.py\n'
+
+
+def fake_git(branch, anchor_in_head=True, changed='', untracked='', protected='', immutable='', subjects='',
+             committed='', dirty='', fail=None, rc_fail=128, anchor_exists=True, unavailable=False):
+    """Runner que responde como Git para un escenario; `fail` es la consulta (función Q_*) que devuelve `rc_fail`."""
+    table = {Q_INSIDE(): (0, 'true\n'), Q_HEAD(): (0, 'abc\n'), Q_BRANCH(): (0, branch + '\n'),
+             Q_BASE(): (0, 'def\n'), Q_ANCHOR(): (0, F34A_ANCHOR + '\n') if anchor_exists else (1, ''),
+             Q_ANCESTOR(): (0 if anchor_in_head else 1, ''), Q_CHANGED(): (0, changed), Q_UNTRACKED(): (0, untracked),
+             Q_PROTECTED(): (0, protected), Q_IMMUTABLE(): (0, immutable), Q_SUBJECTS(): (0, subjects),
+             Q_COMMITTED(): (0, committed), Q_DIRTY(): (0, dirty)}
+    if fail is not None:
+        table[fail()] = (rc_fail, '')                      # salida vacía de un comando fallido: no debe leerse
+
+    def runner(*args):
+        if unavailable:
+            return None, ''
+        return table.get(tuple(args), (128, ''))           # consulta no prevista: error
+    return runner
+
+
+def scope_self_tests():
+    """Casos sintéticos del alcance Git: lista de (descripción, correcto)."""
+    f34b = {'docs/academico/g0-evidence/README.md', 'docs/academico/tools/f34b/validate_f34b.py'}
+    f34a = {'docs/academico/g0-readiness/F34A_Matriz_G0.md', 'docs/academico/tools/f34a/validate_f34a.py'}
+    passes = lambda v: not v
+    fails = lambda v: bool(v)
+
+    def run(**kw):
+        return git_checks(fake_git(**kw), adr_text=ADR_OK)
+
+    def closed(**kw):
+        v, mode = run(**kw)
+        return mode == 'unknown' and bool(v) and 'falla cerrado' in v[0]
+    post = dict(branch='feature/f34b-g0-external-evidence', untracked=F34B_FILES)
+    delta = dict(branch=F34A_BRANCH, anchor_in_head=False, changed='docs/academico/g0-readiness/README.md\n',
+                 subjects='\n'.join(CLOSURE_SUBJECTS) + '\n', committed='docs/PROGRESS.md\n')
+    tests = [
+        ('modo: la rama F34A usa el delta estricto', scope_mode(F34A_BRANCH, True) == 'delta'),
+        ('modo: F34A sin integrar en HEAD usa el delta estricto', scope_mode('feature/x', False) == 'delta'),
+        ('modo: fase posterior con el cierre F34A usa invariantes', scope_mode('feature/f34b-x', True) == 'post'),
+        ('modo: Git sin rama o sin ancestría es desconocido',
+         scope_mode(None, True) == 'unknown' and scope_mode('feature/x', None) == 'unknown'),
+        ('delta F34A: su propio delta pasa', passes(evaluate_scope('delta', f34a, set(), set()))),
+        ('delta F34A: rechaza artefactos de otra fase', fails(evaluate_scope('delta', f34a | f34b, set(), set()))),
+        ('delta F34A: el cierre autorizado admite solo su gobierno',
+         passes(evaluate_scope('delta', {'CLAUDE.md'}, set(), set(), frozenset({'CLAUDE.md'})))
+         and fails(evaluate_scope('delta', {'CLAUDE.md'}, set(), set()))),
+        ('post: artefactos académicos de una fase posterior pasan', passes(evaluate_scope('post', f34b, set(), set()))),
+        ('post: rechaza modificar documentos F34A',
+         fails(evaluate_scope('post', f34b, {'docs/academico/g0-readiness/F34A_Matriz_G0.md'}, set()))),
+        ('post: rechaza cambios fuera de docs académicos', fails(evaluate_scope('post', {'scripts/x.sh'}, set(), set()))),
+        ('post: rechaza runtime, baseline o ADR-005',
+         fails(evaluate_scope('post', {'app/Models/User.php'}, set(), {'app/Models/User.php'}))),
+        ('delta: rechaza runtime aunque esté en el delta', fails(evaluate_scope('delta', f34a, set(), {'app/x.php'}))),
+        ('desconocido: falla cerrado', fails(evaluate_scope('unknown', set(), set(), set()))),
+        # ---- extremo a extremo con Git simulado: positivos
+        ('simulado: F34A delta legítimo pasa', run(**delta) == ([], 'delta')),
+        ('simulado: F34B post legítimo pasa', run(**post) == ([], 'post')),
+        ('simulado: rama F34A sin ancla (antes del cierre) usa delta y pasa',
+         run(**delta, anchor_exists=False) == ([], 'delta')),
+        ('simulado: post que modifica un documento F34A falla',
+         fails(run(**post, immutable='docs/academico/g0-readiness/F34A_Matriz_G0.md\n')[0])),
+        ('simulado: post con cambio fuera de lo académico falla', fails(run(**post, changed='scripts/x.sh\n')[0])),
+        ('simulado: delta con artefacto de otra fase falla', fails(run(**dict(delta, untracked=F34B_FILES))[0])),
+        ('simulado: runtime modificado falla en post', fails(run(**post, protected='app/Models/User.php\n')[0])),
+        # ---- extremo a extremo con Git simulado: códigos de salida distintos de 0 → UNKNOWN y fallo
+        ('fallo 128 al consultar asuntos de gobierno (log)', closed(**delta, fail=Q_SUBJECTS)),
+        ('fallo 128 al consultar el commit de gobierno (diff-tree)', closed(**delta, fail=Q_COMMITTED)),
+        ('fallo 128 al consultar gobierno pendiente (diff HEAD)', closed(**delta, fail=Q_DIRTY)),
+        ('fallo 128 en archivos modificados (diff base)', closed(**post, fail=Q_CHANGED)),
+        ('fallo 128 en archivos sin seguimiento (ls-files)', closed(**post, fail=Q_UNTRACKED)),
+        ('fallo 128 en rutas protegidas (diff base -- protegidas)', closed(**post, fail=Q_PROTECTED)),
+        ('fallo 128 en documentos F34A contra el ancla', closed(**post, fail=Q_IMMUTABLE)),
+        ('fallo 128 al resolver el ancla (no se confunde con «inexistente»)', closed(**post, fail=Q_ANCHOR)),
+        ('fallo 128 al resolver el ancla en la rama F34A', closed(**delta, fail=Q_ANCHOR)),
+        ('fallo 128 en merge-base --is-ancestor', closed(**post, fail=Q_ANCESTOR)),
+        ('fallo 128 al resolver la rama (rev-parse --abbrev-ref)', closed(**post, fail=Q_BRANCH)),
+        ('fallo 128 al resolver la base', closed(**post, fail=Q_BASE)),
+        ('base inexistente (rc 1) también falla cerrado', closed(**post, fail=Q_BASE, rc_fail=1)),
+        ('HEAD inválido o sin commits (rc 128)', closed(**post, fail=Q_HEAD)),
+        ('HEAD inválido (rc 1)', closed(**post, fail=Q_HEAD, rc_fail=1)),
+        ('repositorio inválido (rev-parse --is-inside-work-tree 128)', closed(**post, fail=Q_INSIDE)),
+        ('Git no disponible (no se puede ejecutar)', closed(**post, unavailable=True)),
+        ('ancla inexistente fuera de la rama F34A', closed(**post, anchor_exists=False)),
+        ('código inesperado 1 en diff (no se acepta como «sin cambios»)', closed(**post, fail=Q_CHANGED, rc_fail=1)),
+        ('código inesperado 2 en merge-base', closed(**post, fail=Q_ANCESTOR, rc_fail=2)),
+    ]
+    return tests
 
 
 def main():
@@ -625,8 +872,10 @@ def main():
             add(False, f'{cid}: la mutación no se pudo aplicar ({e})')
     add(len(CASES) >= 35, f'casos negativos: {len(CASES)}')
 
-    gv = git_checks()
-    add(not gv, f'GIT: alcance, baseline, ADR-005, runtime y dependencias sin cambios: {gv}')
+    gv, mode = git_checks()
+    add(not gv, f'GIT (modo {mode}): alcance, documentos F34A, baseline, ADR-005, runtime y dependencias: {gv}')
+    for desc, ok in scope_self_tests():
+        add(ok, f'alcance Git — {desc}')
     add(closure_scope(CLOSURE_SUBJECTS, {'CLAUDE.md'}, set()) == {'CLAUDE.md'},
         'cierre: admite únicamente el delta de gobierno comprometido en C tras B/A')
     add(not closure_scope(CLOSURE_SUBJECTS, {'CLAUDE.md'}, {'CLAUDE.md'}),
