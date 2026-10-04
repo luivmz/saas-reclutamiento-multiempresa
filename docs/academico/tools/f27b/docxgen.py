@@ -322,6 +322,18 @@ def build_docx(template, out_path, datos, doc, title=None):
             parts.append(PAGEBREAK)
     parts.append(sect_variant(sect, keep_first=not wide))
     new_doc = head + '<w:body>' + ''.join(parts) + '</w:body>' + tail
+    # Algunas plantillas (en particular el Formato 04) guardan la referencia al
+    # encabezado en una seccion intermedia situada despues de la primera tabla.
+    # Al reconstruir el cuerpo esa seccion desaparecia, aunque header1.xml y su
+    # relacion seguian dentro del paquete DOCX.  Si el documento resultante no
+    # conserva ninguna referencia, traslada las referencias de encabezado/pie de
+    # la plantilla a la seccion final. No altera las plantillas que ya las
+    # conservaron ni inventa contenido: vuelve a enlazar sus partes oficiales.
+    if '<w:headerReference' not in new_doc:
+        refs = re.findall(r'<w:(?:header|footer)Reference\b[^>]*/>', document)
+        if refs:
+            refs = list(dict.fromkeys(refs))
+            new_doc = re.sub(r'(<w:sectPr\b[^>]*>)', r'\1' + ''.join(refs), new_doc, count=1)
     core = zin.read('docProps/core.xml').decode('utf-8')
     if title:
         core = re.sub(r'<dc:title>.*?</dc:title>|<dc:title/>', f'<dc:title>{escape(title)}</dc:title>', core)

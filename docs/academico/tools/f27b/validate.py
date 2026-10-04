@@ -25,6 +25,42 @@ import m_cu as U  # noqa: E402
 BASE_RF = [f'RF-{i:02d}' for i in range(1, 28)]
 
 
+def pdf_literal_text(data):
+    """Extrae literales Tj/TJ del PDF de Word para el check minimo de cabecera H-14.
+
+    Lee operadores de texto BT/ET, incluidos fragmentos con kerning. No busca
+    cadenas en metadata ni cuenta imagenes como texto. No es un extractor PDF
+    general: una fuente CID/hexadecimal no compatible hace fallar este check.
+    """
+    import zlib
+    lines = []
+    literal = re.compile(rb'\(((?:\\.|[^()\\])*)\)')
+
+    def unescape(value):
+        def replace(m):
+            token = m.group(1)
+            if token[:1] in b'01234567':
+                return bytes([int(token, 8)])
+            return {b'n': b'\n', b'r': b'\r', b't': b'\t', b'b': b'\b',
+                    b'f': b'\f'}.get(token, token)
+        return re.sub(rb'\\([0-7]{1,3}|[^\r\n])', replace, value).decode('cp1252', errors='replace')
+
+    for stream in re.findall(rb'stream\r?\n(.*?)\r?\nendstream', data, re.S):
+        try:
+            stream = zlib.decompress(stream)
+        except zlib.error:
+            pass
+        for block in re.findall(rb'\bBT\b(.*?)\bET\b', stream, re.S):
+            fragments = []
+            for operand in re.findall(rb'(\[(?:[^\]]*)\])\s*TJ', block, re.S):
+                fragments.extend(unescape(v) for v in literal.findall(operand))
+            for value in re.findall(rb'\(((?:\\.|[^()\\])*)\)\s*Tj', block):
+                fragments.append(unescape(value))
+            if fragments:
+                lines.append(''.join(fragments))
+    return ' '.join(' '.join(lines).split())
+
+
 def f9_rf_cu():
     """RF → CU y bloque IN, leídos del F9 v1.1 publicado (tabla de la línea base funcional)."""
     path = os.path.join(ACAD, 'phase-24', 'output', 'F9_Alcance_Proyecto_Software_Colegio_Andino_FINAL_v1.1.docx')
@@ -163,6 +199,11 @@ def checks():
         check(f'DOCX {name}: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla',
               ok and not missing and media_ok and not placeholders,
               f'{len(embeds)} imágenes' + ('; faltan relaciones' if missing else '') + ('; quedan «____»' if placeholders else ''))
+    f4_pdf = os.path.join(ACAD, 'practica-04', 'F4_Problemas_del_Proceso_Colegio_Andino.pdf')
+    with open(f4_pdf, 'rb') as f:
+        header_text = pdf_literal_text(f.read())
+    check('H-14 F4 PDF: cabecera presente como texto extraible (Tj/TJ)',
+          'Asignatura: Pruebas y Calidad de Software' in header_text)
     return res
 
 
