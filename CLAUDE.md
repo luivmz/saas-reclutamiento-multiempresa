@@ -77,6 +77,8 @@ El servicio ML **no** corre en Docker Compose: se ejecuta desde `ml-service/` co
 
 ### `main` — v1.1 académica publicada y documentación post-release
 
+**Estado vigente tras F34A (04/10/2026): F34A CERRADA**, con auditoría final PASS; únicamente documentación y validador. Base preintegración verificada: `develop` = `origin/develop` = `1fb5a1f3663e10cc66289cb3530a8273d1b96b8f` y `main` = `origin/main` = `dc3093ea487a3694223f8f08560e390e26ec95c7` (F34 integrada). **G0 = NO APROBADA; ADR-005 = PROPUESTA; G0-02/03/12/14 = PENDIENTE EXTERNO; G0-09 = PARCIAL; F35–F40 = BLOQUEADAS; datos reales PROHIBIDOS.** El cierre F34A no aprueba el ADR, no sustituye evidencia externa y no habilita scoring/recomendación ni implementación. G0-02 exige evaluación de impacto COMPLETADA si aplica o conclusión jurídica fundamentada de NO APLICABILIDAD, nunca solo planificada. RF-23 sigue humana y RF-29 experimental/informativa. Entrega auditada en [`g0-readiness`](docs/academico/g0-readiness/README.md); sus estados preauditoría se preservan como fotografía histórica. Integración autorizada con gates CI de develop/main; hashes finales en Git. Las referencias pre-F34 siguientes son históricas, no el HEAD vigente.
+
 - Baseline pre-F34: `main` = `origin/main` = `26ae8b34ed586fe19515dd6041491e8dd72f9a64`; contiene el release v1.1 y la documentación académica integrada hasta F33. El tag `v1.1.0-academic` conserva el cierre técnico en `634f354`; el tag histórico `v1.0.0-academic` apunta a `9a946c2` y no se mueve.
 - RF-01 a RF-27 son la línea base v1.0. Sus documentos de cierre (`docs/final-report/`) siguen siendo correctos **para v1.0** y no se reescriben.
 
@@ -104,6 +106,7 @@ Baseline pre-F34: `develop` = `origin/develop` = `288039fbb7eaba9827072e736d2fff
 | 32 | Auditoría académica global y salvaguardas para F33 | CERRADA CON OBSERVACIONES e integrada (`develop` `d6094187`; `main` `40a79ede`), con CI verde |
 | 33 | Diseño funcional del motor inteligente y ADR-005 / G0 | CERRADA e integrada (`develop` `288039f`; `main` `26ae8b34`); auditoría final PASS; solo documentación |
 | 34 | Contrato de datos, dataset sintético y gobernanza | CERRADA tras auditoría final PASS; 19 CSV, 120 vacantes, exclusivamente sintética; integración autorizada con gates CI |
+| 34A | Paquete G0, jurídico/privacidad preliminares, necesidad institucional, amenazas y RF candidatos | CERRADA tras auditoría final PASS; G0 NO APROBADA; ADR-005 PROPUESTA; pendientes externos y G0-09 PARCIAL; solo documentación |
 
 **Puerta G0 tras F34: NO APROBADA. ADR-005: PROPUESTA.** El cierre de las fases de diseño y datos no aprueba el ADR ni habilita implementación. F34 queda CERRADA únicamente con datos sintéticos y gobernanza, sin scoring ni recomendación de personas. F35–F40 permanecen bloqueadas. No se autorizan datos reales por consentimiento ni por el cierre F34: cualquier uso futuro requiere autorización adicional explícita y revisión contractual, jurídica y de privacidad. Fuentes vigentes: [`F33`](docs/academico/diseno-inteligente/README.md), su mapa de fases y el cierre F34 en `docs/PROGRESS.md`. Los estados preauditoría de los entregables F33/F34 se conservan como fotografías históricas de entrega. RF-23 sigue humana y RF-29 experimental, informativa y operacional; no cambia ningún contrato ni el baseline RF-01 a RF-27.
 
