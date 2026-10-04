@@ -73,16 +73,16 @@ El servicio ML **no** corre en Docker Compose: se ejecuta desde `ml-service/` co
 
 ## Estado actual
 
-*Baseline previo a la integración F31 verificado con Git el 02/10/2026. Los hashes siguientes son esa fotografía pre-F31; consulta las refs actuales con `git log --oneline -1 main develop` y `docs/PROGRESS.md`. F31 fue auditada y cerrada con observaciones el 03/10/2026; publicación autorizada con gates CI.*
+*Baseline previo a la integración F33 verificado con Git el 04/10/2026. F31 y F32 están integradas; los hashes siguientes son la fotografía pre-F33. F33 está CERRADA como fase de diseño tras auditoría final PASS, en el commit académico `63a36e71a00881f3baa2d306f24a3f766ddf0882`. Su publicación e integración están autorizadas con gates CI de develop y main; los hashes finales se consultan en Git y `docs/PROGRESS.md`, no se anticipan aquí.*
 
 ### `main` — v1.1 académica publicada y documentación post-release
 
-- `main` = `origin/main` = `59849c3`; contiene el release v1.1 y la documentación académica integrada hasta F30. El tag `v1.1.0-academic` conserva el cierre técnico en `634f354`; el tag histórico `v1.0.0-academic` apunta a `9a946c2` y no se mueve.
+- Baseline pre-F33: `main` = `origin/main` = `40a79ede949672f6cf96602fce962ba5c0d1e4ab`; contiene el release v1.1 y la documentación académica integrada hasta F32. El tag `v1.1.0-academic` conserva el cierre técnico en `634f354`; el tag histórico `v1.0.0-academic` apunta a `9a946c2` y no se mueve.
 - RF-01 a RF-27 son la línea base v1.0. Sus documentos de cierre (`docs/final-report/`) siguen siendo correctos **para v1.0** y no se reescriben.
 
-### `develop` — línea académica post-release integrada hasta F30
+### `develop` — línea académica post-release integrada hasta F32 (baseline pre-F33)
 
-`develop` = `origin/develop` = `2bf2a1e`; `main` contiene el mismo árbol aprobado de F30 mediante el merge `59849c3`. Tras el release técnico se integraron los entregables académicos F27–F30 sin cambiar el runtime.
+Baseline pre-F33: `develop` = `origin/develop` = `d6094187f673ba5af0a38abfff5e721478c46259`; `main` contiene el mismo árbol aprobado de F32 mediante el merge `40a79ede949672f6cf96602fce962ba5c0d1e4ab`. Tras el release técnico se integraron los entregables académicos F27–F32 sin cambiar el runtime.
 
 | Fase | Contenido | Estado |
 |---|---|---|
@@ -101,6 +101,10 @@ El servicio ML **no** corre en Docker Compose: se ejecuta desde `ml-service/` co
 | 27–29 | Formatos académicos F2–F11, F11 oficial, PowerDesigner, matriz, plan y QA | Integradas en `develop` y `main`; ver `docs/academico/ACADEMIC_BASELINE.md` |
 | 30 | Investigación científica y tecnológica para IA de reclutamiento | Integrada (`develop` `2bf2a1e`; `main` `59849c3`), solo documentación |
 | 31 | Cierre de deuda LOW y saneamiento documental | CERRADA con observaciones aceptadas/futuras; integración autorizada con CI obligatorio, sin cambios productivos. Hashes finales en Git |
+| 32 | Auditoría académica global y salvaguardas para F33 | CERRADA CON OBSERVACIONES e integrada (`develop` `d6094187`; `main` `40a79ede`), con CI verde |
+| 33 | Diseño funcional del motor inteligente y ADR-005 / G0 | CERRADA tras auditoría final PASS; commit académico `63a36e7`, integración autorizada con gates CI; solo documentación |
+
+**Puerta G0 tras F33: NO APROBADA. ADR-005: PROPUESTA.** El cierre de la fase de diseño no aprueba el ADR ni habilita implementación. F34 puede avanzar únicamente con datos sintéticos y gobernanza, sin scoring ni recomendación de personas. F35–F40 permanecen bloqueadas. Fuente vigente: [`F33`](docs/academico/diseno-inteligente/README.md) y su mapa de fases. RF-23 sigue humana y RF-29 experimental, informativa y operacional; no cambia ningún contrato ni el baseline RF-01 a RF-27.
 
 **ML (RF-29).** Implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, **no** validado institucionalmente ni autorizado para producción. Estima el riesgo de demora del **proceso**; no puntúa, ordena, selecciona ni descarta personas, no toca el ranking y no cambia RF-23. Contrato científico congelado, no se modifica: *freeze* `9ee1843055e75d4039dd84fd666db7a594e1a45ec7e9b354820fabfcb21ebcd2`, *threshold* `0.1679418172266036`, Logistic Regression `C=10`, `class_weight=None`, `StandardScaler`, sin calibración.
 

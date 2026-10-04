@@ -1,12 +1,12 @@
 # Progreso del proyecto
 
-Última actualización: 2026-10-03 (Fase 31, saneamiento documental cerrado con observaciones aceptadas/futuras).
+Última actualización: 2026-10-04 (F33 CERRADA como fase de diseño tras auditoría final PASS; G0 NO APROBADA).
 
 > El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24; el 25/09/2026, de la Fase 24 a la Fase 25, y ese mismo día, de la Fase 25 a la Fase 26. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
 
 ## Estado de v1.1
 
-Baseline previo a la integración F31: `main` = `origin/main` = `59849c3` y `develop` = `origin/develop` = `2bf2a1e`. Los nuevos hashes de integración se consultan en Git, no se anticipan en este commit. El cierre técnico v1.1 permanece etiquetado como `v1.1.0-academic` sobre `634f354`; `v1.0.0-academic` sigue en `9a946c2`. F27–F30 son documentación académica post-release integrada, sin cambios de comportamiento productivo.
+Baseline previo a la integración F33, verificado el 04/10/2026: `main` = `origin/main` = `40a79ede949672f6cf96602fce962ba5c0d1e4ab` y `develop` = `origin/develop` = `d6094187f673ba5af0a38abfff5e721478c46259`. F31 y F32 están integradas con CI verde. F33 está cerrada como diseño y su publicación e integración están autorizadas con gates CI; los hashes y resultados finales se consultan en Git/GitHub, no se anticipan en este commit. El cierre técnico v1.1 permanece etiquetado como `v1.1.0-academic` sobre `634f354`; `v1.0.0-academic` sigue en `9a946c2`. F27–F33 son trabajo académico post-release, sin cambios de comportamiento productivo.
 
 | Fase | Contenido | Estado | Merge en `develop` | Detalle |
 |---|---|---|---|---|
@@ -28,6 +28,10 @@ Baseline previo a la integración F31: `main` = `origin/main` = `59849c3` y `dev
 | 27–29 | F2–F11, PowerDesigner académico, matriz de operacionalización, plan, QA e informe final | ✅ Cerradas e integradas | `f7017c1`, `1abd405`, `bc44303`, `5c52ad2` | `docs/academico/ACADEMIC_BASELINE.md` |
 | 30 | Investigación científica y tecnológica para IA de reclutamiento | ✅ Auditada e integrada; solo documentación | `2bf2a1e` | `docs/academico/investigacion-ia/README.md` |
 | 31 | Cierre de deuda LOW y saneamiento documental | ✅ CERRADA con observaciones aceptadas/futuras; auditoría final PASS WITH OBSERVATIONS | Integración autorizada con CI obligatorio; hashes en Git | `docs/academico/F31_DOCUMENTATION_DEBT_CLEANUP.md` |
+| 32 | Auditoría académica global y salvaguardas para F33 | ✅ CERRADA CON OBSERVACIONES e integrada; CI develop/main verde | `d6094187` | `docs/academico/auditoria-global/README.md` |
+| 33 | Diseño funcional del motor inteligente y ADR-005 / G0 | ✅ CERRADA; auditoría final PASS; solo diseño | Commit académico `63a36e71a00881f3baa2d306f24a3f766ddf0882`; integración autorizada con gates CI, hashes finales en Git | `docs/academico/diseno-inteligente/README.md` |
+
+**Estado vigente tras la auditoría F33:** **G0 = NO APROBADA** y **ADR-005 = PROPUESTA**. El cierre documental no aprueba G0 ni el ADR. **F34 habilitada solo con datos sintéticos y gobernanza**, sin scoring ni recomendación de personas; **F35–F40 bloqueadas** hasta la aprobación explícita y registrada de G0 para el alcance correspondiente. Los entregables F33 versión 1 se conservan como fueron auditados; sus notas de «pendiente de auditoría» describen su estado al redactarse, no el estado vigente registrado aquí.
 
 **RF-29** está implementado e integrado **experimentalmente**: validado técnicamente con datos sintéticos, no validado institucionalmente ni autorizado para producción; no selecciona ni descarta a nadie y no cambia RF-23. RF-28, RF-29 y los RNF nuevos (incluido RNF-C) siguen siendo **candidatos** (`docs/v1.1/scope-preliminary.md`, decisión 11 y preguntas 12–13).
 

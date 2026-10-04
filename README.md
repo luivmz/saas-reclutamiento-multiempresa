@@ -115,7 +115,7 @@ docs/                 Documentación técnica y del informe final
 | v1.1: fases, cierre y *release* | `docs/v1.1/` · `docs/v1.1/phase-26-release-closeout.md` · `docs/v1.1/release-notes-v1.1.md` |
 | v1.1: UML y PowerDesigner | `docs/v1.1/uml/` · `docs/v1.1/powerdesigner/` |
 | v1.1: Formato 09 | `docs/academico/phase-24/` |
-| Línea académica post-release F27–F31 y auditoría F32 | `docs/academico/ACADEMIC_BASELINE.md` · `docs/academico/auditoria-global/README.md` |
+| Línea académica post-release F27–F33 | `docs/academico/ACADEMIC_BASELINE.md` · `docs/academico/auditoria-global/README.md` · `docs/academico/diseno-inteligente/README.md` |
 | Divergencias entre v1.0 y v1.1 | `docs/v1.1/documentation-update-map.md` |
 
 ## Seguridad
@@ -132,5 +132,5 @@ Todos los datos son ficticios. No se afirma cumplimiento legal ni certificación
 ## Estado
 
 - **v1.0 académica (publicada):** Fases 0 a 12, RF-01 a RF-27; rama `main` y tag `v1.0.0-academic`. Veredicto de la Fase 12: **APTO PARA PUBLICACIÓN** (`docs/final-report/qa-final-report.md`).
-- **v1.1 académica (publicada):** el tag `v1.1.0-academic` apunta al cierre técnico `634f354`; F0–F26 están cerradas. La documentación académica post-release F27–F31 está cerrada e integrada en `develop` y `main`; F31 saneó deuda documental sin cambios de producto. F32 está CERRADA CON OBSERVACIONES, con publicación e integración autorizadas mediante gates CI de `develop` y `main`; los hashes y resultados finales se consultan en Git/GitHub. F33 está apta para diseño de ADR-005/G0, pero G0 sigue NO APROBADA y no autoriza scoring/recomendación de candidatos ni implementación funcional.
+- **v1.1 académica (publicada):** el tag `v1.1.0-academic` apunta al cierre técnico `634f354`; F0–F26 están cerradas. La documentación académica post-release F27–F32 está cerrada e integrada en `develop` y `main`; F31 saneó deuda documental y F32 cerró la auditoría global con observaciones, sin cambios de producto. **F33 CERRADA** como fase de diseño tras auditoría final PASS; publicación e integración autorizadas mediante gates CI de `develop` y `main`, con hashes y resultados finales en Git/GitHub. **G0 NO APROBADA; ADR-005 PROPUESTA. F34 habilitada solo con datos sintéticos y gobernanza; F35–F40 bloqueadas.** El cierre no autoriza scoring/recomendación de candidatos ni implementación funcional.
 - **Requisitos:** RF-01 a RF-27 son la línea base. RF-28 (candidato, no implementado), RF-29 (experimental) y RNF-C (propuesta) **no** forman parte de ella. Estado por fase: `docs/PROGRESS.md`.
