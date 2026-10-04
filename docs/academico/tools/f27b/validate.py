@@ -22,6 +22,7 @@ import m_rf as R  # noqa: E402
 import m_rnf as N  # noqa: E402
 import m_cu as U  # noqa: E402
 import f31_scope  # noqa: E402
+import f32_scope  # noqa: E402
 
 BASE_RF = [f'RF-{i:02d}' for i in range(1, 28)]
 
@@ -567,8 +568,12 @@ def f29c_checks():
     # F31 es una fase posterior explícita: puede sanear F11/F29 y propagar ARQ-01 al informe,
     # pero no amplía el permiso a runtime, ML, F9, F23 o el informe v1.0.
     f31 = f31_scope.active(ROOT)
-    cambios_no_permitidos = [p for p in cambios if not (f31 and p in f31_scope.PROTECTED_DELTA)]
-    add('Alcance: sin cambios en runtime, ML, F9 publicado, F23 ni informe v1.0; delta F31 explícito en F11/F29/informe',
+    # F32 solo corrige dos entradas de navegacion y el hash de una de ellas;
+    # no autoriza binarios, modelos, exports ni documentos historicos de esas carpetas.
+    f32 = f32_scope.active(ROOT)
+    cambios_no_permitidos = [p for p in cambios if not (
+        (f31 and p in f31_scope.PROTECTED_DELTA) or (f32 and p in f32_scope.PROTECTED_DELTA))]
+    add('Alcance: sin cambios en runtime, ML, F9 publicado, F23 ni informe v1.0; deltas F31/F32 explícitos y acotados',
         r.returncode == 0 and not cambios_no_permitidos,
         ', '.join(cambios_no_permitidos)[:120])
     return res

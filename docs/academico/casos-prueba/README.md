@@ -2,7 +2,7 @@
 
 Catálogo formal de casos de prueba (CP-001 en adelante) y matriz de trazabilidad RF → CU → CP → prueba automatizada → evidencia. Aplica el [Plan de Pruebas (F29D)](../plan-pruebas/README.md).
 
-**Estado:** desarrollado en la fase F29E (30/09/2026), **pendiente de auditoría**.
+**Estado vigente:** F29E **auditada, cerrada e integrada** ([baseline académico](../ACADEMIC_BASELINE.md)). El catálogo conserva la ejecución y los estados documentados de 30/09/2026; no se atribuyen nuevas ejecuciones al actualizar esta entrada.
 
 | Archivo | Contenido |
 |---|---|

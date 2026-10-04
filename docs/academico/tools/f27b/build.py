@@ -5,6 +5,8 @@ Uso (desde la raíz del repositorio):  python docs/academico/tools/f27b/build.py
 Para cada práctica genera: el DOCX sobre la plantilla oficial, su espejo en Markdown (mismo
 contenido, para revisión en Git) y los borradores PNG en diagramas/draft/. Las plantillas de
 docs/academico/00-fuentes-oficiales/ solo se leen.
+El F11 vigente usa la clave f11r. La clave f11 esta bloqueada para preservar el
+adaptado historico; el flujo sin argumentos tambien la excluye (F32-M01).
 """
 import os
 import sys
@@ -27,6 +29,27 @@ def builder(key):
         BUILDERS[key] = fn
         return fn
     return deco
+
+
+def resolve_builder_keys(args):
+    """Valida el lote entero antes de escribir; nunca reconstruye el F11 historico."""
+    keys = list(args)
+    if 'f11' in keys:
+        raise ValueError('La clave f11 esta protegida: conserva el F11 adaptado historico. '
+                         'Usa f11r para el Formato 11 oficial vigente.')
+    unknown = [key for key in keys if key not in BUILDERS]
+    if unknown:
+        raise ValueError('Clave de generacion desconocida: ' + ', '.join(unknown))
+    return keys or [key for key in BUILDERS if key != 'f11']
+
+
+def main(args=None):
+    try:
+        keys = resolve_builder_keys(sys.argv[1:] if args is None else args)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    for key in keys:
+        BUILDERS[key]()
 
 
 def pdir(n, *parts):
@@ -1308,6 +1331,8 @@ def f11_trace_rows():
 
 @builder('f11')
 def build_f11():
+    # Tambien se protege la llamada directa; el cuerpo se conserva como fuente historica.
+    resolve_builder_keys(['f11'])
     import validate as V
     diag = arch_diagram()
     checks = V.f11_checks()
@@ -1630,6 +1655,4 @@ def build_f29h():
 
 
 if __name__ == '__main__':
-    keys = sys.argv[1:] or list(BUILDERS)
-    for k in keys:
-        BUILDERS[k]()
+    main()

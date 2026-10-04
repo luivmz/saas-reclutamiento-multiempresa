@@ -2,7 +2,7 @@
 
 Ejecución real de todas las suites del proyecto el 30/09/2026 sobre `develop` `bc44303`, con el árbol limpio al iniciar. La ejecución evalúa los criterios de aceptación CA-01 a CA-07 del [Plan de Pruebas](../plan-pruebas/README.md).
 
-**Estado:** ejecutada en la fase F29F, **pendiente de auditoría**.
+**Estado vigente:** F29F **auditada, cerrada e integrada** ([baseline académico](../ACADEMIC_BASELINE.md)). Resultados y logs conservan la ejecución de 30/09/2026; no se ejecutaron nuevamente al actualizar esta entrada.
 
 | Archivo | Contenido |
 |---|---|
@@ -18,8 +18,8 @@ Ejecución real de todas las suites del proyecto el 30/09/2026 sobre `develop` `
   - pytest: 533/533.
 - **Verificaciones estáticas:** TypeScript y build sin errores.
 - **CI:** en verde en `develop`.
-- **Deudas abiertas:**
-  - **CI main F29C pendiente de ejecución manual** (OBS-F29F-04).
+- **Deudas de aquella ejecución:**
+  - **CI main F29C pendiente de ejecución manual** (OBS-F29F-04) sobre aquel commit; no se reemplaza retrospectivamente por un run distinto. La CI posterior a F31 pasó en develop y main, como documenta el [informe F32](../auditoria-global/F32_Auditoria_Academica_Global.md).
   - Formato pendiente de Pint y `vp check` (F25-L03, LOW).
 
 Las cifras están en [`F29F_Ejecucion_QA.md`](F29F_Ejecucion_QA.md). No se usaron números históricos.

@@ -1,6 +1,6 @@
 # Continuar el proyecto desde macOS
 
-Guía práctica para retomar el proyecto en una Mac tras el cierre académico de las fases F27 a F29 (28/09/2026). No sustituye a la documentación de origen; enlaza a ella.
+Guía práctica para retomar el proyecto en una Mac. Actualizada en el cierre F32: F27–F31 cerradas e integradas; F32 CERRADA CON OBSERVACIONES, con integración autorizada y sujeta a CI. Los hashes y resultados finales se consultan en Git/GitHub. No sustituye a la documentación de origen; enlaza a ella. Los hashes del 28/09/2026 que siguen son antecedentes históricos, no el baseline vigente.
 
 ## Estado del proyecto
 
@@ -9,7 +9,7 @@ Guía práctica para retomar el proyecto en una Mac tras el cierre académico de
 | Repositorio | https://github.com/luivmz/saas-reclutamiento-multiempresa |
 | `main` | Rama publicada. Contiene la v1.1 académica (etiqueta `v1.1.0-academic`) y el cierre académico F2–F11 |
 | `develop` | Rama de integración. **Aquí se continúa el trabajo** |
-| `feature/phase-27-academic-f2-f11` | Rama de las fases F27–F29, integrada en `develop` y `main` y **conservada** para trazabilidad y auditoría. Se limpiará en la F31 o la F32 |
+| `feature/phase-27-academic-f2-f11` | Rama de las fases F27–F29, integrada en `develop` y `main` y **conservada por defecto** para trazabilidad y auditoría. Cualquier eliminación requiere autorización explícita del equipo |
 | Etiquetas | `v1.0.0-academic` → `9a946c2` y `v1.1.0-academic` → `634f354`. No se mueven ni se reutilizan |
 
 **Commits antes de integrar (28/09/2026):**
@@ -118,7 +118,7 @@ Laravel solo llama al servicio si `ML_SERVICE_ENABLED=true`. Sin él, la aplicac
 | F8 Casos de uso | [`practica-08/`](practica-08/README.md) | DOCX y PDF con la exportación formal |
 | F9 Alcance (publicado) | [`phase-24/output/`](phase-24/README.md) · adenda en [`practica-09/`](practica-09/F9_POST_RELEASE_ADDENDUM.md) | Solo lectura |
 | F11 Arquitectura | [`practica-11/`](practica-11/README.md) | Definitivo: DOCX y PDF sobre la plantilla oficial (F11-R), con la vista ARQ-01. Se conserva además la adaptación histórica de la F28 |
-| F29C Variables y operacionalización | [`operacionalizacion/`](operacionalizacion/README.md) | DOCX y PDF con el Anexo 1 (matriz) y el Anexo 2 (diagrama conceptual), espejo `.md` y paquete de ejecución de la actividad E1 y registro de la evidencia de ChatGPT (P-01 a P-06; el resto es NO REQUERIDO). `validate.py --cierre-f29c` pasa. **Lista para auditoría** |
+| F29C Variables y operacionalización | [`operacionalizacion/`](operacionalizacion/README.md) | DOCX y PDF con el Anexo 1 (matriz) y el Anexo 2 (diagrama conceptual), espejo `.md` y paquete de ejecución de la actividad E1 y registro de la evidencia de ChatGPT (P-01 a P-06; el resto es NO REQUERIDO). `validate.py --cierre-f29c` pasa. **Auditada, cerrada e integrada**; no implica mediciones ni aprobación institucional |
 | F29D Plan de Pruebas | [`plan-pruebas/`](plan-pruebas/README.md) | DOCX, PDF y espejo `.md` sobre la plantilla del curso |
 | F29E Casos de prueba | [`casos-prueba/`](casos-prueba/README.md) | Catálogo de 128 CP, matriz de trazabilidad y CSV |
 | F29F Ejecución QA | [`qa-final/`](qa-final/README.md) | Resultados y evidencias reales (registros, JUnit y CI) |
@@ -144,7 +144,8 @@ Laravel solo llama al servicio si `ML_SERVICE_ENABLED=true`. Sin él, la aplicac
 - Los scripts de `powerdesigner/scripts/*.ps1` usan la automatización COM de PowerDesigner y la API de ventanas de Windows, así que **solo funcionan en Windows**. Esto incluye las capturas (`capture_f29_views.ps1`).
 - Los PNG, SVG, DOCX y PDF **sí** se revisan normalmente en la Mac.
 - **DOCX y PDF:**
-  - `python3 docs/academico/tools/f27b/build.py f3 f5 f8 f11` regenera los DOCX en cualquier sistema (necesita Python 3 y Pillow);
+  - `python3 docs/academico/tools/f27b/build.py f3 f5 f8 f11r` regenera los DOCX vigentes, incluido el **F11 oficial** (necesita Python 3 y Pillow);
+  - la clave `f11` está bloqueada antes de cualquier escritura y excluida del flujo por defecto: el F11 adaptado histórico DOCX/PDF/MD y sus registros no se regeneran;
   - el PDF sale de Microsoft Word por COM (`tools/f27b/topdf.ps1`), que solo existe en Windows.
 
   Si se regenera un DOCX en la Mac, su PDF se vuelve a exportar desde Windows antes del commit. Si no, el DOCX y el PDF quedarían desalineados.
@@ -166,7 +167,7 @@ Resultado esperado: `validate.py`, 0 fallas (los requisitos fuera del alcance ef
 - Integración: *merge* explícito (`--no-ff`) a `develop` y, cuando corresponda, de `develop` a `main`.
 - Sin `push --force`, sin rebase de historia publicada y sin mover ni reutilizar etiquetas.
 - Sin *push*, *merge*, *release* ni etiqueta sin autorización explícita del equipo. Las reglas completas están en [`CLAUDE.md`](../../CLAUDE.md).
-- `feature/phase-27-academic-f2-f11` se conserva hasta la F31 o la F32.
+- Las ramas históricas, incluida `feature/phase-27-academic-f2-f11`, se conservan por defecto. Cualquier eliminación local o remota requiere autorización explícita del equipo; no forma parte del cierre F32.
 
 ## Cierre F31 de pendientes LOW
 
@@ -180,7 +181,7 @@ Resultado esperado: `validate.py`, 0 fallas (los requisitos fuera del alcance ef
 
 ## Próximo paso
 
-El proyecto académico está integrado hasta F30; F31 se limita al saneamiento documental. Para continuar en la Mac:
+El proyecto académico está integrado hasta F31; F32 está **CERRADA CON OBSERVACIONES**, con publicación e integración autorizadas mediante CI de develop y main. Consultar sus merges y checks finales en Git/GitHub, sin anticipar hashes. F33 está **APTO PARA DISEÑO** de ADR-005/G0; G0 sigue **NO APROBADA** y no autoriza scoring/recomendación de personas ni implementación funcional. Para continuar en la Mac:
 
 1. actualizar `develop`;
 2. crear una rama nueva desde `develop`;
