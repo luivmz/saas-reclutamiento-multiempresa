@@ -21,6 +21,7 @@ import m_tobe as T  # noqa: E402
 import m_rf as R  # noqa: E402
 import m_rnf as N  # noqa: E402
 import m_cu as U  # noqa: E402
+import f31_scope  # noqa: E402
 
 BASE_RF = [f'RF-{i:02d}' for i in range(1, 28)]
 
@@ -558,10 +559,18 @@ def f29c_checks():
     add('PDF: válido y en páginas horizontales', pdf[:5] == b'%PDF-' and b'%%EOF' in pdf[-1024:] and boxes
         and all(float(w) > float(h) for w, h in boxes), f'{npag} páginas')
     protegidos = ['app', 'resources', 'routes', 'database', 'tests', 'ml-service', 'docs/v1.1', 'docs/final-report',
-                  'docs/academico/phase-24/output', 'docs/academico/practica-11', 'docs/academico/powerdesigner']
-    r = subprocess.run(['git', 'status', '--porcelain', '--'] + protegidos, cwd=ROOT, capture_output=True, text=True)
-    add('Alcance: sin cambios en runtime, ML, F9 publicado, F11, F23/F29 ni en el informe v1.0', r.returncode == 0
-        and not r.stdout.strip(), r.stdout.strip()[:120])
+                  'docs/academico/phase-24/output', 'docs/academico/practica-11', 'docs/academico/powerdesigner',
+                  'docs/academico/informe-final']
+    r = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=all', '--'] + protegidos,
+                       cwd=ROOT, capture_output=True, text=True)
+    cambios = [ln[3:].strip('"') for ln in r.stdout.splitlines()]
+    # F31 es una fase posterior explícita: puede sanear F11/F29 y propagar ARQ-01 al informe,
+    # pero no amplía el permiso a runtime, ML, F9, F23 o el informe v1.0.
+    f31 = f31_scope.active(ROOT)
+    cambios_no_permitidos = [p for p in cambios if not (f31 and p in f31_scope.PROTECTED_DELTA)]
+    add('Alcance: sin cambios en runtime, ML, F9 publicado, F23 ni informe v1.0; delta F31 explícito en F11/F29/informe',
+        r.returncode == 0 and not cambios_no_permitidos,
+        ', '.join(cambios_no_permitidos)[:120])
     return res
 
 

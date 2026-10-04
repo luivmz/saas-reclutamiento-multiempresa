@@ -1,6 +1,6 @@
 # F30 — Análisis de modelos y técnicas para el motor de reclutamiento
 
-> Fase F30, versión 1 (30/09/2026), **pendiente de auditoría**. Es un diseño conceptual: no hay código, endpoints, migraciones ni modelos. Las citas remiten a la [matriz de evidencia](F30_Matriz_Evidencia_Cientifica.md). Lo que no lleva cita es **decisión o inferencia del equipo** y se presenta como tal.
+> Fase F30, versión 1 (30/09/2026), auditada e integrada. Es un diseño conceptual: no hay código, endpoints, migraciones ni modelos. Las citas remiten a la [matriz de evidencia](F30_Matriz_Evidencia_Cientifica.md). Lo que no lleva cita es **decisión o inferencia del equipo** y se presenta como tal.
 
 ## 1. Punto de partida: lo que el sistema ya hace
 

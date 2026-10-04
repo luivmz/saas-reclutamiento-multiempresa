@@ -168,19 +168,19 @@ Resultado esperado: `validate.py`, 0 fallas (los requisitos fuera del alcance ef
 - Sin *push*, *merge*, *release* ni etiqueta sin autorización explícita del equipo. Las reglas completas están en [`CLAUDE.md`](../../CLAUDE.md).
 - `feature/phase-27-academic-f2-f11` se conserva hasta la F31 o la F32.
 
-## Pendientes para la F31 (LOW)
+## Cierre F31 de pendientes LOW
 
 | ID | Pendiente |
 |---|---|
-| H-14 | La cabecera del PDF del F4 no aparece en la capa de texto |
-| F28-L01 | Lo mismo en la cabecera del PDF del F11 |
-| F29-L01 | `RepositoryFilename` de los modelos de PowerDesigner guarda una ruta local de Windows |
-| F29-L02 | Algunos rótulos de ARQ-01 rozan líneas o bordes |
-| F29B-OBS-01 | PowerDesigner 16.6 no dibuja el contenido de SP-01 ni de SP-P en la vista principal del editor; se ve en sus diagramas de detalle y en las exportaciones |
+| H-14 | **RESUELTA:** se conservó la referencia oficial de cabecera del Formato 04 al reconstruir el DOCX; el PDF regenerado muestra «Asignatura» y su capa de texto la extrae |
+| F28-L01 | **NO APLICA:** la revisión visual confirmó que el F11 histórico sí dibuja «Asignatura»; solo la extracción usada en F28 omitía texto del encabezado |
+| F29-L01 | **ACEPTADA:** `RepositoryFilename` es metadata generada por PowerDesigner al guardar; no es consumida por modelos, scripts ni exports y no se edita a mano en XML |
+| F29-L02 | **RESUELTA:** offsets de texto ajustados de forma incremental, persistidos tras reapertura y reexportados |
+| F29B-OBS-01 | **ACEPTADA:** limitación demostrada de PowerDesigner 16.6; los diagramas de detalle y exports reproducibles preservan todo el contenido |
 
 ## Próximo paso
 
-El proyecto académico queda **en pausa** hasta recibir nuevas guías o formatos. Al retomarlo en la Mac:
+El proyecto académico está integrado hasta F30; F31 se limita al saneamiento documental. Para continuar en la Mac:
 
 1. actualizar `develop`;
 2. crear una rama nueva desde `develop`;
