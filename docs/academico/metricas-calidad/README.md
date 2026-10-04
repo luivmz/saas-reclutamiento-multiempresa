@@ -2,7 +2,7 @@
 
 Registro final de defectos y métricas de calidad calculadas **solo con datos existentes**.
 
-**Estado:** desarrollado en la fase F29G (30/09/2026), **pendiente de auditoría**.
+**Estado vigente:** F29G **auditada, cerrada e integrada** ([baseline académico](../ACADEMIC_BASELINE.md)). Los defectos y métricas conservan el snapshot de 30/09/2026; este cambio de navegación no altera sus estados históricos.
 
 | Archivo | Contenido |
 |---|---|
