@@ -6,7 +6,7 @@ Informe final del proyecto sobre la plantilla oficial [`Plantilla_Estructura_de_
 - 14 capítulos con sus 53 secciones;
 - conclusiones, recomendaciones, referencias y anexos.
 
-**Estado:** versión 1 (30/09/2026), **pendiente de auditoría**. No hay validación institucional ni beneficios medidos. El código de alumno de la portada queda «Pendiente»: lo completa el equipo.
+**Estado vigente:** F29H **auditada, cerrada e integrada**; véase [baseline académico](../ACADEMIC_BASELINE.md). Se conserva la versión 1 del informe (30/09/2026) como snapshot histórico; no se reescriben sus resultados ni su cronología al actualizar esta entrada. No hay validación institucional ni beneficios medidos. El código de alumno de la portada queda «Pendiente»: lo completa el equipo.
 
 | Archivo | Contenido |
 |---|---|

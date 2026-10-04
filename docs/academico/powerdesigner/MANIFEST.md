@@ -89,7 +89,7 @@ El diagrama principal de cada formato es la exportación formal de esta tabla de
 
 | Documento | Contenido | SHA-256 |
 |---|---|---|
-| [`README.md`](README.md) | Estado, contenido, reproducción y decisiones de modelado | `1e84ada7a42988ae907532d4836adebff725fd0bbc4750785a3fe860bdc77a8f` |
+| [`README.md`](README.md) | Estado, contenido, reproducción y decisiones de modelado | `c9d9e62410603fda5da019397c85cecb9e9e9bc56832d3648b7f63e9d72b76c9` |
 | [`F29_VALIDATION.md`](F29_VALIDATION.md) | Resultado PASS/OBS por vista | `e1abbc4313b7b08d82eb54c1e753ae11035373ee308c8aaaaab5018d7e01f258` |
 | [`F29B_HOTFIX.md`](F29B_HOTFIX.md) | Hotfix F29B: causa raíz, corrección, pruebas de recarga y F29B-OBS-01 | `14ae1d839bf9643df813c28e5c18849fd065300c0c906b0708612587b1a5d2a7` |
 | [`evidencias/capturas/CAPTURAS_PENDIENTES.md`](evidencias/capturas/CAPTURAS_PENDIENTES.md) | Registro de las capturas (STATUS: COMPLETED) | `e16ebbce7fa5fca8f78573cf5d1971280b78f216d4cc436ff75ff9fc55f29890` |

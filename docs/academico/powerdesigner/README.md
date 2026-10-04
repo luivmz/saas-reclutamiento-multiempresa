@@ -66,11 +66,13 @@ Cada script hace tres cosas:
 ```powershell
 . .\docs\academico\powerdesigner\scripts\capture_f29_views.ps1
 Save-F29Captures
-python docs/academico/tools/f27b/build.py f3 f5 f8 f11
-powershell -ExecutionPolicy Bypass -File docs/academico/tools/f27b/topdf.ps1 <DOCX de F3, F5, F8 y F11>
+python docs/academico/tools/f27b/build.py f3 f5 f8 f11r
+powershell -ExecutionPolicy Bypass -File docs/academico/tools/f27b/topdf.ps1 <DOCX de F3, F5, F8 y F11 oficial>
 ```
 
 `Save-F29Captures` reabre los modelos desde el disco y nunca los guarda. `build.py` inserta en los DOCX las exportaciones de `exports/` y las capturas.
+
+**Corrección F32-M01:** el F11 vigente usa `f11r`. La clave antigua `f11` se rechaza antes de escribir y no participa en el flujo por defecto. El F11 adaptado histórico y sus registros se conservan; no se regeneran con esta receta. La exportación PDF es un paso separado desde Word, solo sobre los DOCX vigentes. Estas instrucciones no autorizan por sí solas regenerar modelos ni capturas históricas.
 
 ## Decisiones de modelado
 

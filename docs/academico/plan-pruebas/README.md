@@ -2,7 +2,7 @@
 
 Plan maestro de pruebas de la plataforma v1.1 (rama `develop`, commit `bc44303`). Sigue la **plantilla del curso** [`Plantilla_de_Plan_de_Pruebas_de_Software.pdf`](../00-fuentes-oficiales/plan-pruebas/Plantilla_de_Plan_de_Pruebas_de_Software.pdf) y respeta su orden y sus 29 títulos, del historial de versiones al glosario.
 
-**Estado:** desarrollado en la fase F29D (30/09/2026), **pendiente de auditoría**.
+**Estado vigente:** F29D **auditada, cerrada e integrada** ([baseline académico](../ACADEMIC_BASELINE.md)). El plan conserva su contenido y fecha de 30/09/2026; este cierre de auditoría no equivale a aprobación ni firma institucional.
 
 - **Aprobación:** el plan **no está aprobado ni firmado**. La tabla de aprobaciones indica quién debe aprobarlo.
 - **Validación institucional:** no la hay.

@@ -9,7 +9,7 @@ Comprueba:
   6. Cada decisión D-xx cita evidencia; las clasificaciones de herramientas son válidas y completas.
   7. Los documentos generados están al día (se regeneran en memoria y se comparan).
   8. Los enlaces relativos y sus anclas existen.
-  9. Git: no hay cambios fuera de docs/academico/, salvo el gobierno activo explícitamente sincronizado por F31.
+  9. Git: no hay cambios fuera de docs/academico/, salvo excepciones de rama/base F31 y README vigente F32.
 Uso: python docs/academico/tools/f30/validate_f30.py [--abstracts DIR]
 """
 import json
@@ -29,6 +29,7 @@ from fuentes import FUENTES  # noqa: E402
 from m_herramientas import CLASES, CLASIFICACION  # noqa: E402
 from m_matriz import MATRIZ, NIVELES, OFICIALES, SR  # noqa: E402
 import f31_scope  # noqa: E402
+import f32_scope  # noqa: E402
 
 DOCS = ['README.md', 'F30_Estado_del_Arte_IA_Reclutamiento.md', 'F30_Matriz_Evidencia_Cientifica.md',
         'F30_Analisis_Modelos_y_Tecnicas.md', 'F30_Explainability_Fairness_Gobernanza.md',
@@ -190,11 +191,13 @@ def main():
     # 9. git
     st = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=all'], cwd=ROOT, capture_output=True,
                         text=True, encoding='utf-8').stdout.splitlines()
-    # Solo el delta no confirmado en la rama y HEAD base F31 admite estos tres documentos.
+    # Solo el delta no confirmado en la rama y HEAD base F31 admite sus tres documentos.
+    # F32-L01 autoriza exclusivamente README.md con otra excepcion de rama/base que expira.
     # La existencia permanente del informe no desactiva protecciones de fases posteriores.
     gobierno_f31 = f31_scope.GOVERNANCE if f31_scope.active(ROOT) else set()
+    gobierno_f32 = f32_scope.GOVERNANCE if f32_scope.active(ROOT) else set()
     fuera = [ln for ln in st if not ln[3:].strip('"').startswith('docs/academico/')
-             and ln[3:].strip('"').replace('\\', '/') not in gobierno_f31]
+             and ln[3:].strip('"').replace('\\', '/') not in (gobierno_f31 | gobierno_f32)]
     if fuera:
         err(f'cambios fuera de docs/academico/: {fuera}')
 
