@@ -21,8 +21,45 @@ import m_tobe as T  # noqa: E402
 import m_rf as R  # noqa: E402
 import m_rnf as N  # noqa: E402
 import m_cu as U  # noqa: E402
+import f31_scope  # noqa: E402
 
 BASE_RF = [f'RF-{i:02d}' for i in range(1, 28)]
+
+
+def pdf_literal_text(data):
+    """Extrae literales Tj/TJ del PDF de Word para el check minimo de cabecera H-14.
+
+    Lee operadores de texto BT/ET, incluidos fragmentos con kerning. No busca
+    cadenas en metadata ni cuenta imagenes como texto. No es un extractor PDF
+    general: una fuente CID/hexadecimal no compatible hace fallar este check.
+    """
+    import zlib
+    lines = []
+    literal = re.compile(rb'\(((?:\\.|[^()\\])*)\)')
+
+    def unescape(value):
+        def replace(m):
+            token = m.group(1)
+            if token[:1] in b'01234567':
+                return bytes([int(token, 8)])
+            return {b'n': b'\n', b'r': b'\r', b't': b'\t', b'b': b'\b',
+                    b'f': b'\f'}.get(token, token)
+        return re.sub(rb'\\([0-7]{1,3}|[^\r\n])', replace, value).decode('cp1252', errors='replace')
+
+    for stream in re.findall(rb'stream\r?\n(.*?)\r?\nendstream', data, re.S):
+        try:
+            stream = zlib.decompress(stream)
+        except zlib.error:
+            pass
+        for block in re.findall(rb'\bBT\b(.*?)\bET\b', stream, re.S):
+            fragments = []
+            for operand in re.findall(rb'(\[(?:[^\]]*)\])\s*TJ', block, re.S):
+                fragments.extend(unescape(v) for v in literal.findall(operand))
+            for value in re.findall(rb'\(((?:\\.|[^()\\])*)\)\s*Tj', block):
+                fragments.append(unescape(value))
+            if fragments:
+                lines.append(''.join(fragments))
+    return ' '.join(' '.join(lines).split())
 
 
 def f9_rf_cu():
@@ -163,6 +200,11 @@ def checks():
         check(f'DOCX {name}: ZIP y XML válidos, imágenes presentes, sin campos vacíos de plantilla',
               ok and not missing and media_ok and not placeholders,
               f'{len(embeds)} imágenes' + ('; faltan relaciones' if missing else '') + ('; quedan «____»' if placeholders else ''))
+    f4_pdf = os.path.join(ACAD, 'practica-04', 'F4_Problemas_del_Proceso_Colegio_Andino.pdf')
+    with open(f4_pdf, 'rb') as f:
+        header_text = pdf_literal_text(f.read())
+    check('H-14 F4 PDF: cabecera presente como texto extraible (Tj/TJ)',
+          'Asignatura: Pruebas y Calidad de Software' in header_text)
     return res
 
 
@@ -517,10 +559,18 @@ def f29c_checks():
     add('PDF: válido y en páginas horizontales', pdf[:5] == b'%PDF-' and b'%%EOF' in pdf[-1024:] and boxes
         and all(float(w) > float(h) for w, h in boxes), f'{npag} páginas')
     protegidos = ['app', 'resources', 'routes', 'database', 'tests', 'ml-service', 'docs/v1.1', 'docs/final-report',
-                  'docs/academico/phase-24/output', 'docs/academico/practica-11', 'docs/academico/powerdesigner']
-    r = subprocess.run(['git', 'status', '--porcelain', '--'] + protegidos, cwd=ROOT, capture_output=True, text=True)
-    add('Alcance: sin cambios en runtime, ML, F9 publicado, F11, F23/F29 ni en el informe v1.0', r.returncode == 0
-        and not r.stdout.strip(), r.stdout.strip()[:120])
+                  'docs/academico/phase-24/output', 'docs/academico/practica-11', 'docs/academico/powerdesigner',
+                  'docs/academico/informe-final']
+    r = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=all', '--'] + protegidos,
+                       cwd=ROOT, capture_output=True, text=True)
+    cambios = [ln[3:].strip('"') for ln in r.stdout.splitlines()]
+    # F31 es una fase posterior explícita: puede sanear F11/F29 y propagar ARQ-01 al informe,
+    # pero no amplía el permiso a runtime, ML, F9, F23 o el informe v1.0.
+    f31 = f31_scope.active(ROOT)
+    cambios_no_permitidos = [p for p in cambios if not (f31 and p in f31_scope.PROTECTED_DELTA)]
+    add('Alcance: sin cambios en runtime, ML, F9 publicado, F23 ni informe v1.0; delta F31 explícito en F11/F29/informe',
+        r.returncode == 0 and not cambios_no_permitidos,
+        ', '.join(cambios_no_permitidos)[:120])
     return res
 
 

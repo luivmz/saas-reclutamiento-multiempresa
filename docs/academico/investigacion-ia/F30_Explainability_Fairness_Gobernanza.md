@@ -1,6 +1,6 @@
 # F30 — Explicabilidad, equidad y gobernanza
 
-> Fase F30, versión 1 (30/09/2026), **pendiente de auditoría**. Las citas remiten a la [matriz de evidencia](F30_Matriz_Evidencia_Cientifica.md). Las referencias a normas son un análisis técnico para orientar el diseño y **no constituyen asesoría legal**: la evaluación de impacto la valida una persona con competencia jurídica.
+> Fase F30, versión 1 (30/09/2026), auditada e integrada. Las citas remiten a la [matriz de evidencia](F30_Matriz_Evidencia_Cientifica.md). Las referencias a normas son un análisis técnico para orientar el diseño y **no constituyen asesoría legal**: la evaluación de impacto la valida una persona con competencia jurídica.
 
 ## 1. Explicabilidad (XAI)
 

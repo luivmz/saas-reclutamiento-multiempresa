@@ -1,6 +1,6 @@
 # F30 — Recomendaciones y decisiones para F33–F40
 
-> Fase F30, versión 1 (30/09/2026), **pendiente de auditoría**. F30 investiga y propone; F33–F40 implementarán después, si el equipo lo autoriza. Las decisiones de este documento son **propuestas de ingeniería** respaldadas por la [matriz de evidencia](F30_Matriz_Evidencia_Cientifica.md). Ninguna está aprobada hasta que el equipo la registre.
+> Fase F30, versión 1 (30/09/2026), auditada e integrada. F30 investiga y propone; F33–F40 implementarán después, si el equipo lo autoriza. Las decisiones de este documento son **propuestas de ingeniería** respaldadas por la [matriz de evidencia](F30_Matriz_Evidencia_Cientifica.md). Ninguna está aprobada hasta que el equipo la registre.
 
 ## 1. Conclusión
 

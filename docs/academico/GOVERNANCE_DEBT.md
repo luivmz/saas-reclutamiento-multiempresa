@@ -36,3 +36,9 @@ Documentos de gobierno del repositorio que quedaron en el estado **anterior al r
 4. **Cómo integrarla:** con una auditoría y la autorización del equipo (contrato 10 de `CLAUDE.md`).
 
 Los formatos F2 a F8 **no dependen** de esta deuda: citan los hashes reales y la etiqueta verificada con Git.
+
+## Actualización F31 (02/10/2026)
+
+- **GD-01, GD-02 y GD-03: RESUELTAS.** `CLAUDE.md`, `README.md` y `docs/PROGRESS.md` reflejan el release v1.1 y la línea académica integrada hasta F30, sin borrar este diagnóstico histórico.
+- **GD-04, GD-05 y GD-06: ACEPTADAS como historia de cierre.** Los documentos de F26 describen la secuencia previa a ejecutar y conservan valor de auditoría; las referencias Git vigentes se publican en el gobierno activo. No se reescriben retrospectivamente todos los documentos de release.
+- **GD-07: NO APLICA.** `main` local y `origin/main` están sincronizados en `59849c3` al iniciar F31.

@@ -115,6 +115,7 @@ docs/                 Documentación técnica y del informe final
 | v1.1: fases, cierre y *release* | `docs/v1.1/` · `docs/v1.1/phase-26-release-closeout.md` · `docs/v1.1/release-notes-v1.1.md` |
 | v1.1: UML y PowerDesigner | `docs/v1.1/uml/` · `docs/v1.1/powerdesigner/` |
 | v1.1: Formato 09 | `docs/academico/phase-24/` |
+| Línea académica post-release F27–F30 | `docs/academico/ACADEMIC_BASELINE.md` · `docs/academico/` |
 | Divergencias entre v1.0 y v1.1 | `docs/v1.1/documentation-update-map.md` |
 
 ## Seguridad
@@ -131,5 +132,5 @@ Todos los datos son ficticios. No se afirma cumplimiento legal ni certificación
 ## Estado
 
 - **v1.0 académica (publicada):** Fases 0 a 12, RF-01 a RF-27; rama `main` y tag `v1.0.0-academic`. Veredicto de la Fase 12: **APTO PARA PUBLICACIÓN** (`docs/final-report/qa-final-report.md`).
-- **v1.1 académica (en cierre):** Fases 13 a 25 cerradas en `develop` (ML experimental, integración Laravel ↔ FastAPI, rediseño, *motion*, CSS 3D, QA visual, UML, PowerDesigner, Formato 09 y QA global). La Fase 26 prepara el cierre y el *release* (`docs/v1.1/phase-26-release-closeout.md`); la etiqueta propuesta es `v1.1.0-academic`, pendiente de auditoría.
+- **v1.1 académica (publicada):** el tag `v1.1.0-academic` apunta al cierre técnico `634f354`; F0–F26 están cerradas. La documentación académica post-release F27–F30 también está integrada en `develop` y `main`; F31 sanea únicamente deuda documental, sin cambios de producto.
 - **Requisitos:** RF-01 a RF-27 son la línea base. RF-28 (candidato, no implementado), RF-29 (experimental) y RNF-C (propuesta) **no** forman parte de ella. Estado por fase: `docs/PROGRESS.md`.

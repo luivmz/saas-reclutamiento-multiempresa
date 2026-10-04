@@ -1,8 +1,8 @@
 """Genera MANIFEST.md y la trazabilidad por elemento de la F29 a partir de los modelos.
 
 - docs/academico/powerdesigner/MANIFEST.md: modelos, exportaciones, recursos de los SVG,
-  scripts e informes, con SHA-256 del contenido versionado en git (blob de HEAD, con los
-  finales de línea normalizados por git) para que el hash no dependa del checkout.
+  scripts e informes, con SHA-256 del contenido que se versionará (los textos se
+  normalizan a LF, igual que en git) para que el hash no dependa del checkout.
 - docs/academico/trazabilidad/F29-powerdesigner-traceability.md: cada elemento de la
   especificación -> objeto del modelo (código) -> carril o agrupación -> dibujado en su
   diagrama -> RF / problema / CU -> exportación.
@@ -31,12 +31,14 @@ def rel(p):
 
 
 def blob_sha(path):
-    # Contenido tal como lo guarda git: índice (preparado para el commit) o, si no, HEAD.
-    for ref in (f':{rel(path)}', f'HEAD:{rel(path)}'):
-        r = subprocess.run(['git', 'show', ref], cwd=ROOT, capture_output=True)
-        if r.returncode == 0:
-            return hashlib.sha256(r.stdout).hexdigest()
-    return None
+    # Contenido del árbol de trabajo que se va a confirmar. Git normaliza a LF los
+    # formatos textuales de F29; se aplica la misma normalización antes del SHA-256.
+    if not path.exists():
+        return None
+    data = path.read_bytes()
+    if path.suffix.lower() in {'.bpm', '.oom', '.svg', '.ps1', '.py', '.md', '.txt'}:
+        data = data.replace(b'\r\n', b'\n')
+    return hashlib.sha256(data).hexdigest()
 
 
 # ------------------------------------------------------------------ índice del modelo
@@ -111,7 +113,7 @@ DELIV = {
     'F5': ('practica-05/F5_Modelo_BPM_TOBE_Colegio_Andino', ['F5_BPMN_TOBE_PowerDesigner_parte1.png',
                                                            'F5_BPMN_TOBE_PowerDesigner_parte2.png', 'F5_SP-P_detalle_PowerDesigner.png']),
     'F8': ('practica-08/F8_Diagrama_Casos_de_Uso_Colegio_Andino', ['F8_Casos_de_Uso_PowerDesigner.png']),
-    'F11 ARQ-01': ('practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino', ['ARQ01_Arquitectura_Conceptual_PowerDesigner.png']),
+    'F11 ARQ-01': ('practica-11/F11_Arquitectura_del_Sistema_Colegio_Andino', ['ARQ01_Arquitectura_Conceptual_PowerDesigner.png']),
 }
 views = [
     ('F3', '../practica-03/POWERDESIGNER_PENDING.md', 'F29_BPM_Academico.bpm · F3', 'F3 - BPMN AS-IS', 'F3_BPMN_ASIS', 'F3_model_check.txt'),
@@ -191,12 +193,12 @@ T.append('\nRelaciones (dependencias del paquete ARQ01): '
 # ------------------------------------------------------------------ manifiesto
 M = []
 M.append('# Manifiesto F29 — modelos y exportaciones de PowerDesigner\n')
-M.append('Generado por [`scripts/make_f29_docs.py`](scripts/make_f29_docs.py). **SHA-256 del contenido versionado** '
-         '(`git show :<ruta>`, el blob que se confirma): git normaliza a LF los finales de línea de `.bpm`, `.oom` y `.svg`, así que el hash '
-         'del archivo de trabajo en Windows (CRLF) puede diferir; el del blob es reproducible en cualquier checkout.\n')
+M.append('Generado por [`scripts/make_f29_docs.py`](scripts/make_f29_docs.py). **SHA-256 del contenido que se versionará**: '
+         'los formatos textuales se normalizan a LF, como hace git, por lo que los hashes son reproducibles en cualquier checkout.\n')
 M.append('**Estado (28/09/2026): F29 CLOSED WITH DOCUMENTED OBSERVATIONS.** F29 AUDITED (con observaciones), F29B AUDITED / '
          'APPROVED, capturas COMPLETED (7, reales), exportaciones formales INTEGRATED en los Formatos 03, 05, 08 y 11 y sus '
-         'DOCX y PDF UPDATED. Observaciones abiertas para la F31: F29-L01, F29-L02 y F29B-OBS-01 (LOW).\n')
+         'DOCX y PDF UPDATED. Cierre F31: F29-L02 RESUELTA; F29-L01 y F29B-OBS-01 ACEPTADAS por limitación de PowerDesigner, '
+         'sin impacto semántico ni de portabilidad.\n')
 M.append('## Modelos y exportaciones\n')
 M.append('| Artefacto | Tipo | Modelo fuente | Diagrama | Formato | SHA-256 | Estado |')
 M.append('|---|---|---|---|---|---|---|')
@@ -257,7 +259,7 @@ M.append('|---|---|---|---|---|')
 for stem, exp in (('practica-03/F3_Diagrama_BPM_ASIS_Colegio_Andino', 'F3_BPMN_ASIS.png'),
                   ('practica-05/F5_Modelo_BPM_TOBE_Colegio_Andino', 'F5_BPMN_TOBE.png'),
                   ('practica-08/F8_Diagrama_Casos_de_Uso_Colegio_Andino', 'F8_Casos_de_Uso_Academicos.png'),
-                  ('practica-11/F11_Arquitectura_del_Sistema_ADAPTADO_Colegio_Andino', 'ARQ-01_Arquitectura_Conceptual.png')):
+                  ('practica-11/F11_Arquitectura_del_Sistema_Colegio_Andino', 'ARQ-01_Arquitectura_Conceptual.png')):
     for ext in ('docx', 'pdf'):
         fp = ROOT / 'docs' / 'academico' / f'{stem}.{ext}'
         M.append(f'| [`{stem}.{ext}`](../{stem}.{ext}) | {ext.upper()} | `{exp}` | `{blob_sha(fp) or "sin confirmar"}` | UPDATED |')
