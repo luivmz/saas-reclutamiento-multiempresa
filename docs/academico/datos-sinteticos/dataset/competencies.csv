@@ -1,0 +1,25 @@
+competency_id,organization_token,competency_label,scope,catalog_version,source_type,synthetic_record_id
+CMP-S1-01,ORG-S1,Planificación de la enseñanza,docente,CAT-S1-v1,synthetic,SYN-000002
+CMP-S1-02,ORG-S1,Conducción del aprendizaje,docente,CAT-S1-v1,synthetic,SYN-000003
+CMP-S1-03,ORG-S1,Evaluación formativa,docente,CAT-S1-v1,synthetic,SYN-000004
+CMP-S1-04,ORG-S1,Trabajo con familias y comunidad,docente,CAT-S1-v1,synthetic,SYN-000005
+CMP-S1-05,ORG-S1,Desarrollo profesional,ambos,CAT-S1-v1,synthetic,SYN-000006
+CMP-S1-06,ORG-S1,Gestión administrativa,administrativo,CAT-S1-v1,synthetic,SYN-000007
+CMP-S1-07,ORG-S1,Atención al usuario,administrativo,CAT-S1-v1,synthetic,SYN-000008
+CMP-S1-08,ORG-S1,Organización del trabajo,ambos,CAT-S1-v1,synthetic,SYN-000009
+CMP-S2-01,ORG-S2,Planificación de la enseñanza,docente,CAT-S2-v1,synthetic,SYN-000011
+CMP-S2-02,ORG-S2,Conducción del aprendizaje,docente,CAT-S2-v1,synthetic,SYN-000012
+CMP-S2-03,ORG-S2,Evaluación formativa,docente,CAT-S2-v1,synthetic,SYN-000013
+CMP-S2-04,ORG-S2,Trabajo con familias y comunidad,docente,CAT-S2-v1,synthetic,SYN-000014
+CMP-S2-05,ORG-S2,Desarrollo profesional,ambos,CAT-S2-v1,synthetic,SYN-000015
+CMP-S2-06,ORG-S2,Gestión administrativa,administrativo,CAT-S2-v1,synthetic,SYN-000016
+CMP-S2-07,ORG-S2,Atención al usuario,administrativo,CAT-S2-v1,synthetic,SYN-000017
+CMP-S2-08,ORG-S2,Organización del trabajo,ambos,CAT-S2-v1,synthetic,SYN-000018
+CMP-S3-01,ORG-S3,Planificación de la enseñanza,docente,CAT-S3-v1,synthetic,SYN-000020
+CMP-S3-02,ORG-S3,Conducción del aprendizaje,docente,CAT-S3-v1,synthetic,SYN-000021
+CMP-S3-03,ORG-S3,Evaluación formativa,docente,CAT-S3-v1,synthetic,SYN-000022
+CMP-S3-04,ORG-S3,Trabajo con familias y comunidad,docente,CAT-S3-v1,synthetic,SYN-000023
+CMP-S3-05,ORG-S3,Desarrollo profesional,ambos,CAT-S3-v1,synthetic,SYN-000024
+CMP-S3-06,ORG-S3,Gestión administrativa,administrativo,CAT-S3-v1,synthetic,SYN-000025
+CMP-S3-07,ORG-S3,Atención al usuario,administrativo,CAT-S3-v1,synthetic,SYN-000026
+CMP-S3-08,ORG-S3,Organización del trabajo,ambos,CAT-S3-v1,synthetic,SYN-000027
