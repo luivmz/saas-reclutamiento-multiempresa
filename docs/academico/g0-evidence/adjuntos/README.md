@@ -11,7 +11,7 @@ Carpeta para archivar la **evidencia real** que reciban los registros de F34B: a
 | `G0-ADR005-ThreatModel_Luis_Vila_2026-10-04_original.png` | G0-14 y G0-09 (Vila Meza Luis Antonio), original histórica |
 | `G0-ADR005-ThreatModel_Luis_Vila_2026-10-04.png` | G0-14 y G0-09 (Vila Meza Luis Antonio), confirmación adicional |
 
-Tres son imágenes JPEG con extensión `.png` y la original de Luis Vila es PNG; siguen un patrón de nombre distinto del indicado abajo (OBS-F34C-03 y 04) y se conservan tal como se aportaron. La confirmación de Luis Vila sobrescribió su captura original antes del primer commit; la original se restauró como archivo aparte (OBS-F34C-06). Una confirmación nueva debe tener **otro nombre** de archivo. No hay adjuntos para G0-02, G0-03 ni G0-12.
+Tres son imágenes JPEG con extensión `.png` y la original de Luis Vila es PNG; siguen un patrón de nombre distinto del indicado abajo (OBS-F34C-03 y 04) y se conservan tal como se aportaron. La confirmación de Luis Vila sobrescribió su captura original antes del primer commit; la original se restauró como archivo aparte (OBS-F34C-06). Una confirmación nueva debe tener **otro nombre** de archivo. No hay adjuntos para G0-02, G0-03 ni G0-12. La respuesta de G0-12 recibida en F34D llegó solo como texto y **no se archivó** aquí (OBS-F34D-01).
 
 ## Reglas
 

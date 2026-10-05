@@ -1,6 +1,6 @@
 # F34B — Decisión G0
 
-> Fase F34B, versión 1 (04/10/2026); **reevaluada en F34C**. Reevaluación de los 15 criterios con la evidencia recibida. **Ningún documento ni validador aprueba G0 automáticamente:** este documento solo aplica la regla de [ADR-005 §9.1](../diseno-inteligente/F33_ADR_005_G0.md#91-estados-y-regla-de-decisión) a la [matriz de evidencias](F34B_Matriz_Evidencias_G0.md).
+> Fase F34B, versión 1 (04/10/2026); **reevaluada en F34C y F34D**. Reevaluación de los 15 criterios con la evidencia recibida. **Ningún documento ni validador aprueba G0 automáticamente:** este documento solo aplica la regla de [ADR-005 §9.1](../diseno-inteligente/F33_ADR_005_G0.md#91-estados-y-regla-de-decisión) a la [matriz de evidencias](F34B_Matriz_Evidencias_G0.md).
 
 ## 1. Resultado
 
@@ -11,9 +11,9 @@
 - **Alcance C: no habilitado.**
 - **Los datos reales siguen PROHIBIDOS.**
 - RF-23 sigue humana; RF-29 sigue experimental e informativa.
-- F34C = LISTA PARA AUDITORÍA.
+- F34D = LISTA PARA AUDITORÍA.
 
-**Motivo:** F34C registró evidencia real solo para G0-14 y G0-09, que pasan a CUMPLIDO. Siguen sin evidencia G0-02 (revisión jurídica y evaluación de impacto), G0-03 (privacidad) y G0-12 (necesidad institucional), que son obligatorios para el alcance B.
+**Motivo:** F34C registró evidencia real solo para G0-14 y G0-09, que pasan a CUMPLIDO. Siguen sin evidencia G0-02 (revisión jurídica y evaluación de impacto), G0-03 (privacidad) y G0-12 (necesidad institucional), que son obligatorios para el alcance B. En F34D llegó para G0-12 una respuesta en texto (NECESIDAD VALIDADA declarada), pero sin adjunto archivado y con un nombre que no coincide con el docente registrado: G0-12 sigue PENDIENTE EXTERNO ([registro §4](F34B_Validacion_Necesidad.md#4-respuesta-recibida-en-f34d-sin-evidencia-archivada)).
 
 ## 2. Reevaluación de los 15 criterios
 
@@ -30,7 +30,7 @@
 | G0-09 | PARCIAL | Capturas de los tres integrantes y confirmación de Luis Vila (F34C) | CUMPLIDO |
 | G0-10 | CUMPLIDO | — | CUMPLIDO |
 | G0-11 | CUMPLIDO | — | CUMPLIDO |
-| G0-12 | PENDIENTE EXTERNO | Ninguna | PENDIENTE EXTERNO |
+| G0-12 | PENDIENTE EXTERNO | Respuesta en texto sin adjunto ni identidad verificable (F34D) | PENDIENTE EXTERNO |
 | G0-13 | CUMPLIDO | — | CUMPLIDO |
 | G0-14 | PENDIENTE EXTERNO | Capturas de los tres integrantes y confirmación de Luis Vila (F34C) | CUMPLIDO |
 | G0-15 | CUMPLIDO | — | CUMPLIDO |
@@ -73,4 +73,4 @@ Esta sección **no habilita nada hoy**. Describe qué quedaría permitido **si y
 |---|---|---|
 | G0-02 | Informe jurídico firmado y evaluación de impacto COMPLETADA o conclusión de NO APLICABILIDAD | Abogado o responsable legal |
 | G0-03 | Aprobación del análisis de privacidad, con base legal y plazos de retención | Responsable del tratamiento, con revisión jurídica |
-| G0-12 | Instrumento respondido por el docente o un representante institucional | Docente o representante institucional |
+| G0-12 | Respuesta archivada en `adjuntos/` (captura, PDF, correo exportado o documento firmado) y vinculación inequívoca con el docente registrado, o confirmación adicional de este (OBS-F34D-01, 02) | Docente o representante institucional |
