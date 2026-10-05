@@ -23,6 +23,17 @@ Reglas sobre docs/academico/g0-evidence/:
         «Confirmación adicional» válida del mismo integrante, con la misma fecha y decisiones, conservando la original);
         concordancia de fecha registro/evidencia; el remitente visible puede faltar (mensaje propio de WhatsApp).
         ADR-005 conserva su estado canónico PROPUESTA; la aprobación interna del equipo se registra aparte.
+  G12   (F34D) respuesta de G0-12: sin adjunto existente (SHA-256 y formato real) no es evidencia y la fila del docente no
+        puede registrarse; identidad verificada solo con el docente del proyecto (CLAUDE.md) o una variante revisada, sin
+        coincidencia aproximada; fecha real; la opinión del revisor no se registra como hecho institucional.
+        F34D-M01: concordancia total entre respuesta declarada, fila del registro, adjunto real y metadatos (identidad,
+        rol compatible, fecha, decisión, mismo adjunto, SHA-256 y formato reales); sin archivo, ningún metadato anticipado.
+        Las transcripciones declaradas deben coincidir literalmente con la respuesta recibida.
+  LIM   (F34D) la validación del docente o revisor nunca se presenta como aprobación jurídica, de privacidad,
+        autorización del Colegio Andino, certificación de cumplimiento, autorización de datos reales, del alcance C ni
+        desbloqueo de F35. F34D-M02: cada proposición se evalúa por separado con su propia polaridad (las elipsis heredan
+        la anterior; «pero/sino» y verbos afirmativos la reinician; «no solo» y «ni deja de» afirman), de modo que negar
+        una categoría no neutraliza la afirmación de otra en la misma línea
   LNK   enlaces y anclas;  GIT  alcance de la rama, F34A, ADR-005, baseline y runtime sin cambios
 Incluye casos negativos y un control positivo (todo en memoria; no crea adjuntos). El control positivo usa una lista
 de integrantes SINTÉTICA y adjuntos simulados con prefijo CONTROL; nunca nombres reales ni archivos del repositorio.
@@ -99,6 +110,16 @@ def team_roster():
     return [ident(x) for x in re.split(r',\s*|\s+y\s+', m.group(1)) if x.strip()]
 
 
+def course_teacher():
+    """Docente del curso según CLAUDE.md («docente Dr. … .»). Cadena vacía si no se puede leer: falla cerrado."""
+    try:
+        t = open(os.path.join(ROOT, 'CLAUDE.md'), encoding='utf-8').read()
+    except OSError:
+        return ''
+    m = re.search(r'docente (?:Dra?\. )?([A-ZÁÉÍÓÚÑ][^.,]+)', t)
+    return m.group(1).strip() if m else ''
+
+
 def real_sha(rel):
     p = os.path.normpath(os.path.join(DOCS, rel))
     if not os.path.isfile(p):
@@ -131,8 +152,9 @@ class Ctx:
     """Contexto de verificación: cómo se comprueba un adjunto (existencia, SHA-256, formato, listado de la carpeta)
     y cuál es la lista de integrantes."""
 
-    def __init__(self, exists, roster, sha=None, fmt=None, listing=None):
+    def __init__(self, exists, roster, sha=None, fmt=None, listing=None, teacher=None):
         self.exists, self.roster = exists, roster
+        self.teacher = course_teacher() if teacher is None else teacher
         self.sha = sha or (lambda rel: None)
         self.fmt = fmt or (lambda rel: None)
         self.listing = listing or (lambda: [])
@@ -311,7 +333,7 @@ def idn_external(n, tab, roster, allowed_roles, unique_roles=False, distinct=Tru
     return out
 
 
-def idn_forms(D, ctx):
+def idn_forms(D, ctx):  # noqa: C901
     roster = getattr(ctx, 'roster', REAL.roster)
     tabs = {n: records(D[n]) for n in FORMS}
 
@@ -329,8 +351,32 @@ def idn_forms(D, ctx):
                                            PRIV_OWNER_ROLES | PRIV_LEGAL_ROLES,
                                            required_roles=[PRIV_OWNER_ROLES, PRIV_LEGAL_ROLES]),
         'F34B_Validacion_Necesidad.md': idn_external('F34B_Validacion_Necesidad.md', t('F34B_Validacion_Necesidad.md'),
-                                                     roster, NEED_ROLES, unique_roles=True),
+                                                     roster, NEED_ROLES, unique_roles=True)
+        + idn_teacher(t('F34B_Validacion_Necesidad.md'), getattr(ctx, 'teacher', REAL.teacher)),
     }
+
+
+# Variantes REVISADAS del nombre del docente (F34D). Vacía: «Max Magnolie Arana» NO está revisada (OBS-F34D-02).
+TEACHER_ALIASES = {}
+
+
+def teacher_match(name, teacher):
+    """Nombre del docente exacto (mismas palabras, sin tildes ni orden) o variante revisada. Sin coincidencia aproximada."""
+    if not teacher or not name or name == '—':
+        return False
+    if ident(name) == ident(teacher):
+        return True
+    return any(ident(v) == ident(name) and ident(target) == ident(teacher) for v, target in TEACHER_ALIASES.items())
+
+
+def idn_teacher(tab, teacher):
+    """La fila «Docente del curso» solo se registra con la identidad del docente del proyecto (F34D)."""
+    out = []
+    for r in tab:
+        if r[1] == 'Docente del curso' and touched(r) and not teacher_match(r[0], teacher):
+            out.append(f'F34B_Validacion_Necesidad.md: «{r[0]}» no es verificable como el docente del curso '
+                       f'(registro del proyecto: «{teacher or "no disponible"}»); requiere vinculación inequívoca')
+    return out
 
 
 def idn(D, exists):
@@ -514,8 +560,9 @@ def evd(D, ctx):
         if r[1] == 'Confirmación adicional' and not any(
                 ATT_LINK.findall(o[11]) == [rel] for o in ev.values() if o[11].startswith('RESUELTA')):
             out.append(f'{rel}: confirmación adicional que no resuelve ninguna evidencia original')
+    g12_refs = set(ATT_LINK.findall(g12_table(D['F34B_Validacion_Necesidad.md']).get('Adjunto', '')))
     for rel in ctx.listing():
-        if rel not in ev:
+        if rel not in ev and rel not in g12_refs:
             out.append(f'{rel}: adjunto presente en adjuntos/ sin registrar ni verificar')
     # Registros del acta y de la aceptación del threat model.
     for n, col, label in (('F34B_Acta_Aprobacion_ADR005.md', 7, 'ADR-005'),
@@ -548,6 +595,289 @@ def evd(D, ctx):
     return out
 
 
+# ---------------------------------------------------------------- G0-12: respuesta recibida y límites (F34D)
+G12_KEYS = ['Estado de la respuesta', 'Adjunto', 'SHA-256', 'Formato real', 'Nombre declarado', 'Rol declarado',
+            'Institución declarada', 'Fecha declarada', 'Decisión declarada', 'Verificación de identidad']
+G12_STATES = {'SIN EVIDENCIA ARCHIVADA', 'EVIDENCIA ARCHIVADA'}
+G12_DECISIONS = {'NECESIDAD VALIDADA', 'NECESIDAD NO VALIDADA'}
+EMPTY = ('', '—')
+# Rol declarado compatible con la fila «Docente del curso»: docente o profesor, nunca postulante, candidato, estudiante
+# ni integrante del equipo.
+ROLE_OK = re.compile(r'\b(docente|profesor[a]?)\b', re.I)
+ROLE_BAD = re.compile(r'postulante|candidat|estudiante|alumn|integrante|evaluad[oa] por el sistema', re.I)
+# Transcripciones literales de la respuesta recibida en F34D: son contenido declarado, no afirmaciones del proyecto,
+# y no pueden modificarse (una afirmación escondida dentro de ellas falla).
+DECLARED_QUOTES = {
+    '**Restricciones o recomendación declaradas:**':
+        'El alcance definido es adecuado y éticamente transparente. Se recomienda mantener la auditabilidad de las '
+        'rúbricas y asegurar una capacitación breve a los evaluadores del Colegio Andino para optimizar el uso de las '
+        'explicaciones visibles y la trazabilidad de evidencias.',
+    '**Observación declarada**':
+        'El Alcance B garantiza el equilibrio perfecto entre automatización operativa y control ético en el proceso de '
+        'selección de personal, cumpliendo plenamente con los requerimientos y estándares institucionales.',
+    '**Confirmación declarada:**': 'Declaro que esta respuesta corresponde a mi revisión real del alcance descrito.',
+}
+
+
+# ---- estructura obligatoria de la respuesta de G0-12 (F34D-M01-R1): falla cerrado
+G12_SECTION = re.compile(r'^## \d+\. Respuesta recibida[^\n]*$', re.M)
+G12_HEADER = ['Campo', 'Valor']
+G12_OUTSIDE = re.compile(r'^\s*(?:[-*]\s*)?\**\s*(?:' + '|'.join(map(re.escape, G12_KEYS)) + r')\s*\**\s*:', re.M)
+
+
+def g12_section(text):
+    """Texto de la sección «Respuesta recibida» de G0-12 (None si no existe)."""
+    m = G12_SECTION.search(text)
+    if not m:
+        return None
+    rest = text[m.end():]
+    nxt = re.search(r'^## ', rest, re.M)
+    return rest[:nxt.start()] if nxt else rest
+
+
+def kv_tables(text):
+    """Todas las tablas «| Campo | Valor |» con todas sus filas, sin filtrar."""
+    tables, cur = [], None
+    for ln in text.splitlines():
+        if not ln.startswith('|'):
+            cur = None
+            continue
+        c = cells(ln)
+        if c == G12_HEADER:
+            cur = []
+            tables.append(cur)
+        elif cur is not None and not set(ln.replace('|', '').strip()) <= set('-: '):
+            cur.append(c)
+    return tables
+
+
+def g12_table(text):
+    """Metadatos de la ÚNICA tabla de la sección de G0-12; dict vacío si la sección o la tabla no son válidas."""
+    sec = g12_section(text)
+    tabs = kv_tables(sec) if sec is not None else []
+    if len(tabs) != 1:
+        return {}
+    return {r[0]: r[1] for r in tabs[0] if len(r) == 2}
+
+
+def g12_structure(text, n):
+    """La sección de G0-12 debe tener exactamente una tabla de metadatos, dentro de la sección, bien formada, con los
+    10 campos obligatorios una sola vez, sin campos vacíos ni desconocidos y sin metadatos fuera de la tabla.
+    No se asume ningún valor por defecto: cualquier fallo estructural impide evaluar G0-12 (falla cerrado)."""
+    sec = g12_section(text)
+    if sec is None:
+        return [f'{n}: falta la sección «Respuesta recibida» de G0-12 (falla cerrado)']
+    in_sec, total = kv_tables(sec), kv_tables(text)
+    if not in_sec:
+        return [f'{n}: falta la tabla de metadatos de G0-12 en su sección (falla cerrado)']
+    out = []
+    if len(in_sec) > 1:
+        out.append(f'{n}: hay {len(in_sec)} tablas de metadatos de G0-12 (duplicada o contradictoria)')
+    if len(total) > len(in_sec):
+        out.append(f'{n}: tabla de metadatos de G0-12 fuera de su sección')
+    rows_ = in_sec[0]
+    bad = [r for r in rows_ if len(r) != 2]
+    if bad:
+        out.append(f'{n}: tabla de metadatos mal formada ({len(bad)} filas sin exactamente dos columnas)')
+    keys = [r[0] for r in rows_ if len(r) == 2]
+    dup = sorted({k for k in keys if keys.count(k) > 1})
+    if dup:
+        out.append(f'{n}: campos repetidos en la tabla de metadatos: {dup}')
+    miss = [k for k in G12_KEYS if k not in keys]
+    if miss:
+        out.append(f'{n}: faltan campos obligatorios en la tabla de metadatos: {miss}')
+    unknown = [k for k in keys if k not in G12_KEYS]
+    if unknown:
+        out.append(f'{n}: campos no admitidos en la tabla de metadatos: {unknown}')
+    empty = [r[0] for r in rows_ if len(r) == 2 and not r[1].strip()]
+    if empty:
+        out.append(f'{n}: campos sin valor (use «—» si no aplica): {empty}')
+    outside = [m.group(0).strip() for m in G12_OUTSIDE.finditer(text)]
+    if outside:
+        out.append(f'{n}: metadatos de G0-12 fuera de la tabla: {outside[:2]}')
+    return out
+
+
+def g12(D, ctx):
+    """Respuesta de G0-12 (§4) con concordancia total (F34D-M01) entre:
+    A) respuesta declarada, B) fila del registro, C) adjunto real y D) metadatos del adjunto.
+    Sin archivo existente: adjunto, SHA-256 y formato vacíos, estado SIN EVIDENCIA ARCHIVADA y G0-12 sin cerrar
+    (ningún metadato anticipado). Con archivo: SHA-256 y formato reales. Una fila del docente en el registro exige
+    misma identidad, fecha, decisión y adjunto que la respuesta, rol compatible e identidad verificada."""
+    out = []
+    n = 'F34B_Validacion_Necesidad.md'
+    structural = g12_structure(D[n], n)
+    if structural:
+        return structural            # sin tabla válida no hay nada que evaluar: G0-12 no puede cerrarse
+    f = g12_table(D[n])
+    links = ATT_LINK.findall(f['Adjunto'])
+    has_file = bool(links) and all(ctx.exists(x) for x in links)
+    state, sha_, fmt_ = f['Estado de la respuesta'], f['SHA-256'].strip('`'), f['Formato real']
+    if state == 'SIN EVIDENCIA ARCHIVADA' and f['Verificación de identidad'] != 'NO VERIFICABLE':
+        out.append(f'{n}: sin evidencia archivada la identidad solo puede figurar como NO VERIFICABLE')
+    if state not in G12_STATES:
+        out.append(f'{n}: estado de la respuesta «{state}» no admitido')
+    if (state == 'EVIDENCIA ARCHIVADA') != has_file:
+        out.append(f'{n}: el estado de la respuesta no coincide con la existencia de su adjunto')
+    if f['Adjunto'] not in EMPTY and not links:
+        out.append(f'{n}: el campo Adjunto no enlaza un archivo de adjuntos/')
+    if not has_file:
+        # Ningún metadato anticipado para un archivo inexistente.
+        if links:
+            out.append(f'{n}: la respuesta enlaza un adjunto que no existe')
+        if sha_ not in EMPTY:
+            out.append(f'{n}: SHA-256 registrado sin archivo existente (metadato anticipado)')
+        if fmt_ not in EMPTY:
+            out.append(f'{n}: formato registrado sin archivo existente (metadato anticipado)')
+    else:
+        for x in links:
+            if sha_ != ctx.sha(x):
+                out.append(f'{n}: SHA-256 de la respuesta distinto del archivo')
+            if fmt_ != ctx.fmt(x):
+                out.append(f'{n}: formato registrado «{fmt_}» distinto del real «{ctx.fmt(x)}»')
+    if not valid_date(f['Fecha declarada']):
+        out.append(f'{n}: fecha declarada «{f["Fecha declarada"]}» inexistente o con formato inválido')
+    if f['Decisión declarada'] not in G12_DECISIONS:
+        out.append(f'{n}: decisión declarada «{f["Decisión declarada"]}» no admitida')
+    if not ROLE_OK.search(f['Rol declarado']) or ROLE_BAD.search(f['Rol declarado']):
+        out.append(f'{n}: rol declarado «{f["Rol declarado"]}» incompatible con la fila «Docente del curso»')
+    teacher = getattr(ctx, 'teacher', REAL.teacher)
+    verified = teacher_match(f['Nombre declarado'], teacher)
+    if f['Verificación de identidad'] == 'VERIFICADA' and not verified:
+        out.append(f'{n}: identidad «{f["Nombre declarado"]}» marcada VERIFICADA sin coincidir con el docente registrado')
+    if f['Verificación de identidad'] not in ('VERIFICADA', 'NO VERIFICABLE'):
+        out.append(f'{n}: verificación de identidad «{f["Verificación de identidad"]}» no admitida')
+    # Concordancia entre la respuesta (A, C, D) y la fila del docente en el registro (B).
+    tab = records(D[n])
+    for r in (tab[0] if tab else []):
+        if len(r) != 7 or r[1] != 'Docente del curso' or not touched(r):
+            continue
+        who, _, date, dec_, ev, _, st = r
+        if st == 'REGISTRADO' and (not has_file or not verified or f['Verificación de identidad'] != 'VERIFICADA'):
+            out.append(f'{n}: la fila del docente se registra sin evidencia archivada o sin identidad verificada')
+        if ident(who) != ident(f['Nombre declarado']):
+            out.append(f'{n}: la identidad del registro («{who}») no coincide con la de la respuesta')
+        if date != f['Fecha declarada']:
+            out.append(f'{n}: la fecha del registro ({date}) no coincide con la fecha declarada ({f["Fecha declarada"]})')
+        if dec_ != f['Decisión declarada']:
+            out.append(f'{n}: la decisión del registro («{dec_}») contradice la respuesta («{f["Decisión declarada"]}»)')
+        if set(ATT_LINK.findall(ev)) != set(links):
+            out.append(f'{n}: el adjunto del registro no es el mismo que el de la respuesta')
+    for ln in D[n].splitlines():
+        if 'cumpliendo plenamente' in ln and 'opinión del revisor' not in ln:
+            out.append(f'{n}: la frase sobre cumplimiento institucional no figura como opinión del revisor')
+        for head, quote in DECLARED_QUOTES.items():
+            if ln.startswith(head):
+                q = re.findall(r'«(.*?)»', ln)
+                if q != [quote]:
+                    out.append(f'{n}: la transcripción «{head.strip("*: ")}» no coincide con la respuesta recibida')
+    t = D[n]
+    for s in ('No es una aprobación jurídica', 'no es una aprobación de privacidad', 'no es una autorización del Colegio Andino'):
+        if s not in t:
+            out.append(f'{n}: falta el límite «{s}»')
+    return out
+
+
+# ---------------------------------------------------------------- LIM: afirmaciones por proposición (F34D-M02)
+# Categorías que la respuesta del docente nunca puede ser. Cada una se evalúa en cada proposición por separado: la
+# negación de una categoría no neutraliza la afirmación de otra en la misma línea.
+LIM_CATEGORIES = {
+    'aprobación jurídica': re.compile(r'jur[ií]dic', re.I),
+    'aprobación de privacidad': re.compile(r'privacidad', re.I),
+    'autorización del Colegio Andino o institucional': re.compile(
+        r'colegio andino|autoriza\w*\s+institucional|autorizaci[oó]n\s+(?:de\s+la\s+)?instituci', re.I),
+    'certificación o cumplimiento institucional': re.compile(
+        r'certific\w*|cumplimiento\s+(?:institucional|normativo|de\s+(?:los\s+)?est[aá]ndares)|cumpl\w*\s+(?:plenamente\s+)?'
+        r'con\s+(?:los\s+)?(?:requerimientos|est[aá]ndares)', re.I),
+    'autorización de datos reales': re.compile(r'datos\s+reales', re.I),
+    'autorización del alcance C': re.compile(r'alcance\s+c\b', re.I),
+    'desbloqueo de F35': re.compile(r'\bF35\b(?!-SBX)|F35[–-]F40', re.I),
+}
+LIM_SUBJECT = re.compile(r'docente|revisor|G0-12|F34D|necesidad|respuesta|validaci[oó]n', re.I)
+# Marcadores que niegan o limitan la proposición en la que aparecen.
+LIM_NEG = re.compile(r'\b(no|ni|nunca|tampoco|sin|jam[aá]s|ningun\w*|prohibid\w*|bloquead\w*|pendient\w*|exig\w*|requier\w*|'
+                     r'falt\w*|salvo|excluid\w*)\b', re.I)
+# «no solo», «no sólo», «no únicamente» afirman, no niegan.
+LIM_NOT_ONLY = re.compile(r'\bno\s+(?:s[oó]lo|solamente|[uú]nicamente)\b|\b(?:no|ni)\s+(?:deja\w*|dej[oó]|dejar[aá])\s+de\b'
+                          r'|\bno\s+(?:es|son)\s+(?:menos|otra\s+cosa)\b', re.I)  # «no solo», «ni deja de ser»: afirman
+LIM_AFFIRM = re.compile(r'\b(s[ií]|es|son|ser[aá]|constituye\w*|equivale\w*|sirve\w*|sustituye\w*|reemplaza\w*|'
+                        r'autoriza\w*|certifica\w*|aprueba\w*|aprobad\w*|habilita\w*|desbloque\w*|cumple\w*|'
+                        r'garantiza\w*|valida\w*|acredita\w*|implica\w*|permite\w*|otorga\w*|concede\w*|tambi[eé]n|'
+                        r'adem[aá]s|incluso)\b', re.I)
+LIM_SPLIT = re.compile(r'(\s*[,;:()—]\s*|\s+(?:pero|sino|aunque|mientras\s+que|y|e|ni|o|u)\s+)', re.I)
+
+
+def propositions(sentence):
+    """Divide una oración en proposiciones y asigna a cada una su polaridad (True = afirmativa).
+
+    - Con un marcador de negación o limitación: negativa (salvo «no solo», que afirma).
+    - Tras «ni»: negativa (continúa la negación).
+    - Tras «pero», «sino» o «aunque», o con un verbo o marcador afirmativo propio: afirmativa.
+    - Sin verbo propio (elipsis, p. ej. «, de privacidad»): hereda la polaridad de la proposición anterior.
+    """
+    parts = LIM_SPLIT.split(sentence)
+    out, prev, sep = [], True, ''
+    for i, p in enumerate(parts):
+        if i % 2 == 1:
+            sep = p.strip().lower()
+            continue
+        if not p.strip():
+            continue
+        if LIM_NOT_ONLY.search(f'{sep} {p}'):     # el separador cuenta: «… ni deja de ser …» afirma
+            pol = True
+        elif LIM_NEG.search(p):
+            pol = False
+        elif sep == 'ni':
+            pol = False
+        elif sep in ('pero', 'sino', 'aunque') or LIM_AFFIRM.search(p):
+            pol = True
+        else:
+            pol = prev
+        out.append((p.strip(), pol))
+        prev = pol
+    return out
+
+
+def lim_claims(text):
+    """Afirmaciones positivas de categorías prohibidas en un texto: [(categoría, proposición)]."""
+    found = []
+    for sentence in re.split(r'(?<=[.!?])\s+|\s*\|\s*', text):
+        for prop, pol in propositions(sentence):
+            if not pol:
+                continue
+            for cat, rx in LIM_CATEGORIES.items():
+                if rx.search(prop):
+                    found.append((cat, prop))
+    return found
+
+
+def strip_declared(ln):
+    """Quita de una línea la transcripción literal declarada (verificada en G12), si es la registrada."""
+    for head, quote in DECLARED_QUOTES.items():
+        if ln.startswith(head):
+            return ln.replace('«' + quote + '»', '')
+    return ln
+
+
+def lim(D, ctx):
+    """La respuesta del docente o revisor nunca se presenta como aprobación jurídica, de privacidad, autorización del
+    Colegio Andino, certificación de cumplimiento institucional, autorización de datos reales, del alcance C ni como
+    desbloqueo de F35. Se evalúa cada proposición por separado (F34D-M02)."""
+    out = []
+    for n, t in D.items():
+        whole = n == 'F34B_Validacion_Necesidad.md'
+        for i, ln in enumerate(t.splitlines(), 1):
+            if not (whole or LIM_SUBJECT.search(ln)):
+                continue
+            if not whole and not re.search(r'docente|revisor|G0-12|F34D', ln, re.I):
+                continue
+            body = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', strip_declared(ln))   # enlaces: solo su texto
+            body = re.sub(r'[*`]', '', body)
+            for cat, prop in lim_claims(body):
+                out.append(f'{n}:{i}: afirma «{cat}» sobre la validación del revisor: {prop[:70]}')
+    return out
+
+
 def derive(D, exists):
     """Estado de cada criterio externo derivado SOLO de registros con evidencia existente e identidad válida.
 
@@ -557,6 +887,8 @@ def derive(D, exists):
     if evd(D, exists):
         bad['F34B_Acta_Aprobacion_ADR005.md'] = bad['F34B_Acta_Aprobacion_ADR005.md'] + ['EVD']
         bad['F34B_Aceptacion_Threat_Model.md'] = bad['F34B_Aceptacion_Threat_Model.md'] + ['EVD']
+    if g12(D, exists):
+        bad['F34B_Validacion_Necesidad.md'] = bad['F34B_Validacion_Necesidad.md'] + ['G12']
 
     def tab(n, i=0):
         t = records(D[n])
@@ -771,7 +1103,8 @@ def lnk(D, exists):
     return out
 
 
-RULES = [('REC', rec), ('ANS', ans), ('IDN', idn), ('EVD', evd), ('MAT', mat), ('DEC', dec), ('SCOPE', scope),
+RULES = [('REC', rec), ('ANS', ans), ('IDN', idn), ('EVD', evd), ('G12', g12), ('LIM', lim), ('MAT', mat),
+         ('DEC', dec), ('SCOPE', scope),
          ('PHASE', phase), ('DATA', data), ('LNK', lnk)]
 
 
@@ -841,7 +1174,7 @@ def set_rows(n, new_rows, table=0):
 # Contexto SIMULADO: lista de integrantes sintética y adjuntos con prefijo CONTROL que solo existen en memoria.
 SYN_TEAM = ['Integrante Control Uno', 'Integrante Control Dos', 'Integrante Control Tres']
 CTRL_SHA = '0' * 64
-SIM = Ctx(lambda p: p.startswith('adjuntos/CONTROL-'), [ident(x) for x in SYN_TEAM],
+SIM = Ctx(lambda p: p.startswith('adjuntos/CONTROL-'), [ident(x) for x in SYN_TEAM], teacher='Persona Docente Control',
           sha=lambda p: CTRL_SHA if p.startswith('adjuntos/CONTROL-') else None,
           fmt=lambda p: 'JPEG' if p.startswith('adjuntos/CONTROL-') else None,
           listing=lambda: [])
@@ -865,6 +1198,43 @@ ACTA, TM, JUR, PRI, NEC, MATX = ('F34B_Acta_Aprobacion_ADR005.md', 'F34B_Aceptac
                                  'F34B_Matriz_Evidencias_G0.md')
 ACTA_ROW = '| — | Integrante del equipo | — | PENDIENTE | — | — | PENDIENTE |'
 SENDER_LUIS_CONF = r'(\[Luis_Vila_confirmación\].*?\| JPEG \| )— \(mensaje propio\)( \|)'
+DOC_ROW = r'^\| — \| Docente del curso \| — \| PENDIENTE \| — \|[^|]*\| PENDIENTE \|$'
+G12_CTRL = 'adjuntos/G0-12_necesidad_CONTROL_2026-10-04.png'   # adjunto SIMULADO solo en memoria (no existe en disco)
+G12_CTRL2 = 'adjuntos/G0-12_otra_CONTROL_2026-10-04.png'        # segundo adjunto SIMULADO (para «adjunto diferente»)
+G12_SIM = {G12_CTRL: ('1' * 64, 'PNG'), G12_CTRL2: ('2' * 64, 'PNG')}
+G12_CTX = Ctx(lambda p: real_exists(p) or p in G12_SIM, REAL.roster,
+              lambda p: real_sha(p) or G12_SIM.get(p, (None, None))[0],
+              lambda p: real_fmt(p) or G12_SIM.get(p, (None, None))[1],
+              lambda: real_listing() + [G12_CTRL])
+
+
+def g12_coherent():
+    """Respuesta de G0-12 coherente en todo (identidad, rol, fecha, decisión, adjunto, SHA-256 y formato) con un
+    adjunto SIMULADO que solo existe en memoria. Base de POS-07 y de los negativos de concordancia (F34D-M01)."""
+    return chain(
+        rsub(NEC, DOC_ROW, f'| {REAL.teacher} | Docente del curso | 2026-10-04 | NECESIDAD VALIDADA | [respuesta]({G12_CTRL}) | '
+                           '— | REGISTRADO |'),
+        sub(NEC, '| Estado de la respuesta | SIN EVIDENCIA ARCHIVADA |', '| Estado de la respuesta | EVIDENCIA ARCHIVADA |'),
+        sub(NEC, '| Adjunto | — |', f'| Adjunto | [respuesta]({G12_CTRL}) |'),
+        sub(NEC, '| SHA-256 | — |', '| SHA-256 | `' + '1' * 64 + '` |'),
+        sub(NEC, '| Formato real | — |', '| Formato real | PNG |'),
+        sub(NEC, '| Nombre declarado | Max Magnolie Arana |', f'| Nombre declarado | {REAL.teacher} |'),
+        sub(NEC, '| Verificación de identidad | NO VERIFICABLE |', '| Verificación de identidad | VERIFICADA |'),
+    )
+
+
+def on_coherent(*fs):
+    return lambda D: chain(*fs)(g12_coherent()(D))
+
+
+OBS_F34D = '### Observaciones F34D'
+
+
+def claim(text, n=None):
+    """Inserta una frase antes de las observaciones F34D (o al final de otro documento)."""
+    if n is None:
+        return sub(NEC, OBS_F34D, text + '\n\n' + OBS_F34D)
+    return lambda D: dict(D, **{n: D[n] + '\n' + text + '\n'})
 CONS_ROW = '| — | Docente del curso (consultivo, opcional) | — | PENDIENTE | — | — | PENDIENTE |'
 FAKE = '[acta](adjuntos/G0-14_acta-adr005_2026-10-05.pdf)'
 # Evidencia real registrada en F34C (los casos la alteran solo en memoria).
@@ -925,8 +1295,8 @@ CASES = [
     ('QA-07', 'ANS', 'Plazo de retención definido sin aprobación de privacidad',
      sub(PRI, '| Plazos de retención y borrado | — |', '| Plazos de retención y borrado | 2 años |'), False, None),
     ('QA-08', 'REC', 'Respuesta institucional inventada: necesidad validada sin adjunto',
-     sub(NEC, '| — | Docente del curso | — | PENDIENTE | — | — | PENDIENTE |',
-         '| Docente | Docente del curso | 2026-10-05 | NECESIDAD VALIDADA | — | — | REGISTRADO |'), False, None),
+     rsub(NEC, r'^\| — \| Docente del curso \| — \| PENDIENTE \| — \|[^|]*\| PENDIENTE \|$',
+          '| Docente | Docente del curso | 2026-10-05 | NECESIDAD VALIDADA | — | — | REGISTRADO |'), False, None),
     ('QA-09', 'REC', 'Threat model aceptado sin evidencia',
      rsub(TM, r'^(\| Peña Arroyo Anthony \| Integrante del equipo \| 2026-10-04 \| ACEPTA \| )[^|]*\|', r'\1— |'),
      False, 'G0-09'),
@@ -1114,10 +1484,176 @@ CASES = [
      sub(ACTA, '| Anthony Peña | Peña Antony |', '| — (mensaje propio) | Peña Antony |'), False, ('G0-14', 'G0-09')),
     ('QA-81', 'EVD', 'Remitente vacío sin justificar («—»)',
      rsub(ACTA, SENDER_LUIS_CONF, r'\1—\2'), False, ('G0-14', 'G0-09')),
+    ('QA-83', 'REC', 'G0-12: decisión del docente registrada sin adjunto',
+     rsub(NEC, DOC_ROW, '| Maglioni Arana Caparachin | Docente del curso | 2026-10-04 | NECESIDAD VALIDADA | — | — | REGISTRADO |'),
+     False, 'G0-12'),
+    ('QA-84', 'IDN', 'G0-12: identidad no verificable («Max Magnolie Arana») aunque haya adjunto',
+     rsub(NEC, DOC_ROW, f'| Max Magnolie Arana | Docente del curso | 2026-10-04 | NECESIDAD VALIDADA | [respuesta]({G12_CTRL}) | — '
+          '| REGISTRADO |'), G12_CTX, 'G0-12'),
+    ('QA-85', 'IDN', 'G0-12: nombre distinto aceptado por coincidencia aproximada («Magnolie Arana Caparachin»)',
+     rsub(NEC, DOC_ROW, f'| Magnolie Arana Caparachin | Docente del curso | 2026-10-04 | NECESIDAD VALIDADA | '
+          f'[respuesta]({G12_CTRL}) | — | REGISTRADO |'), G12_CTX, 'G0-12'),
+    ('QA-86', 'REC', 'G0-12: fecha de calendario inválida en el registro (2026-10-32)',
+     rsub(NEC, DOC_ROW, f'| Maglioni Arana Caparachin | Docente del curso | 2026-10-32 | NECESIDAD VALIDADA | '
+          f'[respuesta]({G12_CTRL}) | — | REGISTRADO |'), G12_CTX, 'G0-12'),
+    ('QA-87', 'G12', 'G0-12: fecha declarada inválida en la respuesta (2026-02-30)',
+     sub(NEC, '| Fecha declarada | 2026-10-04 |', '| Fecha declarada | 2026-02-30 |'), False, None),
+    ('QA-88', 'IDN', 'G0-12: rol incompatible («Postulante») para el docente',
+     rsub(NEC, DOC_ROW, f'| Maglioni Arana Caparachin | Postulante | 2026-10-04 | NECESIDAD VALIDADA | [respuesta]({G12_CTRL}) '
+          '| — | REGISTRADO |'), G12_CTX, 'G0-12'),
+    ('QA-89', 'LIM', 'Opinión del docente tratada como aprobación jurídica',
+     sub(NEC, '### Observaciones F34D', 'La respuesta del docente es la aprobación jurídica del alcance B.\n\n### Observaciones F34D'),
+     False, None),
+    ('QA-90', 'LIM', 'Opinión del revisor tratada como aprobación de privacidad',
+     sub(NEC, '### Observaciones F34D', 'La validación del revisor equivale a la aprobación de privacidad.\n\n### Observaciones F34D'),
+     False, None),
+    ('QA-91', 'LIM', 'Opinión del revisor tratada como autorización institucional del Colegio Andino',
+     sub(NEC, '### Observaciones F34D', 'La respuesta del revisor constituye la autorización del Colegio Andino.\n\n'
+                                        '### Observaciones F34D'), False, None),
+    ('QA-92', 'LIM', 'Opinión del revisor tratada como autorización de datos reales',
+     sub(NEC, '### Observaciones F34D', 'Con la necesidad validada por el docente se autorizan datos reales.\n\n'
+                                        '### Observaciones F34D'), False, None),
+    ('QA-93', 'PHASE', 'F35 desbloqueada tras G0-12 con G0-02 y G0-03 pendientes',
+     sub('F34B_Decision_G0.md', '- **F35–F40 = BLOQUEADAS.**', '- **F35–F40 = HABILITADAS** tras validar G0-12.'), False, None),
+    ('QA-94', 'MAT', 'G0-12 marcado CUMPLIDO solo con la respuesta en texto',
+     rsub(MATX, r'(^\| G0-12 \|.*)\*\*PENDIENTE EXTERNO\*\*', r'\1**CUMPLIDO**'), False, 'G0-12'),
+    ('QA-95', 'G12', 'Identidad marcada VERIFICADA con un nombre que no coincide con el docente',
+     sub(NEC, '| Verificación de identidad | NO VERIFICABLE |', '| Verificación de identidad | VERIFICADA |'), False, None),
+    ('QA-96', 'G12', 'Respuesta marcada EVIDENCIA ARCHIVADA sin adjunto existente',
+     sub(NEC, '| Estado de la respuesta | SIN EVIDENCIA ARCHIVADA |', '| Estado de la respuesta | EVIDENCIA ARCHIVADA |'),
+     False, None),
+    ('QA-97', 'G12', 'La frase de cumplimiento institucional registrada como hecho, no como opinión del revisor',
+     sub(NEC, '(opinión del revisor, no un hecho institucional verificado)', '(hecho institucional)'), False, None),
+    # ---- F34D-M01: concordancia completa (respuesta, registro, adjunto y metadatos) sobre una base coherente simulada
+    ('QA-98', 'G12', 'Decisión contradictoria: respuesta NECESIDAD NO VALIDADA y registro VALIDADA',
+     on_coherent(sub(NEC, '| Decisión declarada | NECESIDAD VALIDADA |', '| Decisión declarada | NECESIDAD NO VALIDADA |')),
+     G12_CTX, 'G0-12'),
+    ('QA-99', 'G12', 'Fecha del registro distinta de la fecha declarada',
+     on_coherent(rsub(NEC, r'^(\| Maglioni Arana Caparachin \| Docente del curso \| )2026-10-04', r'\g<1>2026-10-05')),
+     G12_CTX, 'G0-12'),
+    ('QA-100', 'G12', 'Rol declarado incompatible («Postulante»)',
+     on_coherent(sub(NEC, '| Rol declarado | Docente / Profesor Revisor |', '| Rol declarado | Postulante |')), G12_CTX, 'G0-12'),
+    ('QA-101', 'G12', 'El adjunto del registro no es el de la respuesta',
+     on_coherent(rsub(NEC, r'^(\| Maglioni Arana Caparachin \|.*?\[respuesta\]\()[^)]*\)', r'\1' + G12_CTRL2 + ')')),
+     G12_CTX, 'G0-12'),
+    ('QA-102', 'G12', 'SHA-256 inventado sin archivo (respuesta real sin adjunto)',
+     sub(NEC, '| SHA-256 | — |', '| SHA-256 | `' + 'a' * 64 + '` |'), False, 'G0-12'),
+    ('QA-103', 'G12', 'Formato inventado sin archivo (respuesta real sin adjunto)',
+     sub(NEC, '| Formato real | — |', '| Formato real | PNG |'), False, 'G0-12'),
+    ('QA-104', 'G12', 'SHA-256 incorrecto para el archivo existente',
+     on_coherent(sub(NEC, '| SHA-256 | `' + '1' * 64 + '` |', '| SHA-256 | `' + 'f' * 64 + '` |')), G12_CTX, 'G0-12'),
+    ('QA-105', 'G12', 'Formato registrado distinto del formato real',
+     on_coherent(sub(NEC, '| Formato real | PNG |', '| Formato real | JPEG |')), G12_CTX, 'G0-12'),
+    ('QA-106', 'G12', 'Identidad del registro distinta de la respuesta',
+     on_coherent(rsub(NEC, r'^\| Maglioni Arana Caparachin \| Docente del curso \|', '| Max Magnolie Arana | Docente del curso |')),
+     G12_CTX, 'G0-12'),
+    ('QA-107', 'G12', 'Identidad de la respuesta distinta del registro',
+     on_coherent(sub(NEC, '| Nombre declarado | Maglioni Arana Caparachin |', '| Nombre declarado | Max Magnolie Arana |')),
+     G12_CTX, 'G0-12'),
+    ('QA-108', 'G12', 'Archivo existente con el SHA-256 sin registrar',
+     on_coherent(sub(NEC, '| SHA-256 | `' + '1' * 64 + '` |', '| SHA-256 | — |')), G12_CTX, 'G0-12'),
+    ('QA-109', 'G12', 'Adjunto enlazado que no existe, con metadatos anticipados',
+     chain(sub(NEC, '| Adjunto | — |', '| Adjunto | [respuesta](adjuntos/G0-12_inexistente_2026-10-04.png) |'),
+           sub(NEC, '| SHA-256 | — |', '| SHA-256 | `' + 'b' * 64 + '` |'), sub(NEC, '| Formato real | — |', '| Formato real | PNG |')),
+     False, 'G0-12'),
+    ('QA-110', 'G12', 'Registro REGISTRADO con la identidad marcada NO VERIFICABLE',
+     on_coherent(sub(NEC, '| Verificación de identidad | VERIFICADA |', '| Verificación de identidad | NO VERIFICABLE |')),
+     G12_CTX, 'G0-12'),
+    ('QA-111', 'G12', 'Decisión declarada no admitida',
+     sub(NEC, '| Decisión declarada | NECESIDAD VALIDADA |', '| Decisión declarada | VALIDADA PARCIALMENTE |'), False, None),
+    # ---- F34D-M02: afirmaciones por proposición; una negación no neutraliza otra afirmación
+    ('QA-112', 'LIM', '«es aprobación jurídica, no de privacidad»',
+     claim('La respuesta del docente es la aprobación jurídica del alcance B, no una aprobación de privacidad.'), False, None),
+    ('QA-113', 'LIM', '«no es jurídica, pero sí autorización institucional»',
+     claim('La respuesta del docente no es jurídica, pero sí autorización institucional.'), False, None),
+    ('QA-114', 'LIM', '«no autoriza datos reales, pero certifica cumplimiento institucional»',
+     claim('La validación del revisor no autoriza datos reales, pero certifica el cumplimiento institucional.'), False, None),
+    ('QA-115', 'LIM', '«no aprueba el alcance C, pero autoriza al Colegio Andino»',
+     claim('La respuesta no aprueba el alcance C, pero autoriza al Colegio Andino.'), False, None),
+    ('QA-116', 'LIM', '«no es de privacidad; es la aprobación jurídica»',
+     claim('La respuesta del docente no es una aprobación de privacidad; es la aprobación jurídica.'), False, None),
+    ('QA-117', 'LIM', '«no solo es jurídica: también autoriza datos reales»',
+     claim('No solo es una aprobación jurídica: también autoriza datos reales.'), False, None),
+    ('QA-118', 'LIM', 'Doble negación: «ni deja de ser la aprobación jurídica»',
+     claim('Ni es de privacidad ni deja de ser la aprobación jurídica del alcance B.'), False, None),
+    ('QA-119', 'LIM', 'La validación del docente desbloquea F35',
+     claim('La validación del docente desbloquea F35.'), False, None),
+    ('QA-120', 'LIM', '«no es otra cosa que la aprobación jurídica»',
+     claim('La respuesta no es otra cosa que la aprobación jurídica del alcance B.'), False, None),
+    ('QA-121', 'G12', 'Afirmación escondida dentro de la transcripción declarada',
+     sub(NEC, 'cumpliendo plenamente con los requerimientos y estándares institucionales.»',
+         'cumpliendo plenamente con los requerimientos y estándares institucionales. Es la aprobación jurídica.»'),
+     False, None),
+    ('QA-122', 'LIM', 'Afirmación mixta en otro documento: «G0-12 es aprobación de privacidad, no jurídica»',
+     claim('La validación de G0-12 es la aprobación de privacidad, no jurídica.', 'F34B_Decision_G0.md'), False, None),
+    ('QA-123', 'LIM', '«sin observaciones, autoriza datos reales»',
+     claim('La respuesta del revisor, sin observaciones, autoriza datos reales.'), False, None),
     ('QA-82', 'EVD', 'Variante de remitente añadida al acta sin revisión en el validador',
      sub(ACTA, '| Luis Antonio Vila Meza | Vila Meza Luis Antonio | F34C, capturas de Luis Vila |',
          '| Luis Antonio Vila Meza | Vila Meza Luis Antonio | F34C, capturas de Luis Vila |\n'
          '| Carlos Ruiz Perez | Vila Meza Luis Antonio | sin revisión |'), False, None),
+]
+
+# ---- F34D-M01-R1: estructura obligatoria de la tabla de metadatos de G0-12 (sobre la base coherente simulada, para
+# que lo único que falle sea la estructura).
+G12_TABLE_RX = r'^\| Campo \| Valor \|\n\|---\|---\|\n(?:\|.*\|\n)+'
+
+
+def move_g12_table(D):
+    t = D[NEC]
+    m = re.search(G12_TABLE_RX, t, re.M)
+    assert m, 'tabla de metadatos'
+    t = t.replace(m.group(0), '', 1).replace('## 1. Cómo se registra', m.group(0) + '\n## 1. Cómo se registra', 1)
+    return dict(D, **{NEC: t})
+
+
+def team_capture_bypass(D):
+    """Bypass reproducido: sin tabla de metadatos, docente registrado con una captura del equipo y matriz/decisión
+    alineadas con G0-12 CUMPLIDO."""
+    ev = f'[respuesta]({EV_L})'
+    t = re.sub(G12_TABLE_RX, '', D[NEC], count=1, flags=re.M)
+    t = re.sub(DOC_ROW, f'| {REAL.teacher} | Docente del curso | 2026-10-04 | NECESIDAD VALIDADA | {ev} | — | REGISTRADO |', t,
+               count=1, flags=re.M)
+    m = re.sub(r'(^\| G0-12 \|.*)\*\*PENDIENTE EXTERNO\*\*', r'\1**CUMPLIDO**', D[MATX], count=1, flags=re.M)
+    d = D['F34B_Decision_G0.md'].replace('| G0-12 | PENDIENTE EXTERNO | Respuesta en texto sin adjunto ni identidad '
+                                         'verificable (F34D) | PENDIENTE EXTERNO |',
+                                         '| G0-12 | PENDIENTE EXTERNO | Respuesta en texto sin adjunto ni identidad '
+                                         'verificable (F34D) | CUMPLIDO |')
+    return dict(D, **{NEC: t, MATX: m, 'F34B_Decision_G0.md': d})
+
+
+CASES += [
+    ('QA-124', 'G12', 'Tabla de metadatos de G0-12 ausente', on_coherent(rsub(NEC, G12_TABLE_RX, '')), G12_CTX, 'G0-12'),
+] + [
+    (f'QA-{125 + i}', 'G12', f'Falta el campo obligatorio «{k}» en la tabla de metadatos',
+     on_coherent(rsub(NEC, r'^\| ' + re.escape(k) + r' \|.*\n', '')), G12_CTX, 'G0-12') for i, k in enumerate(G12_KEYS)
+] + [
+    ('QA-135', 'G12', 'Tabla de metadatos duplicada y contradictoria',
+     on_coherent(sub(NEC, '| Verificación de identidad | VERIFICADA |',
+                     '| Verificación de identidad | VERIFICADA |\n\n| Campo | Valor |\n|---|---|\n'
+                     '| Decisión declarada | NECESIDAD NO VALIDADA |')), G12_CTX, 'G0-12'),
+    ('QA-136', 'G12', 'Tabla de metadatos mal formada (fila con tres columnas)',
+     on_coherent(sub(NEC, '| Rol declarado | Docente / Profesor Revisor |', '| Rol declarado | Docente | Profesor Revisor |')),
+     G12_CTX, 'G0-12'),
+    ('QA-137', 'G12', 'Campo obligatorio con valor vacío',
+     on_coherent(sub(NEC, '| Institución declarada | Universidad Continental (UC Continental) |',
+                     '| Institución declarada |  |')), G12_CTX, 'G0-12'),
+    ('QA-138', 'G12', 'Campo repetido con valores contradictorios',
+     on_coherent(sub(NEC, '| Decisión declarada | NECESIDAD VALIDADA |',
+                     '| Decisión declarada | NECESIDAD VALIDADA |\n| Decisión declarada | NECESIDAD NO VALIDADA |')),
+     G12_CTX, 'G0-12'),
+    ('QA-139', 'G12', 'Campo desconocido añadido a la tabla («Aprobación jurídica»)',
+     on_coherent(sub(NEC, '| Verificación de identidad | VERIFICADA |',
+                     '| Verificación de identidad | VERIFICADA |\n| Aprobación jurídica | SÍ |')), G12_CTX, 'G0-12'),
+    ('QA-140', 'G12', 'Tabla de metadatos movida fuera de su sección', on_coherent(move_g12_table), G12_CTX, 'G0-12'),
+    ('QA-141', 'G12', 'Metadatos repartidos fuera de la tabla (SHA-256 en una línea aparte)',
+     on_coherent(rsub(NEC, r'^\| SHA-256 \|.*\n', ''),
+                 sub(NEC, '**Respuestas declaradas:**', '- **SHA-256:** `' + '1' * 64 + '`\n\n**Respuestas declaradas:**')),
+     G12_CTX, 'G0-12'),
+    ('QA-142', 'G12', 'Bypass completo: sin tabla, docente registrado con una captura del equipo, matriz y decisión '
+                      'en CUMPLIDO', team_capture_bypass, False, 'G0-12'),
+    ('QA-143', 'G12', 'Sección «Respuesta recibida» ausente (encabezado cambiado)',
+     on_coherent(rsub(NEC, r'^## 4\. Respuesta recibida en F34D.*$', '## 4. Notas')), G12_CTX, 'G0-12'),
 ]
 
 # Casos POSITIVOS en memoria: deben pasar todas las reglas y dejar G0-14 y G0-09 en CUMPLIDO.
@@ -1155,6 +1691,14 @@ def positive_control():
                        ['—', 'RR. HH.', '—', 'PENDIENTE', '—', '—', 'PENDIENTE'],
                        ['—', 'Administración', '—', 'PENDIENTE', '—', '—', 'PENDIENTE'],
                        ['—', 'Representante institucional', '—', 'PENDIENTE', '—', '—', 'PENDIENTE']]),
+        # §4 de G0-12 coherente con la fila simulada del docente (F34D)
+        sub(NEC, '| Estado de la respuesta | SIN EVIDENCIA ARCHIVADA |', '| Estado de la respuesta | EVIDENCIA ARCHIVADA |'),
+        sub(NEC, '| Adjunto | — |', '| Adjunto | ' + CTRL.format('nec') + ' |'),
+        sub(NEC, '| SHA-256 | — |', f'| SHA-256 | `{CTRL_SHA}` |'),
+        sub(NEC, '| Formato real | — |', '| Formato real | JPEG |'),
+        sub(NEC, '| Nombre declarado | Max Magnolie Arana |', '| Nombre declarado | Persona Docente Control |'),
+        sub(NEC, '| Fecha declarada | 2026-10-04 |', f'| Fecha declarada | {DAY} |'),
+        sub(NEC, '| Verificación de identidad | NO VERIFICABLE |', '| Verificación de identidad | VERIFICADA |'),
     )(D)
     m = D[MATX]
     for gid in sorted(EXTERNAL):
@@ -1184,9 +1728,9 @@ F34A_VALIDATOR = 'docs/academico/tools/f34a/validate_f34a.py'   # corregido en F
 GOVERNANCE_FILES = frozenset({'CLAUDE.md', 'README.md', 'docs/PROGRESS.md',
                               'docs/academico/ACADEMIC_BASELINE.md'})
 CLOSURE_SUBJECTS = [
-    'docs(governance): close F34C; G0 remains not approved',
-    'docs(academic): register ADR-005 team approval and threat-model acceptance',
-    'test(academic): harden F34B evidence validation for F34C',
+    'docs(governance): close F34D with G0-12 still pending',
+    'docs(academic): record unverified G0-12 response and keep criterion pending',
+    'test(academic): harden G0-12 evidence validation for F34D',
 ]
 
 
@@ -1246,7 +1790,23 @@ def main():
         der_m = derive(Dm, ctx)
         ok = bool(r.get(rule)) and all(der_m[c] != 'CUMPLIDO' for c in crits)
         add(ok, f'{cid} detectado por {rule}' + (f' y {"/".join(crits)} no queda CUMPLIDO' if crits else '') + f': {what}')
-    add(len(CASES) >= 80, f'casos negativos: {len(CASES)}')
+    add(len(CASES) >= 140, f'casos negativos: {len(CASES)}')
+    add(not g12_structure(D[NEC], NEC) and derive(D, REAL)['G0-12'] == 'PENDIENTE EXTERNO',
+        'G0-12 real: tabla de metadatos única, completa y bien formada; sigue PENDIENTE EXTERNO')
+    # Positivo F34D (simulado en memoria): evidencia válida + identidad verificable + necesidad validada → G0-12 CUMPLIDO.
+    Dg = g12_coherent()(D)
+    rg = run_rules(Dg, G12_CTX)
+    bad_g = {k: v[:1] for k, v in rg.items() if v and k in ('REC', 'IDN', 'EVD', 'G12', 'LIM', 'PHASE', 'DATA', 'SCOPE')}
+    add(not bad_g and derive(Dg, G12_CTX)['G0-12'] == 'CUMPLIDO' and not real_exists(G12_CTRL)
+        and not real_exists(G12_CTRL2) and derive(D, REAL)['G0-12'] == 'PENDIENTE EXTERNO',
+        f'POS-07 positivo (simulado): adjunto válido + identidad del docente verificable + necesidad validada → '
+        f'G0-12 CUMPLIDO {bad_g}')
+    add(REAL.teacher == 'Maglioni Arana Caparachin', f'docente del curso leído de CLAUDE.md: «{REAL.teacher}»')
+    ok_text = ('La respuesta del docente no es una aprobación jurídica, de privacidad ni una autorización del Colegio '
+               'Andino, y tampoco autoriza datos reales ni el alcance C.')
+    add(not lim(claim(ok_text)(D), REAL), 'LIM positivo: una frase con todas las categorías negadas no falla')
+    add(not teacher_match('Max Magnolie Arana', REAL.teacher) and not teacher_match('Maglioni Arana', REAL.teacher),
+        'identidad del docente: «Max Magnolie Arana» y nombres parciales no se aceptan sin variante revisada')
     for pid, what, mut in POSITIVES:
         Dm = mut(D)
         r = run_rules(Dm, REAL)
