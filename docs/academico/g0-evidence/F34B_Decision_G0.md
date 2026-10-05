@@ -1,22 +1,23 @@
 # F34B — Decisión G0
 
-> Fase F34B, versión 1 (04/10/2026). Reevaluación de los 15 criterios con la evidencia recibida. **Ningún documento ni validador aprueba G0 automáticamente:** este documento solo aplica la regla de [ADR-005 §9.1](../diseno-inteligente/F33_ADR_005_G0.md#91-estados-y-regla-de-decisión) a la [matriz de evidencias](F34B_Matriz_Evidencias_G0.md).
+> Fase F34B, versión 1 (04/10/2026); **reevaluada en F34C**. Reevaluación de los 15 criterios con la evidencia recibida. **Ningún documento ni validador aprueba G0 automáticamente:** este documento solo aplica la regla de [ADR-005 §9.1](../diseno-inteligente/F33_ADR_005_G0.md#91-estados-y-regla-de-decisión) a la [matriz de evidencias](F34B_Matriz_Evidencias_G0.md).
 
 ## 1. Resultado
 
 - **G0 = NO APROBADA.**
-- **ADR-005 = PROPUESTA.**
+- **ADR-005 = PROPUESTA** (estado canónico, sin cambios en F33).
+- **APROBACIÓN INTERNA DEL EQUIPO REGISTRADA** (F34C, [acta](F34B_Acta_Aprobacion_ADR005.md)). Satisface G0-14. Es la decisión del equipo sobre la dirección del motor: no es una aprobación jurídica, de privacidad ni institucional, y no aprueba G0.
 - **F35–F40 = BLOQUEADAS.**
 - **Alcance C: no habilitado.**
 - **Los datos reales siguen PROHIBIDOS.**
 - RF-23 sigue humana; RF-29 sigue experimental e informativa.
-- F34B = LISTA PARA AUDITORÍA.
+- F34C = LISTA PARA AUDITORÍA.
 
-**Motivo:** no se recibió ninguna evidencia externa. Faltan G0-02, G0-03, G0-12 y G0-14 (PENDIENTE EXTERNO) y la aceptación de G0-09 (PARCIAL).
+**Motivo:** F34C registró evidencia real solo para G0-14 y G0-09, que pasan a CUMPLIDO. Siguen sin evidencia G0-02 (revisión jurídica y evaluación de impacto), G0-03 (privacidad) y G0-12 (necesidad institucional), que son obligatorios para el alcance B.
 
 ## 2. Reevaluación de los 15 criterios
 
-| Criterio | Estado F34A | Evidencia nueva en F34B | Estado F34B |
+| Criterio | Estado F34A | Evidencia nueva (F34B/F34C) | Estado vigente (F34C) |
 |---|---|---|---|
 | G0-01 | CUMPLIDO | — | CUMPLIDO |
 | G0-02 | PENDIENTE EXTERNO | Ninguna | PENDIENTE EXTERNO |
@@ -26,12 +27,12 @@
 | G0-06 | CUMPLIDO | — | CUMPLIDO |
 | G0-07 | CUMPLIDO | — | CUMPLIDO |
 | G0-08 | CUMPLIDO | — | CUMPLIDO |
-| G0-09 | PARCIAL | Ninguna | PARCIAL |
+| G0-09 | PARCIAL | Capturas de los tres integrantes y confirmación de Luis Vila (F34C) | CUMPLIDO |
 | G0-10 | CUMPLIDO | — | CUMPLIDO |
 | G0-11 | CUMPLIDO | — | CUMPLIDO |
 | G0-12 | PENDIENTE EXTERNO | Ninguna | PENDIENTE EXTERNO |
 | G0-13 | CUMPLIDO | — | CUMPLIDO |
-| G0-14 | PENDIENTE EXTERNO | Ninguna | PENDIENTE EXTERNO |
+| G0-14 | PENDIENTE EXTERNO | Capturas de los tres integrantes y confirmación de Luis Vila (F34C) | CUMPLIDO |
 | G0-15 | CUMPLIDO | — | CUMPLIDO |
 
 ## 3. Regla de decisión
@@ -70,8 +71,6 @@ Esta sección **no habilita nada hoy**. Describe qué quedaría permitido **si y
 
 | Criterio | Documento que falta | Quién lo produce |
 |---|---|---|
-| G0-14 | Acta de ADR-005 firmada por los tres integrantes | Equipo |
 | G0-02 | Informe jurídico firmado y evaluación de impacto COMPLETADA o conclusión de NO APLICABILIDAD | Abogado o responsable legal |
 | G0-03 | Aprobación del análisis de privacidad, con base legal y plazos de retención | Responsable del tratamiento, con revisión jurídica |
 | G0-12 | Instrumento respondido por el docente o un representante institucional | Docente o representante institucional |
-| G0-09 | Aceptación registrada del modelo de amenazas | Equipo |
