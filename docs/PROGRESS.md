@@ -1,10 +1,32 @@
 # Progreso del proyecto
 
-Última actualización: 2026-10-05 (F34D CERRADA tras auditoría final PASS; G0-12 PENDIENTE EXTERNO; G0 NO APROBADA; F34E/G0-SBX no publicada en esta fase).
+Última actualización: 2026-10-05 (F34E CERRADA; G0 real NO APROBADA; G0-SBX APROBADA CON RESTRICCIONES; F35-SBX sintética HABILITADA, AÚN NO INICIADA; publicación sujeta a CI).
 
 > El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24; el 25/09/2026, de la Fase 24 a la Fase 25, y ese mismo día, de la Fase 25 a la Fase 26. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
 
-## Estado de v1.1
+## Estado vigente F34E
+
+F34E CERRADA (05/10/2026), tras auditoría final PASS y adaptación explícita de alcance para cierre/handoff. Este bloque sustituye el estado vigente anterior; los registros hasta F34D se conservan como fotografías históricas, no como instrucciones actuales.
+
+- G0 real = NO APROBADA
+- G0-09 = CUMPLIDO
+- G0-14 = CUMPLIDO
+- G0-02 = PENDIENTE EXTERNO
+- G0-03 = PENDIENTE EXTERNO
+- G0-12 = PENDIENTE EXTERNO
+- ADR-005 = PROPUESTA
+- G0-SBX = APROBADA CON RESTRICCIONES
+- F35 productiva = BLOQUEADA
+- F35-SBX = HABILITADA
+- F36–F40 = BLOQUEADAS
+- Alcance C = BLOQUEADO
+- Datos reales = PROHIBIDOS
+
+SBX-01..SBX-18 CUMPLE. Aprobación interna del equipo REGISTRADA; no constituye aprobación jurídica, de privacidad ni validación institucional. F35-SBX exclusivamente sintético. F35-SBX AÚN NO INICIADA. RF-23 sigue humana; RF-29 sigue experimental/informativa. Sin scoring, recomendación ni selección automática; sin documentos, audio ni vídeo reales, sin integración productiva ni paso automático a producción. El baseline RF/CU/RNF permanece intacto.
+
+Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa11cd9185423e2866b0fc936`. El commit C y los merges se consultan en Git, sin hashes futuros/autorreferenciales. Publicación autorizada únicamente tras regresión y CI GREEN de develop/main. Sin tag ni release. Próximo trabajo autorizado aquí: handoff macOS, no iniciar F35-SBX.
+
+## Estado de v1.1 — antecedentes hasta F34D
 
 Baseline previo a la integración F34, verificado el 04/10/2026: `main` = `origin/main` = `26ae8b34ed586fe19515dd6041491e8dd72f9a64` y `develop` = `origin/develop` = `288039fbb7eaba9827072e736d2fff4f55d10408`. F31, F32 y F33 están integradas; F34 está CERRADA tras auditoría final PASS y su publicación e integración están autorizadas con gates CI de develop y main. Los hashes de integración y resultados finales se consultan en Git/GitHub, no se anticipan en este commit. El cierre técnico v1.1 permanece etiquetado como `v1.1.0-academic` sobre `634f354`; `v1.0.0-academic` sigue en `9a946c2`. F27–F34 son trabajo académico post-release, sin cambios de comportamiento productivo.
 
