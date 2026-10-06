@@ -71,7 +71,29 @@ docker compose exec app php artisan migrate:fresh --seed --force   # datos demo
 
 El servicio ML **no** corre en Docker Compose: se ejecuta desde `ml-service/` con su entorno virtual (`cd ml-service` y `.venv/Scripts/python.exe -m pytest`; el servidor, con `uvicorn` en el puerto 8008). Laravel solo lo llama si `ML_SERVICE_ENABLED=true`, y sin servicio la página funciona igual. Detalle en `docs/v1.1/phase-16-laravel-ml-integration.md`.
 
-## Estado actual
+## Estado vigente F34E
+
+F34E CERRADA (05/10/2026), tras auditoría final PASS y adaptación explícita de alcance para cierre/handoff. Este bloque sustituye el estado vigente anterior; los registros hasta F34D se conservan como fotografías históricas, no como instrucciones actuales.
+
+- G0 real = NO APROBADA
+- G0-09 = CUMPLIDO
+- G0-14 = CUMPLIDO
+- G0-02 = PENDIENTE EXTERNO
+- G0-03 = PENDIENTE EXTERNO
+- G0-12 = PENDIENTE EXTERNO
+- ADR-005 = PROPUESTA
+- G0-SBX = APROBADA CON RESTRICCIONES
+- F35 productiva = BLOQUEADA
+- F35-SBX = HABILITADA
+- F36–F40 = BLOQUEADAS
+- Alcance C = BLOQUEADO
+- Datos reales = PROHIBIDOS
+
+SBX-01..SBX-18 CUMPLE. Aprobación interna del equipo REGISTRADA; no constituye aprobación jurídica, de privacidad ni validación institucional. F35-SBX exclusivamente sintético. F35-SBX AÚN NO INICIADA. RF-23 sigue humana; RF-29 sigue experimental/informativa. Sin scoring, recomendación ni selección automática; sin documentos, audio ni vídeo reales, sin integración productiva ni paso automático a producción. El baseline RF/CU/RNF permanece intacto.
+
+Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa11cd9185423e2866b0fc936`. El commit C y los merges se consultan en Git, sin hashes futuros/autorreferenciales. Publicación autorizada únicamente tras regresión y CI GREEN de develop/main. Sin tag ni release. Próximo trabajo autorizado aquí: handoff macOS, no iniciar F35-SBX.
+
+## Antecedentes de estado (hasta F34D)
 
 *Baseline previo a la integración F34 verificado con Git el 04/10/2026. F31–F33 están integradas; los hashes siguientes son la fotografía pre-F34. F34 está CERRADA tras auditoría final PASS, exclusivamente con contrato, dataset sintético y gobernanza. Sus commits académicos son A `a4684d196e00fbe8fd3fdd2bea5b04d70f47bc70` y B `cafcbdbb81101fb40f91f0166019a1f5b9965de9`. Su publicación e integración están autorizadas con gates CI de develop y main; los hashes finales se consultan en Git y `docs/PROGRESS.md`, no se anticipan aquí.*
 

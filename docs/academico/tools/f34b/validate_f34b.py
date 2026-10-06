@@ -1717,11 +1717,27 @@ def positive_control():
 
 
 # ---------------------------------------------------------------- git
-def git(*a):
-    p = subprocess.run(['git', *a], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
-    if p.returncode != 0:
-        raise RuntimeError(f'consulta Git fallida (código {p.returncode}); alcance desconocido')
-    return p.stdout
+def git_rc(*a):
+    try:
+        p = subprocess.run(['git', *a], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
+    except OSError:
+        return None, ''
+    return p.returncode, p.stdout
+
+
+class GitError(Exception):
+    pass
+
+
+def q(runner, *args, ok=(0,)):
+    rc, out = runner(*args)
+    if rc not in ok:
+        raise GitError(f'git {" ".join(args[:4])} → código {rc}; UNKNOWN')
+    return rc, out
+
+
+def paths(out):
+    return {ln.strip() for ln in out.splitlines() if ln.strip()}
 
 
 F34A_VALIDATOR = 'docs/academico/tools/f34a/validate_f34a.py'   # corregido en F34B-M01 por encargo de la auditoría
@@ -1741,29 +1757,272 @@ def closure_scope(subjects, committed, dirty):
     return frozenset(committed)
 
 
-def git_checks():
+OWN_BRANCHES = frozenset({'feature/f34b-g0-external-evidence', 'feature/f34c-g0-evidence-update',
+                         'feature/f34d-g0-12-institutional-validation'})
+# Ancla fija: cierre publicado de F34D. No usar una rama móvil para congelar las evidencias.
+POST_ANCHOR = '9e0fc92adbe563e99a7cb16fdb07aa26f8876d68'
+IMMUTABLE = ('docs/academico/g0-evidence/',)
+POST_F34E_ALLOWLIST = frozenset({
+    'CLAUDE.md', 'docs/PROGRESS.md', 'docs/academico/ACADEMIC_BASELINE.md', 'README.md',
+    'docs/academico/handoff/F34E_MACOS_HANDOFF.md', 'scripts/check-macos-readiness.sh',
+})
+POST_F34E_ARTIFACTS = frozenset({
+    'docs/academico/g0-sandbox/' + n for n in (
+        'README.md', 'F34E_Definicion_G0_SBX.md', 'F34E_Matriz_Criterios_G0_SBX.md',
+        'F34E_Alcance_Autorizado.md', 'F34E_Prohibiciones.md', 'F34E_Relacion_G0_Real_vs_SBX.md',
+        'F34E_Autorizacion_F35_SBX.md', 'F34E_Decision_G0_SBX.md')
+}) | frozenset({'docs/academico/tools/f34e/validate_f34e.py',
+               'docs/academico/tools/f34b/validate_f34b.py'})
+POST_F34E_STATES = {
+    'G0 real': 'NO APROBADA', 'G0-09': 'CUMPLIDO', 'G0-14': 'CUMPLIDO',
+    'G0-02': 'PENDIENTE EXTERNO', 'G0-03': 'PENDIENTE EXTERNO', 'G0-12': 'PENDIENTE EXTERNO',
+    'ADR-005': 'PROPUESTA', 'G0-SBX': 'APROBADA CON RESTRICCIONES',
+    'F35 productiva': 'BLOQUEADA', 'F35-SBX': 'HABILITADA', 'F36–F40': 'BLOQUEADAS',
+    'Alcance C': 'BLOQUEADO', 'Datos reales': 'PROHIBIDOS',
+}
+
+
+def post_f34e_path(path):
+    """Excepción autorizada: rutas exactas, nunca cualquier Markdown ni carpeta futura."""
+    return path in POST_F34E_ALLOWLIST or path in POST_F34E_ARTIFACTS
+
+
+def post_doc_rules(path, text, additions=None):
+    """Gobierno/handoff autorizado, con estados explícitos y sin aprobaciones externas inventadas.
+
+    Las fotografías históricas se conservan. La sección vigente es obligatoria; también se revisan TODAS
+    las líneas añadidas a gobierno, no solo esa sección. El handoff se revisa completo.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('f34e_post_policy',
+                                                os.path.join(ROOT, 'docs/academico/tools/f34e/validate_f34e.py'))
+    policy = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(policy)
     out = []
-    changed = set(git('diff', '--name-only', BASE).split()) | set(git('ls-files', '--others', '--exclude-standard').split())
-    allowed = ('docs/academico/g0-evidence/', 'docs/academico/tools/f34b/')
-    subjects = git('log', '-3', '--format=%s').splitlines()
-    committed = set(git('diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD').splitlines())
-    dirty = set(git('diff', '--name-only', 'HEAD', '--', *sorted(GOVERNANCE_FILES)).splitlines())
-    governance = closure_scope(subjects, committed, dirty)
-    fuera = sorted(p for p in changed if not p.startswith(allowed) and p != F34A_VALIDATOR and p not in governance)
-    if fuera:
-        out.append(f'cambios fuera del alcance de F34B: {fuera[:5]}')
-    protected = ['app', 'routes', 'config', 'database', 'resources', 'tests', 'cypress', 'ml-service', 'composer.json',
-                 'composer.lock', 'package.json', 'package-lock.json', 'docker-compose.yml', 'Dockerfile',
-                 'docs/v1.1/scope-preliminary.md', 'docs/final-report/traceability-master.md',
-                 'docs/rf-implementation-matrix.md', 'docs/assumptions.md', 'docs/academico/diseno-inteligente',
-                 'docs/academico/datos-sinteticos', 'docs/academico/g0-readiness', 'docs/academico/tools/f34a']
-    tocados = [p for p in git('diff', '--name-only', BASE, '--', *protected).split() if p != F34A_VALIDATOR]
-    if tocados:
-        out.append(f'runtime, baseline, F33, F34 o documentos F34A modificados: {tocados[:5]}')
-    adr = open(os.path.join(ROOT, 'docs', 'academico', 'diseno-inteligente', 'F33_ADR_005_G0.md'), encoding='utf-8').read()
-    if '- **Estado:** **PROPUESTA**' not in adr:
-        out.append('ADR-005 ya no figura como PROPUESTA')
+    sections = re.findall(r'^## Estado vigente F34E\s*\n(.*?)(?=^## |\Z)', text, re.M | re.S)
+    if len(sections) != 1:
+        return [f'{path}: se exige una sección única «Estado vigente F34E»']
+    section = sections[0]
+    expected = {policy.norm_key(k): v for k, v in POST_F34E_STATES.items()}
+    declared = {}
+    for line in section.splitlines():
+        plain_line = policy.strip_md(line).strip().removeprefix('- ').strip()
+        if '=' not in plain_line:
+            continue
+        key, value = plain_line.split('=', 1)
+        key = policy.norm_key(key)
+        value = ' '.join(value.strip().upper().split())
+        declared.setdefault(key, []).append(value)
+    for key, value in expected.items():
+        if declared.get(key) != [value]:
+            out.append(f'{path}: {key} debe declararse una sola vez como {value}')
+    for key in declared.keys() - expected.keys():
+        out.append(f'{path}: declaración desconocida en estado vigente: {key}')
+    out += [f'{path}: {v}' for v in policy.sta({'F34E_Decision_G0_SBX.md': section}, {})]
+    candidate = text if additions is None else additions
+    out += policy.clm({path: candidate}, {})
+    legal = re.compile(r'aprobaci[oó]n\s+(?:legal|jur[ií]dica)|privacidad(?:\s+\w+){0,3}\s+aprobada|'
+                       r'validaci[oó]n\s+institucional\s+obtenida', re.I)
+    for line in policy.strip_md(candidate).splitlines():
+        for prop, polarity in policy.claim_props(line):
+            if polarity != 'neg' and legal.search(prop):
+                out.append(f'{path}: aprobación externa no respaldada: {prop}')
+    for required in ('F35-SBX exclusivamente sintético', 'F35-SBX AÚN NO INICIADA',
+                     'RF-23 sigue humana', 'RF-29 sigue experimental/informativa',
+                     'Sin scoring, recomendación ni selección automática'):
+        if required not in section:
+            out.append(f'{path}: falta la restricción «{required}»')
     return out
+
+
+def post_document_checks(changed, runner=git_rc):
+    out = []
+    for path in sorted(changed & (GOVERNANCE_FILES | {'docs/academico/handoff/F34E_MACOS_HANDOFF.md'})):
+        try:
+            text = open(os.path.join(ROOT, path), encoding='utf-8').read()
+            additions = None
+            if path in GOVERNANCE_FILES:
+                diff = q(runner, 'diff', '--no-ext-diff', '--unified=0', POST_ANCHOR, '--', path)[1]
+                additions = '\n'.join(line[1:] for line in diff.splitlines()
+                                      if line.startswith('+') and not line.startswith('+++'))
+            out += post_doc_rules(path, text, additions)
+        except (OSError, ValueError) as exc:
+            out.append(f'{path}: contenido desconocido (falla cerrado): {exc}')
+    return out
+
+
+def post_policy_regressions():
+    sample = '## Estado vigente F34E\n' + '\n'.join(f'- {k} = {v}' for k, v in POST_F34E_STATES.items())
+    sample += ('\nF35-SBX exclusivamente sintético. F35-SBX AÚN NO INICIADA. RF-23 sigue humana. '
+               'RF-29 sigue experimental/informativa. Sin scoring, recomendación ni selección automática.\n')
+    results = [(not post_doc_rules('CLAUDE.md', sample), 'POST: gobierno explícito válido')]
+    for path in sorted(POST_F34E_ALLOWLIST | POST_F34E_ARTIFACTS):
+        results.append((post_f34e_path(path), f'POST: ruta exacta permitida {path}'))
+    for path in ('docs/academico/handoff/otro.md', 'scripts/otro.sh', 'app/Models/X.php',
+                 'routes/web.php', 'config/app.php', 'database/migrations/x.php',
+                 'docs/academico/g0-evidence/README.md', 'docs/academico/otro.md'):
+        results.append((not post_f34e_path(path), f'POST: ruta no autorizada rechazada {path}'))
+    for key, value in POST_F34E_STATES.items():
+        bad = sample.replace(f'{key} = {value}', f'{key} = ESTADO INCOMPATIBLE')
+        results.append((bool(post_doc_rules('docs/academico/ACADEMIC_BASELINE.md', bad)),
+                        f'POST: invariante {key} no puede cambiar'))
+    for claim in ('G0 = APROBADA', 'Se obtuvo aprobación legal', 'La privacidad está aprobada',
+                  'Se obtuvo validación institucional obtenida', 'F35 productiva = DESBLOQUEADA',
+                  'Se autorizan datos reales', 'No cambia runtime, pero autoriza datos reales'):
+        results.append((bool(post_doc_rules('README.md', sample, claim)), f'POST: afirmación rechazada {claim}'))
+    results.append((bool(post_doc_rules('docs/academico/handoff/F34E_MACOS_HANDOFF.md', 'Solo instalación')),
+                    'POST: handoff sin estados/restricciones rechazado'))
+    return results
+PROTECTED = ['app', 'routes', 'config', 'database', 'resources', 'tests', 'cypress', 'ml-service', 'composer.json',
+             'composer.lock', 'package.json', 'package-lock.json', 'docker-compose.yml', 'Dockerfile',
+             'docs/v1.1/scope-preliminary.md', 'docs/final-report/traceability-master.md',
+             'docs/rf-implementation-matrix.md', 'docs/assumptions.md', 'docs/academico/diseno-inteligente',
+             'docs/academico/datos-sinteticos', 'docs/academico/g0-readiness', 'docs/academico/tools/f34a']
+
+
+def protected_path(p):
+    return any(p == x or p.startswith(x.rstrip('/') + '/') for x in PROTECTED)
+
+
+def git_scope(runner=git_rc):
+    """Delta propio estricto; post permite académicos nuevos, sin cambiar evidencias cerradas.
+
+    Todas las consultas pasan por q. Solo rc=1 en resolución de ancla o prueba de ancestro tiene significado.
+    Ancla ausente/no ancestral en una fase posterior, Git ausente o consulta inesperada: UNKNOWN/FAIL cerrado.
+    """
+    try:
+        if q(runner, 'rev-parse', '--is-inside-work-tree')[1].strip() != 'true':
+            raise GitError('repositorio inválido')
+        head = q(runner, 'rev-parse', '--verify', '--quiet', 'HEAD^{commit}')[1].strip()
+        branch = q(runner, 'rev-parse', '--abbrev-ref', 'HEAD')[1].strip()
+        if not re.fullmatch(r'[0-9a-f]{40}', head) or not branch or branch == 'HEAD':
+            raise GitError('HEAD o rama desconocidos')
+        rc, anchor = q(runner, 'rev-parse', '--verify', '--quiet', POST_ANCHOR + '^{commit}', ok=(0, 1))
+        own = branch in OWN_BRANCHES
+        if rc == 1:
+            if not own:
+                raise GitError('ancla inexistente fuera de rama propia')
+        else:
+            if anchor.strip() != POST_ANCHOR:
+                raise GitError('resolución de ancla incoherente')
+            ancestral = q(runner, 'merge-base', '--is-ancestor', POST_ANCHOR, 'HEAD', ok=(0, 1))[0] == 0
+            if not ancestral and not own:
+                raise GitError('fase posterior sin cierre F34D en su historia')
+        mode = 'delta' if own else 'post'
+        base = BASE if own else POST_ANCHOR
+        resolved = q(runner, 'rev-parse', '--verify', '--quiet', base + '^{commit}')[1].strip()
+        if not re.fullmatch(r'[0-9a-f]{40}', resolved):
+            raise GitError('base inválida')
+        changed = paths(q(runner, 'diff', '--name-only', base)[1])
+        untracked = paths(q(runner, 'ls-files', '--others', '--exclude-standard')[1])
+        touched = paths(q(runner, 'diff', '--name-only', base, '--', *PROTECTED)[1])
+        touched |= {p for p in untracked if protected_path(p)}
+        if own:
+            touched.discard(F34A_VALIDATOR)  # excepción histórica autorizada solo en el delta propio
+        changed |= untracked
+        out = []
+        if own:
+            subjects = q(runner, 'log', '-3', '--format=%s')[1].splitlines()
+            committed = paths(q(runner, 'diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD')[1])
+            dirty = paths(q(runner, 'diff', '--name-only', 'HEAD', '--', *sorted(GOVERNANCE_FILES))[1])
+            gov = closure_scope(subjects, committed, dirty)
+            outside = {p for p in changed if not p.startswith(('docs/academico/g0-evidence/',
+                        'docs/academico/tools/f34b/')) and p != F34A_VALIDATOR and p not in gov}
+        else:
+            frozen = paths(q(runner, 'diff', '--name-only', POST_ANCHOR, '--', *IMMUTABLE)[1])
+            frozen |= {p for p in untracked if p.startswith(IMMUTABLE)}
+            if frozen:
+                out.append(f'evidencias F34B/C/D cerradas modificadas: {sorted(frozen)[:5]}')
+            outside = {p for p in changed if not post_f34e_path(p)}
+            out += post_document_checks(changed, runner)
+        if outside:
+            out.append(f'cambios fuera del alcance {mode}: {sorted(outside)[:5]}')
+        if touched:
+            out.append(f'runtime, baseline, F33, F34 o F34A modificados: {sorted(touched)[:5]}')
+        return out, mode
+    except GitError as e:
+        return [f'UNKNOWN: {e}; falla cerrado'], 'unknown'
+
+
+def git_checks(runner=git_rc):
+    out, mode = git_scope(runner)
+    adr = open(os.path.join(ROOT, 'docs', 'academico', 'diseno-inteligente', 'F33_ADR_005_G0.md'), encoding='utf-8').read()
+    if '- **Estado:** **PROPUESTA**' not in adr or 'G0 = NO APROBADA' not in adr:
+        out.append('ADR-005 debe seguir PROPUESTA y G0 NO APROBADA')
+    return out
+
+
+def scope_regressions():
+    """Git simulado en memoria: no escribe objetos, archivos ni evidencia externa."""
+    own = sorted(OWN_BRANCHES)[0]
+    post = 'feature/f34e-g0-sbx-synthetic-authorization'
+    def fake(branch=post, changed='', untracked='', protected='', frozen='', anchor_rc=0,
+             ancestor_rc=0, fault=None, fault_rc=128, inside='true', head='a' * 40):
+        def runner(*args):
+            if fault is not None and args[:len(fault)] == fault:
+                return fault_rc, ''
+            if args == ('rev-parse', '--is-inside-work-tree'):
+                return 0, inside
+            if args == ('rev-parse', '--verify', '--quiet', 'HEAD^{commit}'):
+                return 0, head
+            if args == ('rev-parse', '--abbrev-ref', 'HEAD'):
+                return 0, branch
+            if args == ('rev-parse', '--verify', '--quiet', POST_ANCHOR + '^{commit}'):
+                return anchor_rc, POST_ANCHOR if anchor_rc == 0 else ''
+            if args[:3] == ('rev-parse', '--verify', '--quiet'):
+                return 0, 'b' * 40
+            if args[:2] == ('merge-base', '--is-ancestor'):
+                return ancestor_rc, ''
+            if args[:2] == ('diff', '--name-only'):
+                if '--' not in args:
+                    return 0, changed
+                return 0, frozen if args[args.index('--') + 1:] == IMMUTABLE else protected
+            if args[:2] == ('ls-files', '--others'):
+                return 0, untracked
+            if args[:1] == ('log',):
+                return 0, ''
+            if args[:1] == ('diff-tree',):
+                return 0, ''
+            raise AssertionError(f'consulta no cubierta por arnés: {args}')
+        return runner
+    cases = [
+        ('delta propio legítimo', fake(branch=own, changed='docs/academico/g0-evidence/README.md'), True),
+        ('post académico legítimo', fake(untracked='docs/academico/g0-sandbox/README.md'), True),
+        ('delta propio rechaza fase futura', fake(branch=own, untracked='docs/academico/g0-sandbox/README.md'), False),
+        ('documento cerrado', fake(frozen='docs/academico/g0-evidence/F34B_Validacion_Necesidad.md'), False),
+        ('adjunto nuevo no registrado', fake(untracked='docs/academico/g0-evidence/adjuntos/nuevo.png'), False),
+        ('runtime', fake(changed='app/Models/User.php', protected='app/Models/User.php'), False),
+        ('ADR', fake(protected='docs/academico/diseno-inteligente/F33_ADR_005_G0.md'), False),
+        ('F34A cerrado', fake(protected='docs/academico/g0-readiness/README.md'), False),
+        ('fuera de alcance', fake(changed='docs/README.md'), False),
+        ('ancla ausente propia segura', fake(branch=own, anchor_rc=1), True),
+        ('ancla ausente post', fake(anchor_rc=1), False),
+        ('ancla no ancestral post', fake(ancestor_rc=1), False),
+        ('repositorio inválido', fake(inside='false'), False),
+        ('HEAD vacío', fake(head=''), False),
+        ('HEAD inválido rc 1', fake(fault=('rev-parse', '--verify', '--quiet', 'HEAD^{commit}'), fault_rc=1), False),
+        ('base propia no resuelta', fake(branch=own, fault=('rev-parse', '--verify', '--quiet', BASE + '^{commit}')), False),
+        ('diff de protegidos fallido', fake(fault=('diff', '--name-only', POST_ANCHOR, '--', *PROTECTED)), False),
+        ('diff de evidencias cerradas fallido', fake(fault=('diff', '--name-only', POST_ANCHOR, '--', *IMMUTABLE)), False),
+        ('Git no disponible', fake(fault=(), fault_rc=None), False),
+    ]
+    queries = [('rev-parse', '--is-inside-work-tree'), ('rev-parse', '--verify', '--quiet', 'HEAD^{commit}'),
+               ('rev-parse', '--abbrev-ref'), ('rev-parse', '--verify', '--quiet', POST_ANCHOR + '^{commit}'),
+               ('merge-base', '--is-ancestor'), ('diff', '--name-only'), ('ls-files', '--others')]
+    for query in queries:
+        for rc in (2, 128, 129):
+            cases.append((f'Git fallo {rc} {query}', fake(fault=query, fault_rc=rc), False))
+    for query in [('log',), ('diff-tree',), ('diff', '--name-only', 'HEAD')]:
+        cases.append((f'consulta gobierno falla {query}', fake(branch=own, fault=query), False))
+    for path in ('docs/academico/handoff/otro.md', 'scripts/otro.sh', 'app/Models/X.php',
+                 'routes/web.php', 'config/app.php', 'database/migrations/x.php',
+                 'docs/academico/g0-evidence/README.md'):
+        cases.append((f'post rechaza {path}', fake(changed=path, frozen=path if path.startswith(IMMUTABLE) else ''), False))
+    result = []
+    for label, runner, expected in cases:
+        violations, mode = git_scope(runner)
+        result.append(((not violations) == expected, f'SCOPE: {label} → {mode}: {violations}'))
+    return result
 
 
 def main():
@@ -1832,6 +2091,8 @@ def main():
 
     gv = git_checks()
     add(not gv, f'GIT: alcance de F34B; runtime, baseline, ADR-005, F33, F34 y documentos F34A sin cambios: {gv}')
+    checks.extend(scope_regressions())
+    checks.extend(post_policy_regressions())
     add(closure_scope(CLOSURE_SUBJECTS, {'CLAUDE.md'}, set()) == {'CLAUDE.md'},
         'cierre: admite únicamente el gobierno comprometido en C tras B/A')
     add(not closure_scope(CLOSURE_SUBJECTS, {'CLAUDE.md'}, {'CLAUDE.md'}),

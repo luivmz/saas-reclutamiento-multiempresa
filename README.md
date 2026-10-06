@@ -129,7 +129,29 @@ docs/                 Documentación técnica y del informe final
 
 Todos los datos son ficticios. No se afirma cumplimiento legal ni certificación.
 
-## Estado
+## Estado vigente F34E
+
+F34E CERRADA (05/10/2026), tras auditoría final PASS y adaptación explícita de alcance para cierre/handoff. Este bloque sustituye el estado vigente anterior; los registros hasta F34D se conservan como fotografías históricas, no como instrucciones actuales.
+
+- G0 real = NO APROBADA
+- G0-09 = CUMPLIDO
+- G0-14 = CUMPLIDO
+- G0-02 = PENDIENTE EXTERNO
+- G0-03 = PENDIENTE EXTERNO
+- G0-12 = PENDIENTE EXTERNO
+- ADR-005 = PROPUESTA
+- G0-SBX = APROBADA CON RESTRICCIONES
+- F35 productiva = BLOQUEADA
+- F35-SBX = HABILITADA
+- F36–F40 = BLOQUEADAS
+- Alcance C = BLOQUEADO
+- Datos reales = PROHIBIDOS
+
+SBX-01..SBX-18 CUMPLE. Aprobación interna del equipo REGISTRADA; no constituye aprobación jurídica, de privacidad ni validación institucional. F35-SBX exclusivamente sintético. F35-SBX AÚN NO INICIADA. RF-23 sigue humana; RF-29 sigue experimental/informativa. Sin scoring, recomendación ni selección automática; sin documentos, audio ni vídeo reales, sin integración productiva ni paso automático a producción. El baseline RF/CU/RNF permanece intacto.
+
+Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa11cd9185423e2866b0fc936`. El commit C y los merges se consultan en Git, sin hashes futuros/autorreferenciales. Publicación autorizada únicamente tras regresión y CI GREEN de develop/main. Sin tag ni release. Próximo trabajo autorizado aquí: handoff macOS, no iniciar F35-SBX.
+
+## Antecedentes de estado (hasta F34D)
 
 - **v1.0 académica (publicada):** Fases 0 a 12, RF-01 a RF-27; rama `main` y tag `v1.0.0-academic`. Veredicto de la Fase 12: **APTO PARA PUBLICACIÓN** (`docs/final-report/qa-final-report.md`).
 - **v1.1 académica (publicada):** el tag `v1.1.0-academic` conserva el cierre técnico `634f354`; F0–F26 están cerradas. F27–F34B están cerradas e integradas como documentación académica post-release, sin cambios productivos; F34 conserva exclusivamente datos sintéticos. El cierre F34C y el estado vigente de G0 se registran a continuación y en `docs/PROGRESS.md` y `docs/academico/ACADEMIC_BASELINE.md`. Los entregables de fases anteriores conservan su fotografía histórica; no se crean nuevos tags ni releases.
