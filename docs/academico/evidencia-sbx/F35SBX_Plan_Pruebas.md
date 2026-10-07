@@ -15,7 +15,7 @@
 | Momento | Resultado de `validate_f35sbx.py` |
 |---|---|
 | RED (07/10/2026, antes de crear documentos, contrato y fixtures) | 50 comprobaciones correctas, 94 fallas, código de salida 1. Fallaban documentos y artefactos ausentes, el gobierno con «AÚN NO INICIADA» y el alcance de `validate_f34b.py`, que aún no admitía `tools/f35sbx/` |
-| GREEN | 07/10/2026, tras crear documentos, contrato, fixtures, manifest y el registro de apertura en el gobierno: 144 comprobaciones correctas, 0 fallas. Tras DH-10 y DH-11: 233 correctas, 0 fallas. Tras M01, M02 y M03 de la auditoría independiente: 274 correctas, 0 fallas. Tras la segunda reauditoría (normalización Unicode, de guiones, de RF y del nombre en inglés del alcance bloqueado; manifest cerrado por tipos): 319 correctas, 0 fallas. Tras la tercera reauditoría (normalización posterior al Markdown, separadores entre RF y su predicado, JSON sin claves duplicadas, escapes Unicode decodificados): 379 correctas, 0 fallas. Tras la reauditoría final (predicado de un RF envuelto en paréntesis): 409 correctas, 0 fallas. Tras la corrección de envoltorios anidados (hasta 8 capas, fallo cerrado si no son verificables, RF coordinados y saltos de línea): 476 correctas, 0 fallas. Tras el contexto Markdown de la unión de líneas: 504 correctas, 0 fallas. Tras el escáner Markdown compartido (fences por carácter y longitud, bloques HTML, títulos setext, código indentado según CommonMark): 542 comprobaciones correctas, 0 fallas, código de salida 0 |
+| GREEN | 07/10/2026, tras crear documentos, contrato, fixtures, manifest y el registro de apertura en el gobierno: 144 comprobaciones correctas, 0 fallas. Tras DH-10 y DH-11: 233 correctas, 0 fallas. Tras M01, M02 y M03 de la auditoría independiente: 274 correctas, 0 fallas. Tras la segunda reauditoría (normalización Unicode, de guiones, de RF y del nombre en inglés del alcance bloqueado; manifest cerrado por tipos): 319 correctas, 0 fallas. Tras la tercera reauditoría (normalización posterior al Markdown, separadores entre RF y su predicado, JSON sin claves duplicadas, escapes Unicode decodificados): 379 correctas, 0 fallas. Tras la reauditoría final (predicado de un RF envuelto en paréntesis): 409 correctas, 0 fallas. Tras la corrección de envoltorios anidados (hasta 8 capas, fallo cerrado si no son verificables, RF coordinados y saltos de línea): 476 correctas, 0 fallas. Tras el contexto Markdown de la unión de líneas: 504 correctas, 0 fallas. Tras el escáner Markdown compartido (fences por carácter y longitud, bloques HTML, títulos setext, código indentado según CommonMark): 542 comprobaciones correctas, 0 fallas, código de salida 0. Tras los controles de transición de cierre (ciclo de vida INICIADA o CERRADA y ACADEMIC_BASELINE exacto): 657 comprobaciones correctas, 0 fallas, código de salida 0 |
 
 ## 3. Regresión (gate local, DH-08)
 
@@ -293,6 +293,28 @@ Cada caso debe ser detectado por la regla indicada; el validador comprueba que e
 | NS-280 | MAN | `note` con un fence |
 | NS-281 | MAN | `note` con un bloque HTML |
 | NS-282 | CLM | Frase dentro de un título setext |
+| NS-298 | GOV | Gobierno sin estado de ciclo de vida |
+| NS-299 | GOV | Estado de ciclo de vida desconocido (FINALIZADA) |
+| NS-300 | GOV | Estado de ciclo de vida desconocido (COMPLETADA) |
+| NS-301 | GOV | Cierre con un valor de G0 real distinto de NO APROBADA |
+| NS-302 | GOV | Cierre con un valor de F35 productiva distinto de BLOQUEADA |
+| NS-303 | GOV | Cierre con F35-SBX-B fuera de NO INICIADA |
+| NS-304 | GOV | Cierre con un valor de alcance C distinto de BLOQUEADO |
+| NS-305 | GOV | Cierre con un valor de datos reales distinto de PROHIBIDOS |
+| NS-306 | GOV | Cierre con auditoría independiente distinta de PASS |
+| NS-307 | GOV | Documentos de gobierno con estados distintos |
+| NS-308 | GOV | ACADEMIC_BASELINE sin el registro de cierre |
+| NS-309 | GOV | Cierre sin regresión GREEN registrada en el plan |
+| NS-310 | GIT | ACADEMIC_BASELINE con la frase de RF-23 alterada |
+| NS-311 | GIT | ACADEMIC_BASELINE con una frase añadida sobre RF-21 |
+| NS-312 | GIT | ACADEMIC_BASELINE con una frase añadida sobre otro RF |
+| NS-313 | GIT | ACADEMIC_BASELINE con texto arbitrario |
+| NS-314 | GIT | ACADEMIC_BASELINE con la apertura en lugar del cierre |
+| NS-315 | GIT | CLAUDE.md con una línea añadida al cierre |
+| NS-316 | GIT | Archivo de gobierno no autorizado (README.md) |
+| NS-317 | GIT | Git con error durante el cierre |
+| NS-318 | GIT | Base sin relación de ancestro con HEAD |
+| NS-319 | STA | README con un estado de F35-SBX-A desconocido |
 | NS-245 | JOIN | Fence de backticks: join_rf_breaks no une |
 | NS-246 | JOIN | Fence de virgulillas: join_rf_breaks no une |
 | NS-247 | JOIN | Fence con etiqueta de lenguaje: join_rf_breaks no une |

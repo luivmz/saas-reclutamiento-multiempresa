@@ -1,9 +1,11 @@
 """F35-SBX-A — excepciones de alcance para los validadores históricos F30, F33 y F34.
 
 Base inmutable: b67f644 (main tras F34E y el handoff macOS). La excepción vale solo en la rama F35-SBX y mientras
-esa base sea ancestro de HEAD, así que sigue vigente tras los commits técnicos A y B hasta que C registre el gobierno.
+esa base sea ancestro de HEAD: sigue vigente tras los commits A y B, el cierre C y los commits posteriores.
 Todo se compara contra la base, nunca contra HEAD:
-  - CLAUDE.md y docs/PROGRESS.md: exactamente la apertura de F35-SBX-A (DH-09) y los 13 estados sin cambios;
+  - gobierno: exactamente uno de los dos estados de ciclo de vida autorizados de F35-SBX-A, con los 13 estados
+    sin cambios: INICIADA (apertura, DH-09: CLAUDE.md y docs/PROGRESS.md) o CERRADA (cierre, commit C: CLAUDE.md,
+    docs/PROGRESS.md y docs/academico/ACADEMIC_BASELINE.md, según la convención de cierres F33–F34E);
   - validate_f30.py, validate_f33.py y validate_f34.py: exactamente la adaptación autorizada (import de este módulo,
     governance_ok(), sus regresiones y el ajuste mínimo del alcance Git); cualquier otro cambio funcional falla.
 Rama distinta, base no ancestro, error de Git, base ilegible, binario, CR o contenido distinto: falla cerrado.
@@ -13,7 +15,7 @@ import subprocess
 
 F35SBX_BRANCH = 'feature/f35-sbx-synthetic-evidence-pipeline'
 F35SBX_BASE = 'b67f6443fb2bb71e736a60a645a15bd1fa0e7de6'
-GOVERNANCE = frozenset({'CLAUDE.md', 'docs/PROGRESS.md'})
+GOVERNANCE = frozenset({'CLAUDE.md', 'docs/PROGRESS.md', 'docs/academico/ACADEMIC_BASELINE.md'})
 HISTORICAL_VALIDATORS = frozenset({'docs/academico/tools/f30/validate_f30.py', 'docs/academico/tools/f33/validate_f33.py',
                                    'docs/academico/tools/f34/validate_f34.py'})
 STARTED = ('F35-SBX-A INICIADA — diseño, contratos, fixtures sintéticos y validación académica. '
@@ -30,6 +32,22 @@ OPENING = {
     'CLAUDE.md': [('F35-SBX AÚN NO INICIADA.', STARTED), _NEXT],
     'docs/PROGRESS.md': [_HEADER, ('F35-SBX AÚN NO INICIADA.', STARTED), _NEXT],
 }
+CLOSED = ('F35-SBX-A CERRADA — diseño, contratos, fixtures sintéticos y validador completados, tras auditoría '
+          'independiente PASS. Sin runtime productivo ni capacidades de alcance C. F35-SBX-B NO INICIADA.')
+_NEXT_CLOSED = (_NEXT[0], 'El handoff macOS está publicado; F35-SBX-A queda cerrada documentalmente en '
+                '`feature/f35-sbx-synthetic-evidence-pipeline`, con publicación pendiente de regresión post-commits y '
+                'CI. F35-SBX-B NO INICIADA; requiere autorización nueva.')
+_HEADER_CLOSED = (_HEADER[0], 'Última actualización: 2026-10-07 (F34E CERRADA; G0 real NO APROBADA; G0-SBX APROBADA '
+                  'CON RESTRICCIONES; F35-SBX sintética HABILITADA; F35-SBX-A CERRADA; F35-SBX-B NO INICIADA; '
+                  'publicación pendiente de regresión post-commits y CI).')
+# Cierre (commit C): únicos reemplazos admitidos sobre la base; ACADEMIC_BASELINE solo registra el cierre.
+CLOSING = {
+    'CLAUDE.md': [('F35-SBX AÚN NO INICIADA.', CLOSED), _NEXT_CLOSED],
+    'docs/PROGRESS.md': [_HEADER_CLOSED, ('F35-SBX AÚN NO INICIADA.', CLOSED), _NEXT_CLOSED],
+    'docs/academico/ACADEMIC_BASELINE.md': [('F35-SBX AÚN NO INICIADA.', CLOSED), _NEXT_CLOSED],
+}
+# Ciclo de vida: los dos únicos estados autorizados, nunca ambos ni otro.
+LIFECYCLE = {'INICIADA': (OPENING, STARTED), 'CERRADA': (CLOSING, CLOSED)}
 STATES = ['- G0 real = NO APROBADA', '- G0-09 = CUMPLIDO', '- G0-14 = CUMPLIDO', '- G0-02 = PENDIENTE EXTERNO',
           '- G0-03 = PENDIENTE EXTERNO', '- G0-12 = PENDIENTE EXTERNO', '- ADR-005 = PROPUESTA',
           '- G0-SBX = APROBADA CON RESTRICCIONES', '- F35 productiva = BLOQUEADA', '- F35-SBX = HABILITADA',
@@ -82,9 +100,16 @@ def apply(base_text, patches):
     return text
 
 
-def expected(path, base_text):
-    """Contenido de la base con la apertura de F35-SBX-A aplicada; None si la base no la admite."""
-    return apply(base_text, OPENING[path]) if path in OPENING else None
+def expected(path, base_text, state='INICIADA'):
+    """Contenido de la base con el estado de ciclo de vida aplicado; None si no está autorizado para esa ruta."""
+    patches = LIFECYCLE[state][0]
+    return apply(base_text, patches[path]) if path in patches else None
+
+
+def lifecycle(path, text, base_text):
+    """'INICIADA' o 'CERRADA' si el texto es exactamente ese estado autorizado sobre la base; None en otro caso."""
+    found = [st for st in LIFECYCLE if expected(path, base_text, st) == text]
+    return found[0] if len(found) == 1 else None
 
 
 def expected_validator(path, base_text):
@@ -92,17 +117,16 @@ def expected_validator(path, base_text):
     return apply(base_text, VALIDATOR_PATCHES[path]) if path in VALIDATOR_PATCHES else None
 
 
-def opening_problems(path, text, base_text):
+def governance_problems(path, text, base_text):
+    """El gobierno debe ser exactamente la apertura o el cierre autorizados, con su frase canónica y sin la otra."""
     if path not in GOVERNANCE:
         return [f'{path}: no es gobierno F35-SBX-A']
     out = []
-    exp = expected(path, base_text)
-    if exp is None:
-        out.append(f'{path}: la base no admite la apertura de F35-SBX-A')
-    elif text != exp:
-        out.append(f'{path}: cambios distintos de la apertura de F35-SBX-A')
-    if STARTED not in text:
-        out.append(f'{path}: falta el registro de apertura de F35-SBX-A')
+    state = lifecycle(path, text, base_text)
+    if state is None:
+        out.append(f'{path}: contenido distinto de la apertura o del cierre autorizados de F35-SBX-A')
+    elif (STARTED in text) == (CLOSED in text):
+        out.append(f'{path}: estado de F35-SBX-A ambiguo (INICIADA y CERRADA o ninguno)')
     for line in STATES:
         if ('\n' + line + '\n') not in text:
             out.append(f'{path}: estado ausente o alterado: {line}')
@@ -143,12 +167,12 @@ def _load(path, root, runner, reader):
 
 
 def governance_ok(path, root, runner=git, reader=read):
-    """True solo para CLAUDE.md o docs/PROGRESS.md con exactamente la apertura de F35-SBX-A (falla cerrado)."""
+    """True solo para el gobierno F35-SBX-A con exactamente la apertura o el cierre autorizados (falla cerrado)."""
     path = path.strip().strip('"').replace('\\', '/')
     if path not in GOVERNANCE:
         return False
     loaded = _load(path, root, runner, reader)
-    return loaded is not None and not opening_problems(path, *loaded)
+    return loaded is not None and not governance_problems(path, *loaded)
 
 
 def validator_ok(path, root, runner=git, reader=read):
@@ -185,33 +209,47 @@ def regressions(root):
     text = lambda t: (lambda r, p: None if t is None else t.encode('utf-8'))
     out = []
     for path in sorted(GOVERNANCE):
-        good = expected(path, bases[path])
-        out.append((good is not None and STARTED in good and governance_ok(path, root, at_base, text(good)),
-                    f'F35-SBX: A, HEAD = base con la apertura exacta aceptada en {path}'))
-        out.append((governance_ok(path, root, advanced, text(good)),
-                    f'F35-SBX: B/C, HEAD posterior con la base como ancestro y gobierno sin commit aceptado en {path}'))
-        bad = {
-            'modificación arbitraria': good + '\nLínea añadida sin relación con la apertura.\n',
-            'G0 real = APROBADA': good.replace('- G0 real = NO APROBADA', '- G0 real = APROBADA', 1),
-            'F35 productiva = HABILITADA': good.replace('- F35 productiva = BLOQUEADA', '- F35 productiva = HABILITADA', 1),
-            'F36 iniciada': good.replace(STARTED, STARTED + ' F36 INICIADA.', 1),
-            'alcance C habilitado': good.replace('- Alcance C = BLOQUEADO', '- Alcance C = HABILITADO', 1),
-            'RF-21 modificada': good.replace(STARTED, STARTED + ' RF-21 se reemplaza por un orden nuevo.', 1),
-            'RF-23 modificada': good.replace('RF-23 sigue humana', 'RF-23 pasa a ser automática', 1),
-            'datos reales permitidos': good.replace('- Datos reales = PROHIBIDOS', '- Datos reales = PERMITIDOS', 1),
-            'sin registro de apertura': bases[path],
-        }
-        for label, t in bad.items():
-            out.append((t != good and not governance_ok(path, root, at_base, text(t)),
-                        f'F35-SBX: {label} rechazada en {path}'))
-        out.append((not governance_ok(path, root, advanced, text(bad['G0 real = APROBADA'])),
-                    f'F35-SBX: HEAD posterior con gobierno incorrecto rechazado en {path}'))
-        for label, data in (('binario', good.encode('utf-8') + b'\x00'), ('CR', good.replace('\n', '\r\n').encode('utf-8')),
-                            ('no UTF-8', b'\xff\xfe'), ('ilegible', None)):
-            out.append((not governance_ok(path, root, at_base, lambda r, p, d=data: d), f'F35-SBX: {path} {label} rechazado'))
-        for label, run in (('otra rama', runner(branch='main')), ('base no ancestro', runner(ancestor=1)),
-                           ('error de git merge-base', runner(ancestor=128)), ('Git no disponible', lambda r, *a: (None, ''))):
-            out.append((not governance_ok(path, root, run, text(good)), f'F35-SBX: {label} rechazado en {path}'))
+        for state, (_, marker) in LIFECYCLE.items():
+            good = expected(path, bases[path], state)
+            if good is None:                                       # p. ej. ACADEMIC_BASELINE en la apertura
+                opening = expected(path, bases[path], 'INICIADA')
+                out.append((opening is None and not governance_ok(path, root, at_base, text(bases[path])),
+                            f'F35-SBX: {path} no admite el estado {state}'))
+                continue
+            out.append((marker in good and governance_ok(path, root, at_base, text(good)),
+                        f'F35-SBX: {state} exacta aceptada en {path} (HEAD = base)'))
+            out.append((governance_ok(path, root, advanced, text(good)),
+                        f'F35-SBX: {state} exacta aceptada en {path} con HEAD posterior (base ancestro)'))
+            other = CLOSED if state == 'INICIADA' else STARTED
+            bad = {
+                'modificación arbitraria': good + '\nLínea añadida sin relación con el ciclo de vida.\n',
+                'G0 real = APROBADA': good.replace('- G0 real = NO APROBADA', '- G0 real = APROBADA', 1),
+                'F35 productiva = HABILITADA': good.replace('- F35 productiva = BLOQUEADA', '- F35 productiva = HABILITADA', 1),
+                'F36 iniciada': good.replace(marker, marker + ' F36 INICIADA.', 1),
+                'alcance C habilitado': good.replace('- Alcance C = BLOQUEADO', '- Alcance C = HABILITADO', 1),
+                'RF-21 modificada': good.replace(marker, marker + ' RF-21 se reemplaza por un orden nuevo.', 1),
+                'RF-23 modificada': good.replace('RF-23 sigue humana', 'RF-23 pasa a ser automática', 1),
+                'otro RF modificado': good.replace(marker, marker + ' RF-05 se elimina del baseline.', 1),
+                'datos reales permitidos': good.replace('- Datos reales = PROHIBIDOS', '- Datos reales = PERMITIDOS', 1),
+                'INICIADA y CERRADA a la vez': good.replace(marker, marker + ' ' + other, 1),
+                'estado desconocido FINALIZADA': good.replace(marker, marker.replace(state, 'FINALIZADA'), 1),
+                'F35-SBX-B INICIADA': good.replace(marker, marker + ' F35-SBX-B INICIADA.', 1),
+                'auditoría FAIL': good.replace(marker, marker + ' Auditoría independiente FAIL.', 1),
+                'sin registro de ciclo de vida': bases[path],
+            }
+            for label, t in bad.items():
+                out.append((t != good and not governance_ok(path, root, at_base, text(t)),
+                            f'F35-SBX: {state} con {label} rechazado en {path}'))
+            out.append((not governance_ok(path, root, advanced, text(bad['G0 real = APROBADA'])),
+                        f'F35-SBX: HEAD posterior con gobierno {state} incorrecto rechazado en {path}'))
+            for label, data in (('binario', good.encode('utf-8') + b'\x00'),
+                                ('CR', good.replace('\n', '\r\n').encode('utf-8')), ('no UTF-8', b'\xff\xfe'),
+                                ('ilegible', None)):
+                out.append((not governance_ok(path, root, at_base, lambda r, p, d=data: d),
+                            f'F35-SBX: {path} {state} {label} rechazado'))
+            for label, run in (('otra rama', runner(branch='main')), ('base no ancestro', runner(ancestor=1)),
+                               ('error de git merge-base', runner(ancestor=128)), ('Git no disponible', lambda r, *a: (None, ''))):
+                out.append((not governance_ok(path, root, run, text(good)), f'F35-SBX: {state} con {label} rechazado en {path}'))
     for path in sorted(HISTORICAL_VALIDATORS):
         good = expected_validator(path, bases[path])
         out.append((good is not None and validator_ok(path, root, at_base, text(good))

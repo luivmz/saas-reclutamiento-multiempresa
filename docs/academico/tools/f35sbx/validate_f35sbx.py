@@ -26,7 +26,9 @@ que esos artefactos declaran. Reutiliza los analizadores de proposiciones y de e
   REV   SyntheticHumanReview limitada a integridad y procedencia: review_scope = integridad_y_procedencia (DH-05).
   STO   sin persistencia ni integración productiva; sin lectura de g0-evidence/adjuntos.
   MAN   manifest: archivos exactos, SHA-256, conteos y referencias F34.
-  GOV   gobierno: F35-SBX-A INICIADA (no cerrada) y estados G0 sin cambios.
+  GOV   gobierno: ciclo de vida de F35-SBX-A, exactamente INICIADA o CERRADA (coherente en los tres documentos;
+        CERRADA exige auditoría independiente PASS, regresión GREEN registrada y F35-SBX-B NO INICIADA) y estados
+        G0 sin cambios.
   GATE  G0 real NO APROBADA y G0-SBX vigente; si la puerta cae, el trabajo SBX se detiene.
   DEP   solo biblioteca estándar autorizada en tools/f35sbx (sin sqlite3 en F35-SBX-A, DH-07).
   GIT   solo evidencia-sbx/** (md/json), tools/f35sbx/** (py), la adaptación DH-02 y el gobierno; falla cerrado.
@@ -61,10 +63,16 @@ ORGS = ['ORG-S1', 'ORG-S2', 'ORG-S3']
 FIXTURES = {o: f'fixtures/{o}_evidencias.json' for o in ORGS}
 MANIFEST = 'fixtures/manifest.json'
 ARTIFACTS = [CONTRACT, MANIFEST, *FIXTURES.values()]
-GOVERNANCE = ['CLAUDE.md', 'docs/PROGRESS.md']
+GOVERNANCE = ['CLAUDE.md', 'docs/PROGRESS.md', 'docs/academico/ACADEMIC_BASELINE.md']
+BASELINE_DOC = 'docs/academico/ACADEMIC_BASELINE.md'          # solo registra el cierre (convención F33–F34E)
 STARTED = ('F35-SBX-A INICIADA — diseño, contratos, fixtures sintéticos y validación académica. '
            'Sin runtime productivo ni capacidades de alcance C.')
 NOT_STARTED = 'AÚN NO INICIADA'
+CLOSED = ('F35-SBX-A CERRADA — diseño, contratos, fixtures sintéticos y validador completados, tras auditoría '
+          'independiente PASS. Sin runtime productivo ni capacidades de alcance C. F35-SBX-B NO INICIADA.')
+LIFECYCLE_PHRASES = {'INICIADA': STARTED, 'CERRADA': CLOSED}
+PHASE_STATE_RX = re.compile(r'F35-SBX-A\s+([A-ZÁÉÍÓÚÑ]{4,})\b')          # cualquier estado en mayúsculas
+SBXB_STATE_RX = re.compile(r'F35-SBX-B\s+(?!NO\s+INICIADA)([A-ZÁÉÍÓÚÑ]{2,})\b')
 GOV_FIXED = {'G0 real': 'NO APROBADA', 'G0-09': 'CUMPLIDO', 'G0-14': 'CUMPLIDO', 'G0-02': 'PENDIENTE EXTERNO',
              'G0-03': 'PENDIENTE EXTERNO', 'G0-12': 'PENDIENTE EXTERNO', 'ADR-005': 'PROPUESTA',
              'F35 productiva': 'BLOQUEADA', 'F36–F40': 'BLOQUEADAS', 'Alcance C': 'BLOQUEADO',
@@ -417,7 +425,9 @@ def f35_path_ok(p):
     return False
 
 
-F35_EXACT = {'docs/academico/tools/f34b/validate_f34b.py', 'docs/academico/tools/f34e/validate_f34e.py', *GOVERNANCE}
+F35_EXACT = {'docs/academico/tools/f34b/validate_f34b.py', 'docs/academico/tools/f34e/validate_f34e.py'}
+# El gobierno (CLAUDE.md, PROGRESS.md, ACADEMIC_BASELINE.md) no es una ruta libre: su contenido debe ser exactamente
+# la apertura o el cierre autorizados sobre la base (f35sbx_scope.lifecycle).
 # Validadores históricos adaptados en F35-SBX-A: rutas exactas; su contenido se compara con la base (f35sbx_scope).
 F35_HISTORICAL = frozenset({'docs/academico/tools/f30/validate_f30.py', 'docs/academico/tools/f33/validate_f33.py',
                             'docs/academico/tools/f34/validate_f34.py'})
@@ -425,7 +435,8 @@ F35_HISTORICAL = frozenset({'docs/academico/tools/f30/validate_f30.py', 'docs/ac
 
 def git_state(runner=git_rc, scope=None):
     """Estado Git real. Cualquier código inesperado, Git ausente o base no ancestral: error (falla cerrado)."""
-    empty = {'changed': set(), 'deleted': set(), 'contents': {}, 'historical': {}, 'v34b': ([], 'unknown')}
+    empty = {'changed': set(), 'deleted': set(), 'contents': {}, 'historical': {}, 'governance': {},
+             'v34b': ([], 'unknown')}
     try:
         if runner('rev-parse', '--is-inside-work-tree') != (0, 'true'):
             raise GitError('repositorio inválido o Git no disponible')
@@ -445,11 +456,15 @@ def git_state(runner=git_rc, scope=None):
         for p in sorted(changed & F35_HISTORICAL):
             rc, base = SCOPE.git(ROOT, 'show', f'{BASE}:{p}')   # sin recortar: el contenido se compara exacto
             historical[p] = {'text': read_text(os.path.join(ROOT, p)), 'base': base if rc == 0 and base else None}
+        governance = {}
+        for p in sorted(changed & set(GOVERNANCE)):
+            rc, base = SCOPE.git(ROOT, 'show', f'{BASE}:{p}')
+            governance[p] = {'text': read_text(os.path.join(ROOT, p)), 'base': base if rc == 0 and base else None}
         if scope is None:
             V34B = load_module('f35sbx_f34b_scope', os.path.join(ACAD, 'tools', 'f34b', 'validate_f34b.py'))
             scope = V34B.git_scope()
         return {'error': None, 'changed': changed, 'deleted': lines(deleted), 'contents': contents,
-                'historical': historical, 'v34b': scope}
+                'historical': historical, 'governance': governance, 'v34b': scope}
     except (GitError, OSError) as e:
         return dict(empty, error=str(e))
 
@@ -679,11 +694,16 @@ def r_sta(D, P):
             if v != exp.get(k):
                 out.append(f'{n}: «{k} = {v}» incoherente con el estado vigente ({exp.get(k)})')
     plain = unmark(readme)
-    for need in ('ADR-005 = PROPUESTA', 'Datos reales = PROHIBIDOS', 'F35-SBX-A INICIADA'):
+    for need in ('ADR-005 = PROPUESTA', 'Datos reales = PROHIBIDOS'):
         if need not in plain:
             out.append(f'README: falta «{need}»')
-    if re.search(r'F35-SBX-A\s+CERRADA|F35-SBX-B\s+INICIADA', plain, re.I):
-        out.append('README: F35-SBX-A no puede figurar cerrada ni F35-SBX-B iniciada')
+    words = set(PHASE_STATE_RX.findall(plain))
+    if len(words) != 1 or not words <= set(LIFECYCLE_PHRASES):
+        out.append(f'README: estado de F35-SBX-A ausente, contradictorio o desconocido {sorted(words)}')
+    elif words == {'CERRADA'} and gov_lifecycle(D)[0] != 'CERRADA':
+        out.append('README: F35-SBX-A figura cerrada sin cierre registrado en el gobierno')
+    if SBXB_STATE_RX.search(plain):
+        out.append('README: F35-SBX-B no puede figurar iniciada')
     return out
 
 
@@ -1493,27 +1513,62 @@ def meta_problems(text):
     return sorted(set(out))
 
 
+def gov_section(t):
+    sections = re.findall(r'^## Estado vigente F34E\s*\n(.*?)(?=^## |\Z)', t or '', re.M | re.S)
+    return sections[0] if len(sections) == 1 else None
+
+
+def gov_lifecycle(D):
+    """(estado, problemas) del ciclo de vida de F35-SBX-A según CLAUDE.md y docs/PROGRESS.md: INICIADA o CERRADA."""
+    states, out = [], []
+    for path in GOVERNANCE[:2]:
+        sec = gov_section(D['gov'].get(path))
+        if sec is None:
+            out.append(f'{path}: se exige una sección única «Estado vigente F34E»')
+            continue
+        found = [st for st, phrase in LIFECYCLE_PHRASES.items() if phrase in sec]
+        words = set(PHASE_STATE_RX.findall(sec))
+        if len(found) != 1 or not words <= set(LIFECYCLE_PHRASES) or len(words) != 1:
+            out.append(f'{path}: estado de F35-SBX-A ausente, contradictorio o desconocido {sorted(words)}')
+        else:
+            states.append(found[0])
+    if len(set(states)) > 1:
+        out.append(f'CLAUDE.md y docs/PROGRESS.md con estados distintos de F35-SBX-A: {states}')
+    state = states[0] if len(states) == 2 and len(set(states)) == 1 else None
+    return state, out
+
+
 def r_gov(D, P):
     out = []
     g, f = gate_states(D)
     exp = dict(GOV_FIXED, **{'G0-SBX': g, 'F35-SBX': f})
+    state, out = gov_lifecycle(D)
     for path in GOVERNANCE:
         t = D['gov'].get(path)
         if t is None:
             out.append(f'{path}: ilegible (falla cerrado)')
             continue
-        sections = re.findall(r'^## Estado vigente F34E\s*\n(.*?)(?=^## |\Z)', t, re.M | re.S)
-        if len(sections) != 1:
+        sec = gov_section(t)
+        if sec is None:
             out.append(f'{path}: se exige una sección única «Estado vigente F34E»')
             continue
-        sec = sections[0]
-        if STARTED not in sec:
-            out.append(f'{path}: falta el registro de inicio de F35-SBX-A')
         head = t.split('\n## ', 1)[0]
-        if NOT_STARTED in sec or NOT_STARTED in head:
+        if path == BASELINE_DOC:
+            # ACADEMIC_BASELINE no registra la apertura (sigue en el texto de la base) y sí el cierre.
+            words = set(PHASE_STATE_RX.findall(sec))
+            if state == 'CERRADA' and (CLOSED not in sec or words != {'CERRADA'}):
+                out.append(f'{path}: el cierre de F35-SBX-A debe registrarse también aquí, y solo el cierre')
+            if state == 'INICIADA' and (words or NOT_STARTED not in sec):
+                out.append(f'{path}: antes del cierre conserva el texto de la base')
+        elif NOT_STARTED in sec or NOT_STARTED in head:
             out.append(f'{path}: el estado vigente sigue diciendo «{NOT_STARTED}»')
-        if re.search(r'F35-SBX-A\s+CERRADA|F35-SBX-B\s+INICIADA', sec + head, re.I):
-            out.append(f'{path}: F35-SBX-A no se marca cerrada ni F35-SBX-B iniciada en esta fase')
+        if SBXB_STATE_RX.search(sec + head):
+            out.append(f'{path}: F35-SBX-B no puede figurar iniciada')
+        if state == 'CERRADA':
+            if 'F35-SBX-B NO INICIADA' not in sec or 'Sin runtime productivo' not in sec:
+                out.append(f'{path}: el cierre exige F35-SBX-B NO INICIADA y sin runtime productivo')
+            if 'auditoría independiente PASS' not in sec or re.search(r'auditor[ií]a[^.;]*\bFAIL\b', sec, re.I):
+                out.append(f'{path}: el cierre exige auditoría independiente PASS')
         declared = {}
         for ln in sec.splitlines():
             plain = V34E.strip_md(ln).strip().removeprefix('- ').strip()
@@ -1523,6 +1578,13 @@ def r_gov(D, P):
         for k, v in exp.items():
             if declared.get(V34E.norm_key(k)) != [v]:
                 out.append(f'{path}: «{k}» debe declararse una vez como {v}')
+    if state == 'CERRADA':
+        # Regresión final GREEN registrada en el plan de pruebas (fila GREEN con 0 fallas, sin «pendiente»).
+        plan = D['docs'].get('F35SBX_Plan_Pruebas.md') or ''
+        green = [ln for ln in plan.splitlines() if ln.startswith('| GREEN |')]
+        if (len(green) != 1 or re.search(r'\bpendiente\b', green[0], re.I)
+                or not green[0].rstrip(' |').endswith('0 fallas, código de salida 0')):
+            out.append('cierre sin regresión final GREEN registrada en el plan de pruebas')
     return out
 
 
@@ -1601,6 +1663,12 @@ def r_git(D, P):
     for p in sorted(g['changed']):
         if p in F35_EXACT:
             continue
+        if p in GOVERNANCE:
+            h = g.get('governance', {}).get(p) or {}
+            state = SCOPE.lifecycle(p, h['text'], h['base']) if h.get('text') and h.get('base') else None
+            if state is None:
+                out.append(f'{p}: gobierno distinto de la apertura o del cierre autorizados de F35-SBX-A (falla cerrado)')
+            continue
         if p in F35_HISTORICAL:
             h = g['historical'].get(p) or {}
             if not h.get('text') or not h.get('base'):
@@ -1612,6 +1680,14 @@ def r_git(D, P):
             out += content_problems(p, g['contents'].get(p))
             continue
         out.append(f'cambio fuera del alcance de F35-SBX-A: {p}')
+    states = {SCOPE.lifecycle(p, h['text'], h['base']) for p, h in (g.get('governance') or {}).items()
+              if p in g['changed'] and h.get('text') and h.get('base')}
+    if len(states - {None}) > 1:
+        out.append(f'gobierno con estados de ciclo de vida distintos entre documentos: {sorted(states - {None})}')
+    if 'CERRADA' in states and not all(p in g['changed'] for p in GOVERNANCE):
+        out.append('cierre de F35-SBX-A sin registrar en los tres documentos de gobierno')
+    if 'INICIADA' in states and BASELINE_DOC in g['changed']:
+        out.append(f'{BASELINE_DOC}: solo puede cambiar para registrar el cierre')
     v, mode = g['v34b']
     if v or mode != 'post':
         out.append(f'validate_f34b.git_scope debe ser post sin violaciones: {mode} {v[:2]}')
@@ -1705,6 +1781,36 @@ def git_with(changed=(), contents=None, deleted=(), error=None, v34b=None):
         if v34b is not None:
             g['v34b'] = v34b
     return mutate(fn)
+
+
+def gov_phase(fn, path='CLAUDE.md'):
+    """Reemplaza la frase canónica del estado vigente (INICIADA o CERRADA) del documento de gobierno."""
+    def apply(D):
+        t = D['gov'][path] or ''
+        phrase = next(ph for ph in (CLOSED, STARTED) if ph in t)
+        D['gov'][path] = t.replace(phrase, fn(phrase), 1)
+    return mutate(apply)
+
+
+def gov_all(a, b):
+    """Mismo cambio en los tres documentos de gobierno."""
+    def apply(D):
+        for p in GOVERNANCE:
+            assert a in (D['gov'][p] or ''), (p, a)
+            D['gov'][p] = D['gov'][p].replace(a, b, 1)
+    return mutate(apply)
+
+
+def gov_git(path, fn):
+    """Contenido de gobierno distinto en el estado Git (el delta exacto se compara con la base)."""
+    def apply(D):
+        h = dict((D['git'].get('governance') or {}).get(path) or {})
+        if not h.get('base'):
+            h['base'] = SCOPE.git(ROOT, 'show', f'{BASE}:{path}')[1]
+        h['text'] = fn(h.get('text') or h['base'])
+        D['git']['governance'] = dict(D['git'].get('governance') or {}, **{path: h})
+        D['git']['changed'] = set(D['git']['changed']) | {path}
+    return mutate(apply)
 
 
 def gov_sub(a, b, path='CLAUDE.md'):
@@ -1850,8 +1956,8 @@ CASES = [
     ('NS-78', 'STA', 'Alias desconocido de un estado crítico', doc_add('- G0 productiva = NO APROBADA', 'README.md')),
     ('NS-79', 'STA', 'F35-SBX BLOQUEADA en el README con la puerta vigente',
      doc_sub('README.md', '**F35-SBX = HABILITADA**', '**F35-SBX = BLOQUEADA**')),
-    ('NS-80', 'GOV', 'Gobierno sigue «AÚN NO INICIADA»', gov_sub(STARTED, 'F35-SBX AÚN NO INICIADA.')),
-    ('NS-81', 'GOV', 'Gobierno marca F35-SBX-A cerrada', gov_sub(STARTED, STARTED + ' F35-SBX-A CERRADA.', 'docs/PROGRESS.md')),
+    ('NS-80', 'GOV', 'Gobierno sigue «AÚN NO INICIADA»', gov_phase(lambda ph: 'F35-SBX AÚN NO INICIADA.')),
+    ('NS-81', 'GOV', 'INICIADA y CERRADA a la vez', gov_phase(lambda ph: STARTED + ' ' + CLOSED, 'docs/PROGRESS.md')),
     ('NS-82', 'GATE', 'Decisión G0 real alterada', mutate(lambda D: D['gate'].__setitem__('g0_real', '- **G0 = APROBADA.**'))),
     # ---- contrato, manifest y documentos
     ('NS-83', 'CON', 'additionalProperties=true en el registro',
@@ -2102,6 +2208,31 @@ CASES += [
     ('NS-280', 'MAN', 'note con un fence', man_set('note', lambda v: v + '\n```\nSe recomienda al mejor candidato\n```')),
     ('NS-281', 'MAN', 'note con un bloque HTML', man_set('note', lambda v: v + '\n<div>\nx\n</div>')),
     ('NS-282', 'CLM', 'Afirmación dentro de un título setext', doc_add('Se habilita scoring de candidatos\n===')),
+    # ---- controles de transición: ciclo de vida INICIADA/CERRADA y ACADEMIC_BASELINE
+    ('NS-298', 'GOV', 'Ningún estado de ciclo de vida', gov_phase(lambda ph: '')),
+    ('NS-299', 'GOV', 'Estado desconocido FINALIZADA', gov_phase(lambda ph: ph.replace('CERRADA', 'FINALIZADA').replace('INICIADA', 'FINALIZADA', 1))),
+    ('NS-300', 'GOV', 'Estado desconocido COMPLETADA', gov_phase(lambda ph: ph.replace('CERRADA', 'COMPLETADA').replace('INICIADA', 'COMPLETADA', 1))),
+    ('NS-301', 'GOV', 'CERRADA con G0 real APROBADA', gov_all('- G0 real = NO APROBADA', '- G0 real = APROBADA')),
+    ('NS-302', 'GOV', 'CERRADA con F35 productiva HABILITADA', gov_all('- F35 productiva = BLOQUEADA', '- F35 productiva = HABILITADA')),
+    ('NS-303', 'GOV', 'CERRADA con F35-SBX-B INICIADA', gov_all('F35-SBX-B NO INICIADA.', 'F35-SBX-B INICIADA.')),
+    ('NS-304', 'GOV', 'CERRADA con alcance C HABILITADO', gov_all('- Alcance C = BLOQUEADO', '- Alcance C = HABILITADO')),
+    ('NS-305', 'GOV', 'CERRADA con datos reales permitidos', gov_all('- Datos reales = PROHIBIDOS', '- Datos reales = PERMITIDOS')),
+    ('NS-306', 'GOV', 'CERRADA con auditoría FAIL', gov_all('auditoría independiente PASS', 'auditoría independiente FAIL')),
+    ('NS-307', 'GOV', 'CLAUDE.md CERRADA y PROGRESS.md INICIADA', gov_phase(lambda ph: STARTED, 'docs/PROGRESS.md')),
+    ('NS-308', 'GOV', 'ACADEMIC_BASELINE sin el registro de cierre', gov_phase(lambda ph: 'F35-SBX AÚN NO INICIADA.', BASELINE_DOC)),
+    ('NS-309', 'GOV', 'Cierre sin regresión GREEN registrada', mutate(lambda D: D['docs'].__setitem__(
+        'F35SBX_Plan_Pruebas.md', re.sub(r'^\| GREEN \|.*$', '| GREEN | pendiente |', D['docs']['F35SBX_Plan_Pruebas.md'], flags=re.M)))),
+    ('NS-310', 'GIT', 'ACADEMIC_BASELINE con RF-23 alterado', gov_git(BASELINE_DOC, lambda t: t.replace('RF-23 sigue humana', 'RF-23 pasa a ser automática', 1))),
+    ('NS-311', 'GIT', 'ACADEMIC_BASELINE con RF-21 alterado', gov_git(BASELINE_DOC, lambda t: t.replace(CLOSED, CLOSED + ' RF-21 se reemplaza.', 1))),
+    ('NS-312', 'GIT', 'ACADEMIC_BASELINE con otro RF alterado', gov_git(BASELINE_DOC, lambda t: t.replace(CLOSED, CLOSED + ' RF-05 se elimina.', 1))),
+    ('NS-313', 'GIT', 'ACADEMIC_BASELINE con texto arbitrario', gov_git(BASELINE_DOC, lambda t: t + '\nTexto añadido sin relación con el cierre.\n')),
+    ('NS-314', 'GIT', 'ACADEMIC_BASELINE con la apertura en lugar del cierre',
+     gov_git(BASELINE_DOC, lambda t: t.replace(CLOSED, STARTED, 1))),
+    ('NS-315', 'GIT', 'CLAUDE.md con una línea añadida al cierre', gov_git('CLAUDE.md', lambda t: t + '\nLínea añadida.\n')),
+    ('NS-316', 'GIT', 'Archivo de gobierno no autorizado (README.md)', git_with(changed={'README.md'})),
+    ('NS-317', 'GIT', 'Error Git en el cierre', git_with(error='git no disponible')),
+    ('NS-318', 'GIT', 'Base no ancestro de HEAD', git_with(error='la base no es ancestro de HEAD')),
+    ('NS-319', 'STA', 'README con F35-SBX-A en estado desconocido', doc_sub('README.md', 'F35-SBX-A INICIADA', 'F35-SBX-A FINALIZADA')),
 ]
 
 # Contexto Markdown de join_rf_breaks: (id, descripción, texto, se une). Se comprueba la transformación misma.
@@ -2228,6 +2359,27 @@ def main():
         r = run_rules(Dm)
         add(r.get(rule), f'{cid} detectado por {rule}: {what}')
     add(len(CASES) >= 45, f'casos negativos: {len(CASES)}')
+    # Ciclo de vida: A. INICIADA coherente; B. CERRADA coherente (estado real); D. ACADEMIC_BASELINE exacto de cierre.
+    Di = copy.deepcopy(D)
+    for pth in GOVERNANCE:
+        base_t = SCOPE.git(ROOT, 'show', f'{BASE}:{pth}')[1]
+        Di['gov'][pth] = SCOPE.expected(pth, base_t, 'INICIADA') or base_t
+        Di['git']['governance'][pth] = {'text': Di['gov'][pth], 'base': base_t}
+    Di['git']['changed'] = set(Di['git']['changed']) - {BASELINE_DOC}
+    ri = run_rules(Di)
+    add(not ri['GOV'] and not ri['STA'] and not [x for x in ri['GIT'] if 'gobierno' in x or 'ACADEMIC' in x],
+        f'ciclo de vida: estado INICIADA coherente aceptado {ri["GOV"][:2]}')
+    st, gp = gov_lifecycle(D)
+    add(st == 'CERRADA' and not gp and not run_rules(D)['GOV'], f'ciclo de vida: estado CERRADA coherente aceptado {gp}')
+    for pth in GOVERNANCE:
+        base_t = SCOPE.git(ROOT, 'show', f'{BASE}:{pth}')[1]
+        add(SCOPE.lifecycle(pth, D['gov'][pth], base_t) == 'CERRADA',
+            f'{pth}: contenido exacto del cierre autorizado sobre la base fija')
+    add(SCOPE.CLOSED == CLOSED and SCOPE.STARTED == STARTED and set(SCOPE.GOVERNANCE) == set(GOVERNANCE),
+        'f35sbx_scope: mismas frases de ciclo de vida y mismos documentos de gobierno (doble llave)')
+    V34B_ = load_module('f35sbx_f34b_paths', os.path.join(ACAD, 'tools', 'f34b', 'validate_f34b.py'))
+    add(all(V34B_.post_f34e_path(pth) for pth in F35_EXACT | F35_HISTORICAL | set(GOVERNANCE)),
+        'rutas coherentes: validate_f34b admite exactamente las rutas que F35-SBX-A autoriza')
     for text, kinds, unclosed in SCAN_CHECKS:
         got = [k for _, k in scan_markdown(text)]
         add(got == kinds and unclosed_fence(text) == unclosed, f'escáner Markdown: {text!r} → {got}')

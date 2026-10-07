@@ -1787,6 +1787,7 @@ F35SBX_DOCS = 'docs/academico/evidencia-sbx/'
 F35SBX_TOOLS = 'docs/academico/tools/f35sbx/'
 F35SBX_MAX_BYTES = 262144
 F35SBX_STARTED = 'F35-SBX-A INICIADA'
+F35SBX_CLOSED = 'F35-SBX-A CERRADA'
 
 
 def post_f35sbx_path(path):
@@ -1894,9 +1895,18 @@ def post_doc_rules(path, text, additions=None):
                      'Sin scoring, recomendación ni selección automática'):
         if required not in section:
             out.append(f'{path}: falta la restricción «{required}»')
-    # DH-09: exactamente uno de los dos registros de inicio (antes de F35-SBX-A, o F35-SBX-A iniciada).
-    if ('F35-SBX AÚN NO INICIADA' in section) == (F35SBX_STARTED in section):
-        out.append(f'{path}: estado de inicio de F35-SBX ausente o contradictorio')
+    # DH-09 y cierre: exactamente un estado del ciclo de vida de F35-SBX-A (antes de F35-SBX-A, INICIADA o CERRADA);
+    # ningún otro estado en mayúsculas. CERRADA exige auditoría independiente PASS y F35-SBX-B NO INICIADA.
+    found = [st for st in ('F35-SBX AÚN NO INICIADA', F35SBX_STARTED, F35SBX_CLOSED) if st in section]
+    words = set(re.findall(r'F35-SBX-A\s+([A-ZÁÉÍÓÚÑ]{4,})\b', section))
+    if len(found) != 1 or not words <= {'INICIADA', 'CERRADA'} or len(words) > 1:
+        out.append(f'{path}: estado de F35-SBX-A ausente, contradictorio o desconocido')
+    elif found[0] == F35SBX_CLOSED and ('auditoría independiente PASS' not in section
+                                       or re.search(r'auditor[ií]a[^.;]*\bFAIL\b', section, re.I)
+                                       or 'F35-SBX-B NO INICIADA' not in section):
+        out.append(f'{path}: el cierre de F35-SBX-A exige auditoría independiente PASS y F35-SBX-B NO INICIADA')
+    if re.search(r'F35-SBX-B\s+(?!NO\s+INICIADA)[A-ZÁÉÍÓÚÑ]{2,}\b', section):
+        out.append(f'{path}: F35-SBX-B no puede figurar iniciada')
     return out
 
 
@@ -1946,6 +1956,21 @@ def post_policy_regressions():
                     'POST: inicio contradictorio (iniciada y no iniciada) rechazado'))
     results.append((bool(post_doc_rules('CLAUDE.md', sample.replace('F35-SBX AÚN NO INICIADA.', ''))),
                     'POST: estado de inicio ausente rechazado'))
+    # Cierre de F35-SBX-A: estado CERRADA coherente aceptado; combinaciones y estados no canónicos rechazados.
+    closed = sample.replace('F35-SBX AÚN NO INICIADA.', F35SBX_CLOSED + ' — diseño, contratos, fixtures sintéticos y '
+                            'validador completados, tras auditoría independiente PASS. Sin runtime productivo ni '
+                            'capacidades de alcance C. F35-SBX-B NO INICIADA.')
+    results.append((not post_doc_rules('CLAUDE.md', closed), 'POST: F35-SBX-A CERRADA coherente aceptada'))
+    for label, bad in (('INICIADA y CERRADA', closed.replace(F35SBX_CLOSED, F35SBX_STARTED + '. ' + F35SBX_CLOSED, 1)),
+                       ('FINALIZADA', closed.replace(F35SBX_CLOSED, 'F35-SBX-A FINALIZADA', 1)),
+                       ('COMPLETADA', closed.replace(F35SBX_CLOSED, 'F35-SBX-A COMPLETADA', 1)),
+                       ('auditoría FAIL', closed.replace('auditoría independiente PASS', 'auditoría independiente FAIL', 1)),
+                       ('F35-SBX-B INICIADA', closed.replace('F35-SBX-B NO INICIADA', 'F35-SBX-B INICIADA', 1)),
+                       ('G0 real APROBADA', closed.replace('G0 real = NO APROBADA', 'G0 real = APROBADA', 1)),
+                       ('F35 productiva HABILITADA', closed.replace('F35 productiva = BLOQUEADA', 'F35 productiva = HABILITADA', 1)),
+                       ('alcance C HABILITADO', closed.replace('Alcance C = BLOQUEADO', 'Alcance C = HABILITADO', 1)),
+                       ('datos reales PERMITIDOS', closed.replace('Datos reales = PROHIBIDOS', 'Datos reales = PERMITIDOS', 1))):
+        results.append((bool(post_doc_rules('CLAUDE.md', bad)), f'POST: cierre F35-SBX-A con {label} rechazado'))
     for path in ('docs/academico/evidencia-sbx/README.md', 'docs/academico/evidencia-sbx/fixtures/manifest.json',
                  'docs/academico/tools/f35sbx/validate_f35sbx.py'):
         results.append((post_f34e_path(path), f'POST: ruta F35-SBX permitida {path}'))
