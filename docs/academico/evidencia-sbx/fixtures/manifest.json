@@ -1,0 +1,40 @@
+{
+  "manifest_version": "f35sbx-manifest-1.0.0",
+  "contract_version": "f35sbx-contract-1.0.0",
+  "file_hash": "sha256-bytes",
+  "source_type": "synthetic",
+  "environment": "sandbox",
+  "note": "Fixtures 100 % sintéticos derivados del dataset F34; NO representan datos reales del Colegio Andino. F35-SBX-A no ejecuta ningún pipeline: los runs son un oráculo declarativo para F35-SBX-B.",
+  "f34": {
+    "dataset_version": "f34-synth-1.1.0",
+    "manifest_path": "docs/academico/datos-sinteticos/dataset/manifest.json",
+    "manifest_sha256": "079aae87916530b99fb97f22414d8c7d4938e8b7edd7d3527e5fa9db555af431",
+    "evidence_path": "docs/academico/datos-sinteticos/dataset/evidence.csv",
+    "evidence_sha256": "ec6aef1b297a2f5688800d883df5a681c7c4a8070af406e9532cfd785b4b0563"
+  },
+  "derivation_rule": "Por cada organización sintética, las 2 primeras filas de evidence.csv con state = vinculada, source_type = synthetic y source_type_ev en formulario, nota_entrevista o prueba, ordenadas por evidence_id.",
+  "files": {
+    "contrato/f35sbx_contract.json": {
+      "sha256": "2e2cace693996a127e0b31f3cab4f60fcec0f781e1706590de6140067a2c49af",
+      "bytes": 14851
+    },
+    "fixtures/ORG-S1_evidencias.json": {
+      "sha256": "0fb5c85f42068829e3693407485c94524f99cc97c9952506114ad33061ff6808",
+      "bytes": 11851,
+      "records": 2,
+      "synthetic_organization_id": "ORG-S1"
+    },
+    "fixtures/ORG-S2_evidencias.json": {
+      "sha256": "79f91893955a91f752d67bf5246be0abca07efaf3f5004f38d44b8956816dffb",
+      "bytes": 11828,
+      "records": 2,
+      "synthetic_organization_id": "ORG-S2"
+    },
+    "fixtures/ORG-S3_evidencias.json": {
+      "sha256": "6b0c31f673d745dadb6894aefd345167cc9bd56ff4c8a6ff56e3c88767987318",
+      "bytes": 11844,
+      "records": 2,
+      "synthetic_organization_id": "ORG-S3"
+    }
+  }
+}
