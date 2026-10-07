@@ -1782,9 +1782,72 @@ POST_F34E_STATES = {
 }
 
 
+# DH-02 (F35-SBX-A): únicas carpetas futuras autorizadas, con extensión fija y contenido de texto comprobado.
+F35SBX_DOCS = 'docs/academico/evidencia-sbx/'
+F35SBX_TOOLS = 'docs/academico/tools/f35sbx/'
+F35SBX_MAX_BYTES = 262144
+F35SBX_STARTED = 'F35-SBX-A INICIADA'
+
+
+def post_f35sbx_path(path):
+    """Markdown/JSON en evidencia-sbx/ y Python en tools/f35sbx/; sin rutas relativas, binarios ni media."""
+    if '\\' in path or any(part in ('', '.', '..') for part in path.split('/')):
+        return False
+    if path.startswith(F35SBX_DOCS):
+        return path.endswith(('.md', '.json'))
+    if path.startswith(F35SBX_TOOLS):
+        return path.endswith('.py')
+    return False
+
+
+def f35sbx_content(path, data):
+    """Contenido de una ruta F35-SBX: existente, UTF-8, sin NUL ni CR, acotado y JSON válido si es .json."""
+    import json
+    if data is None:
+        return [f'{path}: ausente o ilegible (falla cerrado)']
+    out = []
+    if len(data) > F35SBX_MAX_BYTES or b'\x00' in data or b'\r' in data:
+        out.append(f'{path}: binario, CR o tamaño excesivo')
+    try:
+        text = data.decode('utf-8')
+        if path.endswith('.json'):
+            json.loads(text)
+    except (UnicodeDecodeError, ValueError):
+        out.append(f'{path}: no es texto UTF-8 o JSON válido')
+    return out
+
+
+def disk_reader(path):
+    try:
+        with open(os.path.join(ROOT, path), 'rb') as f:
+            return f.read()
+    except OSError:
+        return None
+
+
+# F35-SBX-A: los tres validadores históricos adaptados, como rutas exactas; su contenido se verifica contra la base.
+F35SBX_HISTORICAL = frozenset({'docs/academico/tools/f30/validate_f30.py', 'docs/academico/tools/f33/validate_f33.py',
+                               'docs/academico/tools/f34/validate_f34.py'})
+
+
+def f35sbx_scope_module():
+    """Módulo de excepciones de F35-SBX-A; None si no se puede cargar (falla cerrado)."""
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            'f34b_f35sbx_scope', os.path.join(ROOT, 'docs', 'academico', 'tools', 'f35sbx', 'f35sbx_scope.py'))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+    except (OSError, ImportError, SyntaxError, AttributeError):
+        return None
+
+
 def post_f34e_path(path):
-    """Excepción autorizada: rutas exactas, nunca cualquier Markdown ni carpeta futura."""
-    return path in POST_F34E_ALLOWLIST or path in POST_F34E_ARTIFACTS
+    """Excepción autorizada: rutas exactas de F34E y, desde F35-SBX-A, las dos carpetas de DH-02 y los tres
+    validadores históricos adaptados (rutas exactas)."""
+    return (path in POST_F34E_ALLOWLIST or path in POST_F34E_ARTIFACTS or post_f35sbx_path(path)
+            or path in F35SBX_HISTORICAL)
 
 
 def post_doc_rules(path, text, additions=None):
@@ -1827,11 +1890,13 @@ def post_doc_rules(path, text, additions=None):
         for prop, polarity in policy.claim_props(line):
             if polarity != 'neg' and legal.search(prop):
                 out.append(f'{path}: aprobación externa no respaldada: {prop}')
-    for required in ('F35-SBX exclusivamente sintético', 'F35-SBX AÚN NO INICIADA',
-                     'RF-23 sigue humana', 'RF-29 sigue experimental/informativa',
+    for required in ('F35-SBX exclusivamente sintético', 'RF-23 sigue humana', 'RF-29 sigue experimental/informativa',
                      'Sin scoring, recomendación ni selección automática'):
         if required not in section:
             out.append(f'{path}: falta la restricción «{required}»')
+    # DH-09: exactamente uno de los dos registros de inicio (antes de F35-SBX-A, o F35-SBX-A iniciada).
+    if ('F35-SBX AÚN NO INICIADA' in section) == (F35SBX_STARTED in section):
+        out.append(f'{path}: estado de inicio de F35-SBX ausente o contradictorio')
     return out
 
 
@@ -1872,6 +1937,31 @@ def post_policy_regressions():
         results.append((bool(post_doc_rules('README.md', sample, claim)), f'POST: afirmación rechazada {claim}'))
     results.append((bool(post_doc_rules('docs/academico/handoff/F34E_MACOS_HANDOFF.md', 'Solo instalación')),
                     'POST: handoff sin estados/restricciones rechazado'))
+    # DH-02/DH-09 (F35-SBX-A): registro de inicio y rutas futuras autorizadas.
+    started = sample.replace('F35-SBX AÚN NO INICIADA.', F35SBX_STARTED + ' — diseño, contratos, fixtures sintéticos '
+                             'y validación académica. Sin runtime productivo ni capacidades de alcance C.')
+    results.append((not post_doc_rules('CLAUDE.md', started), 'POST: F35-SBX-A INICIADA aceptada'))
+    results.append((bool(post_doc_rules('CLAUDE.md', started.replace(F35SBX_STARTED, F35SBX_STARTED + '. F35-SBX AÚN '
+                                                                     'NO INICIADA'))),
+                    'POST: inicio contradictorio (iniciada y no iniciada) rechazado'))
+    results.append((bool(post_doc_rules('CLAUDE.md', sample.replace('F35-SBX AÚN NO INICIADA.', ''))),
+                    'POST: estado de inicio ausente rechazado'))
+    for path in ('docs/academico/evidencia-sbx/README.md', 'docs/academico/evidencia-sbx/fixtures/manifest.json',
+                 'docs/academico/tools/f35sbx/validate_f35sbx.py'):
+        results.append((post_f34e_path(path), f'POST: ruta F35-SBX permitida {path}'))
+    for path in ('docs/academico/evidencia-sbx/foto.png', 'docs/academico/evidencia-sbx/informe.pdf',
+                 'docs/academico/evidencia-sbx/x.py', 'docs/academico/evidencia-sbx/datos.sqlite',
+                 'docs/academico/tools/f35sbx/datos.json', 'docs/academico/evidencia-sbx-otro/a.md',
+                 'docs/academico/evidencia-sbx/../g0-evidence/a.md', 'docs/academico/evidencia-sbx//a.md',
+                 'docs/academico/tools/f35sbx-otro/x.py', 'docs/academico/evidencia-sbx\\a.md'):
+        results.append((not post_f34e_path(path), f'POST: ruta F35-SBX no autorizada rechazada {path}'))
+    for label, data, ok in (('texto', b'# F35-SBX-A\n', True), ('ausente', None, False), ('NUL', b'a\x00b', False),
+                            ('CR', b'a\r\n', False), ('no UTF-8', b'\xff\xfe', False),
+                            ('tamaño', b'a' * (F35SBX_MAX_BYTES + 1), False)):
+        results.append(((not f35sbx_content('docs/academico/evidencia-sbx/a.md', data)) == ok,
+                        f'POST: contenido F35-SBX {label}'))
+    results.append((bool(f35sbx_content('docs/academico/evidencia-sbx/a.json', b'{"a": ')),
+                    'POST: JSON F35-SBX inválido rechazado'))
     return results
 PROTECTED = ['app', 'routes', 'config', 'database', 'resources', 'tests', 'cypress', 'ml-service', 'composer.json',
              'composer.lock', 'package.json', 'package-lock.json', 'docker-compose.yml', 'Dockerfile',
@@ -1884,11 +1974,12 @@ def protected_path(p):
     return any(p == x or p.startswith(x.rstrip('/') + '/') for x in PROTECTED)
 
 
-def git_scope(runner=git_rc):
+def git_scope(runner=git_rc, reader=disk_reader):
     """Delta propio estricto; post permite académicos nuevos, sin cambiar evidencias cerradas.
 
     Todas las consultas pasan por q. Solo rc=1 en resolución de ancla o prueba de ancestro tiene significado.
     Ancla ausente/no ancestral en una fase posterior, Git ausente o consulta inesperada: UNKNOWN/FAIL cerrado.
+    En post, cada ruta F35-SBX (DH-02) se lee con reader y debe ser texto: una ruta ausente o ilegible falla.
     """
     try:
         if q(runner, 'rev-parse', '--is-inside-work-tree')[1].strip() != 'true':
@@ -1934,6 +2025,14 @@ def git_scope(runner=git_rc):
             if frozen:
                 out.append(f'evidencias F34B/C/D cerradas modificadas: {sorted(frozen)[:5]}')
             outside = {p for p in changed if not post_f34e_path(p)}
+            for p in sorted(p for p in changed if post_f35sbx_path(p)):
+                out += f35sbx_content(p, reader(p))
+            hist = sorted(changed & F35SBX_HISTORICAL)
+            scope = f35sbx_scope_module() if hist else None
+            for p in hist:
+                if scope is None or not scope.validator_ok(p, ROOT, lambda root, *a: runner(*a),
+                                                           lambda root, path: reader(path)):
+                    out.append(f'{p}: adaptación distinta de la autorizada en F35-SBX-A (falla cerrado)')
             out += post_document_checks(changed, runner)
         if outside:
             out.append(f'cambios fuera del alcance {mode}: {sorted(outside)[:5]}')
@@ -1957,12 +2056,16 @@ def scope_regressions():
     own = sorted(OWN_BRANCHES)[0]
     post = 'feature/f34e-g0-sbx-synthetic-authorization'
     def fake(branch=post, changed='', untracked='', protected='', frozen='', anchor_rc=0,
-             ancestor_rc=0, fault=None, fault_rc=128, inside='true', head='a' * 40):
+             ancestor_rc=0, fault=None, fault_rc=128, inside='true', head='a' * 40, shows=None):
         def runner(*args):
             if fault is not None and args[:len(fault)] == fault:
                 return fault_rc, ''
             if args == ('rev-parse', '--is-inside-work-tree'):
                 return 0, inside
+            if args == ('branch', '--show-current'):
+                return 0, branch
+            if args[:1] == ('show',) and shows is not None:
+                return (0, shows[args[1]]) if args[1] in shows else (128, '')
             if args == ('rev-parse', '--verify', '--quiet', 'HEAD^{commit}'):
                 return 0, head
             if args == ('rev-parse', '--abbrev-ref', 'HEAD'):
@@ -2018,9 +2121,62 @@ def scope_regressions():
                  'routes/web.php', 'config/app.php', 'database/migrations/x.php',
                  'docs/academico/g0-evidence/README.md'):
         cases.append((f'post rechaza {path}', fake(changed=path, frozen=path if path.startswith(IMMUTABLE) else ''), False))
+    # DH-02 (F35-SBX-A): carpetas autorizadas con contenido de texto; todo lo demás sigue fallando cerrado.
+    sbx_md, sbx_json = 'docs/academico/evidencia-sbx/README.md', 'docs/academico/evidencia-sbx/fixtures/ORG-S1.json'
+    sbx_py = 'docs/academico/tools/f35sbx/validate_f35sbx.py'
+    text = {sbx_md: b'# F35-SBX-A\n', sbx_json: b'{"a": 1}\n', sbx_py: b'import json\n'}
+    f35 = [
+        ('F35-SBX legítimo', fake(untracked='\n'.join(text)), True, text),
+        ('F35-SBX binario con extensión .json', fake(untracked=sbx_json), False, {sbx_json: b'\x89PNG\x00'}),
+        ('F35-SBX JSON inválido', fake(untracked=sbx_json), False, {sbx_json: b'{"a": '}),
+        ('F35-SBX archivo ilegible', fake(untracked=sbx_md), False, {}),
+        ('F35-SBX imagen', fake(untracked='docs/academico/evidencia-sbx/foto.png'), False, {}),
+        ('F35-SBX vídeo', fake(untracked='docs/academico/evidencia-sbx/sesion.mp4'), False, {}),
+        ('F35-SBX Python fuera de tools', fake(untracked='docs/academico/evidencia-sbx/x.py'), False, {}),
+        ('F35-SBX JSON en tools', fake(untracked='docs/academico/tools/f35sbx/datos.json'), False,
+         {'docs/academico/tools/f35sbx/datos.json': b'{}'}),
+        ('F35-SBX con runtime', fake(untracked=sbx_md + '\napp/Models/X.php', protected='app/Models/X.php'), False,
+         text),
+        ('F35-SBX con tests/', fake(untracked=sbx_md + '\ntests/Feature/SbxTest.php'), False, text),
+        ('F35-SBX con evidencias cerradas', fake(untracked=sbx_md, frozen='docs/academico/g0-evidence/README.md',
+                                                 changed='docs/academico/g0-evidence/README.md'), False, text),
+        ('F35-SBX con baseline RF', fake(untracked=sbx_md, changed='docs/final-report/traceability-master.md',
+                                         protected='docs/final-report/traceability-master.md'), False, text),
+        ('F35-SBX con Git no disponible', fake(untracked=sbx_md, fault=(), fault_rc=None), False, text),
+    ]
+    # F35-SBX-A: tres validadores históricos, solo con la adaptación exacta comprobada contra la base fija.
     result = []
-    for label, runner, expected in cases:
-        violations, mode = git_scope(runner)
+    scope = f35sbx_scope_module()
+    bases = {p: git_rc('show', f'{scope.F35SBX_BASE}:{p}')[1] for p in sorted(F35SBX_HISTORICAL)} if scope else {}
+    if not scope or not all(bases.values()):
+        result.append((False, 'SCOPE: módulo o base de F35-SBX-A ilegibles (falla cerrado)'))
+    else:
+        shows = {f'{scope.F35SBX_BASE}:{p}': b for p, b in bases.items()}
+        good = {p: scope.expected_validator(p, b).encode('utf-8') for p, b in bases.items()}
+        extra = {p: t + b"\nprint('cambio no autorizado')\n" for p, t in good.items()}
+        br = scope.F35SBX_BRANCH
+        f34 = 'docs/academico/tools/f34/validate_f34.py'
+        f35 += [
+            ('F35-SBX validadores históricos adaptados', fake(branch=br, changed='\n'.join(good), shows=shows), True, good),
+            ('F35-SBX validador histórico con HEAD posterior a la base',
+             fake(branch=br, changed=f34, shows=shows, head='c' * 40), True, good),
+            ('F35-SBX validador histórico en otra rama', fake(branch='feature/otra', changed=f34, shows=shows), False, good),
+            ('F35-SBX validador histórico con base ilegible', fake(branch=br, changed=f34, shows={}), False, good),
+            ('F35-SBX cuarto validador no autorizado', fake(branch=br, changed='docs/academico/tools/f34a/validate_f34a.py',
+                                                            protected='docs/academico/tools/f34a/validate_f34a.py',
+                                                            shows=shows), False, good),
+            ('F35-SBX otro archivo de tools/f30', fake(branch=br, changed='docs/academico/tools/f30/f30.py', shows=shows),
+             False, good),
+            ('F35-SBX validate_f29 no autorizado', fake(branch=br, shows=shows,
+                                                        changed='docs/academico/powerdesigner/scripts/validate_f29.py'),
+             False, good),
+        ]
+        for p in sorted(F35SBX_HISTORICAL):
+            f35.append((f'F35-SBX cambio funcional extra en {p}', fake(branch=br, changed=p, shows=shows), False,
+                        dict(good, **{p: extra[p]})))
+    for label, runner, expected, *files in cases + f35:
+        reader = (lambda p, f=files[0]: f.get(p)) if files else disk_reader
+        violations, mode = git_scope(runner, reader)
         result.append(((not violations) == expected, f'SCOPE: {label} → {mode}: {violations}'))
     return result
 
