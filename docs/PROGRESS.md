@@ -1,6 +1,6 @@
 # Progreso del proyecto
 
-Última actualización: 2026-10-05 (F34E CERRADA; G0 real NO APROBADA; G0-SBX APROBADA CON RESTRICCIONES; F35-SBX sintética HABILITADA, AÚN NO INICIADA; publicación sujeta a CI).
+Última actualización: 2026-10-07 (F34E CERRADA; G0 real NO APROBADA; G0-SBX APROBADA CON RESTRICCIONES; F35-SBX sintética HABILITADA; F35-SBX-A CERRADA; F35-SBX-B NO INICIADA; publicación pendiente de regresión post-commits y CI).
 
 > El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24; el 25/09/2026, de la Fase 24 a la Fase 25, y ese mismo día, de la Fase 25 a la Fase 26. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
 
@@ -22,9 +22,9 @@ F34E CERRADA (05/10/2026), tras auditoría final PASS y adaptación explícita d
 - Alcance C = BLOQUEADO
 - Datos reales = PROHIBIDOS
 
-SBX-01..SBX-18 CUMPLE. Aprobación interna del equipo REGISTRADA; no constituye aprobación jurídica, de privacidad ni validación institucional. F35-SBX exclusivamente sintético. F35-SBX AÚN NO INICIADA. RF-23 sigue humana; RF-29 sigue experimental/informativa. Sin scoring, recomendación ni selección automática; sin documentos, audio ni vídeo reales, sin integración productiva ni paso automático a producción. El baseline RF/CU/RNF permanece intacto.
+SBX-01..SBX-18 CUMPLE. Aprobación interna del equipo REGISTRADA; no constituye aprobación jurídica, de privacidad ni validación institucional. F35-SBX exclusivamente sintético. F35-SBX-A CERRADA — diseño, contratos, fixtures sintéticos y validador completados, tras auditoría independiente PASS. Sin runtime productivo ni capacidades de alcance C. F35-SBX-B NO INICIADA. RF-23 sigue humana; RF-29 sigue experimental/informativa. Sin scoring, recomendación ni selección automática; sin documentos, audio ni vídeo reales, sin integración productiva ni paso automático a producción. El baseline RF/CU/RNF permanece intacto.
 
-Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa11cd9185423e2866b0fc936`. El commit C y los merges se consultan en Git, sin hashes futuros/autorreferenciales. Publicación autorizada únicamente tras regresión y CI GREEN de develop/main. Sin tag ni release. Próximo trabajo autorizado aquí: handoff macOS, no iniciar F35-SBX.
+Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa11cd9185423e2866b0fc936`. El commit C y los merges se consultan en Git, sin hashes futuros/autorreferenciales. Publicación autorizada únicamente tras regresión y CI GREEN de develop/main. Sin tag ni release. El handoff macOS está publicado; F35-SBX-A queda cerrada documentalmente en `feature/f35-sbx-synthetic-evidence-pipeline`, con publicación pendiente de regresión post-commits y CI. F35-SBX-B NO INICIADA; requiere autorización nueva.
 
 ## Estado de v1.1 — antecedentes hasta F34D
 
