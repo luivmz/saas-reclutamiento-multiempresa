@@ -17,7 +17,9 @@ Recalcula los 18 criterios SBX con comprobaciones del repositorio y exige que la
   REAL        G0 real NO APROBADA, G0-02/03/12 sin cerrar, ADR-005 canónico PROPUESTA, aprobación interna registrada,
               F34C intacta (4 adjuntos con su SHA-256) y documentos F34D publicados intactos.
   GIT         solo cambian g0-sandbox/, tools/f34e/ y la adaptación autorizada del alcance Git de validate_f34b.py;
-              base fija: cierre F34D en main; runtime sin cambios.
+              base fija: cierre F34D en main; runtime sin cambios. Desde F35-SBX-A (DH-02) también
+              evidencia-sbx/** (.md/.json) y tools/f35sbx/** (.py), comprobado aquí con una segunda llave, y los
+              tres validadores históricos adaptados (F30, F33 y F34), como rutas exactas.
 Incluye casos negativos y un control que demuestra que el validador también acepta un resultado NO APROBADA.
 Uso: python docs/academico/tools/f34e/validate_f34e.py
 """
@@ -650,10 +652,51 @@ def git_checks():
     except (GitError, OSError) as e:
         return [f'estado Git desconocido (falla cerrado): {e}']
     for p in sorted(changed):
-        if V34B.post_f34e_path(p):
+        if p.startswith(F35SBX_ROOTS) and not f35sbx_path(p):
+            out.append(f'ruta F35-SBX no autorizada por DH-02: {p}')
+        elif V34B.post_f34e_path(p):
             continue
-        out.append(f'cambio fuera del alcance de F34E: {p}')
+        else:
+            out.append(f'cambio fuera del alcance de F34E: {p}')
     return out
+
+
+# DH-02 (F35-SBX-A), segunda llave independiente de validate_f34b.py.
+F35SBX_ROOTS = ('docs/academico/evidencia-sbx', 'docs/academico/tools/f35sbx')
+
+
+def f35sbx_path(p):
+    if '\\' in p or any(part in ('', '.', '..') for part in p.split('/')):
+        return False
+    if p.startswith('docs/academico/evidencia-sbx/'):
+        return p.endswith(('.md', '.json'))
+    return p.startswith('docs/academico/tools/f35sbx/') and p.endswith('.py')
+
+
+def f35sbx_scope_regressions(V34B):
+    """Ambas llaves deben coincidir: lo que DH-02 autoriza y nada más (incluidas rutas confundibles)."""
+    ok_paths = ('docs/academico/evidencia-sbx/README.md', 'docs/academico/evidencia-sbx/contrato/f35sbx_contract.json',
+                'docs/academico/tools/f35sbx/validate_f35sbx.py')
+    bad_paths = ('docs/academico/evidencia-sbx/foto.png', 'docs/academico/evidencia-sbx/audio.mp3',
+                 'docs/academico/evidencia-sbx/informe.pdf', 'docs/academico/evidencia-sbx/x.py',
+                 'docs/academico/tools/f35sbx/datos.json', 'docs/academico/evidencia-sbx-otro/a.md',
+                 'docs/academico/evidencia-sbx/../g0-evidence/F34B_Decision_G0.md', 'docs/academico/tools/f35sbx-x/a.py',
+                 'app/Models/SyntheticEvidence.php', 'tests/Feature/SbxTest.php', 'database/migrations/x.php')
+    out = [(f35sbx_path(p) and V34B.post_f34e_path(p), f'F35-SBX: ruta autorizada {p}') for p in ok_paths]
+    out += [(not f35sbx_path(p) and not V34B.post_f34e_path(p), f'F35-SBX: ruta rechazada {p}') for p in bad_paths]
+    # Validadores históricos adaptados en F35-SBX-A: exactamente estas tres rutas en ambas llaves.
+    out.append((getattr(V34B, 'F35SBX_HISTORICAL', None) == F35SBX_HISTORICAL,
+                'F35-SBX: validate_f34b autoriza exactamente los tres validadores históricos'))
+    out += [(V34B.post_f34e_path(p), f'F35-SBX: validador histórico autorizado {p}') for p in sorted(F35SBX_HISTORICAL)]
+    for p in ('docs/academico/tools/f34a/validate_f34a.py', 'docs/academico/tools/f30/f30.py',
+              'docs/academico/tools/f27b/validate.py', 'docs/academico/powerdesigner/scripts/validate_f29.py',
+              'docs/academico/tools/f33/otro.py', 'docs/academico/tools/f34/schema.json'):
+        out.append((not V34B.post_f34e_path(p), f'F35-SBX: cuarto validador o archivo no autorizado rechazado {p}'))
+    return out
+
+
+F35SBX_HISTORICAL = frozenset({'docs/academico/tools/f30/validate_f30.py', 'docs/academico/tools/f33/validate_f33.py',
+                               'docs/academico/tools/f34/validate_f34.py'})
 
 
 # ---------------------------------------------------------------- casos negativos
@@ -871,6 +914,7 @@ def main():
     gv = git_checks()
     add(not gv, f'GIT: solo F34E y adaptación de alcance F34B; F34D publicada, runtime y baseline intactos: {gv}')
     checks.extend(V34B.post_policy_regressions())
+    checks.extend(f35sbx_scope_regressions(V34B))
 
     for cid, rule, what, mut, override in CASES:
         try:
