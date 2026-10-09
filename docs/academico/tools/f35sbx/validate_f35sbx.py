@@ -55,6 +55,11 @@ REL_SBX = 'docs/academico/evidencia-sbx/'
 REL_TOOLS = 'docs/academico/tools/f35sbx/'
 # Base fija de F35-SBX-A: main publicado tras el cierre de F34E y el handoff macOS.
 BASE = 'b67f6443fb2bb71e736a60a645a15bd1fa0e7de6'
+# Ancla externa del adaptador f35sbx_scope.py auditado (commit E): SHA-256 de su contenido exacto. Este archivo no
+# guarda ningún hash de sí mismo; f35sbx_scope.VALIDATOR_SHA256 lo fija excluyendo exactamente la línea siguiente.
+ADAPTER_SHA256 = '1b43bc52eedf52815fae0e70e59df37172d26d55bbba72913e2c9247acf32740'
+AUDITED_D = 'ba139c1f0e4a16c15126ff1e34ae280620234db7'     # commit D: cierre auditado de F35-SBX-A
+F35_BRANCH = 'feature/f35-sbx-synthetic-evidence-pipeline'
 DOCS = ['README.md', 'F35SBX_Alcance.md', 'F35SBX_Arquitectura.md', 'F35SBX_Contratos_Datos.md', 'F35SBX_Provenance.md',
         'F35SBX_Revision_Humana_Simulada.md', 'F35SBX_Aislamiento_y_Almacenamiento.md', 'F35SBX_Threat_Model.md',
         'F35SBX_Plan_Pruebas.md', 'F35SBX_Criterios_Cierre_y_Revocacion.md']
@@ -408,6 +413,500 @@ def git_rc(*args):
     except OSError:
         return None, ''
     return p.returncode, p.stdout.strip()
+
+
+def git_bytes(*args):
+    try:
+        p = subprocess.run(['git', *args], cwd=ROOT, capture_output=True)
+    except OSError:
+        return None, b''
+    return p.returncode, p.stdout
+
+
+ADAPTER_REL = REL_TOOLS + 'f35sbx_scope.py'
+SELF_REL = REL_TOOLS + 'validate_f35sbx.py'
+ANCHOR_LINE = re.compile(rb"^ADAPTER_SHA256 = '([0-9a-f]{64})'\n", re.M)
+
+
+ADAPTED = (ADAPTER_REL, SELF_REL)
+# Conjunto canónico congelado tras E (mismo que f35sbx_scope.FROZEN_AFTER_CLOSURE, doble llave en main()).
+FROZEN_AFTER_E = ('CLAUDE.md', 'docs/PROGRESS.md', 'docs/academico/ACADEMIC_BASELINE.md', 'docs/academico/evidencia-sbx',
+                  'docs/academico/tools/f35sbx', 'docs/academico/tools/f30/validate_f30.py',
+                  'docs/academico/tools/f33/validate_f33.py', 'docs/academico/tools/f34/validate_f34.py',
+                  'docs/academico/tools/f34b/validate_f34b.py', 'docs/academico/tools/f34e/validate_f34e.py')
+
+
+def adapter_history(runner=git_bytes):
+    """Commits de D..HEAD que tocan el adaptador o este validador, sin simplificar la historia: `rev-list --parents`
+    enumera todos los commits alcanzables (también ramas laterales ya fusionadas) y cada uno se compara contra cada
+    padre. Un commit normal toca si cambia alguno frente a su padre; un merge, si difiere de todos sus padres. Un cambio
+    revertido o restaurado por un merge posterior sigue siendo su propio commit. (lista de (commit, padres), error)."""
+    rc, out = runner('rev-list', '--parents', f'{AUDITED_D}..HEAD')
+    if rc != 0:
+        return None, 'ADAPTADOR: historia Git no verificable (falla cerrado)'
+    touching = []
+    for line in out.decode('utf-8', 'replace').splitlines():
+        ids = line.split()
+        if not ids:
+            continue
+        if len(ids) < 2 or not all(re.fullmatch(r'[0-9a-f]{40}', x) for x in ids):
+            return None, 'ADAPTADOR: commit sin padres o no verificable en la historia posterior a D (falla cerrado)'
+        commit, parents = ids[0], ids[1:]
+        diffs = []
+        for parent in parents:
+            rc, names = runner('diff-tree', '-r', '--name-only', '--no-renames', parent, commit, '--', *ADAPTED)
+            if rc != 0:
+                return None, 'ADAPTADOR: diff de la historia no verificable (falla cerrado)'
+            diffs.append(set(names.decode('utf-8', 'replace').split()))
+        if set.intersection(*diffs):
+            touching.append((commit, parents))
+    return touching, None
+
+
+def git_blob_id(data):
+    """Identificador Git del blob calculado localmente sobre los bytes reales (sin índice ni filtros)."""
+    return hashlib.sha1(b'blob %d\x00' % len(data) + data).hexdigest()
+
+
+PYCACHE_OK = REL_TOOLS + '__pycache__'          # único directorio ignorado por la política del repositorio
+
+
+def real_bytes(rel):
+    """Bytes reales del sistema de archivos; enlaces, no-archivos y errores de lectura → None (falla cerrado)."""
+    full = os.path.join(ROOT, rel)
+    return None if os.path.islink(full) or not os.path.isfile(full) else read_bytes(full)
+
+
+def cache_problems(path, sub):
+    """Excepción __pycache__: solo archivos regulares *.pyc directos. DirEntry.is_file(follow_symlinks=False) no sigue
+    enlaces: un nombre o sufijo .pyc nunca convierte un directorio, enlace, unión u objeto especial en permitido.
+    Directorio o entrada ilegible: falla cerrado."""
+    bad = []
+    try:
+        with os.scandir(path) as entries:
+            for entry in entries:
+                try:
+                    ok = entry.name.endswith('.pyc') and not entry.is_symlink() and entry.is_file(follow_symlinks=False)
+                except OSError:
+                    ok = False
+                if not ok:
+                    bad.append(entry.name)
+    except OSError:
+        return [f'{sub} ilegible (falla cerrado)']
+    return [f'entradas no permitidas en {sub} (solo archivos regulares .pyc): {sorted(bad)[:3]}'] if bad else []
+
+
+def _remove_tree(top):
+    """Borrado sin seguir enlaces (solo os): archivos y enlaces se desvinculan; directorios, de abajo arriba."""
+    if not os.path.lexists(top):
+        return
+    for d, dirs, files in os.walk(top, topdown=False):
+        for name in files:
+            os.remove(os.path.join(d, name))
+        for name in dirs:
+            p = os.path.join(d, name)
+            try:
+                os.unlink(p) if os.path.islink(p) else os.rmdir(p)
+            except OSError:
+                os.rmdir(p)
+    os.rmdir(top)
+
+
+def cache_regressions(disk):
+    """Excepción __pycache__ con sistema de archivos real en un directorio temporal fuera del repositorio."""
+    base = os.environ.get('TMPDIR') or os.environ.get('TEMP') or os.environ.get('TMP') or '/tmp'
+    tmp = os.path.join(base, f'f35sbx-cache-{os.getpid()}')
+    _remove_tree(tmp)
+    cache = os.path.join(tmp, *PYCACHE_OK.split('/'))
+    out = []
+
+    def touch(p, data=b'x'):
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        with open(p, 'wb') as f:
+            f.write(data)
+
+    def case(label, build, ok, needs_link=False):
+        _remove_tree(os.path.join(tmp, 'docs'))
+        os.makedirs(cache)
+        outside = os.path.join(tmp, 'fuera.txt')
+        touch(outside)
+        try:
+            build(cache, outside)
+        except OSError as e:
+            if not needs_link:
+                raise
+            out.append((True, f'__pycache__: {label} — enlace no creable en esta plataforma ({e.__class__.__name__})'))
+            return
+        _, problems = disk(tmp)
+        out.append(((not problems) == ok, f'__pycache__: {label} → {"PASS" if not problems else "FAIL"} {problems[:1]}'))
+    try:
+        case('vacío', lambda c, o: None, True)
+        case('normal.pyc archivo regular', lambda c, o: touch(os.path.join(c, 'normal.pyc')), True)
+        case('directorio not-a-file.pyc con descendiente',
+             lambda c, o: touch(os.path.join(c, 'not-a-file.pyc', 'hidden-extra.md')), False)
+        case('directorio directory.pyc vacío', lambda c, o: os.makedirs(os.path.join(c, 'directory.pyc')), False)
+        case('enlace link.pyc a un archivo', lambda c, o: os.symlink(o, os.path.join(c, 'link.pyc')), False, True)
+        case('enlace dir.pyc a un directorio', lambda c, o: os.symlink(os.path.dirname(o), os.path.join(c, 'dir.pyc'),
+                                                                    target_is_directory=True), False, True)
+        case('subdirectorio subdir/hidden.pyc', lambda c, o: touch(os.path.join(c, 'subdir', 'hidden.pyc')), False)
+        case('archivo evil.txt', lambda c, o: touch(os.path.join(c, 'evil.txt')), False)
+        case('normal.pyc + archivo extra oculto',
+             lambda c, o: (touch(os.path.join(c, 'normal.pyc')), touch(os.path.join(c, 'oculto.md'))), False)
+    finally:
+        _remove_tree(tmp)
+    return out
+
+
+def disk_files(roots=None, root=ROOT):
+    """Archivos reales bajo las rutas protegidas (sistema de archivos, sin Git). Solo se omite el __pycache__ de
+    tools/f35sbx, y solo con archivos regulares .pyc directos (cache_problems). (conjunto de rutas, problemas)."""
+    found, problems = set(), []
+    for rel in roots or FROZEN_AFTER_E:
+        full = os.path.join(root, rel)
+        if os.path.islink(full):
+            problems.append(f'ruta protegida convertida en enlace: {rel}')
+        elif os.path.isdir(full):
+            for d, dirs, files in os.walk(full):
+                here = os.path.relpath(d, root).replace(os.sep, '/')
+                for x in list(dirs):
+                    sub = f'{here}/{x}'
+                    if os.path.islink(os.path.join(d, x)):
+                        problems.append(f'directorio protegido como enlace: {sub}')
+                        dirs.remove(x)
+                    elif sub == PYCACHE_OK:
+                        dirs.remove(x)
+                        problems += cache_problems(os.path.join(d, x), sub)
+                found |= {f'{here}/{f}' for f in files}
+        elif os.path.lexists(full):
+            found.add(rel)
+    return found, problems
+
+
+def integrity_problems(ref, runner=git_bytes, reader=real_bytes, walk=disk_files, skip=(), flag_paths=FROZEN_AFTER_E):
+    """Integridad real de los protegidos frente a ref (E en POST-E, D en PRE-E), sin depender de git diff:
+    1. ningún flag del índice que oculte cambios (`ls-files -v`: solo «H»; h = assume-unchanged, S = skip-worktree,
+       s = ambos, cualquier otra letra también falla); 2. lista esperada = blobs de ref (`ls-tree -r -z`);
+    3. bytes reales del sistema de archivos con el mismo blob-id y modo 100644; 4. ningún archivo protegido extra."""
+    rc1, flags = runner('ls-files', '-v', '-z', '--', *flag_paths)
+    rc2, tree = runner('ls-tree', '-r', '-z', '--full-tree', ref, '--', *FROZEN_AFTER_E)
+    if rc1 != 0 or rc2 != 0:
+        return ['ADAPTADOR: índice o árbol de referencia no verificables (falla cerrado)']
+    out = []
+    flagged = [e[2:].decode('utf-8', 'replace') for e in flags.split(b'\x00') if e and e[:2] != b'H ']
+    if flagged:
+        out.append(f'ADAPTADOR: flags del índice que ocultan cambios (assume-unchanged/skip-worktree u otros) en: '
+                   f'{flagged[:5]}')
+    expected = {}
+    for entry in tree.split(b'\x00'):
+        if entry:
+            meta, _, path = entry.partition(b'\t')
+            parts = meta.split()
+            if len(parts) != 3:
+                return out + ['ADAPTADOR: árbol de referencia ilegible (falla cerrado)']
+            expected[path.decode('utf-8', 'replace')] = tuple(x.decode() for x in parts)
+    if not expected:
+        return out + ['ADAPTADOR: árbol de referencia vacío para las rutas protegidas (falla cerrado)']
+    found, walk_problems = walk()
+    out += [f'ADAPTADOR: {p}' for p in walk_problems]
+    differ = []
+    for path, (mode, kind, oid) in sorted(expected.items()):
+        if path in skip:
+            continue
+        data = reader(path)
+        if kind != 'blob' or mode != '100644' or data is None or git_blob_id(data) != oid:
+            differ.append(path)
+    if differ:
+        out.append(f'ADAPTADOR: bytes reales distintos de la referencia, eliminados o ilegibles: {differ[:5]}')
+    extra = sorted(found - set(expected))
+    if extra:
+        out.append(f'ADAPTADOR: archivos protegidos que no existen en la referencia: {extra[:5]}')
+    return out
+
+
+def name_status(data):
+    out = {}
+    for line in data.decode('utf-8', 'replace').splitlines():
+        if line.strip():
+            status, _, path = line.partition('\t')
+            out[path] = status
+    return out
+
+
+def adapter_check(runner=git_bytes, reader=lambda rel: read_bytes(os.path.join(ROOT, rel))):
+    """Transición del adaptador, independiente de f35sbx_scope (ancla externa + historia Git completa). (fase, problemas).
+    PRE-E: ningún commit posterior a D toca el adaptador ni este validador, rama F35-SBX con HEAD = D y delta exacto
+    respecto de D (árbol, índice y archivos sin seguimiento) = exactamente esos dos archivos modificados.
+    POST-E: en toda la historia de D..HEAD un único commit E los toca: hijo directo y único de D, cambia exactamente esos
+    dos archivos con el adaptador anclado, y el árbol de trabajo es idéntico a E. Otro caso o error de Git: falla cerrado."""
+    adapter, own = reader(ADAPTER_REL), reader(SELF_REL)
+    out = []
+    if adapter is None or hashlib.sha256(adapter).hexdigest() != ADAPTER_SHA256:
+        out.append('ADAPTADOR: f35sbx_scope.py distinto del adaptador auditado (ancla externa ADAPTER_SHA256)')
+    if own is None or ANCHOR_LINE.findall(own) != [ADAPTER_SHA256.encode()]:
+        out.append('ADAPTADOR: validate_f35sbx.py sin exactamente una línea de ancla igual a la que se ejecuta')
+    touching, error = adapter_history(runner)
+    if error:
+        return None, out + [error]
+    if not touching:
+        rc1, branch = runner('branch', '--show-current')
+        rc2, head = runner('rev-parse', '--verify', '--quiet', 'HEAD^{commit}')
+        rc3, tree = runner('diff', '--name-status', '--no-renames', AUDITED_D)
+        rc4, index = runner('diff', '--cached', '--name-status', '--no-renames', AUDITED_D)
+        rc5, untracked = runner('ls-files', '--others', '--exclude-standard')
+        if (rc1, rc2, rc3, rc4, rc5) != (0, 0, 0, 0, 0):
+            return None, out + ['ADAPTADOR: rama, HEAD o delta PRE-E no verificables (falla cerrado)']
+        if branch.decode('utf-8', 'replace').strip() != F35_BRANCH or head.decode('utf-8', 'replace').strip() != AUDITED_D:
+            out.append('ADAPTADOR: sin evidencia de E; PRE-E solo se admite en la rama F35-SBX con HEAD = commit D')
+        expected = {ADAPTER_REL: 'M', SELF_REL: 'M'}
+        tree_s, index_s = name_status(tree), name_status(index)
+        extra_untracked = sorted(lines(untracked.decode('utf-8', 'replace')))
+        if tree_s != expected:
+            out.append(f'ADAPTADOR: delta PRE-E respecto de D distinto de exactamente los dos archivos auditados: '
+                       f'{sorted(tree_s.items())[:6]}')
+        if not set(index_s.items()) <= set(expected.items()):
+            out.append(f'ADAPTADOR: índice con cambios preparados fuera de los dos archivos auditados: '
+                       f'{sorted(index_s.items())[:6]}')
+        if extra_untracked:
+            out.append(f'ADAPTADOR: archivos sin seguimiento en PRE-E: {extra_untracked[:5]}')
+        # Sin flags del índice en todo el repositorio (el delta PRE-E es global) y bytes reales = D en los protegidos,
+        # salvo los dos archivos de E, que se verifican por sus anclas.
+        out += integrity_problems(AUDITED_D, runner, skip=ADAPTED, flag_paths=())
+        return 'PRE-E', out
+    if len(touching) != 1:
+        return None, out + [f'ADAPTADOR: adaptador o validador modificados después de D por {len(touching)} commits '
+                            f'(historia completa): {[c[:7] for c, _ in touching][:5]}']
+    e, parents = touching[0]
+    rc2, names = runner('diff-tree', '--no-commit-id', '--name-only', '-r', '--no-renames', e)
+    rc3, e_adapter = runner('show', f'{e}:{ADAPTER_REL}')
+    rc4, e_own = runner('show', f'{e}:{SELF_REL}')
+    if (rc2, rc3, rc4) != (0, 0, 0):
+        return None, out + ['ADAPTADOR: contenido de E no verificable (falla cerrado)']
+    if parents != [AUDITED_D]:
+        out.append('ADAPTADOR: E no es hijo directo y único del commit D (ni merge)')
+    if sorted(names.decode('utf-8', 'replace').split()) != sorted(ADAPTED):
+        out.append('ADAPTADOR: E cambia archivos distintos del adaptador y este validador')
+    if hashlib.sha256(e_adapter).hexdigest() != ADAPTER_SHA256 or ANCHOR_LINE.findall(e_own) != [ADAPTER_SHA256.encode()]:
+        out.append('ADAPTADOR: E no contiene el adaptador ni el ancla auditados')
+    if e_adapter != adapter or e_own != own:
+        out.append('ADAPTADOR: árbol de trabajo distinto de E')
+    # Congelación POST-E (feature, develop y main): artefactos del cierre idénticos a E en árbol, índice y sin
+    # seguimiento, sin detección de renombrados.
+    rc5, tree = runner('diff', '--name-status', '--no-renames', e, '--', *FROZEN_AFTER_E)
+    rc6, index = runner('diff', '--cached', '--name-status', '--no-renames', e, '--', *FROZEN_AFTER_E)
+    rc7, untracked = runner('ls-files', '--others', '--exclude-standard', '--', *FROZEN_AFTER_E)
+    if (rc5, rc6, rc7) != (0, 0, 0):
+        return None, out + ['ADAPTADOR: congelación POST-E no verificable (falla cerrado)']
+    changed = sorted(set(name_status(tree)) | set(name_status(index)) | lines(untracked.decode('utf-8', 'replace')))
+    if changed:
+        out.append(f'ADAPTADOR: artefactos congelados modificados respecto de E: {changed[:6]}')
+    out += integrity_problems(e, runner)          # sin flags del índice y bytes reales = E, sin depender de git diff
+    return 'POST-E', out
+
+
+def adapter_regressions():
+    """Negativos y controles de la transición PRE-E/POST-E con Git simulado en memoria (no crea commits ni archivos)."""
+    real = {r: read_bytes(os.path.join(ROOT, r)) for r in ADAPTED}
+    rc_d, adapter_d = git_bytes('show', f'{AUDITED_D}:{ADAPTER_REL}')
+    if None in real.values() or rc_d != 0:
+        return [(False, 'ADAPTADOR: archivos o versión D ilegibles (falla cerrado)')]
+    e, x, y, z, lat, m = 'e' * 40, '1' * 40, '2' * 40, '3' * 40, '4' * 40, '5' * 40
+    sc, va = ADAPTED
+    both = [sc, va]
+    clean = [('9' * 40, ['8' * 40, e], {'8' * 40: both, e: []}), (e, [AUDITED_D], {AUDITED_D: both})]
+    exact = f'M\t{sc}\nM\t{va}\n'
+
+    def after(*commits):
+        return list(commits) + clean
+
+    disk, _ = disk_files()
+    disk_tree = b''.join(b'100644 blob %s\t%s\x00' % (git_blob_id(real_bytes(q)).encode(), q.encode())
+                         for q in sorted(disk))
+    readme = 'docs/academico/evidencia-sbx/README.md'
+
+    def tree_with(path, oid=None, drop=False):
+        out = b''
+        for entry in disk_tree.split(b'\x00'):
+            if entry and entry.endswith(b'\t' + path.encode()):
+                if drop:
+                    continue
+                entry = entry.replace(entry.split()[2], (oid or '0' * 40).encode(), 1)
+            out += entry + b'\x00' if entry else b''
+        return out
+
+    def fake(branch=F35_BRANCH, head=AUDITED_D, history=None, raw=None, names=None, files=None, fault=None,
+             tree=exact, index='', untracked='', frozen_tree='', frozen_index='', frozen_untracked='', flags=b'',
+             ref_tree=None):
+        history = clean if history is None else history
+        names = f'{sc}\n{va}' if names is None else names
+        files = real if files is None else files
+        pairs = {(p, c): t for c, _, per in history for p, t in per.items()}
+        listing = raw if raw is not None else ''.join(f'{c} {" ".join(ps)}\n' for c, ps, _ in history)
+
+        def run(*a):
+            if fault is not None and a[:len(fault)] == fault:
+                return 128, b''
+            if a[:1] == ('rev-list',):
+                return 0, listing.encode()
+            if a[:2] == ('diff-tree', '-r'):
+                return 0, ('\n'.join(pairs.get((a[4], a[5]), [])) + '\n').encode()
+            if a[:2] == ('diff-tree', '--no-commit-id'):
+                return 0, (names + '\n').encode()
+            if a[:1] == ('show',) and a[1].startswith(e + ':'):
+                content = files.get(a[1].split(':', 1)[1])
+                return (0, content) if content is not None else (128, b'')
+            if a[:1] == ('branch',):
+                return 0, (branch + '\n').encode()
+            if a[:2] == ('rev-parse', '--verify'):
+                return 0, (head + '\n').encode()
+            if a[:2] == ('ls-files', '-v'):
+                return 0, flags
+            if a[:1] == ('ls-tree',):
+                return 0, disk_tree if ref_tree is None else ref_tree
+            if '--' in a and a[:2] == ('diff', '--name-status'):          # congelación POST-E respecto de E
+                return 0, frozen_tree.encode()
+            if '--' in a and a[:2] == ('diff', '--cached'):
+                return 0, frozen_index.encode()
+            if '--' in a and a[:1] == ('ls-files',):
+                return 0, frozen_untracked.encode()
+            if a[:2] == ('diff', '--name-status'):
+                return 0, tree.encode()
+            if a[:2] == ('diff', '--cached'):
+                return 0, index.encode()
+            if a[:1] == ('ls-files',):
+                return 0, untracked.encode()
+            return 128, b''
+        return run
+
+    def tree(**kw):
+        files = dict(real, **{ADAPTER_REL if k == 'adapter' else SELF_REL: v for k, v in kw.items()})
+        return lambda rel: files.get(rel)
+    extra = real[ADAPTER_REL] + b'# linea extra\n'
+    wrong = re.sub(rb"^ADAPTER_SHA256 = '[0-9a-f]{64}'\n", b"ADAPTER_SHA256 = '" + b'1' * 64 + b"'\n", real[SELF_REL],
+                   count=1, flags=re.M)
+    ok_tree = tree()
+    pre = dict(history=[])
+    cases = [
+        ('A PRE-E con exactamente los dos archivos auditados', fake(**pre), ok_tree, 'PRE-E', True),
+        ('A PRE-E con los dos archivos auditados además preparados en el índice', fake(index=exact, **pre), ok_tree,
+         'PRE-E', True),
+        ('PRE-E con una línea extra en f35sbx_scope.py', fake(**pre), tree(adapter=extra), 'PRE-E', False),
+        ('1 PRE-E con un tercer archivo tracked', fake(tree=exact + 'M\tdocs/academico/tools/f35sbx/README.md\n', **pre),
+         ok_tree, 'PRE-E', False),
+        ('2 PRE-E con un tercer archivo sin seguimiento', fake(untracked='docs/academico/tools/f35sbx/nuevo.py\n', **pre),
+         ok_tree, 'PRE-E', False),
+        ('3 PRE-E con un archivo extra preparado en el índice', fake(index=exact + 'A\tnota.md\n', **pre), ok_tree,
+         'PRE-E', False),
+        ('4 PRE-E sin f35sbx_scope.py en el delta', fake(tree=f'M\t{va}\n', **pre), ok_tree, 'PRE-E', False),
+        ('4 PRE-E con f35sbx_scope.py eliminado', fake(tree=f'D\t{sc}\nM\t{va}\n', **pre), tree(adapter=None), 'PRE-E',
+         False),
+        ('5 PRE-E sin validate_f35sbx.py en el delta', fake(tree=f'M\t{sc}\n', **pre), ok_tree, 'PRE-E', False),
+        ('6 PRE-E con evidencia-sbx modificada', fake(tree=exact + 'M\tdocs/academico/evidencia-sbx/README.md\n', **pre),
+         ok_tree, 'PRE-E', False),
+        ('7 PRE-E con gobierno modificado', fake(tree='M\tCLAUDE.md\n' + exact, **pre), ok_tree, 'PRE-E', False),
+        ('PRE-E con un cambio productivo', fake(tree=exact + 'M\tapp/Models/User.php\n', **pre), ok_tree, 'PRE-E', False),
+        ('PRE-E con un rename', fake(tree=exact + 'D\tdocs/academico/evidencia-sbx/README.md\nA\tdocs/LEEME.md\n', **pre),
+         ok_tree, 'PRE-E', False),
+        ('B POST-E exacto en feature (HEAD = E)', fake(history=clean[1:]), ok_tree, 'POST-E', True),
+        ('C/D POST-E exacto en develop/main (merge de E)', fake(branch='develop'), ok_tree, 'POST-E', True),
+        ('E/15 merge limpio posterior a E que no toca los archivos', fake(history=after((m, [e, z], {e: [], z: both}))),
+         ok_tree, 'POST-E', True),
+        ('POST-E con f35sbx_scope.py modificado en el árbol', fake(), tree(adapter=extra), 'POST-E', False),
+        ('POST-E con f35sbx_scope.py eliminado', fake(), tree(adapter=None), 'POST-E', False),
+        ('POST-E con f35sbx_scope.py reemplazado por la versión D', fake(), tree(adapter=adapter_d), 'POST-E', False),
+        ('E con la versión D del adaptador', fake(files=dict(real, **{sc: adapter_d})), tree(adapter=adapter_d),
+         'POST-E', False),
+        ('POST-E con ancla ADAPTER_SHA256 incorrecta', fake(files=dict(real, **{va: wrong})), tree(validator=wrong),
+         'POST-E', False),
+        ('8 POST-E: scope modificado y revertido', fake(history=after((y, [x], {x: [sc]}), (x, [e], {e: [sc]}))),
+         ok_tree, None, False),
+        ('9 POST-E: validador modificado y revertido', fake(history=after((y, [x], {x: [va]}), (x, [e], {e: [va]}))),
+         ok_tree, None, False),
+        ('10 POST-E: ambos modificados con anclas recalculadas y revertidos', fake(history=after(
+            (y, [x], {x: both}), (x, [e], {e: both}))), ok_tree, None, False),
+        ('11 POST-E: rama lateral modifica scope y el merge restaura E', fake(history=after(
+            (m, [e, lat], {e: [], lat: [sc]}), (lat, [e], {e: [sc]}))), ok_tree, None, False),
+        ('12 POST-E: rama lateral modifica el validador y el merge restaura E', fake(history=after(
+            (m, [e, lat], {e: [], lat: [va]}), (lat, [e], {e: [va]}))), ok_tree, None, False),
+        ('13 POST-E: merge commit que toca scope directamente', fake(history=after((m, [e, z], {e: [sc], z: both}))),
+         ok_tree, None, False),
+        ('14 POST-E: merge commit que toca el validador directamente', fake(history=after(
+            (m, [e, z], {e: [va], z: both}))), ok_tree, None, False),
+        ('develop sin evidencia de E', fake(branch='develop', head='a' * 40, **pre), ok_tree, 'PRE-E', False),
+        ('main sin evidencia de E', fake(branch='main', head='b' * 40, **pre), ok_tree, 'PRE-E', False),
+        ('PRE-E en la rama F35-SBX con HEAD distinto de D', fake(head='c' * 40, **pre), ok_tree, 'PRE-E', False),
+        ('E que no es hijo directo de D', fake(history=[(e, ['a' * 40], {'a' * 40: both})]), ok_tree, 'POST-E', False),
+        ('E como merge', fake(history=[(e, [AUDITED_D, 'a' * 40], {AUDITED_D: both, 'a' * 40: both})]), ok_tree,
+         'POST-E', False),
+        ('E que cambia otro archivo', fake(names=f'{sc}\n{va}\nCLAUDE.md'), ok_tree, 'POST-E', False),
+        ('commit sin padres en la historia', fake(raw=f'{"a" * 40}\n'), ok_tree, None, False),
+        # FEATURE POST-E (HEAD = E): misma congelación respecto de E que develop/main.
+        ('F1 feature POST-E + evidencia-sbx/README.md modificado', fake(history=clean[1:],
+         frozen_tree='M\tdocs/academico/evidencia-sbx/README.md\n'), ok_tree, 'POST-E', False),
+        ('F2 feature POST-E + otro archivo de evidencia-sbx modificado', fake(history=clean[1:],
+         frozen_tree='M\tdocs/academico/evidencia-sbx/fixtures/manifest.json\n'), ok_tree, 'POST-E', False),
+        ('F3 feature POST-E + archivo sin seguimiento en evidencia-sbx', fake(history=clean[1:],
+         frozen_untracked='docs/academico/evidencia-sbx/nuevo.md\n'), ok_tree, 'POST-E', False),
+        ('F4 feature POST-E + evidencia-sbx preparado en el índice (árbol restaurado)', fake(history=clean[1:],
+         frozen_index='M\tdocs/academico/evidencia-sbx/README.md\n'), ok_tree, 'POST-E', False),
+        ('F5 feature POST-E + evidencia-sbx eliminado', fake(history=clean[1:],
+         frozen_tree='D\tdocs/academico/evidencia-sbx/README.md\n'), ok_tree, 'POST-E', False),
+        ('F6 feature POST-E + evidencia-sbx renombrado', fake(history=clean[1:],
+         frozen_tree='D\tdocs/academico/evidencia-sbx/README.md\nA\tdocs/academico/evidencia-sbx/LEEME.md\n'),
+         ok_tree, 'POST-E', False),
+        *[(f'F7-F12 feature POST-E + {p} modificado', fake(history=clean[1:], frozen_tree=f'M\t{p}\n'), ok_tree,
+           'POST-E', False)
+          for p in ('CLAUDE.md', 'docs/PROGRESS.md', 'docs/academico/ACADEMIC_BASELINE.md',
+                    'docs/academico/tools/f30/validate_f30.py', 'docs/academico/tools/f33/validate_f33.py',
+                    'docs/academico/tools/f34/validate_f34.py', 'docs/academico/tools/f34b/validate_f34b.py',
+                    'docs/academico/tools/f34e/validate_f34e.py', ADAPTER_REL, SELF_REL)],
+        ('develop POST-E + evidencia-sbx/README.md modificado', fake(branch='develop',
+         frozen_tree='M\tdocs/academico/evidencia-sbx/README.md\n'), ok_tree, 'POST-E', False),
+        ('main POST-E + archivo sin seguimiento en evidencia-sbx', fake(branch='main',
+         frozen_untracked='docs/academico/evidencia-sbx/nuevo.md\n'), ok_tree, 'POST-E', False),
+        ('F14 feature POST-E limpio (árbol, índice y sin seguimiento idénticos a E)', fake(history=clean[1:]), ok_tree,
+         'POST-E', True),
+        # Flags del índice e integridad de bytes (independiente de git diff): los flags ocultan el cambio a git diff.
+        ('B feature POST-E + assume-unchanged en README (sin cambiar bytes)', fake(history=clean[1:],
+         flags=b'h ' + readme.encode() + b'\x00'), ok_tree, 'POST-E', False),
+        ('D feature POST-E + skip-worktree en README', fake(history=clean[1:], flags=b'S ' + readme.encode() + b'\x00'),
+         ok_tree, 'POST-E', False),
+        ('feature POST-E + assume-unchanged y skip-worktree en README', fake(history=clean[1:],
+         flags=b's ' + readme.encode() + b'\x00'), ok_tree, 'POST-E', False),
+        ('C/E feature POST-E + bytes de README distintos de E aunque git diff esté limpio', fake(history=clean[1:],
+         ref_tree=tree_with(readme)), ok_tree, 'POST-E', False),
+        ('K feature POST-E + protegido ausente del sistema de archivos', fake(history=clean[1:],
+         ref_tree=disk_tree + b'100644 blob ' + b'1' * 40 + b'\tdocs/academico/evidencia-sbx/borrado.md\x00'),
+         ok_tree, 'POST-E', False),
+        ('L/M feature POST-E + archivo real que no existe en E', fake(history=clean[1:], ref_tree=tree_with(readme,
+         drop=True)), ok_tree, 'POST-E', False),
+        ('feature POST-E + protegido con modo distinto de 100644 en E', fake(history=clean[1:],
+         ref_tree=disk_tree.replace(b'100644 blob', b'100755 blob', 1)), ok_tree, 'POST-E', False),
+        ('feature POST-E + árbol de referencia vacío', fake(history=clean[1:], ref_tree=b''), ok_tree, 'POST-E', False),
+        ('N develop POST-E + assume-unchanged', fake(branch='develop', flags=b'h ' + readme.encode() + b'\x00'),
+         ok_tree, 'POST-E', False),
+        ('O main POST-E + skip-worktree', fake(branch='main', flags=b'S ' + readme.encode() + b'\x00'), ok_tree,
+         'POST-E', False),
+        ('PRE-E + assume-unchanged en cualquier ruta del repositorio', fake(history=[],
+         flags=b'h app/Models/User.php\x00'), ok_tree, 'PRE-E', False),
+        ('PRE-E + bytes de un protegido distintos de D', fake(history=[], ref_tree=tree_with(readme)), ok_tree, 'PRE-E',
+         False),
+        ('feature POST-E + error de Git en ls-files -v', fake(history=clean[1:], fault=('ls-files', '-v')), ok_tree,
+         'POST-E', False),
+        ('feature POST-E + error de Git en ls-tree', fake(history=clean[1:], fault=('ls-tree',)), ok_tree, 'POST-E',
+         False),
+        ('feature POST-E con error de Git en la congelación', fake(history=clean[1:],
+         fault=('ls-files', '--others', '--exclude-standard', '--')), ok_tree, None, False),
+        ('error de Git en la historia', fake(fault=('rev-list',)), ok_tree, None, False),
+        ('error de Git en el diff de un commit', fake(fault=('diff-tree', '-r')), ok_tree, None, False),
+        ('error de Git en el delta PRE-E', fake(fault=('diff', '--cached'), **pre), ok_tree, None, False),
+        ('error de Git al leer E', fake(fault=('show',)), ok_tree, None, False),
+        ('Git no disponible', lambda *a: (None, b''), ok_tree, None, False),
+    ]
+    out = []
+    for label, run, rd, phase, ok in cases:
+        got, problems = adapter_check(run, rd)
+        out.append((got == phase and (not problems) == ok, f'ADAPTADOR {label} → {got}: {problems[:1]}'))
+    return out
 
 
 def lines(text):
@@ -2393,6 +2892,16 @@ def main():
     add(SCOPE.HISTORICAL_VALIDATORS == F35_HISTORICAL and SCOPE.F35SBX_BASE == BASE,
         'f35sbx_scope: mismos tres validadores históricos y misma base fija (doble llave)')
     for ok, m in SCOPE.regressions(ROOT):
+        add(ok, m)
+    phase, ap = adapter_check()
+    add(phase is not None and not ap, f'ADAPTADOR: transición {phase} verificada con ancla externa e historia Git {ap}')
+    add(SCOPE.AUDITED_CLOSURE == AUDITED_D and SCOPE.F35SBX_BRANCH == F35_BRANCH and SCOPE.ADAPTER == ADAPTER_REL
+        and SCOPE.ADAPTER_VALIDATOR == SELF_REL and set(SCOPE.FROZEN_AFTER_CLOSURE) == set(FROZEN_AFTER_E)
+        and not SCOPE.anchor_problems(read_text(os.path.join(ROOT, ADAPTER_REL)),
+                                                                            read_text(os.path.join(ROOT, SELF_REL))),
+        'f35sbx_scope: mismo commit D, misma rama, mismos archivos adaptados, mismo conjunto congelado tras E y anclas '
+        'cruzadas válidas (doble llave)')
+    for ok, m in adapter_regressions() + cache_regressions(lambda root: disk_files(root=root)):
         add(ok, m)
 
     # Controles positivos.
