@@ -30,6 +30,8 @@ from m_herramientas import CLASES, CLASIFICACION  # noqa: E402
 from m_matriz import MATRIZ, NIVELES, OFICIALES, SR  # noqa: E402
 import f31_scope  # noqa: E402
 import f32_scope  # noqa: E402
+sys.path.append(os.path.join(HERE, '..', 'f35sbx'))
+import f35sbx_scope  # noqa: E402
 
 DOCS = ['README.md', 'F30_Estado_del_Arte_IA_Reclutamiento.md', 'F30_Matriz_Evidencia_Cientifica.md',
         'F30_Analisis_Modelos_y_Tecnicas.md', 'F30_Explainability_Fairness_Gobernanza.md',
@@ -196,10 +198,15 @@ def main():
     # La existencia permanente del informe no desactiva protecciones de fases posteriores.
     gobierno_f31 = f31_scope.GOVERNANCE if f31_scope.active(ROOT) else set()
     gobierno_f32 = f32_scope.GOVERNANCE if f32_scope.active(ROOT) else set()
+    # F35-SBX-A (DH-09): CLAUDE.md y docs/PROGRESS.md solo con exactamente la apertura, en rama y base propias.
     fuera = [ln for ln in st if not ln[3:].strip('"').startswith('docs/academico/')
-             and ln[3:].strip('"').replace('\\', '/') not in (gobierno_f31 | gobierno_f32)]
+             and ln[3:].strip('"').replace('\\', '/') not in (gobierno_f31 | gobierno_f32)
+             and not f35sbx_scope.governance_ok(ln[3:], ROOT)]
     if fuera:
         err(f'cambios fuera de docs/academico/: {fuera}')
+    for ok, m in f35sbx_scope.regressions(ROOT):
+        if not ok:
+            err(m)
 
     for a in avisos:
         print('AVISO', a)

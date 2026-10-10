@@ -241,7 +241,13 @@ def main():
     st = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=all'], cwd=ROOT, capture_output=True,
                         text=True, encoding='utf-8').stdout.splitlines()
     rutas = [ln[3:].strip('"') for ln in st]
-    check(all(p.startswith('docs/academico/') for p in rutas), f'cambios solo en docs/academico ({len(rutas)})')
+    # Excepción F35-SBX-A (DH-09): solo CLAUDE.md y docs/PROGRESS.md con exactamente la apertura; si no, falla.
+    sys.path.append(os.path.join(ROOT, 'docs', 'academico', 'tools', 'f35sbx'))
+    import f35sbx_scope
+    check(all(p.startswith('docs/academico/') or f35sbx_scope.governance_ok(p, ROOT) for p in rutas),
+          f'cambios solo en docs/academico ({len(rutas)})')
+    for ok, m in f35sbx_scope.regressions(ROOT):
+        check(ok, m)
     check(not [p for p in rutas if p.startswith(RUNTIME)], '0 cambios de runtime o producto')
 
     fallas = [m for ok, m in res if not ok]

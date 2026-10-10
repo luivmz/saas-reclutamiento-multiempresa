@@ -1,0 +1,294 @@
+{
+  "fixture_id": "FXS-ORG-S3",
+  "contract_version": "f35sbx-contract-1.0.0",
+  "synthetic_organization_id": "ORG-S3",
+  "source_type": "synthetic",
+  "environment": "sandbox",
+  "synthetic_marker": "[SINTÉTICO]",
+  "tenant": {
+    "synthetic_organization_id": "ORG-S3",
+    "tenant_kind": "synthetic_organization",
+    "origin_dataset_version": "f34-synth-1.1.0",
+    "simulation_actor": "SIMREV-ORG-S3"
+  },
+  "run": {
+    "pipeline_run_id": "SBXR-ORG-S3-0001",
+    "synthetic_organization_id": "ORG-S3",
+    "run_kind": "oraculo_sbx_a",
+    "pipeline_version": "f35sbx-design-0",
+    "contract_version": "f35sbx-contract-1.0.0",
+    "hash_algorithm": "f35sbx-content-sha256-v1",
+    "seed": 20261010,
+    "clock_start": "2026-10-07T09:00:00",
+    "environment": "sandbox",
+    "source_type": "synthetic"
+  },
+  "events": [
+    {
+      "event_id": "SBXV-ORG-S3-0001-01",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "seq": 1,
+      "state": "pendiente",
+      "at": "2026-10-07T09:00:00",
+      "error_code": "",
+      "prev_event_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "event_hash": "e215ec324c9349620afb65673119985750345a4a825be27cfc6b2e0664314feb"
+    },
+    {
+      "event_id": "SBXV-ORG-S3-0001-02",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "seq": 2,
+      "state": "validando",
+      "at": "2026-10-07T09:01:00",
+      "error_code": "",
+      "prev_event_hash": "e215ec324c9349620afb65673119985750345a4a825be27cfc6b2e0664314feb",
+      "event_hash": "27fe0b8f12b01508439d4ca8a1db1955933fa923a4bf384c41ff05e38c9c7091"
+    },
+    {
+      "event_id": "SBXV-ORG-S3-0001-03",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "seq": 3,
+      "state": "registrado",
+      "at": "2026-10-07T09:02:00",
+      "error_code": "",
+      "prev_event_hash": "27fe0b8f12b01508439d4ca8a1db1955933fa923a4bf384c41ff05e38c9c7091",
+      "event_hash": "164eba2f2806f099d84365d3e6e09834aae15586cde8734a3b36cd9c67cc3438"
+    },
+    {
+      "event_id": "SBXV-ORG-S3-0001-04",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "seq": 4,
+      "state": "transformado",
+      "at": "2026-10-07T09:03:00",
+      "error_code": "",
+      "prev_event_hash": "164eba2f2806f099d84365d3e6e09834aae15586cde8734a3b36cd9c67cc3438",
+      "event_hash": "f061009d2d2b76749eca13a24af579411f870428b7040360da5e7cc8faf28204"
+    },
+    {
+      "event_id": "SBXV-ORG-S3-0001-05",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "seq": 5,
+      "state": "en_revision",
+      "at": "2026-10-07T09:04:00",
+      "error_code": "",
+      "prev_event_hash": "f061009d2d2b76749eca13a24af579411f870428b7040360da5e7cc8faf28204",
+      "event_hash": "7fa4c923902f4e7002dcb5dd2b7cb4d6670f94991850d9fc46c705d2b2fc4ebd"
+    },
+    {
+      "event_id": "SBXV-ORG-S3-0001-06",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "seq": 6,
+      "state": "revisado",
+      "at": "2026-10-07T09:05:00",
+      "error_code": "",
+      "prev_event_hash": "7fa4c923902f4e7002dcb5dd2b7cb4d6670f94991850d9fc46c705d2b2fc4ebd",
+      "event_hash": "18508f7036cbe21b78791aeb6d2ca8f393923d3b82577fec5e0c27051f907b01"
+    },
+    {
+      "event_id": "SBXV-ORG-S3-0001-07",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "seq": 7,
+      "state": "completado",
+      "at": "2026-10-07T09:06:00",
+      "error_code": "",
+      "prev_event_hash": "18508f7036cbe21b78791aeb6d2ca8f393923d3b82577fec5e0c27051f907b01",
+      "event_hash": "4f6f611fd7d67cf8dbb83ca90ee311169202231e1b23900e1826d2cd491feb15"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "SBXS-ORG-S3-000001",
+      "synthetic_organization_id": "ORG-S3",
+      "source_type": "synthetic",
+      "origin_dataset_version": "f34-synth-1.1.0",
+      "origin_file": "docs/academico/datos-sinteticos/dataset/evidence.csv",
+      "origin_file_sha256": "ec6aef1b297a2f5688800d883df5a681c7c4a8070af406e9532cfd785b4b0563",
+      "origin_record_id": "SYN-006312"
+    },
+    {
+      "source_id": "SBXS-ORG-S3-000002",
+      "synthetic_organization_id": "ORG-S3",
+      "source_type": "synthetic",
+      "origin_dataset_version": "f34-synth-1.1.0",
+      "origin_file": "docs/academico/datos-sinteticos/dataset/evidence.csv",
+      "origin_file_sha256": "ec6aef1b297a2f5688800d883df5a681c7c4a8070af406e9532cfd785b4b0563",
+      "origin_record_id": "SYN-006313"
+    }
+  ],
+  "records": [
+    {
+      "synthetic_id": "SBXE-ORG-S3-000001",
+      "synthetic_organization_id": "ORG-S3",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "source_id": "SBXS-ORG-S3-000001",
+      "criterion_ref": "CRI-0011",
+      "evidence_kind": "formulario",
+      "text_synthetic": "[SINTÉTICO] Describe una situación concreta relacionada con «Planificación de la enseñanza».",
+      "source_type": "synthetic",
+      "environment": "sandbox",
+      "hash_algorithm": "f35sbx-content-sha256-v1",
+      "content_hash": "20a4fec1ab33a83ca59a5e705145fd3721920a3d286ee5ad209babfc4a796497",
+      "validation_status": "valido",
+      "review_status": "conforme",
+      "created_at": "2026-10-07T09:02:00"
+    },
+    {
+      "synthetic_id": "SBXE-ORG-S3-000002",
+      "synthetic_organization_id": "ORG-S3",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "source_id": "SBXS-ORG-S3-000002",
+      "criterion_ref": "CRI-0011",
+      "evidence_kind": "formulario",
+      "text_synthetic": "[SINTÉTICO] Aporta un ejemplo con propósito, acción y resultado para «Planificación de la enseñanza».",
+      "source_type": "synthetic",
+      "environment": "sandbox",
+      "hash_algorithm": "f35sbx-content-sha256-v1",
+      "content_hash": "911050af13aa10592b937ddfb0377c5e4913a610497daa83b026c85fec41a1de",
+      "validation_status": "valido",
+      "review_status": "conforme",
+      "created_at": "2026-10-07T09:02:00"
+    }
+  ],
+  "provenance": [
+    {
+      "provenance_id": "SBXP-ORG-S3-000001",
+      "record_id": "SBXE-ORG-S3-000001",
+      "synthetic_organization_id": "ORG-S3",
+      "provenance_kind": "synthetic_fixture",
+      "source_id": "SBXS-ORG-S3-000001",
+      "transformation_id": "T1-normalizacion-nfc-espacios",
+      "transformation_version": "1",
+      "hash_before": "20a4fec1ab33a83ca59a5e705145fd3721920a3d286ee5ad209babfc4a796497",
+      "hash_after": "20a4fec1ab33a83ca59a5e705145fd3721920a3d286ee5ad209babfc4a796497",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "review_id": "SBXH-ORG-S3-000001",
+      "recorded_at": "2026-10-07T09:03:00",
+      "prev_provenance_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "provenance_hash": "96824874c900e9549f9211e82bddd7a7b354bca0cdf86a67793bbb7677e244ac"
+    },
+    {
+      "provenance_id": "SBXP-ORG-S3-000002",
+      "record_id": "SBXE-ORG-S3-000002",
+      "synthetic_organization_id": "ORG-S3",
+      "provenance_kind": "synthetic_fixture",
+      "source_id": "SBXS-ORG-S3-000002",
+      "transformation_id": "T1-normalizacion-nfc-espacios",
+      "transformation_version": "1",
+      "hash_before": "911050af13aa10592b937ddfb0377c5e4913a610497daa83b026c85fec41a1de",
+      "hash_after": "911050af13aa10592b937ddfb0377c5e4913a610497daa83b026c85fec41a1de",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "review_id": "SBXH-ORG-S3-000002",
+      "recorded_at": "2026-10-07T09:03:00",
+      "prev_provenance_hash": "96824874c900e9549f9211e82bddd7a7b354bca0cdf86a67793bbb7677e244ac",
+      "provenance_hash": "174f0962bc6b6c847c9a854a57e0e15de68f0829e737d3214694f33dbbdb905e"
+    }
+  ],
+  "reviews": [
+    {
+      "review_id": "SBXH-ORG-S3-000001",
+      "record_id": "SBXE-ORG-S3-000001",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "synthetic_organization_id": "ORG-S3",
+      "reviewer_type": "synthetic_human_simulation",
+      "simulation_actor": "SIMREV-ORG-S3",
+      "review_scope": "integridad_y_procedencia",
+      "review_status": "conforme",
+      "scripted": true,
+      "reviewed_at": "2026-10-07T09:05:00"
+    },
+    {
+      "review_id": "SBXH-ORG-S3-000002",
+      "record_id": "SBXE-ORG-S3-000002",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "synthetic_organization_id": "ORG-S3",
+      "reviewer_type": "synthetic_human_simulation",
+      "simulation_actor": "SIMREV-ORG-S3",
+      "review_scope": "integridad_y_procedencia",
+      "review_status": "conforme",
+      "scripted": true,
+      "reviewed_at": "2026-10-07T09:05:00"
+    }
+  ],
+  "audit": [
+    {
+      "audit_id": "SBXA-ORG-S3-0001-01",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "synthetic_organization_id": "ORG-S3",
+      "action": "fixture_verificado",
+      "target_ref": "SBXR-ORG-S3-0001",
+      "at": "2026-10-07T09:00:00",
+      "prev_audit_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "audit_hash": "1d004e460ddf5d1e89b9f71146688cb05f3dc709089a3f17eb0eea42c069b38a"
+    },
+    {
+      "audit_id": "SBXA-ORG-S3-0001-02",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "synthetic_organization_id": "ORG-S3",
+      "action": "esquema_validado",
+      "target_ref": "SBXR-ORG-S3-0001",
+      "at": "2026-10-07T09:01:00",
+      "prev_audit_hash": "1d004e460ddf5d1e89b9f71146688cb05f3dc709089a3f17eb0eea42c069b38a",
+      "audit_hash": "1835997106574145d79c4eba57aed6d0d70c3000c4b118e17aa2dd47f38ef54c"
+    },
+    {
+      "audit_id": "SBXA-ORG-S3-0001-03",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "synthetic_organization_id": "ORG-S3",
+      "action": "sintetico_verificado",
+      "target_ref": "SBXR-ORG-S3-0001",
+      "at": "2026-10-07T09:02:00",
+      "prev_audit_hash": "1835997106574145d79c4eba57aed6d0d70c3000c4b118e17aa2dd47f38ef54c",
+      "audit_hash": "6a719fbe3bdb9fce1c2e9c7124c1a65c231367180b2a0a5133fcdc7c30285316"
+    },
+    {
+      "audit_id": "SBXA-ORG-S3-0001-04",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "synthetic_organization_id": "ORG-S3",
+      "action": "hash_calculado",
+      "target_ref": "SBXR-ORG-S3-0001",
+      "at": "2026-10-07T09:03:00",
+      "prev_audit_hash": "6a719fbe3bdb9fce1c2e9c7124c1a65c231367180b2a0a5133fcdc7c30285316",
+      "audit_hash": "5e031f2ff2b4572602a69f93599ba12d724a837e89472764c8dc30ab22e003f4"
+    },
+    {
+      "audit_id": "SBXA-ORG-S3-0001-05",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "synthetic_organization_id": "ORG-S3",
+      "action": "provenance_registrada",
+      "target_ref": "SBXR-ORG-S3-0001",
+      "at": "2026-10-07T09:04:00",
+      "prev_audit_hash": "5e031f2ff2b4572602a69f93599ba12d724a837e89472764c8dc30ab22e003f4",
+      "audit_hash": "5b38a6d49380d835641d476866143a8354d41fe3140ea1c95d28d39f04d83f24"
+    },
+    {
+      "audit_id": "SBXA-ORG-S3-0001-06",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "synthetic_organization_id": "ORG-S3",
+      "action": "tenant_validado",
+      "target_ref": "SBXR-ORG-S3-0001",
+      "at": "2026-10-07T09:05:00",
+      "prev_audit_hash": "5b38a6d49380d835641d476866143a8354d41fe3140ea1c95d28d39f04d83f24",
+      "audit_hash": "1f99d8ddfefb120a7a818c17e623e738df13e1c4cf3e71691552861406beb195"
+    },
+    {
+      "audit_id": "SBXA-ORG-S3-0001-07",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "synthetic_organization_id": "ORG-S3",
+      "action": "revision_simulada_registrada",
+      "target_ref": "SBXR-ORG-S3-0001",
+      "at": "2026-10-07T09:06:00",
+      "prev_audit_hash": "1f99d8ddfefb120a7a818c17e623e738df13e1c4cf3e71691552861406beb195",
+      "audit_hash": "8da7cf620aab3efd1fddd07bc9bea554177236b9376c397d178e1f41db0490d2"
+    },
+    {
+      "audit_id": "SBXA-ORG-S3-0001-08",
+      "pipeline_run_id": "SBXR-ORG-S3-0001",
+      "synthetic_organization_id": "ORG-S3",
+      "action": "ejecucion_cerrada",
+      "target_ref": "SBXR-ORG-S3-0001",
+      "at": "2026-10-07T09:07:00",
+      "prev_audit_hash": "8da7cf620aab3efd1fddd07bc9bea554177236b9376c397d178e1f41db0490d2",
+      "audit_hash": "4a968c4ac585a2daa1f69156493321c8945a06f0c0c8d652addd7a8c83a1c1ba"
+    }
+  ]
+}
