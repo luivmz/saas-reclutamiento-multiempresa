@@ -61,12 +61,23 @@ RUNTIME_SURFACES = ('app', 'routes', 'database', 'config', 'resources', 'bootstr
                     'artisan', 'composer.json', 'composer.lock', 'package.json', 'package-lock.json',
                     'docker-compose.yml', '.dockerignore', 'phpunit.xml', 'vite.config.ts',
                     'docs/academico/datos-sinteticos', 'docs/academico/g0-sandbox', 'docs/academico/g0-evidence')
-# Excepciones mínimas: artefactos locales generados que existen realmente en el repositorio de trabajo.
-RT_SKIP_DIRS = frozenset({'public/build',                         # salida de Vite (npm run build)
-                          'resources/js/actions', 'resources/js/routes', 'resources/js/wayfinder',  # Wayfinder
-                          'cypress/results',                       # resultados de Cypress
-                          'ml-service/src/recruitment_ml.egg-info'})  # instalación editable del servicio ML
+# Excepciones de FSY (B1.2): por defecto se deniega todo; cada excepción es un directorio generado cuyo contenido no
+# se ignora, sino que se valida: cada archivo debe cumplir un patrón estrecho de ruta y extensión, sin enlaces ni
+# objetos especiales. Los dos archivos de caché de Laravel además deben ser un arreglo PHP literal puro.
+RT_EXCEPTIONS = {
+    'public/build': re.compile(r'(manifest\.json|fonts-manifest\.json|'
+                               r'assets/[A-Za-z0-9_.-]+-[A-Za-z0-9_-]{8}\.(js|css|woff2?))'),     # Vite
+    'resources/js/actions': re.compile(r'([A-Za-z0-9_-]+/)*[A-Za-z0-9_.-]+\.ts'),                  # Wayfinder
+    'resources/js/routes': re.compile(r'([A-Za-z0-9_-]+/)*[A-Za-z0-9_.-]+\.ts'),                   # Wayfinder
+    'resources/js/wayfinder': re.compile(r'([A-Za-z0-9_-]+/)*[A-Za-z0-9_.-]+\.ts'),                # Wayfinder
+    'cypress/results': re.compile(r'[A-Za-z0-9_.-]+\.(json|log)'),                                # Cypress
+    'ml-service/src/recruitment_ml.egg-info': re.compile(                                          # pip -e
+        r'(PKG-INFO|SOURCES\.txt|dependency_links\.txt|top_level\.txt|requires\.txt)'),
+}
+RT_SKIP_DIRS = frozenset(RT_EXCEPTIONS)
 RT_SKIP_FILES = frozenset({'bootstrap/cache/packages.php', 'bootstrap/cache/services.php'})  # caché de Laravel
+PHP_ARRAY_RX = re.compile(r"<\?php return array \((?:\s+|'(?:[^'\\]|\\.)*'|\d+|=>|array \(|\)|,|true|false|null|NULL)*"
+                          r"\);\s*")
 RT_PYCACHE_ROOTS = ('ml-service/src/', 'ml-service/tests/')        # __pycache__ con solo .pyc regulares
 # Alcance exacto de B1 respecto de B_BASE: ruta -> estado esperado. Todas obligatorias.
 SCOPE = {
@@ -196,6 +207,38 @@ def walk(roots, skip_dirs=frozenset(), skip_files=frozenset(), pycache_roots=())
     return found, problems
 
 
+def exception_problems(reader=real_bytes):
+    """Contenido de las excepciones de FSY: patrón de ruta y tipo de cada archivo, y arreglo PHP literal en la caché."""
+    out = []
+    for rel, rx in sorted(RT_EXCEPTIONS.items()):
+        full = os.path.join(ROOT, rel)
+        if os.path.islink(full):
+            out.append(f'excepción convertida en enlace: {rel}')
+            continue
+        if not os.path.lexists(full):
+            continue
+        if not os.path.isdir(full):
+            out.append(f'excepción que no es un directorio: {rel}')
+            continue
+        for d, dirs, files in os.walk(full):
+            for name in dirs + files:
+                p = os.path.join(d, name)
+                sub = os.path.relpath(p, full).replace(os.sep, '/')
+                if os.path.islink(p):
+                    out.append(f'enlace dentro de una excepción: {rel}/{sub}')
+                elif name in files and not (os.path.isfile(p) and rx.fullmatch(sub)):
+                    out.append(f'archivo no autorizado dentro de la excepción {rel}: {sub}')
+            dirs[:] = [x for x in dirs if not os.path.islink(os.path.join(d, x))]
+    for rel in sorted(RT_SKIP_FILES):
+        if not os.path.lexists(os.path.join(ROOT, rel)):
+            continue
+        data = reader(rel)
+        text = text_of(data) if data is not None else None
+        if text is None or not PHP_ARRAY_RX.fullmatch(text):
+            out.append(f'{rel}: no es un arreglo PHP literal generado por Laravel (código no autorizado)')
+    return out
+
+
 def name_status(data):
     parts = data.split(b'\x00')
     return {(parts[i].decode(), parts[i + 1].decode('utf-8', 'replace')) for i in range(0, len(parts) - 1, 2)
@@ -276,6 +319,7 @@ def collect(runner=git, reader=real_bytes):
         S['rt_tracked'] = {x for x in must('ls-tree', '-r', '--name-only', '-z', 'HEAD', '--', *RUNTIME_SURFACES)
                            .decode('utf-8', 'replace').split('\x00') if x}
         S['rt_fs'], S['rt_walk'] = walk(RUNTIME_SURFACES, RT_SKIP_DIRS, RT_SKIP_FILES, RT_PYCACHE_ROOTS)
+        S['rt_exc'] = exception_problems(reader)
         S['a_head_diff'] = [x for x in must('diff', '--name-only', '-z', E, 'HEAD', '--', *A_PATHS).decode().split('\x00') if x]
         S['b0_blob'] = must('rev-parse', f'{B0_CLOSE}:{B0_DOC}').decode().strip()
         S['b0_real'] = None if (d := reader(B0_DOC)) is None else blob_id(d)
@@ -310,15 +354,75 @@ ENABLE_RX = re.compile(r'^(habilit|permit|implement|activ|autoriz|desbloque|apro
                        r'incorpor|despleg|deploy|introduc|admit)')
 REJECT_CTX_RX = re.compile(r'\b(rechaz\w*|prohib\w*|detect\w*|fall\w*|fail\w*|bloque\w*|ejemplo\w*|negativ\w*|'
                            r'cita\w*|reject\w*|forbid\w*|nunca|no debe\w*)\b')
-EXAMPLE_PREFIX_RX = re.compile(r'^(ejemplo negativo|caso negativo|prueba negativa|negativo|negative example)\b')
-QUOTE_RX = re.compile(r'«[^«»]*»|“[^“”]*”|"[^"]*"')
+EXAMPLE_PREFIX_RX = re.compile(r'^(ejemplo negativo|caso negativo|prueba negativa|negativo|negative example|'
+                               r'bypass( reproducido| confirmado)?|ataque|attack)\b')
+QUOTE_RX = re.compile(r"«[^«»]*»|“[^“”]*”|‘[^‘’]*’|\"[^\"]*\"|(?<![a-z0-9])'[^'\n]*'(?![a-z0-9])")
+# B1.2 — acciones inequívocas sobre personas candidatas y estados predicativos automáticos.
+PERSON_RX = re.compile(r'^(candidat|postulant|aspirant|ganador|ganadora|apto|apta|aptos|aptas|mejor|mejores|person|'
+                       r'applicant|candidate|winner|best)')
+AUTO_RX = re.compile(r'^(automatic|automated|autonom)')
+PROHIB_RX = re.compile(r'^(prohib|bloque|rechaz|forbid|deneg|vedad|impid|imped|block)')
+ACTIONS = [   # (familia, formas verbales explícitas; exige persona candidata; exige «automático»)
+    ('scoring', re.compile(r'^(puntu(a|an|ar|ara|aran|aria|e|en|o|amos|ando|ado|ada|ados|adas)|scores?|scored)$'),
+     True, False),
+    ('scoring', re.compile(r'^(califica|calific(an|ar|ara|aran|o|amos)|clasific(a|an|ar|ara|aran|amos)|'
+                           r'evalu(a|an|ar|ara|aran|amos))$'), True, True),
+    ('recomendación', re.compile(r'^(recomiend\w*|recomend(ar|ara|aran|aria|o|e|en|amos|ado|ada)|'
+                                 r'recommends?|recommended|recommending)$'), True, False),
+    ('mejor candidato', re.compile(r'^(elig\w*|eleg(ir|ira|iran|imos|ido|ida)|escog\w*|escoj\w*|'
+                                   r'identific(a|an|ar|ara|aran|o|amos))$'), True, False),
+    ('selección automática', re.compile(r'^(seleccion(a|an|ar|ara|aran|aria|o|e|en|amos|ado|ada|ados|adas|ando)|'
+                                        r'descart(a|an|ar|ara|aran|e|en|o|amos|ado|ada)|'
+                                        r'contrat(a|an|ar|ara|aran|e|en|o|amos)|selects?|selected|hires?|hired)$'),
+     True, False),
+    ('selección automática', re.compile(r'^(decid(e|en|ir|ira|iran|io|ido|ida|imos)|determin(a|an|ar|ara|aran)|'
+                                        r'resuelv(e|en)|resolv(er|era|eran)|decides?|decided)$'), False, True),
+    ('ranking automático', re.compile(r'^(rankea\w*|rank|ranks|ranked|ordena|ordenan|ordenar|ordenara|ordenaran)$'),
+     True, True),
+]
+STATE_NOUNS = r'(seleccion|decision|contratacion|descarte|eleccion|recomendacion|puntuacion|calificacion|ranking|' \
+              r'ordenamiento|selection|decision|hiring|scoring|recommendation)'
+COPULAS = r'(sera|seran|es|son|esta|estan|estara|queda|quedan|quedara|pasa a ser|pasara a ser|pasa a|se vuelve|' \
+          r'resulta|is|are|will be|becomes)'
+PREDICATIVE_RX = re.compile(r'\b' + STATE_NOUNS + r'\b((?: [a-z0-9-]+){0,3}?) ' + COPULAS +
+                            r'((?: [a-z0-9-]+){0,2}?) (automatic\w*|automated)\b')
+
+
+def unprohibited(toks, start, end):
+    """Una prohibición no negada en el mismo tramo, después de la acción, la convierte en prohibición."""
+    return not any(PROHIB_RX.match(t) and not negated(toks, k) for k, t in enumerate(toks) if k > start)
+
+
+def action_claims(segs, sentence):
+    """Acciones positivas inequívocas: verbo de la familia sobre personas candidatas (o con «automático») y estados
+    predicativos («la selección final será automática»), sin negación ni prohibición que los alcance."""
+    toks_all = [t for seg in segs for t in seg]
+    has_person = any(PERSON_RX.match(t) for t in toks_all)
+    has_auto = any(AUTO_RX.match(t) for t in toks_all)
+    hits = []
+    for family, verb_rx, needs_person, needs_auto in ACTIONS:
+        if (needs_person and not has_person) or (needs_auto and not has_auto):
+            continue
+        for toks in segs:
+            for i, t in enumerate(toks):
+                if verb_rx.match(t) and not negated(toks, i) and unprohibited(toks, i, len(toks)):
+                    hits.append(family)
+                    break
+    for toks in segs:
+        joined = ' '.join(toks)
+        for m in PREDICATIVE_RX.finditer(joined):
+            between = (m.group(2) + ' ' + m.group(4)).split()
+            at = joined[:m.start()].count(' ')
+            if not any(t in NEG_WORDS for t in between) and not negated(toks, at) and unprohibited(toks, at, len(toks)):
+                hits.append('selección automática')
+    return sorted(set(hits))
 # familia: (términos, verbos propios de la familia o None, términos que ya son una acción por sí mismos o None)
 FAMILIES = {
     'scoring': (r'\b(scoring|score|scores|puntaje\w*|puntuacion\w*|calificacion automatica)\b',
                 r'^(calcul|asign|otorg|comput|puntu|calific)', r'\bpuntua(n|r)?\b'),
     'recomendación': (r'\b(recomendacion\w*|recommendation\w*)\b', None, r'\b(recomiend\w*|recomendar|recommends?)\b'),
     'mejor candidato': (r'\b(mejor(es)? candidat\w*|best candidates?)\b', r'^(identific|elig|escog|select)', None),
-    'selección automática': (r'\b((seleccion|descarte|contratacion|decision) automatica\w*|automatic (selection|hiring))\b',
+    'selección automática': (r'\b((seleccion|descarte|contratacion|decision)( final)? automatica\w*|automatic (selection|hiring))\b',
                              None, r'\b(selecciona\w*|descarta\w*|contrata\w*) automaticamente\b'),
     'ranking automático': (r'\b(ranking automatico|nuevo ranking|ranking nuevo|automatic ranking)\b', None, r'\brankea\w*\b'),
     'OCR o extracción': (r'\b(ocr|parsing|parseo|extraccion\w*|extraction)\b', None, r'\b(extrae\w*|parsea\w*)\b'),
@@ -335,7 +439,7 @@ FAMILIES = {
 }
 # RF-23 se evalúa por oración con patrones explícitos: «RF-23 … automática/modifica/reemplaza…» o
 # «automatiza/modifica/reemplaza… RF-23», sin negación dentro del tramo ni en las tres palabras anteriores al verbo.
-RF23_RX = re.compile(r'\brf-?23\b((?:\s+\S+){0,4}?)\s+(automati\w*|modific\w*|reemplaz\w*|elimin\w*|sustitu\w*)\b|'
+RF23_RX = re.compile(r'\brf-?23\b((?:\s+\S+){0,4}?)\s+(automati\w*|modific\w*|reemplaz\w*|elimin\w*|sustitu\w*|decidid\w*|resuelt\w*)\b|'
                      r'\b(automatiz\w*|modific\w*|reemplaz\w*|elimin\w*|sustitu\w*)((?:\s+\S+){0,2}?)\s+rf-?23\b')
 
 
@@ -414,6 +518,7 @@ def positive_claims(text, exempt=lambda s: False):
         segs = segments(sentence)
         if rf23_claim(segs):
             hits.append(('RF-23', sentence.strip()[:120]))
+        hits += [(family, sentence.strip()[:120]) for family in action_claims(segs, sentence)]
         for family, (term_rx, verb_rx, action_rx) in FAMILY_RX.items():
             if family == 'RF-23':
                 continue
@@ -432,23 +537,29 @@ def positive_claims(text, exempt=lambda s: False):
 # Declaraciones de estado de gobierno: sujeto, separador opcional (=, :, :=, ==, ->, →) y valor.
 STATE_VALUE = (r'(no\s+)?(aprobad\w*|habilitad\w*|desbloquead\w*|permitid\w*|autorizad\w*|iniciad\w*|activ\w*|'
                r'bloquead\w*|prohibid\w*|propuest\w*|cerrad\w*|congelad\w*|implementad\w*|aceptad\w*)')
+LOCKED = ('no aprobad', 'no habilitad', 'no desbloquead', 'no autorizad', 'no iniciad', 'no activ', 'no implementad',
+          'no aceptad', 'no permitid')     # negar un estado positivo es coherente con un estado restrictivo
 DECLARED = [   # (sujeto, valores admitidos: prefijo del valor normalizado)
-    (r'g0 real', ('no aprobad',)),
-    (r'g0(?!\s+real)(?![\w-])', ('no aprobad',)),
-    (r'adr-005(?: canonico)?', ('propuest',)),
+    (r'g0 real', ('no aprobad',) + LOCKED),
+    (r'g0(?!\s+real)(?![\w-])', ('no aprobad',) + LOCKED),
+    (r'adr-005(?: canonico)?', ('propuest',) + LOCKED),
     (r'g0-sbx', ('aprobad con restricciones',)),
-    (r'f35 productiva', ('bloquead',)),
-    (r'f35-f40(?: productivas)?', ('bloquead',)),
-    (r'f36-f40', ('bloquead',)),
-    (r'(?:alcance|scope) c', ('bloquead', 'no habilitad')),
-    (r'datos reales', ('prohibid',)),
+    (r'f35 productiva', ('bloquead',) + LOCKED),
+    (r'f35-f40(?: productivas)?', ('bloquead',) + LOCKED),
+    (r'f36-f40', ('bloquead',) + LOCKED),
+    (r'(?:alcance|scope) c', ('bloquead',) + LOCKED),
+    (r'datos reales', ('prohibid',) + LOCKED),
     (r'f35-sbx-a', ('cerrad',)),
     (r'f35-sbx-b', ('iniciad',)),
     (r'f35-sbx', ('habilitad',)),
     (r'b0', ('cerrad',)),
     (r'b1', ('implementad', 'pendiente')),
 ]
-DECL_RX = [(re.compile(r'(?<![\w-])(' + subj + r')(?![\w-])\s*(?:(?::=|==|=|:|->|→)\s*)?' + STATE_VALUE), allowed)
+DECL_COPULA = (r'(?:queda\w*|quedo|quedaron|fue|fueron|esta|estan|estara\w*|es|son|sera\w*|pasa\w* a(?: ser)?|'
+               r'paso a(?: ser)?|declara\w*|resulta\w*|permanece\w*|sigue|siguen|continua\w*|is|was|are|were|'
+               r'becomes|remains)')
+DECL_RX = [(re.compile(r'(?<![\w-])(' + subj + r')(?![\w-])(?:\s*(?::=|==|=|:|->|→)\s*|\s+(no\s+)?(?:se\s+)?'
+                       + DECL_COPULA + r'\s+|\s+)' + STATE_VALUE.replace('(no\\s+)?', '(no\\s+)?', 1)), allowed)
            for subj, allowed in DECLARED]
 DECL_NEG_RX = re.compile(r'\b(no|nunca|jamas)\s+(\w+\s+){0,2}(declar\w*|figur\w*|registr\w*|afirm\w*|indic\w*|'
                          r'decir|escrib\w*|pon\w*)|\b(rechaz\w*|prohib\w*|detect\w*|impid\w*|imped\w*|ejemplo\w*|'
@@ -464,7 +575,8 @@ def contradictions(text):
             continue
         for rx, allowed in DECL_RX:
             for m in rx.finditer(body):
-                value = ' '.join(((m.group(2) or '') + m.group(3)).split())
+                negated_value = bool(m.group(2) or m.group(3))
+                value = ('no ' if negated_value else '') + m.group(4)
                 if value.startswith('aprobad') and body[m.end():].lstrip().startswith('con restricciones'):
                     value = 'aprobad con restricciones'
                 if value.startswith(allowed):
@@ -590,7 +702,7 @@ def r_scp(S):
 def r_fsy(S):
     if S['errors']:
         return ['sistema de archivos no verificable (falla cerrado)']
-    out = list(S['b_walk']) + list(S['rt_walk'])
+    out = list(S['b_walk']) + list(S['rt_walk']) + list(S['rt_exc'])
     if S['b_fs'] != B_FILES:
         out.append(f'carpetas de B distintas de la lista exacta: extra={sorted(S["b_fs"] - B_FILES)[:3]} '
                    f'faltan={sorted(B_FILES - S["b_fs"])[:3]}')
@@ -797,6 +909,26 @@ CASES = [
      mutate(lambda T: T['a_history'].append(('f' * 40, ['docs/academico/tools/f35sbx/f35sbx_scope.py'])))),
     ('NB-37', 'HST', 'repositorio superficial', mutate(lambda T: T.__setitem__('shallow', True))),
     ('NB-38', 'CNT', 'RF-23 declarada automática con dos puntos', doc_add('RF-23: automática.')),
+    # B1.2 — M01 residual: acciones inequívocas y selección automática (frases distintas de las de la auditoría).
+    ('NB-39', 'CNT', 'acción de puntuar candidatos', doc_add('Ahora permitimos puntuar candidatos.')),
+    ('NB-40', 'CNT', 'recomendación automática del candidato más apto',
+     doc_add('El sistema recomienda automáticamente al candidato más apto.')),
+    ('NB-41', 'CNT', 'selección final predicada como automática', doc_add('La selección final será automática.')),
+    ('NB-42', 'CNT', 'el sistema selecciona al candidato ganador', doc_add('El sistema seleccionará al candidato ganador.')),
+    ('NB-43', 'CNT', 'el motor decide automáticamente', doc_add('El motor decide automáticamente la selección final.')),
+    ('NB-44', 'CNT', 'RF-23 decidido automáticamente', doc_add('RF-23 será decidido automáticamente por el motor.')),
+    ('NB-45', 'CNT', 'inglés: ranking automático de candidatos', doc_add('We now rank candidates automatically.')),
+    ('NB-46', 'CNT', 'el motor elige a los mejores postulantes', doc_add('El motor elegirá a los mejores postulantes.')),
+    ('NB-47', 'CNT', 'contratación predicada como automática', doc_add('La contratación pasa a ser automática.')),
+    # B1.2 — M02 residual: declaraciones directas con verbo copulativo (varias entidades).
+    ('NB-48', 'GOV', 'ADR-005 queda APROBADA', gov_add('ADR-005 queda APROBADA')),
+    ('NB-49', 'GOV', 'ADR-005 fue o está APROBADA', gov_add('ADR-005 está APROBADA')),
+    ('NB-50', 'GOV', 'alcance C pasa a HABILITADO', gov_add('Scope C pasa a HABILITADO')),
+    ('NB-51', 'GOV', 'F35 productiva no está BLOQUEADA', gov_add('F35 productiva no está BLOQUEADA')),
+    ('NB-52', 'GOV', 'datos reales están permitidos', gov_add('Datos reales están permitidos')),
+    # B1.2 — M03 residual: abuso de una excepción de FSY.
+    ('NB-53', 'FSY', 'código no autorizado dentro de una excepción de FSY',
+     mutate(lambda T: T['rt_exc'].append('archivo no autorizado dentro de la excepción public/build: x.php'))),
 ]
 CASE_ROWS = {(row_cell(cid), row_cell(rule), row_cell(what)) for cid, rule, what, _ in CASES}
 # Controles positivos de B1.1: negación, prohibición, cita rechazada y ejemplo negativo no son afirmaciones.
@@ -805,7 +937,11 @@ LEGIT_TEXTS = ['No se habilita scoring.', 'Scoring permanece prohibido.',
                'Intento de habilitar F36–F40.', 'Sin scoring, recomendación ni selección automática.',
                'No debe declararse G0 real = APROBADA.', 'Nunca se permiten datos reales.',
                'El gate rechaza «F36–F40 = HABILITADAS» y «datos reales = permitidos».',
-               'Selección automática y RF-23 sin cambios.', 'RF-23 no se modifica.']
+               'Selección automática y RF-23 sin cambios.', 'RF-23 no se modifica.',
+               'La selección final permanece bajo decisión humana.', 'La selección automática está prohibida.',
+               "El gate debe rechazar: 'la selección final será automática'.", 'Puntuar candidatos está prohibido.',
+               'Bypass reproducido: el sistema seleccionará al candidato ganador.', 'ADR-005 permanece PROPUESTA.',
+               'ADR-005 no está APROBADA.', 'El gate debe rechazar ADR-005 queda APROBADA.']
 
 
 def integrity_cases(S):
