@@ -372,7 +372,7 @@ ACTIONS = [   # (familia, formas verbales explícitas; exige persona candidata; 
     ('mejor candidato', re.compile(r'^(elig\w*|eleg(ir|ira|iran|imos|ido|ida)|escog\w*|escoj\w*|'
                                    r'identific(a|an|ar|ara|aran|o|amos))$'), True, False),
     ('selección automática', re.compile(r'^(seleccion(a|an|ar|ara|aran|aria|o|e|en|amos|ado|ada|ados|adas|ando)|'
-                                        r'descart(a|an|ar|ara|aran|e|en|o|amos|ado|ada)|'
+                                        r'descart(a|an|ar|ara|aran|o|amos|ado|ada)|'
                                         r'contrat(a|an|ar|ara|aran|e|en|o|amos)|selects?|selected|hires?|hired)$'),
      True, False),
     ('selección automática', re.compile(r'^(decid(e|en|ir|ira|iran|io|ido|ida|imos)|determin(a|an|ar|ara|aran)|'
@@ -419,7 +419,8 @@ def action_claims(segs, sentence):
 # familia: (términos, verbos propios de la familia o None, términos que ya son una acción por sí mismos o None)
 FAMILIES = {
     'scoring': (r'\b(scoring|score|scores|puntaje\w*|puntuacion\w*|calificacion automatica)\b',
-                r'^(calcul|asign|otorg|comput|puntu|calific)', r'\bpuntua(n|r)?\b'),
+                r'^(calcul|asign|otorg|comput|puntu|calific)(a|an|ar|ara|aran|o|e|en|ado|ada|ados|adas)$',
+                r'\bpuntua(n|r)?\b'),
     'recomendación': (r'\b(recomendacion\w*|recommendation\w*)\b', None, r'\b(recomiend\w*|recomendar|recommends?)\b'),
     'mejor candidato': (r'\b(mejor(es)? candidat\w*|best candidates?)\b', r'^(identific|elig|escog|select)', None),
     'selección automática': (r'\b((seleccion|descarte|contratacion|decision)( final)? automatica\w*|automatic (selection|hiring))\b',
