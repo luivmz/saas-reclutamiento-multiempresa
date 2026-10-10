@@ -115,6 +115,7 @@ Los casos negativos viven dentro del gate, igual que en F35-SBX-A, sin `tests/` 
 | NB-35 | FSY | enlace en una superficie del runtime |
 | NB-36 | HST | commit posterior a E que toca F35-SBX-A (aunque se restaure) |
 | NB-37 | HST | repositorio superficial |
+| NB-38 | CNT | RF-23 declarada automática con dos puntos |
 
 ### 7.1 RED → GREEN (09/10/2026)
 
@@ -150,3 +151,69 @@ Cuando el cambio real altera el texto de partida de un negativo en memoria, ese 
 - Validadores vigentes sobre HEAD: `validate.py`, `validate.py --cierre-f29`, `test_f32_safety.py`, `validate_f34a.py` y `validate_f29.py`, sin fallas.
 - Gates históricos sobre HEAD: `validate_f30.py`, `validate_f33.py` y `validate_f34.py` pasan. `validate_f34b.py` y `validate_f34e.py` fallan solo por su alcance Git histórico (clase A de DH-B13). `validate_f35sbx.py` termina con un `StopIteration` no controlado: falla cerrado, sin diagnóstico (riesgo LOW ya registrado, que no se corrige porque A está congelada).
 - Gates históricos anclados (`main` en `d63d094`, `develop` en `8054fed`): los seis pasan.
+
+## 8. Corrección B1.1
+
+La auditoría independiente de la versión 1 (`f30cfe6`) dejó B1 «IMPLEMENTADA / NO APROBADA PARA CIERRE» con cuatro hallazgos MEDIUM y uno LOW. B1.1 los corrige sin cambiar la arquitectura (recogida del estado más reglas puras), DH-B13, SBX-01..SBX-18 ni el alcance de B1. El gate sigue en desarrollo y necesita reauditoría: no está congelado.
+
+### 8.1 Hallazgos y resolución
+
+| Hallazgo | Problema | Resolución |
+|---|---|---|
+| M01 | CNT solo revisaba claves JSON: un Markdown autorizado podía afirmar capacidades prohibidas | CNT analiza el texto de los documentos mutables de B (§8.2) |
+| M02 | GOV solo exigía las líneas canónicas: se podían añadir estados contradictorios en minúsculas | GOV analiza las declaraciones de estado en cualquier forma (§8.2) |
+| LOW | GOV podía leer una prohibición como declaración | Las citas, las prohibiciones y los ejemplos negativos no cuentan como declaración |
+| M03 | Un archivo de runtime ignorado por Git no se veía | FSY recorre el sistema de archivos real de las superficies (§8.3) |
+| M04 | Un cambio en A deshecho por un commit posterior no se veía | Regla HST sobre la historia completa (§8.4) |
+
+### 8.2 Semántica acotada de CNT y GOV
+
+No es un detector lingüístico universal. El texto se normaliza (minúsculas, sin acentos, sin Markdown básico, guiones unificados) y se divide en oraciones y en celdas de tabla.
+
+- **CNT.** Por familia (puntaje, recomendación, mejor candidato, selección automática, ranking nuevo, OCR o extracción, embeddings, búsqueda semántica, ML, alcance C, datos reales, producción, F36–F40, G0 real y RF-23), el gate rechaza toda oración que combine un término de la familia con un verbo o estado que intente habilitarla. Un término o un verbo no cuentan cuando una negación o prohibición aparece en las tres palabras anteriores de su mismo tramo; las comas, los dos puntos, el punto y coma, las celdas y los paréntesis cortan ese tramo. Las citas entre comillas se descartan solo cuando la oración que las rodea las rechaza o las presenta como ejemplo. Las oraciones que empiezan por «Ejemplo negativo» describen pruebas. Una fila «NB-xx» de la tabla de negativos solo describe un negativo si coincide con un caso del propio gate. El documento de B0 queda fuera porque B0F lo congela.
+- **GOV.** En el estado vigente, la cabecera y las líneas añadidas, el gate localiza las declaraciones de G0 real, ADR-005, G0-SBX, F35 productiva, F35–F40, F36–F40, alcance C, datos reales, F35-SBX, F35-SBX-A, F35-SBX-B, B0 y B1 con `=`, `:`, `:=`, `==`, `->`, `→` o sin separador, y exige el valor vigente; G0-SBX además «con restricciones». Las citas no cuentan, y tampoco una declaración que una prohibición o un ejemplo introducen en su propio tramo. Las líneas añadidas pasan además por el análisis de CNT.
+
+Límites conocidos: una afirmación redactada fuera de esos patrones, o con la negación a más de tres palabras, puede no detectarse; el prefijo «Ejemplo negativo» y las citas rechazadas son exenciones explícitas y auditables. Los controles positivos del gate (negación, prohibición, cita rechazada, ejemplo e intento) evitan falsos positivos sobre el texto legítimo.
+
+### 8.3 Superficies del sistema de archivos
+
+FSY recorre, sin seguir enlaces e incluidos los archivos ocultos: `app/`, `routes/`, `database/`, `config/`, `resources/`, `bootstrap/`, `public/`, `lang/`, `tests/`, `cypress/`, `docker/`, `.github/`, `ml-service/src/`, `ml-service/tests/`, `ml-service/pyproject.toml`, `artisan`, `composer.json`, `composer.lock`, `package.json`, `package-lock.json`, `docker-compose.yml`, `.dockerignore`, `phpunit.xml`, `vite.config.ts`, `docs/academico/datos-sinteticos/`, `docs/academico/g0-sandbox/` y `docs/academico/g0-evidence/`. Cada archivo debe estar en el árbol de HEAD, aunque `.gitignore` o `.git/info/exclude` lo ignoren, y ningún archivo de HEAD puede faltar.
+
+Excepciones, todas artefactos locales generados que existen en el repositorio de trabajo:
+
+| Excepción | Origen |
+|---|---|
+| `public/build/` | Salida de Vite (`npm run build`) |
+| `resources/js/actions/`, `resources/js/routes/`, `resources/js/wayfinder/` | Generados por Laravel Wayfinder |
+| `cypress/results/` | Resultados de Cypress |
+| `ml-service/src/recruitment_ml.egg-info/` | Instalación editable del servicio ML |
+| `bootstrap/cache/packages.php`, `bootstrap/cache/services.php` | Caché de Laravel |
+| `__pycache__/` dentro de `ml-service/src/` y `ml-service/tests/` | Solo archivos regulares `.pyc` |
+
+No se recorren `vendor/`, `node_modules/`, `storage/`, `.git/`, `ml-service/.venv/` ni `ml-service/artifacts/`, que quedan fuera del modelo de amenaza de B1: sus cambios no alteran el código versionado ni el dataset, y SBX-15 y SBX-16 siguen revisando el runtime.
+
+### 8.4 Historia de F35-SBX-A
+
+HST recorre `git rev-list --parents E..HEAD` sin filtrar por rutas, de modo que ninguna simplificación de la historia oculta commits, y compara cada commit con cada padre mediante `git diff-tree` sin detección de renombrados. Un commit normal falla si cambia contenido, modo, altas o bajas en las rutas de A; un merge, si su versión difiere de la de todos sus padres. Un cambio que otro commit deshace sigue siendo una violación. E no tiene que ser padre directo: la regla funciona en la rama de B, en `develop` y en `main`. Un repositorio superficial, un commit sin padres o un error de Git fallan cerrado.
+
+### 8.5 RED → GREEN (10/10/2026)
+
+Con Git real, en clones desechables sin remoto y ya eliminados:
+
+| Caso | Gate B1 (`f30cfe6`): RED | Gate B1.1: GREEN |
+|---|---|---|
+| Afirmación positiva en Markdown autorizado (M01) | 29/0, PASS | FAIL en CNT |
+| Estados canónicos más contradicciones en minúsculas (M02) | 29/0, PASS | FAIL en GOV |
+| Archivo de `app/` oculto por `.git/info/exclude` (M03) | 29/0, PASS | FAIL en FSY |
+| A modificada y restaurada por commits (M04) | 29/0, PASS | FAIL en HST |
+
+Variantes distintas de las de la auditoría, también con Git real, todas en FAIL:
+- **CNT:** puntaje automático con Markdown y mayúsculas; recomendación del mejor candidato en inglés; embeddings y búsqueda semántica.
+- **GOV**, rechazadas: «**G0 real** := Aprobada», «Scope C: HABILITADO» y «ADR-005 = aceptado».
+- **FSY:** archivo extra normal, oculto, anidado e ignorado por `.git/info/exclude`, ignorado por `.gitignore` en `bootstrap/cache/`, enlace en `routes/` y archivo no `.pyc` en un `__pycache__` del servicio ML.
+- **HST:** borrado, cambio de modo y renombrado de A, cada uno deshecho por un commit posterior.
+- **Estados no verificables:** clon superficial y `GIT_DIR` inválido, que fallan cerrados sin trazas.
+
+Pasan, como deben, el estado limpio, las negaciones, el ejemplo negativo y la cita rechazada en Markdown, la prohibición textual en el gobierno, los artefactos locales reales dentro de sus excepciones y la integración de B1.1 en `develop` y en `main` con `merge --no-ff`.
+
+Durante estas pruebas apareció un defecto propio de B1.1: con un estado incompleto (clon superficial o `GIT_DIR` inválido), los controles positivos detenían el gate con `KeyError` en lugar de informar. Se corrigió y ahora fallan cerrados con diagnóstico. En el gate quedan 37 negativos en memoria (NB-01..NB-18 y NB-20..NB-38), NB-19 y once controles positivos: 60 comprobaciones correctas y 0 fallas sobre HEAD, con SBX-01..SBX-18 en PASS.
