@@ -73,4 +73,61 @@ Así el gate de B nunca tiene que modificarse para que otra fase avance, y una f
 
 ## 7. Pruebas de B1
 
-Los casos negativos viven dentro del gate, igual que en F35-SBX-A, sin `tests/` productivos. Se completan con su evidencia RED → GREEN en el commit de pruebas de B1.
+Los casos negativos viven dentro del gate, igual que en F35-SBX-A, sin `tests/` productivos. Cada uno muta una copia del estado recogido y exige que la regla indicada lo detecte.
+
+| Caso | Regla | Negativo |
+|---|---|---|
+| NB-01 | SBX | SBX-05 incumplido (campo de puntaje en `schema.json`) |
+| NB-02 | GOV | G0 real declarada APROBADA |
+| NB-03 | CNT | Dato personal real en un documento de B |
+| NB-04 | AIN | Archivo protegido de F35-SBX-A alterado |
+| NB-05 | SCP | Cambio productivo fuera del alcance (`app/`) |
+| NB-06 | FSY | Archivo extra no autorizado, aunque Git lo ignore |
+| NB-07 | FSY | Enlace simbólico en una ruta de B |
+| NB-08 | FLG | assume-unchanged |
+| NB-09 | FLG | skip-worktree |
+| NB-10 | CTX | Error de Git |
+| NB-11 | CTX | Estado desconocido: HEAD separado |
+| NB-12 | SBX | Estado desconocido: criterio SBX-18 no evaluable |
+| NB-13 | GOV | Intento de habilitar F36–F40 |
+| NB-14 | GOV | Línea añadida que habilita el alcance C |
+| NB-15 | GOV | F35-SBX-B declarada CERRADA durante B1 |
+| NB-16 | B0F | Documento de B0 modificado |
+| NB-17 | DEP | Dependencia de ML en el código de B |
+| NB-18 | CNT | JSON de B con un campo de puntaje |
+| NB-19 | SBX | Módulo de `compute_sbx()` alterado: no se importa |
+
+### 7.1 RED → GREEN (09/10/2026)
+
+- **RED**, con la recogida del estado y los casos ya escritos y las diez reglas devolviendo una lista vacía: `validate_f35sbxb: 11 comprobaciones correctas, 18 fallas`. Ninguno de NB-01..NB-18 se detectó. NB-19 ya pasaba porque prueba la verificación previa a la importación, que pertenece a la recogida.
+- **GREEN**, con las reglas implementadas: `validate_f35sbxb: 29 comprobaciones correctas, 0 fallas`, con SBX-01..SBX-18 en PASS.
+
+### 7.2 Demostración con Git real
+
+En un clon desechable sin remoto, ya eliminado:
+
+| Escenario | Resultado | Reglas en FALLA |
+|---|---|---|
+| Rama de B limpia | 29/0, PASS | — |
+| `develop` con B1 integrada (`merge --no-ff`) | 29/0, PASS | — |
+| `main` con B1 integrada (`merge --no-ff`) | 29/0, PASS | — |
+| Campo de puntaje añadido a `schema.json` | FAIL | SBX (SBX-05), SCP |
+| G0 real declarada APROBADA | FAIL | GOV |
+| Correo personal en un documento de B | FAIL | CNT |
+| Archivo de F35-SBX-A alterado | FAIL | AIN, SCP |
+| Cambio en `app/Models/User.php` | FAIL | SCP; además SBX-08 y SBX-09 por el runtime modificado |
+| Archivo extra oculto por `.git/info/exclude` | FAIL | FSY |
+| Enlace simbólico en `evidencia-sbx-b/` | FAIL | FSY, SCP |
+| assume-unchanged más G0 real APROBADA (`git status` no ve nada) | FAIL | FLG, GOV |
+| skip-worktree en el documento de B0 | FAIL | FLG |
+| `GIT_DIR` inválido | FAIL cerrado | Todas |
+| HEAD separado o rama desconocida | FAIL | CTX |
+| F36–F40 HABILITADAS o línea que habilita el alcance C | FAIL | GOV |
+
+Cuando el cambio real altera el texto de partida de un negativo en memoria, ese negativo también falla («la mutación no se pudo aplicar»), lo que mantiene el gate en fallo.
+
+### 7.3 Validación del incremento
+
+- Validadores vigentes sobre HEAD: `validate.py`, `validate.py --cierre-f29`, `test_f32_safety.py`, `validate_f34a.py` y `validate_f29.py`, sin fallas.
+- Gates históricos sobre HEAD: `validate_f30.py`, `validate_f33.py` y `validate_f34.py` pasan. `validate_f34b.py` y `validate_f34e.py` fallan solo por su alcance Git histórico (clase A de DH-B13). `validate_f35sbx.py` termina con un `StopIteration` no controlado: falla cerrado, sin diagnóstico (riesgo LOW ya registrado, que no se corrige porque A está congelada).
+- Gates históricos anclados (`main` en `d63d094`, `develop` en `8054fed`): los seis pasan.
