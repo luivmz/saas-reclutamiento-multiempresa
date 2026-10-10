@@ -1,6 +1,6 @@
 # F35-SBX-B — B1: gate sucesor sobre HEAD
 
-> Incremento B1 de F35-SBX-B, versión 2 (10/10/2026): la versión 1 se auditó en `f30cfe6c4adf9c3f7704b6bd665b6363a137b91a` y esta incorpora la corrección B1.1 (§8). Rama `feature/f35-sbx-b-deterministic-pipeline`, creada desde `develop` `430f3f544c3542cabac8028a122c8a0c2a97390b`, que integra [B0](F35SBXB_B0_Sucesion_de_Gates.md). B1 construye solo el **mecanismo de control** que exigen DH-B04 y DH-B13 antes de cualquier pipeline: no hay pipeline funcional, SQLite, máquina de estados, informe, purga ni ML.
+> Incremento B1 de F35-SBX-B, versión 3 (10/10/2026): la versión 1 se auditó en `f30cfe6c4adf9c3f7704b6bd665b6363a137b91a` y la versión 2 en `298c5a4dc19594980a22a877ad9d4a89f5acdf23`; esta incorpora las correcciones B1.1 (§8) y B1.2 (§9). Rama `feature/f35-sbx-b-deterministic-pipeline`, creada desde `develop` `430f3f544c3542cabac8028a122c8a0c2a97390b`, que integra [B0](F35SBXB_B0_Sucesion_de_Gates.md). B1 construye solo el **mecanismo de control** que exigen DH-B04 y DH-B13 antes de cualquier pipeline: no hay pipeline funcional, SQLite, máquina de estados, informe, purga ni ML.
 
 ## 1. Qué es el gate
 
@@ -19,7 +19,7 @@ El gate primero **recoge** el estado real (Git, índice, sistema de archivos y d
 | SBX | SBX-01..SBX-18 recalculados uno por uno sobre HEAD (§4) | DH-B13 |
 | GOV | Los trece estados de gobierno exactos en `CLAUDE.md` y `docs/PROGRESS.md`; F35-SBX-B solo INICIADA. En el estado vigente, la cabecera y las líneas añadidas, el gate rechaza toda declaración de estado contradictoria para G0 real, ADR-005, G0-SBX, F35 productiva, F36–F40, alcance C, datos reales, F35-SBX-A/B, B0 y B1, en cualquier forma (mayúsculas, Markdown, `=`, `:`, `:=`, `->`); las citas y las prohibiciones no cuentan como declaración | DH-B11; B1.1 M02 |
 | SCP | Delta exacto respecto de la base de B (árbol de HEAD, árbol de trabajo, índice y archivos sin seguimiento): solo las rutas autorizadas, con el estado esperado, y las obligatorias presentes | DH-B03; plan B1 §4.F y §4.K |
-| FSY | Recorrido real de `evidencia-sbx-b/`, `tools/f35sbxb/` y de las superficies del runtime, el dataset y la evidencia (§8.3): todo archivo debe estar en el árbol de HEAD aunque Git lo ignore, ningún archivo de HEAD puede faltar y no se admiten enlaces; solo hay las excepciones explícitas de §8.3 | Plan B1 §4.I; B1.1 M03 |
+| FSY | Recorrido real de `evidencia-sbx-b/`, `tools/f35sbxb/` y de las superficies del runtime, el dataset y la evidencia (§8.3): todo archivo debe estar en el árbol de HEAD aunque Git lo ignore, ningún archivo de HEAD puede faltar y no se admiten enlaces; solo hay las excepciones explícitas de §9.3, cuyo contenido también se valida | Plan B1 §4.I; B1.1 M03; B1.2 |
 | FLG | Ningún flag del índice en todo el repositorio: solo `H` en `git ls-files -v` (`h` = assume-unchanged, `S` = skip-worktree, `s` = ambos) | Plan B1 §4.I |
 | CNT | Archivos de B: UTF-8 sin NUL, CR ni BOM; sin correos, DNI, teléfonos ni RUC; solo `.md`, `.json` y `.py`; claves JSON sin vocabulario de capacidades prohibidas; y, en los documentos mutables de B, el gate rechaza toda afirmación positiva que habilite una capacidad prohibida (§8.2) | Plan B1 §7; B1.1 M01 |
 | DEP | Código de `tools/f35sbxb/` solo con la biblioteca estándar autorizada, sin importaciones dinámicas, red ni dependencias de ML | DH-B12; TSBB-09 |
@@ -116,6 +116,21 @@ Los casos negativos viven dentro del gate, igual que en F35-SBX-A, sin `tests/` 
 | NB-36 | HST | commit posterior a E que toca F35-SBX-A (aunque se restaure) |
 | NB-37 | HST | repositorio superficial |
 | NB-38 | CNT | RF-23 declarada automática con dos puntos |
+| NB-39 | CNT | acción de puntuar candidatos |
+| NB-40 | CNT | recomendación automática del candidato más apto |
+| NB-41 | CNT | selección final predicada como automática |
+| NB-42 | CNT | el sistema selecciona al candidato ganador |
+| NB-43 | CNT | el motor decide automáticamente |
+| NB-44 | CNT | RF-23 decidido automáticamente |
+| NB-45 | CNT | inglés: ranking automático de candidatos |
+| NB-46 | CNT | el motor elige a los mejores postulantes |
+| NB-47 | CNT | contratación predicada como automática |
+| NB-48 | GOV | ADR-005 queda APROBADA |
+| NB-49 | GOV | ADR-005 fue o está APROBADA |
+| NB-50 | GOV | alcance C pasa a HABILITADO |
+| NB-51 | GOV | F35 productiva no está BLOQUEADA |
+| NB-52 | GOV | datos reales están permitidos |
+| NB-53 | FSY | código no autorizado dentro de una excepción de FSY |
 
 ### 7.1 RED → GREEN (09/10/2026)
 
@@ -179,16 +194,7 @@ Límites conocidos: una afirmación redactada fuera de esos patrones, o con la n
 
 FSY recorre, sin seguir enlaces e incluidos los archivos ocultos: `app/`, `routes/`, `database/`, `config/`, `resources/`, `bootstrap/`, `public/`, `lang/`, `tests/`, `cypress/`, `docker/`, `.github/`, `ml-service/src/`, `ml-service/tests/`, `ml-service/pyproject.toml`, `artisan`, `composer.json`, `composer.lock`, `package.json`, `package-lock.json`, `docker-compose.yml`, `.dockerignore`, `phpunit.xml`, `vite.config.ts`, `docs/academico/datos-sinteticos/`, `docs/academico/g0-sandbox/` y `docs/academico/g0-evidence/`. Cada archivo debe estar en el árbol de HEAD, aunque `.gitignore` o `.git/info/exclude` lo ignoren, y ningún archivo de HEAD puede faltar.
 
-Excepciones, todas artefactos locales generados que existen en el repositorio de trabajo:
-
-| Excepción | Origen |
-|---|---|
-| `public/build/` | Salida de Vite (`npm run build`) |
-| `resources/js/actions/`, `resources/js/routes/`, `resources/js/wayfinder/` | Generados por Laravel Wayfinder |
-| `cypress/results/` | Resultados de Cypress |
-| `ml-service/src/recruitment_ml.egg-info/` | Instalación editable del servicio ML |
-| `bootstrap/cache/packages.php`, `bootstrap/cache/services.php` | Caché de Laravel |
-| `__pycache__/` dentro de `ml-service/src/` y `ml-service/tests/` | Solo archivos regulares `.pyc` |
+Las excepciones de B1.1 eran directorios ignorados; B1.2 las sustituye por excepciones validadas (§9.3).
 
 No se recorren `vendor/`, `node_modules/`, `storage/`, `.git/`, `ml-service/.venv/` ni `ml-service/artifacts/`, que quedan fuera del modelo de amenaza de B1: sus cambios no alteran el código versionado ni el dataset, y SBX-15 y SBX-16 siguen revisando el runtime.
 
@@ -217,3 +223,55 @@ Variantes distintas de las de la auditoría, también con Git real, todas en FAI
 Pasan, como deben, el estado limpio, las negaciones, el ejemplo negativo y la cita rechazada en Markdown, la prohibición textual en el gobierno, los artefactos locales reales dentro de sus excepciones y la integración de B1.1 en `develop` y en `main` con `merge --no-ff`.
 
 Durante estas pruebas apareció un defecto propio de B1.1: con un estado incompleto (clon superficial o `GIT_DIR` inválido), los controles positivos detenían el gate con `KeyError` en lugar de informar. Se corrigió y ahora fallan cerrados con diagnóstico. En el gate quedan 37 negativos en memoria (NB-01..NB-18 y NB-20..NB-38), NB-19 y once controles positivos: 60 comprobaciones correctas y 0 fallas sobre HEAD, con SBX-01..SBX-18 en PASS.
+
+## 9. Corrección B1.2
+
+La segunda auditoría independiente (`298c5a4`) dio por resueltos M04 (HST), el fallo cerrado, el LOW de negaciones en GOV, SBX-01..SBX-18 y la integridad de A, y dejó tres clases residuales. B1.2 corrige solo esas clases, no las frases concretas del auditor. El gate sigue en desarrollo, pendiente de reauditoría final: no está congelado.
+
+### 9.1 M01 residual: acciones inequívocas
+
+CNT añade tres reglas a la de término y verbo:
+
+- **Acción sobre personas candidatas.** Formas verbales explícitas de puntuación, recomendación, elección, selección, descarte, contratación y ordenamiento, en español y en inglés, con una persona candidata en la oración (candidato, postulante, aspirante, ganador, más apto, mejor). Las de calificación, clasificación, evaluación y ordenamiento exigen además «automático». Las formas son explícitas para que los sustantivos (ranking, puntuación, identificador, determinista) no cuenten.
+- **Decisión automática.** Las formas de decisión, determinación o resolución junto a «automáticamente».
+- **Estado predicativo.** La selección, la decisión, la contratación, la recomendación o el puntaje predicados como automáticos; el gate rechaza, por ejemplo, «la selección final será automática».
+
+Una negación en las tres palabras anteriores, o una prohibición no negada más adelante en el mismo tramo («puntuar candidatos está prohibido»), deja la oración como prohibición. Con los patrones explícitos de RF-23 el gate también rechaza «RF-23 será decidido automáticamente por el motor». Las comillas simples y los prefijos «Bypass reproducido» y «Ataque» se tratan igual que las citas y el prefijo «Ejemplo negativo».
+
+### 9.2 M02 residual: declaraciones directas
+
+GOV reconoce también las declaraciones con verbo copulativo (queda, quedó, fue, está, pasa a, se declara, permanece, sigue, resulta, es y sus equivalentes en inglés) para todas las entidades protegidas. Negar un estado positivo es coherente con un estado restrictivo («ADR-005 no está APROBADA»); negar un estado restrictivo es una contradicción («F35 productiva no está BLOQUEADA»). Las citas, las prohibiciones y los ejemplos siguen sin contar como declaración.
+
+### 9.3 M03 residual: excepciones validadas
+
+Por defecto se deniega todo. Una excepción ya no significa ignorar un directorio: el gate lo recorre y cada archivo debe cumplir un patrón estrecho, sin enlaces ni objetos especiales.
+
+| Excepción | Patrón admitido | Origen |
+|---|---|---|
+| `public/build/` | `manifest.json`, `fonts-manifest.json` y `assets/<nombre>-<hash de 8>.{js,css,woff,woff2}` | Salida de Vite |
+| `resources/js/actions/`, `resources/js/routes/`, `resources/js/wayfinder/` | Solo archivos `.ts` | Laravel Wayfinder |
+| `cypress/results/` | Solo `.json` y `.log` en el primer nivel | Resultados de Cypress |
+| `ml-service/src/recruitment_ml.egg-info/` | Solo `PKG-INFO`, `SOURCES.txt`, `dependency_links.txt`, `top_level.txt` y `requires.txt` | Instalación editable del servicio ML |
+| `bootstrap/cache/packages.php`, `bootstrap/cache/services.php` | Solo un arreglo PHP literal (`<?php return array (...);` con cadenas, números y `=>`), sin variables, llamadas ni funciones | Caché de Laravel |
+| `__pycache__/` dentro de `ml-service/src/` y `ml-service/tests/` | Solo archivos regulares `.pyc`, sin subdirectorios | Bytecode de Python |
+
+Los artefactos reales del repositorio de trabajo cumplen estos patrones. Cualquier otro archivo de `bootstrap/cache/` sigue siendo un extra frente al árbol de HEAD.
+
+### 9.4 RED → GREEN (10/10/2026)
+
+Con Git real, en clones desechables sin remoto y ya eliminados, el mismo conjunto de casos contra el gate de `298c5a4` (RED) y contra el gate corregido (GREEN):
+
+| Caso | RED | GREEN |
+|---|---|---|
+| M01: las cuatro frases de la auditoría y tres variantes nuevas (elección del postulante idóneo, contratación del mejor postulante en inglés y ordenamiento automático de aspirantes) | Pasaban | FAIL en CNT |
+| RF-23: se rechaza «el motor decide automáticamente la selección final» | Pasaba | FAIL en CNT |
+| M02: ADR-005 con «queda», «fue», «está» y «pasa a» APROBADA | Pasaban | FAIL en GOV |
+| M03: PHP en `public/build/` y en `public/build/assets/` con nombre de hash, archivo inesperado en `public/build/`, `services.php` con código, enlace en `public/build/`, código en el `egg-info`, PHP en Wayfinder | Pasaban | FAIL en FSY |
+
+También se rechazan, ya antes y ahora, «G0 real se declara APROBADA», «F36–F40 quedan INICIADAS», un archivo nuevo en `bootstrap/cache/`, un archivo de `app/` ignorado u oculto y un `__pycache__` con subdirectorios.
+
+Pasan en los dos casos: el estado limpio, la negación, el ejemplo negativo, la selección final bajo decisión humana, el rechazo citado, «ADR-005 permanece PROPUESTA», «ADR-005 no está APROBADA», el rechazo de una declaración y los artefactos locales que cumplen sus patrones, con copias reales de `bootstrap/cache/`.
+
+Regresión de lo ya resuelto: A modificada y restaurada por commits sigue fallando en HST, la prohibición textual sigue pasando en GOV y el clon superficial y `GIT_DIR` inválido siguen fallando cerrados sin trazas. En el gate quedan 52 negativos en memoria (NB-01..NB-18 y NB-20..NB-53), NB-19 y diecinueve controles positivos: 83 comprobaciones correctas y 0 fallas sobre HEAD, con SBX-01..SBX-18 en PASS.
+
+Límites que se mantienen: la semántica sigue acotada a patrones explícitos y documentados; una afirmación redactada fuera de ellos puede no detectarse. Dentro de cada excepción se valida la forma de los archivos, no el contenido de los artefactos de Vite, Wayfinder o Cypress.
