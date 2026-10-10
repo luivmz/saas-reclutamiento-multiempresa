@@ -822,8 +822,12 @@ def main():
     for ok, msg in integrity_cases(S):
         add(ok, msg)
     for text in LEGIT_TEXTS:
-        rc = run_rules(doc_add(text)(S))['CNT']
-        rg = run_rules(gov_add(text)(S))['GOV']
+        try:
+            rc = run_rules(doc_add(text)(S))['CNT']
+            rg = run_rules(gov_add(text)(S))['GOV']
+        except (KeyError, TypeError, AttributeError, ValueError) as e:   # estado incompleto: falla cerrado
+            add(False, f'PB: control no aplicable sobre un estado no verificable ({e.__class__.__name__}): «{text}»')
+            continue
         add(not rc and not rg, f'PB: texto legítimo aceptado por CNT y GOV: «{text}» {(rc + rg)[:1]}')
     fallas = [m for ok, m in checks if not ok]
     for m in fallas:
