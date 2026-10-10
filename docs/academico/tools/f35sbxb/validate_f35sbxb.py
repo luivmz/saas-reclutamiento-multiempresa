@@ -333,6 +333,23 @@ FAMILIES = {
     'G0 real': (r'\bg0 real\b', None, None),
     'RF-23': (r'\brf-?23\b', r'^(automati|modific|reemplaz|elimin|sustitu|cambi)', None),
 }
+# RF-23 se evalúa por oración con patrones explícitos: «RF-23 … automática/modifica/reemplaza…» o
+# «automatiza/modifica/reemplaza… RF-23», sin negación dentro del tramo ni en las tres palabras anteriores al verbo.
+RF23_RX = re.compile(r'\brf-?23\b((?:\s+\S+){0,4}?)\s+(automati\w*|modific\w*|reemplaz\w*|elimin\w*|sustitu\w*)\b|'
+                     r'\b(automatiz\w*|modific\w*|reemplaz\w*|elimin\w*|sustitu\w*)((?:\s+\S+){0,2}?)\s+rf-?23\b')
+
+
+def rf23_claim(segs):
+    toks = [t for seg in segs for t in seg]
+    joined = ' '.join(toks)
+    for m in RF23_RX.finditer(joined):
+        between = (m.group(1) or m.group(4) or '').split()
+        verb_at = joined[:m.start(2) if m.group(2) else m.start(3)].count(' ')
+        if not any(t in NEG_WORDS or t.startswith(NEG_PREFIXES) for t in between) and not negated(toks, verb_at):
+            return True
+    return False
+
+
 FAMILY_RX = {k: (re.compile(t), re.compile(v) if v else None, re.compile(a) if a else None)
              for k, (t, v, a) in FAMILIES.items()}
 
@@ -395,7 +412,11 @@ def positive_claims(text, exempt=lambda s: False):
         if EXAMPLE_PREFIX_RX.match(body):
             continue
         segs = segments(sentence)
+        if rf23_claim(segs):
+            hits.append(('RF-23', sentence.strip()[:120]))
         for family, (term_rx, verb_rx, action_rx) in FAMILY_RX.items():
+            if family == 'RF-23':
+                continue
             terms = [(s, i) for s, toks in enumerate(segs) for i in matches(term_rx, toks) if not negated(toks, i)]
             if not terms:
                 continue
@@ -775,6 +796,7 @@ CASES = [
     ('NB-36', 'HST', 'commit posterior a E que toca F35-SBX-A (aunque se restaure)',
      mutate(lambda T: T['a_history'].append(('f' * 40, ['docs/academico/tools/f35sbx/f35sbx_scope.py'])))),
     ('NB-37', 'HST', 'repositorio superficial', mutate(lambda T: T.__setitem__('shallow', True))),
+    ('NB-38', 'CNT', 'RF-23 declarada automática con dos puntos', doc_add('RF-23: automática.')),
 ]
 CASE_ROWS = {(row_cell(cid), row_cell(rule), row_cell(what)) for cid, rule, what, _ in CASES}
 # Controles positivos de B1.1: negación, prohibición, cita rechazada y ejemplo negativo no son afirmaciones.
@@ -782,7 +804,8 @@ LEGIT_TEXTS = ['No se habilita scoring.', 'Scoring permanece prohibido.',
                'El gate debe rechazar «G0 real = APROBADA».', 'Ejemplo negativo: Scope C habilitado.',
                'Intento de habilitar F36–F40.', 'Sin scoring, recomendación ni selección automática.',
                'No debe declararse G0 real = APROBADA.', 'Nunca se permiten datos reales.',
-               'El gate rechaza «F36–F40 = HABILITADAS» y «datos reales = permitidos».']
+               'El gate rechaza «F36–F40 = HABILITADAS» y «datos reales = permitidos».',
+               'Selección automática y RF-23 sin cambios.', 'RF-23 no se modifica.']
 
 
 def integrity_cases(S):
