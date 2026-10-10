@@ -10,11 +10,16 @@ los casos negativos mutan una copia del estado en memoria.
   B0F  documento de B0 idéntico a su cierre auditado.
   SBX  SBX-01..SBX-18 recalculados sobre HEAD con compute_sbx() de validate_f34e.py, importado solo tras verificar
        sus bytes y los de los módulos que carga contra E (DH-B13).
-  GOV  trece estados exactos; F35-SBX-B solo INICIADA; ninguna línea añadida que desbloquee nada (DH-B11).
+  GOV  trece estados exactos; F35-SBX-B solo INICIADA; ninguna declaración de estado contradictoria (en cualquier
+       forma: mayúsculas, Markdown, =, :, :=, ->) ni afirmación positiva que desbloquee nada en lo vigente o añadido.
   SCP  delta exacto respecto de la base de B en el árbol de HEAD, el árbol de trabajo, el índice y lo no seguido.
-  FSY  recorrido real de las carpetas de B: sin archivos fuera de la lista (aunque Git los ignore) ni enlaces.
+  FSY  recorrido real de las carpetas de B y de las superficies del runtime, el dataset y la evidencia: ningún archivo
+       que no esté en el árbol de HEAD (aunque Git lo ignore), ningún enlace; excepciones mínimas y explícitas.
+  HST  historia completa E..HEAD: ningún commit (ni merge que difiera de todos sus padres) toca F35-SBX-A, aunque
+       después se restaure; repositorio superficial o historia ilegible: falla cerrado.
   FLG  sin flags del índice: solo «H» en git ls-files -v (h = assume-unchanged, S = skip-worktree, s = ambos).
-  CNT  archivos de B: UTF-8 sin NUL, CR ni BOM; sin PII; solo .md, .json y .py; claves JSON sin capacidades prohibidas.
+  CNT  archivos de B: UTF-8 sin NUL, CR ni BOM; sin PII; solo .md, .json y .py; claves JSON sin capacidades prohibidas
+       y, en los documentos mutables de B, ninguna afirmación positiva que habilite una capacidad prohibida.
   DEP  código de tools/f35sbxb: biblioteca estándar autorizada, sin importaciones dinámicas ni dependencias de ML.
 
 Cualquier error de Git, de lectura o de importación, criterio no evaluable o estado desconocido: falla cerrado (DH-B10).
@@ -28,6 +33,7 @@ import os
 import re
 import subprocess
 import sys
+import unicodedata
 
 sys.dont_write_bytecode = True
 
@@ -49,6 +55,19 @@ B0_DOC = 'docs/academico/evidencia-sbx-b/F35SBXB_B0_Sucesion_de_Gates.md'
 B_DIRS = ('docs/academico/evidencia-sbx-b', 'docs/academico/tools/f35sbxb')
 PYCACHE_OK = ('docs/academico/tools/f35sbx/__pycache__', 'docs/academico/tools/f35sbxb/__pycache__')
 GATE = 'docs/academico/tools/f35sbxb/validate_f35sbxb.py'
+# Superficies reales que se recorren en el sistema de archivos (M03): todo archivo debe estar en el árbol de HEAD.
+RUNTIME_SURFACES = ('app', 'routes', 'database', 'config', 'resources', 'bootstrap', 'public', 'lang', 'tests',
+                    'cypress', 'docker', '.github', 'ml-service/src', 'ml-service/tests', 'ml-service/pyproject.toml',
+                    'artisan', 'composer.json', 'composer.lock', 'package.json', 'package-lock.json',
+                    'docker-compose.yml', '.dockerignore', 'phpunit.xml', 'vite.config.ts',
+                    'docs/academico/datos-sinteticos', 'docs/academico/g0-sandbox', 'docs/academico/g0-evidence')
+# Excepciones mínimas: artefactos locales generados que existen realmente en el repositorio de trabajo.
+RT_SKIP_DIRS = frozenset({'public/build',                         # salida de Vite (npm run build)
+                          'resources/js/actions', 'resources/js/routes', 'resources/js/wayfinder',  # Wayfinder
+                          'cypress/results',                       # resultados de Cypress
+                          'ml-service/src/recruitment_ml.egg-info'})  # instalación editable del servicio ML
+RT_SKIP_FILES = frozenset({'bootstrap/cache/packages.php', 'bootstrap/cache/services.php'})  # caché de Laravel
+RT_PYCACHE_ROOTS = ('ml-service/src/', 'ml-service/tests/')        # __pycache__ con solo .pyc regulares
 # Alcance exacto de B1 respecto de B_BASE: ruta -> estado esperado. Todas obligatorias.
 SCOPE = {
     'CLAUDE.md': 'M',
@@ -96,7 +115,7 @@ SBX_INFO = {   # ID: (fuente, comprobación aplicada), según la matriz de crite
     'SBX-17': ('F34B_Decision_G0.md', 'Alcance C no habilitado'),
     'SBX-18': ('F34B_Decision_G0.md, validate_f34b.py', 'G0 = NO APROBADA y G0-02/03/12 sin cerrar'),
 }
-STDLIB_OK = {'ast', 'copy', 'hashlib', 'importlib', 'json', 'os', 're', 'subprocess', 'sys'}
+STDLIB_OK = {'ast', 'copy', 'hashlib', 'importlib', 'json', 'os', 're', 'subprocess', 'sys', 'unicodedata'}
 PII = [re.compile(p) for p in (
     r'[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}',                          # correo
     r'\bDNI\b\D{0,10}\d{8}(?![0-9A-Za-z])',                                    # DNI
@@ -135,9 +154,9 @@ def real_bytes(rel):
         return None
 
 
-def walk(roots):
-    """Archivos reales bajo las rutas, sin seguir enlaces. Solo se omiten los __pycache__ autorizados, y solo con
-    archivos regulares .pyc directos. (conjunto de rutas, problemas)."""
+def walk(roots, skip_dirs=frozenset(), skip_files=frozenset(), pycache_roots=()):
+    """Archivos reales bajo las rutas, sin seguir enlaces y con archivos ocultos. Solo se omiten los __pycache__
+    autorizados (con archivos regulares .pyc directos) y las excepciones explícitas. (conjunto de rutas, problemas)."""
     found, problems = set(), []
 
     def visit(rel):
@@ -148,8 +167,10 @@ def walk(roots):
                     sub = f'{rel}/{entry.name}'
                     if entry.is_symlink():
                         problems.append(f'enlace en una ruta protegida: {sub}')
+                    elif entry.is_dir(follow_symlinks=False) and sub in skip_dirs:
+                        continue
                     elif entry.is_dir(follow_symlinks=False):
-                        if sub in PYCACHE_OK:
+                        if sub in PYCACHE_OK or (entry.name == '__pycache__' and sub.startswith(pycache_roots)):
                             bad = [e.name for e in os.scandir(entry.path) if not (
                                 e.name.endswith('.pyc') and not e.is_symlink() and e.is_file(follow_symlinks=False))]
                             if bad:
@@ -157,7 +178,8 @@ def walk(roots):
                         else:
                             visit(sub)
                     elif entry.is_file(follow_symlinks=False):
-                        found.add(sub)
+                        if sub not in skip_files:
+                            found.add(sub)
                     else:
                         problems.append(f'objeto especial en una ruta protegida: {sub}')
         except OSError as e:
@@ -201,6 +223,25 @@ def sbx_eval(must, reader=real_bytes):
         return None, f'compute_sbx() no evaluable ({e.__class__.__name__}: {e}): falla cerrado'
 
 
+def a_history(must):
+    """Commits de E..HEAD que tocan F35-SBX-A, con la historia completa (rev-list sin filtrar por rutas) y cada
+    commit comparado con cada padre: un commit normal la toca si cambia contenido, modo, altas o bajas (sin
+    detección de renombrados); un merge, si su versión difiere de la de todos sus padres. Un cambio revertido después
+    sigue siendo su propio commit. [(commit, rutas)]."""
+    touching = []
+    for line in must('rev-list', '--parents', f'{E}..HEAD').decode().splitlines():
+        ids = line.split()
+        if len(ids) < 2 or not all(re.fullmatch(r'[0-9a-f]{40}', x) for x in ids):
+            raise GitError('commit sin padres o no verificable en E..HEAD')
+        commit, parents = ids[0], ids[1:]
+        diffs = [{x for x in must('diff-tree', '-r', '--no-renames', '--name-only', '-z', p, commit, '--', *A_PATHS)
+                  .decode('utf-8', 'replace').split('\x00') if x} for p in parents]
+        touched = set.intersection(*diffs)
+        if touched:
+            touching.append((commit, sorted(touched)))
+    return touching
+
+
 def collect(runner=git, reader=real_bytes):
     """Estado real de HEAD. Cualquier error de Git queda en S['errors'] y hace fallar CTX."""
     S = {'errors': []}
@@ -230,6 +271,11 @@ def collect(runner=git, reader=real_bytes):
         S['a_expected'] = expected
         S['a_real'] = {p: (None if (d := reader(p)) is None else blob_id(d)) for p in expected}
         S['a_fs'], S['a_walk'] = walk(A_PATHS)
+        S['shallow'] = must('rev-parse', '--is-shallow-repository').strip() != b'false'
+        S['a_history'] = a_history(must)
+        S['rt_tracked'] = {x for x in must('ls-tree', '-r', '--name-only', '-z', 'HEAD', '--', *RUNTIME_SURFACES)
+                           .decode('utf-8', 'replace').split('\x00') if x}
+        S['rt_fs'], S['rt_walk'] = walk(RUNTIME_SURFACES, RT_SKIP_DIRS, RT_SKIP_FILES, RT_PYCACHE_ROOTS)
         S['a_head_diff'] = [x for x in must('diff', '--name-only', '-z', E, 'HEAD', '--', *A_PATHS).decode().split('\x00') if x]
         S['b0_blob'] = must('rev-parse', f'{B0_CLOSE}:{B0_DOC}').decode().strip()
         S['b0_real'] = None if (d := reader(B0_DOC)) is None else blob_id(d)
@@ -248,6 +294,165 @@ def collect(runner=git, reader=real_bytes):
     except (GitError, OSError, ValueError) as e:
         S['errors'].append(f'estado Git o de archivos no verificable: {e}')
     return S
+
+
+# ---------------------------------------------------------------- semántica acotada (CNT y GOV)
+# No es un detector lingüístico universal: normaliza (minúsculas, acentos, Markdown básico, guiones), divide en
+# oraciones y en segmentos (comas, dos puntos, punto y coma, celdas de tabla y paréntesis) y busca, por familia,
+# un término de capacidad y un verbo o estado que la habilite. Ninguno de los dos cuenta si una negación o
+# prohibición aparece en las tres palabras anteriores dentro de su segmento. Las citas entre comillas solo se
+# descartan cuando la oración que las rodea las rechaza o las presenta como ejemplo; si no, se analizan.
+NEG_WORDS = frozenset({'no', 'nunca', 'ni', 'sin', 'jamas', 'tampoco', 'ningun', 'ninguna', 'ninguno', 'nada',
+                       'not', 'never', 'without', 'nor', 'none'})
+NEG_PREFIXES = ('prohib', 'bloque', 'rechaz', 'imped', 'impid', 'deneg', 'evit', 'detect', 'intent', 'attempt',
+                'reject', 'forbid', 'prevent', 'block', 'revoc', 'exclu', 'fall', 'fail')
+ENABLE_RX = re.compile(r'^(habilit|permit|implement|activ|autoriz|desbloque|aprob|enable|allow|approv|unlock|'
+                       r'incorpor|despleg|deploy|introduc|admit)')
+REJECT_CTX_RX = re.compile(r'\b(rechaz\w*|prohib\w*|detect\w*|fall\w*|fail\w*|bloque\w*|ejemplo\w*|negativ\w*|'
+                           r'cita\w*|reject\w*|forbid\w*|nunca|no debe\w*)\b')
+EXAMPLE_PREFIX_RX = re.compile(r'^(ejemplo negativo|caso negativo|prueba negativa|negativo|negative example)\b')
+QUOTE_RX = re.compile(r'«[^«»]*»|“[^“”]*”|"[^"]*"')
+# familia: (términos, verbos propios de la familia o None, términos que ya son una acción por sí mismos o None)
+FAMILIES = {
+    'scoring': (r'\b(scoring|score|scores|puntaje\w*|puntuacion\w*|calificacion automatica)\b',
+                r'^(calcul|asign|otorg|comput|puntu|calific)', r'\bpuntua(n|r)?\b'),
+    'recomendación': (r'\b(recomendacion\w*|recommendation\w*)\b', None, r'\b(recomiend\w*|recomendar|recommends?)\b'),
+    'mejor candidato': (r'\b(mejor(es)? candidat\w*|best candidates?)\b', r'^(identific|elig|escog|select)', None),
+    'selección automática': (r'\b((seleccion|descarte|contratacion|decision) automatica\w*|automatic (selection|hiring))\b',
+                             None, r'\b(selecciona\w*|descarta\w*|contrata\w*) automaticamente\b'),
+    'ranking automático': (r'\b(ranking automatico|nuevo ranking|ranking nuevo|automatic ranking)\b', None, r'\brankea\w*\b'),
+    'OCR o extracción': (r'\b(ocr|parsing|parseo|extraccion\w*|extraction)\b', None, r'\b(extrae\w*|parsea\w*)\b'),
+    'embeddings': (r'\b(embedding\w*|vectoriz\w*)\b', None, None),
+    'búsqueda semántica': (r'\b(busqueda semantica|semantic search)\b', None, None),
+    'ML': (r'\b(ml|machine learning|aprendizaje automatico)\b', r'^(entren|train)', None),
+    'alcance C': (r'\b(alcance|scope) c\b', None, None),
+    'datos reales': (r'\b(datos reales|real data|pii|cvs? reales|curriculos reales|audios? reales|videos? reales|'
+                     r'documentos reales|candidatos reales)\b', r'^(carg|import|ingest|utiliz|recib)|^(usa|usar|usan)$', None),
+    'producción': (r'\b(produccion|productiv\w*|endpoints?|migracion\w*|migrations?)\b', r'^(registr|conect|expon)', None),
+    'F36–F40': (r'\b(f3[6-9]|f40|f36-f40)\b', r'^(inici|abr|comenz|empez|start)', None),
+    'G0 real': (r'\bg0 real\b', None, None),
+    'RF-23': (r'\brf-?23\b', r'^(automati|modific|reemplaz|elimin|sustitu|cambi)', None),
+}
+FAMILY_RX = {k: (re.compile(t), re.compile(v) if v else None, re.compile(a) if a else None)
+             for k, (t, v, a) in FAMILIES.items()}
+
+
+def fold(text):
+    """Minúsculas, sin acentos, sin Markdown básico (* _ ~ `), guiones unificados y espacios colapsados."""
+    text = unicodedata.normalize('NFKD', text)
+    text = ''.join(c for c in text if not unicodedata.combining(c)).lower()
+    text = re.sub(r'[‐-―−]', '-', text)
+    text = re.sub(r'[*_~`]', '', text)
+    return re.sub(r'[ \t]+', ' ', text)
+
+
+def quoted_lines(text, cite=False):
+    """Las citas se resuelven por línea, antes de dividir en oraciones (una cita puede contener «;» o «.»). Con
+    cite=True se descartan siempre (declaraciones de gobierno); si no, solo cuando la línea las rechaza o las presenta
+    como ejemplo, y en otro caso se analizan sin las comillas."""
+    out = []
+    for line in fold(text).splitlines():
+        if QUOTE_RX.search(line):
+            outside = QUOTE_RX.sub(' ', line)
+            line = outside if cite or REJECT_CTX_RX.search(outside) else re.sub(r'[«»“”"]', ' ', line)
+        out.append(line)
+    return out
+
+
+def sentences(text, cite=False, exempt=lambda row: False):
+    """Unidades de análisis: cada celda de una fila de tabla (salvo filas exentas) y cada oración de la prosa."""
+    out = []
+    for line in quoted_lines(text, cite):
+        if line.lstrip().startswith('|'):
+            if not exempt(line):
+                for cell in line.strip().strip('|').split('|'):
+                    out += [x for x in re.split(r'(?<=[.!?;])\s+', cell) if x.strip()]
+        else:
+            out += [s for s in re.split(r'(?<=[.!?;])\s+', line) if s.strip()]
+    return out
+
+
+def segments(sentence):
+    """Segmentos de una oración con sus tokens; la negación no cruza comas, dos puntos, celdas ni paréntesis."""
+    return [re.findall(r'[a-z0-9]+(?:-[a-z0-9]+)*', seg) for seg in re.split(r'[,:;|()\[\]]', sentence)]
+
+
+def negated(tokens, i):
+    return any(t in NEG_WORDS or t.startswith(NEG_PREFIXES) for t in tokens[max(0, i - 3):i])
+
+
+def matches(rx, tokens):
+    """Índices de token donde empieza cada coincidencia del patrón sobre el segmento."""
+    joined = ' '.join(tokens)
+    return [joined[:m.start()].count(' ') for m in rx.finditer(joined)]
+
+
+def positive_claims(text, exempt=lambda s: False):
+    """Afirmaciones positivas que habilitan una capacidad prohibida: [(familia, oración)]."""
+    hits = []
+    for sentence in sentences(text, exempt=exempt):
+        body = sentence.strip(' |-')
+        if EXAMPLE_PREFIX_RX.match(body):
+            continue
+        segs = segments(sentence)
+        for family, (term_rx, verb_rx, action_rx) in FAMILY_RX.items():
+            terms = [(s, i) for s, toks in enumerate(segs) for i in matches(term_rx, toks) if not negated(toks, i)]
+            if not terms:
+                continue
+            verbs = [(s, i) for s, toks in enumerate(segs) for i, t in enumerate(toks)
+                     if (ENABLE_RX.match(t) or (verb_rx and verb_rx.match(t))) and not negated(toks, i)]
+            actions = action_rx and [(s, i) for s, toks in enumerate(segs) for i in matches(action_rx, toks)
+                                     if not negated(toks, i)]
+            if verbs or actions:
+                hits.append((family, sentence.strip()[:120]))
+    return hits
+
+
+# Declaraciones de estado de gobierno: sujeto, separador opcional (=, :, :=, ==, ->, →) y valor.
+STATE_VALUE = (r'(no\s+)?(aprobad\w*|habilitad\w*|desbloquead\w*|permitid\w*|autorizad\w*|iniciad\w*|activ\w*|'
+               r'bloquead\w*|prohibid\w*|propuest\w*|cerrad\w*|congelad\w*|implementad\w*|aceptad\w*)')
+DECLARED = [   # (sujeto, valores admitidos: prefijo del valor normalizado)
+    (r'g0 real', ('no aprobad',)),
+    (r'g0(?!\s+real)(?![\w-])', ('no aprobad',)),
+    (r'adr-005(?: canonico)?', ('propuest',)),
+    (r'g0-sbx', ('aprobad con restricciones',)),
+    (r'f35 productiva', ('bloquead',)),
+    (r'f35-f40(?: productivas)?', ('bloquead',)),
+    (r'f36-f40', ('bloquead',)),
+    (r'(?:alcance|scope) c', ('bloquead', 'no habilitad')),
+    (r'datos reales', ('prohibid',)),
+    (r'f35-sbx-a', ('cerrad',)),
+    (r'f35-sbx-b', ('iniciad',)),
+    (r'f35-sbx', ('habilitad',)),
+    (r'b0', ('cerrad',)),
+    (r'b1', ('implementad', 'pendiente')),
+]
+DECL_RX = [(re.compile(r'(?<![\w-])(' + subj + r')(?![\w-])\s*(?:(?::=|==|=|:|->|→)\s*)?' + STATE_VALUE), allowed)
+           for subj, allowed in DECLARED]
+DECL_NEG_RX = re.compile(r'\b(no|nunca|jamas)\s+(\w+\s+){0,2}(declar\w*|figur\w*|registr\w*|afirm\w*|indic\w*|'
+                         r'decir|escrib\w*|pon\w*)|\b(rechaz\w*|prohib\w*|detect\w*|impid\w*|imped\w*|ejemplo\w*|'
+                         r'negativ\w*|intent\w*)\b')
+
+
+def contradictions(text):
+    """Declaraciones de estado distintas de las vigentes. No cuentan las citas ni las que una prohibición o un
+    ejemplo introducen dentro de su propio tramo (desde el último signo de puntuación)."""
+    out = []
+    for body in sentences(text, cite=True):
+        if EXAMPLE_PREFIX_RX.match(body.strip(' |-')):
+            continue
+        for rx, allowed in DECL_RX:
+            for m in rx.finditer(body):
+                value = ' '.join(((m.group(2) or '') + m.group(3)).split())
+                if value.startswith('aprobad') and body[m.end():].lstrip().startswith('con restricciones'):
+                    value = 'aprobad con restricciones'
+                if value.startswith(allowed):
+                    continue
+                before = re.split(r'[.,;:!?|]', body[:m.start()])[-1]
+                if DECL_NEG_RX.search(before):
+                    continue
+                out.append(f'«{m.group(0).strip()}»')
+    return out
 
 
 # ---------------------------------------------------------------- reglas puras sobre el estado
@@ -328,14 +533,18 @@ def r_gov(S):
         states = [ln for ln in section.splitlines() if re.match(r'^- [^=\n]+ = ', ln)]
         if states != STATES:
             out.append(f'{path}: los trece estados de gobierno no son exactamente los vigentes')
-        vigente = section + '\n' + '\n'.join(ln for ln in text.splitlines() if ln.startswith('Última actualización:'))
-        b_states = [' '.join(m.split()) for m in B_STATE_RX.findall(vigente)]
+        header = '\n'.join(ln for ln in text.splitlines() if ln.startswith('Última actualización:'))
+        b_states = [' '.join(m.split()) for m in B_STATE_RX.findall(section + '\n' + header)]
         if not b_states or set(b_states) != {'INICIADA'}:
             out.append(f'{path}: F35-SBX-B debe figurar solo INICIADA en el estado vigente: {sorted(set(b_states))}')
-        added = [ln for ln in text.splitlines() if ln not in set(base.splitlines())]
-        hits = [ln[:90] for ln in added for rx in UNLOCK if rx.search(ln)]
-        if hits:
-            out.append(f'{path}: líneas añadidas que desbloquean un estado prohibido: {hits[:2]}')
+        added = '\n'.join(ln for ln in text.splitlines() if ln not in set(base.splitlines()))
+        current = section + '\n' + header + '\n' + added
+        bad = contradictions(current)
+        if bad:
+            out.append(f'{path}: declaraciones de estado contradictorias con el gobierno vigente: {bad[:3]}')
+        claims = positive_claims(added)
+        if claims:
+            out.append(f'{path}: líneas añadidas que afirman habilitar una capacidad prohibida: {claims[:2]}')
     return out
 
 
@@ -360,12 +569,29 @@ def r_scp(S):
 def r_fsy(S):
     if S['errors']:
         return ['sistema de archivos no verificable (falla cerrado)']
-    out = list(S['b_walk'])
+    out = list(S['b_walk']) + list(S['rt_walk'])
     if S['b_fs'] != B_FILES:
         out.append(f'carpetas de B distintas de la lista exacta: extra={sorted(S["b_fs"] - B_FILES)[:3]} '
                    f'faltan={sorted(B_FILES - S["b_fs"])[:3]}')
     if S['links']:
         out.append(f'enlaces en rutas de B o de gobierno: {S["links"][:3]}')
+    extra = sorted(S['rt_fs'] - S['rt_tracked'])
+    if extra:
+        out.append(f'archivos en el runtime, el dataset o la evidencia que no están en HEAD (aunque Git los ignore): '
+                   f'{extra[:5]}')
+    missing = sorted(S['rt_tracked'] - S['rt_fs'])
+    if missing:
+        out.append(f'archivos de HEAD ausentes o reemplazados en el runtime, el dataset o la evidencia: {missing[:5]}')
+    return out
+
+
+def r_hst(S):
+    if S['errors']:
+        return ['historia de F35-SBX-A no verificable (falla cerrado)']
+    out = []
+    if S['shallow']:
+        out.append('repositorio superficial: la historia E..HEAD no es completa (falla cerrado)')
+    out += [f'el commit {c[:12]} toca F35-SBX-A después de E: {paths[:3]}' for c, paths in S['a_history']]
     return out
 
 
@@ -373,6 +599,16 @@ def r_flg(S):
     if S['errors']:
         return ['índice no verificable (falla cerrado)']
     return [f'flags del índice que ocultan cambios: {S["flags"][:5]}'] if S['flags'] else []
+
+
+def row_cell(text):
+    return ' '.join(re.sub(r'[«»“”"]', ' ', fold(text)).split())
+
+
+def case_row(sentence):
+    """Una fila «| NB-xx | REGLA | descripción |» solo describe un negativo si coincide con un caso del gate."""
+    cells = tuple(row_cell(c) for c in sentence.strip().strip('|').split('|'))
+    return len(cells) == 3 and cells in CASE_ROWS
 
 
 def r_cnt(S):
@@ -394,6 +630,10 @@ def r_cnt(S):
             hits = [m.group(0) for rx in PII for m in [rx.search(text)] if m]
             if hits:
                 out.append(f'{path}: posible dato personal: {hits[:2]}')
+        if path.endswith('.md') and path != B0_DOC:      # B0 está congelado por B0F
+            claims = positive_claims(text, exempt=case_row)
+            if claims:
+                out.append(f'{path}: afirmación positiva que habilita una capacidad prohibida: {claims[:2]}')
         if path.endswith('.json'):
             try:
                 keys = []
@@ -444,8 +684,8 @@ def r_dep(S):
     return out
 
 
-RULES = {'CTX': r_ctx, 'AIN': r_ain, 'B0F': r_b0f, 'SBX': r_sbx, 'GOV': r_gov, 'SCP': r_scp, 'FSY': r_fsy,
-         'FLG': r_flg, 'CNT': r_cnt, 'DEP': r_dep}
+RULES = {'CTX': r_ctx, 'AIN': r_ain, 'HST': r_hst, 'B0F': r_b0f, 'SBX': r_sbx, 'GOV': r_gov, 'SCP': r_scp,
+         'FSY': r_fsy, 'FLG': r_flg, 'CNT': r_cnt, 'DEP': r_dep}
 
 
 def run_rules(S):
@@ -468,6 +708,10 @@ def gov_sub(old, new):
             assert old in text, old
             T['gov'][p] = text.replace(old, new, 1).encode('utf-8')
     return mutate(fn)
+
+
+def doc_add(line):
+    return mutate(lambda T: T['files'].__setitem__(B1_DOC, T['files'][B1_DOC] + f'\n{line}\n'.encode('utf-8')))
 
 
 def gov_add(line):
@@ -504,7 +748,41 @@ CASES = [
      mutate(lambda T: T['files'].__setitem__(GATE, T['files'][GATE] + b'\nimport sklearn\n'))),
     ('NB-18', 'CNT', 'JSON de B con un campo de puntaje',
      mutate(lambda T: T['files'].__setitem__('docs/academico/evidencia-sbx-b/x.json', b'{"candidate_score": 1}'))),
+    # B1.1 — M01: afirmaciones positivas en Markdown autorizado (familias, mayúsculas, Markdown, español e inglés).
+    ('NB-20', 'CNT', 'Markdown de B que afirma habilitar scoring y recomendación del mejor candidato',
+     doc_add('**Se habilita** scoring de candidatos y recomendación automática del *mejor candidato*.')),
+    ('NB-21', 'CNT', 'mayúsculas: OCR y alcance C habilitados', doc_add('SE HABILITA OCR Y SCOPE C EN B.')),
+    ('NB-22', 'CNT', 'inglés: scoring y búsqueda semántica habilitados',
+     doc_add('Candidate scoring and semantic search are enabled for B.')),
+    ('NB-23', 'CNT', 'datos reales permitidos', doc_add('Queda permitido cargar datos reales de postulantes.')),
+    ('NB-24', 'CNT', 'RF-23 automatizada', doc_add('RF-23 pasa a ser automática.')),
+    ('NB-25', 'CNT', 'F36 autorizada', doc_add('Se autoriza iniciar F36 en este sandbox.')),
+    ('NB-26', 'CNT', 'endpoints productivos activados', doc_add('Se activan endpoints productivos para B.')),
+    # B1.1 — M02: estados contradictorios junto a los canónicos (mayúsculas, Markdown, :=, flecha).
+    ('NB-27', 'GOV', 'estado canónico más «g0 real = aprobada»', gov_add('g0 real = aprobada')),
+    ('NB-28', 'GOV', 'contradicción con Markdown en F35 productiva', gov_add('**F35 productiva** = Habilitada')),
+    ('NB-29', 'GOV', 'contradicción con := en el alcance C', gov_add('scope c := habilitado')),
+    ('NB-30', 'GOV', 'contradicción con dos puntos en datos reales', gov_add('Datos Reales: PERMITIDOS')),
+    ('NB-31', 'GOV', 'contradicción con flecha en G0 real', gov_add('G0 real → APROBADA')),
+    ('NB-32', 'GOV', 'B1 declarada cerrada', gov_add('B1 = CERRADA')),
+    # B1.1 — M03: superficies del runtime.
+    ('NB-33', 'FSY', 'archivo de runtime que no está en HEAD (ignorado)',
+     mutate(lambda T: T['rt_fs'].add('app/Models/B1AuditHidden.php'))),
+    ('NB-34', 'FSY', 'archivo de HEAD ausente del runtime', mutate(lambda T: T['rt_fs'].discard(sorted(T['rt_tracked'])[0]))),
+    ('NB-35', 'FSY', 'enlace en una superficie del runtime',
+     mutate(lambda T: T['rt_walk'].append('enlace en una ruta protegida: routes/enlace.php'))),
+    # B1.1 — M04: historia de F35-SBX-A.
+    ('NB-36', 'HST', 'commit posterior a E que toca F35-SBX-A (aunque se restaure)',
+     mutate(lambda T: T['a_history'].append(('f' * 40, ['docs/academico/tools/f35sbx/f35sbx_scope.py'])))),
+    ('NB-37', 'HST', 'repositorio superficial', mutate(lambda T: T.__setitem__('shallow', True))),
 ]
+CASE_ROWS = {(row_cell(cid), row_cell(rule), row_cell(what)) for cid, rule, what, _ in CASES}
+# Controles positivos de B1.1: negación, prohibición, cita rechazada y ejemplo negativo no son afirmaciones.
+LEGIT_TEXTS = ['No se habilita scoring.', 'Scoring permanece prohibido.',
+               'El gate debe rechazar «G0 real = APROBADA».', 'Ejemplo negativo: Scope C habilitado.',
+               'Intento de habilitar F36–F40.', 'Sin scoring, recomendación ni selección automática.',
+               'No debe declararse G0 real = APROBADA.', 'Nunca se permiten datos reales.',
+               'El gate rechaza «F36–F40 = HABILITADAS» y «datos reales = permitidos».']
 
 
 def integrity_cases(S):
@@ -543,6 +821,10 @@ def main():
         add(run_rules(T)[rule], f'{cid} detectado por {rule}: {what}')
     for ok, msg in integrity_cases(S):
         add(ok, msg)
+    for text in LEGIT_TEXTS:
+        rc = run_rules(doc_add(text)(S))['CNT']
+        rg = run_rules(gov_add(text)(S))['GOV']
+        add(not rc and not rg, f'PB: texto legítimo aceptado por CNT y GOV: «{text}» {(rc + rg)[:1]}')
     fallas = [m for ok, m in checks if not ok]
     for m in fallas:
         print('FALLA', m)

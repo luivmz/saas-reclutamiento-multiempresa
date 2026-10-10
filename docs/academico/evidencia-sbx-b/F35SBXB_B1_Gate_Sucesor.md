@@ -1,6 +1,6 @@
 # F35-SBX-B — B1: gate sucesor sobre HEAD
 
-> Incremento B1 de F35-SBX-B, versión 1 (09/10/2026). Rama `feature/f35-sbx-b-deterministic-pipeline`, creada desde `develop` `430f3f544c3542cabac8028a122c8a0c2a97390b`, que integra [B0](F35SBXB_B0_Sucesion_de_Gates.md). B1 construye solo el **mecanismo de control** que exigen DH-B04 y DH-B13 antes de cualquier pipeline: no hay pipeline funcional, SQLite, máquina de estados, informe, purga ni ML.
+> Incremento B1 de F35-SBX-B, versión 2 (10/10/2026): la versión 1 se auditó en `f30cfe6c4adf9c3f7704b6bd665b6363a137b91a` y esta incorpora la corrección B1.1 (§8). Rama `feature/f35-sbx-b-deterministic-pipeline`, creada desde `develop` `430f3f544c3542cabac8028a122c8a0c2a97390b`, que integra [B0](F35SBXB_B0_Sucesion_de_Gates.md). B1 construye solo el **mecanismo de control** que exigen DH-B04 y DH-B13 antes de cualquier pipeline: no hay pipeline funcional, SQLite, máquina de estados, informe, purga ni ML.
 
 ## 1. Qué es el gate
 
@@ -14,13 +14,14 @@ El gate primero **recoge** el estado real (Git, índice, sistema de archivos y d
 |---|---|---|
 | CTX | Rama `feature/f35-sbx-b-deterministic-pipeline`, `develop` o `main`; HEAD no separado; E, el cierre de B0 y la base de B como ancestros de HEAD | Plan B1 §4.A y §4.J; DH-B04 |
 | AIN | F35-SBX-A idéntica a E: 22 archivos con los bytes reales del blob de E, sin archivos extra ni enlaces; árbol de HEAD sin cambios frente a E en esas rutas | DH-B09 |
+| HST | Historia completa de E a HEAD: el gate rechaza todo commit que haya tocado F35-SBX-A (contenido, modo, altas, bajas o renombrados), aunque después se restaure; en un merge cuenta lo que difiere de todos sus padres. Un repositorio superficial o una historia ilegible fallan cerrado | B1.1 M04; DH-B09 |
 | B0F | El documento de B0 idéntico a su cierre auditado | B0 CERRADA |
 | SBX | SBX-01..SBX-18 recalculados uno por uno sobre HEAD (§4) | DH-B13 |
-| GOV | Los trece estados de gobierno exactos en `CLAUDE.md` y `docs/PROGRESS.md`; F35-SBX-B solo INICIADA; ninguna línea añadida que desbloquee G0 real, ADR-005, F35 productiva, F36–F40, el alcance C o los datos reales | DH-B11; plan B1 §4.E |
+| GOV | Los trece estados de gobierno exactos en `CLAUDE.md` y `docs/PROGRESS.md`; F35-SBX-B solo INICIADA. En el estado vigente, la cabecera y las líneas añadidas, el gate rechaza toda declaración de estado contradictoria para G0 real, ADR-005, G0-SBX, F35 productiva, F36–F40, alcance C, datos reales, F35-SBX-A/B, B0 y B1, en cualquier forma (mayúsculas, Markdown, `=`, `:`, `:=`, `->`); las citas y las prohibiciones no cuentan como declaración | DH-B11; B1.1 M02 |
 | SCP | Delta exacto respecto de la base de B (árbol de HEAD, árbol de trabajo, índice y archivos sin seguimiento): solo las rutas autorizadas, con el estado esperado, y las obligatorias presentes | DH-B03; plan B1 §4.F y §4.K |
-| FSY | Recorrido real de `evidencia-sbx-b/` y `tools/f35sbxb/`: ningún archivo fuera de la lista, aunque Git lo ignore; ningún enlace; solo `.pyc` regulares en `tools/f35sbxb/__pycache__` | Plan B1 §4.I |
+| FSY | Recorrido real de `evidencia-sbx-b/`, `tools/f35sbxb/` y de las superficies del runtime, el dataset y la evidencia (§8.3): todo archivo debe estar en el árbol de HEAD aunque Git lo ignore, ningún archivo de HEAD puede faltar y no se admiten enlaces; solo hay las excepciones explícitas de §8.3 | Plan B1 §4.I; B1.1 M03 |
 | FLG | Ningún flag del índice en todo el repositorio: solo `H` en `git ls-files -v` (`h` = assume-unchanged, `S` = skip-worktree, `s` = ambos) | Plan B1 §4.I |
-| CNT | Archivos de B: UTF-8 sin NUL, CR ni BOM; sin correos, DNI, teléfonos ni RUC; solo `.md`, `.json` y `.py`; claves JSON sin vocabulario de puntaje, ranking, recomendación, selección, OCR, extracción ni embeddings | Plan B1 §7 |
+| CNT | Archivos de B: UTF-8 sin NUL, CR ni BOM; sin correos, DNI, teléfonos ni RUC; solo `.md`, `.json` y `.py`; claves JSON sin vocabulario de capacidades prohibidas; y, en los documentos mutables de B, el gate rechaza toda afirmación positiva que habilite una capacidad prohibida (§8.2) | Plan B1 §7; B1.1 M01 |
 | DEP | Código de `tools/f35sbxb/` solo con la biblioteca estándar autorizada, sin importaciones dinámicas, red ni dependencias de ML | DH-B12; TSBB-09 |
 
 Cualquier error de Git, de lectura o de importación, criterio no evaluable o estado desconocido hace fallar el gate (DH-B10).
@@ -68,34 +69,52 @@ Así el gate de B nunca tiene que modificarse para que otra fase avance, y una f
 | OCR, parsing, extracción, embeddings o búsqueda semántica | Claves JSON prohibidas en CNT; DEP; SCP impide tocar el runtime |
 | Integración productiva, endpoints o migraciones | SCP (ninguna ruta del runtime autorizada); SBX-15 y SBX-16 |
 | Dependencias de ML | DEP; SCP impide tocar `composer.json`, `package.json` y similares |
-| Modificar RF-23 | SBX-08; SCP impide tocar la matriz de trazabilidad |
-| Desbloqueo falso de G0 real, ADR-005, F35 productiva, F36–F40, alcance C o datos reales | GOV; SBX-13, SBX-17 y SBX-18 |
+| Intento de modificar RF-23 | SBX-08; SCP impide tocar la matriz de trazabilidad |
+| Intento de desbloqueo falso de G0 real, ADR-005, F35 productiva, F36–F40, alcance C o datos reales | GOV; CNT; SBX-13, SBX-17 y SBX-18 |
 
 ## 7. Pruebas de B1
 
-Los casos negativos viven dentro del gate, igual que en F35-SBX-A, sin `tests/` productivos. Cada uno muta una copia del estado recogido y exige que la regla indicada lo detecte.
+Los casos negativos viven dentro del gate, igual que en F35-SBX-A, sin `tests/` productivos. Cada uno muta una copia del estado recogido y exige que la regla indicada lo detecte. La tabla reproduce literalmente los casos del gate: CNT solo trata una fila «NB-xx» como descripción de un negativo si coincide con un caso del código.
 
 | Caso | Regla | Negativo |
 |---|---|---|
-| NB-01 | SBX | SBX-05 incumplido (campo de puntaje en `schema.json`) |
+| NB-01 | SBX | SBX-05 incumplido (campo de puntaje en schema.json) |
 | NB-02 | GOV | G0 real declarada APROBADA |
-| NB-03 | CNT | Dato personal real en un documento de B |
-| NB-04 | AIN | Archivo protegido de F35-SBX-A alterado |
-| NB-05 | SCP | Cambio productivo fuera del alcance (`app/`) |
-| NB-06 | FSY | Archivo extra no autorizado, aunque Git lo ignore |
-| NB-07 | FSY | Enlace simbólico en una ruta de B |
-| NB-08 | FLG | assume-unchanged |
-| NB-09 | FLG | skip-worktree |
-| NB-10 | CTX | Error de Git |
-| NB-11 | CTX | Estado desconocido: HEAD separado |
-| NB-12 | SBX | Estado desconocido: criterio SBX-18 no evaluable |
-| NB-13 | GOV | Intento de habilitar F36–F40 |
-| NB-14 | GOV | Línea añadida que habilita el alcance C |
-| NB-15 | GOV | F35-SBX-B declarada CERRADA durante B1 |
-| NB-16 | B0F | Documento de B0 modificado |
-| NB-17 | DEP | Dependencia de ML en el código de B |
+| NB-03 | CNT | dato personal real en un documento de B |
+| NB-04 | AIN | archivo protegido de F35-SBX-A alterado |
+| NB-05 | SCP | cambio productivo fuera del alcance (app/) |
+| NB-06 | FSY | archivo extra no autorizado en evidencia-sbx-b (ignorado por Git) |
+| NB-07 | FSY | enlace simbólico en una ruta de B |
+| NB-08 | FLG | assume-unchanged en CLAUDE.md |
+| NB-09 | FLG | skip-worktree en el documento de B0 |
+| NB-10 | CTX | error de Git |
+| NB-11 | CTX | estado desconocido: HEAD separado |
+| NB-12 | SBX | estado desconocido: criterio SBX-18 no evaluable |
+| NB-13 | GOV | intento de habilitar F36–F40 |
+| NB-14 | GOV | línea añadida que habilita el alcance C |
+| NB-15 | GOV | F35-SBX-B declarada CERRADA en el estado vigente |
+| NB-16 | B0F | documento de B0 modificado |
+| NB-17 | DEP | dependencia de ML en el código de B |
 | NB-18 | CNT | JSON de B con un campo de puntaje |
 | NB-19 | SBX | Módulo de `compute_sbx()` alterado: no se importa |
+| NB-20 | CNT | Markdown de B que afirma habilitar scoring y recomendación del mejor candidato |
+| NB-21 | CNT | mayúsculas: OCR y alcance C habilitados |
+| NB-22 | CNT | inglés: scoring y búsqueda semántica habilitados |
+| NB-23 | CNT | datos reales permitidos |
+| NB-24 | CNT | RF-23 automatizada |
+| NB-25 | CNT | F36 autorizada |
+| NB-26 | CNT | endpoints productivos activados |
+| NB-27 | GOV | estado canónico más «g0 real = aprobada» |
+| NB-28 | GOV | contradicción con Markdown en F35 productiva |
+| NB-29 | GOV | contradicción con := en el alcance C |
+| NB-30 | GOV | contradicción con dos puntos en datos reales |
+| NB-31 | GOV | contradicción con flecha en G0 real |
+| NB-32 | GOV | B1 declarada cerrada |
+| NB-33 | FSY | archivo de runtime que no está en HEAD (ignorado) |
+| NB-34 | FSY | archivo de HEAD ausente del runtime |
+| NB-35 | FSY | enlace en una superficie del runtime |
+| NB-36 | HST | commit posterior a E que toca F35-SBX-A (aunque se restaure) |
+| NB-37 | HST | repositorio superficial |
 
 ### 7.1 RED → GREEN (09/10/2026)
 
@@ -112,17 +131,17 @@ En un clon desechable sin remoto, ya eliminado:
 | `develop` con B1 integrada (`merge --no-ff`) | 29/0, PASS | — |
 | `main` con B1 integrada (`merge --no-ff`) | 29/0, PASS | — |
 | Campo de puntaje añadido a `schema.json` | FAIL | SBX (SBX-05), SCP |
-| G0 real declarada APROBADA | FAIL | GOV |
+| Intento de declarar APROBADA la G0 real | FAIL | GOV |
 | Correo personal en un documento de B | FAIL | CNT |
 | Archivo de F35-SBX-A alterado | FAIL | AIN, SCP |
 | Cambio en `app/Models/User.php` | FAIL | SCP; además SBX-08 y SBX-09 por el runtime modificado |
 | Archivo extra oculto por `.git/info/exclude` | FAIL | FSY |
 | Enlace simbólico en `evidencia-sbx-b/` | FAIL | FSY, SCP |
-| assume-unchanged más G0 real APROBADA (`git status` no ve nada) | FAIL | FLG, GOV |
+| assume-unchanged más intento de declarar APROBADA la G0 real (`git status` no ve nada) | FAIL | FLG, GOV |
 | skip-worktree en el documento de B0 | FAIL | FLG |
 | `GIT_DIR` inválido | FAIL cerrado | Todas |
 | HEAD separado o rama desconocida | FAIL | CTX |
-| F36–F40 HABILITADAS o línea que habilita el alcance C | FAIL | GOV |
+| Intento de habilitar F36–F40 o el alcance C | FAIL | GOV |
 
 Cuando el cambio real altera el texto de partida de un negativo en memoria, ese negativo también falla («la mutación no se pudo aplicar»), lo que mantiene el gate en fallo.
 
