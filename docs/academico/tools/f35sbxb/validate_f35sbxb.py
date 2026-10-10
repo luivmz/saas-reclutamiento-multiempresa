@@ -362,24 +362,47 @@ PERSON_RX = re.compile(r'^(candidat|postulant|aspirant|ganador|ganadora|apto|apt
                        r'applicant|candidate|winner|best)')
 AUTO_RX = re.compile(r'^(automatic|automated|autonom)')
 PROHIB_RX = re.compile(r'^(prohib|bloque|rechaz|forbid|deneg|vedad|impid|imped|block)')
+# B1.3 — las formas verbales se generan por clase de conjugación (presente, pasado, futuro, primera persona del
+# plural, condicional, gerundio y participio), no frase por frase. Las formas que coinciden con sustantivos del
+# dominio («descarte», «contrato») se excluyen expresamente.
+AR = r'(a|an|as|ar|ara|aran|aras|are|aremos|aria|arian|o|e|en|amos|ando|ado|ada|ados|adas|aron)'
+AR_NOUNSAFE = r'(a|an|as|ar|ara|aran|aras|are|aremos|aria|arian|amos|ando|ado|ada|ados|adas|aron)'
+ER_IR = r'(e|en|es|er|ir|era|eran|ira|iran|eremos|iremos|eria|iria|io|imos|ieron|iendo|ido|ida|idos|idas)'
 ACTIONS = [   # (familia, formas verbales explícitas; exige persona candidata; exige «automático»)
-    ('scoring', re.compile(r'^(puntu(a|an|ar|ara|aran|aria|e|en|o|amos|ando|ado|ada|ados|adas)|scores?|scored)$'),
-     True, False),
-    ('scoring', re.compile(r'^(califica|calific(an|ar|ara|aran|o|amos)|clasific(a|an|ar|ara|aran|amos)|'
-                           r'evalu(a|an|ar|ara|aran|amos))$'), True, True),
-    ('recomendación', re.compile(r'^(recomiend\w*|recomend(ar|ara|aran|aria|o|e|en|amos|ado|ada)|'
-                                 r'recommends?|recommended|recommending)$'), True, False),
-    ('mejor candidato', re.compile(r'^(elig\w*|eleg(ir|ira|iran|imos|ido|ida)|escog\w*|escoj\w*|'
-                                   r'identific(a|an|ar|ara|aran|o|amos))$'), True, False),
-    ('selección automática', re.compile(r'^(seleccion(a|an|ar|ara|aran|aria|o|e|en|amos|ado|ada|ados|adas|ando)|'
-                                        r'descart(a|an|ar|ara|aran|o|amos|ado|ada)|'
-                                        r'contrat(a|an|ar|ara|aran|e|en|o|amos)|selects?|selected|hires?|hired)$'),
-     True, False),
-    ('selección automática', re.compile(r'^(decid(e|en|ir|ira|iran|io|ido|ida|imos)|determin(a|an|ar|ara|aran)|'
-                                        r'resuelv(e|en)|resolv(er|era|eran)|decides?|decided)$'), False, True),
-    ('ranking automático', re.compile(r'^(rankea\w*|rank|ranks|ranked|ordena|ordenan|ordenar|ordenara|ordenaran)$'),
-     True, True),
+    ('scoring', re.compile(r'^(puntu' + AR + r'|scores?|scored)$'), True, False),
+    ('scoring', re.compile(r'^((calific|clasific|evalu)' + AR + r'|rates?|rated|grades?|graded|classifie[sd]|'
+                           r'evaluates?|evaluated)$'), True, True),
+    ('recomendación', re.compile(r'^(recomiend(a|an|as|o|e|en)|recomend' + AR + r'|recommends?|recommended|'
+                                 r'recommending)$'), True, False),
+    ('mejor candidato', re.compile(r'^(elig(e|en|es|o|io|iendo)|(eleg|escog)' + ER_IR + r'|escoj(a|an|o)|'
+                                   r'identific(a|an|ar|ara|aran|aremos|o|amos)|choose|chooses|chose|chosen|'
+                                   r'picks?|picked)$'), True, False),
+    ('selección automática', re.compile(r'^(seleccion' + AR + r'|(descart|contrat)' + AR_NOUNSAFE +
+                                        r'|selects?|selected|hires?|hired)$'), True, False),
+    ('selección automática', re.compile(r'^(decid' + ER_IR + r'|determin' + AR + r'|resuelv(e|en|a|an)|resolv' +
+                                        ER_IR + r'|decides?|decided|determines?|determined)$'), False, True),
+    ('ranking automático', re.compile(r'^(rankea\w*|rank|ranks|ranked|(orden|prioriz|jerarquiz)' + AR +
+                                      r'|prioriti[sz]es?|prioriti[sz]ed)$'), True, True),
 ]
+# B1.3 — tomar o ejecutar la decisión: verbo de ejecución con la decisión o la selección como objeto directo
+# («realizará la selección final», «la decisión final la tomará»), con «automático» o con un agente de sistema.
+DECISION_NOUN = r'(seleccion|selecciones|decision|decisiones|contratacion|descarte|eleccion|selection|decision|' \
+                r'decisions|hiring|choice)'
+OBJ_VERB = r'((tom|adopt|emit|realiz|efectu|ejecut)' + AR + r'|takes?|took|taken|makes?|made|performs?|' \
+           r'performed|executes?|executed)'
+OBJ_RXS = [re.compile(r'\b(?P<verb>' + OBJ_VERB + r') (?:(?:la|el|las|los|una|un|su|sus|the|a|an|its|their) )?'
+                      r'(?:(?:final|definitiva|ultima) )?' + DECISION_NOUN + r'\b'),
+           re.compile(r'\b' + DECISION_NOUN + r'(?: (?:final|definitiva))? (?:(?:la|lo|las|los) )?(?P<verb>' +
+                      OBJ_VERB + r')\b')]
+# Agentes. Un agente de sistema introducido como instrumento («con apoyo del sistema») no es el agente.
+SYSTEM_RX = re.compile(r'^(sistema|sistemas|motor|plataforma|algoritmo|algoritmos|modelo|modelos|ia|ai|engine|'
+                       r'system|platform|algorithm|model|bot|servicio|service)$')
+INSTRUMENTAL = frozenset({'con', 'apoyo', 'ayuda', 'mediante', 'usando', 'utilizando', 'asistido', 'asistida',
+                          'with', 'using', 'via', 'support', 'assisted'})
+HUMAN_RX = re.compile(r'^(aprobador|aprobadora|aprobadores|direccion|comite|evaluador|evaluadora|evaluadores|'
+                      r'reclutador|reclutadora|reclutadores|jurado|approver|approvers|committee|recruiter|recruiters|'
+                      r'director|directora|directores)$')
+MANUAL_RX = re.compile(r'^(manual|manualmente|manually)$')
 STATE_NOUNS = r'(seleccion|decision|contratacion|descarte|eleccion|recomendacion|puntuacion|calificacion|ranking|' \
               r'ordenamiento|selection|decision|hiring|scoring|recommendation)'
 COPULAS = r'(sera|seran|es|son|esta|estan|estara|queda|quedan|quedara|pasa a ser|pasara a ser|pasa a|se vuelve|' \
@@ -393,9 +416,31 @@ def unprohibited(toks, start, end):
     return not any(PROHIB_RX.match(t) and not negated(toks, k) for k, t in enumerate(toks) if k > start)
 
 
+def system_agent(segs):
+    """Agente de sistema no negado y no instrumental en la oración."""
+    return any(SYSTEM_RX.match(t) and not negated(toks, i) and not set(toks[max(0, i - 2):i]) & INSTRUMENTAL
+               for toks in segs for i, t in enumerate(toks))
+
+
+def human_exempt(segs, s, i):
+    """B1.3 — la acción la ejecuta una persona: un agente humano no negado antes del verbo (o «por el Aprobador»
+    después), o «manualmente» en su tramo. El contexto humano nunca exime si en la oración hay «automático» o un
+    agente de sistema no instrumental: «sin intervención humana» o «con confirmación humana» no son agentes."""
+    live = [(a, b, t) for a, toks in enumerate(segs) for b, t in enumerate(toks) if not negated(toks, b)]
+    if any(AUTO_RX.match(t) for _, _, t in live) or system_agent(segs):
+        return False
+    for a, b, t in live:
+        if HUMAN_RX.match(t) and ((a, b) < (s, i) or {'por', 'by'} & set(segs[a][max(0, b - 3):b])):
+            return True
+        if MANUAL_RX.match(t) and a == s:
+            return True
+    return False
+
+
 def action_claims(segs, sentence):
-    """Acciones positivas inequívocas: verbo de la familia sobre personas candidatas (o con «automático») y estados
-    predicativos («la selección final será automática»), sin negación ni prohibición que los alcance."""
+    """Acciones positivas inequívocas: verbo de la familia sobre personas candidatas (o con «automático»), toma o
+    ejecución de la decisión por el sistema y estados predicativos («la selección final será automática»), sin
+    negación ni prohibición que los alcance y sin un agente humano que ejecute la acción."""
     toks_all = [t for seg in segs for t in seg]
     has_person = any(PERSON_RX.match(t) for t in toks_all)
     has_auto = any(AUTO_RX.match(t) for t in toks_all)
@@ -403,11 +448,18 @@ def action_claims(segs, sentence):
     for family, verb_rx, needs_person, needs_auto in ACTIONS:
         if (needs_person and not has_person) or (needs_auto and not has_auto):
             continue
-        for toks in segs:
-            for i, t in enumerate(toks):
-                if verb_rx.match(t) and not negated(toks, i) and unprohibited(toks, i, len(toks)):
-                    hits.append(family)
-                    break
+        if any(verb_rx.match(t) and not negated(toks, i) and unprohibited(toks, i, len(toks))
+               and not human_exempt(segs, s, i) for s, toks in enumerate(segs) for i, t in enumerate(toks)):
+            hits.append(family)
+    live_auto = any(AUTO_RX.match(t) and not negated(toks, i) for toks in segs for i, t in enumerate(toks))
+    if live_auto or system_agent(segs):
+        for s, toks in enumerate(segs):
+            joined = ' '.join(toks)
+            for rx in OBJ_RXS:
+                for m in rx.finditer(joined):
+                    at = joined[:m.start('verb')].count(' ')
+                    if not negated(toks, at) and unprohibited(toks, at, len(toks)) and not human_exempt(segs, s, at):
+                        hits.append('selección automática')
     for toks in segs:
         joined = ' '.join(toks)
         for m in PREDICATIVE_RX.finditer(joined):
@@ -419,11 +471,17 @@ def action_claims(segs, sentence):
 # familia: (términos, verbos propios de la familia o None, términos que ya son una acción por sí mismos o None)
 FAMILIES = {
     'scoring': (r'\b(scoring|score|scores|puntaje\w*|puntuacion\w*|calificacion automatica)\b',
-                r'^(calcul|asign|otorg|comput|puntu|calific)(a|an|ar|ara|aran|o|e|en|ado|ada|ados|adas)$',
+                r'^(calcul|asign|otorg|comput|puntu|calific)' + AR + r'$',
                 r'\bpuntua(n|r)?\b'),
     'recomendación': (r'\b(recomendacion\w*|recommendation\w*)\b', None, r'\b(recomiend\w*|recomendar|recommends?)\b'),
     'mejor candidato': (r'\b(mejor(es)? candidat\w*|best candidates?)\b', r'^(identific|elig|escog|select)', None),
-    'selección automática': (r'\b((seleccion|descarte|contratacion|decision)( final)? automatica\w*|automatic (selection|hiring))\b',
+    # B1.3 — capacidad nombrada como «automática» en cualquier orden, con hasta dos palabras intermedias no negativas.
+    'selección automática': (r'\b(seleccion|contratacion|descarte|decision|eleccion|puntuacion|calificacion|'
+                             r'clasificacion|priorizacion|ordenamiento|ranking|recomendacion)'
+                             r'(?: (?!no\b|ni\b|sin\b|nunca\b)[a-z0-9-]+){0,2} automatic\w*|'
+                             r'\b(automatic|automated|autonomous)(?: (?!not\b|no\b|without\b|never\b)[a-z0-9-]+){0,2} '
+                             r'(selection|hiring|ranking|scoring|prioriti[sz]ation|recommendation|decision|screening|'
+                             r'shortlisting)s?\b',
                              None, r'\b(selecciona\w*|descarta\w*|contrata\w*) automaticamente\b'),
     'ranking automático': (r'\b(ranking automatico|nuevo ranking|ranking nuevo|automatic ranking)\b', None, r'\brankea\w*\b'),
     'OCR o extracción': (r'\b(ocr|parsing|parseo|extraccion\w*|extraction)\b', None, r'\b(extrae\w*|parsea\w*)\b'),
@@ -556,36 +614,118 @@ DECLARED = [   # (sujeto, valores admitidos: prefijo del valor normalizado)
     (r'b0', ('cerrad',)),
     (r'b1', ('implementad', 'pendiente')),
 ]
-DECL_COPULA = (r'(?:queda\w*|quedo|quedaron|fue|fueron|esta|estan|estara\w*|es|son|sera\w*|pasa\w* a(?: ser)?|'
-               r'paso a(?: ser)?|declara\w*|resulta\w*|permanece\w*|sigue|siguen|continua\w*|is|was|are|were|'
+DECL_COPULA = (r'(?:ha sido|han sido|ha quedado|han quedado|ha pasado a(?: ser)?|has been|have been|'
+               r'queda\w*|quedo|quedaron|fue|fueron|esta|estan|estara\w*|es|son|sera\w*|pasa\w* a(?: ser)?|'
+               r'paso a(?: ser)?|declara\w*|resulta\w*|permanece\w*|sigue|siguen|continua\w*|como|is|was|are|were|'
                r'becomes|remains)')
 DECL_RX = [(re.compile(r'(?<![\w-])(' + subj + r')(?![\w-])(?:\s*(?::=|==|=|:|->|→)\s*|\s+(no\s+)?(?:se\s+)?'
-                       + DECL_COPULA + r'\s+|\s+)' + STATE_VALUE.replace('(no\\s+)?', '(no\\s+)?', 1)), allowed)
+                       + DECL_COPULA + r'\s+(?:[a-z]+mente\s+)?|\s+)' + STATE_VALUE), allowed)
            for subj, allowed in DECLARED]
+# B1.3 — declaración por verbo finito sobre la entidad («se aprueba ADR-005», «aprobamos ADR-005», «ADR-005 se
+# aprueba»). Se traduce al estado equivalente y se compara con los valores admitidos de esa entidad. Sin infinitivo
+# ni subjuntivo: «falta aprobar ADR-005» o «antes de que se habilite F36» no son declaraciones.
+FIN = r'(a|an|o|amos|aron|ara|aran|aremos)'
+DECL_VERBS = [
+    (r'aprueb(a|an|o)|aprob(o|amos|aron|ara|aran|aremos)|approves?|approved', 'aprobad'),
+    (r'habilit' + FIN + r'|enables?|enabled', 'habilitad'),
+    (r'desbloque' + FIN + r'|unlocks?|unlocked', 'desbloquead'),
+    (r'autoriz' + FIN + r'|authori[sz]es?|authori[sz]ed', 'autorizad'),
+    (r'activ' + FIN + r'|activates?|activated', 'activ'),
+    (r'inici' + FIN + r'|starts?|started', 'iniciad'),
+    (r'acept' + FIN + r'|accepts?|accepted', 'aceptad'),
+    (r'permit(e|en|io|imos|ieron|ira|iran|iremos)|permits?|permitted|allows?|allowed', 'permitid'),
+    (r'cierr(a|an|o)|cerr(o|amos|aron|ara|aran|aremos)|closes?|closed', 'cerrad'),
+    (r'congel' + FIN + r'|freezes?|frozen', 'congelad'),
+    (r'implement' + FIN + r'|implements?|implemented', 'implementad'),
+    (r'bloque' + FIN + r'|blocks?|blocked', 'bloquead'),
+    (r'prohib(e|en|io|imos|ieron|ira|iran|iremos)|prohibits?|prohibited', 'prohibid'),
+]
+DECL_VERB = '|'.join(f'(?P<v{k}>{p})' for k, (p, _) in enumerate(DECL_VERBS))
+DECL_NEG = r'(?:(?P<neg>no|nunca|jamas|tampoco)\s+)?'
+VERB_DECL_RX = [(re.compile(r'(?<![\w-])' + DECL_NEG + r'(?:se\s+)?(?:(?:lo|la|los|las)\s+)?(?<![\w-])(?:' + DECL_VERB +
+                            r')(?![\w-])\s+(?:[a-z]+mente\s+)?(?:(?:el|la|los|las|al|a|the)\s+)?(?P<subj>' + subj +
+                            r')(?![\w-])'), allowed, rx)
+                for (subj, allowed), (rx, _) in zip(DECLARED, DECL_RX)] + \
+               [(re.compile(r'(?<![\w-])(?P<subj>' + subj + r')(?![\w-])\s+' + DECL_NEG + r'se\s+(?:[a-z]+mente\s+)?(?:' +
+                            DECL_VERB + r')(?![\w-])'), allowed, rx)
+                for (subj, allowed), (rx, _) in zip(DECLARED, DECL_RX)]
+STEM_RX = re.compile(r'(aprobad|habilitad|desbloquead|permitid|autorizad|iniciad|activ|bloquead|prohibid|propuest|'
+                     r'cerrad|congelad|implementad|aceptad)')
+UNRESTRICTED_RX = re.compile(r'\b(sin (restricciones|restriccion|limitaciones|condiciones|salvaguardas)\b|irrestrict\w*|'
+                             r'without restrictions\b|unrestricted\b|(plena|total|completa)mente (habilitad|aprobad|'
+                             r'autorizad|activ|desbloquead|irrestrict)\w*|(plena|total|completa) (habilitacion|'
+                             r'aprobacion|autorizacion)\b|fully (enabled|approved|unlocked|authori[sz]ed)\b)')
+RESTRICTION_RX = re.compile(r'^(restricciones|restriccion|restrictions?|limitaciones|condiciones|salvaguardas)$')
+REMOVE_RX = re.compile(r'^((elimin|levant|retir|quit|anul|derog)' + AR + r'|suprim' + ER_IR +
+                       r'|removes?|removed|lifts?|lifted|drops?|dropped|waives?|waived)$')
 DECL_NEG_RX = re.compile(r'\b(no|nunca|jamas)\s+(\w+\s+){0,2}(declar\w*|figur\w*|registr\w*|afirm\w*|indic\w*|'
                          r'decir|escrib\w*|pon\w*)|\b(rechaz\w*|prohib\w*|detect\w*|impid\w*|imped\w*|ejemplo\w*|'
                          r'negativ\w*|intent\w*)\b')
 
 
-def contradictions(text):
-    """Declaraciones de estado distintas de las vigentes. No cuentan las citas ni las que una prohibición o un
-    ejemplo introducen dentro de su propio tramo (desde el último signo de puntuación)."""
+def state_value(negated_value, word, rest):
+    """Estado normalizado: «no » opcional, raíz del valor y, si sigue, «con restricciones» o «sin restricciones»."""
+    value = ('no ' if negated_value else '') + STEM_RX.match(word).group(1)
+    rest = rest.lstrip()
+    if rest.startswith('con restricciones'):
+        value += ' con restricciones'
+    elif UNRESTRICTED_RX.match(rest):
+        value += ' sin restricciones'
+    return value
+
+
+def admitted(value, allowed):
+    """Valor admitido para la entidad; negar un estado irrestricto siempre es coherente."""
+    return value.startswith(allowed) or (value.startswith('no ') and value.endswith(' sin restricciones'))
+
+
+def g0sbx_unrestricted(body):
+    """B1.3 — G0-SBX sin restricciones, plenamente habilitada o con sus restricciones eliminadas, en cualquier orden.
+    Un marcador cuenta si ninguna negación lo precede desde la mención de G0-SBX (o en sus tres palabras anteriores)."""
+    toks = [t for seg in segments(body) for t in seg]
+    subj = [k for k, t in enumerate(toks) if t == 'g0-sbx']
+    if not subj:
+        return []
     out = []
-    for body in sentences(text, cite=True):
+    for k in matches(UNRESTRICTED_RX, toks):
+        prev = [j for j in subj if j < k]
+        span = toks[prev[-1] + 1:k] if prev else toks[max(0, k - 3):k]
+        if not any(t in NEG_WORDS or t.startswith(NEG_PREFIXES) for t in span):
+            out.append(f'«G0-SBX … {" ".join(toks[k:k + 2])}»')
+    for k, t in enumerate(toks):
+        if REMOVE_RX.match(t) and not negated(toks, k) and any(
+                RESTRICTION_RX.match(r) and not set(toks[max(0, j - 2):j]) & NEG_WORDS for j, r in enumerate(toks)):
+            out.append(f'«{t} … restricciones de G0-SBX»')
+    return out
+
+
+def contradictions(text, exempt=lambda row: False):
+    """Declaraciones de estado distintas de las vigentes, por separador o cópula («ADR-005 queda APROBADA»), por verbo
+    finito sobre la entidad («se aprueba ADR-005») y G0-SBX sin restricciones. No cuentan las citas ni las que una
+    prohibición o un ejemplo introducen dentro de su propio tramo (desde el último signo de puntuación)."""
+    out = []
+    for body in sentences(text, cite=True, exempt=exempt):
         if EXAMPLE_PREFIX_RX.match(body.strip(' |-')):
             continue
+        found = []
         for rx, allowed in DECL_RX:
             for m in rx.finditer(body):
-                negated_value = bool(m.group(2) or m.group(3))
-                value = ('no ' if negated_value else '') + m.group(4)
-                if value.startswith('aprobad') and body[m.end():].lstrip().startswith('con restricciones'):
-                    value = 'aprobad con restricciones'
-                if value.startswith(allowed):
+                found.append((m, allowed, state_value(bool(m.group(2) or m.group(3)), m.group(4), body[m.end():])))
+        for rx, allowed, decl_rx in VERB_DECL_RX:
+            for m in rx.finditer(body):
+                if decl_rx.match(body, m.start('subj')):     # la entidad abre su propia declaración: se evalúa arriba
                     continue
-                before = re.split(r'[.,;:!?|]', body[:m.start()])[-1]
-                if DECL_NEG_RX.search(before):
-                    continue
-                out.append(f'«{m.group(0).strip()}»')
+                k = next(int(g[1:]) for g, v in m.groupdict().items() if v and g.startswith('v'))
+                found.append((m, allowed, state_value(bool(m.group('neg')), DECL_VERBS[k][1], body[m.end():])))
+        for m, allowed, value in found:
+            if admitted(value, allowed):
+                continue
+            before = re.split(r'[.,;:!?|]', body[:m.start()])[-1]
+            if DECL_NEG_RX.search(before):
+                continue
+            out.append(f'«{m.group(0).strip()}»')
+        if not DECL_NEG_RX.search(re.split(r'[.,;:!?|]', body.split('g0-sbx')[0])[-1]):
+            out += g0sbx_unrestricted(body)
     return out
 
 
@@ -768,6 +908,9 @@ def r_cnt(S):
             claims = positive_claims(text, exempt=case_row)
             if claims:
                 out.append(f'{path}: afirmación positiva que habilita una capacidad prohibida: {claims[:2]}')
+            bad = contradictions(text, exempt=case_row)
+            if bad:
+                out.append(f'{path}: declaraciones de estado contradictorias con el gobierno vigente: {bad[:2]}')
         if path.endswith('.json'):
             try:
                 keys = []
