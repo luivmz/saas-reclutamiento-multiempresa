@@ -1164,7 +1164,38 @@ CASES = [
     ('NB-52', 'GOV', 'datos reales están permitidos', gov_add('Datos reales están permitidos')),
     # B1.2 — M03 residual: abuso de una excepción de FSY.
     ('NB-53', 'FSY', 'código no autorizado dentro de una excepción de FSY',
-     mutate(lambda T: T['rt_exc'].append('archivo no autorizado dentro de la excepción public/build: x.php'))),
+     mutate(lambda T: T['rt_exc'].append('archivo no autorizado dentro de la excepción cypress/results: x.php'))),
+    # B1.3 — M01 y RF-23: conjugaciones, objeto de decisión, sistema como agente y contexto humano que no exime.
+    ('NB-54', 'CNT', 'primera persona del futuro: asignaremos una calificación automática',
+     doc_add('Asignaremos una calificación automática al candidato.')),
+    ('NB-55', 'CNT', 'inglés: ranking automático de candidatos habilitado', doc_add('Automatic candidate ranking enabled.')),
+    ('NB-56', 'CNT', 'futuro: el motor priorizará automáticamente candidatos',
+     doc_add('El motor priorizará automáticamente candidatos para selección.')),
+    ('NB-57', 'CNT', 'la decisión final la tomará el sistema',
+     doc_add('La decisión final la tomará automáticamente el sistema.')),
+    ('NB-58', 'CNT', 'inglés: el sistema elige al postulante final', doc_add('The system chooses the final applicant.')),
+    ('NB-59', 'CNT', 'el sistema realizará la selección final', doc_add('El sistema realizará la selección final.')),
+    ('NB-60', 'CNT', 'la plataforma escoge al ganador sin intervención humana',
+     doc_add('La plataforma escogerá al ganador sin intervención humana.')),
+    ('NB-61', 'CNT', 'variante: el algoritmo efectuará la contratación final',
+     doc_add('El algoritmo efectuará la contratación final.')),
+    ('NB-62', 'CNT', 'variante: el sistema selecciona y el Aprobador solo recibe aviso',
+     doc_add('El sistema seleccionará al candidato y el Aprobador será notificado manualmente.')),
+    # B1.3 — M02: verbo finito sobre la entidad, «ha sido» y G0-SBX sin restricciones.
+    ('NB-63', 'GOV', 'verbo antes de la entidad: se aprueba ADR-005', gov_add('Se aprueba ADR-005')),
+    ('NB-64', 'GOV', 'primera persona: aprobamos ADR-005', gov_add('Aprobamos ADR-005')),
+    ('NB-65', 'GOV', 'ADR-005 ha sido aprobada', gov_add('ADR-005 ha sido aprobada')),
+    ('NB-66', 'GOV', 'G0-SBX queda sin restricciones', gov_add('G0-SBX queda SIN RESTRICCIONES')),
+    ('NB-67', 'GOV', 'se eliminan las restricciones de G0-SBX', gov_add('Se eliminan las restricciones de G0-SBX')),
+    ('NB-68', 'GOV', 'G0-SBX queda plenamente habilitada', gov_add('G0-SBX queda plenamente habilitada')),
+    ('NB-69', 'CNT', 'Markdown de B: se aprobó ADR-005', doc_add('Se aprobó ADR-005.')),
+    # B1.3 — M03: código ejecutable sin origen verificable.
+    ('NB-70', 'FSY', 'bundle de Vite no versionado aunque el manifiesto lo nombre',
+     mutate(lambda T: T['rt_fs'].update({'public/build/manifest.json', 'public/build/assets/app-AbCdEf12.js'}))),
+    ('NB-71', 'FSY', 'TypeScript de Wayfinder no versionado', mutate(lambda T: T['rt_fs'].add('resources/js/routes/index.ts'))),
+    ('NB-72', 'FSY', 'caché PHP de Laravel no versionada', mutate(lambda T: T['rt_fs'].add('bootstrap/cache/packages.php'))),
+    ('NB-73', 'FSY', 'archivo del runtime con bytes distintos de la base autorizada',
+     mutate(lambda T: T['rt_real'].__setitem__(sorted(T['rt_real'])[0], '0' * 40))),
 ]
 CASE_ROWS = {(row_cell(cid), row_cell(rule), row_cell(what)) for cid, rule, what, _ in CASES}
 # Controles positivos de B1.1: negación, prohibición, cita rechazada y ejemplo negativo no son afirmaciones.
@@ -1177,20 +1208,48 @@ LEGIT_TEXTS = ['No se habilita scoring.', 'Scoring permanece prohibido.',
                'La selección final permanece bajo decisión humana.', 'La selección automática está prohibida.',
                "El gate debe rechazar: 'la selección final será automática'.", 'Puntuar candidatos está prohibido.',
                'Bypass reproducido: el sistema seleccionará al candidato ganador.', 'ADR-005 permanece PROPUESTA.',
-               'ADR-005 no está APROBADA.', 'El gate debe rechazar ADR-005 queda APROBADA.']
+               'ADR-005 no está APROBADA.', 'El gate debe rechazar ADR-005 queda APROBADA.',
+               # B1.3
+               'El Aprobador seleccionará manualmente al candidato, con confirmación humana.',
+               'La decisión final corresponde al Aprobador.', 'RF-23 permanece como decisión humana.',
+               'El gate debe rechazar “el sistema realizará la selección final”.',
+               'El sistema no realizará la selección final.', 'La Dirección escogerá al candidato con justificación humana.',
+               'ADR-005 no ha sido aprobada.', 'No se aprueba ADR-005.', 'El gate debe rechazar “Se aprueba ADR-005”.',
+               'Ejemplo negativo: “ADR-005 queda aprobada”.', 'G0-SBX = APROBADA CON RESTRICCIONES.',
+               'Las restricciones de G0-SBX permanecen vigentes.', 'G0-SBX no está aprobada sin restricciones.',
+               'El gate debe rechazar “G0-SBX queda sin restricciones”.']
 
 
 def integrity_cases(S):
-    """DH-B13: un módulo de compute_sbx() alterado no se importa (lectura simulada, sin tocar archivos)."""
+    """DH-B13: un módulo de compute_sbx() alterado no se importa (lectura simulada, sin tocar archivos). B1.3: tampoco
+    con un archivo ajeno en su ruta de importación ni con generate_synthetic.py alterado; un .pyc distinto de su
+    fuente o reescrito por pytest no se certifica, y uno derivable sí."""
     def must(*args):
         rc, out = git(*args)
         if rc != 0:
             raise GitError(str(rc))
         return out
+    out = []
     tampered = lambda rel: (real_bytes(rel) or b'') + (b'\n# alterado\n' if rel == SBX_MODULES[1] else b'')
     res, err = sbx_eval(must, tampered)
-    return [(res is None and bool(err) and 'no se importa' in err,
-             f'NB-19 SBX: módulo de compute_sbx() alterado no se importa (falla cerrado) — {err}')]
+    out.append((res is None and bool(err) and 'no se importa' in err,
+                f'NB-19 SBX: módulo de compute_sbx() alterado no se importa (falla cerrado) — {err}'))
+    res, err = sbx_eval(must, lister=lambda d: os.listdir(d) + (['csv.py'] if d.endswith('f34') else []))
+    out.append((res is None and bool(err) and 'no se importa' in err,
+                f'NB-74 SBX: archivo ajeno en una ruta de importación de compute_sbx() (falla cerrado) — {err}'))
+    synth = 'docs/academico/tools/f34/generate_synthetic.py'
+    res, err = sbx_eval(must, lambda rel: (real_bytes(rel) or b'') + (b'\n# alterado\n' if rel == synth else b''))
+    out.append((res is None and bool(err) and 'no se importa' in err,
+                f'NB-75 SBX: generate_synthetic.py alterado no se importa (falla cerrado) — {err}'))
+    pyc = f'{GATE.rsplit("/", 1)[0]}/__pycache__/validate_f35sbxb.{sys.implementation.cache_tag}.pyc'
+    bad = pyc_problem(pyc, load=lambda path, name: compile(b'import sklearn\n', path, 'exec', dont_inherit=True))
+    out.append((bool(bad) and 'no corresponde' in bad, f'NB-76 FSY: .pyc distinto de su fuente no se certifica — {bad}'))
+    bad = pyc_problem('ml-service/tests/__pycache__/test_api.cpython-312-pytest-8.3.3.pyc')
+    out.append((bool(bad) and 'no derivable' in bad, f'NB-77 FSY: .pyc reescrito por pytest no se certifica — {bad}'))
+    src = real_bytes(GATE) or b''
+    good = pyc_problem(pyc, load=lambda path, name: compile(src, path, 'exec', dont_inherit=True))
+    out.append((good is None, f'PB: .pyc derivable de su fuente se verifica y se admite — {good}'))
+    return out
 
 
 def main():

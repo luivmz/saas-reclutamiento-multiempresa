@@ -1,6 +1,6 @@
 # F35-SBX-B — B1: gate sucesor sobre HEAD
 
-> Incremento B1 de F35-SBX-B, versión 3 (10/10/2026): la versión 1 se auditó en `f30cfe6c4adf9c3f7704b6bd665b6363a137b91a` y la versión 2 en `298c5a4dc19594980a22a877ad9d4a89f5acdf23`; esta incorpora las correcciones B1.1 (§8) y B1.2 (§9). Rama `feature/f35-sbx-b-deterministic-pipeline`, creada desde `develop` `430f3f544c3542cabac8028a122c8a0c2a97390b`, que integra [B0](F35SBXB_B0_Sucesion_de_Gates.md). B1 construye solo el **mecanismo de control** que exigen DH-B04 y DH-B13 antes de cualquier pipeline: no hay pipeline funcional, SQLite, máquina de estados, informe, purga ni ML.
+> Incremento B1 de F35-SBX-B, versión 4 (10/10/2026): la versión 1 se auditó en `f30cfe6c4adf9c3f7704b6bd665b6363a137b91a`, la versión 2 en `298c5a4dc19594980a22a877ad9d4a89f5acdf23` y la versión 3 en `bd93c69b5a6b712a0cacb17646cd593023dc187e`; esta incorpora las correcciones B1.1 (§8), B1.2 (§9) y B1.3 (§10). Rama `feature/f35-sbx-b-deterministic-pipeline`, creada desde `develop` `430f3f544c3542cabac8028a122c8a0c2a97390b`, que integra [B0](F35SBXB_B0_Sucesion_de_Gates.md). B1 construye solo el **mecanismo de control** que exigen DH-B04 y DH-B13 antes de cualquier pipeline: no hay pipeline funcional, SQLite, máquina de estados, informe, purga ni ML.
 
 ## 1. Qué es el gate
 
@@ -17,11 +17,11 @@ El gate primero **recoge** el estado real (Git, índice, sistema de archivos y d
 | HST | Historia completa de E a HEAD: el gate rechaza todo commit que haya tocado F35-SBX-A (contenido, modo, altas, bajas o renombrados), aunque después se restaure; en un merge cuenta lo que difiere de todos sus padres. Un repositorio superficial o una historia ilegible fallan cerrado | B1.1 M04; DH-B09 |
 | B0F | El documento de B0 idéntico a su cierre auditado | B0 CERRADA |
 | SBX | SBX-01..SBX-18 recalculados uno por uno sobre HEAD (§4) | DH-B13 |
-| GOV | Los trece estados de gobierno exactos en `CLAUDE.md` y `docs/PROGRESS.md`; F35-SBX-B solo INICIADA. En el estado vigente, la cabecera y las líneas añadidas, el gate rechaza toda declaración de estado contradictoria para G0 real, ADR-005, G0-SBX, F35 productiva, F36–F40, alcance C, datos reales, F35-SBX-A/B, B0 y B1, en cualquier forma (mayúsculas, Markdown, `=`, `:`, `:=`, `->`); las citas y las prohibiciones no cuentan como declaración | DH-B11; B1.1 M02 |
+| GOV | Los trece estados de gobierno exactos en `CLAUDE.md` y `docs/PROGRESS.md`; F35-SBX-B solo INICIADA. En el estado vigente, la cabecera y las líneas añadidas, el gate rechaza toda declaración de estado contradictoria para G0 real, ADR-005, G0-SBX, F35 productiva, F36–F40, alcance C, datos reales, F35-SBX-A/B, B0 y B1, en cualquier forma (mayúsculas, Markdown, `=`, `:`, `:=`, `->`), con verbo copulativo o con verbo finito sobre la entidad, y rechaza también la declaración de G0-SBX sin restricciones (§10.2); las citas y las prohibiciones no cuentan como declaración | DH-B11; B1.1 M02; B1.3 |
 | SCP | Delta exacto respecto de la base de B (árbol de HEAD, árbol de trabajo, índice y archivos sin seguimiento): solo las rutas autorizadas, con el estado esperado, y las obligatorias presentes | DH-B03; plan B1 §4.F y §4.K |
-| FSY | Recorrido real de `evidencia-sbx-b/`, `tools/f35sbxb/` y de las superficies del runtime, el dataset y la evidencia (§8.3): todo archivo debe estar en el árbol de HEAD aunque Git lo ignore, ningún archivo de HEAD puede faltar y no se admiten enlaces; solo hay las excepciones explícitas de §9.3, cuyo contenido también se valida | Plan B1 §4.I; B1.1 M03; B1.2 |
+| FSY | Recorrido real de `evidencia-sbx-b/`, `tools/f35sbxb/` y de las superficies del runtime, el dataset y la evidencia (§8.3): todo archivo debe coincidir byte a byte con su blob en la base autorizada `430f3f5` aunque Git lo ignore, ningún archivo de la base puede faltar y no se admiten enlaces; un `.pyc` solo se admite si es derivable de su fuente, y las únicas excepciones son los directorios de metadatos de §10.3 | Plan B1 §4.I; B1.1 M03; B1.2; B1.3 |
 | FLG | Ningún flag del índice en todo el repositorio: solo `H` en `git ls-files -v` (`h` = assume-unchanged, `S` = skip-worktree, `s` = ambos) | Plan B1 §4.I |
-| CNT | Archivos de B: UTF-8 sin NUL, CR ni BOM; sin correos, DNI, teléfonos ni RUC; solo `.md`, `.json` y `.py`; claves JSON sin vocabulario de capacidades prohibidas; y, en los documentos mutables de B, el gate rechaza toda afirmación positiva que habilite una capacidad prohibida (§8.2) | Plan B1 §7; B1.1 M01 |
+| CNT | Archivos de B: UTF-8 sin NUL, CR ni BOM; sin correos, DNI, teléfonos ni RUC; solo `.md`, `.json` y `.py`; claves JSON sin vocabulario de capacidades prohibidas; y, en los documentos mutables de B, el gate rechaza toda afirmación positiva que habilite una capacidad prohibida (§8.2) y toda declaración de estado contradictoria con el gobierno vigente (§10.2) | Plan B1 §7; B1.1 M01; B1.3 |
 | DEP | Código de `tools/f35sbxb/` solo con la biblioteca estándar autorizada, sin importaciones dinámicas, red ni dependencias de ML | DH-B12; TSBB-09 |
 
 Cualquier error de Git, de lectura o de importación, criterio no evaluable o estado desconocido hace fallar el gate (DH-B10).
@@ -43,7 +43,8 @@ Delta respecto de la base de B (`430f3f5`), sin subconjuntos de las obligatorias
 ## 4. DH-B13 en el gate
 
 - Antes de importar nada, el gate comprueba que `validate_f34e.py` y los tres módulos que su función `compute_sbx()` carga (`validate_f34.py`, `validate_f34a.py` y `validate_f34b.py`) son idénticos byte a byte a sus blobs en E. Si no se puede verificar, el gate falla sin importar.
-- Ejecuta solo `compute_sbx()`, sin generar bytecode, y exige exactamente SBX-01..SBX-18.
+- Desde B1.3 (§10.4) verifica también, antes de ejecutar nada, que los directorios que esos módulos ponen en `sys.path` (`tools/f34`, `tools/f34a`, `tools/f34b` y `tools/f34e`) contienen exactamente lo de E, incluido `generate_synthetic.py`, que `validate_f34.py` importa. Ninguna ruta del repositorio queda en `sys.path` y ningún `.pyc` sustituye a una fuente verificada.
+- Ejecuta solo `compute_sbx()`, sin generar ni reutilizar bytecode, y exige exactamente SBX-01..SBX-18.
 - Por cada criterio informa ID, PASS o FAIL, fuente, comprobación aplicada (de la [matriz de criterios](../g0-sandbox/F34E_Matriz_Criterios_G0_SBX.md)) y, si falla, el motivo.
 - Un criterio ausente, una excepción o un resultado que no sea verdadero hacen fallar el gate: es un incumplimiento sustantivo (clase B) o no evaluable.
 - `validate_f34e.py` completo sobre HEAD sigue fallando por su alcance Git histórico (clase A). El gate no lo presenta como revocación ni lo ignora: esa falla es justamente la que obliga a recalcular los 18 criterios.
@@ -131,6 +132,30 @@ Los casos negativos viven dentro del gate, igual que en F35-SBX-A, sin `tests/` 
 | NB-51 | GOV | F35 productiva no está BLOQUEADA |
 | NB-52 | GOV | datos reales están permitidos |
 | NB-53 | FSY | código no autorizado dentro de una excepción de FSY |
+| NB-54 | CNT | primera persona del futuro: asignaremos una calificación automática |
+| NB-55 | CNT | inglés: ranking automático de candidatos habilitado |
+| NB-56 | CNT | futuro: el motor priorizará automáticamente candidatos |
+| NB-57 | CNT | la decisión final la tomará el sistema |
+| NB-58 | CNT | inglés: el sistema elige al postulante final |
+| NB-59 | CNT | el sistema realizará la selección final |
+| NB-60 | CNT | la plataforma escoge al ganador sin intervención humana |
+| NB-61 | CNT | variante: el algoritmo efectuará la contratación final |
+| NB-62 | CNT | variante: el sistema selecciona y el Aprobador solo recibe aviso |
+| NB-63 | GOV | verbo antes de la entidad: se aprueba ADR-005 |
+| NB-64 | GOV | primera persona: aprobamos ADR-005 |
+| NB-65 | GOV | ADR-005 ha sido aprobada |
+| NB-66 | GOV | G0-SBX queda sin restricciones |
+| NB-67 | GOV | se eliminan las restricciones de G0-SBX |
+| NB-68 | GOV | G0-SBX queda plenamente habilitada |
+| NB-69 | CNT | Markdown de B: se aprobó ADR-005 |
+| NB-70 | FSY | bundle de Vite no versionado aunque el manifiesto lo nombre |
+| NB-71 | FSY | TypeScript de Wayfinder no versionado |
+| NB-72 | FSY | caché PHP de Laravel no versionada |
+| NB-73 | FSY | archivo del runtime con bytes distintos de la base autorizada |
+| NB-74 | SBX | Archivo ajeno en una ruta de importación de `compute_sbx()`: no se importa |
+| NB-75 | SBX | `generate_synthetic.py` alterado: no se importa |
+| NB-76 | FSY | `.pyc` distinto de su fuente: no se certifica |
+| NB-77 | FSY | `.pyc` reescrito por pytest: no se certifica |
 
 ### 7.1 RED → GREEN (09/10/2026)
 
@@ -255,7 +280,7 @@ Por defecto se deniega todo. Una excepción ya no significa ignorar un directori
 | `bootstrap/cache/packages.php`, `bootstrap/cache/services.php` | Solo un arreglo PHP literal (`<?php return array (...);` con cadenas, números y `=>`), sin variables, llamadas ni funciones | Caché de Laravel |
 | `__pycache__/` dentro de `ml-service/src/` y `ml-service/tests/` | Solo archivos regulares `.pyc`, sin subdirectorios | Bytecode de Python |
 
-Los artefactos reales del repositorio de trabajo cumplen estos patrones. Cualquier otro archivo de `bootstrap/cache/` sigue siendo un extra frente al árbol de HEAD.
+Los artefactos reales del repositorio de trabajo cumplen estos patrones. Cualquier otro archivo de `bootstrap/cache/` sigue siendo un extra frente al árbol de HEAD. B1.3 sustituye esta tabla (§10.3).
 
 ### 9.4 RED → GREEN (10/10/2026)
 
@@ -275,3 +300,87 @@ Pasan en los dos casos: el estado limpio, la negación, el ejemplo negativo, la 
 Regresión de lo ya resuelto: A modificada y restaurada por commits sigue fallando en HST, la prohibición textual sigue pasando en GOV y el clon superficial y `GIT_DIR` inválido siguen fallando cerrados sin trazas. En el gate quedan 52 negativos en memoria (NB-01..NB-18 y NB-20..NB-53), NB-19 y diecinueve controles positivos: 83 comprobaciones correctas y 0 fallas sobre HEAD, con SBX-01..SBX-18 en PASS.
 
 Límites que se mantienen: la semántica sigue acotada a patrones explícitos y documentados; una afirmación redactada fuera de ellos puede no detectarse. Dentro de cada excepción se valida la forma de los archivos, no el contenido de los artefactos de Vite, Wayfinder o Cypress.
+
+## 10. Corrección B1.3
+
+La tercera auditoría independiente (`bd93c69`) dejó tres clases residuales y un falso positivo LOW:
+
+- **M01 y RF-23:** afirmaciones con formas verbales fuera de las explícitas, con la decisión como objeto directo o con capacidades nombradas como automáticas.
+- **M02:** declaraciones por verbo finito sobre la entidad y sobre las restricciones de G0-SBX.
+- **M03:** código ejecutable admitido por su nombre o su extensión.
+- **Falso positivo LOW:** la selección manual del Aprobador con confirmación humana.
+
+B1.3 corrige las clases, no frases sueltas. El gate sigue en desarrollo, pendiente de reauditoría final: no está congelado.
+
+### 10.1 M01 y RF-23: conjugación, objeto de decisión y agente
+
+- **Conjugación por clase.** Las formas verbales se generan por clase: presente, pretérito, futuro, primera persona del plural, condicional, gerundio y participio. Cubren las familias de puntuación, calificación, clasificación, recomendación, elección, selección, descarte, contratación, ordenamiento y priorización, y sus equivalentes en inglés. Las formas que coinciden con sustantivos del dominio («descarte», «contrato») siguen excluidas.
+- **La decisión como objeto directo.** Cuenta tomar, adoptar, emitir, realizar, efectuar o ejecutar la selección, la decisión o la contratación, también con pronombre («la decisión final la tomará»). Exige que la oración tenga «automático» o un agente de sistema (sistema, motor, plataforma, algoritmo, modelo, IA o sus equivalentes en inglés). Por eso el gate rechaza «el sistema realizará la selección final».
+- **Capacidad nombrada como automática.** Cuenta en cualquier orden, con hasta dos palabras intermedias que no sean negaciones, cuando un verbo la habilita. Por eso el gate rechaza «automatic final candidate selection is enabled».
+- **Agente humano.** Una acción no cuenta si la ejecuta una persona:
+  - un agente humano no negado antes del verbo (Aprobador, Dirección, comité, evaluador o reclutador);
+  - ese agente introducido después con «por»;
+  - «manualmente» en el mismo tramo.
+
+  Ese agente nunca exime si la oración tiene «automático» o un agente de sistema que no sea instrumental («con apoyo del sistema» sí es instrumental). Tampoco exime el contexto humano situado en otro lugar: el gate rechaza «la plataforma escogerá al ganador sin intervención humana».
+
+Así deja de fallar «El Aprobador seleccionará manualmente al candidato, con confirmación humana.».
+
+### 10.2 M02: verbo finito sobre la entidad y G0-SBX
+
+- **Cópulas compuestas y adverbios.** GOV reconoce «ha sido», «ha quedado» y «has been», y un adverbio entre la cópula y el valor. El gate rechaza «ADR-005 ha sido aprobada».
+- **Verbo finito sobre la entidad.** Cuenta en los dos órdenes, y el verbo se traduce al estado equivalente: aprobar, habilitar, desbloquear, autorizar, activar, iniciar, aceptar, permitir, cerrar, congelar, implementar, bloquear o prohibir. Ese estado se compara con los valores admitidos para la entidad. El gate rechaza «se aprueba ADR-005» y «aprobamos ADR-005». No cuentan el infinitivo ni el subjuntivo, ni la negación de un estado positivo («no se aprueba» sigue siendo coherente).
+- **G0-SBX solo admite APROBADA CON RESTRICCIONES.** El gate rechaza que se declare sin restricciones, irrestricta o plenamente habilitada, y que se eliminen o se levanten sus restricciones, en cualquier orden. Un marcador cuenta si ninguna negación lo precede desde la mención de la entidad. Negar el estado irrestricto es coherente.
+- **CNT.** Aplica estas mismas declaraciones de estado al Markdown mutable de B. El documento de B0 queda fuera, porque B0F ya lo compara con su cierre.
+
+### 10.3 M03: metadatos no son código ejecutable
+
+Ningún archivo se certifica por su nombre ni por su extensión. Todo código ejecutable o importable de las superficies que recorre FSY queda en uno de tres casos:
+
+| Artefacto | Caso | Motivo |
+|---|---|---|
+| Archivos del runtime, el dataset y la evidencia | (A) Bytes reales idénticos a su blob en la base autorizada `430f3f5` | Congelados frente a una referencia que ya existe; no se crea ninguna baseline nueva |
+| `.pyc` en `ml-service/src/`, `ml-service/tests/`, `tools/f35sbx/` y `tools/f35sbxb/` | (B) Solo si su código coincide con el que `compile()` produce desde la fuente hermana, con la etiqueta del intérprete que ejecuta el gate | Derivable y verificable; si se reescribió con pytest, viene de otra versión de Python o no tiene fuente, falla cerrado |
+| `public/build/`: bundles y manifiestos de Vite | (C) Fuera del conjunto permitido en B1 | No están versionados ni en la base ni en HEAD, y no se derivan sin un build; un manifiesto no autoriza un bundle |
+| `resources/js/actions/`, `resources/js/routes/` y `resources/js/wayfinder/` | (C) | TypeScript importable que genera Wayfinder, sin versionar |
+| `bootstrap/cache/packages.php` y `bootstrap/cache/services.php` | (C) | PHP que Laravel ejecuta; la gramática de B1.2 probaba su forma, no su origen |
+| `cypress/results/` y `ml-service/src/recruitment_ml.egg-info/` | Excepción de metadatos, con su patrón estrecho | Nada los ejecuta ni los importa |
+
+Consecuencia operativa: el gate se ejecuta sobre un checkout sin artefactos generados, como un clon limpio. Un árbol de trabajo con build de Vite, Wayfinder, la caché de Laravel o `.pyc` de pytest falla en FSY, y el diagnóstico los enumera. Ni B1.3 ni el gate borran esos artefactos. No se ejecutó ningún build ni se añadió ninguna dependencia: `importlib.machinery` es de la biblioteca estándar y entra en `importlib`, ya autorizado.
+
+### 10.4 Código que ejecuta el propio gate (DH-B13)
+
+Al revisar M03 apareció la misma clase dentro del gate. `validate_f34.py` importa `generate_synthetic.py` y módulos estándar mediante `sys.path`. Además, un `.pyc` de `__pycache__` cuya cabecera coincidiera con su fuente podía sustituir a la fuente verificada.
+
+El gate ahora:
+
+1. retira de `sys.path` las rutas del repositorio antes de cualquier otra importación;
+2. apunta `sys.pycache_prefix` debajo de un archivo regular, de modo que ningún `.pyc` se reutiliza;
+3. exige, antes de ejecutar nada, que `tools/f34`, `tools/f34a`, `tools/f34b` y `tools/f34e` contengan exactamente lo de E con los mismos bytes, más un `__pycache__` opcional con `.pyc` derivables.
+
+### 10.5 RED → GREEN (10/10/2026)
+
+Se ejecutó con Git real, en clones desechables sin remoto y ya eliminados. El mismo guion corrió contra el gate de `bd93c69` (RED) y contra el gate corregido (GREEN):
+
+| Caso | RED | GREEN |
+|---|---|---|
+| M01 y RF-23: las catorce frases de la auditoría | Siete pasaban; las otras siete ya fallaban | FAIL en CNT |
+| M01 y RF-23: seis variantes propias (futuro de primera persona, participio, inglés, contratación final, selección por el sistema con aviso al Aprobador y priorización automatizada) | Cinco pasaban y una ya fallaba | FAIL en CNT |
+| M01: los nueve textos legítimos, incluida la selección manual del Aprobador | Fallaban dos: la selección manual del Aprobador y la elección de la Dirección | PASS |
+| M02: seis formas de aprobar ADR-005, el rechazo de cinco formas de G0-SBX sin restricciones, el levantamiento de restricciones y el verbo después de la entidad | Diez pasaban; ya fallaban «queda», «pasa a» y «aprobada sin restricciones» | FAIL en GOV |
+| M02: los nueve textos legítimos | Ocho pasaban; se rechazaba por error la negación del estado irrestricto de G0-SBX | PASS |
+| M02 en el Markdown de B: se rechaza «Se aprobó ADR-005» | Pasaba | FAIL en CNT |
+| M03: bundle de Vite con su manifiesto, TypeScript de Wayfinder, copias reales de la caché de Laravel, `.pyc` con código distinto de su fuente y `.pyc` con nombre de pytest | Pasaban | FAIL en FSY |
+| M03: `.pyc` derivable de su fuente con `py_compile` | Pasaba | PASS |
+| DH-B13: `csv.py` plantado e ignorado en `tools/f34/` | PASS (83/0) después de ejecutar el código plantado | FAIL en SBX, sin ejecutarse |
+| DH-B13: `.pyc` plantado con la cabecera de `validate_f34.py` | PASS (83/0) después de ejecutar el código plantado | FAIL en SBX, sin ejecutarse |
+
+Regresión de lo ya resuelto, igual en RED y en GREEN: A modificada y restaurada por commits falla en HST; `public/build/*.php`, un archivo de `app/` ignorado y código en el `egg-info` fallan en FSY; la prohibición textual pasa en GOV y en CNT; el clon superficial y `GIT_DIR` inválido fallan cerrados sin trazas. En el gate quedan 72 negativos en memoria (NB-01..NB-18 y NB-20..NB-73), NB-19, NB-74..NB-77, un control positivo de `.pyc` derivable y treinta y tres controles positivos de texto: 122 comprobaciones correctas y 0 fallas sobre un clon limpio de HEAD, con SBX-01..SBX-18 en PASS. Sobre un árbol de trabajo con artefactos generados, el gate falla en FSY (§10.3).
+
+Límites LOW que se mantienen:
+
+- La semántica sigue acotada a patrones explícitos y documentados: una afirmación redactada fuera de ellos puede no detectarse.
+- Una prohibición situada más de tres palabras antes del verbo, sin coma intermedia, no se reconoce, y la oración cuenta como afirmación. Es un falso positivo conservador.
+- El gate rechaza también una selección en voz pasiva sin agente («se seleccionará al candidato») aunque no diga «automático». Es un falso positivo conservador.
+- La verificación de un `.pyc` deserializa su código con el cargador estándar, sin ejecutarlo. Un `.pyc` malformado hace fallar el gate, nunca pasar.
+- En las dos excepciones de metadatos se valida la forma de los archivos, no su contenido.
