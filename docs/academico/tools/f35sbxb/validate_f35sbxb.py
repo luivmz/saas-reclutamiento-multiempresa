@@ -24,18 +24,27 @@ los casos negativos mutan una copia del estado en memoria.
 
 Cualquier error de Git, de lectura o de importación, criterio no evaluable o estado desconocido: falla cerrado (DH-B10).
 """
-import ast
-import copy
-import hashlib
-import importlib.util
-import json
 import os
-import re
-import subprocess
 import sys
-import unicodedata
 
+# B1.3 — antes de cualquier otra importación: ninguna ruta del repositorio en sys.path (un archivo plantado no puede
+# sustituir a un módulo), y ningún .pyc se reutiliza: pycache_prefix apunta debajo de un archivo regular, ruta que no
+# puede existir como directorio. El gate solo ejecuta del repositorio los bytes que verificó contra E (DH-B13).
+_REPO = os.path.normcase(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..')))
+sys.path[:] = [p for p in sys.path if not (os.path.normcase(os.path.abspath(p or os.curdir)) + os.sep).startswith(
+    _REPO + os.sep)]
 sys.dont_write_bytecode = True
+sys.pycache_prefix = os.path.join(os.path.abspath(__file__), 'sin-pyc')
+
+import ast  # noqa: E402
+import copy  # noqa: E402
+import hashlib  # noqa: E402
+import importlib.machinery  # noqa: E402
+import importlib.util  # noqa: E402
+import json  # noqa: E402
+import re  # noqa: E402
+import subprocess  # noqa: E402
+import unicodedata  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..', '..', '..'))
@@ -61,24 +70,23 @@ RUNTIME_SURFACES = ('app', 'routes', 'database', 'config', 'resources', 'bootstr
                     'artisan', 'composer.json', 'composer.lock', 'package.json', 'package-lock.json',
                     'docker-compose.yml', '.dockerignore', 'phpunit.xml', 'vite.config.ts',
                     'docs/academico/datos-sinteticos', 'docs/academico/g0-sandbox', 'docs/academico/g0-evidence')
-# Excepciones de FSY (B1.2): por defecto se deniega todo; cada excepción es un directorio generado cuyo contenido no
-# se ignora, sino que se valida: cada archivo debe cumplir un patrón estrecho de ruta y extensión, sin enlaces ni
-# objetos especiales. Los dos archivos de caché de Laravel además deben ser un arreglo PHP literal puro.
+# B1.3 — METADATA != CÓDIGO EJECUTABLE. Todo código ejecutable o importable de estas superficies debe ser (A) idéntico,
+# byte a byte, a su blob en la base autorizada B_BASE, o (B) derivable y verificable (un .pyc cuyo código coincide con
+# el que compile() produce desde su fuente hermana, con la etiqueta del intérprete actual). Lo demás queda (C) fuera
+# del conjunto permitido durante B1: bundles de Vite (aunque un manifiesto los nombre), TypeScript de Wayfinder y la
+# caché PHP de Laravel no están versionados ni pueden derivarse sin ejecutar un build, así que FSY no los certifica
+# por su nombre ni por su extensión y falla cerrado. Solo quedan como excepciones directorios de metadatos que nada
+# ejecuta ni importa, con un patrón estrecho de ruta y extensión.
 RT_EXCEPTIONS = {
-    'public/build': re.compile(r'(manifest\.json|fonts-manifest\.json|'
-                               r'assets/[A-Za-z0-9_.-]+-[A-Za-z0-9_-]{8}\.(js|css|woff2?))'),     # Vite
-    'resources/js/actions': re.compile(r'([A-Za-z0-9_-]+/)*[A-Za-z0-9_.-]+\.ts'),                  # Wayfinder
-    'resources/js/routes': re.compile(r'([A-Za-z0-9_-]+/)*[A-Za-z0-9_.-]+\.ts'),                   # Wayfinder
-    'resources/js/wayfinder': re.compile(r'([A-Za-z0-9_-]+/)*[A-Za-z0-9_.-]+\.ts'),                # Wayfinder
     'cypress/results': re.compile(r'[A-Za-z0-9_.-]+\.(json|log)'),                                # Cypress
     'ml-service/src/recruitment_ml.egg-info': re.compile(                                          # pip -e
         r'(PKG-INFO|SOURCES\.txt|dependency_links\.txt|top_level\.txt|requires\.txt)'),
 }
 RT_SKIP_DIRS = frozenset(RT_EXCEPTIONS)
-RT_SKIP_FILES = frozenset({'bootstrap/cache/packages.php', 'bootstrap/cache/services.php'})  # caché de Laravel
-PHP_ARRAY_RX = re.compile(r"<\?php return array \((?:\s+|'(?:[^'\\]|\\.)*'|\d+|=>|array \(|\)|,|true|false|null|NULL)*"
-                          r"\);\s*")
-RT_PYCACHE_ROOTS = ('ml-service/src/', 'ml-service/tests/')        # __pycache__ con solo .pyc regulares
+RT_GENERATED = ('public/build/', 'public/hot', 'resources/js/actions/', 'resources/js/routes/',
+                'resources/js/wayfinder/', 'bootstrap/cache/')   # generados por builds: sin origen verificable en B1
+RT_PYCACHE_ROOTS = ('ml-service/src/', 'ml-service/tests/')        # __pycache__ con .pyc derivables y verificados
+PYC_RX = re.compile(r'([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z0-9_-]+?)(?:\.opt-([12]))?\.pyc')
 # Alcance exacto de B1 respecto de B_BASE: ruta -> estado esperado. Todas obligatorias.
 SCOPE = {
     'CLAUDE.md': 'M',
@@ -126,6 +134,11 @@ SBX_INFO = {   # ID: (fuente, comprobación aplicada), según la matriz de crite
     'SBX-17': ('F34B_Decision_G0.md', 'Alcance C no habilitado'),
     'SBX-18': ('F34B_Decision_G0.md, validate_f34b.py', 'G0 = NO APROBADA y G0-02/03/12 sin cerrar'),
 }
+# B1.3 — directorios que validate_f34e.py y sus módulos ponen en sys.path: su contenido debe ser exactamente el de E,
+# con los mismos bytes, más un __pycache__ opcional que el gate no usa y cuyos .pyc deben ser derivables de su fuente;
+# así también generate_synthetic.py, que validate_f34.py importa, queda verificado antes de ejecutar nada.
+SBX_DIRS = ('docs/academico/tools/f34', 'docs/academico/tools/f34a', 'docs/academico/tools/f34b',
+            'docs/academico/tools/f34e')
 STDLIB_OK = {'ast', 'copy', 'hashlib', 'importlib', 'json', 'os', 're', 'subprocess', 'sys', 'unicodedata'}
 PII = [re.compile(p) for p in (
     r'[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}',                          # correo
@@ -182,8 +195,14 @@ def walk(roots, skip_dirs=frozenset(), skip_files=frozenset(), pycache_roots=())
                         continue
                     elif entry.is_dir(follow_symlinks=False):
                         if sub in PYCACHE_OK or (entry.name == '__pycache__' and sub.startswith(pycache_roots)):
-                            bad = [e.name for e in os.scandir(entry.path) if not (
-                                e.name.endswith('.pyc') and not e.is_symlink() and e.is_file(follow_symlinks=False))]
+                            bad = []
+                            for e in os.scandir(entry.path):
+                                if e.name.endswith('.pyc') and not e.is_symlink() and e.is_file(follow_symlinks=False):
+                                    problem = pyc_problem(f'{sub}/{e.name}')
+                                    if problem:
+                                        problems.append(problem)
+                                else:
+                                    bad.append(e.name)
                             if bad:
                                 problems.append(f'entradas no permitidas en {sub}: {sorted(bad)[:3]}')
                         else:
@@ -207,8 +226,33 @@ def walk(roots, skip_dirs=frozenset(), skip_files=frozenset(), pycache_roots=())
     return found, problems
 
 
+def load_pyc(path, name):
+    return importlib.machinery.SourcelessFileLoader(name, path).get_code(name)
+
+
+def pyc_problem(rel, load=load_pyc):
+    """B1.3 — un .pyc solo se admite si es derivable y verificable: etiqueta del intérprete que ejecuta el gate,
+    fuente hermana real y código idéntico al que compile() produce desde esa fuente. Lo demás (otra versión de
+    Python, .pyc reescrito por pytest, sin fuente o distinto) no se certifica y falla cerrado."""
+    folder, name = rel.rsplit('/', 1)
+    m = PYC_RX.fullmatch(name)
+    if not m or m.group(2) != sys.implementation.cache_tag:
+        return (f'{rel}: .pyc no derivable con este intérprete ({sys.implementation.cache_tag}) o generado por otra '
+                f'herramienta: no se certifica (falla cerrado)')
+    src_rel = f'{folder.rsplit("/", 1)[0]}/{m.group(1)}.py'
+    src = real_bytes(src_rel)
+    if src is None:
+        return f'{rel}: sin fuente hermana {src_rel}: no se certifica (falla cerrado)'
+    try:
+        loaded = load(os.path.join(ROOT, rel), m.group(1))
+        built = compile(src, os.path.join(ROOT, src_rel), 'exec', dont_inherit=True, optimize=int(m.group(3) or 0))
+    except Exception as e:          # cabecera, marshal o fuente inválidos: no verificable
+        return f'{rel}: .pyc o fuente no verificable ({e.__class__.__name__}): falla cerrado'
+    return None if loaded == built else f'{rel}: no corresponde a {src_rel}: no se certifica (falla cerrado)'
+
+
 def exception_problems(reader=real_bytes):
-    """Contenido de las excepciones de FSY: patrón de ruta y tipo de cada archivo, y arreglo PHP literal en la caché."""
+    """Contenido de las excepciones de FSY (solo metadatos): patrón de ruta y tipo de cada archivo, sin enlaces."""
     out = []
     for rel, rx in sorted(RT_EXCEPTIONS.items()):
         full = os.path.join(ROOT, rel)
@@ -229,13 +273,6 @@ def exception_problems(reader=real_bytes):
                 elif name in files and not (os.path.isfile(p) and rx.fullmatch(sub)):
                     out.append(f'archivo no autorizado dentro de la excepción {rel}: {sub}')
             dirs[:] = [x for x in dirs if not os.path.islink(os.path.join(d, x))]
-    for rel in sorted(RT_SKIP_FILES):
-        if not os.path.lexists(os.path.join(ROOT, rel)):
-            continue
-        data = reader(rel)
-        text = text_of(data) if data is not None else None
-        if text is None or not PHP_ARRAY_RX.fullmatch(text):
-            out.append(f'{rel}: no es un arreglo PHP literal generado por Laravel (código no autorizado)')
     return out
 
 
@@ -245,10 +282,38 @@ def name_status(data):
             if parts[i]}
 
 
-def sbx_eval(must, reader=real_bytes):
-    """DH-B13: verificar contra E los bytes de validate_f34e.py y de los módulos que carga; solo entonces ejecutar
-    compute_sbx() con los bytes verificados. (resultados, error)."""
+def sbx_eval(must, reader=real_bytes, lister=os.listdir):
+    """DH-B13: verificar contra E los bytes de validate_f34e.py y de los módulos que carga, y (B1.3) el contenido
+    completo de los directorios que esos módulos ponen en sys.path; solo entonces ejecutar compute_sbx() con los bytes
+    verificados. (resultados, error)."""
     try:
+        for folder in SBX_DIRS:
+            tree = {}
+            for entry in must('ls-tree', '-z', f'{E}:{folder}').split(b'\x00'):
+                if entry:
+                    meta, _, name = entry.partition(b'\t')
+                    tree[name.decode()] = tuple(meta.decode().split())
+            full = os.path.join(ROOT, folder)
+            if os.path.islink(full) or not os.path.isdir(full):
+                return None, f'{folder}: no es un directorio real; no se importa (falla cerrado)'
+            names = set(lister(full))
+            pycache = os.path.join(full, '__pycache__')
+            if '__pycache__' in names:
+                if os.path.islink(pycache) or not os.path.isdir(pycache):
+                    return None, f'{folder}/__pycache__: no es un directorio real; no se importa (falla cerrado)'
+                for name in sorted(os.listdir(pycache)):     # el gate no los usa, pero tampoco los certifica sin verificar
+                    p = os.path.join(pycache, name)
+                    problem = (pyc_problem(f'{folder}/__pycache__/{name}') if name.endswith('.pyc') and not
+                               os.path.islink(p) and os.path.isfile(p) else f'{folder}/__pycache__/{name}: no es un .pyc regular')
+                    if problem:
+                        return None, f'{problem}; no se importa'
+            extra = sorted(names - set(tree) - {'__pycache__'})
+            if extra:
+                return None, f'{folder}: entradas ajenas a E en una ruta de importación {extra[:3]}; no se importa (falla cerrado)'
+            for name, meta in tree.items():
+                data = reader(f'{folder}/{name}')
+                if meta[:2] != ('100644', 'blob') or data is None or blob_id(data) != meta[2]:
+                    return None, f'{folder}/{name}: distinto de su blob en E; no se importa (falla cerrado)'
         verified = {}
         for rel in SBX_MODULES:
             oid = must('rev-parse', f'{E}:{rel}').decode().strip()
@@ -318,7 +383,13 @@ def collect(runner=git, reader=real_bytes):
         S['a_history'] = a_history(must)
         S['rt_tracked'] = {x for x in must('ls-tree', '-r', '--name-only', '-z', 'HEAD', '--', *RUNTIME_SURFACES)
                            .decode('utf-8', 'replace').split('\x00') if x}
-        S['rt_fs'], S['rt_walk'] = walk(RUNTIME_SURFACES, RT_SKIP_DIRS, RT_SKIP_FILES, RT_PYCACHE_ROOTS)
+        S['rt_base'] = {}
+        for entry in must('ls-tree', '-r', '-z', B_BASE, '--', *RUNTIME_SURFACES).split(b'\x00'):
+            if entry:
+                meta, _, path = entry.partition(b'\t')
+                S['rt_base'][path.decode('utf-8', 'replace')] = tuple(meta.decode().split())
+        S['rt_fs'], S['rt_walk'] = walk(RUNTIME_SURFACES, RT_SKIP_DIRS, frozenset(), RT_PYCACHE_ROOTS)
+        S['rt_real'] = {p: (None if (d := reader(p)) is None else blob_id(d)) for p in sorted(S['rt_fs'] & set(S['rt_base']))}
         S['rt_exc'] = exception_problems(reader)
         S['a_head_diff'] = [x for x in must('diff', '--name-only', '-z', E, 'HEAD', '--', *A_PATHS).decode().split('\x00') if x]
         S['b0_blob'] = must('rev-parse', f'{B0_CLOSE}:{B0_DOC}').decode().strip()
@@ -849,13 +920,26 @@ def r_fsy(S):
                    f'faltan={sorted(B_FILES - S["b_fs"])[:3]}')
     if S['links']:
         out.append(f'enlaces en rutas de B o de gobierno: {S["links"][:3]}')
-    extra = sorted(S['rt_fs'] - S['rt_tracked'])
+    if S['rt_tracked'] != set(S['rt_base']):
+        out.append(f'el árbol de HEAD difiere de la base autorizada en el runtime, el dataset o la evidencia: '
+                   f'{sorted(S["rt_tracked"] ^ set(S["rt_base"]))[:5]}')
+    generated = sorted(p for p in S['rt_fs'] - set(S['rt_base']) if p.startswith(RT_GENERATED))
+    if generated:
+        out.append(f'código generado y no versionado (bundle de Vite, Wayfinder o caché de Laravel): su origen no es '
+                   f'verificable frente a la base y no se certifica por nombre ni extensión (falla cerrado): '
+                   f'{generated[:5]}')
+    extra = sorted(p for p in S['rt_fs'] - set(S['rt_base']) if not p.startswith(RT_GENERATED))
     if extra:
-        out.append(f'archivos en el runtime, el dataset o la evidencia que no están en HEAD (aunque Git los ignore): '
-                   f'{extra[:5]}')
-    missing = sorted(S['rt_tracked'] - S['rt_fs'])
+        out.append(f'archivos en el runtime, el dataset o la evidencia que no están en la base autorizada (aunque Git '
+                   f'los ignore): {extra[:5]}')
+    missing = sorted(set(S['rt_base']) - S['rt_fs'])
     if missing:
-        out.append(f'archivos de HEAD ausentes o reemplazados en el runtime, el dataset o la evidencia: {missing[:5]}')
+        out.append(f'archivos de la base ausentes o reemplazados en el runtime, el dataset o la evidencia: {missing[:5]}')
+    changed = sorted(p for p, meta in S['rt_base'].items() if p in S['rt_real'] and (
+        meta[:2] not in (('100644', 'blob'), ('100755', 'blob')) or S['rt_real'][p] != meta[2]))
+    if changed:
+        out.append(f'bytes reales distintos de su blob en la base autorizada {B_BASE[:7]} (código no certificado): '
+                   f'{changed[:5]}')
     return out
 
 
