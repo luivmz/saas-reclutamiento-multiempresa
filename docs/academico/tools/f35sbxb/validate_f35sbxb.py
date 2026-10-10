@@ -750,21 +750,30 @@ def admitted(value, allowed):
     return value.startswith(allowed) or (value.startswith('no ') and value.endswith(' sin restricciones'))
 
 
+REJECT_RX = re.compile(r'^(rechaz|prohib|detect|impid|imped|ejemplo|negativ|intent|reject|forbid)')
+
+
 def g0sbx_unrestricted(body):
     """B1.3 — G0-SBX sin restricciones, plenamente habilitada o con sus restricciones eliminadas, en cualquier orden.
-    Un marcador cuenta si ninguna negación lo precede desde la mención de G0-SBX (o en sus tres palabras anteriores)."""
-    toks = [t for seg in segments(body) for t in seg]
+    Un marcador cuenta si ninguna negación lo precede desde la mención de G0-SBX (o en sus tres palabras anteriores)
+    y si la cláusula que abre esa mención no es un rechazo, una prohibición o un ejemplo («|» marca cada cláusula)."""
+    toks = [t for seg in segments(body) for t in seg + ['|']]
     subj = [k for k, t in enumerate(toks) if t == 'g0-sbx']
     if not subj:
         return []
+
+    def rejected(at):
+        start = max((x for x in range(at) if toks[x] == '|'), default=-1) + 1
+        return any(REJECT_RX.match(t) for t in toks[start:at])
     out = []
     for k in matches(UNRESTRICTED_RX, toks):
         prev = [j for j in subj if j < k]
-        span = toks[prev[-1] + 1:k] if prev else toks[max(0, k - 3):k]
-        if not any(t in NEG_WORDS or t.startswith(NEG_PREFIXES) for t in span):
+        anchor = prev[-1] if prev else k
+        span = toks[anchor + 1:k] if prev else toks[max(0, k - 3):k]
+        if not any(t in NEG_WORDS or t.startswith(NEG_PREFIXES) for t in span) and not rejected(anchor):
             out.append(f'«G0-SBX … {" ".join(toks[k:k + 2])}»')
     for k, t in enumerate(toks):
-        if REMOVE_RX.match(t) and not negated(toks, k) and any(
+        if REMOVE_RX.match(t) and not negated(toks, k) and not rejected(k) and any(
                 RESTRICTION_RX.match(r) and not set(toks[max(0, j - 2):j]) & NEG_WORDS for j, r in enumerate(toks)):
             out.append(f'«{t} … restricciones de G0-SBX»')
     return out
@@ -795,8 +804,7 @@ def contradictions(text, exempt=lambda row: False):
             if DECL_NEG_RX.search(before):
                 continue
             out.append(f'«{m.group(0).strip()}»')
-        if not DECL_NEG_RX.search(re.split(r'[.,;:!?|]', body.split('g0-sbx')[0])[-1]):
-            out += g0sbx_unrestricted(body)
+        out += g0sbx_unrestricted(body)
     return out
 
 
