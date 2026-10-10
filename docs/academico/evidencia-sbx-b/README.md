@@ -1,6 +1,6 @@
 # F35-SBX-B — Ejecución determinista del pipeline de evidencia sintética
 
-**Estado:** B0 IMPLEMENTADA, PENDIENTE DE AUDITORÍA. F35-SBX-B NO INICIADA.
+**Estado:** B0 IMPLEMENTADA, PENDIENTE DE REAUDITORÍA. F35-SBX-B NO INICIADA.
 
 Segunda subfase de F35-SBX, dentro del [alcance autorizado](../g0-sandbox/F34E_Alcance_Autorizado.md) por la [decisión G0-SBX](../g0-sandbox/F34E_Decision_G0_SBX.md) y bajo sus [prohibiciones](../g0-sandbox/F34E_Prohibiciones.md). Parte de la entrega cerrada e integrada de [F35-SBX-A](../evidencia-sbx/README.md), que no se modifica.
 
@@ -10,7 +10,7 @@ B0 es solo documentación: registra la sucesión de gates que permite avanzar a 
 
 | Archivo | Contenido |
 |---|---|
-| [F35SBXB_B0_Sucesion_de_Gates.md](F35SBXB_B0_Sucesion_de_Gates.md) | Gates históricos anclados y gate sucesor sobre HEAD, decisiones DH-B01..DH-B12, resolución de la auditoría del plan y modelo de amenazas TSBB-01..TSBB-13 |
+| [F35SBXB_B0_Sucesion_de_Gates.md](F35SBXB_B0_Sucesion_de_Gates.md) | Gates históricos anclados y gate sucesor sobre HEAD, decisiones DH-B01..DH-B13, resolución de las auditorías del plan y de B0, modelo de amenazas TSBB-01..TSBB-13 y verificación transitoria de SBX-01..SBX-18 |
 
 ## Estados vigentes
 

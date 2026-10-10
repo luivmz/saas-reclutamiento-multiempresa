@@ -1,6 +1,6 @@
 # F35-SBX-B — B0: sucesión de gates
 
-> Subfase B0 de F35-SBX-B, versión 1 (09/10/2026). Base: `develop` `8054fedf02f1b91ab6b6baa45c743725166af1a6`, que integra el cierre de F35-SBX-A con su commit E `61f94e23fc30b00a848a4558830b6d65f81dff87`. **Solo documentación**: B0 no crea pipeline, runner, almacenamiento SQLite, fixtures, modelos ni dependencias. Estado: **B0 IMPLEMENTADA, PENDIENTE DE AUDITORÍA. F35-SBX-B NO INICIADA.**
+> Subfase B0 de F35-SBX-B, versión 2 (09/10/2026). La versión 1 se auditó en el commit `66fb20814a048a28f7374fadb8fdad4ba1384778`; esta versión resuelve solo sus dos hallazgos (§5.7). Base: `develop` `8054fedf02f1b91ab6b6baa45c743725166af1a6`, que integra el cierre de F35-SBX-A con su commit E `61f94e23fc30b00a848a4558830b6d65f81dff87`. **Solo documentación**: B0 no crea pipeline, runner, almacenamiento SQLite, fixtures, modelos ni dependencias. Estado: **B0 IMPLEMENTADA, PENDIENTE DE REAUDITORÍA. F35-SBX-B NO INICIADA.**
 
 ## 1. Problema
 
@@ -43,6 +43,7 @@ A implementar en B, antes de cualquier pipeline. Todo estado Git o de sistema de
 |---|---|
 | Alcance cerrado de B | Delta respecto de la base de B igual a la lista exacta de rutas autorizadas, sin subconjuntos ni superconjuntos |
 | Invariantes vigentes | Los trece estados de gobierno, RF-01..RF-27, RF-23 humana y RF-29 experimental, sin cambios |
+| Criterios SBX-01..SBX-18 | Recalculados uno por uno sobre HEAD según DH-B13 (§3.1), no deducidos del texto del gobierno |
 | Dataset y provenance | `evidence.csv` de F34 y fixtures de A verificados por SHA-256 contra sus manifests y contra E |
 | Integridad de A respecto de E | Bytes reales de `evidencia-sbx/**`, `tools/f35sbx/**` y de los cinco validadores históricos adaptados idénticos a sus blobs en E, sin archivos extra |
 | Rutas nuevas de B | Solo las autorizadas en §6, con tipo y contenido de texto comprobados |
@@ -54,6 +55,21 @@ A implementar en B, antes de cualquier pipeline. Todo estado Git o de sistema de
 | Flags del índice | Solo `H` en `git ls-files -v`: assume-unchanged (`h`), skip-worktree (`S`) y ambos (`s`) fallan |
 | Historia y ascendencia | E como ancestro de HEAD y B0 integrada antes que B, identificadas por la historia y no por hashes futuros; historia completa sin simplificar |
 
+### 3.1 DH-B13 — Sucesión normativa de la verificación G0-SBX
+
+1. F34E, su matriz de criterios y `validate_f34e.py` permanecen congelados y no se modifican.
+2. Los gates históricos anclados siguen acreditando únicamente sus estados históricos.
+3. A partir de B, el gate sucesor sobre HEAD **recalcula individualmente** SBX-01 a SBX-18 con las comprobaciones materiales de la [matriz de criterios](../g0-sandbox/F34E_Matriz_Criterios_G0_SBX.md) (dataset, PII, árbol de archivos, `schema.json`, matriz de trazabilidad, decisión G0, runtime). No basta con comprobar las declaraciones textuales del gobierno.
+4. Cada criterio produce como mínimo: ID, estado PASS o FAIL, fuente o evidencia, comprobación aplicada y, si falla, el motivo.
+5. Un FAIL sustantivo, un criterio no evaluable, una evidencia ausente, un error de lectura o un estado Git o de sistema de archivos desconocido hacen fallar el gate (fail-closed).
+6. Se distinguen dos clases de fallo:
+   - **A) Fallo histórico o de alcance:** el validador congelado no reconoce una evolución autorizada de rutas o de ciclo de vida. No demuestra por sí solo una revocación sustantiva, pero no se ignora: obliga a ejecutar la evaluación sucesora completa sobre HEAD.
+   - **B) Incumplimiento sustantivo:** uno o más de SBX-01..SBX-18 dejan de cumplirse. Aplica la regla de revocación y bloqueo de la [autorización de F35-SBX](../g0-sandbox/F34E_Autorizacion_F35_SBX.md).
+7. La sucesión no reduce ni reinterpreta los criterios: solo sucede el **mecanismo** de verificación cuando el gate congelado ya no puede representar legítimamente la nueva fase.
+8. G0-SBX sigue dependiendo del cumplimiento material de SBX-01..SBX-18. DH-B13 no declara ninguna aprobación nueva ni cambia el significado de G0-SBX.
+9. Durante B0, mientras no existe el gate ejecutable de B, la comprobación transitoria se limita a esta documentación más una verificación directa y auditable de los 18 criterios (§8). No es un sustituto permanente.
+10. Antes de cualquier implementación funcional de B, el gate sucesor tiene que existir o formar parte del primer incremento controlado de B, según la decisión final auditada.
+
 ## 4. Decisiones humanas de B
 
 | Decisión | Resultado |
@@ -62,7 +78,7 @@ A implementar en B, antes de cualquier pipeline. Todo estado Git o de sistema de
 | DH-B02 | Los gates históricos solo aportan evidencia complementaria del estado histórico (principios A y B) |
 | DH-B03 | B usa rutas nuevas, separadas de A: `docs/academico/tools/f35sbxb/` y `docs/academico/evidencia-sbx-b/`. Sustituye la ubicación `tools/f35sbx/` que preveía §4 de los criterios de A, incompatible con el congelamiento de E |
 | DH-B04 | Gate sucesor obligatorio sobre HEAD antes de cualquier implementación funcional (§3) |
-| DH-B05 | Conformidad con el oráculo de A mediante una proyección, no por igualdad del informe completo (§5.2) |
+| DH-B05 | Conformidad con el oráculo de A en dos niveles: proyección semántica A↔B e integridad nativa de B, nunca igualdad del informe completo ni de cadenas que dependen del run (§5.2) |
 | DH-B06 | Purga definida de forma verificable y sin prometer borrado físico de memoria (§5.3) |
 | DH-B07 | SQLite solo `:memory:`, con la configuración de §5.4 |
 | DH-B08 | Aislamiento por tenant: una conexión y un run por organización sintética, tenant validado antes de escribir |
@@ -70,26 +86,41 @@ A implementar en B, antes de cualquier pipeline. Todo estado Git o de sistema de
 | DH-B10 | Fail-closed: cualquier error, excepción o estado desconocido deja el run en `fallido`, sin resultado parcial, y el gate con código de salida distinto de cero |
 | DH-B11 | Todas las restricciones de G0 real, G0-SBX y sus prohibiciones siguen vigentes |
 | DH-B12 | B no autoriza ML, CAP-33, CAP-34, F36–F40 ni ninguna fase posterior |
+| DH-B13 | Sucesión normativa de la verificación G0-SBX: el gate sucesor recalcula SBX-01..SBX-18 sobre HEAD (§3.1) |
 
 ## 5. Hallazgos de la auditoría del plan
 
 ### 5.1 B0-M01: los gates históricos no validan HEAD
 
-Resuelto por DH-B01, DH-B02 y DH-B04: el gate sucesor sobre HEAD es obligatorio y los gates históricos son solo evidencia complementaria.
+Resuelto por DH-B01, DH-B02 y DH-B04: el gate sucesor sobre HEAD es obligatorio y los gates históricos son solo evidencia complementaria. DH-B13 (§3.1) añade la sucesión normativa de la verificación de G0-SBX.
 
-### 5.2 B0-M02: proyección de conformidad con el oráculo
+### 5.2 B0-M02: conformidad con el oráculo en dos niveles
 
-El informe de B no se compara byte a byte con los fixtures de A. Se compara una **proyección** con lo que el oráculo realmente fija:
+El informe de B no se compara byte a byte con los fixtures de A. En A, `event_hash`, `audit_hash` y `provenance_hash` se calculan sobre el objeto completo menos su propio campo, y ese objeto incluye `pipeline_run_id`, los identificadores de objeto y los instantes. Con otro run, esas cadenas cambian necesariamente. En cambio, `content_hash`, `hash_before` y `hash_after` usan el preimage cerrado del contrato (`hash_definition.canonical_fields`: `algorithm`, `criterion_ref`, `evidence_kind`, `origin_record_id`, `synthetic_organization_id`, `text`), que no contiene ningún identificador del run. Los hashes criptográficos ya calculados no se normalizan.
 
-| Se compara con el oráculo | Queda fuera, como metadato propio de B |
+**Nivel 1 — Proyección semántica A↔B.** Igualdad exacta, por tenant, emparejando cada evidencia por su clave natural (`synthetic_organization_id`, `origin_record_id`) y no por identificadores de objeto:
+
+| Objeto | Campos comparados |
 |---|---|
-| Contenido de cada evidencia según el contrato | `run_kind`, `pipeline_version` e identificadores del run de B |
-| Transformación T1 (`hash_before`, `hash_after`) | Estados de ejecución propios (`fallido`, `purgado`) |
-| `content_hash` y cadenas definidas por el contrato | Fallos inyectados y sus códigos |
-| Provenance y su encadenamiento | Comprobante de purga |
-| Secuencia de estados y acciones de auditoría del oráculo | Rutas, instantes reales y datos de plataforma |
+| Evidencia | `synthetic_organization_id`, `criterion_ref`, `evidence_kind`, `text_synthetic` (tras T1), `hash_algorithm`, `content_hash`, `validation_status`, `review_status`, `source_type`, `environment` |
+| Fuente | `origin_dataset_version`, `origin_file`, `origin_file_sha256`, `origin_record_id`, `source_type`, `synthetic_organization_id` |
+| Provenance (estructural) | `provenance_kind`, `transformation_id`, `transformation_version`, `hash_before`, `hash_after`, la relación evidencia ↔ fuente ↔ origen F34 y el orden de la cadena |
+| Revisión simulada | `review_scope`, `review_status`, `reviewer_type`, `scripted`, `simulation_actor` |
+| Eventos | Secuencia ordenada de `state` y `error_code` del camino del oráculo, con `seq` contiguo |
+| Auditoría | Secuencia ordenada de `action` |
+| Conteos | Evidencias, fuentes, provenance, revisiones, eventos y entradas de auditoría por tenant |
 
-La lista exacta de campos se congela en el contrato de B antes de implementar. Para el determinismo, el informe usa JSON canónico en UTF-8, finales de línea LF, orden estable de claves y filas y el reloj lógico del run. No depende de rutas absolutas, de la hora real ni de diferencias entre Windows y macOS.
+Quedan **fuera** del nivel 1: `pipeline_run_id`, `run_kind`, `pipeline_version`, `seed` y `clock_start` cuando son propios de la ejecución; los identificadores de objeto asignados por el run (`synthetic_id`, `source_id`, `provenance_id`, `review_id`, `event_id`, `audit_id`, `target_ref`); los instantes (`at`, `created_at`, `recorded_at`, `reviewed_at`); las cadenas cuyo preimage incluye identificadores o instantes del run (`event_hash`/`prev_event_hash`, `audit_hash`/`prev_audit_hash`, `provenance_hash`/`prev_provenance_hash`); los estados propios de B (`fallido`, `purgado`), los fallos inyectados, el comprobante de purga, las rutas y los metadatos de plataforma.
+
+**Nivel 2 — Integridad nativa de B.** B calcula sus propias cadenas con sus identificadores reales, con el mismo algoritmo de A (SHA-256 del JSON canónico del objeto sin su propio campo de hash y génesis de 64 ceros):
+
+- se verifican internamente, eslabón por eslabón, y cualquier alteración las rompe;
+- son reproducibles bajo el contrato de determinismo de B: dos ejecuciones dan los mismos bytes;
+- no tienen por qué coincidir con las cadenas de A, porque incorporan otro run.
+
+Los identificadores de B se derivan de forma estable solo del tenant, la semilla y el ordinal del reloj lógico, con un prefijo distinto del de A. Nunca se copia el `pipeline_run_id` de A para obtener el mismo hash. La regla exacta de identificadores y la lista definitiva de campos de cada nivel se congelan en el contrato de B antes de implementar, sin contradecir esta sección.
+
+Para el determinismo, el informe usa JSON canónico en UTF-8, finales de línea LF, orden estable de claves y filas y el reloj lógico del run. No depende de rutas absolutas, de la hora real ni de diferencias entre Windows y macOS.
 
 ### 5.3 B0-M03: purga
 
@@ -136,6 +167,15 @@ SQLite `:memory:` no es una frontera de seguridad frente a SQL arbitrario: la pr
 
 Git confirma que F35-SBX-A, incluido su commit E, está integrada en `develop` y en `main`. B0 corrige solo la frase vigente que la daba como pendiente de publicación, en `CLAUDE.md` y `docs/PROGRESS.md`. `docs/academico/ACADEMIC_BASELINE.md` registra cierres de fase, conserva su texto del cierre de A y no cambia en B0. Los resultados de CI y los hashes de los merges se consultan en Git y GitHub.
 
+### 5.7 Auditoría de B0 (versión 1)
+
+La auditoría independiente del commit `66fb20814a048a28f7374fadb8fdad4ba1384778` concluyó «B0 NO APROBADA PARA INTEGRACIÓN» y autorizó corregir solo dos hallazgos documentales:
+
+| Hallazgo | Severidad | Resolución |
+|---|---|---|
+| Sucesión normativa incompleta: B0 no exigía recalcular SBX-01..SBX-18 sobre HEAD | BLOCKER | DH-B13 (§3.1), nueva fila en §3 y verificación transitoria de los 18 criterios (§8) |
+| Proyección de cadenas ambigua: las cadenas de A incluyen `pipeline_run_id` | MEDIUM | Dos niveles de comparación con campos exactos (§5.2) y DH-B05 actualizada |
+
 ## 6. Rutas de B
 
 Autorizadas conceptualmente para la implementación; en B0 solo existe esta documentación.
@@ -155,7 +195,7 @@ Pendiente para la implementación y fuera de B0: `sbxb_pipeline.py`, `sbxb_store
 - F35 productiva = BLOQUEADA
 - F35-SBX = HABILITADA, solo sandbox sintético
 - F35-SBX-A = CERRADA E INTEGRADA
-- F35-SBX-B = NO INICIADA hasta que B0 se audite y se autorice B
+- F35-SBX-B = NO INICIADA hasta que B0 se reaudite y se autorice B
 - F36–F40 = BLOQUEADAS
 - Alcance C = BLOQUEADO
 - Datos reales = PROHIBIDOS
@@ -170,3 +210,30 @@ B0 no cambia RF-01..RF-27, no modifica RF-23 y no habilita ranking, recomendaci�
 - **Comprobaciones directas de B0**: delta exacto de B0 respecto de `develop`, integridad de A respecto de E, sin cambios en el runtime ni en las dependencias, sin flags del índice, `git diff --check` limpio y enlaces relativos válidos.
 
 Hasta que exista el gate sucesor, estas comprobaciones directas sustituyen la validación de HEAD solo para B0, que es únicamente documental.
+
+### 8.1 Verificación transitoria de SBX-01..SBX-18 (DH-B13, punto 9)
+
+Recalculados uno por uno sobre HEAD de la rama de B0 el 09/10/2026, con la función `compute_sbx()` de `validate_f34e.py`, ejecutada en modo de solo lectura y sin generar bytecode, después de comprobar que el archivo es idéntico byte a byte a su blob en E. Esa función calcula cada criterio con las comprobaciones materiales de la matriz, independientemente del alcance Git histórico que hace fallar el validador completo sobre HEAD. Es una comprobación transitoria de B0, no un sustituto del gate sucesor.
+
+| ID | Comprobación aplicada | Fuente | Resultado |
+|---|---|---|---|
+| SBX-01 | Reglas DQ-05 a DQ-07 sin violaciones y `source = synthetic` en el manifiesto | Dataset F34, `validate_f34.py` | PASS |
+| SBX-02 | Reglas PII-01 a PII-03 sin violaciones | `validate_f34.py` | PASS |
+| SBX-03 | Solo CSV, JSON o Markdown en `datos-sinteticos/` y `g0-sandbox/`; DQ-04 | Árbol de archivos, F34 | PASS |
+| SBX-04 | Ningún archivo de audio ni de vídeo en esas carpetas | Árbol de archivos | PASS |
+| SBX-05 | Ningún campo de score, ranking ni selección; LK-01 y LK-08 | `schema.json`, F34 | PASS |
+| SBX-06 | Ningún campo de recomendación | `schema.json` | PASS |
+| SBX-07 | Ningún campo de selección o contratación; RF-23 humana | `schema.json`, matriz de trazabilidad | PASS |
+| SBX-08 | Fila RF-23 «humana» y baseline sin cambios frente a la base fija | `traceability-master.md`, Git | PASS |
+| SBX-09 | Fila RF-21 presente, sin cambios, y regla RANK de F34A | Matriz de trazabilidad, `validate_f34a.py` | PASS |
+| SBX-10 | Reglas CTX-01 a CTX-10 y `organization_token` en el contexto | F34, `schema.json` | PASS |
+| SBX-11 | `provenance` en `evidence` y DQ-07 | `schema.json`, F34 | PASS |
+| SBX-12 | G0-09 derivado como CUMPLIDO | Registros de F34C, `validate_f34b.py` | PASS |
+| SBX-13 | G0-14 CUMPLIDO y ADR-005 canónico PROPUESTA | `validate_f34b.py`, ADR-005 | PASS |
+| SBX-14 | `source_type = synthetic`, prefijo `[SINTÉTICO]` y advertencia del manifiesto | F34, `manifest.json` | PASS |
+| SBX-15 | Ningún archivo del runtime referencia los datos sintéticos ni G0-SBX | Recorrido del runtime | PASS |
+| SBX-16 | Runtime, dependencias, migraciones y baseline sin cambios frente a la base fija | Git | PASS |
+| SBX-17 | La decisión G0 vigente declara el alcance C no habilitado | `F34B_Decision_G0.md` | PASS |
+| SBX-18 | «G0 = NO APROBADA» y G0-02, G0-03 y G0-12 sin cerrar (PENDIENTE EXTERNO) | `F34B_Decision_G0.md`, `validate_f34b.py` | PASS |
+
+Resultado: 18/18 PASS, sin criterios no evaluables. El validador completo `validate_f34e.py` sobre HEAD da 247 comprobaciones correctas y 1 falla, del tipo A de DH-B13 (alcance Git histórico), que no se ignora: es la que obliga a esta evaluación criterio a criterio.
