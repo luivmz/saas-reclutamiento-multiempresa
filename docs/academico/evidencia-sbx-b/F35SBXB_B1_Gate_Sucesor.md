@@ -1,6 +1,6 @@
 # F35-SBX-B — B1: gate sucesor sobre HEAD
 
-> Incremento B1 de F35-SBX-B, versión 4 (10/10/2026): la versión 1 se auditó en `f30cfe6c4adf9c3f7704b6bd665b6363a137b91a`, la versión 2 en `298c5a4dc19594980a22a877ad9d4a89f5acdf23` y la versión 3 en `bd93c69b5a6b712a0cacb17646cd593023dc187e`; esta incorpora las correcciones B1.1 (§8), B1.2 (§9) y B1.3 (§10). Rama `feature/f35-sbx-b-deterministic-pipeline`, creada desde `develop` `430f3f544c3542cabac8028a122c8a0c2a97390b`, que integra [B0](F35SBXB_B0_Sucesion_de_Gates.md). B1 construye solo el **mecanismo de control** que exigen DH-B04 y DH-B13 antes de cualquier pipeline: no hay pipeline funcional, SQLite, máquina de estados, informe, purga ni ML.
+> Incremento B1 de F35-SBX-B, versión 5 (10/10/2026): la versión 1 se auditó en `f30cfe6c4adf9c3f7704b6bd665b6363a137b91a`, la versión 2 en `298c5a4dc19594980a22a877ad9d4a89f5acdf23`, la versión 3 en `bd93c69b5a6b712a0cacb17646cd593023dc187e` y la versión 4 en `ddf82c28f2cbb9b33e65969de20e7bee073e2752`; esta incorpora las correcciones B1.1 (§8), B1.2 (§9), B1.3 (§10) y B1.4 (§11). Rama `feature/f35-sbx-b-deterministic-pipeline`, creada desde `develop` `430f3f544c3542cabac8028a122c8a0c2a97390b`, que integra [B0](F35SBXB_B0_Sucesion_de_Gates.md). B1 construye solo el **mecanismo de control** que exigen DH-B04 y DH-B13 antes de cualquier pipeline: no hay pipeline funcional, SQLite, máquina de estados, informe, purga ni ML.
 
 ## 1. Qué es el gate
 
@@ -12,7 +12,7 @@ El gate primero **recoge** el estado real (Git, índice, sistema de archivos y d
 
 | ID | Qué comprueba | Origen |
 |---|---|---|
-| CTX | Rama `feature/f35-sbx-b-deterministic-pipeline`, `develop` o `main`; HEAD no separado; E, el cierre de B0 y la base de B como ancestros de HEAD | Plan B1 §4.A y §4.J; DH-B04 |
+| CTX | Rama `feature/f35-sbx-b-deterministic-pipeline`, `develop` o `main`; HEAD no separado; E, el cierre de B0 y la base de B como ancestros de HEAD; intérprete aislado (`python -I`, al que el gate se relanza solo) y sin `PYTHONPATH`, `PYTHONHOME` ni `PYTHONUSERBASE` (§11.2) | Plan B1 §4.A y §4.J; DH-B04; B1.4 |
 | AIN | F35-SBX-A idéntica a E: 22 archivos con los bytes reales del blob de E, sin archivos extra ni enlaces; árbol de HEAD sin cambios frente a E en esas rutas | DH-B09 |
 | HST | Historia completa de E a HEAD: el gate rechaza todo commit que haya tocado F35-SBX-A (contenido, modo, altas, bajas o renombrados), aunque después se restaure; en un merge cuenta lo que difiere de todos sus padres. Un repositorio superficial o una historia ilegible fallan cerrado | B1.1 M04; DH-B09 |
 | B0F | El documento de B0 idéntico a su cierre auditado | B0 CERRADA |
@@ -44,6 +44,7 @@ Delta respecto de la base de B (`430f3f5`), sin subconjuntos de las obligatorias
 
 - Antes de importar nada, el gate comprueba que `validate_f34e.py` y los tres módulos que su función `compute_sbx()` carga (`validate_f34.py`, `validate_f34a.py` y `validate_f34b.py`) son idénticos byte a byte a sus blobs en E. Si no se puede verificar, el gate falla sin importar.
 - Desde B1.3 (§10.4) verifica también, antes de ejecutar nada, que los directorios que esos módulos ponen en `sys.path` (`tools/f34`, `tools/f34a`, `tools/f34b` y `tools/f34e`) contienen exactamente lo de E, incluido `generate_synthetic.py`, que `validate_f34.py` importa. Ninguna ruta del repositorio queda en `sys.path` y ningún `.pyc` sustituye a una fuente verificada.
+- Desde B1.4 (§11) no ejecuta ningún código del repositorio antes de verificarlo. Usa un inventario cerrado de todo lo que `compute_sbx()` puede ejecutar, incluido el `schema.py` del servicio RF-29, comparado con el blob de su referencia; recalcula el grafo por AST sin importar; y una guarda sirve solo los bytes verificados.
 - Ejecuta solo `compute_sbx()`, sin generar ni reutilizar bytecode, y exige exactamente SBX-01..SBX-18.
 - Por cada criterio informa ID, PASS o FAIL, fuente, comprobación aplicada (de la [matriz de criterios](../g0-sandbox/F34E_Matriz_Criterios_G0_SBX.md)) y, si falla, el motivo.
 - Un criterio ausente, una excepción o un resultado que no sea verdadero hacen fallar el gate: es un incumplimiento sustantivo (clase B) o no evaluable.
@@ -156,6 +157,24 @@ Los casos negativos viven dentro del gate, igual que en F35-SBX-A, sin `tests/` 
 | NB-75 | SBX | `generate_synthetic.py` alterado: no se importa |
 | NB-76 | FSY | `.pyc` distinto de su fuente: no se certifica |
 | NB-77 | FSY | `.pyc` reescrito por pytest: no se certifica |
+| NB-78 | SBX | `schema.py` alterado: no se ejecuta y el marcador no aparece |
+| NB-79 | SBX | `f35sbx_scope.py` alterado: no se ejecuta y el marcador no aparece |
+| NB-80 | SBX | Módulo plantado que sombrearía una importación de `compute_sbx()`: no se ejecuta nada |
+| NB-81 | SBX | Ejecución dinámica en el grafo estático: no verificable |
+| NB-82 | SBX | Módulo del repositorio ya cargado: no se acepta |
+| NB-83 | SBX | La guarda rechaza código del repositorio no verificado antes de ejecutarlo |
+| NB-84 | CTX | intérprete no aislado o con PYTHONPATH |
+| NB-85 | CNT | el sistema asigna notas automáticamente a los postulantes |
+| NB-86 | CNT | inglés: candidatos ordenados automáticamente para la selección |
+| NB-87 | CNT | el motor sugiere qué candidato debe avanzar |
+| NB-88 | CNT | el sistema calcula la calificación de cada candidato |
+| NB-89 | CNT | el sistema determina al seleccionado sin decir automático |
+| NB-90 | CNT | la plataforma decide quién obtiene la plaza |
+| NB-91 | CNT | inglés: el motor determina al postulante elegido |
+| NB-92 | GOV | ADR-005 recibe aprobación |
+| NB-93 | GOV | tiempo compuesto: hemos aprobado ADR-005 |
+| NB-94 | GOV | G0-SBX ya no tiene restricciones |
+| NB-95 | GOV | G0-SBX deja de tener restricciones |
 
 ### 7.1 RED → GREEN (09/10/2026)
 
@@ -384,3 +403,107 @@ Límites LOW que se mantienen:
 - El gate rechaza también una selección en voz pasiva sin agente («se seleccionará al candidato») aunque no diga «automático». Es un falso positivo conservador.
 - La verificación de un `.pyc` deserializa su código con el cargador estándar, sin ejecutarlo. Un `.pyc` malformado hace fallar el gate, nunca pasar.
 - En las dos excepciones de metadatos se valida la forma de los archivos, no su contenido.
+
+## 11. Corrección B1.4
+
+La cuarta auditoría independiente (`ddf82c2`) dejó un HIGH y tres MEDIUM:
+
+- **H01 (DH-B13):** un `ml-service/src/recruitment_ml/schema.py` alterado se ejecutaba antes de que el gate fallara.
+- **M01:** puntuación, ordenamiento y recomendación residuales.
+- **M02:** RF-23 residual.
+- **M03:** gobierno residual de ADR-005 y G0-SBX.
+
+B1.4 corrige la clase de H01, no solo `schema.py`, y las tres familias semánticas. El gate sigue en desarrollo, pendiente de reauditoría final: no está congelado.
+
+### 11.1 Inventario del código ejecutable
+
+El inventario se construyó sin importar nada del repositorio: primero por lectura estática y después con una traza de las cargas de `compute_sbx()` sobre el árbol legítimo.
+
+| Archivo | Cómo se ejecuta | Referencia autorizada |
+|---|---|---|
+| `tools/f34e/validate_f34e.py` | Punto de entrada de `compute_sbx()`; `validate_f34b.py` también lo carga por ruta | E |
+| `tools/f34/validate_f34.py` | `load_module` de `validate_f34e.py` | E |
+| `tools/f34/generate_synthetic.py` | `import` de `validate_f34.py` desde su directorio | E |
+| `tools/f34a/validate_f34a.py` | `load_module` de `validate_f34e.py` | E |
+| `tools/f34b/validate_f34b.py` | `load_module` de `validate_f34e.py` | E |
+| `tools/f35sbx/f35sbx_scope.py` | Carga por ruta en `validate_f34b.py` e `import` en `validate_f34.py` | E |
+| `ml-service/src/recruitment_ml/schema.py` | Carga por ruta, a nivel de módulo, en `validate_f34.py` (contrato RF-29) | Base de B `430f3f5` |
+
+No hay otras cargas: los siete módulos solo usan la biblioteca estándar, no tienen `exec`, `eval` ni importaciones dinámicas, y sus subprocesos son exclusivamente `git`. `schema.py` se carga sin su paquete, por lo que `recruitment_ml/__init__.py` no se ejecuta.
+
+### 11.2 Verificación antes de ejecutar
+
+1. **Aislamiento del intérprete.** Si no se invoca con `python -I`, el gate se relanza a sí mismo aislado con `os.spawnv` antes de importar nada más, y devuelve su código de salida. CTX falla si están definidas `PYTHONPATH`, `PYTHONHOME` o `PYTHONUSERBASE`.
+2. **Bytes autorizados.** Cada archivo del inventario debe ser un archivo regular, sin enlaces en su ruta, y con los bytes del blob 100644 de su referencia.
+3. **Grafo estático.** El grafo se recalcula por AST sobre esos bytes, sin importarlos, resolviendo las rutas de `spec_from_file_location`, de `load_module` y de `sys.path`. Fallan cerrados:
+   - una carga no resoluble;
+   - un nombre importado que exista como módulo del repositorio en un directorio de `sys.path` (`.py`, `.pyc`, `.pyd` o paquete) y no esté en el inventario;
+   - la ejecución dinámica;
+   - un subproceso que no sea `git`.
+
+   El grafo debe coincidir exactamente con el inventario.
+4. **Módulos ya cargados.** Si en `sys.modules` ya hay un módulo cuyo origen está en el repositorio, el gate falla sin ejecutar.
+5. **Guarda durante `compute_sbx()`.** El código del repositorio se sirve desde los bytes ya verificados en memoria: la verificación y la ejecución usan el mismo objeto, sin releer el archivo. La guarda rechaza cualquier otra fuente del repositorio, un `.pyc` sin fuente, una extensión nativa o un paquete, y el bytecode del repositorio nunca se reutiliza. Un rechazo hace fallar SBX aunque el validador lo capture. Al salir, la guarda restaura `sys.path`, `sys.modules` y los cargadores.
+
+La guarda no es un sandbox de procesos: no protege frente a otro proceso que modifique los archivos de datos mientras el gate corre, ni frente a código que el intérprete ejecute antes del gate.
+
+### 11.3 M01, RF-23 y M02
+
+- **Puntuación.** El gate rechaza la asignación o el otorgamiento de notas, calificaciones o puntajes a personas candidatas por el sistema o con «automático». La misma tarea de un evaluador no cuenta.
+- **Ordenamiento.** El gate rechaza el ordenamiento, la clasificación o la priorización de personas candidatas con «automático», o por el sistema con una finalidad decisional («para la selección»). «El ranking calcula, ordena y compara» sigue pasando.
+- **Recomendación.** El gate rechaza la sugerencia o la recomendación, por el sistema, de quién continúa.
+- **RF-23 sin «automático».** El gate rechaza la decisión, la determinación, la elección o la selección de una persona candidata, de «quién» o de la plaza cuando el agente es el sistema.
+- **Agente de la acción.** Es el agente responsable más cercano antes del verbo; si no hay, uno pospuesto (el sistema, o una persona introducida por «por»). «El sistema muestra el ranking y el Aprobador elige al candidato» deja de rechazarse por error, y una acción del sistema nunca queda eximida.
+- **ADR-005.** Cuentan los tiempos compuestos con «haber» y la aprobación recibida, obtenida o concedida por una entidad restrictiva. Las negaciones y la aprobación solo requerida siguen siendo coherentes. El gate rechaza «hemos aprobado ADR-005» y «ADR-005 recibe aprobación».
+- **G0-SBX.** Cuentan «ya no tiene restricciones», «deja de tener restricciones», «no longer has restrictions» y «has no restrictions», aunque contengan «no». La protección solo la da una negación anterior a esa construcción. El gate rechaza «G0-SBX ya no tiene restricciones».
+
+### 11.4 RED → GREEN (10/10/2026)
+
+Se ejecutó con Git real, en clones desechables sin remoto y ya eliminados. El mismo guion corrió contra el gate de `ddf82c2` (RED) y contra el gate corregido (GREEN). Cada carga útil intenta crear un archivo marcador fuera del clon, y el guion comprueba si aparece.
+
+| Caso | RED (`ddf82c2`) | GREEN |
+|---|---|---|
+| H01: `schema.py` con la carga útil al final del módulo | Aparecía el marcador: el código se ejecutaba antes de que el gate fallara | FAIL en SBX, FSY y SCP, sin marcador |
+| H01: `f35sbx_scope.py`, `generate_synthetic.py` y `validate_f34a.py` alterados | FAIL sin marcador (`compute_sbx()` no carga `f35sbx_scope.py`; B1.3 ya protegía los otros dos) | FAIL, también en SBX, sin marcador |
+| Secuestro de importaciones con archivos plantados (ver la lista debajo) | FAIL sin marcador | FAIL sin marcador |
+| Secuestro: `PYTHONPATH` externo con `json.py`, `hashlib.py`, `re.py` y `csv.py` | Aparecía el marcador y el gate terminaba sin informe | FAIL en CTX, sin marcador |
+| Secuestro: `PYTHONPATH` externo con `sitecustomize.py` | El intérprete lo ejecutaba al arrancar y el gate daba PASS (122/0) | El intérprete lo sigue ejecutando antes que el gate, pero el gate da FAIL en CTX |
+| M01: dos frases de la auditoría y seis variantes | Seis pasaban | FAIL en CNT |
+| M01: seis textos legítimos | Se rechazaba por error la elección del Aprobador tras una mención del sistema | PASS |
+| RF-23: tres frases de la auditoría y cuatro variantes | Pasaban todas | FAIL en CNT |
+| RF-23: seis textos legítimos | Pasaban | PASS |
+| M02: tres frases de la auditoría y siete variantes | Ocho pasaban | FAIL en GOV |
+| M02: diez textos legítimos | Pasaban | PASS |
+
+Los archivos plantados del tercer caso son:
+
+- `csv.py`, `json.py`, `hashlib.py` y `pathlib.py` en `tools/f34/`;
+- `csv.py` en `tools/f35sbx/` y `json.py` junto al gate;
+- `PYTHONPATH=tools/f34`, y el directorio de trabajo en `tools/f34`;
+- un `.pyc` malicioso con la cabecera de `validate_f34.py` o de `schema.py`;
+- un `.pyc` sin fuente.
+
+Regresión, igual en RED y en GREEN:
+
+- el bundle de Vite, Wayfinder, la caché de Laravel y un archivo de `app/` ignorado fallan en FSY;
+- el `.pyc` derivable pasa;
+- A modificada y restaurada por commits falla en HST;
+- el clon superficial y `GIT_DIR` inválido fallan cerrados sin trazas.
+
+Durante el primer GREEN apareció una regresión propia: con Git no verificable, el caso NB-81 detenía el gate con una traza. Se corrigió antes del commit, y ahora los casos de integridad fallan cerrados con diagnóstico.
+
+En el gate quedan:
+
+- 84 negativos en memoria: NB-01..NB-18, NB-20..NB-73 y NB-84..NB-95;
+- doce casos de integridad: NB-19, NB-74..NB-83 y el `.pyc` derivable;
+- cuarenta y cuatro controles positivos de texto.
+
+Sobre un clon limpio de HEAD dan 151 comprobaciones correctas y 0 fallas, con SBX-01..SBX-18 en PASS. Sobre un árbol de trabajo con artefactos generados, el gate sigue fallando en FSY (§10.3), sin ejecutar código no verificado.
+
+Límites LOW que se mantienen:
+
+- **Código que el intérprete ejecuta antes del gate.** Un `sitecustomize.py` en `PYTHONPATH` o el sitio de Python fuera del repositorio quedan fuera de su alcance. El gate falla si `PYTHONPATH` está definida, y la invocación recomendada es `python -I`.
+- **No es un sandbox de procesos.** Los archivos de datos (CSV y Markdown) se verifican al recoger el estado y se leen después: otro proceso concurrente podría cambiarlos entre ambos momentos.
+- **Análisis estático acotado.** El análisis del grafo solo resuelve literales y `os.path.*`. Cualquier otra construcción falla cerrada, aunque fuera inocua.
+- **Agente de la acción.** Se determina por proximidad dentro de la oración, así que una oración con varias cláusulas puede atribuirlo mal. Ante la duda, la oración se trata como afirmación.
+- **Límites de B1.3.** Siguen los de §10.5: la prohibición alejada del verbo y la voz pasiva sin agente son falsos positivos conservadores.

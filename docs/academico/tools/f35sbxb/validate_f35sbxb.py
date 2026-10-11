@@ -1599,6 +1599,25 @@ CASES = [
     ('NB-72', 'FSY', 'caché PHP de Laravel no versionada', mutate(lambda T: T['rt_fs'].add('bootstrap/cache/packages.php'))),
     ('NB-73', 'FSY', 'archivo del runtime con bytes distintos de la base autorizada',
      mutate(lambda T: T['rt_real'].__setitem__(sorted(T['rt_real'])[0], '0' * 40))),
+    # B1.4 — entorno del intérprete (los casos de integridad previa a la ejecución están en integrity_cases).
+    ('NB-84', 'CTX', 'intérprete no aislado o con PYTHONPATH',
+     mutate(lambda T: T['env'].append('variable de entorno PYTHONPATH definida'))),
+    # B1.4 — M01, RF-23 y M02 residuales.
+    ('NB-85', 'CNT', 'el sistema asigna notas automáticamente a los postulantes',
+     doc_add('El sistema asignará notas automáticamente a los postulantes.')),
+    ('NB-86', 'CNT', 'inglés: candidatos ordenados automáticamente para la selección',
+     doc_add('Candidates are automatically ordered for selection.')),
+    ('NB-87', 'CNT', 'el motor sugiere qué candidato debe avanzar', doc_add('El motor sugerirá qué candidato debe avanzar.')),
+    ('NB-88', 'CNT', 'el sistema calcula la calificación de cada candidato',
+     doc_add('El sistema calculará la calificación de cada candidato.')),
+    ('NB-89', 'CNT', 'el sistema determina al seleccionado sin decir automático', doc_add('El sistema determinará al seleccionado.')),
+    ('NB-90', 'CNT', 'la plataforma decide quién obtiene la plaza', doc_add('La plataforma decidirá quién obtiene la plaza.')),
+    ('NB-91', 'CNT', 'inglés: el motor determina al postulante elegido',
+     doc_add('The engine determines the successful applicant.')),
+    ('NB-92', 'GOV', 'ADR-005 recibe aprobación', gov_add('ADR-005 recibe aprobación')),
+    ('NB-93', 'GOV', 'tiempo compuesto: hemos aprobado ADR-005', gov_add('Hemos aprobado ADR-005')),
+    ('NB-94', 'GOV', 'G0-SBX ya no tiene restricciones', gov_add('G0-SBX ya no tiene restricciones')),
+    ('NB-95', 'GOV', 'G0-SBX deja de tener restricciones', gov_add('G0-SBX deja de tener restricciones')),
 ]
 CASE_ROWS = {(row_cell(cid), row_cell(rule), row_cell(what)) for cid, rule, what, _ in CASES}
 # Controles positivos de B1.1: negación, prohibición, cita rechazada y ejemplo negativo no son afirmaciones.
@@ -1620,7 +1639,14 @@ LEGIT_TEXTS = ['No se habilita scoring.', 'Scoring permanece prohibido.',
                'ADR-005 no ha sido aprobada.', 'No se aprueba ADR-005.', 'El gate debe rechazar “Se aprueba ADR-005”.',
                'Ejemplo negativo: “ADR-005 queda aprobada”.', 'G0-SBX = APROBADA CON RESTRICCIONES.',
                'Las restricciones de G0-SBX permanecen vigentes.', 'G0-SBX no está aprobada sin restricciones.',
-               'El gate debe rechazar “G0-SBX queda sin restricciones”.']
+               'El gate debe rechazar “G0-SBX queda sin restricciones”.',
+               # B1.4
+               'El evaluador asigna notas a los postulantes según la rúbrica.',
+               'El sistema muestra el ranking y el Aprobador elige al candidato.',
+               'La Dirección decide quién obtiene la plaza.', 'El sistema no decide quién obtiene la plaza.',
+               'La decisión final requiere confirmación humana.', 'ADR-005 no recibe aprobación.',
+               'No hemos aprobado ADR-005.', 'ADR-005 requiere aprobación externa.', 'G0-SBX mantiene restricciones.',
+               'No se eliminan las restricciones de G0-SBX.', 'G0-SBX nunca deja de tener restricciones.']
 
 
 def integrity_cases(S):
@@ -1652,6 +1678,45 @@ def integrity_cases(S):
     src = real_bytes(GATE) or b''
     good = pyc_problem(pyc, load=lambda path, name: compile(src, path, 'exec', dont_inherit=True))
     out.append((good is None, f'PB: .pyc derivable de su fuente se verifica y se admite — {good}'))
+    # B1.4 — H01: ningún código del repositorio se ejecuta antes de verificarse. La carga útil solo marcaría sys.
+    payload = b'import sys\nsys._f35sbxb_marca = True\n'
+    for cid, rel in (('NB-78', 'ml-service/src/recruitment_ml/schema.py'),
+                     ('NB-79', 'docs/academico/tools/f35sbx/f35sbx_scope.py')):
+        res, err = sbx_eval(must, lambda r, rel=rel: (real_bytes(r) or b'') + (b'\n' + payload if r == rel else b''))
+        ran = getattr(sys, '_f35sbxb_marca', False)
+        out.append((res is None and bool(err) and 'ni se ejecuta' in err and not ran,
+                    f'{cid} SBX: {rel} alterado no se ejecuta (marcador ausente: {not ran}) — {err}'))
+    planted = {'docs/academico/tools/f34/csv.py', 'docs/academico/tools/f35sbx/json.py'}
+    res, err = sbx_eval(must, exists=lambda p: os.path.lexists(p) or os.path.relpath(p, ROOT).replace(os.sep, '/') in planted)
+    out.append((res is None and bool(err) and 'ni se ejecuta' in err,
+                f'NB-80 SBX: módulo plantado que sombrearía una importación de compute_sbx() (falla cerrado) — {err}'))
+    verified, err = verify_inventory(must)
+    if verified:
+        bad = dict(verified)
+        bad['docs/academico/tools/f34a/validate_f34a.py'] += b"\nexec('x = 1')\n"
+        _, problems = exec_graph(bad)
+        out.append((any('ejecución dinámica' in p for p in problems),
+                    f'NB-81 SBX: ejecución dinámica en el grafo estático no verificable — {problems[:1]}'))
+    else:
+        out.append((False, f'NB-81 SBX: inventario no verificable — {err}'))
+    fake = type(sys)('f35sbxb_modulo_falso')
+    fake.__file__ = os.path.join(ROOT, 'docs', 'academico', 'tools', 'f34', 'csv.py')
+    sys.modules['f35sbxb_modulo_falso'] = fake
+    try:
+        res, err = sbx_eval(must)
+    finally:
+        sys.modules.pop('f35sbxb_modulo_falso', None)
+    out.append((res is None and bool(err) and 'ya cargados' in err,
+                f'NB-82 SBX: módulo del repositorio ya cargado no se acepta — {err}'))
+    refused = False
+    with ExecGuard({}) as guard:
+        sys.path.insert(0, os.path.join(ROOT, 'docs', 'academico', 'tools', 'f34'))
+        try:
+            importlib.util.find_spec('generate_synthetic')
+        except ImportError:
+            refused = True
+    out.append((refused and bool(guard.refused) and 'generate_synthetic' not in sys.modules,
+                f'NB-83 SBX: la guarda rechaza código del repositorio no verificado antes de ejecutarlo — {guard.refused[:1]}'))
     return out
 
 
@@ -1676,8 +1741,11 @@ def main():
             add(False, f'{cid}: la mutación no se pudo aplicar ({e.__class__.__name__}: {e})')
             continue
         add(run_rules(T)[rule], f'{cid} detectado por {rule}: {what}')
-    for ok, msg in integrity_cases(S):
-        add(ok, msg)
+    try:
+        for ok, msg in integrity_cases(S):
+            add(ok, msg)
+    except Exception as e:          # estado Git o de archivos no verificable: los casos de integridad fallan cerrados
+        add(False, f'NB-19 y NB-74..NB-83: casos de integridad no evaluables ({e.__class__.__name__}): falla cerrado')
     for text in LEGIT_TEXTS:
         try:
             rc = run_rules(doc_add(text)(S))['CNT']
