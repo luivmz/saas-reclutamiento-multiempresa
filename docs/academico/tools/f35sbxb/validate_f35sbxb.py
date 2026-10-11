@@ -27,6 +27,16 @@ Cualquier error de Git, de lectura o de importación, criterio no evaluable o es
 import os
 import sys
 
+# B1.4 — el gate solo corre en modo aislado (python -I): sin PYTHONPATH, sin sitio del usuario y sin el directorio del
+# script en sys.path. Si se invoca de otro modo, se relanza a sí mismo aislado con os.spawnv (os ya está cargado: no
+# se importa nada nuevo en un entorno no verificado) y devuelve su código de salida.
+if __name__ == '__main__' and not sys.flags.isolated:
+    _argv = [sys.executable, '-I', '-B'] + (['-X', 'utf8'] if sys.flags.utf8_mode else []) + \
+        [os.path.abspath(__file__)] + sys.argv[1:]
+    if os.name == 'nt':
+        _argv = ['"' + a.replace('"', '\\"') + '"' if (' ' in a or '\t' in a) else a for a in _argv]
+    sys.exit(os.spawnv(os.P_WAIT, sys.executable, _argv))
+
 # B1.3 — antes de cualquier otra importación: ninguna ruta del repositorio en sys.path (un archivo plantado no puede
 # sustituir a un módulo), y ningún .pyc se reutiliza: pycache_prefix apunta debajo de un archivo regular, ruta que no
 # puede existir como directorio. El gate solo ejecuta del repositorio los bytes que verificó contra E (DH-B13).
@@ -139,6 +149,28 @@ SBX_INFO = {   # ID: (fuente, comprobación aplicada), según la matriz de crite
 # así también generate_synthetic.py, que validate_f34.py importa, queda verificado antes de ejecutar nada.
 SBX_DIRS = ('docs/academico/tools/f34', 'docs/academico/tools/f34a', 'docs/academico/tools/f34b',
             'docs/academico/tools/f34e')
+# B1.4 — inventario cerrado de todo el código del repositorio que compute_sbx() puede ejecutar, directa o
+# transitivamente, con su referencia autorizada: E para los validadores congelados de A y sus dependencias, y la base
+# de B para el runtime que B no puede modificar. El grafo se recalcula por AST, sin importar nada, y debe coincidir
+# exactamente con este inventario; los bytes reales deben ser los del blob autorizado antes de ejecutar cualquiera.
+EXEC_ENTRY = SBX_MODULES[0]
+EXEC_INVENTORY = {
+    'docs/academico/tools/f34e/validate_f34e.py': E,
+    'docs/academico/tools/f34/validate_f34.py': E,
+    'docs/academico/tools/f34/generate_synthetic.py': E,
+    'docs/academico/tools/f34a/validate_f34a.py': E,
+    'docs/academico/tools/f34b/validate_f34b.py': E,
+    'docs/academico/tools/f35sbx/f35sbx_scope.py': E,
+    'ml-service/src/recruitment_ml/schema.py': B_BASE,
+}
+PATH_FUNCS = ('os.path.join', 'os.path.dirname', 'os.path.abspath', 'os.path.normpath', 'os.path.realpath')
+DYNAMIC_CALLS = ('exec', 'eval', 'compile', '__import__', 'execfile', 'breakpoint')
+DYNAMIC_ATTRS = ('import_module', 'run_path', 'run_module', 'system', 'popen', 'startfile', 'execv', 'execve',
+                 'execl', 'execlp', 'execvp', 'spawnv', 'spawnve', 'spawnl', 'load_source', 'load_compiled',
+                 'load_dynamic', 'SourceFileLoader', 'SourcelessFileLoader', 'ExtensionFileLoader')
+# Variables que alteran qué código carga el intérprete al arrancar un script (PYTHONSTARTUP solo afecta al modo
+# interactivo y no se considera).
+ENV_VARS = ('PYTHONPATH', 'PYTHONHOME', 'PYTHONUSERBASE')
 STDLIB_OK = {'ast', 'copy', 'hashlib', 'importlib', 'json', 'os', 're', 'subprocess', 'sys', 'unicodedata'}
 PII = [re.compile(p) for p in (
     r'[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}',                          # correo
@@ -282,7 +314,285 @@ def name_status(data):
             if parts[i]}
 
 
-def sbx_eval(must, reader=real_bytes, lister=os.listdir):
+def _norm_rel(path):
+    """Ruta relativa al repositorio, normalizada sin tocar el sistema de archivos ('..' inicial = fuera del repo)."""
+    parts = []
+    for p in path.replace('\\', '/').split('/'):
+        if p in ('', '.'):
+            continue
+        if p == '..' and parts and parts[-1] != '..':
+            parts.pop()
+        else:
+            parts.append(p)
+    return '/'.join(parts) or '.'
+
+
+def _dotted(node):
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        base = _dotted(node.value)
+        return f'{base}.{node.attr}' if base else None
+    return None
+
+
+def _eval_path(node, env):
+    """Evalúa estáticamente una expresión de ruta: literales, nombres de módulo ya resueltos y os.path.*. None si no
+    es resoluble (y entonces la carga falla cerrada)."""
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    if isinstance(node, ast.Name):
+        return env.get(node.id)
+    if isinstance(node, ast.Call) and _dotted(node.func) in PATH_FUNCS and node.args and not node.keywords:
+        args = [_eval_path(a, env) for a in node.args]
+        if None in args:
+            return None
+        name = _dotted(node.func)
+        if name == 'os.path.join':
+            return _norm_rel('/'.join(args))
+        if name == 'os.path.dirname':
+            return _norm_rel(args[0].rsplit('/', 1)[0] if '/' in _norm_rel(args[0]) else '.')
+        return _norm_rel(args[0])
+    return None
+
+
+def scan_module(rel, tree):
+    """Análisis estático de un módulo del inventario (sin importarlo): cargas de código por ruta, rutas añadidas a
+    sys.path, nombres importados y construcciones de ejecución dinámica no verificables."""
+    env = {'__file__': rel}
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+            value = _eval_path(node.value, env)
+            if value is not None:
+                env[node.targets[0].id] = value
+    loads, dirs, imports, problems = set(), set(), set(), []
+    loaders = {}     # función propia que carga por ruta: nombre -> (índice del parámetro, añade su directorio)
+    for fn in [n for n in ast.walk(tree) if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]:
+        params = [a.arg for a in fn.args.args]
+        for call in [n for n in ast.walk(fn) if isinstance(n, ast.Call)]:
+            name = _dotted(call.func) or ''
+            if name.endswith('spec_from_file_location') and len(call.args) > 1 and \
+                    isinstance(call.args[1], ast.Name) and call.args[1].id in params:
+                loaders[fn.name] = (params.index(call.args[1].id), loaders.get(fn.name, (0, False))[1])
+        for call in [n for n in ast.walk(fn) if isinstance(n, ast.Call)]:
+            name = _dotted(call.func) or ''
+            if name in ('sys.path.insert', 'sys.path.append') and fn.name in loaders:
+                arg = call.args[-1] if call.args else None
+                if isinstance(arg, ast.Call) and _dotted(arg.func) == 'os.path.dirname' and arg.args and \
+                        isinstance(arg.args[0], ast.Name) and arg.args[0].id in params:
+                    loaders[fn.name] = (loaders[fn.name][0], True)
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imports |= {a.name.split('.')[0] for a in node.names}
+        elif isinstance(node, ast.ImportFrom):
+            if node.level:
+                problems.append(f'{rel}: importación relativa no verificable')
+            imports.add((node.module or '').split('.')[0])
+        elif isinstance(node, ast.Call):
+            name = _dotted(node.func) or ''
+            if (isinstance(node.func, ast.Name) and name in DYNAMIC_CALLS) or name.split('.')[-1] in DYNAMIC_ATTRS:
+                problems.append(f'{rel}: ejecución dinámica no verificable ({name})')
+            elif name.startswith('subprocess.'):
+                first = node.args[0] if node.args else None
+                if not (isinstance(first, (ast.List, ast.Tuple)) and first.elts and isinstance(first.elts[0], ast.Constant)
+                        and first.elts[0].value == 'git'):
+                    problems.append(f'{rel}: subproceso distinto de git ({name})')
+            elif name.endswith('spec_from_file_location'):
+                arg = node.args[1] if len(node.args) > 1 else None
+                if isinstance(arg, ast.Name) and any(arg.id in [a.arg for a in fn.args.args]
+                                                      for fn in ast.walk(tree) if isinstance(fn, ast.FunctionDef)
+                                                      and fn.name in loaders):
+                    continue
+                target = _eval_path(arg, env) if arg is not None else None
+                if target is None:
+                    problems.append(f'{rel}: carga de código por una ruta no resoluble estáticamente')
+                else:
+                    loads.add(target)
+            elif isinstance(node.func, ast.Name) and name in loaders:
+                index, adds_dir = loaders[name]
+                target = _eval_path(node.args[index], env) if len(node.args) > index else None
+                if target is None:
+                    problems.append(f'{rel}: carga de código por una ruta no resoluble estáticamente ({name})')
+                else:
+                    loads.add(target)
+                    if adds_dir:
+                        dirs.add(_eval_path(ast.Call(func=ast.parse('os.path.dirname', mode='eval').body,
+                                                     args=[ast.Constant(target)], keywords=[]), env))
+            elif name in ('sys.path.insert', 'sys.path.append'):
+                arg = node.args[-1] if node.args else None
+                target = _eval_path(arg, env) if arg is not None else None
+                if target is not None:
+                    dirs.add(target)
+                elif not any(n is node for fn in ast.walk(tree) if isinstance(fn, ast.FunctionDef) and fn.name in loaders
+                             and loaders[fn.name][1] for n in ast.walk(fn)):
+                    problems.append(f'{rel}: ruta añadida a sys.path no resoluble estáticamente')
+    imports.discard('')
+    return loads, dirs, imports, problems
+
+
+def exec_graph(sources, exists=os.path.lexists):
+    """B1.4 — grafo del código del repositorio que ejecutaría compute_sbx(), calculado por AST sobre bytes ya
+    verificados (sin importar nada). Un nombre importado que existe como módulo del repositorio en un directorio de
+    sys.path debe estar en el inventario; si no, o si una carga no es resoluble, falla cerrado. (cierre, problemas)."""
+    seen, todo, dirs, imports, problems = set(), [EXEC_ENTRY], set(), set(), []
+    while True:
+        while todo:
+            rel = todo.pop()
+            if rel in seen:
+                continue
+            seen.add(rel)
+            if rel not in sources:
+                problems.append(f'código del repositorio fuera del inventario verificado: {rel}')
+                continue
+            try:
+                tree = ast.parse(sources[rel].decode('utf-8'), filename=rel)
+            except (SyntaxError, ValueError) as e:
+                problems.append(f'{rel}: no analizable ({e.__class__.__name__})')
+                continue
+            loads, more_dirs, names, found = scan_module(rel, tree)
+            problems += found
+            dirs |= more_dirs
+            imports |= names
+            for target in loads:
+                if target.startswith('..') or not target.endswith('.py'):
+                    problems.append(f'{rel}: carga de código fuera del repositorio o que no es fuente: {target}')
+                else:
+                    todo.append(target)
+        for d in sorted(dirs):
+            if d.startswith('..'):
+                problems.append(f'ruta de importación fuera del repositorio: {d}')
+                continue
+            for name in sorted(imports):
+                for cand in (f'{d}/{name}.py', f'{d}/{name}.pyc', f'{d}/{name}.pyw', f'{d}/{name}.pyd', f'{d}/{name}.so',
+                             f'{d}/{name}'):
+                    if exists(os.path.join(ROOT, cand)):
+                        if cand in sources and cand not in seen:
+                            todo.append(cand)
+                        elif cand not in sources:
+                            problems.append(f'{cand}: módulo del repositorio importable por compute_sbx() y fuera del '
+                                            f'inventario verificado (falla cerrado)')
+        if not todo:
+            break
+    if not problems and seen != set(EXEC_INVENTORY):
+        problems.append(f'el grafo estático no coincide con el inventario: {sorted(seen ^ set(EXEC_INVENTORY))}')
+    return seen, sorted(set(problems))
+
+
+def _no_link(rel):
+    """Ningún componente de la ruta es un enlace."""
+    parts = rel.split('/')
+    return not any(os.path.islink(os.path.join(ROOT, *parts[:k])) for k in range(1, len(parts) + 1))
+
+
+def verify_inventory(must, reader=real_bytes):
+    """B1.4 — bytes reales de cada archivo del inventario idénticos a su blob en la referencia autorizada, como archivo
+    regular 100644 y sin enlaces en la ruta. ({ruta: bytes verificados}, error)."""
+    verified = {}
+    for rel, ref in EXEC_INVENTORY.items():
+        meta = must('ls-tree', ref, '--', rel).decode().split('\t')[0].split()
+        data = reader(rel) if _no_link(rel) else None
+        if len(meta) != 3 or meta[:2] != ['100644', 'blob'] or data is None or blob_id(data) != meta[2]:
+            return None, f'{rel}: distinto de su blob autorizado en {ref[:7]}; no se ejecuta (falla cerrado)'
+        verified[rel] = data
+    return verified, None
+
+
+def repo_key(path):
+    return os.path.normcase(os.path.abspath(path))
+
+
+def in_repo(path):
+    key = repo_key(path)
+    return key == _REPO or key.startswith(_REPO + os.sep)
+
+
+def repo_modules(skip=()):
+    """Módulos ya cargados cuyo origen está en el repositorio (salvo el propio gate)."""
+    out = []
+    for name, mod in list(sys.modules.items()):
+        if mod is None or any(mod is x for x in skip):
+            continue
+        spec = getattr(mod, '__spec__', None)
+        locs = [getattr(mod, '__file__', None), getattr(spec, 'origin', None)]
+        locs += list(getattr(spec, 'submodule_search_locations', None) or [])
+        if any(isinstance(p, str) and os.path.isabs(p) and in_repo(p) for p in locs):
+            out.append(name)
+    return sorted(out)
+
+
+class ExecGuard:
+    """B1.4 — mientras corre compute_sbx(), el código del repositorio solo se carga desde los bytes ya verificados
+    (sin releer el archivo: sin ventana entre verificación y ejecución) y cualquier otro código del repositorio
+    (fuente, .pyc sin fuente, extensión nativa o paquete) se rechaza antes de ejecutarse. Restaura todo al salir."""
+
+    def __init__(self, verified):
+        self.verified = {repo_key(os.path.join(ROOT, rel)): data for rel, data in verified.items()}
+        self.refused = []
+
+    def find_spec(self, name, path=None, target=None):
+        spec = importlib.machinery.PathFinder.find_spec(name, path, target)
+        if spec is None:
+            return None
+        locs = ([spec.origin] if spec.origin else []) + list(spec.submodule_search_locations or [])
+        if not any(os.path.isabs(p) and in_repo(p) for p in locs):
+            return None
+        if spec.origin and repo_key(spec.origin) in self.verified and spec.submodule_search_locations is None \
+                and type(spec.loader) is importlib.machinery.SourceFileLoader:
+            return spec
+        self.refused.append(f'módulo {name} ({spec.origin or "paquete"})')
+        raise ImportError(f'{name}: código del repositorio no verificado; no se ejecuta')
+
+    def __enter__(self):
+        guard = self
+        self.saved_path, self.saved_modules = list(sys.path), set(sys.modules)
+        SFL, SLL, EFL = (importlib.machinery.SourceFileLoader, importlib.machinery.SourcelessFileLoader,
+                         importlib.machinery.ExtensionFileLoader)
+        self.patched = [(SFL, 'get_data', SFL.__dict__.get('get_data')), (SLL, 'get_data', SLL.__dict__.get('get_data')),
+                        (EFL, 'create_module', EFL.__dict__.get('create_module'))]
+        source_get, sourceless_get, ext_create = SFL.get_data, SLL.get_data, EFL.create_module
+
+        def get_source(loader, path):
+            if not in_repo(path):
+                return source_get(loader, path)
+            if repo_key(path) != repo_key(loader.path):
+                raise OSError('bytecode del repositorio: no se reutiliza')
+            if repo_key(path) in guard.verified:
+                return guard.verified[repo_key(path)]
+            guard.refused.append(f'fuente {path}')
+            raise ImportError(f'{path}: código del repositorio no verificado; no se ejecuta')
+
+        def get_sourceless(loader, path):
+            if in_repo(path):
+                guard.refused.append(f'bytecode sin fuente {path}')
+                raise ImportError(f'{path}: bytecode del repositorio; no se ejecuta')
+            return sourceless_get(loader, path)
+
+        def create_extension(loader, spec):
+            if in_repo(loader.path):
+                guard.refused.append(f'extensión nativa {loader.path}')
+                raise ImportError(f'{loader.path}: extensión nativa del repositorio; no se carga')
+            return ext_create(loader, spec)
+        SFL.get_data, SLL.get_data, EFL.create_module = get_source, get_sourceless, create_extension
+        sys.meta_path.insert(0, self)
+        importlib.invalidate_caches()
+        return self
+
+    def __exit__(self, *exc):
+        if self in sys.meta_path:
+            sys.meta_path.remove(self)
+        for cls, attr, original in self.patched:
+            if original is None:
+                delattr(cls, attr)
+            else:
+                setattr(cls, attr, original)
+        sys.path[:] = self.saved_path
+        for name in set(sys.modules) - self.saved_modules:
+            del sys.modules[name]
+        importlib.invalidate_caches()
+        return False
+
+
+def sbx_eval(must, reader=real_bytes, lister=os.listdir, exists=os.path.lexists):
     """DH-B13: verificar contra E los bytes de validate_f34e.py y de los módulos que carga, y (B1.3) el contenido
     completo de los directorios que esos módulos ponen en sys.path; solo entonces ejecutar compute_sbx() con los bytes
     verificados. (resultados, error)."""
@@ -314,18 +624,23 @@ def sbx_eval(must, reader=real_bytes, lister=os.listdir):
                 data = reader(f'{folder}/{name}')
                 if meta[:2] != ('100644', 'blob') or data is None or blob_id(data) != meta[2]:
                     return None, f'{folder}/{name}: distinto de su blob en E; no se importa (falla cerrado)'
-        verified = {}
-        for rel in SBX_MODULES:
-            oid = must('rev-parse', f'{E}:{rel}').decode().strip()
-            data = reader(rel)
-            if data is None or blob_id(data) != oid:
-                return None, f'{rel}: distinto de su blob en E; no se importa (falla cerrado)'
-            verified[rel] = data
-        path = os.path.join(ROOT, SBX_MODULES[0])
-        spec = importlib.util.spec_from_file_location('f35sbxb_validate_f34e', path)
-        module = importlib.util.module_from_spec(spec)
-        exec(compile(verified[SBX_MODULES[0]], path, 'exec'), module.__dict__)
-        results = module.compute_sbx()[0]
+        verified, err = verify_inventory(must, reader)
+        if err:
+            return None, err.replace('no se ejecuta', 'no se importa ni se ejecuta')
+        _, problems = exec_graph(verified, exists)
+        if problems:
+            return None, f'grafo de código no verificable; no se importa ni se ejecuta: {problems[:3]}'
+        foreign = repo_modules(skip=(sys.modules.get(__name__),))
+        if foreign:
+            return None, f'módulos del repositorio ya cargados {foreign[:3]}; no se importa ni se ejecuta (falla cerrado)'
+        path = os.path.join(ROOT, EXEC_ENTRY)
+        with ExecGuard(verified) as guard:
+            spec = importlib.util.spec_from_file_location('f35sbxb_validate_f34e', path)
+            module = importlib.util.module_from_spec(spec)
+            exec(compile(verified[EXEC_ENTRY], path, 'exec', dont_inherit=True), module.__dict__)
+            results = module.compute_sbx()[0]
+        if guard.refused:
+            return None, f'código del repositorio no verificado rechazado durante compute_sbx(): {guard.refused[:3]}; no se importa (falla cerrado)'
         return {k: (v[0] is True, v[1]) for k, v in results.items()}, None
     except Exception as e:          # cualquier fallo de evaluación deja los criterios como no evaluables
         return None, f'compute_sbx() no evaluable ({e.__class__.__name__}: {e}): falla cerrado'
@@ -352,7 +667,9 @@ def a_history(must):
 
 def collect(runner=git, reader=real_bytes):
     """Estado real de HEAD. Cualquier error de Git queda en S['errors'] y hace fallar CTX."""
-    S = {'errors': []}
+    S = {'errors': [], 'env': [f'el gate debe ejecutarse aislado (python -I): falla cerrado'] * (not sys.flags.isolated)
+         + [f'variable de entorno {v} definida: entorno de Python no verificable (falla cerrado)'
+            for v in ENV_VARS if os.environ.get(v)]}
 
     def must(*args):
         rc, out = runner(*args)
@@ -822,6 +1139,7 @@ def r_ctx(S):
     out = list(S['errors'])
     if out:
         return out
+    out += S['env']
     if not S.get('inside'):
         out.append('no es un árbol de trabajo Git')
     if S.get('branch') not in BRANCHES:
