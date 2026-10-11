@@ -1,0 +1,95 @@
+{
+  "manifest_version": 1,
+  "phase": "F35-SBX-B",
+  "increment": "B1",
+  "audited_b1_anchor": "8e94a60274fe39ebda3e9961bc58036b389dfc00",
+  "b_base": "430f3f544c3542cabac8028a122c8a0c2a97390b",
+  "f35sbx_a_e": "61f94e23fc30b00a848a4558830b6d65f81dff87",
+  "b0_close": "cc634eb9dcc5c0cc0d77b911bb3815182b8319c2",
+  "audit_result": "B1 APROBADA PARA CIERRE (auditoría independiente final sobre el ancla)",
+  "freeze_state": "B1 = FREEZE IMPLEMENTADO / PENDIENTE DE AUDITORÍA POST-FREEZE",
+  "frozen_set": [
+    {
+      "path": "CLAUDE.md",
+      "status_vs_base": "M",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "b7068afbfac6cc2f1f39053dff8face38b894415",
+      "sha256": "1d21eb8f8684c789c457bb5851088154a26f21ac2a3b62dce4e42784a3495fd7",
+      "bytes": 19738
+    },
+    {
+      "path": "docs/PROGRESS.md",
+      "status_vs_base": "M",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "983844fd2477432b2a1ea402aa8b3130678a014a",
+      "sha256": "cd87b69896abee54a6da4502896a2b4adb3ed5a4f89dc62c88cf92ef469e664a",
+      "bytes": 34206
+    },
+    {
+      "path": "docs/academico/evidencia-sbx-b/F35SBXB_B1_Gate_Sucesor.md",
+      "status_vs_base": "A",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "189c66dbdcb5d8b40a403de31f8329ae39c25297",
+      "sha256": "b57d15185cd9b8f7179d957d14fd5339b52fc2d94ce861f0e7a48e9969efd388",
+      "bytes": 51097
+    },
+    {
+      "path": "docs/academico/evidencia-sbx-b/README.md",
+      "status_vs_base": "M",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "1cf55c3f0aae1ee1b688af9c15abca394c0929b5",
+      "sha256": "4c5f574b6820b7afbe66316e7f88dd988cc49f1046fa645216df5e61c1d735b8",
+      "bytes": 1906
+    },
+    {
+      "path": "docs/academico/tools/f35sbxb/validate_f35sbxb.py",
+      "status_vs_base": "A",
+      "mode": "100644",
+      "type": "blob",
+      "blob": "e98f3b96335e296aa66153a8a10d9a62f4bc2c49",
+      "sha256": "3dd84bd87ad09ec0a22e821bf115edecb646fcef178056fabdb295cca1de8870",
+      "bytes": 109874
+    }
+  ],
+  "frozen_dirs": {
+    "docs/academico/evidencia-sbx-b": [
+      "F35SBXB_B0_Sucesion_de_Gates.md",
+      "F35SBXB_B1_Gate_Sucesor.md",
+      "README.md"
+    ],
+    "docs/academico/tools/f35sbxb": [
+      "validate_f35sbxb.py"
+    ],
+    "docs/academico/evidencia-sbx-b-freeze": [
+      "F35SBXB_B1_Freeze.md"
+    ],
+    "docs/academico/tools/f35sbxb_freeze": [
+      "b1_freeze_manifest.json",
+      "validate_f35sbxb_freeze.py"
+    ]
+  },
+  "freeze_files": [
+    "docs/academico/evidencia-sbx-b-freeze/F35SBXB_B1_Freeze.md",
+    "docs/academico/tools/f35sbxb_freeze/b1_freeze_manifest.json",
+    "docs/academico/tools/f35sbxb_freeze/validate_f35sbxb_freeze.py"
+  ],
+  "governance_states": [
+    "G0 real = NO APROBADA",
+    "G0-09 = CUMPLIDO",
+    "G0-14 = CUMPLIDO",
+    "G0-02 = PENDIENTE EXTERNO",
+    "G0-03 = PENDIENTE EXTERNO",
+    "G0-12 = PENDIENTE EXTERNO",
+    "ADR-005 = PROPUESTA",
+    "G0-SBX = APROBADA CON RESTRICCIONES",
+    "F35 productiva = BLOQUEADA",
+    "F35-SBX = HABILITADA",
+    "F36–F40 = BLOQUEADAS",
+    "Alcance C = BLOQUEADO",
+    "Datos reales = PROHIBIDOS"
+  ]
+}
