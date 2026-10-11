@@ -1,6 +1,6 @@
 # F35-SBX-B — B1: gate sucesor sobre HEAD
 
-> Incremento B1 de F35-SBX-B, versión 5 (10/10/2026): la versión 1 se auditó en `f30cfe6c4adf9c3f7704b6bd665b6363a137b91a`, la versión 2 en `298c5a4dc19594980a22a877ad9d4a89f5acdf23`, la versión 3 en `bd93c69b5a6b712a0cacb17646cd593023dc187e` y la versión 4 en `ddf82c28f2cbb9b33e65969de20e7bee073e2752`; esta incorpora las correcciones B1.1 (§8), B1.2 (§9), B1.3 (§10) y B1.4 (§11). Rama `feature/f35-sbx-b-deterministic-pipeline`, creada desde `develop` `430f3f544c3542cabac8028a122c8a0c2a97390b`, que integra [B0](F35SBXB_B0_Sucesion_de_Gates.md). B1 construye solo el **mecanismo de control** que exigen DH-B04 y DH-B13 antes de cualquier pipeline: no hay pipeline funcional, SQLite, máquina de estados, informe, purga ni ML.
+> Incremento B1 de F35-SBX-B, versión 5 (10/10/2026): la versión 1 se auditó en `f30cfe6c4adf9c3f7704b6bd665b6363a137b91a`, la versión 2 en `298c5a4dc19594980a22a877ad9d4a89f5acdf23`, la versión 3 en `bd93c69b5a6b712a0cacb17646cd593023dc187e` y la versión 4 en `ddf82c28f2cbb9b33e65969de20e7bee073e2752`; esta incorpora las correcciones B1.1 (§8), B1.2 (§9), B1.3 (§10), B1.4 (§11) y B1.5 (§11.5). Rama `feature/f35-sbx-b-deterministic-pipeline`, creada desde `develop` `430f3f544c3542cabac8028a122c8a0c2a97390b`, que integra [B0](F35SBXB_B0_Sucesion_de_Gates.md). B1 construye solo el **mecanismo de control** que exigen DH-B04 y DH-B13 antes de cualquier pipeline: no hay pipeline funcional, SQLite, máquina de estados, informe, purga ni ML.
 
 ## 1. Qué es el gate
 
@@ -175,6 +175,7 @@ Los casos negativos viven dentro del gate, igual que en F35-SBX-A, sin `tests/` 
 | NB-93 | GOV | tiempo compuesto: hemos aprobado ADR-005 |
 | NB-94 | GOV | G0-SBX ya no tiene restricciones |
 | NB-95 | GOV | G0-SBX deja de tener restricciones |
+| NB-96 | CNT | el motor recomienda quién debe continuar |
 
 ### 7.1 RED → GREEN (09/10/2026)
 
@@ -507,3 +508,32 @@ Límites LOW que se mantienen:
 - **Análisis estático acotado.** El análisis del grafo solo resuelve literales y `os.path.*`. Cualquier otra construcción falla cerrada, aunque fuera inocua.
 - **Agente de la acción.** Se determina por proximidad dentro de la oración, así que una oración con varias cláusulas puede atribuirlo mal. Ante la duda, la oración se trata como afirmación.
 - **Límites de B1.3.** Siguen los de §10.5: la prohibición alejada del verbo y la voz pasiva sin agente son falsos positivos conservadores.
+
+### 11.5 Corrección B1.5
+
+La reauditoría de `2b95797` dejó un único MEDIUM. La regla de recomendación exigía nombrar a la persona candidata, y el gate no rechazaba «El motor recomendará quién debe continuar» en el README de B: daba 151/0.
+
+B1.5 añade solo esa clase: una recomendación o una sugerencia que cumpla tres condiciones:
+
+1. el sistema es el agente;
+2. la sigue «quién» o «who»;
+3. después aparece un verbo de avance (continuar, avanzar, pasar a la siguiente etapa, *proceed* o *advance*) o se habla de la selección o la elección de esa persona.
+
+Siguen pasando:
+
+- una prohibición que introduce la subordinada con «que» o «that» («está prohibido que…»), que la mantiene como prohibición;
+- las negaciones, las citas rechazadas y los ejemplos negativos;
+- las decisiones de una persona responsable.
+
+Resultados con Git real, en clones desechables sin remoto y ya eliminados:
+
+| Caso | RED (`2b95797`) | GREEN (`26a00d3`) |
+|---|---|---|
+| Frase exacta del auditor en el README de B | PASS (151/0) | FAIL en CNT |
+| Cuatro variantes cercanas (avanzar, siguiente etapa y, en inglés, *continue* y *advance*) | No se repitió | FAIL en CNT |
+| Siete controles legítimos y negados (§11.5) | No se repitió | PASS |
+| Smoke de H01: `schema.py` alterado | No se repitió | FAIL en SBX, FSY y SCP, sin marcador |
+
+El gate añade NB-96 y siete controles positivos de texto. Sobre un clon limpio de HEAD da 159 comprobaciones correctas y 0 fallas, con SBX-01..SBX-18 en PASS.
+
+Límite LOW nuevo: la doble negación («no está prohibido que el sistema recomiende quién debe avanzar») no se rechaza. La prohibición negada todavía cuenta como negación del agente de sistema, así que la oración pasa sin detectarse.
