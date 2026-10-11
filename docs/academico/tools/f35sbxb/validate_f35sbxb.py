@@ -779,6 +779,13 @@ ACTIONS = [   # (familia, formas verbales explícitas; exige persona candidata; 
                                       r'|prioriti[sz]es?|prioriti[sz]ed|ordered|orders|sorts?|sorted|'
                                       r'classifies)$'), True, True),
 ]
+# B1.5 — recomendación implícita: el sistema recomienda o sugiere «quién» continúa, avanza, pasa a la siguiente etapa
+# o es seleccionado, aunque no nombre a la persona candidata.
+RECOMMEND_RX = next(rx for family, rx, _, _ in ACTIONS if family == 'recomendación')
+WHO_RX = re.compile(r'^(quien|quienes|who|whom)$')
+PROGRESS_RX = re.compile(r'^(continu\w*|avanz\w*|avanc\w*|pas(a|an|e|en|ar|ara|aran)|seleccionad\w*|elegid\w*|'
+                         r'proceed\w*|advance\w*|progress\w*|selected|chosen)$')
+CONJUNCTIONS = frozenset({'y', 'e', 'pero', 'mas', 'sino', 'and', 'but'})
 # B1.4 — decidir, determinar, elegir o seleccionar con el sistema como agente y una persona, «quién» o la plaza como
 # objeto: es una decisión automática aunque no diga «automático» (RF-23).
 DECIDE_RX = re.compile(r'^(decid' + ER_IR + r'|determin' + AR + r'|resuelv(e|en|a|an)|elig(e|en|es|o|io|iendo)|'
@@ -859,6 +866,16 @@ def human_exempt(segs, s, i):
     return agent is None and any(MANUAL_RX.match(t) and not negated(segs[s], b) for b, t in enumerate(segs[s]))
 
 
+def prohibited_clause(toks, i):
+    """B1.5 — la acción está dentro de una subordinada prohibida («está prohibido que el sistema recomiende…»): una
+    prohibición no negada seguida de «que» o «that» antes del verbo, sin una conjunción que abra otra cláusula."""
+    for j in range(i - 1):
+        if PROHIB_RX.match(toks[j]) and not negated(toks, j) and toks[j + 1] in ('que', 'that') \
+                and not CONJUNCTIONS & set(toks[j + 2:i]):
+            return True
+    return False
+
+
 def action_claims(segs, sentence):
     """Acciones positivas inequívocas: verbo de la familia sobre personas candidatas (o con «automático»), toma o
     ejecución de la decisión por el sistema y estados predicativos («la selección final será automática»), sin
@@ -884,6 +901,13 @@ def action_claims(segs, sentence):
     if has_object and any(DECIDE_RX.match(t) and agent_of(segs, s, i) == 'system' and live(s, i)
                           for s, i, t in positions):
         hits.append('selección automática')
+    for k, (s, i, t) in enumerate(positions):
+        if RECOMMEND_RX.match(t) and agent_of(segs, s, i) == 'system' and live(s, i) and not prohibited_clause(segs[s], i):
+            after = [x[2] for x in positions[k + 1:]]
+            who = next((n for n, x in enumerate(after) if WHO_RX.match(x)), None)
+            if who is not None and any(PROGRESS_RX.match(x) for x in after[who + 1:]):
+                hits.append('recomendación')
+                break
     if has_person and any(SCORE_NOUN_RX.match(t) for t in toks_all) and any(
             SCORE_VERB_RX.match(t) and live(s, i) and (has_auto or agent_of(segs, s, i) == 'system')
             for s, i, t in positions):
@@ -1618,6 +1642,8 @@ CASES = [
     ('NB-93', 'GOV', 'tiempo compuesto: hemos aprobado ADR-005', gov_add('Hemos aprobado ADR-005')),
     ('NB-94', 'GOV', 'G0-SBX ya no tiene restricciones', gov_add('G0-SBX ya no tiene restricciones')),
     ('NB-95', 'GOV', 'G0-SBX deja de tener restricciones', gov_add('G0-SBX deja de tener restricciones')),
+    # B1.5 — recomendación implícita del sistema sobre quién continúa.
+    ('NB-96', 'CNT', 'el motor recomienda quién debe continuar', doc_add('El motor recomendará quién debe continuar.')),
 ]
 CASE_ROWS = {(row_cell(cid), row_cell(rule), row_cell(what)) for cid, rule, what, _ in CASES}
 # Controles positivos de B1.1: negación, prohibición, cita rechazada y ejemplo negativo no son afirmaciones.
@@ -1646,7 +1672,14 @@ LEGIT_TEXTS = ['No se habilita scoring.', 'Scoring permanece prohibido.',
                'La Dirección decide quién obtiene la plaza.', 'El sistema no decide quién obtiene la plaza.',
                'La decisión final requiere confirmación humana.', 'ADR-005 no recibe aprobación.',
                'No hemos aprobado ADR-005.', 'ADR-005 requiere aprobación externa.', 'G0-SBX mantiene restricciones.',
-               'No se eliminan las restricciones de G0-SBX.', 'G0-SBX nunca deja de tener restricciones.']
+               'No se eliminan las restricciones de G0-SBX.', 'G0-SBX nunca deja de tener restricciones.',
+               # B1.5
+               'El motor no recomendará quién debe continuar.',
+               'Está prohibido que el sistema recomiende quién debe avanzar.',
+               'El gate debe rechazar “El motor recomendará quién debe continuar”.',
+               'Ejemplo negativo: “The engine recommends who should continue”.',
+               'El Aprobador decide quién debe continuar.', 'Dirección determina quién avanza.',
+               'El sistema muestra información y el Aprobador decide quién continúa.']
 
 
 def integrity_cases(S):
