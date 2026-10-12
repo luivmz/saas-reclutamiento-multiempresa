@@ -1,12 +1,12 @@
 # F35-SBX-B — B2: diseño del almacén efímero sintético
 
-> Incremento B2 de F35-SBX-B, versión 2 de diseño (11/10/2026). Estado: **B2 = DISEÑADA / CORREGIDA / PENDIENTE DE REAUDITORÍA FINAL FOCAL**.
+> Incremento B2 de F35-SBX-B: versión 2.1 del diseño (11/10/2026), implementada el 12/10/2026. Estado: **B2 = IMPLEMENTADA / CANDIDATA A AUDITORÍA INDEPENDIENTE**.
 >
 > - La versión 1 (`ae25e8c60c538ce2336fadd98489de8eee9e0983`) recibió el veredicto «B2-DESIGN APROBADO CON CORRECCIONES PREVIAS», sin hallazgos BLOCKER ni HIGH.
 > - Esta versión resuelve sus cinco MEDIUM (B2-M01..B2-M05, §0) y fija las decisiones Q1–Q9 ([contrato, §4](F35SBXB_B2_Contrato_Verificacion.md#4-decisiones-q1q9)).
-> - La versión 2.1 completa M05 y Q1 tras la reauditoría de `eaac212`: la transición de gobierno es única y monotónica.
+> - La versión 2.1 completa M05 y Q1 tras la reauditoría de `eaac212`: la transición de gobierno es única y monotónica. Su reauditoría final focal dio el veredicto «B2-DESIGN APROBADO PARA IMPLEMENTACIÓN».
 >
-> Es un contrato de diseño: no hay almacén, runtime SQLite, pruebas ejecutables ni gate implementados. Rama `feature/f35-sbx-b2-ephemeral-store`, creada desde `develop` `72e86c5838984ea873d6dd56c179d94217b27317`.
+> La implementación sigue este diseño sin cambios: el almacén es [`sbxb_store.py`](../tools/f35sbxb2/sbxb_store.py) y el gate sucesor, [`validate_f35sbxb2.py`](../tools/f35sbxb2/validate_f35sbxb2.py). Su evidencia y sus observaciones están en el [contrato, §5](F35SBXB_B2_Contrato_Verificacion.md#5-implementación-12102026). El código es de desarrollo y NO AUDITADO (Q6). Rama `feature/f35-sbx-b2-ephemeral-store`, creada desde `develop` `72e86c5838984ea873d6dd56c179d94217b27317`.
 
 ## 0. Correcciones de la versión 2
 
@@ -413,3 +413,5 @@ Otras observaciones de la inspección:
 - **El autorizador por lista blanca** negó `UPDATE`, `DELETE`, `PRAGMA` de escritura, `DROP TRIGGER`, `CREATE TABLE`, `ATTACH`, `load_extension` y `sqlite_version()`.
 - **Tras `close()`**, `execute` lanzó `ProgrammingError`.
 - **Ninguna operación** creó archivos en la carpeta de trabajo.
+
+La implementación añadió tres observaciones sobre el autorizador y el motor, sin cambiar el diseño: las lecturas de un `EXISTS` dentro de un trigger, las funciones de los `CHECK` y el resultado de `DO UPDATE` con y sin autorizador (O1–O3 del [contrato, §5.6](F35SBXB_B2_Contrato_Verificacion.md#56-observaciones-de-la-implementación)).
