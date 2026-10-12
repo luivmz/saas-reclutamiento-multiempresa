@@ -128,7 +128,7 @@ GOVERNANCE_DELTA = {
         (_B1_SENTENCE_1, _B2_SENTENCE_1),
         (_B1_SENTENCE_2, _B2_SENTENCE_2.format(root='academico/'))]}
 # Commit de la transición de gobierno. Se registra después de que exista, nunca en el propio commit (§2.3).
-B2_GOVERNANCE_TRANSITION = None
+B2_GOVERNANCE_TRANSITION = '12c1c36e409f81c048fccf7fcb3e6d2a2d5d40aa'
 
 # ---------------------------------------------------------------- esquema esperado, derivado por el gate (doble llave)
 TABLE_ENTITY = (('tenant_context', 'SyntheticTenantContext', 'synthetic_organization_id'),

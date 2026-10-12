@@ -30,7 +30,7 @@ No hay pipeline funcional ni ML, ni dependencias nuevas, ni cambios en el runtim
 
 ## Gobierno
 
-`CLAUDE.md` y `docs/PROGRESS.md` forman parte del conjunto auditado de B1. Solo cambian en una única transición monotónica (Q1, DH-B2-07), del blob histórico de B1 al blob nuevo de B2, con el delta cerrado que enumera el [contrato, §5.2](F35SBXB_B2_Contrato_Verificacion.md#52-delta-y-transición-de-gobierno). Esa transición registra B1 cerrada e integrada y B2 implementada y candidata a auditoría independiente. Sus descendientes no pueden volver atrás, y el contenido histórico de B1 no se reescribe. El gate deriva el commit de la transición de la historia y lo compara con el registrado.
+`CLAUDE.md` y `docs/PROGRESS.md` forman parte del conjunto auditado de B1. Solo cambian en una única transición monotónica (Q1, DH-B2-07), del blob histórico de B1 al blob nuevo de B2, con el delta cerrado que enumera el [contrato, §5.2](F35SBXB_B2_Contrato_Verificacion.md#52-delta-y-transición-de-gobierno). Esa transición registra B1 cerrada e integrada y B2 implementada y candidata a auditoría independiente. Sus descendientes no pueden volver atrás, y el contenido histórico de B1 no se reescribe. La transición es el commit `12c1c36e409f81c048fccf7fcb3e6d2a2d5d40aa`, registrado después de existir; el gate la deriva de la historia y la compara con la registrada.
 
 Los estados de gobierno no cambian:
 

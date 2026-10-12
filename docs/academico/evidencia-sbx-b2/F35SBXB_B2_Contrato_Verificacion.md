@@ -259,8 +259,10 @@ Rama `feature/f35-sbx-b2-ephemeral-store`, desde el diseño 2.1 (`24e4ed911ca158
 | `05c8e72c0381e60b26927b0650f425c7e89ea542` | Almacén [`sbxb_store.py`](../tools/f35sbxb2/sbxb_store.py) | GREEN: 38 correctas, 0 fallas |
 | `5532eb6fb32eee639e0219c527ba25c548077d08` | P26 con y sin autorizador, `E-HASH` en P29 y NB2-01..NB2-17 | 55 correctas, 0 fallas |
 | `29080755c475fad86d92b667906d7475c11b56d1` | Reglas de repositorio del [gate](../tools/f35sbxb2/validate_f35sbxb2.py), B1F con P25, P32 y P33, y NB2-18..NB2-28 | 101 correctas, 0 fallas en un clon limpio sin remoto |
+| `8750e7df5d16db3c6ad89401441f40dbb4cde892` | Esta documentación de la implementación | 100 correctas y 1 falla en el árbol de trabajo local: solo FSY, por la observación O6 |
+| `12c1c36e409f81c048fccf7fcb3e6d2a2d5d40aa` | Transición de gobierno (§5.2) | 101 correctas, 0 fallas en un clon limpio sin remoto, con la transición derivada de la historia |
 
-El primer intento de GREEN falló en PRE por la observación O1 de §5.6, que se corrigió antes del commit del almacén. Esta documentación, la transición de gobierno y su registro son commits posteriores y se consultan en Git.
+El primer intento de GREEN falló en PRE por la observación O1 de §5.6, que se corrigió antes del commit del almacén. El commit que registra la transición es posterior y se consulta en Git.
 
 ### 5.2 Delta y transición de gobierno
 
@@ -297,7 +299,7 @@ docs/PROGRESS.md, reemplazo 4
   después: F35-SBX-B INICIADA: su incremento B1 (gate sucesor sobre HEAD) está CERRADO, CONGELADO E INTEGRADO en `develop` y `main` (ancla auditada `8e94a60274fe39ebda3e9961bc58036b389dfc00`, cierre `3d9b78307684a0dfb093e31d28fde290b2b1cb4a`), registrado en [`evidencia-sbx-b-freeze`](academico/evidencia-sbx-b-freeze/F35SBXB_B1_Freeze.md); su incremento B2 (almacén efímero aislado) está IMPLEMENTADO y es CANDIDATO A AUDITORÍA INDEPENDIENTE, en `feature/f35-sbx-b2-ephemeral-store` y registrado en [`evidencia-sbx-b2`](academico/evidencia-sbx-b2/README.md). Su integración y su publicación requieren autorización explícita del equipo.
 ```
 
-`B2_GOVERNANCE_TRANSITION` es el commit que introduce los dos blobs nuevos a la vez. El gate lo deriva de la historia y lo compara con el registrado. Al redactar este documento todavía no existe; se registra después, en un commit separado. Además de las reglas 1 a 4 de §2.3, el gate exige que la transición cambie solo las dos rutas de gobierno (historia F15).
+`B2_GOVERNANCE_TRANSITION` = `12c1c36e409f81c048fccf7fcb3e6d2a2d5d40aa`. Es el commit que introduce los dos blobs nuevos a la vez. Tiene un solo padre, `8750e7df5d16db3c6ad89401441f40dbb4cde892`, que conserva los blobs históricos, y no cambia ninguna otra ruta. Se registró después de existir, en un commit separado. Desde entonces el gate exige que la transición que deriva de la historia coincida con la registrada (NB2-28), y todo descendiente debe conservar los blobs nuevos (regla 3). Además de las reglas 1 a 4 de §2.3, el gate exige que la transición cambie solo las dos rutas de gobierno (historia F15).
 
 ### 5.3 Cómo se ejecutan las pruebas
 
