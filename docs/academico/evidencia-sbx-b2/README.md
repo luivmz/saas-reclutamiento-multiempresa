@@ -1,6 +1,9 @@
 # F35-SBX-B — B2: almacén efímero sintético
 
-> **Estado: B2 = DISEÑADA / PENDIENTE DE AUDITORÍA DE DISEÑO.** Fecha: 11/10/2026. Rama `feature/f35-sbx-b2-ephemeral-store`, creada desde `develop` `72e86c5838984ea873d6dd56c179d94217b27317`.
+> **Estado: B2 = DISEÑADA / CORREGIDA / PENDIENTE DE REAUDITORÍA.** Fecha: 11/10/2026. Rama `feature/f35-sbx-b2-ephemeral-store`, creada desde `develop` `72e86c5838984ea873d6dd56c179d94217b27317`.
+>
+> - **Versión 1 del diseño** (`ae25e8c60c538ce2336fadd98489de8eee9e0983`): veredicto «B2-DESIGN APROBADO CON CORRECCIONES PREVIAS», sin hallazgos BLOCKER ni HIGH.
+> - **Versión 2**: resuelve sus cinco MEDIUM (B2-M01..B2-M05) y fija las decisiones Q1–Q9.
 >
 > Punto de partida: B1 = CERRADA / CONGELADA / INTEGRADA.
 >
@@ -8,12 +11,12 @@
 > - Cierre: `3d9b78307684a0dfb093e31d28fde290b2b1cb4a` ([B1-FREEZE](../evidencia-sbx-b-freeze/F35SBXB_B1_Freeze.md)).
 > - Integración: `develop` `72e86c5838984ea873d6dd56c179d94217b27317`, con CI 38179967121 en verde, y `main` `3fdfdcecdec47b08d99e96968dd915e0e1b9010b`, con CI 38180279164 en verde.
 
-B2 es el incremento sucesor de B1. Diseña el almacén donde F35-SBX-B guardará los objetos de un run sintético: una base SQLite `:memory:` por organización sintética, con solo inserción y destrucción por cierre de la conexión. En esta sesión solo se diseña y se define cómo verificarlo.
+B2 es el incremento sucesor de B1. Diseña el almacén donde F35-SBX-B guardará los objetos de un run sintético: una base SQLite `:memory:` por organización sintética y escenario, que solo admite inserciones de contenido F34 autorizado y se destruye cerrando la conexión. En esta fase solo se diseña y se define cómo verificarlo.
 
 | Documento | Contenido |
 |---|---|
-| [F35SBXB_B2_Diseno_Almacen.md](F35SBXB_B2_Diseno_Almacen.md) | Arquitectura, aislamiento por tenant, endurecimiento de SQLite, esquema mínimo, ciclo de vida, principal inmutable, eventos, purga, determinismo, restricciones de datos, RF-29, API interna, modelo de fallos y decisiones propuestas |
-| [F35SBXB_B2_Contrato_Verificacion.md](F35SBXB_B2_Contrato_Verificacion.md) | Matriz de pruebas P01..P30 y contrato del gate sucesor de B2 |
+| [F35SBXB_B2_Diseno_Almacen.md](F35SBXB_B2_Diseno_Almacen.md) | Correcciones de la versión 2, arquitectura, aislamiento por tenant, frontera SQL y preflight, esquema mínimo, ciclo de vida y cierre excepcional, principal inmutable, eventos, purga, identidad y determinismo, contrato sintético y procedencia, RF-29, API interna, modelo de fallos y decisiones |
+| [F35SBXB_B2_Contrato_Verificacion.md](F35SBXB_B2_Contrato_Verificacion.md) | Matriz de pruebas P01..P32, contrato del gate sucesor de B2 (con B1F desde el ancla y desde el cierre), verificación de las sesiones de diseño y decisiones Q1–Q9 |
 
 ## Qué no incluye este incremento
 
@@ -21,7 +24,7 @@ No existe todavía el almacén (`sbxb_store.py`), ni el runtime SQLite, ni prueb
 
 ## Gobierno
 
-Este diseño no modifica `CLAUDE.md` ni `docs/PROGRESS.md`. Esos dos archivos forman parte del conjunto congelado de B1. Cambiarlos sin el gate de B2 dejaría HEAD sin ninguna comprobación ejecutable de la integridad de B1, y hoy el validador de B1-FREEZE la sigue acreditando sobre esta rama. Por eso todavía no registran el cierre de B1. Lo registrará el incremento que introduzca el gate de B2, con su regla de gobierno (DH-B2-07).
+Este diseño no modifica `CLAUDE.md` ni `docs/PROGRESS.md`, que forman parte del conjunto auditado de B1. Por eso todavía no registran el cierre de B1. Lo hará el incremento ejecutable del gate de B2 (Q1, DH-B2-07), como delta explícito y auditado de B2: un estado nuevo de gobierno, sin reescribir el contenido histórico de B1.
 
 Los estados de gobierno no cambian:
 
@@ -34,4 +37,4 @@ B2 no autoriza ML, scoring, recomendación ni selección automática, y no modif
 
 ## Próximo paso
 
-Auditoría independiente del diseño. Después, y solo con autorización, el incremento de implementación: almacén, casos de prueba y gate sucesor, en ese orden de verificación.
+Reauditoría focal independiente de la versión 2 del diseño. Solo después, y con autorización, vendrá el incremento de implementación: almacén, casos de prueba y gate sucesor.
