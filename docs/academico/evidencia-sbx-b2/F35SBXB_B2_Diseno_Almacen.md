@@ -1,9 +1,10 @@
 # F35-SBX-B — B2: diseño del almacén efímero sintético
 
-> Incremento B2 de F35-SBX-B, versión 2 de diseño (11/10/2026). Estado: **B2 = DISEÑADA / CORREGIDA / PENDIENTE DE REAUDITORÍA**.
+> Incremento B2 de F35-SBX-B, versión 2 de diseño (11/10/2026). Estado: **B2 = DISEÑADA / CORREGIDA / PENDIENTE DE REAUDITORÍA FINAL FOCAL**.
 >
 > - La versión 1 (`ae25e8c60c538ce2336fadd98489de8eee9e0983`) recibió el veredicto «B2-DESIGN APROBADO CON CORRECCIONES PREVIAS», sin hallazgos BLOCKER ni HIGH.
 > - Esta versión resuelve sus cinco MEDIUM (B2-M01..B2-M05, §0) y fija las decisiones Q1–Q9 ([contrato, §4](F35SBXB_B2_Contrato_Verificacion.md#4-decisiones-q1q9)).
+> - La versión 2.1 completa M05 y Q1 tras la reauditoría de `eaac212`: la transición de gobierno es única y monotónica.
 >
 > Es un contrato de diseño: no hay almacén, runtime SQLite, pruebas ejecutables ni gate implementados. Rama `feature/f35-sbx-b2-ephemeral-store`, creada desde `develop` `72e86c5838984ea873d6dd56c179d94217b27317`.
 
@@ -15,7 +16,7 @@
 | B2-M02. `fallido` no siempre se puede persistir | Tres planos separados: estado persistido, estado del objeto y estado de la conexión. Cierre excepcional con diagnóstico que distingue el evento confirmado del no disponible | §6, §9 |
 | B2-M03. Identificadores fijos que colisionan entre escenarios | Espacio de nombres `<org>-<semilla>`, alineado con B0 §5.2 | §10 |
 | B2-M04. Afirmación de que no hay dónde guardar datos sensibles | Garantía acotada: antes de persistir, el contenido debe corresponder a su fila F34 autorizada, transformada solo por T1 | §11 |
-| B2-M05. Frontera histórica de B1 reducida al cierre | Dos conjuntos con sus anclas, el auditado desde `8e94a60` y el del cierre desde `3d9b783`, y el gobierno como estado nuevo verificable | [Contrato, §2.3](F35SBXB_B2_Contrato_Verificacion.md#23-b1f-b1-sigue-íntegra) |
+| B2-M05. Frontera histórica de B1 reducida al cierre | Dos conjuntos con sus anclas, el auditado desde `8e94a60` y el del cierre desde `3d9b783`. Una única transición monotónica de gobierno, de `HISTORICAL_B1_BLOB` a `B2_GOVERNANCE_BLOB`, sin vuelta atrás en sus descendientes (versión 2.1) | [Contrato, §2.3](F35SBXB_B2_Contrato_Verificacion.md#23-b1f-b1-sigue-íntegra) |
 
 ## 1. Qué es B2 y de dónde sale
 
@@ -388,7 +389,7 @@ Módulo `sbxb_store.py`, API Python interna y experimental. No es una API HTTP.
 | DH-B2-04 | API cerrada y catálogo fijo como frontera primaria; triggers, autorizador, límites y postcondición como defensa adicional; preflight sin respaldo silencioso | B2-M01, Q4 y Q5 |
 | DH-B2-05 | `purgado` vive en el comprobante en memoria, encadenado al último evento y solo con hechos observados | Sin observaciones; precisado por B2-M02 |
 | DH-B2-06 | Identidad `<org>-<semilla>` con ordinales del run (B0 §5.2) | B2-M03 |
-| DH-B2-07 | El registro de B1 cerrada y del estado de B2 en `CLAUDE.md` y `docs/PROGRESS.md` lo hará el incremento ejecutable del gate de B2, como delta explícito y auditado de B2 | Q1: APROBADA |
+| DH-B2-07 | El registro de B1 cerrada y del estado de B2 en `CLAUDE.md` y `docs/PROGRESS.md` lo hará el incremento ejecutable del gate de B2, en una única transición monotónica y auditada `HISTORICAL_B1_BLOB` → `B2_GOVERNANCE_BLOB` | Q1: MODIFICADA Y RESUELTA |
 
 Las decisiones Q1–Q9 completas están en el [contrato de verificación, §4](F35SBXB_B2_Contrato_Verificacion.md#4-decisiones-q1q9).
 

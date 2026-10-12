@@ -1,9 +1,10 @@
 # F35-SBX-B — B2: contrato de verificación
 
-> Incremento B2 de F35-SBX-B, versión 2 de diseño (11/10/2026). Estado: **B2 = DISEÑADA / CORREGIDA / PENDIENTE DE REAUDITORÍA**.
+> Incremento B2 de F35-SBX-B, versión 2 de diseño (11/10/2026). Estado: **B2 = DISEÑADA / CORREGIDA / PENDIENTE DE REAUDITORÍA FINAL FOCAL**.
 >
 > - Define las pruebas y el gate sucesor que la implementación de B2 tendrá que cumplir. Nada de esto es ejecutable todavía.
 > - La versión 2 alinea el contrato con las correcciones B2-M01..B2-M05 y fija Q1–Q9 (§4).
+> - La versión 2.1 completa M05 y Q1 tras la reauditoría de `eaac212`: la transición de gobierno de B2 es única y monotónica (§2.3, P25 y P33).
 > - El diseño que se verifica está en [F35SBXB_B2_Diseno_Almacen.md](F35SBXB_B2_Diseno_Almacen.md).
 
 ## 1. Matriz de pruebas
@@ -40,7 +41,7 @@ Cada prueba vivirá dentro del gate de B2, como en A y en B1, sin `tests/` produ
 | P22 | Identidad determinista | Mismo tenant y semilla dos veces; otra semilla; otro tenant con la misma semilla; mismo identificador con otro `clock_start`; instante anterior a `clock_start` | Mismo escenario, mismos identificadores, hashes y comprobante. Otra semilla u otro tenant, otro espacio de nombres. Mismo identificador con otro principal, rechazo. Instante inválido, `E-CONTRATO`. Sin reloj del sistema (AST) | STA, DYN, DET | B0 §5.2; B2-M03 |
 | P23 | Ninguna conexión compartida entre tenants | AST: sin conexión ni almacén a nivel de módulo; en ejecución, cada almacén con su conexión | Ninguna variable global de conexión ni registro por organización | STA, ISO | Q3 |
 | P24 | La purga no es un `DELETE` | AST: sin `DELETE` en el catálogo ni en `purge`; tras purgar, conexión cerrada | Sin `DELETE`; conexión cerrada | STA, PUR | DH-B06 |
-| P25 | B1 sigue íntegra | Regla B1F (§2.3): el conjunto auditado desde `8e94a60` y el conjunto del cierre desde `3d9b783` | Ambos idénticos a sus anclas en el árbol, la historia, el índice y el disco | B1F | B2-M05 |
+| P25 | B1 sigue íntegra y el gobierno cambia una sola vez | Regla B1F (§2.3) sobre la historia real | A) Conjunto auditado de B1 íntegro desde `8e94a60`. B) Conjunto del cierre íntegro desde `3d9b783`. C) El padre de la transición de gobierno de B2 tiene el blob histórico de B1. D) La transición tiene el blob nuevo de B2. E) Todos los descendientes relevantes conservan el blob nuevo. F) Cualquier tercer blob falla | B1F | B2-M05; Q1 |
 | P26 | Las políticas de conflicto no rompen la solo inserción | **A) API y catálogo:** AST del catálogo y de la API; vía interna, una sentencia `OR IGNORE` sometida a la postcondición del almacén. **B) Motor**, vía interna: `INSERT OR REPLACE`, `REPLACE INTO`, `INSERT OR IGNORE`, `DO NOTHING` y `DO UPDATE` sobre filas existentes | **A)** Ninguna de esas formas en el catálogo; ningún parámetro de la API las permite; la postcondición `rowcount == 1` falla cerrada. **B)** Se registra el comportamiento real: `OR REPLACE`, `REPLACE` y `DO UPDATE` fallan; `OR IGNORE` y `DO NOTHING` no fallan ni cambian nada (`rowcount = 0`). Ninguna fila cambia ni desaparece. El motor no se presenta como la garantía | STA, DYN | B2-M01 |
 | P27 | El autorizador niega lo que el catálogo no usa | Vía interna, tras abrir: `PRAGMA foreign_keys = OFF`, `DROP TRIGGER`, `CREATE TABLE`, `load_extension`, `random()`, `datetime('now')` | Todo se niega en el motor (defensa adicional) | DYN | DH-B2-04 |
 | P28 | Esquema cerrado e igual al contrato | `preflight_report` (`table_info` del preflight interno) y DDL del catálogo frente a la lista independiente del gate | Igualdad exacta de tablas, columnas, tipos y restricciones; sin ninguna API de `PRAGMA` | STA, DYN, DAT | Doble llave; TSBB-10 |
@@ -48,6 +49,7 @@ Cada prueba vivirá dentro del gate de B2, como en A y en B1, sin `tests/` produ
 | P30 | Ciclo de vida completo | Cada operación en cada estado de §6.1 del diseño, incluido `bloqueado`; vía interna: fallo del `ROLLBACK` | Lo no permitido falla con `E-CICLO`, `E-BLOQUEADO` o `E-PURGADO`. Tras un cierre excepcional solo queda `diagnostic`, y la conexión está cerrada aunque el `ROLLBACK` haya fallado | DYN | DH-B10; B2-M02 |
 | P31 | Metadatos válidos con contenido ajeno se rechazan | Evidencia con `origin_record_id`, criterio, tipo, procedencia y hashes coherentes entre sí, pero con el texto de otra fila F34, o un texto alterado tras T1 | `E-ORIGEN`; ninguna fila persistida; cierre excepcional | DYN, DAT | B2-M04 |
 | P32 | Modificar y restaurar un artefacto del cierre se detecta | Clon desechable: un commit modifica el manifiesto de B1-FREEZE y otro lo restaura | B1F falla por historia | B1F | B2-M05 |
+| P33 | El gobierno no vuelve atrás tras su transición | Clon desechable: la secuencia de commits blob histórico → blob nuevo de B2 → blob histórico → blob nuevo de B2 en `CLAUDE.md` y `docs/PROGRESS.md` | B1F falla, aunque HEAD termine en el blob nuevo: un descendiente de la transición vuelve al blob histórico y hay una segunda introducción del blob nuevo. Demuestra que el gate lee la ascendencia y no solo el blob final | B1F | B2-M05; Q1 |
 
 P26 a P30 se justifican así:
 
@@ -56,7 +58,7 @@ P26 a P30 se justifican así:
 - P29 ancla la integridad a la entrada autorizada.
 - P30 hace verificable la tabla del ciclo de vida.
 
-P31 y P32 son los dos negativos materiales que pidió la auditoría.
+P31 y P32 son los dos negativos materiales que pidió la primera auditoría; P33, el que pidió la reauditoría. P32 protege los artefactos del cierre de B1-FREEZE; P33, la monotonía de la transición de gobierno.
 
 ## 2. Gate sucesor de B2
 
@@ -87,13 +89,13 @@ Ubicación: `docs/academico/tools/f35sbxb2/validate_f35sbxb2.py`. Solo bibliotec
 | DEP | Solo biblioteca estándar | Almacén: `sqlite3`, `csv`, `hashlib`, `json`, `re`, `unicodedata` y `os`, este último solo con `os.path.join`, `os.path.dirname` y `os.path.abspath`. Gate: las del gate de B1. `sqlite3` solo en `sbxb_store.py`. Sin importaciones dinámicas |
 | PRE | Entorno compatible | Los requisitos del preflight (§4.3 del diseño): SQLite 3.37 o posterior realmente cargado, API presentes y PRAGMA efectivos. Si no se cumplen, falla cerrado antes de DYN |
 | STA | Almacén correcto antes de ejecutarlo | AST y catálogo (§2.4) |
-| DYN | Pruebas P01..P32 | Ejecución en proceso desde bytes verificados, con la guarda de §2.4 |
+| DYN | Pruebas P01..P33 | Ejecución en proceso desde bytes verificados, con la guarda de §2.4 |
 | DET | Determinismo | P11 y P22 |
 | ISO | Aislamiento por tenant | P03, P04, P05, P14 y P23 |
 | PUR | Semántica de purga | P12, P13 y P24 |
 | DAT | Solo contenido sintético autorizado | P15, P16, P28, P29 y P31 |
 | CAP | Sin capacidades prohibidas | P17 y P18, más CNT sobre los documentos de B2 con las reglas semánticas de B1 |
-| GOV | Gobierno | Los trece estados exactos y el gobierno como estado nuevo de B2 (§2.3) |
+| GOV | Gobierno | Los trece estados exactos y la transición única de gobierno de B2 (§2.3) |
 
 | Requisito del encargo | Reglas |
 |---|---|
@@ -118,7 +120,7 @@ B1F protege dos conjuntos, cada uno desde su ancla. No reduce la frontera histó
 
 - **Valores protegidos.** Modo, tipo y blob de cada ruta, tomados del árbol del ancla.
 - **Historia.** En cada commit de `git rev-list --ancestry-path 8e94a60..HEAD`, merges incluidos, cada ruta tiene un blob admitido. Así se detectan modificar y restaurar, renombrar, eliminar y los cambios de modo o de tipo. Los merges legítimos pasan, como en B1-FREEZE.
-- **Blobs admitidos.** Para las tres rutas que no son de gobierno, solo el blob del ancla. Para `CLAUDE.md` y `docs/PROGRESS.md`, ver «Gobierno como estado nuevo».
+- **Blobs admitidos.** Para las tres rutas que no son de gobierno, solo el blob del ancla. Para `CLAUDE.md` y `docs/PROGRESS.md`, los de la transición monotónica de gobierno, que dependen de la ascendencia de cada commit (ver «Transición de gobierno de B2»).
 - **Estado efectivo.** En el árbol de HEAD, en el índice (etapa 0, sin flags) y en el disco (archivo regular, sin enlaces, con sus bytes), el blob admitido vigente.
 
 **B) Conjunto del cierre de B1-FREEZE**, con referencia `3d9b78307684a0dfb093e31d28fde290b2b1cb4a`. Son los tres archivos que introdujo el cierre: `validate_f35sbxb_freeze.py`, `b1_freeze_manifest.json` y `F35SBXB_B1_Freeze.md`.
@@ -129,14 +131,31 @@ B1F protege dos conjuntos, cada uno desde su ancla. No reduce la frontera histó
 
 **C) Carpetas.** Las de B1 (`evidencia-sbx-b/`, `tools/f35sbxb/`) y las de B1-FREEZE (`evidencia-sbx-b-freeze/`, `tools/f35sbxb_freeze/`) con su contenido exacto.
 
-**Gobierno como estado nuevo (DH-B2-07).** Mientras B2 no actualice el gobierno, el único blob admitido de `CLAUDE.md` y `docs/PROGRESS.md` es el del ancla. Cuando el incremento ejecutable de B2 lo actualice:
+**Transición de gobierno de B2 (DH-B2-07, Q1).** Para `CLAUDE.md` y `docs/PROGRESS.md` se distinguen tres cosas:
 
-- **El delta.** El contrato de ese incremento enumerará el delta de gobierno como una lista cerrada de reemplazos literales (bloque antiguo → bloque nuevo) sobre el contenido del ancla. Cada bloque antiguo debe aparecer exactamente una vez.
-- **El contenido esperado.** El gate calcula los bytes esperados aplicando esos reemplazos al blob del ancla. Su blob es el estado nuevo de gobierno.
-- **Los blobs admitidos.** Son el del ancla y ese estado nuevo. Cualquier otro contenido, en HEAD o en un commit intermedio, falla; también un estado nuevo modificado y restaurado.
-- **El contenido histórico de B1.** Sigue siendo verificable: es el blob de `8e94a60` en Git, nunca se reescribe, y es la entrada de la función que da el estado nuevo. El delta de B2 queda separado, enumerado y auditado.
+| Concepto | Qué es |
+|---|---|
+| `HISTORICAL_B1_BLOB` | Blob de cada ruta en el ancla `8e94a60`. Es la historia válida de B1 y nunca se presenta como incorrecta |
+| `B2_GOVERNANCE_BLOB` | Blob nuevo autorizado por B2. El contrato del incremento ejecutable enumerará el delta como una lista cerrada de reemplazos literales (bloque antiguo → bloque nuevo) sobre el contenido del ancla, cada bloque antiguo presente exactamente una vez. El gate calcula los bytes esperados aplicándolos al blob histórico |
+| `B2_GOVERNANCE_TRANSITION` | Commit futuro que introduce, en las dos rutas a la vez, el paso `HISTORICAL_B1_BLOB` → `B2_GOVERNANCE_BLOB`. Todavía no existe y su hash no se fija aquí |
 
-Desde ese momento, el validador de B1-FREEZE falla en FRZ sobre HEAD, como prevé su propio documento (§4 del cierre), y pasa a ejecutarse anclado sobre `3d9b783`.
+La transición se identifica sin hashes inventados:
+
+- **Derivación.** El gate la deriva de la historia: es el único commit de `git rev-list --ancestry-path 8e94a60..HEAD` que contiene el blob nuevo en las dos rutas sin que ninguno de sus padres lo contenga.
+- **Registro posterior.** Cuando exista, el contrato o el cierre del incremento sucesor la registrará explícitamente, después de que exista, nunca en el propio commit. Desde entonces el gate exige que la transición derivada coincida con la registrada.
+
+Para cada commit `C` de `git rev-list --ancestry-path 8e94a60..HEAD`, merges incluidos:
+
+1. **Antes de la transición, o si `C` no desciende de ella**, `C` contiene `HISTORICAL_B1_BLOB`. Una rama legítima creada antes de la transición puede seguir con el blob histórico mientras no desciende de la transición. Nunca puede tener un tercer blob.
+2. **En la transición**, que debe ser un commit con un solo padre, el padre contiene `HISTORICAL_B1_BLOB` y el commit contiene `B2_GOVERNANCE_BLOB` en las dos rutas. En esas rutas el único cambio es ese.
+3. **En todo descendiente de la transición**, determinado con `git merge-base --is-ancestor`, `C` contiene `B2_GOVERNANCE_BLOB`. Un merge `--no-ff` legítimo, como el de la rama de B2 en `develop` y el de `develop` en `main`, desciende de la transición y lleva el blob nuevo: pasa. Un merge que reintroduce el blob histórico en su resultado falla.
+4. **Introducción única.** Ningún otro commit puede introducir el blob nuevo, es decir, contenerlo sin que lo contenga alguno de sus padres. La secuencia histórico → nuevo → histórico → nuevo falla dos veces: por el descendiente que vuelve al blob histórico (regla 3) y por la segunda introducción (regla 4). También fallan modificar y restaurar, y cualquier tercer blob, aunque HEAD termine en el blob nuevo (P33).
+
+No existe ninguna regla que acepte indistintamente el blob histórico o el nuevo en un commit intermedio. Lo que vale en cada commit depende solo de su ascendencia respecto de la transición. Una transición de gobierno distinta en el futuro solo podrá autorizarla otro incremento sucesor, con su propio contrato y su propia ancla.
+
+El contenido histórico de B1 sigue siendo verificable: es el blob de `8e94a60` en Git, no se reescribe, y es la entrada de la función que da el blob nuevo. Quedan separadas tres cosas: la historia válida de B1, la transición autorizada de B2 y el estado posterior obligatorio de B2.
+
+Desde la transición, el validador de B1-FREEZE falla en FRZ sobre HEAD, como prevé su propio documento (§4 del cierre), y pasa a ejecutarse anclado sobre `3d9b783`.
 
 ### 2.4 Almacén: verificación antes de ejecutar
 
@@ -169,8 +188,8 @@ Rutas exactas del incremento sucesor; no hay excepción general a SCP ni a FSY (
 | `docs/academico/evidencia-sbx-b2/F35SBXB_B2_Diseno_Almacen.md` | A | Diseño |
 | `docs/academico/evidencia-sbx-b2/F35SBXB_B2_Contrato_Verificacion.md` | A | Diseño |
 | `docs/academico/tools/f35sbxb2/sbxb_store.py` | A | Implementación |
-| `docs/academico/tools/f35sbxb2/validate_f35sbxb2.py` | A | Implementación (gate y casos P01..P32) |
-| `CLAUDE.md`, `docs/PROGRESS.md` | M | Implementación, solo con el delta de gobierno enumerado de §2.3 (Q1) |
+| `docs/academico/tools/f35sbxb2/validate_f35sbxb2.py` | A | Implementación (gate y casos P01..P33) |
+| `CLAUDE.md`, `docs/PROGRESS.md` | M | Implementación, solo mediante la transición única y monotónica de §2.3 (Q1) |
 
 Nada más: ni runtime, ni CI, ni dataset, ni A, ni B0, ni B1 o B1-FREEZE, ni `ACADEMIC_BASELINE.md`.
 
@@ -215,7 +234,7 @@ Decisiones fijadas por la auditoría independiente del diseño (versión 1).
 
 | # | Pregunta | Decisión | Estado | Dónde |
 |---|---|---|---|---|
-| Q1 | Registro en el gobierno del cierre de B1 y del estado de B2 | Lo hace el incremento ejecutable del gate de B2, como delta explícito y auditado de B2. No reescribe la evidencia histórica de B1 y queda protegido por el gate. Esta corrección documental no toca el gobierno | APROBADA | §2.3; diseño §15 |
+| Q1 | Registro en el gobierno del cierre de B1 y del estado de B2 | El gobierno se actualizará únicamente en el incremento ejecutable del gate de B2, mediante una transición explícita y monotónica `HISTORICAL_B1_BLOB` → `B2_GOVERNANCE_BLOB`. El commit concreto se identificará cuando exista. Desde ese commit, ningún descendiente relevante de B2 puede volver al blob histórico ni tener otro. La evidencia histórica de B1 sigue verificable en sus anclas. Esta corrección documental no toca el gobierno | MODIFICADA Y RESUELTA | §2.3; P25 y P33; diseño §15 |
 | Q2 | Rutas de B2 | `docs/academico/evidencia-sbx-b2/` y `docs/academico/tools/f35sbxb2/`, rutas exactas enumeradas por el gate; no son una excepción general a SCP ni a FSY | APROBADA | §2.5 |
 | Q3 | Almacén y run | 1 tenant, 1 run o escenario y 1 conexión literal `:memory:`. Identidad alineada con B0. `tenant_context` es metadato inmutable y defensa adicional. Tener la referencia a un almacén es una frontera de confianza separada: B2 garantiza el aislamiento entre almacenes, no la autenticación ni la autorización del llamador | MODIFICADA Y RESUELTA | Diseño §2, §3 y §10 |
 | Q4 | Requisitos de SQLite y Python | Preflight sin respaldo silencioso: SQLite 3.37 o posterior realmente cargado, API comprobadas directamente y no por versión, y `foreign_keys`, `recursive_triggers`, `temp_store`, `journal_mode` y el límite de bases adjuntas efectivos. Si algo no se cumple, falla cerrado. La ausencia de archivos observados no prueba la ausencia física de temporales ni de memoria paginada | MODIFICADA Y RESUELTA | Diseño §4.3; P08 |
