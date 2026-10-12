@@ -6,9 +6,28 @@ Contrato: docs/academico/evidencia-sbx-b2/F35SBXB_B2_Contrato_Verificacion.md (v
 F35SBXB_B2_Diseno_Almacen.md. Código de desarrollo NO AUDITADO (Q6): un PASS de desarrollo no equivale a confianza
 ni a cierre; lo acredita la auditoría independiente.
 
-Reglas sobre el almacén: STA (análisis estático antes de ejecutar, con doble llave del esquema y del origen), DEP,
-PRE (entorno) y DYN (casos P01..P31, en proceso, desde los mismos bytes ya analizados), con sus agrupaciones DET, ISO,
-PUR y DAT. Todo error o estado no evaluable falla cerrado.
+  CTX  rama de B2, develop o main; aislado (python -I) y sin PYTHONPATH, PYTHONHOME ni PYTHONUSERBASE; E, el cierre de
+       B0, el ancla y el cierre de B1 y la base de B2 como ancestros de HEAD; historia no superficial.
+  B1F  conjunto auditado de B1 desde 8e94a60 y del cierre desde 3d9b783, en cada commit de la ascendencia; transición
+       única y monotónica de gobierno (reglas 1 a 4 de §2.3); estado efectivo en árbol, índice y disco (P25, P32, P33,
+       con historias en repositorios desechables).
+  AIN, B0F, HST, SBX, FLG   reglas del gate de B1, cargado desde los bytes verificados contra su ancla (Q5).
+  SCP  delta exacto respecto de 72e86c5 (§2.5) en HEAD, árbol de trabajo, índice y archivos sin seguimiento.
+  FSY  FSY de B1 (runtime, dataset y evidencia byte a byte; carpetas de B1), carpetas de B1-FREEZE y de B2 exactas,
+       ningún archivo de base de datos SQLite en el repositorio y ningún enlace.
+  DEP  almacén: sqlite3, csv, hashlib, json, re, unicodedata y os.path; gate: las del gate de B1; nadie más usa el almacén.
+  PRE  entorno del preflight (SQLite 3.37 o posterior realmente cargado, API y PRAGMA efectivos) antes de DYN.
+  STA  el almacén antes de ejecutarlo: catálogo, DDL con doble llave frente al contrato de A, origen frente al
+       manifiesto F34, conexión, API, módulo y referencias (§2.4).
+  DYN  P01..P33 en proceso desde los mismos bytes analizados, bajo la guarda de B1.4 y en un directorio temporal.
+  DET, ISO, PUR, DAT   agrupaciones de casos de §2.2.
+  CAP  P17 y P18, más el contenido de los archivos de B2 con la semántica de B1.
+  GOV  trece estados exactos y gobierno igual al blob histórico de B1 o al nuevo de B2, sin declaraciones
+       contradictorias ni afirmaciones que habiliten capacidades.
+  NB2  negativos: mutaciones del almacén y del estado del repositorio que el gate debe detectar.
+
+Todo error o estado no evaluable falla cerrado. El repositorio real nunca se modifica: los casos de historia usan
+repositorios desechables fuera de él.
 """
 import os
 import sys
@@ -248,6 +267,170 @@ def load_b1_gate():
     sys.modules[B1_GATE_MODULE] = module
     exec(compile(data, path, 'exec', dont_inherit=True), module.__dict__)
     return module
+
+
+# ---------------------------------------------------------------- B1F: historia de B1 y transición de gobierno (§2.3)
+class Repo:
+    """Lectura de un repositorio Git, el real o uno desechable, con caché por commit. No escribe en el real."""
+
+    def __init__(self, cwd, env=None):
+        self.cwd, self.env, self.cache = cwd, env, {}
+
+    def call(self, *args, data=None):
+        try:
+            p = subprocess.run(['git', *args], cwd=self.cwd, capture_output=True, env=self.env, input=data)
+        except OSError as e:
+            raise GitError(f'git no ejecutable ({e.__class__.__name__})')
+        return p.returncode, p.stdout
+
+    def run(self, *args, data=None):
+        rc, out = self.call(*args, data=data)
+        if rc != 0:
+            raise GitError(f'git {" ".join(args[:3])} → {rc}')
+        return out
+
+    def entries(self, commit, paths):
+        """{ruta: (modo, tipo, blob)} de las rutas pedidas en un commit (identificado por su hash)."""
+        key = ('ls-tree', commit, paths)
+        if key not in self.cache:
+            found = {}
+            for entry in self.run('ls-tree', '-z', commit, '--', *paths).split(b'\x00'):
+                if entry:
+                    meta, _, path = entry.partition(b'\t')
+                    found[path.decode('utf-8', 'replace')] = tuple(meta.decode().split())
+            self.cache[key] = found
+        return self.cache[key]
+
+    def is_ancestor(self, older, newer):
+        key = ('ancestor', older, newer)
+        if key not in self.cache:
+            rc, _ = self.call('merge-base', '--is-ancestor', older, newer)
+            if rc not in (0, 1):
+                raise GitError(f'merge-base --is-ancestor → {rc}')
+            self.cache[key] = rc == 0
+        return self.cache[key]
+
+    def graph(self, base, head):
+        """{commit: [padres]} de git rev-list --ancestry-path base..head, merges incluidos, en orden topológico."""
+        out = {}
+        for line in self.run('rev-list', '--topo-order', '--parents', '--ancestry-path', f'{base}..{head}').decode().splitlines():
+            ids = line.split()
+            if not ids or not all(re.fullmatch(r'[0-9a-f]{40}', x) for x in ids):
+                raise GitError('historia no verificable')
+            out[ids[0]] = ids[1:]
+        return out
+
+
+def governance_new(repo, anchor, delta):
+    """Bytes del blob nuevo de B2 en cada ruta de gobierno: el delta cerrado aplicado al blob histórico del ancla, con
+    cada bloque antiguo presente exactamente una vez. ({ruta: bytes}, problemas)."""
+    found, problems = {}, []
+    old = repo.entries(anchor, GOV_PATHS)
+    for path in GOV_PATHS:
+        meta = old.get(path)
+        if meta is None or meta[:2] != ('100644', 'blob'):
+            problems.append(f'{path}: sin blob histórico regular en el ancla')
+            continue
+        text = repo.run('cat-file', 'blob', meta[2]).decode('utf-8')
+        blocks = delta.get(path) or []
+        if not blocks or any(text.count(before) != 1 for before, _ in blocks):
+            problems.append(f'{path}: delta vacío o con un bloque antiguo que no aparece exactamente una vez')
+            continue
+        for before, after in blocks:
+            text = text.replace(before, after, 1)
+        found[path] = text.encode('utf-8')
+    return found, problems
+
+
+def effective_state(repo, root, expected):
+    """Árbol de HEAD, índice (etapa 0, sin flags) y disco (archivo regular, sin enlaces) con el blob admitido."""
+    out, paths = [], tuple(expected)
+    tree = repo.entries(repo.run('rev-parse', '--verify', 'HEAD^{commit}').decode().strip(), paths)
+    index = {}
+    for entry in repo.run('ls-files', '-s', '-v', '-z', '--', *paths).split(b'\x00'):
+        if entry:
+            meta, _, path = entry.partition(b'\t')
+            index.setdefault(path.decode('utf-8', 'replace'), []).append(tuple(meta.decode().split()))
+    for path, want in expected.items():
+        if tree.get(path) != want:
+            out.append(f'{path}: árbol de HEAD distinto del blob admitido')
+        if index.get(path) != [('H', want[0], want[2], '0')]:
+            out.append(f'{path}: índice distinto del blob admitido, con flags o en conflicto')
+        data = real_bytes(path, root)
+        if data is None or blob_id(data) != want[2]:
+            out.append(f'{path}: disco distinto del blob admitido, enlace o ausente')
+    return out
+
+
+def b1f_check(repo, anchor, closure, delta, registered, head='HEAD', root=None):
+    """B1F (§2.3): conjunto auditado de B1 desde su ancla, conjunto del cierre desde el suyo y transición única y
+    monotónica de gobierno, en cada commit de la ascendencia (merges incluidos). Con head = HEAD comprueba además el
+    estado efectivo en root. Devuelve (problemas, transición derivada o None, commits revisados)."""
+    out = []
+    want_a, want_b = repo.entries(anchor, SET_A), repo.entries(closure, SET_B)
+    for label, want, paths in (('auditado de B1', want_a, SET_A), ('del cierre de B1-FREEZE', want_b, SET_B)):
+        if set(want) != set(paths) or any(m[:2] != ('100644', 'blob') for m in want.values()):
+            out.append(f'conjunto {label} incompleto o con modo o tipo inesperado en su ancla')
+    new_bytes, problems = governance_new(repo, anchor, delta)
+    out += problems
+    if out:
+        return out, None, 0
+    old = {p: want_a[p] for p in GOV_PATHS}
+    new = {p: ('100644', 'blob', blob_id(new_bytes[p])) for p in GOV_PATHS}
+    graph = repo.graph(anchor, head)
+
+    def gov(commit):
+        found = repo.entries(commit, SET_A)
+        return {p: found.get(p) for p in GOV_PATHS}
+    # Regla 4: un único commit introduce el blob nuevo, es decir, lo contiene sin que lo contenga ninguno de sus padres.
+    introduced = {}
+    for commit in reversed(list(graph)):            # de los más antiguos a los más recientes
+        for p in GOV_PATHS:
+            if gov(commit)[p] == new[p] and not any(gov(q)[p] == new[p] for q in graph[commit]):
+                introduced.setdefault(commit, set()).add(p)
+    full = [c for c, paths in introduced.items() if paths == set(GOV_PATHS)]
+    transition = full[0] if full else None
+    others = [c[:12] for c in introduced if c != transition]
+    if others:
+        out.append(f'regla 4: introducción del blob nuevo de gobierno fuera de la transición única: {others}')
+    # Regla 2: la transición tiene un solo padre, con el blob histórico, y solo cambia las dos rutas de gobierno.
+    if transition is not None:
+        parents = graph[transition]
+        if len(parents) != 1:
+            out.append(f'regla 2: la transición {transition[:12]} no tiene un solo padre')
+        elif gov(parents[0]) != old:
+            out.append(f'regla 2: el padre de la transición {transition[:12]} no contiene el blob histórico')
+        else:
+            changed = {x for x in repo.run('diff-tree', '-r', '--no-renames', '--name-only', '-z', parents[0], transition)
+                       .decode('utf-8', 'replace').split('\x00') if x}
+            if changed != set(GOV_PATHS):
+                out.append(f'la transición {transition[:12]} cambia otras rutas además del gobierno: '
+                           f'{sorted(changed ^ set(GOV_PATHS))[:3]}')
+    if registered is not None and transition != registered:
+        out.append(f'transición derivada ({transition[:12] if transition else "ninguna"}) distinta de la registrada '
+                   f'({registered[:12]})')
+    # Reglas 1 y 3 y el resto del conjunto auditado, en cada commit: lo admitido depende de su ascendencia.
+    for commit in graph:
+        found = repo.entries(commit, SET_A)
+        moved = [p for p in SET_A if p not in GOV_PATHS and found.get(p) != want_a[p]]
+        if moved:
+            out.append(f'{commit[:12]}: conjunto auditado de B1 distinto del ancla (modificado, eliminado, renombrado '
+                       f'o con otro modo): {moved[:2]}')
+        after = transition is not None and (commit == transition or repo.is_ancestor(transition, commit))
+        bad = [p for p in GOV_PATHS if found.get(p) != (new if after else old)[p]]
+        if bad:
+            rule = ('regla 3: descendiente de la transición sin el blob nuevo de B2' if after else
+                    'regla 1: commit previo o ajeno a la transición sin el blob histórico de B1')
+            out.append(f'{commit[:12]}: {rule}: {bad}')
+    # Conjunto del cierre de B1-FREEZE, desde su introducción.
+    for commit in repo.graph(closure, head):
+        found = repo.entries(commit, SET_B)
+        bad = [p for p in SET_B if found.get(p) != want_b[p]]
+        if bad:
+            out.append(f'{commit[:12]}: conjunto del cierre de B1-FREEZE distinto de {closure[:12]}: {bad[:2]}')
+    if head == 'HEAD':
+        out += effective_state(repo, root, {**want_a, **(new if transition is not None else old), **want_b})
+    return out, transition, len(graph)
 
 
 # ---------------------------------------------------------------- doble llave: DDL y catálogo esperados desde A
@@ -678,6 +861,131 @@ def listing(path, skip=('.git',)):
         for name in files:
             out.add(os.path.relpath(os.path.join(d, name), path).replace(os.sep, '/'))
     return out
+
+
+# ---------------------------------------------------------------- B1F sobre historias desechables (P25, P32 y P33)
+class FixtureRepo:
+    """Repositorio desechable para B1F, fuera del original: configuración de Git aislada, identidad ficticia y commits
+    construidos con plumbing sobre un índice propio. El repositorio real nunca se toca."""
+
+    def __init__(self):
+        self.base = make_temp('b1f')
+        try:
+            self.root = os.path.join(self.base, 'repo')
+            os.mkdir(self.root)
+            config = os.path.join(self.base, 'gitconfig')
+            with open(config, 'wb'):
+                pass
+            env = {k: v for k, v in os.environ.items() if not k.upper().startswith('GIT_')}
+            env.update({'GIT_CONFIG_NOSYSTEM': '1', 'GIT_CONFIG_GLOBAL': config, 'GIT_AUTHOR_NAME': 'fixture-b2',
+                        'GIT_AUTHOR_EMAIL': 'fixture-b2@example.invalid', 'GIT_COMMITTER_NAME': 'fixture-b2',
+                        'GIT_COMMITTER_EMAIL': 'fixture-b2@example.invalid',
+                        'GIT_AUTHOR_DATE': '2026-10-12T00:00:00+00:00', 'GIT_COMMITTER_DATE': '2026-10-12T00:00:00+00:00'})
+            self.repo = Repo(self.root, env)
+            self.repo.run('init', '-q')
+            self.repo.run('config', 'core.autocrlf', 'false')
+            self.plumbing = Repo(self.root, dict(env, GIT_INDEX_FILE=os.path.join(self.base, 'indice-plumbing')))
+            self.count = 0
+        except BaseException:
+            remove_tree(self.base)
+            raise
+
+    def commit(self, parents, changes):
+        """Commit cuyo árbol es el del primer padre con los cambios indicados (bytes, (modo, bytes) o None)."""
+        self.plumbing.run('read-tree', *(parents[:1] or ['--empty']))
+        for path, value in changes.items():
+            if value is None:
+                self.plumbing.run('update-index', '--force-remove', '--', path)
+                continue
+            mode, data = value if isinstance(value, tuple) else ('100644', value)
+            blob = self.plumbing.run('hash-object', '-w', '--stdin', data=data).decode().strip()
+            self.plumbing.run('update-index', '--add', '--cacheinfo', f'{mode},{blob},{path}')
+        tree = self.plumbing.run('write-tree').decode().strip()
+        self.count += 1
+        return self.plumbing.run('commit-tree', tree, '-m', f'fixture {self.count}',
+                                 *[arg for p in parents for arg in ('-p', p)]).decode().strip()
+
+
+FX_OLD = {'CLAUDE.md': b'# Gobierno\n\nEstado: B1 en desarrollo.\n', 'docs/PROGRESS.md': b'# Progreso\n\nEstado: B1 en desarrollo.\n'}
+FX_DELTA = {p: [('Estado: B1 en desarrollo.', 'Estado: B1 cerrada; B2 implementada.')] for p in GOV_PATHS}
+
+
+def b1f_fixtures():
+    """Escenarios de B1F en un repositorio desechable. {id: (ok, descripción, detalle)}; el ok compara el resultado
+    con lo esperado (pasa o falla con la regla indicada)."""
+    fx, results = None, {}
+    try:
+        fx = FixtureRepo()
+        R, c = fx.repo, fx.commit
+        new = {p: FX_OLD[p].replace(b'B1 en desarrollo.', 'B1 cerrada; B2 implementada.'.encode()) for p in GOV_PATHS}
+        rest = {SET_A[2]: b'readme de B\n', SET_A[3]: b'documento de B1\n', SET_A[4]: b'# gate de B1\n'}
+        closing = {SET_B[0]: b'# validador del cierre\n', SET_B[1]: b'{"manifiesto": 1}\n', SET_B[2]: b'cierre de B1\n'}
+        anchor = c([], {**FX_OLD, **rest, 'otro.txt': b'0\n'})
+        close = c([anchor], closing)
+        dev = c([close], {'otro.txt': b'1\n'})
+        trans = c([dev], new)
+        post = c([trans], {'otro.txt': b'2\n'})
+        side, side2, d1 = c([close], {'otro2.txt': b'x\n'}), c([dev], {'otro3.txt': b'x\n'}), c([close], {'otro4.txt': b'x\n'})
+        d2 = c([d1, post], {**new, 'otro.txt': b'2\n'})                                  # --no-ff en develop
+        main_merge = c([close, d2], {**new, 'otro.txt': b'2\n', 'otro4.txt': b'x\n'})     # y de develop en main
+        back = c([trans], FX_OLD)
+        again = c([back], new)
+        scenarios = [   # (id, descripción, head, registrada, debe pasar, fragmentos exigidos en los problemas)
+            ('F01', 'historia legítima antes de la transición', dev, None, True, ()),
+            ('F02', 'transición legítima y un descendiente', post, None, True, ()),
+            ('F03', 'transición registrada que coincide con la derivada', post, trans, True, ()),
+            ('F04', 'transición registrada distinta de la derivada', post, dev, False, ('distinta de la registrada',)),
+            ('F05', 'manifiesto del cierre modificado y restaurado (P32)',
+             c([c([dev], {SET_B[1]: b'{"manifiesto": 2}\n'})], {SET_B[1]: closing[SET_B[1]]}), None, False,
+             ('conjunto del cierre',)),
+            ('F06', 'gate de B1 modificado y restaurado',
+             c([c([dev], {SET_A[4]: b'# gate alterado\n'})], {SET_A[4]: rest[SET_A[4]]}), None, False, ('conjunto auditado',)),
+            ('F07', 'documento de B1 eliminado', c([dev], {SET_A[3]: None}), None, False, ('conjunto auditado',)),
+            ('F08', 'documento de B1 renombrado', c([dev], {SET_A[3]: None, SET_A[3][:-3] + '_v2.md': rest[SET_A[3]]}),
+             None, False, ('conjunto auditado',)),
+            ('F09', 'gate de B1 con cambio de modo', c([dev], {SET_A[4]: ('100755', rest[SET_A[4]])}), None, False,
+             ('conjunto auditado',)),
+            ('F10', 'histórico, nuevo, histórico y nuevo otra vez (P33)', again, None, False, ('regla 3', 'regla 4')),
+            ('F11', 'histórico, nuevo e histórico otra vez', back, None, False, ('regla 3',)),
+            ('F12', 'tercer blob en el gobierno', c([dev], {'CLAUDE.md': b'# Gobierno\n\nEstado: otro.\n'}), None, False,
+             ('regla 1',)),
+            ('F13', 'transición hecha en un merge', c([dev, side], {**new, 'otro2.txt': b'x\n'}), None, False, ('regla 2',)),
+            ('F14', 'transición en una sola ruta', c([dev], {'CLAUDE.md': new['CLAUDE.md']}), None, False,
+             ('regla 1', 'regla 4')),
+            ('F15', 'transición que cambia otras rutas', c([dev], {**new, 'otro.txt': b'9\n'}), None, False, ('otras rutas',)),
+            ('F16', 'rama previa a la transición fusionada con el blob nuevo', c([post, side2], {'otro3.txt': b'x\n'}), None,
+             True, ()),
+            ('F17', 'merge que reintroduce el blob histórico', c([post, side2], {**FX_OLD, 'otro3.txt': b'x\n'}), None,
+             False, ('regla 3',)),
+            ('F18', 'integración --no-ff en develop y después en main', main_merge, trans, True, ()),
+        ]
+        for cid, what, head, registered, should_pass, fragments in scenarios:
+            problems, derived, _ = b1f_check(R, anchor, close, FX_DELTA, registered, head=head)
+            text = ' | '.join(problems)
+            ok = (not problems) if should_pass else (bool(problems) and all(f in text for f in fragments))
+            if ok and cid in ('F02', 'F03', 'F18'):
+                ok = derived == trans
+            results[cid] = (ok, what, f'{"pasa" if not problems else text[:160]}')
+        # Estado efectivo sobre una copia de trabajo del escenario legítimo: limpio, disco alterado e índice con flag.
+        R.run('checkout', '-q', '--detach', post)
+        problems, _, _ = b1f_check(R, anchor, close, FX_DELTA, None, root=fx.root)
+        results['F19'] = (not problems, 'estado efectivo limpio tras la transición', '; '.join(problems)[:160] or 'pasa')
+        with open(os.path.join(fx.root, 'CLAUDE.md'), 'wb') as f:
+            f.write(FX_OLD['CLAUDE.md'])
+        problems, _, _ = b1f_check(R, anchor, close, FX_DELTA, None, root=fx.root)
+        results['F20'] = (any('disco' in p for p in problems), 'disco con el blob histórico tras la transición',
+                          '; '.join(problems)[:160])
+        R.run('checkout', '-q', '--', 'CLAUDE.md')
+        R.run('update-index', '--skip-worktree', 'CLAUDE.md')
+        problems, _, _ = b1f_check(R, anchor, close, FX_DELTA, None, root=fx.root)
+        results['F21'] = (any('índice' in p for p in problems), 'índice con flag skip-worktree', '; '.join(problems)[:160])
+        R.run('update-index', '--no-skip-worktree', 'CLAUDE.md')
+    except (GitError, OSError, ValueError) as e:
+        results['F00'] = (False, 'repositorio desechable de B1F', f'no evaluable ({e}): falla cerrado')
+    finally:
+        if fx is not None:
+            remove_tree(fx.base)
+    return results
 
 
 # ---------------------------------------------------------------- DYN: casos P01..P31 sobre el almacén
@@ -1501,6 +1809,325 @@ def run_store_rules(b1, store_bytes, baseline=None):
     return out, cases, ctx
 
 
+# ---------------------------------------------------------------- estado del repositorio para las reglas propias de B2
+SQLITE_ARTIFACT = re.compile(r'(\.(db|sqlite|sqlite3)|-(journal|wal|shm))$', re.I)
+
+
+def collect2(b1):
+    """Estado de HEAD para CTX, SCP, FSY, DEP, GOV, CAP y B1F. Cualquier error de Git o de lectura queda en
+    S2['errors'] y hace fallar esas reglas (falla cerrado)."""
+    S2, repo = {'errors': []}, Repo(ROOT)
+    try:
+        S2['inside'] = repo.run('rev-parse', '--is-inside-work-tree').strip() == b'true'
+        S2['branch'] = repo.run('branch', '--show-current').decode().strip()
+        S2['shallow'] = repo.run('rev-parse', '--is-shallow-repository').strip() != b'false'
+        S2['ancestors'] = {name: repo.is_ancestor(commit, 'HEAD') for name, commit in (
+            ('E', E), ('el cierre de B0', B0_CLOSE), ('el ancla de B1', B1_ANCHOR), ('el cierre de B1', B1_CLOSURE),
+            ('la base de B2', B2_BASE))}
+        S2['delta'] = {
+            'HEAD': b1.name_status(repo.run('diff', '--name-status', '--no-renames', '-z', B2_BASE, 'HEAD')),
+            'árbol': b1.name_status(repo.run('diff', '--name-status', '--no-renames', '-z', B2_BASE)),
+            'índice': b1.name_status(repo.run('diff', '--cached', '--name-status', '--no-renames', '-z', B2_BASE))}
+        S2['untracked'] = {x for x in repo.run('ls-files', '--others', '--exclude-standard', '-z')
+                           .decode('utf-8', 'replace').split('\x00') if x}
+        S2['surfaces'] = {ref: repo.run('ls-tree', '-r', '-z', ref, '--', *b1.RUNTIME_SURFACES) for ref in (B1_BASE, B2_BASE)}
+        S2['folders'] = {}
+        for folder in FOLDERS:
+            disk, problems = b1.walk((folder,), pycache_roots=(folder + '/',) if folder.endswith('/f35sbxb2') else ())
+            tree = {x for x in repo.run('ls-tree', '-r', '--name-only', '-z', 'HEAD', '--', folder)
+                    .decode('utf-8', 'replace').split('\x00') if x}
+            S2['folders'][folder] = (disk, problems, tree)
+        S2['files'] = {p: real_bytes(p) for p in B2_FILES}
+        S2['gov'] = {p: real_bytes(p) for p in GOV_PATHS}
+        S2['gov_old'] = {p: repo.run('show', f'{B1_ANCHOR}:{p}') for p in GOV_PATHS}
+        S2['gov_new'], S2['gov_new_problems'] = governance_new(repo, B1_ANCHOR, GOVERNANCE_DELTA)
+        S2['b1f'], S2['transition'], S2['b1f_commits'] = b1f_check(repo, B1_ANCHOR, B1_CLOSURE, GOVERNANCE_DELTA,
+                                                                   B2_GOVERNANCE_TRANSITION, root=ROOT)
+        S2['listing'] = listing(ROOT)
+        S2['py_refs'] = sorted(p for p in repo.run('ls-files', '-z', '--', '*.py').decode('utf-8', 'replace').split('\x00')
+                               if p and p not in (STORE, GATE2) and b'sbxb_store' in (real_bytes(p) or b''))
+    except (GitError, OSError, ValueError, UnicodeDecodeError) as e:
+        S2['errors'].append(f'estado Git o de archivos no verificable: {e}')
+    return S2
+
+
+# ---------------------------------------------------------------- semántica de B1 con los estados de B2 (GOV y CAP)
+B2_FORBIDDEN_RX = re.compile(r'(?<![\w-])b2(?![\w-])((?:\s+[a-z0-9-]+){0,3}?)\s*(?:=|:|\s)\s*(cerrad\w*|integrad\w*|'
+                             r'productiv\w*|congelad\w*|aprobad\w*|publicad\w*|desplegad\w*)\b')
+
+
+def semantics(b1):
+    """Declaraciones de estado de B1 (cerrada) y de B2 (implementada), construidas con las piezas verificadas del gate
+    de B1; el resto de entidades conserva sus valores. El gate de B1 no se modifica."""
+    declared = [(s, a) for s, a in b1.DECLARED if s != 'b1'] + [
+        ('b1', ('cerrad', 'congelad', 'implementad') + b1.LOCKED),
+        ('b2', ('implementad', 'no cerrad', 'no congelad', 'no aprobad') + b1.LOCKED)]
+    decl_rx = [(re.compile(r'(?<![\w-])(' + subj + r')(?![\w-])(?:\s*(?::=|==|=|:|->|→)\s*|\s+(no\s+)?(?:se\s+)?'
+                           + b1.DECL_COPULA + r'\s+(?:[a-z]+mente\s+)?|\s+)' + b1.STATE_VALUE), allowed)
+               for subj, allowed in declared]
+    verb_rx = [(re.compile(r'(?<![\w-])' + b1.DECL_NEG + r'(?:se\s+)?(?:(?:lo|la|los|las)\s+)?(?<![\w-])(?:' + b1.DECL_VERB +
+                           r')(?![\w-])\s+(?:[a-z]+mente\s+)?(?:(?:el|la|los|las|al|a|the)\s+)?(?P<subj>' + subj +
+                           r')(?![\w-])'), allowed, rx) for (subj, allowed), (rx, _) in zip(declared, decl_rx)] + \
+              [(re.compile(r'(?<![\w-])(?P<subj>' + subj + r')(?![\w-])\s+' + b1.DECL_NEG + r'se\s+(?:[a-z]+mente\s+)?(?:' +
+                           b1.DECL_VERB + r')(?![\w-])'), allowed, rx) for (subj, allowed), (rx, _) in zip(declared, decl_rx)]
+    return decl_rx, verb_rx
+
+
+def contradictions2(b1, sem, text, exempt=lambda row: False):
+    """contradictions() de B1 con las declaraciones de B2, más B2 cerrada, integrada, productiva o publicada."""
+    decl_rx, verb_rx = sem
+    out = []
+    for body in b1.sentences(text, cite=True, exempt=exempt):
+        if b1.EXAMPLE_PREFIX_RX.match(body.strip(' |-')):
+            continue
+        found = []
+        for rx, allowed in decl_rx:
+            for m in rx.finditer(body):
+                found.append((m, allowed, b1.state_value(bool(m.group(2) or m.group(3)), m.group(4), body[m.end():])))
+        for rx, allowed, decl in verb_rx:
+            for m in rx.finditer(body):
+                if decl.match(body, m.start('subj')):
+                    continue
+                k = next(int(g[1:]) for g, v in m.groupdict().items() if v and g.startswith('v'))
+                found.append((m, allowed, b1.state_value(bool(m.group('neg')), b1.DECL_VERBS[k][1], body[m.end():])))
+        for m in B2_FORBIDDEN_RX.finditer(body):
+            if any(t in b1.NEG_WORDS or t.startswith(b1.NEG_PREFIXES) for t in m.group(1).split()):
+                continue
+            found.append((m, ('implementad',), m.group(2)))
+        for m, allowed, value in found:
+            if b1.admitted(value, allowed):
+                continue
+            if b1.DECL_NEG_RX.search(re.split(r'[.,;:!?|]', body[:m.start()])[-1]):
+                continue
+            out.append(f'«{m.group(0).strip()}»')
+        out += b1.g0sbx_unrestricted(body) + b1.approval_grants(body)
+    return out
+
+
+def case_rows2(b1):
+    """Filas «| NB2-xx | REGLA | descripción |» de los documentos que describen un negativo del gate: no son
+    afirmaciones (como los casos NB de B1)."""
+    rows = {tuple(b1.row_cell(x) for x in (cid, rule, what)) for cid, rule, what, *_ in
+            NB2_STORE + NB2_REPO + NB2_REPO_EXTRA}
+
+    def exempt(sentence):
+        cells = tuple(b1.row_cell(c) for c in sentence.strip().strip('|').split('|'))
+        return len(cells) == 3 and cells in rows
+    return exempt
+
+
+# ---------------------------------------------------------------- reglas propias de B2 sobre el repositorio
+def r2_ctx(S, S2):
+    out = list(S2['errors'])
+    if out:
+        return out
+    out += list(S.get('env', ['entorno de Python no verificable (falla cerrado)']))
+    if not S2['inside']:
+        out.append('no es un árbol de trabajo Git')
+    if S2['branch'] not in BRANCHES:
+        out.append(f'rama no permitida o HEAD separado: «{S2["branch"]}»')
+    out += [f'{name} no es ancestro de HEAD' for name, ok in S2['ancestors'].items() if not ok]
+    if S2['shallow']:
+        out.append('repositorio superficial: la historia no es completa (falla cerrado)')
+    return out
+
+
+def r2_scp(S2):
+    if S2['errors']:
+        return ['alcance no verificable (falla cerrado)']
+    out = []
+    for where, delta in S2['delta'].items():
+        for status, path in sorted(delta):
+            if SCOPE2.get(path) != status:
+                out.append(f'{where}: cambio fuera del delta autorizado de B2 o con estado inesperado: {status} {path}')
+    present = {p for _, p in S2['delta']['HEAD'] | S2['delta']['árbol']} | {p for p in S2['untracked'] if SCOPE2.get(p) == 'A'}
+    missing = sorted(p for p, status in SCOPE2.items() if status == 'A' and p not in present)
+    if missing:
+        out.append(f'rutas obligatorias de B2 ausentes del delta: {missing}')
+    stray = sorted(p for p in S2['untracked'] if SCOPE2.get(p) != 'A')
+    if stray:
+        out.append(f'archivos sin seguimiento fuera del delta de B2: {stray[:5]}')
+    return out
+
+
+def r2_fsy(b1, S, S2):
+    if S2['errors']:
+        return ['sistema de archivos no verificable (falla cerrado)']
+    out = list(b1.r_fsy(S))      # runtime, dataset y evidencia frente a la base; carpetas de B1; enlaces (gate de B1)
+    if S2['surfaces'][B1_BASE] != S2['surfaces'][B2_BASE]:
+        out.append('las superficies del runtime difieren entre la base de B1 y la de B2: comparación no válida')
+    for folder, (disk, problems, tree) in S2['folders'].items():
+        out += problems
+        want = FOLDERS[folder]
+        for where, found in (('disco', disk), ('árbol de HEAD', tree)):
+            if found != want:
+                out.append(f'{folder}: contenido en {where} distinto de la lista exacta: extra={sorted(found - want)[:3]} '
+                           f'faltan={sorted(want - found)[:3]}')
+    artifacts = sorted(p for p in S2['listing'] if SQLITE_ARTIFACT.search(p))
+    if artifacts:
+        out.append(f'archivos de base de datos SQLite en el repositorio: {artifacts[:5]}')
+    links = sorted(p for p in B2_FILES + GOV_PATHS + SET_B if not no_link(p))
+    if links:
+        out.append(f'enlaces en rutas de B2, de B1-FREEZE o de gobierno: {links[:3]}')
+    return out
+
+
+def r2_dep(S2):
+    if S2['errors']:
+        return ['código no verificable (falla cerrado)']
+    return [f'{p}: código fuera de B2 que usa el almacén o sus nombres internos' for p in S2['py_refs']]
+
+
+def r2_gov(b1, S2, sem):
+    """Trece estados exactos, F35-SBX-B solo INICIADA, contenido igual al blob histórico de B1 o al nuevo de B2 (cuál
+    rige lo decide B1F por la ascendencia) y ninguna declaración contradictoria ni afirmación que habilite capacidades."""
+    if S2['errors']:
+        return ['gobierno no verificable (falla cerrado)']
+    out = list(S2['gov_new_problems'])
+    for path in GOV_PATHS:
+        data, old, new = S2['gov'][path], S2['gov_old'][path], S2['gov_new'].get(path)
+        if data is None or new is None:
+            out.append(f'{path}: ilegible o sin blob nuevo calculable (falla cerrado)')
+            continue
+        if data not in (old, new):
+            out.append(f'{path}: contenido distinto del blob histórico de B1 y del blob nuevo de B2')
+        text = data.decode('utf-8', 'replace')
+        sections = re.findall(r'^## Estado vigente F34E\s*\n(.*?)(?=^## |\Z)', text, re.M | re.S)
+        if len(sections) != 1:
+            out.append(f'{path}: se exige una única sección «Estado vigente F34E»')
+            continue
+        section = sections[0]
+        if [ln for ln in section.splitlines() if re.match(r'^- [^=\n]+ = ', ln)] != b1.STATES:
+            out.append(f'{path}: los trece estados de gobierno no son exactamente los vigentes')
+        header = '\n'.join(ln for ln in text.splitlines() if ln.startswith('Última actualización:'))
+        b_states = {' '.join(m.split()) for m in b1.B_STATE_RX.findall(section + '\n' + header)}
+        if b_states != {'INICIADA'}:
+            out.append(f'{path}: F35-SBX-B debe figurar solo INICIADA en el estado vigente: {sorted(b_states)}')
+        before = set(old.decode('utf-8', 'replace').splitlines())
+        added = '\n'.join(ln for ln in text.splitlines() if ln not in before)
+        bad = contradictions2(b1, sem, section + '\n' + header + '\n' + added)
+        if bad:
+            out.append(f'{path}: declaraciones de estado contradictorias con el gobierno vigente: {bad[:3]}')
+        claims = b1.positive_claims(added)
+        if claims:
+            out.append(f'{path}: líneas nuevas que afirman habilitar una capacidad prohibida: {claims[:2]}')
+    return out
+
+
+def r2_cap(b1, S2, sem, exempt, cases):
+    """P17 y P18, más el contenido de los archivos de B2 con las reglas de B1 (UTF-8 sin NUL, CR ni BOM; en los
+    documentos, sin datos personales, afirmaciones positivas ni declaraciones contradictorias)."""
+    out = [f'{pid}: {cases.get(pid, (False, "no ejecutado"))[1]}' for pid in ('P17', 'P18')
+           if not cases.get(pid, (False, ''))[0]]
+    if S2['errors']:
+        return out + ['contenido no verificable (falla cerrado)']
+    for path in B2_FILES:
+        data = S2['files'].get(path)
+        if data is None or len(data) > b1.MAX_BYTES or b'\x00' in data or b'\r' in data or data.startswith(b'\xef\xbb\xbf'):
+            out.append(f'{path}: ilegible, binario, CR, BOM o tamaño excesivo')
+            continue
+        try:
+            text = data.decode('utf-8')
+        except UnicodeDecodeError:
+            out.append(f'{path}: no es UTF-8')
+            continue
+        if not path.endswith('.md'):
+            continue
+        hits = [m.group(0) for rx in b1.PII for m in [rx.search(text)] if m]
+        if hits:
+            out.append(f'{path}: posible dato personal: {hits[:2]}')
+        claims = b1.positive_claims(text, exempt=exempt)
+        if claims:
+            out.append(f'{path}: afirmación positiva que habilita una capacidad prohibida: {claims[:2]}')
+        bad = contradictions2(b1, sem, text, exempt=exempt)
+        if bad:
+            out.append(f'{path}: declaraciones de estado contradictorias con el gobierno vigente: {bad[:2]}')
+    return out
+
+
+# ---------------------------------------------------------------- NB2: negativos del repositorio (estado mutado)
+def _gov_edit(old, new):
+    def apply(S, S2):
+        for p in GOV_PATHS:
+            S2['gov'][p] = S2['gov'][p].replace(old.encode('utf-8'), new.encode('utf-8'), 1)
+    return apply
+
+
+def _doc_add(path, line):
+    def apply(S, S2):
+        S2['files'][path] = S2['files'][path] + f'\n{line}\n'.encode('utf-8')
+    return apply
+
+
+def _add_db(S, S2):
+    S2['listing'].add('docs/academico/tools/f35sbxb2/almacen.db')
+    S2['folders']['docs/academico/tools/f35sbxb2'][0].add('docs/academico/tools/f35sbxb2/almacen.db')
+
+
+# (caso, regla, descripción, mutación del estado, fragmento exigido en las violaciones de la regla)
+NB2_REPO = [
+    ('NB2-18', 'SCP', 'archivo del runtime en el delta de B2',
+     lambda S, S2: S2['delta']['HEAD'].add(('A', 'app/Models/Extra.php')), 'fuera del delta autorizado'),
+    ('NB2-19', 'SCP', 'gobierno eliminado en el árbol de trabajo',
+     lambda S, S2: S2['delta']['árbol'].add(('D', 'CLAUDE.md')), 'fuera del delta autorizado'),
+    ('NB2-20', 'FSY', 'base de datos en archivo junto al almacén', _add_db, 'SQLite'),
+    ('NB2-21', 'DEP', 'otro módulo del repositorio usa el almacén',
+     lambda S, S2: S2['py_refs'].append('docs/academico/tools/f34/validate_f34.py'), 'usa el almacén'),
+    ('NB2-22', 'GOV', 'G0 real declarada APROBADA', _gov_edit('- G0 real = NO APROBADA', '- G0 real = APROBADA'),
+     'trece estados'),
+    ('NB2-23', 'GOV', 'B2 declarada cerrada e integrada en el gobierno',
+     _gov_edit('- Datos reales = PROHIBIDOS\n', '- Datos reales = PROHIBIDOS\n\nB2 = CERRADA E INTEGRADA.\n'),
+     'declaraciones de estado'),
+    ('NB2-24', 'CTX', 'rama no permitida', lambda S, S2: S2.__setitem__('branch', 'feature/otra'), 'rama no permitida'),
+    ('NB2-25', 'CAP', 'un documento de B2 afirma que el motor recomienda quién continúa',
+     _doc_add(B2_DOCS[0], 'El motor recomendará quién debe continuar.'), 'afirmación positiva'),
+    ('NB2-26', 'CAP', 'dato personal en un documento de B2',
+     _doc_add(B2_DOCS[0], 'Contacto: ana.torres@correo.pe'), 'dato personal'),
+    ('NB2-27', 'GOV', 'F35-SBX-B declarada cerrada en el gobierno',
+     _gov_edit('F35-SBX-B INICIADA solo como sandbox', 'F35-SBX-B CERRADA solo como sandbox'), 'solo INICIADA'),
+]
+
+
+def run_nb2_repo(b1, S, S2, sem, exempt, cases):
+    """Cada negativo muta en memoria una copia del estado y la regla correspondiente debe detectarlo."""
+    rules = {'SCP': lambda T, T2: r2_scp(T2), 'FSY': lambda T, T2: r2_fsy(b1, T, T2), 'DEP': lambda T, T2: r2_dep(T2),
+             'GOV': lambda T, T2: r2_gov(b1, T2, sem), 'CTX': r2_ctx,
+             'CAP': lambda T, T2: r2_cap(b1, T2, sem, exempt, cases)}
+    results = {}
+    for cid, rule, what, mutate, fragment in NB2_REPO:
+        try:
+            T, T2 = copy.deepcopy(S), copy.deepcopy(S2)
+            mutate(T, T2)
+            found = rules[rule](T, T2)
+        except Exception as e:      # mutación no aplicable o estado incompleto: el negativo no demuestra nada
+            results[cid] = (False, f'no evaluable ({e.__class__.__name__}: {e})')
+            continue
+        hit = [p for p in found if fragment in p]
+        results[cid] = (bool(hit), f'{rule}: {hit[0][:110]}' if hit else f'{rule} no lo detecta')
+    try:
+        problems, _, _ = b1f_check(Repo(ROOT), B1_ANCHOR, B1_CLOSURE, GOVERNANCE_DELTA, '0' * 40, root=ROOT)
+        hit = [p for p in problems if 'distinta de la registrada' in p]
+        results['NB2-28'] = (bool(hit), f'B1F: {hit[0][:110]}' if hit else 'B1F no lo detecta')
+    except (GitError, OSError, ValueError) as e:
+        results['NB2-28'] = (False, f'no evaluable ({e})')
+    return results
+
+
+NB2_REPO_EXTRA = [('NB2-28', 'B1F', 'transición registrada distinta de la derivada')]
+
+
+def report(checks):
+    fallas = [m for ok, m in checks if not ok]
+    for m in fallas:
+        print('FALLA', m)
+    print(f'validate_f35sbxb2: {len(checks) - len(fallas)} comprobaciones correctas, {len(fallas)} fallas')
+    sys.exit(1 if fallas else 0)
+
+
+RULE_ORDER = ('CTX', 'B1F', 'AIN', 'B0F', 'HST', 'SBX', 'SCP', 'FSY', 'FLG', 'DEP', 'PRE', 'STA', 'DYN', 'DET', 'ISO',
+              'PUR', 'DAT', 'CAP', 'GOV')
+
+
 def main():
     sys.stdout.reconfigure(encoding='utf-8')
     checks = []
@@ -1510,30 +2137,57 @@ def main():
     except (GitError, OSError) as e:
         b1 = None
         add(False, f'gate de B1 no verificable ({e}): falla cerrado')
-    nb2 = {}
     if b1 is None:
-        add(False, 'gate de B1 distinto de su blob en el ancla o ilegible: no se ejecuta (falla cerrado)')
-        rules, cases = {'STA': ['sin gate de B1 verificado'], 'DYN': ['sin gate de B1 verificado']}, {}
-    else:
-        store_bytes = real_bytes(STORE)
-        rules, cases, ctx = run_store_rules(b1, store_bytes)
-        if ctx is None:
-            add(False, 'NB2: sin contexto de pruebas del almacén; los negativos no se ejecutan (falla cerrado)')
-        else:
-            nb2 = run_nb2_store(b1, store_bytes, ctx)
-    for rid, viol in rules.items():
+        add(False, 'gate de B1 distinto de su blob en el ancla o ilegible: no se ejecuta nada (falla cerrado)')
+        report(checks)
+    # collect() de B1 sin __main__ registrado: su control de módulos del repositorio ya cargados (DH-B13) no debe
+    # tomar este gate por código no verificado. El almacén todavía no se ha cargado.
+    running = sys.modules.pop('__main__', None)
+    try:
+        S = b1.collect()
+    finally:
+        if running is not None:
+            sys.modules['__main__'] = running
+    S2 = collect2(b1)
+    sem, exempt = semantics(b1), case_rows2(b1)
+    fixtures = b1f_fixtures()
+    store_bytes = real_bytes(STORE)
+    store_rules, cases, ctx = run_store_rules(b1, store_bytes, baseline=None if S2['errors'] else S2['listing'])
+    nb2 = run_nb2_store(b1, store_bytes, ctx) if ctx is not None else {}
+    nb2.update(run_nb2_repo(b1, S, S2, sem, exempt, cases))
+    # P25, P32 y P33: B1F sobre la historia real y sobre las historias desechables.
+    real_b1f = ['B1F no evaluable (falla cerrado)'] if S2['errors'] else list(S2['b1f'])
+    fixture_fail = [f'{cid} ({what}): {detail}' for cid, (ok, what, detail) in sorted(fixtures.items()) if not ok]
+    p25 = real_b1f + [x for x in fixture_fail if not x.startswith(('F05', 'F10'))]
+    cases['P25'] = (not p25 and len(fixtures) >= 21, f'{p25[:2]}' if p25 else
+                    f'historia real íntegra ({S2.get("b1f_commits", 0)} commits desde el ancla; transición derivada: '
+                    f'{S2.get("transition") or "aún no materializada"}); escenarios F01–F04, F06–F09 y F11–F21 correctos')
+    for pid, cid in (('P32', 'F05'), ('P33', 'F10')):
+        ok, what, detail = fixtures.get(cid, (False, '', 'no ejecutado'))
+        cases[pid] = (ok, f'{cid} ({what}): {detail}')
+    rules = {'CTX': r2_ctx(S, S2), 'B1F': real_b1f + fixture_fail,
+             'AIN': b1.r_ain(S), 'B0F': b1.r_b0f(S), 'HST': b1.r_hst(S), 'SBX': b1.r_sbx(S),
+             'SCP': r2_scp(S2), 'FSY': r2_fsy(b1, S, S2), 'FLG': b1.r_flg(S),
+             'DEP': store_rules['DEP'] + r2_dep(S2), 'PRE': store_rules['PRE'], 'STA': store_rules['STA'],
+             'DYN': store_rules['DYN'] + [f'{pid}: {cases[pid][1]}' for pid in ('P25', 'P32', 'P33') if not cases[pid][0]],
+             'CAP': r2_cap(b1, S2, sem, exempt, cases), 'GOV': r2_gov(b1, S2, sem)}
+    for gid in GROUPS:
+        rules[gid] = store_rules.get(gid, [f'{gid} no evaluado: el almacén no llegó a ejecutarse (falla cerrado)'])
+    for rid in RULE_ORDER:
+        viol = rules[rid]
         add(not viol, f'{rid}: {len(viol)} violaciones' + (f' — {viol[:3]}' if viol else ''))
-    for pid in STORE_CASES:
+    for pid in sorted(set(STORE_CASES) | {'P25', 'P32', 'P33'}):
         ok, detail = cases.get(pid, (False, 'no ejecutado'))
         add(ok, f'{pid}: {detail}')
-    for cid, rule, what, _, _ in NB2_STORE:
+    for cid in sorted(fixtures):
+        ok, what, detail = fixtures[cid]
+        add(ok, f'{cid} [B1F] {what}: {detail}')
+    for cid, rule, what, *_ in NB2_STORE + NB2_REPO + NB2_REPO_EXTRA:
         ok, detail = nb2.get(cid, (False, 'no ejecutado'))
         add(ok, f'{cid} [{rule}] {what}: {detail}')
-    fallas = [m for ok, m in checks if not ok]
-    for m in fallas:
-        print('FALLA', m)
-    print(f'validate_f35sbxb2: {len(checks) - len(fallas)} comprobaciones correctas, {len(fallas)} fallas')
-    sys.exit(1 if fallas else 0)
+    print(f'INFO transición de gobierno de B2 derivada: {S2.get("transition") or "ninguna (aún no materializada)"}; '
+          f'registrada: {B2_GOVERNANCE_TRANSITION or "ninguna"}')
+    report(checks)
 
 
 if __name__ == '__main__':
