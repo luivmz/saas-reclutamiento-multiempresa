@@ -49,6 +49,68 @@ F34_MANIFEST = F34_DIR + '/manifest.json'
 F34_NAMES = ('evidence', 'criteria', 'vacancies', 'applications')
 TENANTS = ('ORG-S1', 'ORG-S2', 'ORG-S3')
 
+# ---------------------------------------------------------------- historia, alcance y gobierno (§2.2, §2.3 y §2.5)
+E = '61f94e23fc30b00a848a4558830b6d65f81dff87'            # cierre endurecido de F35-SBX-A
+B0_CLOSE = 'cc634eb9dcc5c0cc0d77b911bb3815182b8319c2'     # cierre auditado de B0
+B1_CLOSURE = '3d9b78307684a0dfb093e31d28fde290b2b1cb4a'   # cierre de B1-FREEZE
+B1_BASE = '430f3f544c3542cabac8028a122c8a0c2a97390b'      # base de B1 (superficies del runtime de referencia del gate de B1)
+B2_BASE = '72e86c5838984ea873d6dd56c179d94217b27317'      # develop al crear la rama de B2 (B1-FREEZE integrada)
+B2_BRANCH = 'feature/f35-sbx-b2-ephemeral-store'
+BRANCHES = (B2_BRANCH, 'develop', 'main')
+GOV_PATHS = ('CLAUDE.md', 'docs/PROGRESS.md')
+SET_A = GOV_PATHS + ('docs/academico/evidencia-sbx-b/README.md', 'docs/academico/evidencia-sbx-b/F35SBXB_B1_Gate_Sucesor.md',
+                     B1_GATE)
+SET_B = ('docs/academico/tools/f35sbxb_freeze/validate_f35sbxb_freeze.py',
+         'docs/academico/tools/f35sbxb_freeze/b1_freeze_manifest.json',
+         'docs/academico/evidencia-sbx-b-freeze/F35SBXB_B1_Freeze.md')
+B2_DOCS = ('docs/academico/evidencia-sbx-b2/README.md', 'docs/academico/evidencia-sbx-b2/F35SBXB_B2_Diseno_Almacen.md',
+           'docs/academico/evidencia-sbx-b2/F35SBXB_B2_Contrato_Verificacion.md')
+B2_FILES = B2_DOCS + (STORE, GATE2)
+# Carpetas con su contenido exacto: las de B1 y B1-FREEZE (B1F, C) y las de B2 (Q2, DH-B2-01).
+FOLDERS = {'docs/academico/evidencia-sbx-b': {'docs/academico/evidencia-sbx-b/README.md',
+                                              'docs/academico/evidencia-sbx-b/F35SBXB_B0_Sucesion_de_Gates.md',
+                                              'docs/academico/evidencia-sbx-b/F35SBXB_B1_Gate_Sucesor.md'},
+           'docs/academico/tools/f35sbxb': {B1_GATE},
+           'docs/academico/evidencia-sbx-b-freeze': {SET_B[2]},
+           'docs/academico/tools/f35sbxb_freeze': {SET_B[0], SET_B[1]},
+           'docs/academico/evidencia-sbx-b2': set(B2_DOCS),
+           'docs/academico/tools/f35sbxb2': {STORE, GATE2}}
+# Delta exacto respecto de la base de B2 (§2.5). El gobierno solo cambia mediante la transición única de §2.3.
+SCOPE2 = {**{p: 'A' for p in B2_FILES}, **{p: 'M' for p in GOV_PATHS}}
+# Delta de gobierno de B2 (Q1, DH-B2-07): lista cerrada de reemplazos literales sobre el blob de cada ruta en el ancla
+# de B1. Cada bloque antiguo aparece exactamente una vez; el gate calcula así los bytes del blob nuevo.
+_B2_SENTENCE_1 = ('F35-SBX-B INICIADA solo como sandbox sintético: B1 (gate sucesor sobre HEAD) CERRADA, CONGELADA E '
+                  'INTEGRADA; B2 (almacén efímero SQLite `:memory:` por organización sintética) IMPLEMENTADA, sin '
+                  'pipeline funcional ni ML.')
+_B2_SENTENCE_2 = ('F35-SBX-B INICIADA: su incremento B1 (gate sucesor sobre HEAD) está CERRADO, CONGELADO E INTEGRADO en '
+                  '`develop` y `main` (ancla auditada `8e94a60274fe39ebda3e9961bc58036b389dfc00`, cierre '
+                  '`3d9b78307684a0dfb093e31d28fde290b2b1cb4a`), registrado en [`evidencia-sbx-b-freeze`]'
+                  '({root}evidencia-sbx-b-freeze/F35SBXB_B1_Freeze.md); su incremento B2 (almacén efímero aislado) está '
+                  'IMPLEMENTADO y es CANDIDATO A AUDITORÍA INDEPENDIENTE, en `feature/f35-sbx-b2-ephemeral-store` y '
+                  'registrado en [`evidencia-sbx-b2`]({root}evidencia-sbx-b2/README.md). Su integración y su publicación '
+                  'requieren autorización explícita del equipo.')
+_B1_SENTENCE_1 = ('F35-SBX-B INICIADA solo como sandbox sintético: B1 (gate sucesor sobre HEAD) en desarrollo, sin '
+                  'pipeline funcional, SQLite ni ML.')
+_B1_SENTENCE_2 = ('F35-SBX-B INICIADA en `feature/f35-sbx-b-deterministic-pipeline`; su incremento B1 (gate sucesor '
+                  'sobre HEAD) se entrega PENDIENTE DE AUDITORÍA.')
+GOVERNANCE_DELTA = {
+    'CLAUDE.md': [(_B1_SENTENCE_1, _B2_SENTENCE_1),
+                  (_B1_SENTENCE_2, _B2_SENTENCE_2.format(root='docs/academico/'))],
+    'docs/PROGRESS.md': [
+        ('Última actualización: 2026-10-09 (F34E CERRADA; G0 real NO APROBADA; G0-SBX APROBADA CON RESTRICCIONES; '
+         'F35-SBX sintética HABILITADA; F35-SBX-A CERRADA E INTEGRADA; B0 CERRADA E INTEGRADA; F35-SBX-B INICIADA, B1 '
+         'en desarrollo).',
+         'Última actualización: 2026-10-12 (F34E CERRADA; G0 real NO APROBADA; G0-SBX APROBADA CON RESTRICCIONES; '
+         'F35-SBX sintética HABILITADA; F35-SBX-A CERRADA E INTEGRADA; B0 CERRADA E INTEGRADA; F35-SBX-B INICIADA: '
+         'B1 CERRADA E INTEGRADA, B2 IMPLEMENTADA Y CANDIDATA A AUDITORÍA INDEPENDIENTE).'),
+        ('el mismo día, al inicio de F35-SBX-B con B0 cerrada e integrada.',
+         'el mismo día, al inicio de F35-SBX-B con B0 cerrada e integrada. El 12/10/2026 pasó de «B1 en desarrollo» '
+         'a B1 cerrada e integrada y B2 implementada, candidata a auditoría independiente.'),
+        (_B1_SENTENCE_1, _B2_SENTENCE_1),
+        (_B1_SENTENCE_2, _B2_SENTENCE_2.format(root='academico/'))]}
+# Commit de la transición de gobierno. Se registra después de que exista, nunca en el propio commit (§2.3).
+B2_GOVERNANCE_TRANSITION = None
+
 # ---------------------------------------------------------------- esquema esperado, derivado por el gate (doble llave)
 TABLE_ENTITY = (('tenant_context', 'SyntheticTenantContext', 'synthetic_organization_id'),
                 ('pipeline_run', 'SyntheticPipelineRun', 'pipeline_run_id'),
@@ -1052,21 +1114,32 @@ def make_cases(ST, fixtures, rows, schema):
         before = ST.snapshot(st)
         params = ST._params('evidence_source', ST.list_evidence(st)[0]['source'])
         marks = ', '.join('?' * len(params))
-        observed = {}
-        for label, stmt in (('OR REPLACE', f'INSERT OR REPLACE INTO evidence_source VALUES ({marks})'),
-                            ('REPLACE', f'REPLACE INTO evidence_source VALUES ({marks})'),
-                            ('OR IGNORE', f'INSERT OR IGNORE INTO evidence_source VALUES ({marks})'),
-                            ('DO NOTHING', f'INSERT INTO evidence_source VALUES ({marks}) ON CONFLICT DO NOTHING'),
-                            ('DO UPDATE', f'INSERT INTO evidence_source VALUES ({marks}) ON CONFLICT(source_id) '
-                                          f'DO UPDATE SET source_type = excluded.source_type')):
-            try:
-                observed[label] = f'sin error, rowcount={st._conn.execute(stmt, params).rowcount}'
-            except sq.Error as e:
-                observed[label] = e.__class__.__name__
+        forms = (('OR REPLACE', f'INSERT OR REPLACE INTO evidence_source VALUES ({marks})'),
+                 ('REPLACE', f'REPLACE INTO evidence_source VALUES ({marks})'),
+                 ('OR IGNORE', f'INSERT OR IGNORE INTO evidence_source VALUES ({marks})'),
+                 ('DO NOTHING', f'INSERT INTO evidence_source VALUES ({marks}) ON CONFLICT DO NOTHING'),
+                 ('DO UPDATE', f'INSERT INTO evidence_source VALUES ({marks}) ON CONFLICT(source_id) '
+                               f'DO UPDATE SET source_type = excluded.source_type'))
+
+        def attempt(conn):
+            seen = {}
+            for label, stmt in forms:
+                try:
+                    seen[label] = f'sin error, rowcount={conn.execute(stmt, params).rowcount}'
+                except sq.Error as e:
+                    seen[label] = e.__class__.__name__
+            return seen
+        # Motor con el autorizador (como queda tras abrir) y, por la vía interna, solo con los triggers (§16 del diseño).
+        observed = {'con autorizador': attempt(st._conn), 'solo triggers': without_authorizer(st, attempt)}
         expect(ST.snapshot(st) == before, f'una fila cambió o desapareció: {observed}')
-        expect(observed['OR IGNORE'] == observed['DO NOTHING'] == 'sin error, rowcount=0' and
-               all(observed[k] in ('IntegrityError', 'DatabaseError') for k in ('OR REPLACE', 'REPLACE', 'DO UPDATE')),
-               f'comportamiento del motor distinto del documentado: {observed}')
+        for mode, seen in observed.items():
+            expect(seen['OR IGNORE'] == seen['DO NOTHING'] == 'sin error, rowcount=0',
+                   f'{mode}: OR IGNORE o DO NOTHING no se comportan como documenta el diseño: {seen}')
+            expect(all(seen[k] in ('IntegrityError', 'DatabaseError') for k in ('OR REPLACE', 'REPLACE', 'DO UPDATE')),
+                   f'{mode}: una forma que debía fallar no falló: {seen}')
+        expect(observed['solo triggers']['DO UPDATE'] == 'IntegrityError' and
+               observed['con autorizador']['DO UPDATE'] == 'DatabaseError',
+               f'DO UPDATE: el trigger o el autorizador no actúan como se documenta: {observed}')
         ST.purge(st)
         st = started()
         ST.append_evidence(st, payload('ORG-S1', 0))
@@ -1134,6 +1207,12 @@ def make_cases(ST, fixtures, rows, schema):
             tampered[2]['state'] = 'fallido'
             expect(not g_chain_ok(tampered, 'event_hash', 'prev_event_hash'), 'la alteración de un eslabón no se detecta')
             ST.purge(st)
+        # Texto correcto con un hash alterado: el almacén recalcula y rechaza (E-HASH), sin filas.
+        st = started()
+        wrong = payload('ORG-S1', 0)
+        wrong['hash_before'] = ('1' if wrong['hash_before'][0] == '0' else '0') + wrong['hash_before'][1:]
+        expect_error('E-HASH', ST.append_evidence, st, wrong)
+        expect(st._state == 'bloqueado' and counts(st)['evidence_record'] == 0, 'hash alterado admitido')
 
     def p30():
         seed, clock = scenario('ORG-S1')
@@ -1222,27 +1301,129 @@ GROUPS = {'DET': ('P11', 'P22'), 'ISO': ('P03', 'P04', 'P05', 'P14', 'P23'), 'PU
           'DAT': ('P15', 'P16', 'P28', 'P29', 'P31')}
 STORE_CASES = tuple(f'P{i:02d}' for i in range(1, 32) if i != 25)
 
+# ---------------------------------------------------------------- NB2: negativos del almacén (bytes mutados en memoria)
+# (caso, regla, descripción, (texto original, texto mutado) o ('', texto añadido al final), detector). El detector es un
+# tema de STA o, para una mutación invisible al análisis estático, el caso DYN que debe fallar con ella.
+NB2_STORE = [
+    ('NB2-01', 'STA', 'conexión a un archivo con URI',
+     ("conn = sqlite3.connect(':memory:', isolation_level=None)",
+      "conn = sqlite3.connect('file:almacen.db', uri=True, isolation_level=None)"), 'connect'),
+    ('NB2-02', 'STA', 'INSERT OR REPLACE en el catálogo',
+     ("SQL_INSERT_EVIDENCE_RECORD = ('INSERT INTO evidence_record", "SQL_INSERT_EVIDENCE_RECORD = ('INSERT OR REPLACE INTO "
+                                                                    "evidence_record"), 'catalog'),
+    ('NB2-03', 'STA', 'DELETE en el catálogo', ('', "\nSQL_DELETE_RUN = 'DELETE FROM pipeline_run'\n"), 'catalog'),
+    ('NB2-04', 'DEP', 'el almacén importa time', ('import sqlite3\n', 'import sqlite3\nimport time\n'), 'imports'),
+    ('NB2-05', 'STA', 'inserción sin la postcondición de una fila',
+     ('_one(conn.execute(SQL_INSERT_AUDIT_ENTRY,', '(conn.execute(SQL_INSERT_AUDIT_ENTRY,'), 'postcondition'),
+    ('NB2-06', 'STA', 'SQL construido fuera del catálogo',
+     ('        conn.execute(SQL_BEGIN)\n        _one(conn.execute(SQL_INSERT_PIPELINE_RUN,',
+      "        conn.execute('BEGIN ' + 'IMMEDIATE')\n        _one(conn.execute(SQL_INSERT_PIPELINE_RUN,"), 'execute'),
+    ('NB2-07', 'STA', 'API que acepta SQL del llamador',
+     ('', '\n\ndef execute_sql(store, sql):\n    return store._conn.execute(sql)\n'), 'api'),
+    ('NB2-08', 'STA', 'columna de puntaje fuera del contrato de A',
+     ("    created_at TEXT NOT NULL CHECK (created_at GLOB '20[0-9][0-9]-[01][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:"
+      "[0-5][0-9]')\n) STRICT;",
+      "    created_at TEXT NOT NULL CHECK (created_at GLOB '20[0-9][0-9]-[01][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:"
+      "[0-5][0-9]'),\n    score INTEGER NOT NULL CHECK (score >= 0)\n) STRICT;"), 'ddl'),
+    ('NB2-09', 'STA', 'conexión a nivel de módulo', ('', "\n_CONN = sqlite3.connect(':memory:')\n"), 'module_state'),
+    ('NB2-10', 'STA', 'apertura del origen en modo de escritura',
+     ("with open(os.path.join(_ROOT, *rel.split('/')), 'rb') as handle:",
+      "with open(os.path.join(_ROOT, *rel.split('/')), 'rb+') as handle:"), 'files'),
+    ('NB2-11', 'DYN', 'texto ajeno admitido sin compararlo con T1 de su fila',
+     ("    if record['text_synthetic'] != _t1(text):", '    if False:'), 'P31'),
+    ('NB2-12', 'DYN', 'autorizador que todo lo admite',
+     ('    return sqlite3.SQLITE_OK if allowed else sqlite3.SQLITE_DENY', '    return sqlite3.SQLITE_OK'), 'P27'),
+    ('NB2-13', 'DYN', 'cierre excepcional sin cerrar la conexión',
+     ("        verified = _close(conn)\n        store._conn = None\n        store._closure = _closure(store, 'aborto'",
+      "        verified = True\n        store._conn = None\n        store._closure = _closure(store, 'aborto'"), 'P21'),
+    ('NB2-14', 'DYN', 'filas F34 de otra organización en el índice del tenant',
+     ("and criteria.get(r['criterion_id']) == org and applications.get(r['application_token']) == org:",
+      'and True:'), 'P05'),
+    ('NB2-15', 'DYN', 'purga sin cerrar la conexión',
+     ("            verified = _close(conn)\n            store._conn = None\n            store._closure = _closure(store, "
+      "'purga'", "            verified = True\n            store._conn = None\n            store._closure = "
+                 "_closure(store, 'purga'"), 'P24'),
+    ('NB2-16', 'DYN', 'evento fallido afirmado sin confirmarlo',
+     ("            if failed_record != 'no_disponible':\n                failed = 'FAILED_EVENT_COMMITTED'",
+      "            failed = 'FAILED_EVENT_COMMITTED'"), 'P21'),
+    ('NB2-17', 'DYN', 'hashes aceptados sin recalcularlos',
+     ("    if evidence['hash_before'] != _content_hash(org, origin, criterion, kind, text) or \\\n"
+      "            evidence['content_hash'] != _content_hash(org, origin, criterion, kind, _t1(text)):",
+      '    if False:'), 'P29'),
+]
 
-def run_store_rules(b1, store_bytes):
-    """STA, DEP, PRE y DYN (P01..P31) con sus agrupaciones. Devuelve ({regla: [problemas]}, {caso: (ok, detalle)})."""
+
+def mutate_bytes(data, change):
+    old, new = change
+    text = data.decode('utf-8')
+    if not old:
+        return (text + new).encode('utf-8')
+    if old not in text:
+        raise ValueError(f'mutación no aplicable: {old[:50]!r}')
+    return text.replace(old, new, 1).encode('utf-8')
+
+
+def run_nb2_store(b1, store_bytes, ctx):
+    """Cada mutación del almacén debe detectarse: por STA en su tema o, si STA no la ve, por el caso DYN indicado,
+    ejecutado con los bytes mutados bajo la misma guarda. {caso: (detectada, detalle)}."""
+    results = {}
+    for cid, rule, what, change, detector in NB2_STORE:
+        try:
+            mutated = mutate_bytes(store_bytes, change)
+        except ValueError as e:
+            results[cid] = (False, f'{e} (falla cerrado)')
+            continue
+        static = store_static(mutated, ctx['contract'], ctx['origin'])
+        if not detector.startswith('P'):
+            hits = static.get(detector, [])
+            results[cid] = (bool(hits), f'STA ({detector}): {hits[:1]}' if hits else f'STA no lo detecta en {detector}')
+            continue
+        found = [p for items in static.values() for p in items]
+        if found:
+            results[cid] = (False, f'la mutación ya la detecta STA ({found[:1]}): no prueba {detector}')
+            continue
+        tmp, cwd = make_temp('nb2'), os.getcwd()
+        try:
+            os.chdir(tmp)
+            with b1.ExecGuard({}):
+                try:
+                    ST = load_store(mutated)
+                    case = dict(make_cases(ST, ctx['fixtures'], ctx['rows'], ctx['schema']))[detector]
+                except Exception as e:      # mutación no ejecutable: el negativo no demuestra nada
+                    results[cid] = (False, f'almacén mutado no ejecutable ({e.__class__.__name__})')
+                    continue
+                try:
+                    case()
+                    results[cid] = (False, f'{detector} no detecta la mutación')
+                except Exception as e:      # el caso falla con el almacén mutado: la mutación se detecta
+                    results[cid] = (True, f'{detector}: {e.__class__.__name__}: {str(e)[:90]}')
+        finally:
+            os.chdir(cwd)
+            remove_tree(tmp)
+    return results
+
+
+def run_store_rules(b1, store_bytes, baseline=None):
+    """STA, DEP, PRE y DYN (P01..P31) con sus agrupaciones. Devuelve ({regla: [problemas]}, {caso: (ok, detalle)},
+    contexto de las pruebas para los negativos NB2)."""
     out = {'STA': [], 'DEP': [], 'PRE': [], 'DYN': []}
-    cases = {}
+    cases, ctx = {}, None
     try:
         contract, origin = read_json(A_CONTRACT), expected_origin()
         fixtures = {org: read_json(p) for org, p in A_FIXTURES.items()}
     except (ValueError, KeyError, UnicodeDecodeError) as e:
         for rid in out:
             out[rid].append(f'contrato de A, fixtures o manifiesto F34 ilegibles ({e}): falla cerrado')
-        return out, cases
+        return out, cases, ctx
     if store_bytes is None:
         for rid in out:
             out[rid].append('almacén ausente o ilegible (falla cerrado)')
-        return out, cases
+        return out, cases, ctx
     static = store_static(store_bytes, contract, origin)
     if 'parse' in static:
         for rid in out:
             out[rid] += static['parse']
-        return out, cases
+        return out, cases, ctx
     out['DEP'] += static['imports']
     out['STA'] += [p for topic, items in static.items() if topic != 'imports' for p in items]
     try:
@@ -1257,10 +1438,10 @@ def run_store_rules(b1, store_bytes):
         cases[pid] = (not problems, f'estático: {problems[:2]}' if problems else 'estático: correcto')
     if out['STA'] or out['DEP']:
         out['DYN'].append('el almacén no supera STA/DEP: no se ejecuta (falla cerrado)')
-        return out, cases
-    schema = expected_schema(contract)
+        return out, cases, ctx
+    schema, rows = expected_schema(contract), None
     tmp = make_temp('dyn')
-    repo_before, cwd = listing(ROOT), os.getcwd()
+    repo_before, cwd = (listing(ROOT) if baseline is None else baseline), os.getcwd()
     try:
         os.chdir(tmp)
         with b1.ExecGuard({}) as guard:
@@ -1314,7 +1495,10 @@ def run_store_rules(b1, store_bytes):
     for gid, pids in GROUPS.items():
         out[gid] = [f'{pid}: {cases.get(pid, (False, "no ejecutado"))[1]}' for pid in pids
                     if not cases.get(pid, (False, ''))[0]]
-    return out, cases
+    if rows is not None:
+        ctx = {'contract': contract, 'origin': origin, 'fixtures': fixtures, 'rows': rows, 'schema': schema,
+               'static': static}
+    return out, cases, ctx
 
 
 def main():
@@ -1326,16 +1510,25 @@ def main():
     except (GitError, OSError) as e:
         b1 = None
         add(False, f'gate de B1 no verificable ({e}): falla cerrado')
+    nb2 = {}
     if b1 is None:
         add(False, 'gate de B1 distinto de su blob en el ancla o ilegible: no se ejecuta (falla cerrado)')
         rules, cases = {'STA': ['sin gate de B1 verificado'], 'DYN': ['sin gate de B1 verificado']}, {}
     else:
-        rules, cases = run_store_rules(b1, real_bytes(STORE))
+        store_bytes = real_bytes(STORE)
+        rules, cases, ctx = run_store_rules(b1, store_bytes)
+        if ctx is None:
+            add(False, 'NB2: sin contexto de pruebas del almacén; los negativos no se ejecutan (falla cerrado)')
+        else:
+            nb2 = run_nb2_store(b1, store_bytes, ctx)
     for rid, viol in rules.items():
         add(not viol, f'{rid}: {len(viol)} violaciones' + (f' — {viol[:3]}' if viol else ''))
     for pid in STORE_CASES:
         ok, detail = cases.get(pid, (False, 'no ejecutado'))
         add(ok, f'{pid}: {detail}')
+    for cid, rule, what, _, _ in NB2_STORE:
+        ok, detail = nb2.get(cid, (False, 'no ejecutado'))
+        add(ok, f'{cid} [{rule}] {what}: {detail}')
     fallas = [m for ok, m in checks if not ok]
     for m in fallas:
         print('FALLA', m)
