@@ -15,10 +15,12 @@ ni a cierre; lo acredita la auditoría independiente.
   SCP  delta exacto respecto de 72e86c5 (§2.5) en HEAD, árbol de trabajo, índice y archivos sin seguimiento.
   FSY  FSY de B1 (runtime, dataset y evidencia byte a byte; carpetas de B1), carpetas de B1-FREEZE y de B2 exactas,
        ningún archivo de base de datos SQLite en el repositorio y ningún enlace.
-  DEP  almacén: sqlite3, csv, hashlib, json, re, unicodedata y os.path; gate: las del gate de B1; nadie más usa el almacén.
+  DEP  almacén: sqlite3, csv, hashlib, json, re, unicodedata, os.path y threading (solo get_ident, para la propiedad
+       del hilo de M01); gate: las del gate de B1; nadie más usa el almacén.
   PRE  entorno del preflight (SQLite 3.37 o posterior realmente cargado, API y PRAGMA efectivos) antes de DYN.
   STA  el almacén antes de ejecutarlo: catálogo, DDL con doble llave frente al contrato de A, origen frente al
-       manifiesto F34, conexión, API, módulo y referencias (§2.4).
+       manifiesto F34, API, módulo y referencias (§2.4); y, por H01, todos los contextos que se ejecutan al cargar,
+       las capacidades de cada módulo sin alias ni caminos indirectos, y una única apertura de SQLite, la autorizada.
   DYN  P01..P33 en proceso desde los mismos bytes analizados, bajo la guarda de B1.4 y en un directorio temporal.
   DET, ISO, PUR, DAT   agrupaciones de casos de §2.2.
   CAP  P17 y P18, más el contenido de los archivos de B2 con la semántica de B1.
@@ -179,7 +181,7 @@ API = {'open_tenant_store': ('tenant',), 'create_run': ('store', 'seed', 'clock_
        'list_audit': ('store',), 'list_evidence': ('store',), 'current_state': ('store',), 'snapshot': ('store',),
        'preflight_report': ('store',), 'diagnostic': ('store',), 'purge': ('store',)}
 API_CLASSES = frozenset({'TenantRunStore', 'SbxbStoreError'})
-STORE_IMPORTS = frozenset({'csv', 'hashlib', 'json', 'os', 're', 'sqlite3', 'unicodedata'})
+STORE_IMPORTS = frozenset({'csv', 'hashlib', 'json', 'os', 're', 'sqlite3', 'threading', 'unicodedata'})
 GATE_IMPORTS = frozenset({'ast', 'copy', 'hashlib', 'importlib', 'json', 'os', 're', 'subprocess', 'sys', 'unicodedata'})
 OS_ALLOWED = frozenset({'os.path.join', 'os.path.dirname', 'os.path.abspath'})
 FORBIDDEN_ATTRS = frozenset({'backup', 'serialize', 'deserialize', 'iterdump', 'enable_load_extension', 'load_extension',
@@ -546,6 +548,7 @@ def _expr(source):
 # valor, nunca se reasigna y solo se importa a nivel de módulo: así no hay alias ni caminos indirectos.
 MODULE_ATTRS = {'csv': {'DictReader', 'Error'}, 'hashlib': {'sha256'}, 'json': {'dumps', 'loads'},
                 're': {'compile', 'split', 'I'}, 'unicodedata': {'normalize'}, 'os': {'path'},
+                'threading': {'get_ident'},
                 'sqlite3': {'connect', 'Connection', 'Error', 'ProgrammingError', 'sqlite_version',
                             'SQLITE_LIMIT_ATTACHED', 'SQLITE_OK', 'SQLITE_DENY', 'SQLITE_INSERT', 'SQLITE_READ',
                             'SQLITE_SELECT', 'SQLITE_TRANSACTION', 'SQLITE_FUNCTION', 'SQLITE_PRAGMA'}}
@@ -1774,7 +1777,10 @@ def make_cases(ST, fixtures, rows, schema):
                                      ('append_event', lambda: ST.append_event(st, 'validando', clock)),
                                      ('cierre interno', lambda: ST._close(conn, st._owner))])
             api = {k: v[0] for k, v in out.items() if k != 'cierre interno'}
-            expect(set(api.values()) == {'E-HILO'}, f'{label}: operaciones desde otro hilo: {api}')
+            # El ciclo de vida se comprueba antes que el hilo: en finalizado, append_event es E-CICLO. Ninguno de los
+            # dos rechazos toca SQLite ni cambia el estado.
+            want = {k: ('E-CICLO' if label == 'finalizado' and k == 'append_event' else 'E-HILO') for k in api}
+            expect(api == want, f'{label}: operaciones desde otro hilo: {api}')
             expect(out['cierre interno'] == ('admitida', False), f'{label}: el cierre se acreditó desde otro hilo: '
                                                                  f'{out["cierre interno"]}')
             expect(st._state == ('activo' if label == 'activo' else 'finalizado') and st._conn is conn and usable(conn),
@@ -1946,15 +1952,16 @@ NB2_STORE = [
     ('NB2-12', 'DYN', 'autorizador que todo lo admite',
      ('    return sqlite3.SQLITE_OK if allowed else sqlite3.SQLITE_DENY', '    return sqlite3.SQLITE_OK'), 'P27'),
     ('NB2-13', 'DYN', 'cierre excepcional sin cerrar la conexión',
-     ("        verified = _close(conn)\n        store._conn = None\n        store._closure = _closure(store, 'aborto'",
-      "        verified = True\n        store._conn = None\n        store._closure = _closure(store, 'aborto'"), 'P21'),
+     ("        verified = _close(conn, store._owner)\n        store._conn = None\n    store._closure = _receipt(store, "
+      "'aborto'", "        verified = True\n        store._conn = None\n    store._closure = _receipt(store, 'aborto'"),
+     'P21'),
     ('NB2-14', 'DYN', 'filas F34 de otra organización en el índice del tenant',
      ("and criteria.get(r['criterion_id']) == org and applications.get(r['application_token']) == org:",
       'and True:'), 'P05'),
     ('NB2-15', 'DYN', 'purga sin cerrar la conexión',
-     ("            verified = _close(conn)\n            store._conn = None\n            store._closure = _closure(store, "
-      "'purga'", "            verified = True\n            store._conn = None\n            store._closure = "
-                 "_closure(store, 'purga'"), 'P24'),
+     ("            verified = _close(conn, store._owner)\n            store._conn = None\n        store._closure = "
+      "record = _receipt(store, 'purga'", "            verified = True\n            store._conn = None\n        "
+                                          "store._closure = record = _receipt(store, 'purga'"), 'P24'),
     ('NB2-16', 'DYN', 'evento fallido afirmado sin confirmarlo',
      ("            if failed_record != 'no_disponible':\n                failed = 'FAILED_EVENT_COMMITTED'",
       "            failed = 'FAILED_EVENT_COMMITTED'"), 'P21'),
@@ -1962,6 +1969,13 @@ NB2_STORE = [
      ("    if evidence['hash_before'] != _content_hash(org, origin, criterion, kind, text) or \\\n"
       "            evidence['content_hash'] != _content_hash(org, origin, criterion, kind, _t1(text)):",
       '    if False:'), 'P29'),
+    ('NB2-40', 'DYN', 'propiedad del hilo sin comprobar antes de tocar SQLite',
+     ('    if connection and store._owner != threading.get_ident():', '    if False:'), 'P35'),
+    ('NB2-41', 'DYN', 'cierre acreditado desde cualquier hilo',
+     ('    if owner != threading.get_ident():\n        return False\n', ''), 'P35'),
+    ('NB2-42', 'DYN', 'comprobante sin respaldo ante un fallo de construcción',
+     ('    except Exception as e:\n        reason = e.__class__.__name__\n',
+      '    except Exception as e:\n        raise\n'), 'P36'),
 ]
 
 

@@ -16,6 +16,7 @@ import json
 import os
 import re
 import sqlite3
+import threading
 import unicodedata
 
 # ---------------------------------------------------------------- constantes del contrato (A, B0 §5.2 y diseño §5)
@@ -388,12 +389,13 @@ class SbxbStoreError(Exception):
 
 class TenantRunStore:
     """Almacén de un tenant y un escenario (§3). Se opera solo con las funciones del módulo: no expone la conexión,
-    los cursores, el catálogo ni el índice de origen. No hay registro global de almacenes."""
-    __slots__ = ('_tenant', '_origin', '_conn', '_report', '_state', '_outcome', '_run', '_events', '_audit',
+    los cursores, el catálogo ni el índice de origen. No hay registro global de almacenes. Pertenece al hilo que lo
+    abre (M01): desde otro hilo ninguna operación toca SQLite."""
+    __slots__ = ('_tenant', '_origin', '_conn', '_report', '_owner', '_state', '_outcome', '_run', '_events', '_audit',
                  '_evidence', '_closure')
 
-    def __init__(self, tenant, origin, conn, report):
-        self._tenant, self._origin, self._conn, self._report = tenant, origin, conn, report
+    def __init__(self, tenant, origin, conn, report, owner):
+        self._tenant, self._origin, self._conn, self._report, self._owner = tenant, origin, conn, report, owner
         self._state, self._outcome, self._closure = 'abierto', None, None
         self._run, self._events, self._audit, self._evidence = None, [], [], []
 
@@ -601,23 +603,26 @@ def _phase(store):
     return store._outcome if store._state == 'finalizado' else store._state
 
 
-def _require(store, allowed):
-    """Matriz de §6.1. Un error de ciclo no cierra el almacén: la operación no llega a ejecutarse."""
+def _require(store, allowed, connection=True):
+    """Matriz de §6.1 y propiedad del hilo (M01). Un error de ciclo o de hilo no cierra el almacén: la operación no
+    llega a tocar SQLite ni a cambiar el estado. connection=False para las operaciones que no usan la conexión."""
     if type(store) is not TenantRunStore:
         raise SbxbStoreError('E-CONTRATO', 'se esperaba un almacén abierto con open_tenant_store')
     phase = _phase(store)
-    if phase in allowed:
-        return
-    if phase == 'purgado':
-        raise SbxbStoreError('E-PURGADO', 'el almacén está purgado')
-    if phase == 'bloqueado':
-        raise SbxbStoreError('E-BLOQUEADO', 'el almacén quedó bloqueado tras un cierre excepcional; solo diagnostic')
-    raise SbxbStoreError('E-CICLO', f'operación no admitida con el almacén en {phase}')
+    if phase not in allowed:
+        if phase == 'purgado':
+            raise SbxbStoreError('E-PURGADO', 'el almacén está purgado')
+        if phase == 'bloqueado':
+            raise SbxbStoreError('E-BLOQUEADO', 'el almacén quedó bloqueado tras un cierre excepcional; solo diagnostic')
+        raise SbxbStoreError('E-CICLO', f'operación no admitida con el almacén en {phase}')
+    if connection and store._owner != threading.get_ident():
+        raise SbxbStoreError('E-HILO', 'el almacén pertenece al hilo que lo abrió: desde otro hilo no se toca SQLite '
+                                       'ni cambia su estado')
 
 
 def _guarded(store, allowed, action):
-    """Ejecuta action(conexión) con el almacén en un estado admitido. Cualquier fallo, incluido un sqlite3.Error,
-    activa el cierre excepcional y se propaga como SbxbStoreError (fallo cerrado, §13)."""
+    """Ejecuta action(conexión) con el almacén en un estado admitido y desde su hilo. Cualquier fallo, incluido un
+    sqlite3.Error, activa el cierre excepcional y se propaga como SbxbStoreError (fallo cerrado, §13)."""
     _require(store, allowed)
     try:
         return action(store._conn)
@@ -627,7 +632,10 @@ def _guarded(store, allowed, action):
         failure = SbxbStoreError('E-SQLITE', f'{e.__class__.__name__}: {e}')
     except Exception as e:
         failure = SbxbStoreError('E-CONTRATO', f'entrada no evaluable ({e.__class__.__name__})')
-    _abort(store, failure.code)
+    try:
+        _abort(store, failure.code)
+    except Exception:           # _abort no lanza; si lo hiciera, el objeto sigue bloqueado y se conserva la causa
+        store._state = 'bloqueado'
     raise failure
 
 
@@ -641,12 +649,15 @@ def _rollback(conn):
         return False
 
 
-def _close(conn):
-    """Cierra siempre y comprueba que una consulta posterior lanza ProgrammingError."""
+def _close(conn, owner):
+    """Cierra siempre y acredita el cierre solo desde el hilo propietario (M01). Allí, que una consulta posterior lance
+    ProgrammingError significa conexión cerrada: el error de hilo ajeno no puede darse. Desde otro hilo, sin acreditar."""
     try:
         conn.close()
     except Exception:
         pass
+    if owner != threading.get_ident():
+        return False
     try:
         conn.execute(SQL_POST_CLOSE_PROBE)
     except sqlite3.ProgrammingError:
@@ -703,10 +714,43 @@ def _closure(store, kind, code, failed, failed_record, observed, verified):
     return record
 
 
+def _receipt(store, kind, code, failed, failed_record, observed, verified):
+    """Construcción falible del comprobante o del diagnóstico (M02). Si _closure falla, se degrada a un mínimo veraz:
+    los hechos ya establecidos (tipo de cierre, código del fallo original, evento fallido y estado de la conexión), lo
+    disponible del run y del tenant, y no_disponible en lo demás, con la causa en receipt_error. No inventa hashes,
+    conteos, FAILED ni CLOSED. Nunca lanza."""
+    try:
+        return _closure(store, kind, code, failed, failed_record, observed, verified)
+    except Exception as e:
+        reason = e.__class__.__name__
+    record = {'closure_kind': kind, 'pipeline_run_id': 'no_disponible', 'synthetic_organization_id': 'no_disponible',
+              'final_state': 'no_disponible', 'failed_event': failed, 'failed_event_record': 'no_disponible',
+              'error_code': code, 'last_event_hash': 'no_disponible', 'counts': 'no_disponible',
+              'file_backed': 'no_disponible', 'observed': 'no_disponible',
+              'connection': ('CONNECTION_ABORTED' if kind == 'aborto' else 'CLOSED') if verified else 'CLOSE_UNVERIFIED',
+              'post_close_check': 'ProgrammingError' if verified else 'no_verificado', 'receipt_error': reason}
+    try:
+        run_id = store._run['pipeline_run_id'] if store._run is not None else 'sin_run'
+        record['pipeline_run_id'] = run_id if type(run_id) is str else 'no_disponible'
+    except Exception:
+        pass
+    try:
+        org = store._tenant['synthetic_organization_id']
+        record['synthetic_organization_id'] = org if type(org) is str else 'no_disponible'
+    except Exception:
+        pass
+    try:
+        record['receipt_hash'] = _sha(record)
+    except Exception:
+        record['receipt_hash'] = 'no_disponible'
+    return record
+
+
 def _abort(store, code, purge_requested=False):
-    """Cierre excepcional (§6.2): ROLLBACK; fallido solo si es válido; hechos observados; cierre en finally.
-    Nunca lanza: lo que no se pueda leer queda como no_disponible."""
-    conn = store._conn
+    """Cierre excepcional (§6.2). El objeto queda bloqueado antes de tocar la conexión; ROLLBACK; fallido solo si es
+    válido y se confirma; hechos observados; cierre en finally; comprobante falible con respaldo veraz (M02). Nunca
+    lanza: lo que no se pueda leer queda como no_disponible y se conserva el código del fallo original."""
+    conn, store._state = store._conn, 'bloqueado'
     failed, failed_record, observed, verified = 'FAILED_EVENT_UNAVAILABLE', 'no_disponible', 'no_disponible', False
     try:
         usable = _rollback(conn)
@@ -715,20 +759,27 @@ def _abort(store, code, purge_requested=False):
             if failed_record != 'no_disponible':
                 failed = 'FAILED_EVENT_COMMITTED'
         if usable:
-            try:
-                observed = _observe(conn)
-            except Exception:
-                observed = 'no_disponible'
+            observed = _observe(conn)
+    except Exception:           # un fallo inesperado no impide el cierre: lo no observado queda no_disponible
+        pass
     finally:
-        verified = _close(conn)
+        verified = _close(conn, store._owner)
         store._conn = None
-        store._closure = _closure(store, 'aborto', code, failed, failed_record, observed, verified)
-        store._state = 'purgado' if purge_requested and verified else 'bloqueado'
+    store._closure = _receipt(store, 'aborto', code, failed, failed_record, observed, verified)
+    store._state = 'purgado' if purge_requested and verified else 'bloqueado'
     return store._closure
 
 
 def _copy(value):
     return json.loads(json.dumps(value))
+
+
+def _safe_copy(record):
+    """Copia del comprobante para el llamador; si la copia profunda falla, una copia superficial, nunca la interna."""
+    try:
+        return _copy(record)
+    except Exception:
+        return dict(record)
 
 
 # ---------------------------------------------------------------- validación de entradas (§8, §11 y §13)
@@ -850,6 +901,7 @@ def open_tenant_store(tenant):
     row = _check_tenant(tenant)
     origin = _load_origin(row['synthetic_organization_id'])
     _require_api()
+    owner = threading.get_ident()
     conn = sqlite3.connect(':memory:', isolation_level=None)
     try:
         report = _preflight(conn)
@@ -858,11 +910,11 @@ def open_tenant_store(tenant):
         _one(conn.execute(SQL_INSERT_TENANT_CONTEXT, _params('tenant_context', row)))
         conn.execute(SQL_COMMIT)
     except Exception as e:
-        _close(conn)
+        _close(conn, owner)
         if type(e) is SbxbStoreError and e.code == 'E-PREFLIGHT':
             raise
         raise SbxbStoreError('E-PREFLIGHT', f'el almacén no se abre ({e.__class__.__name__}: {e})') from None
-    return TenantRunStore(row, origin, conn, report)
+    return TenantRunStore(row, origin, conn, report, owner)
 
 
 def create_run(store, seed, clock_start):
@@ -978,35 +1030,35 @@ def snapshot(store):
 
 
 def preflight_report(store):
-    """Copia de solo lectura de los hechos del preflight. No hay API de PRAGMA."""
-    _require(store, ('abierto', 'activo', 'completado', 'fallido', 'bloqueado', 'purgado'))
+    """Copia de solo lectura de los hechos del preflight. No hay API de PRAGMA ni acceso a la conexión."""
+    _require(store, ('abierto', 'activo', 'completado', 'fallido', 'bloqueado', 'purgado'), connection=False)
     return _copy(store._report)
 
 
 def diagnostic(store):
-    """Diagnóstico del cierre excepcional; solo en bloqueado."""
-    _require(store, ('bloqueado',))
-    return _copy(store._closure)
+    """Diagnóstico del cierre excepcional; solo en bloqueado. No usa la conexión."""
+    _require(store, ('bloqueado',), connection=False)
+    return _safe_copy(store._closure)
 
 
 def purge(store):
     """Cierra la conexión y devuelve el comprobante en memoria (§9). Con el run activo, cierre excepcional
-    E-ABORTADO. La purga nunca es un borrado de filas: no existe ninguna sentencia de borrado."""
+    E-ABORTADO. La purga nunca es un borrado de filas: no existe ninguna sentencia de borrado. El objeto queda
+    bloqueado antes de tocar la conexión y el comprobante es falible con respaldo veraz (M02)."""
     _require(store, ('abierto', 'activo', 'completado', 'fallido'))
     if store._state == 'activo':
         record = _abort(store, 'E-ABORTADO', purge_requested=True)
     else:
-        conn, observed, verified = store._conn, 'no_disponible', False
+        conn, observed, verified, store._state = store._conn, 'no_disponible', False, 'bloqueado'
         try:
             observed = _observe(conn)
-        except Exception:
-            observed = 'no_disponible'
+        except Exception:       # lo no observado queda no_disponible; el cierre sigue
+            pass
         finally:
-            verified = _close(conn)
+            verified = _close(conn, store._owner)
             store._conn = None
-            store._closure = _closure(store, 'purga', '', 'no_aplica', 'no_aplica', observed, verified)
-            store._state = 'purgado' if verified else 'bloqueado'
-        record = store._closure
+        store._closure = record = _receipt(store, 'purga', '', 'no_aplica', 'no_aplica', observed, verified)
+        store._state = 'purgado' if verified else 'bloqueado'
     if record['connection'] == 'CLOSE_UNVERIFIED':
         raise SbxbStoreError('E-SQLITE', 'no se pudo comprobar el cierre de la conexión; ver diagnostic')
-    return _copy(record)
+    return _safe_copy(record)
