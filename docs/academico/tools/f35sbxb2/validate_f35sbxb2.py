@@ -1595,19 +1595,181 @@ def make_cases(ST, fixtures, rows, schema):
             expect_error('E-ORIGEN', ST.append_evidence, st, p)
             expect(st._state == 'bloqueado' and counts(st)['evidence_record'] == 0, f'{what}: evidencia persistida')
 
+    def usable(conn):
+        try:
+            return conn.execute(ST.SQL_POST_CLOSE_PROBE).fetchone() == (1,)
+        except sq.Error:
+            return False
+
+    def p35():
+        """M01: el almacén pertenece al hilo que lo abre. Desde otro hilo, nada toca SQLite ni cambia el estado, nada
+        declara CLOSED, y el propietario sigue pudiendo purgar. El cierre solo se acredita desde el hilo propietario."""
+        threading = ST.threading
+        seed, clock = scenario('ORG-S1')
+
+        def from_other_thread(calls):
+            out = {}
+
+            def body():
+                for name, fn in calls:
+                    try:
+                        result = fn()
+                        out[name] = ('admitida', result)
+                    except ST.SbxbStoreError as e:
+                        out[name] = (e.code, None)
+                    except Exception as e:      # cualquier otra excepción es un fallo del contrato
+                        out[name] = (f'excepción no contractual {e.__class__.__name__}: {e}', None)
+            t = threading.Thread(target=body, name='hilo-ajeno-p35')
+            t.start()
+            t.join()
+            return out
+        for label, make in (('activo', started), ('finalizado', full)):
+            st = make()
+            conn = st._conn
+            events = ST.list_events(st)
+            out = from_other_thread([('purge', lambda: ST.purge(st)), ('list_events', lambda: ST.list_events(st)),
+                                     ('read_run', lambda: ST.read_run(st)), ('current_state', lambda: ST.current_state(st)),
+                                     ('append_event', lambda: ST.append_event(st, 'validando', clock)),
+                                     ('cierre interno', lambda: ST._close(conn, st._owner))])
+            api = {k: v[0] for k, v in out.items() if k != 'cierre interno'}
+            expect(set(api.values()) == {'E-HILO'}, f'{label}: operaciones desde otro hilo: {api}')
+            expect(out['cierre interno'] == ('admitida', False), f'{label}: el cierre se acreditó desde otro hilo: '
+                                                                 f'{out["cierre interno"]}')
+            expect(st._state == ('activo' if label == 'activo' else 'finalizado') and st._conn is conn and usable(conn),
+                   f'{label}: la purga rechazada cambió el estado o cerró la conexión')
+            expect(ST.list_events(st) == events, f'{label}: la purga rechazada registró eventos')
+            r = ST.purge(st)
+            expect(st._state == 'purgado' and r['post_close_check'] == 'ProgrammingError' and probe_closed(conn) and
+                   r['connection'] == ('CONNECTION_ABORTED' if label == 'activo' else 'CLOSED'),
+                   f'{label}: el propietario no pudo purgar tras el rechazo: {r.get("connection")}')
+        st = ST.open_tenant_store(tenant('ORG-S1'))
+        out = from_other_thread([('create_run', lambda: ST.create_run(st, seed, clock)),
+                                 ('preflight_report', lambda: ST.preflight_report(st))])
+        expect(out['create_run'][0] == 'E-HILO' and out['preflight_report'][0] == 'admitida' and st._state == 'abierto',
+               f'abierto: {out}')
+        ST.create_run(st, seed, clock)
+        try:
+            ST.append_evidence(st, dict(payload('ORG-S1', 0), text_synthetic=TEXT_MARKER + 'texto ajeno'))
+        except ST.SbxbStoreError:
+            pass
+        out = from_other_thread([('diagnostic', lambda: ST.diagnostic(st))])
+        expect(out['diagnostic'][0] == 'admitida' and st._state == 'bloqueado', f'bloqueado: {out}')
+
+    def p36():
+        """M02: el cierre no depende de construir el comprobante. El objeto nunca vuelve a quedar utilizable, el cierre
+        se intenta siempre, se conserva la causa original y lo no observado queda no_disponible."""
+        bad = dict(payload('ORG-S1', 0), text_synthetic=TEXT_MARKER + 'texto ajeno')       # E-ORIGEN
+        unobserved = ('final_state', 'last_event_hash', 'counts', 'file_backed', 'observed', 'failed_event_record')
+
+        def raising(*a, **k):
+            raise RuntimeError('fallo inyectado al construir el comprobante')
+
+        def attempt(label, action, patches=()):
+            saved = {name: getattr(ST, name) for name in patches}
+            for name in patches:
+                setattr(ST, name, raising)
+            try:
+                try:
+                    return 'ok', action()
+                except ST.SbxbStoreError as e:
+                    return e.code, None
+                except Exception as e:      # una excepción cruda es justo el defecto M02
+                    raise CaseFail(f'{label}: excepción no contractual {e.__class__.__name__}: {e}')
+            finally:
+                for name, fn in saved.items():
+                    setattr(ST, name, fn)
+
+        def closed_state(label, st, conn, record, connection, failed, degraded, hashed=True):
+            expect(st._state in ('bloqueado', 'purgado') and st._conn is None, f'{label}: el objeto sigue utilizable '
+                                                                              f'({st._state})')
+            if connection != 'CLOSE_UNVERIFIED':
+                expect(probe_closed(conn), f'{label}: la conexión no quedó cerrada')
+            expect(record['connection'] == connection and record['failed_event'] == failed,
+                   f'{label}: hechos del cierre: {record.get("connection")} / {record.get("failed_event")}')
+            if degraded:
+                expect('receipt_error' in record and all(record[k] == 'no_disponible' for k in unobserved),
+                       f'{label}: comprobante degradado incompleto o con hechos inventados: {record}')
+            body = {k: v for k, v in record.items() if k != 'receipt_hash'}
+            expect(record['receipt_hash'] == (g_sha(body) if hashed else 'no_disponible'),
+                   f'{label}: receipt_hash {record["receipt_hash"]!r} no corresponde')
+            follow = 'E-PURGADO' if st._state == 'purgado' else 'E-BLOQUEADO'
+            expect_error(follow, ST.read_run, st)
+        # Cierre excepcional: fallo durante el comprobante, del respaldo y antes del comprobante.
+        for label, patches, failed, degraded, hashed in (
+                ('comprobante roto', ('_closure',), 'FAILED_EVENT_COMMITTED', True, True),
+                ('comprobante y respaldo rotos', ('_closure', '_sha'), 'FAILED_EVENT_UNAVAILABLE', True, False),
+                ('fallo antes del comprobante', ('_commit_failed',), 'FAILED_EVENT_UNAVAILABLE', False, True),
+                ('lectura de hechos rota', ('_observe',), 'FAILED_EVENT_COMMITTED', False, True)):
+            st = started()
+            conn = st._conn
+            code, _ = attempt(label, lambda: ST.append_evidence(st, bad), patches)
+            expect(code == 'E-ORIGEN', f'{label}: causa original perdida ({code})')
+            d = ST.diagnostic(st)
+            expect(d['error_code'] == 'E-ORIGEN', f'{label}: error_code {d["error_code"]}')
+            closed_state(label, st, conn, d, 'CONNECTION_ABORTED', failed, degraded, hashed)
+            if label == 'fallo antes del comprobante' or label == 'lectura de hechos rota':
+                expect(d['observed'] == 'no_disponible', f'{label}: hechos inventados ({d["observed"]})')
+        # Sin parches: estado interno corrupto que hace fallar el comprobante.
+        st = started()
+        conn = st._conn
+        st._tenant = {k: v for k, v in st._tenant.items() if k != 'synthetic_organization_id'}
+        code, _ = attempt('estado interno corrupto', lambda: ST.append_evidence(st, bad))
+        expect(code == 'E-CONTRATO', f'estado interno corrupto: causa original perdida ({code})')
+        closed_state('estado interno corrupto', st, conn, ST.diagnostic(st), 'CONNECTION_ABORTED',
+                     'FAILED_EVENT_COMMITTED', True)
+        # Cierre no verificable y FAILED no disponible, ambos con el comprobante roto.
+        st = started()
+        real = st._conn
+        st._conn = FailConn(real, sq.OperationalError, lambda s: False, closes=False)
+        try:
+            code, _ = attempt('cierre no verificable', lambda: ST.append_evidence(st, bad), ('_closure',))
+            expect(code == 'E-ORIGEN', f'cierre no verificable: causa original perdida ({code})')
+            closed_state('cierre no verificable', st, real, ST.diagnostic(st), 'CLOSE_UNVERIFIED',
+                         'FAILED_EVENT_COMMITTED', True)
+            expect(real.execute(ST.SQL_SELECT_PIPELINE_EVENT).fetchall()[-1][3] == 'fallido',
+                   'cierre no verificable: FAILED_EVENT_COMMITTED sin el evento en la base')
+        finally:
+            real.close()
+        st = started()
+        real = st._conn
+        st._conn = FailConn(real, sq.OperationalError, lambda s: s in (ST.SQL_INSERT_EVIDENCE_RECORD,
+                                                                        ST.SQL_INSERT_PIPELINE_EVENT))
+        code, _ = attempt('FAILED no disponible', lambda: ST.append_evidence(st, payload('ORG-S1', 0)), ('_closure',))
+        expect(code == 'E-SQLITE', f'FAILED no disponible: causa original perdida ({code})')
+        closed_state('FAILED no disponible', st, real, ST.diagnostic(st), 'CONNECTION_ABORTED',
+                     'FAILED_EVENT_UNAVAILABLE', True)
+        # Purga: normal, en activo y no verificable, con el comprobante roto.
+        for label, make, connection, failed in (('purga normal', full, 'CLOSED', 'no_aplica'),
+                                                 ('purga en activo', started, 'CONNECTION_ABORTED',
+                                                  'FAILED_EVENT_COMMITTED')):
+            st = make()
+            conn = st._conn
+            code, receipt = attempt(label, lambda: ST.purge(st), ('_closure',))
+            expect(code == 'ok' and st._state == 'purgado', f'{label}: {code} / {st._state}')
+            closed_state(label, st, conn, receipt, connection, failed, True)
+        st = full()
+        real = st._conn
+        st._conn = FailConn(real, sq.OperationalError, lambda s: False, closes=False)
+        try:
+            code, _ = attempt('purga no verificable', lambda: ST.purge(st), ('_closure',))
+            expect(code == 'E-SQLITE', f'purga no verificable: {code}')
+            closed_state('purga no verificable', st, real, ST.diagnostic(st), 'CLOSE_UNVERIFIED', 'no_aplica', True)
+        finally:
+            real.close()
+
     return [('P01', p01), ('P02', p02), ('P03', p03), ('P04', p04), ('P05', p05), ('P07', p07), ('P09', p09),
             ('P10', p10), ('P11', p11), ('P12', p12), ('P13', p13), ('P14', p14), ('P15', p15), ('P16', p16),
             ('P17', p17), ('P18', p18), ('P21', p21), ('P22', p22), ('P23', p23), ('P24', p24), ('P26', p26),
-            ('P27', p27), ('P28', p28), ('P29', p29), ('P30', p30), ('P31', p31)]
+            ('P27', p27), ('P28', p28), ('P29', p29), ('P30', p30), ('P31', p31), ('P35', p35), ('P36', p36)]
 
 
 STATIC_FOR = {'P01': ('connect',), 'P06': ('execute', 'strings', 'catalog'), 'P07': ('catalog',), 'P11': ('catalog',),
               'P17': ('api',), 'P18': ('api',), 'P19': ('imports',), 'P20': ('refs',), 'P22': ('time', 'imports'),
               'P23': ('module_state',), 'P24': ('catalog',), 'P26': ('catalog', 'postcondition', 'api'),
-              'P28': ('ddl', 'catalog')}
-GROUPS = {'DET': ('P11', 'P22'), 'ISO': ('P03', 'P04', 'P05', 'P14', 'P23'), 'PUR': ('P12', 'P13', 'P24'),
+              'P28': ('ddl', 'catalog'), 'P34': ('connect', 'capability', 'load')}
+GROUPS = {'DET': ('P11', 'P22'), 'ISO': ('P03', 'P04', 'P05', 'P14', 'P23'), 'PUR': ('P12', 'P13', 'P24', 'P35', 'P36'),
           'DAT': ('P15', 'P16', 'P28', 'P29', 'P31')}
-STORE_CASES = tuple(f'P{i:02d}' for i in range(1, 32) if i != 25)
+STORE_CASES = tuple(f'P{i:02d}' for i in range(1, 32) if i != 25) + ('P35', 'P36')
 
 # ---------------------------------------------------------------- NB2: negativos del almacén (bytes mutados en memoria)
 # (caso, regla, descripción, (texto original, texto mutado) o ('', texto añadido al final), detector). El detector es un
@@ -1659,6 +1821,94 @@ NB2_STORE = [
       "            evidence['content_hash'] != _content_hash(org, origin, criterion, kind, _t1(text)):",
       '    if False:'), 'P29'),
 ]
+
+
+# H01 (auditoría de la implementación): una conexión SQLite adicional obtenida por un camino indirecto en código que se
+# ejecuta al cargar o al abrir el almacén. Cada negativo inserta una apertura de un marcador en una ruta absoluta fuera
+# del repositorio; el gate debe rechazarlo ANTES de ejecutar nada, y el marcador no debe aparecer.
+_H01_END = "\n\n{}\n"
+_AUTHORIZED_CONNECT = "    conn = sqlite3.connect(':memory:', isolation_level=None)\n"
+H01_NEGATIVES = [   # (caso, descripción, plantilla; {m} es la ruta absoluta del marcador)
+    ('NB2-29', 'clase privada con alias de sqlite3.connect que abre un marcador al cargar',
+     ('', "class _Fabrica:\n    _abrir = sqlite3.connect\n    _marca = _abrir('{m}')\n    _marca.close()")),
+    ('NB2-30', 'alias de sqlite3.connect a nivel de módulo usado en un cuerpo de clase',
+     ('', "_abrir_modulo = sqlite3.connect\n\n\nclass _UsaAlias:\n    _marca = _abrir_modulo('{m}')\n    _marca.close()")),
+    ('NB2-31', 'apertura en un argumento por defecto evaluado al definir una función',
+     ('', "_abrir_defecto = sqlite3.connect\n\n\ndef _por_defecto(c=_abrir_defecto('{m}').close()):\n    return c")),
+    ('NB2-32', 'apertura en un decorador evaluado al cargar',
+     ('', "_abrir_decorador = sqlite3.connect\n\n\n@(lambda f: (_abrir_decorador('{m}').close(), f)[1])\n"
+          "def _decorada():\n    return None")),
+    ('NB2-33', 'apertura en una anotación evaluada al definir una función',
+     ('', "_abrir_anotacion = sqlite3.connect\n\n\ndef _anotada(x: _abrir_anotacion('{m}').close()):\n    return x")),
+    ('NB2-34', 'conexión autorizada cambiada a un archivo',
+     (_AUTHORIZED_CONNECT, "    conn = sqlite3.connect('{m}', isolation_level=None)\n")),
+    ('NB2-35', 'clase Connection obtenida con type() desde la conexión autorizada',
+     (_AUTHORIZED_CONNECT, _AUTHORIZED_CONNECT + "    type(conn)('{m}').close()\n")),
+    ('NB2-36', 'connect alcanzado por un atributo dunder del módulo',
+     ('', "class _Dunder:\n    _marca = sqlite3.__dict__['connect']('{m}')\n    _marca.close()")),
+    ('NB2-37', 'clase sqlite3.Connection llamada directamente al cargar',
+     ('', "class _Clase:\n    _marca = sqlite3.Connection('{m}')\n    _marca.close()")),
+    ('NB2-38', 'import de sqlite3 dentro de un cuerpo de clase',
+     ('', "class _Importa:\n    import sqlite3\n    _abrir = sqlite3.connect\n    _marca = _abrir('{m}')\n"
+          "    _marca.close()")),
+    ('NB2-39', 'alias de open en un cuerpo de clase que escribe un marcador',
+     ('', "class _Escribe:\n    _w = open\n    _w('{m}', 'wb').close()")),
+]
+H01_CONTROL = ('PB2-01', 'almacén sin mutar: STA lo acepta y ningún marcador aparece')
+H01_ROWS = [(cid, 'STA', what) for cid, what, _ in H01_NEGATIVES] + [(H01_CONTROL[0], 'STA', H01_CONTROL[1])]
+
+
+def h01_mutation(data, template, marker):
+    old, new = template
+    text = data.decode('utf-8')
+    if not old:
+        return (text + _H01_END.format(new.format(m=marker))).encode('utf-8')
+    if old not in text:
+        raise ValueError(f'mutación no aplicable: {old[:50]!r}')
+    return text.replace(old, new.format(m=marker), 1).encode('utf-8')
+
+
+def run_h01_negatives(b1, store_bytes, ctx):
+    """H01: cada negativo sigue el mismo camino de decisión que el gate (STA y, solo si STA acepta, ejecución del módulo
+    y apertura del preflight). Correcto si STA lo rechaza antes de ejecutar y el marcador no existe."""
+    results, tenant = {}, {'synthetic_organization_id': 'ORG-S1', 'tenant_kind': 'synthetic_organization',
+                           'origin_dataset_version': 'f34-synth-1.1.0', 'simulation_actor': 'SIMREV-ORG-S1'}
+    for cid, what, template in H01_NEGATIVES + [(H01_CONTROL[0], H01_CONTROL[1], None)]:
+        tmp = make_temp('h01')
+        marker = os.path.join(tmp, f'{cid}.db').replace(os.sep, '/')
+        try:
+            data = store_bytes if template is None else h01_mutation(store_bytes, template, marker)
+            static = store_static(data, ctx['contract'], ctx['origin'])
+            problems = [p for items in static.values() for p in items]
+            executed = None
+            if not problems:            # el gate lo ejecutaría: se ejecuta igual para observar el efecto
+                cwd = os.getcwd()
+                try:
+                    os.chdir(tmp)
+                    with b1.ExecGuard({}):
+                        ST = load_store(data)
+                        ST.purge(ST.open_tenant_store(tenant))
+                    executed = 'ejecutado'
+                except Exception as e:      # el efecto pudo producirse antes del error: se comprueba igual
+                    executed = f'ejecutado con error {e.__class__.__name__}'
+                finally:
+                    os.chdir(cwd)
+            created = os.path.exists(marker)
+            if template is None:
+                ok = not problems and not created
+                detail = 'aceptado por STA; sin marcador' if ok else f'control rechazado: {problems[:1]}'
+            else:
+                ok = bool(problems) and executed is None and not created
+                detail = (f'rechazado antes de ejecutar ({problems[0][:90]}); marcador ausente' if ok else
+                          f'{executed or "rechazado"}; marcador {"CREADO" if created else "ausente"}')
+        except Exception as e:      # mutación no aplicable o fallo del análisis: el negativo no demuestra nada
+            ok, detail = False, f'no evaluable ({e.__class__.__name__}: {e})'
+        try:
+            remove_tree(tmp)
+        except OSError:             # algo mantiene abierto el marcador: el efecto existió
+            ok, detail = False, detail + '; temporal no eliminable (archivo en uso)'
+        results[cid] = (ok, detail)
+    return results
 
 
 def mutate_bytes(data, change):
@@ -1908,7 +2158,7 @@ def case_rows2(b1):
     """Filas «| NB2-xx | REGLA | descripción |» de los documentos que describen un negativo del gate: no son
     afirmaciones (como los casos NB de B1)."""
     rows = {tuple(b1.row_cell(x) for x in (cid, rule, what)) for cid, rule, what, *_ in
-            NB2_STORE + NB2_REPO + NB2_REPO_EXTRA}
+            NB2_STORE + NB2_REPO + NB2_REPO_EXTRA + H01_ROWS}
 
     def exempt(sentence):
         cells = tuple(b1.row_cell(c) for c in sentence.strip().strip('|').split('|'))
@@ -2155,6 +2405,16 @@ def main():
     store_rules, cases, ctx = run_store_rules(b1, store_bytes, baseline=None if S2['errors'] else S2['listing'])
     nb2 = run_nb2_store(b1, store_bytes, ctx) if ctx is not None else {}
     nb2.update(run_nb2_repo(b1, S, S2, sem, exempt, cases))
+    # P34 (H01): STA rechaza toda vía alternativa a la conexión autorizada antes de ejecutar, sin marcadores.
+    h01 = run_h01_negatives(b1, store_bytes, ctx) if ctx is not None else {}
+    nb2.update(h01)
+    static_ok, static_detail = cases.get('P34', (False, 'no ejecutado'))
+    h01_fail = [f'{cid}: {detail}' for cid, (ok, detail) in sorted(h01.items()) if not ok]
+    h01_all = {cid for cid, *_ in H01_NEGATIVES} | {H01_CONTROL[0]}
+    cases['P34'] = (static_ok and not h01_fail and set(h01) == h01_all,
+                    f'{static_detail}; ' + (f'{h01_fail[:2]}' if h01_fail or set(h01) != h01_all else
+                                           f'{len(H01_NEGATIVES)} negativos rechazados antes de ejecutar, sin '
+                                           f'marcador; control benigno aceptado'))
     # P25, P32 y P33: B1F sobre la historia real y sobre las historias desechables.
     real_b1f = ['B1F no evaluable (falla cerrado)'] if S2['errors'] else list(S2['b1f'])
     fixture_fail = [f'{cid} ({what}): {detail}' for cid, (ok, what, detail) in sorted(fixtures.items()) if not ok]
@@ -2169,20 +2429,21 @@ def main():
              'AIN': b1.r_ain(S), 'B0F': b1.r_b0f(S), 'HST': b1.r_hst(S), 'SBX': b1.r_sbx(S),
              'SCP': r2_scp(S2), 'FSY': r2_fsy(b1, S, S2), 'FLG': b1.r_flg(S),
              'DEP': store_rules['DEP'] + r2_dep(S2), 'PRE': store_rules['PRE'], 'STA': store_rules['STA'],
-             'DYN': store_rules['DYN'] + [f'{pid}: {cases[pid][1]}' for pid in ('P25', 'P32', 'P33') if not cases[pid][0]],
+             'DYN': store_rules['DYN'] + [f'{pid}: {cases[pid][1]}' for pid in ('P25', 'P32', 'P33', 'P34')
+                                          if not cases[pid][0]],
              'CAP': r2_cap(b1, S2, sem, exempt, cases), 'GOV': r2_gov(b1, S2, sem)}
     for gid in GROUPS:
         rules[gid] = store_rules.get(gid, [f'{gid} no evaluado: el almacén no llegó a ejecutarse (falla cerrado)'])
     for rid in RULE_ORDER:
         viol = rules[rid]
         add(not viol, f'{rid}: {len(viol)} violaciones' + (f' — {viol[:3]}' if viol else ''))
-    for pid in sorted(set(STORE_CASES) | {'P25', 'P32', 'P33'}):
+    for pid in sorted(set(STORE_CASES) | {'P25', 'P32', 'P33', 'P34'}):
         ok, detail = cases.get(pid, (False, 'no ejecutado'))
         add(ok, f'{pid}: {detail}')
     for cid in sorted(fixtures):
         ok, what, detail = fixtures[cid]
         add(ok, f'{cid} [B1F] {what}: {detail}')
-    for cid, rule, what, *_ in NB2_STORE + NB2_REPO + NB2_REPO_EXTRA:
+    for cid, rule, what, *_ in NB2_STORE + NB2_REPO + NB2_REPO_EXTRA + H01_ROWS:
         ok, detail = nb2.get(cid, (False, 'no ejecutado'))
         add(ok, f'{cid} [{rule}] {what}: {detail}')
     print(f'INFO transición de gobierno de B2 derivada: {S2.get("transition") or "ninguna (aún no materializada)"}; '
