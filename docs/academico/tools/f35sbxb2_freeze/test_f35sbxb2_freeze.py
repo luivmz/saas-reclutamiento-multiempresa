@@ -12,10 +12,10 @@ Diseño que estas pruebas fijan antes de implementar el validador (RED):
            completa. Ese commit se deriva de Git: ningún archivo registra su propio hash.
 
 El validador informa diez reglas: ENT, CAN, MAN, HIS, ARB, IDX, FLG, DSK, FRZ y DEP. Cada caso trabaja en un clon
-desechable de HEAD, fuera del repositorio, con objetos compartidos de solo lectura, configuración de Git aislada,
-identidad ficticia y fechas fijas, y ejecuta allí el validador con python -I. El caso pasa si el validador termina con
-su resumen y fallan exactamente las reglas esperadas (ninguna, si se espera PASS). Las rutas congeladas se derivan de
-Git, no del manifiesto. El repositorio original no se modifica.
+desechable de HEAD, fuera del repositorio, con objetos compartidos de solo lectura (F20, con un clon superficial),
+configuración de Git aislada, identidad ficticia y fechas fijas, y ejecuta allí el validador con python -I. El caso pasa
+si el validador termina con su resumen y fallan exactamente las reglas esperadas (ninguna, si se espera PASS). Las rutas
+congeladas se derivan de Git, no del manifiesto. El repositorio original no se modifica.
 
 Salvo en la segunda sonda de B01, el validador que se ejecuta tiene los bytes del commit de freeze: los casos que lo
 alteran recuperan esos bytes en el disco antes de validar, como hará la auditoría con el commit registrado.
@@ -46,6 +46,7 @@ B2_BASE = '72e86c5838984ea873d6dd56c179d94217b27317'      # develop al crear la 
 B2_BRANCH = 'feature/f35-sbx-b2-ephemeral-store'
 VALIDATOR = 'docs/academico/tools/f35sbxb2_freeze/validate_f35sbxb2_freeze.py'
 MANIFEST = 'docs/academico/tools/f35sbxb2_freeze/b2_freeze_manifest.json'
+TESTS = 'docs/academico/tools/f35sbxb2_freeze/test_f35sbxb2_freeze.py'
 FREEZE_DOC = 'docs/academico/evidencia-sbx-b2-freeze/F35SBXB_B2_Freeze.md'
 RULES = frozenset({'ENT', 'CAN', 'MAN', 'HIS', 'ARB', 'IDX', 'FLG', 'DSK', 'FRZ', 'DEP'})
 SUMMARY = 'validate_f35sbxb2_freeze: '
@@ -109,19 +110,41 @@ def run_git(args, cwd, env, data=None):
     return p.stdout
 
 
-class Fixture:
-    """Clon desechable de la base con la rama de B2 en HEAD. Nada de lo que se hace aquí llega al repositorio."""
+def file_url(path):
+    path = os.path.abspath(path).replace(os.sep, '/')
+    return 'file://' + ('' if path.startswith('/') else '/') + path
 
-    def __init__(self, base, label, env, head):
-        self.env, self.root = env, make_temp(label)
+
+class Fixture:
+    """Clon desechable de la base con la rama de B2 en HEAD. Nada de lo que se hace aquí llega al repositorio. Con
+    depth, el clon es superficial (copia de objetos por file://); si no, comparte los objetos de la base."""
+
+    def __init__(self, base, label, env, head, depth=None):
+        self.env, self.base, self.head, self.extra = env, base, head, []
+        self.root = make_temp(label)
         try:
-            run_git(['clone', '-q', '--shared', '--no-checkout', '-c', 'core.autocrlf=false', base, self.root],
-                    os.path.dirname(self.root), env)
-            self.git('remote', 'remove', 'origin')
-            self.git('checkout', '-q', '-B', B2_BRANCH, head)
+            self._clone(self.root, depth)
         except BaseException:
             remove_tree(self.root)
             raise
+
+    def _clone(self, root, depth=None):
+        source = ['--shared', self.base] if depth is None else ['--depth', str(depth), file_url(self.base)]
+        run_git(['clone', '-q', '--no-checkout', '-c', 'core.autocrlf=false', *source, root], os.path.dirname(root),
+                self.env)
+        run_git(['remote', 'remove', 'origin'], root, self.env)
+        run_git(['checkout', '-q', '-B', B2_BRANCH, self.head], root, self.env)
+
+    def sibling(self, label):
+        """Otro clon limpio del mismo HEAD, que se borra junto con el caso."""
+        root = make_temp(label)
+        self.extra.append(root)
+        self._clone(root)
+        return root
+
+    def cleanup(self):
+        for path in [self.root] + self.extra:
+            remove_tree(path)
 
     def git(self, *args, data=None):
         return run_git(list(args), self.root, self.env, data)
@@ -151,12 +174,12 @@ class Fixture:
         """git status no muestra ningún cambio: el escenario es invisible para él."""
         return self.git('status', '--porcelain').strip() == b''
 
-    def validate(self):
+    def validate(self, extra_env=None):
         """(reglas en falla, resumen) del validador del clon, o (None, motivo) si no terminó con un resumen coherente."""
         RUNS[0] += 1
         try:
-            p = subprocess.run([sys.executable, '-I', '-B', self.path(VALIDATOR)], cwd=self.root, env=self.env,
-                               capture_output=True, timeout=900)
+            p = subprocess.run([sys.executable, '-I', '-B', self.path(VALIDATOR)], cwd=self.root,
+                               env=dict(self.env, **(extra_env or {})), capture_output=True, timeout=900)
         except (OSError, subprocess.TimeoutExpired) as e:
             return None, f'el validador no se pudo ejecutar ({e.__class__.__name__})'
         lines = p.stdout.decode('utf-8', 'replace').splitlines()
@@ -164,17 +187,17 @@ class Fixture:
         failing = {x.split()[1].rstrip(':') for x in lines if x.startswith('FALLA ') and len(x.split()) > 1}
         if len(summary) != 1:
             tail = ((p.stdout + p.stderr).decode('utf-8', 'replace').strip().splitlines() or [''])[-1]
-            return None, f'el validador no terminó con su resumen (código {p.returncode}): «{tail[-200:]}»'
+            return None, f'el validador no terminó con su resumen (código {p.returncode}): «{tail[:200]}»'
         if (p.returncode == 0) != (not failing) or not failing <= RULES:
             return None, f'salida incoherente del validador (código {p.returncode}; reglas en falla {sorted(failing)})'
         return failing, summary[0]
 
 
-def probe(fx, expected, label='', scenario=True, why=''):
+def probe(fx, expected, label='', scenario=True, why='', env=None):
     """Una ejecución del validador frente a las reglas que deben fallar (vacío = PASS)."""
     if not scenario:
         return label, expected, None, f'escenario no reproducido: {why}'
-    observed, detail = fx.validate()
+    observed, detail = fx.validate(env)
     return label, expected, observed, detail
 
 
@@ -406,6 +429,29 @@ def f19(fx, c):
     return [probe(fx, {'ENT', 'HIS', 'ARB', 'IDX', 'DSK'}, scenario=seen, why='git replace no sustituyó el candidato')]
 
 
+def f20(fx, c):
+    shallow = fx.text('rev-parse', '--is-shallow-repository') == 'true'
+    return [probe(fx, {'ENT', 'CAN', 'MAN', 'HIS', 'ARB', 'IDX', 'DSK', 'FRZ'}, scenario=shallow,
+                  why='el clon no es superficial')]
+
+
+f20.depth = 1
+
+
+def f21(fx, c):
+    path = c['gov'][1]
+    original = fx.read(path)
+    fx.write(path, original + b'\nsolo en el indice\n')
+    fx.git('add', '--', path)
+    fx.write(path, original)
+    clean = fx.sibling('f21-limpio')
+    hostile = {'GIT_DIR': os.path.join(clean, '.git'), 'GIT_WORK_TREE': clean,
+               'GIT_INDEX_FILE': os.path.join(clean, '.git', 'index')}
+    steered = subprocess.run(['git', 'diff', '--cached', '--quiet'], cwd=fx.root, env=dict(fx.env, **hostile),
+                             capture_output=True).returncode == 0      # con esas variables, Git no ve el cambio
+    return [probe(fx, {'IDX'}, scenario=steered, why='con esas variables Git sigue viendo el cambio', env=hostile)]
+
+
 def r01(fx, c):
     path = c['py'][0]
     data = fx.read(path) + b'# alterado con un manifiesto coherente\n'
@@ -455,6 +501,18 @@ def b04(fx, c):
     return [probe(fx, {'FRZ'})]
 
 
+def b05(fx, c):
+    layer = {path: fx.read(path) for path in (VALIDATOR, MANIFEST, TESTS, FREEZE_DOC)}
+    fx.git('checkout', '-q', '-b', 'alternativa', CANDIDATE)
+    for path, data in layer.items():
+        fx.write(path, data + (b'\n# capa alternativa\n' if path == VALIDATOR else b''))
+    fx.commit('capa del freeze alternativa en una rama lateral', *layer)
+    fx.git('checkout', '-q', B2_BRANCH)
+    fx.git('merge', '-q', '--no-ff', '-s', 'ours', '-m', 'merge que conserva la capa del freeze', 'alternativa')
+    kept = all(fx.read(path) == data for path, data in layer.items()) and fx.hidden()
+    return [probe(fx, {'FRZ'}, scenario=kept, why='el merge no conserva la capa del freeze')]
+
+
 CASES = (
     ('F01', 'candidato intacto con la capa del freeze', (f01,)),
     ('F02', 'archivo congelado modificado y confirmado', (f02,)),
@@ -475,11 +533,14 @@ CASES = (
     ('F17', 'objeto inesperado en una ruta congelada', (f17_gitlink, f17_symlink)),
     ('F18', 'historia reescrita: el candidato no es ancestro de HEAD', (f18,)),
     ('F19', 'candidato sustituido con git replace para ocultar una alteración', (f19,)),
+    ('F20', 'clon superficial: la historia no es completa', (f20,)),
+    ('F21', 'GIT_DIR, GIT_WORK_TREE y GIT_INDEX_FILE apuntan a un clon limpio', (f21,)),
     ('R01', 'raíz de confianza: archivo congelado y manifiesto alterados de forma coherente', (r01,)),
     ('B01', 'validador del freeze modificado y confirmado', (b01,)),
     ('B02', 'manifiesto del freeze modificado en el disco', (b02,)),
     ('B03', 'evidencia del freeze modificada solo en el índice', (b03,)),
     ('B04', 'modificar → restaurar el validador del freeze', (b04,)),
+    ('B05', 'segunda capa del freeze en una rama lateral, integrada con un merge que conserva la original', (b05,)),
 )
 
 
@@ -525,14 +586,14 @@ def main():
         for setup in setups:
             fx = None
             try:
-                fx = Fixture(base, cid.lower(), env, ctx['head'])
+                fx = Fixture(base, cid.lower(), env, ctx['head'], getattr(setup, 'depth', None))
                 probes = setup(fx, ctx)
             except (Failure, OSError, ValueError, KeyError, TypeError) as e:
                 probes = [('', None, None, f'preparación no ejecutable ({e.__class__.__name__}: {e})')]
             finally:
                 if fx is not None:
                     try:
-                        remove_tree(fx.root)
+                        fx.cleanup()
                     except OSError as e:
                         problems.append(f'limpieza incompleta del clon ({e.__class__.__name__})')
             for label, expected, observed, detail in probes:
