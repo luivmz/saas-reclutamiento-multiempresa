@@ -541,10 +541,158 @@ def _expr(source):
     return ast.dump(ast.parse(source, mode='eval').body)
 
 
+# H01: capacidades que el almacén puede tomar de cada módulo importado. Todo acceso a un módulo es módulo.atributo con
+# el atributo en esta lista (para path y Connection, con un segundo nivel también cerrado). Un módulo nunca se usa como
+# valor, nunca se reasigna y solo se importa a nivel de módulo: así no hay alias ni caminos indirectos.
+MODULE_ATTRS = {'csv': {'DictReader', 'Error'}, 'hashlib': {'sha256'}, 'json': {'dumps', 'loads'},
+                're': {'compile', 'split', 'I'}, 'unicodedata': {'normalize'}, 'os': {'path'},
+                'sqlite3': {'connect', 'Connection', 'Error', 'ProgrammingError', 'sqlite_version',
+                            'SQLITE_LIMIT_ATTACHED', 'SQLITE_OK', 'SQLITE_DENY', 'SQLITE_INSERT', 'SQLITE_READ',
+                            'SQLITE_SELECT', 'SQLITE_TRANSACTION', 'SQLITE_FUNCTION', 'SQLITE_PRAGMA'}}
+MODULE_SECOND = {('os', 'path'): {'join', 'dirname', 'abspath'},
+                 ('sqlite3', 'Connection'): {'setlimit', 'getlimit', 'set_authorizer'}}
+AUTHORIZED_CONNECT = "conn = sqlite3.connect(':memory:', isolation_level=None)"
+LOAD_CALLS = ('re.compile', 'frozenset', 'os.path.abspath', 'os.path.join', 'os.path.dirname')
+STORE_CLASSES = {'TenantRunStore': (), 'SbxbStoreError': ('Exception',)}
+LOAD_FORBIDDEN = (ast.AnnAssign, ast.AsyncFunctionDef, ast.AsyncFor, ast.AsyncWith, ast.Await, ast.Match)
+
+
+def _load_safe(node, known):
+    """Valor de una asignación de módulo que puede evaluarse al cargar sin efectos: literales, constantes ya definidas,
+    + y *, re.I y las llamadas puras de LOAD_CALLS sobre esos mismos valores."""
+    if isinstance(node, ast.Constant):
+        return True
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set)):
+        return all(_load_safe(e, known) for e in node.elts)
+    if isinstance(node, ast.Dict):
+        return all(k is not None and _load_safe(k, known) and _load_safe(v, known) for k, v in zip(node.keys, node.values))
+    if isinstance(node, ast.Name):
+        return isinstance(node.ctx, ast.Load) and node.id in known
+    if isinstance(node, ast.BinOp):
+        return isinstance(node.op, (ast.Add, ast.Mult)) and _load_safe(node.left, known) and _load_safe(node.right, known)
+    if isinstance(node, ast.Attribute):
+        return _dotted(node) == 're.I'
+    if isinstance(node, ast.Call):
+        return _dotted(node.func) in LOAD_CALLS and not node.keywords and \
+            all(not isinstance(a, ast.Starred) and _load_safe(a, known) for a in node.args)
+    return False
+
+
+def capability_problems(tree, parent, docstrings, imports):
+    """H01, antes de ejecutar nada: (1) contextos que se ejecutan al cargar el módulo (cuerpo del módulo, cuerpos de
+    clase, decoradores, valores por defecto, anotaciones), limitados a valores sin efectos; (2) vías hacia capacidades
+    restringidas (alias o reasignación de módulos, atributos fuera de la lista, dunder, type(), llamadas sobre
+    expresiones); (3) una única apertura de SQLite, la autorizada. Devuelve {'connect', 'capability', 'load'}."""
+    C = {'connect': [], 'capability': [], 'load': []}
+    line = lambda n: f'línea {getattr(n, "lineno", "?")}'
+
+    def bound_by_except(name):
+        p = parent.get(name)
+        while p is not None:
+            if isinstance(p, ast.ExceptHandler) and p.name == name.id:
+                return True
+            p = parent.get(p)
+        return False
+
+    def authorized(node):
+        call = parent.get(node)
+        stmt = parent.get(call)
+        fn = parent.get(stmt)
+        return (isinstance(call, ast.Call) and call.func is node and isinstance(stmt, ast.Assign) and
+                stmt.value is call and ast.dump(stmt) == ast.dump(ast.parse(AUTHORIZED_CONNECT).body[0]) and
+                isinstance(fn, ast.FunctionDef) and fn.name == 'open_tenant_store' and parent.get(fn) is tree and
+                any(s is stmt for s in fn.body))
+    # (1) Cuerpo del módulo: asignaciones evaluables sin efectos, en orden.
+    known = set()
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            target = node.targets[0].id if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name) else None
+            extra = {'__file__'} if target == '_ROOT' else set()
+            if target is None or not _load_safe(node.value, known | extra):
+                C['load'].append(f'asignación de módulo con código que se ejecuta al cargar ({line(node)})')
+            if target:
+                known.add(target)
+    connects = []
+    for node in ast.walk(tree):
+        if isinstance(node, LOAD_FORBIDDEN):
+            C['load'].append(f'construcción no admitida: {node.__class__.__name__} ({line(node)})')
+        elif isinstance(node, (ast.Import, ast.ImportFrom)) and parent.get(node) is not tree:
+            C['load'].append(f'importación fuera del nivel de módulo ({line(node)})')
+        elif isinstance(node, ast.ClassDef):
+            bases = tuple(_dotted(b) for b in node.bases)
+            if parent.get(node) is not tree or STORE_CLASSES.get(node.name) != bases or node.keywords or \
+                    node.decorator_list:
+                C['load'].append(f'clase {node.name} no autorizada o con bases, metaclase o decoradores ({line(node)})')
+            for stmt in node.body:
+                slots = (isinstance(stmt, ast.Assign) and len(stmt.targets) == 1 and
+                         isinstance(stmt.targets[0], ast.Name) and stmt.targets[0].id == '__slots__' and
+                         isinstance(stmt.value, ast.Tuple) and
+                         all(isinstance(e, ast.Constant) and isinstance(e.value, str) for e in stmt.value.elts))
+                if not (isinstance(stmt, ast.FunctionDef) or slots or
+                        (isinstance(stmt, ast.Expr) and stmt.value in docstrings)):
+                    C['load'].append(f'{node.name}: el cuerpo de la clase ejecuta código al cargar ({line(stmt)})')
+        if isinstance(node, (ast.FunctionDef, ast.Lambda)):
+            a = node.args
+            annotated = [x for x in a.posonlyargs + a.args + a.kwonlyargs + [a.vararg, a.kwarg]
+                         if x is not None and x.annotation is not None]
+            if isinstance(node, ast.FunctionDef) and (node.decorator_list or node.returns is not None) or annotated:
+                C['load'].append(f'decoradores o anotaciones evaluados al definir ({line(node)})')
+            if any(d is not None and not isinstance(d, ast.Constant) for d in a.defaults + a.kw_defaults):
+                C['load'].append(f'valor por defecto evaluado al definir ({line(node)})')
+            if isinstance(node, ast.FunctionDef) and node.name in imports:
+                C['capability'].append(f'función que oculta el módulo {node.name} ({line(node)})')
+        # (2) Vías hacia capacidades restringidas.
+        if isinstance(node, ast.Name) and node.id in imports:
+            p = parent.get(node)
+            if not isinstance(node.ctx, ast.Load):
+                C['capability'].append(f'módulo {node.id} reasignado ({line(node)})')
+            elif not (isinstance(p, ast.Attribute) and p.value is node):
+                C['capability'].append(f'módulo {node.id} usado como valor: alias o acceso indirecto ({line(node)})')
+            elif p.attr not in MODULE_ATTRS.get(node.id, ()):
+                C['capability'].append(f'{node.id}.{p.attr}: capacidad no autorizada ({line(node)})')
+            elif (node.id, p.attr) in MODULE_SECOND:
+                q = parent.get(p)
+                if not (isinstance(q, ast.Attribute) and q.value is p and q.attr in MODULE_SECOND[(node.id, p.attr)]):
+                    C['capability'].append(f'{node.id}.{p.attr}: uso no autorizado ({line(node)})')
+            if isinstance(p, ast.Attribute) and p.value is node and node.id == 'sqlite3' and p.attr == 'connect':
+                connects.append(p)
+        elif isinstance(node, ast.arg) and node.arg in imports or \
+                isinstance(node, ast.ExceptHandler) and node.name in imports:
+            C['capability'].append(f'nombre de módulo reutilizado como variable ({line(node)})')
+        elif isinstance(node, ast.Attribute) and node.attr.startswith('__') and node.attr.endswith('__'):
+            ok = (node.attr == '__init__' and isinstance(node.value, ast.Call) and _dotted(node.value.func) == 'super'
+                  and not node.value.args and not node.value.keywords) or \
+                (node.attr == '__class__' and isinstance(node.value, ast.Name) and bound_by_except(node.value) and
+                 isinstance(parent.get(node), ast.Attribute) and parent[node].attr == '__name__') or \
+                (node.attr == '__name__' and isinstance(node.value, ast.Attribute) and node.value.attr == '__class__')
+            if not ok:
+                C['capability'].append(f'atributo dunder no autorizado: {node.attr} ({line(node)})')
+        elif isinstance(node, ast.Name) and node.id.startswith('__') and node.id.endswith('__') and \
+                isinstance(node.ctx, ast.Load) and node.id != '__file__':
+            C['capability'].append(f'nombre dunder no autorizado: {node.id} ({line(node)})')
+        elif isinstance(node, ast.Name) and node.id in ('type', 'super', 'object'):
+            p = parent.get(node)
+            call = p if isinstance(p, ast.Call) and p.func is node else None
+            cmp = parent.get(call)
+            ok = call is not None and (
+                (node.id == 'type' and len(call.args) == 1 and not call.keywords and isinstance(cmp, ast.Compare) and
+                 cmp.left is call and all(isinstance(op, (ast.Is, ast.IsNot)) for op in cmp.ops)) or
+                (node.id == 'super' and isinstance(cmp, ast.Attribute) and cmp.attr == '__init__'))
+            if not ok:
+                C['capability'].append(f'{node.id} fuera de su uso autorizado ({line(node)})')
+        if isinstance(node, ast.Call) and not isinstance(node.func, (ast.Name, ast.Attribute)):
+            C['capability'].append(f'llamada sobre una expresión ({node.func.__class__.__name__}, {line(node)})')
+    # (3) Una única apertura de SQLite, la autorizada.
+    if len(connects) != 1 or not authorized(connects[0]):
+        C['connect'].append(f'sqlite3.connect aparece {len(connects)} veces; solo se admite «{AUTHORIZED_CONNECT}» como '
+                            f'sentencia directa de open_tenant_store')
+    return C
+
+
 def store_static(source, contract, origin):
     """Problemas estáticos del almacén por tema, sobre los mismos bytes que luego se ejecutarán."""
     P = {k: [] for k in ('imports', 'os', 'connect', 'execute', 'catalog', 'ddl', 'postcondition', 'files', 'attrs',
-                         'module_state', 'api', 'refs', 'strings', 'time', 'origin')}
+                         'module_state', 'api', 'refs', 'strings', 'time', 'origin', 'capability', 'load')}
     try:
         tree = ast.parse(source.decode('utf-8'), filename=STORE)
     except (SyntaxError, ValueError, UnicodeDecodeError) as e:
@@ -566,6 +714,10 @@ def store_static(source, contract, origin):
         if isinstance(node, (ast.Module, ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)) and node.body and \
                 isinstance(node.body[0], ast.Expr) and isinstance(node.body[0].value, ast.Constant):
             docstrings.add(node.body[0].value)
+    # H01: contextos de carga, vías hacia capacidades restringidas y apertura única de SQLite.
+    imports = {a.name for n in tree.body if isinstance(n, ast.Import) for a in n.names}
+    for topic, items in capability_problems(tree, parent, docstrings, imports).items():
+        P[topic] += items
     # Catálogo: solo constantes de texto literales a nivel de módulo, asignadas una vez.
     catalog, module_names = {}, {}
     for node in tree.body:
@@ -648,7 +800,7 @@ def store_static(source, contract, origin):
         if inserts.get(table) != 1 or selects.get(table) != 1:
             P['catalog'].append(f'{table}: se exige exactamente una inserción y una lectura en el catálogo')
     inserts_names = {n for n, s in catalog.items() if s.startswith('INSERT')}
-    connects, opens = 0, 0
+    opens = 0
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for a in node.names:
@@ -671,14 +823,6 @@ def store_static(source, contract, origin):
             if node.id in FORBIDDEN_MODULE_NAMES:
                 P['time'].append(f'referencia a {node.id}')
         elif isinstance(node, ast.Call):
-            name = _dotted(node.func) or ''
-            if name == 'sqlite3.connect':
-                connects += 1
-                ok = (len(node.args) == 1 and isinstance(node.args[0], ast.Constant) and node.args[0].value == ':memory:'
-                      and all(k.arg == 'isolation_level' and isinstance(k.value, ast.Constant) and k.value.value is None
-                              for k in node.keywords))
-                if not ok:
-                    P['connect'].append('sqlite3.connect distinto de la constante literal \':memory:\' sin uri')
             if isinstance(node.func, ast.Attribute) and node.func.attr in ('execute', 'executemany'):
                 arg = node.args[0] if node.args else None
                 if not (isinstance(arg, ast.Name) and arg.id in catalog and arg.id != 'SQL_SCHEMA') or \
@@ -715,8 +859,6 @@ def store_static(source, contract, origin):
                 P['refs'].append(f'referencia prohibida: {node.value[:40]!r}')
             if node not in docstrings and node not in sql_values and SQL_WORDS.search(node.value):
                 P['strings'].append(f'SQL fuera del catálogo: {node.value[:40]!r}')
-    if connects != 1:
-        P['connect'].append(f'sqlite3.connect aparece {connects} veces (se exige una)')
     if opens != 1:
         P['files'].append(f'open aparece {opens} veces (se exige una, en _load_origin)')
     # Origen: las cuatro rutas fijas con el SHA-256 del manifiesto F34 y la raíz derivada de __file__.
