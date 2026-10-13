@@ -1,12 +1,12 @@
 # F35-SBX-B — B2: diseño del almacén efímero sintético
 
-> Incremento B2 de F35-SBX-B: versión 2.1 del diseño (11/10/2026), implementada el 12/10/2026. Estado: **B2 = IMPLEMENTADA / CANDIDATA A AUDITORÍA INDEPENDIENTE**.
+> Incremento B2 de F35-SBX-B: versión 2.1 del diseño (11/10/2026), implementada y corregida tras la auditoría de la implementación el 12/10/2026. Estado: **B2 = IMPLEMENTADA / CORREGIDA / PENDIENTE DE REAUDITORÍA FOCAL**.
 >
 > - La versión 1 (`ae25e8c60c538ce2336fadd98489de8eee9e0983`) recibió el veredicto «B2-DESIGN APROBADO CON CORRECCIONES PREVIAS», sin hallazgos BLOCKER ni HIGH.
 > - Esta versión resuelve sus cinco MEDIUM (B2-M01..B2-M05, §0) y fija las decisiones Q1–Q9 ([contrato, §4](F35SBXB_B2_Contrato_Verificacion.md#4-decisiones-q1q9)).
 > - La versión 2.1 completa M05 y Q1 tras la reauditoría de `eaac212`: la transición de gobierno es única y monotónica. Su reauditoría final focal dio el veredicto «B2-DESIGN APROBADO PARA IMPLEMENTACIÓN».
 >
-> La implementación sigue este diseño sin cambios: el almacén es [`sbxb_store.py`](../tools/f35sbxb2/sbxb_store.py) y el gate sucesor, [`validate_f35sbxb2.py`](../tools/f35sbxb2/validate_f35sbxb2.py). Su evidencia y sus observaciones están en el [contrato, §5](F35SBXB_B2_Contrato_Verificacion.md#5-implementación-12102026). El código es de desarrollo y NO AUDITADO (Q6). Rama `feature/f35-sbx-b2-ephemeral-store`, creada desde `develop` `72e86c5838984ea873d6dd56c179d94217b27317`.
+> La implementación sigue este diseño sin cambios: el almacén es [`sbxb_store.py`](../tools/f35sbxb2/sbxb_store.py) y el gate sucesor, [`validate_f35sbxb2.py`](../tools/f35sbxb2/validate_f35sbxb2.py). Su evidencia y sus observaciones están en el [contrato, §5](F35SBXB_B2_Contrato_Verificacion.md#5-implementación-12102026). La auditoría de la implementación encontró tres hallazgos (H01, M01 y M02); su corrección precisa tres puntos sin cambiar el diseño: la propiedad del hilo (§6.1), el bloqueo previo y el comprobante falible (§6.2 y §9) y el código `E-HILO` (§13). Está en el [contrato, §6](F35SBXB_B2_Contrato_Verificacion.md#6-corrección-post-auditoría-de-la-implementación). El código es de desarrollo y NO AUDITADO (Q6). Rama `feature/f35-sbx-b2-ephemeral-store`, creada desde `develop` `72e86c5838984ea873d6dd56c179d94217b27317`.
 
 ## 0. Correcciones de la versión 2
 
@@ -52,7 +52,7 @@ purge(store) o cierre excepcional ──> conexión cerrada + comprobante o diag
 ```
 
 - **Ubicación:** `docs/academico/tools/f35sbxb2/sbxb_store.py`. El nombre viene de B0 §6; la carpeta es una ruta exacta de B2 (Q2).
-- **Dependencias:** solo la biblioteca estándar: `sqlite3`, `csv`, `hashlib`, `json`, `re`, `unicodedata` y `os.path` (solo para componer las rutas fijas). `sqlite3` solo se importa en este módulo (B0 §6).
+- **Dependencias:** solo la biblioteca estándar: `sqlite3`, `csv`, `hashlib`, `json`, `re`, `unicodedata`, `os.path` (solo para componer las rutas fijas) y `threading` (solo `get_ident`, para la propiedad del hilo que pide M01). `sqlite3` solo se importa en este módulo (B0 §6).
 - **Frontera de E/S:**
   - Lee únicamente, en binario y sin escribir, cuatro archivos fijos del dataset F34: `evidence.csv`, `criteria.csv`, `vacancies.csv` y `applications.csv`, cada uno con el SHA-256 del contrato (§11).
   - No escribe archivos ni usa red, variables de entorno ni nada del runtime, y no se registra en ningún punto del proyecto.
@@ -203,15 +203,24 @@ El esquema no define columnas de puntaje, ranking, recomendación, selección, t
 
 Fuera de la tabla, la operación falla con `E-CICLO`; en `bloqueado`, con `E-BLOQUEADO`; en `purgado`, con `E-PURGADO`. Las transiciones del run siguen el camino de A (`pendiente` → `validando` → `registrado` → `transformado` → `en_revision` → `revisado` → `completado`), y desde cualquier estado no terminal se puede pasar a `fallido`.
 
+**Propiedad del hilo (corrección de M01).** El almacén pertenece al hilo que lo abre. Toda operación que usa la conexión comprueba, después del ciclo de vida y antes de tocar SQLite, que se llama desde ese hilo; si no, falla con `E-HILO`, no cambia el estado y no declara ningún cierre, de modo que el propietario puede purgar después. `preflight_report` y `diagnostic` no usan la conexión y se admiten desde cualquier hilo. La restricción de hilo de SQLite (`check_same_thread`) se mantiene.
+
 ### 6.2 Cierre excepcional
 
 Si falla una escritura (validación, contrato, origen, postcondición o `sqlite3.Error`), o si `purge` llega con el run todavía activo:
 
+0. **Bloqueo (corrección de M02).** Antes de tocar la conexión, el objeto pasa a `bloqueado`: ningún fallo posterior lo devuelve a un estado utilizable.
 1. **`ROLLBACK`** de la unidad actual. Si falla, la conexión queda `contaminada` y se salta al paso 4.
 2. **Evento `fallido`, solo si es válido.** Se intenta registrar únicamente si el principal existe y está confirmado, el último evento no es terminal y el rollback terminó bien. Se hace en su propia transacción, con su código (`E-ABORTADO` cuando lo pide `purge`). Si se confirma, se relee para el diagnóstico.
-3. **Diagnóstico.** Se reúnen los hechos observables: conteos, último `event_hash` y `PRAGMA database_list`. Lo que no se pueda leer queda como `no_disponible`; nunca se rellena.
-4. **Cierre en `finally`.** La conexión se cierra siempre, aunque hayan fallado el rollback, el evento, el diagnóstico o el comprobante. Después se comprueba que una consulta lanza `ProgrammingError`.
-5. **Estado final.** El objeto pasa a `bloqueado` y el diagnóstico queda en memoria, accesible con `diagnostic(store)`. Si el cierre lo pidió `purge`, el objeto pasa a `purgado` y el diagnóstico es su comprobante (§9).
+3. **Diagnóstico.** Se reúnen los hechos observables: conteos, último `event_hash` y `PRAGMA database_list`. Lo que no se pueda leer queda como `no_disponible`; nunca se rellena. Un fallo inesperado en los pasos 1 a 3 no interrumpe el cierre.
+4. **Cierre en `finally`.** La conexión se cierra siempre, aunque hayan fallado el rollback, el evento, el diagnóstico o el comprobante. Después, y solo desde el hilo propietario, se comprueba que una consulta lanza `ProgrammingError`.
+5. **Estado final.** El diagnóstico se construye como una operación falible (corrección de M02). Si su construcción falla, se degrada a un mínimo veraz:
+   - conserva los hechos ya establecidos (tipo de cierre, código del fallo original, evento fallido y estado de la conexión) y lo disponible del run y del tenant;
+   - deja `no_disponible` en lo demás;
+   - añade la causa en `receipt_error`;
+   - calcula el hash solo si puede.
+
+   El objeto queda en `bloqueado` y el diagnóstico en memoria, accesible con `diagnostic(store)`. Si el cierre lo pidió `purge`, el objeto pasa a `purgado` y el diagnóstico es su comprobante (§9). El llamador recibe siempre `SbxbStoreError` con el código del fallo original.
 
 | Campo del diagnóstico | Valores |
 |---|---|
@@ -247,10 +256,12 @@ DH-B10 se cumple en el informe. El resultado del run es fallido, nunca completad
 La purga es la frontera de destrucción lógica del almacén (DH-B06, B0 §5.3):
 
 1. **Run activo.** Si el run sigue activo, se aplica el cierre excepcional de §6.2 con `E-ABORTADO`.
-2. **Hechos para el comprobante.** Si no, se leen conteos por tabla, último `event_hash` y `PRAGMA database_list`. Lo que no se pueda leer queda `no_disponible`.
+2. **Hechos para el comprobante.** Si no, el objeto pasa a `bloqueado` antes de tocar la conexión (corrección de M02), y se leen conteos por tabla, último `event_hash` y `PRAGMA database_list`. Lo que no se pueda leer queda `no_disponible`.
 3. **Cierre en `finally`.** La conexión se cierra aunque haya fallado el paso 2.
-4. **Comprobación.** Una consulta sobre la conexión cerrada debe lanzar `sqlite3.ProgrammingError`. Si no la lanza, el comprobante lo dice (`CLOSE_UNVERIFIED`) y la purga termina con error.
+4. **Comprobación.** Desde el hilo propietario, una consulta sobre la conexión cerrada debe lanzar `sqlite3.ProgrammingError` (corrección de M01: en ese hilo solo puede deberse al cierre). Si no la lanza, el comprobante lo dice (`CLOSE_UNVERIFIED`) y la purga termina con error.
 5. **Referencia.** El almacén descarta la conexión y pasa a `purgado`. Después, cualquier llamada falla con `E-PURGADO`.
+
+El comprobante se construye como en el paso 5 de §6.2: si su construcción falla, la purga se completa igual con el comprobante mínimo veraz, con su causa en `receipt_error`.
 
 El comprobante es un objeto Python en memoria (`dict`): no es un archivo, no va a otra base ni a ninguna persistencia productiva. Representa el estado `purgado` de A, encadenado al último evento, y solo contiene hechos observados:
 
@@ -356,7 +367,7 @@ Módulo `sbxb_store.py`, API Python interna y experimental. No es una API HTTP.
 | `diagnostic(store)` | — | `dict` del cierre excepcional | Solo en `bloqueado` |
 | `purge(store)` | — | `dict` del comprobante (§9) | Una vez. `E-PURGADO` si se repite |
 
-- **Errores.** Una sola excepción, `SbxbStoreError(code, message)`. Los códigos cumplen el patrón de A `^E-[A-Z]{2,12}$`: `E-TENANT`, `E-CICLO`, `E-CONTRATO`, `E-ORIGEN`, `E-PROHIBIDO`, `E-HASH`, `E-SQLITE`, `E-PREFLIGHT`, `E-ABORTADO`, `E-BLOQUEADO` y `E-PURGADO`.
+- **Errores.** Una sola excepción, `SbxbStoreError(code, message)`. Los códigos cumplen el patrón de A `^E-[A-Z]{2,12}$`: `E-TENANT`, `E-CICLO`, `E-CONTRATO`, `E-ORIGEN`, `E-PROHIBIDO`, `E-HASH`, `E-SQLITE`, `E-PREFLIGHT`, `E-ABORTADO`, `E-BLOQUEADO`, `E-PURGADO` y, desde la corrección de M01, `E-HILO`: operación desde un hilo distinto del propietario, sin tocar SQLite ni cambiar el estado (§6.1).
 - **Fallo cerrado.** Un `sqlite3.Error` nunca se ignora: se convierte en `E-SQLITE` y activa el cierre excepcional (§6.2).
 - **Encapsulamiento.** El objeto no expone la conexión, los cursores, el catálogo ni el índice de origen. Los nombres internos no son API y el gate prohíbe usarlos fuera del módulo.
 

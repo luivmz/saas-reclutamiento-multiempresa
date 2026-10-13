@@ -1,11 +1,12 @@
 # F35-SBX-B — B2: almacén efímero sintético
 
-> **Estado: B2 = IMPLEMENTADA / CANDIDATA A AUDITORÍA INDEPENDIENTE.** Fecha: 12/10/2026. Rama `feature/f35-sbx-b2-ephemeral-store`, creada desde `develop` `72e86c5838984ea873d6dd56c179d94217b27317`.
+> **Estado: B2 = IMPLEMENTADA / CORREGIDA / PENDIENTE DE REAUDITORÍA FOCAL.** Fecha: 12/10/2026. Rama `feature/f35-sbx-b2-ephemeral-store`, creada desde `develop` `72e86c5838984ea873d6dd56c179d94217b27317`.
 >
 > - **Versión 1 del diseño** (`ae25e8c60c538ce2336fadd98489de8eee9e0983`): veredicto «B2-DESIGN APROBADO CON CORRECCIONES PREVIAS», sin hallazgos BLOCKER ni HIGH.
 > - **Versión 2** (`eaac2120ede71289cd282a283baf6cc8698ca87b`): resuelve sus cinco MEDIUM (B2-M01..B2-M05) y fija las decisiones Q1–Q9. La reauditoría dio M01–M04 por resueltos y M05 como parcialmente resuelto.
 > - **Versión 2.1** (`24e4ed911ca1580c5d4afeace0e97e3f515f10e8`): completa M05 y Q1 con una transición de gobierno única y monotónica. Su reauditoría final focal dio el veredicto «B2-DESIGN APROBADO PARA IMPLEMENTACIÓN».
 > - **Implementación** (12/10/2026): almacén, casos P01..P33 y gate sucesor, sin cambios de diseño. Es código de desarrollo NO AUDITADO (Q6).
+> - **Corrección post-auditoría** (12/10/2026): la auditoría independiente de la implementación (`5147d7d8cb494b71f9d96412c307083212186593`) encontró un hallazgo HIGH (H01) y dos MEDIUM (M01 y M02). Están reproducidos en RED, corregidos y cubiertos por los casos nuevos P34 a P36 y los negativos NB2-29 a NB2-42 ([contrato, §6](F35SBXB_B2_Contrato_Verificacion.md#6-corrección-post-auditoría-de-la-implementación)). Falta la reauditoría focal.
 >
 > Punto de partida: B1 = CERRADA / CONGELADA / INTEGRADA.
 >
@@ -18,19 +19,19 @@ B2 es el incremento sucesor de B1. Implementa el almacén donde F35-SBX-B guarda
 | Archivo | Contenido |
 |---|---|
 | [F35SBXB_B2_Diseno_Almacen.md](F35SBXB_B2_Diseno_Almacen.md) | Correcciones de la versión 2, arquitectura, aislamiento por tenant, frontera SQL y preflight, esquema mínimo, ciclo de vida y cierre excepcional, principal inmutable, eventos, purga, identidad y determinismo, contrato sintético y procedencia, RF-29, API interna, modelo de fallos y decisiones |
-| [F35SBXB_B2_Contrato_Verificacion.md](F35SBXB_B2_Contrato_Verificacion.md) | Matriz de pruebas P01..P33, contrato del gate sucesor de B2 (con B1F desde el ancla y desde el cierre), decisiones Q1–Q9 y, en §5, la evidencia de la implementación: commits, resultados, delta de gobierno, historias de B1F, negativos NB2 y observaciones |
-| [sbxb_store.py](../tools/f35sbxb2/sbxb_store.py) | Almacén: API interna cerrada, catálogo fijo de sentencias, preflight, esquema `STRICT`, procedencia, ciclo de vida, cierre excepcional y purga |
-| [validate_f35sbxb2.py](../tools/f35sbxb2/validate_f35sbxb2.py) | Gate sucesor sobre HEAD: CTX, B1F, AIN, B0F, HST, SBX, SCP, FSY, FLG, DEP, PRE, STA, DYN, DET, ISO, PUR, DAT, CAP y GOV, con P01..P33, las historias F01–F21 y los negativos NB2 |
+| [F35SBXB_B2_Contrato_Verificacion.md](F35SBXB_B2_Contrato_Verificacion.md) | Matriz de pruebas P01..P36, contrato del gate sucesor de B2 (con B1F desde el ancla y desde el cierre) y decisiones Q1–Q9. En §5, la evidencia de la implementación: commits, resultados, delta de gobierno, historias de B1F, negativos NB2 y observaciones. En §6, la corrección de H01, M01 y M02 |
+| [sbxb_store.py](../tools/f35sbxb2/sbxb_store.py) | Almacén: API interna cerrada, catálogo fijo de sentencias, preflight, esquema `STRICT`, procedencia, ciclo de vida con propiedad del hilo, cierre excepcional y purga con comprobante falible |
+| [validate_f35sbxb2.py](../tools/f35sbxb2/validate_f35sbxb2.py) | Gate sucesor sobre HEAD: CTX, B1F, AIN, B0F, HST, SBX, SCP, FSY, FLG, DEP, PRE, STA, DYN, DET, ISO, PUR, DAT, CAP y GOV, con P01..P36, las historias F01–F21, los negativos NB2 y el control PB2-01 |
 
 Uso, desde la raíz del repositorio: `python -I docs/academico/tools/f35sbxb2/validate_f35sbxb2.py`. La referencia es un clon limpio sin remoto: en un árbol de trabajo con artefactos locales (bundles de Vite o `.pyc` de pytest), FSY falla igual que en el gate de B1.
 
 ## Qué no incluye este incremento
 
-No hay pipeline funcional ni ML, ni dependencias nuevas, ni cambios en el runtime, en la CI, en el dataset, en A, en B0, en B1 ni en B1-FREEZE. B2 no persiste nada de RF-29 ni ningún puntaje, ranking, recomendación o selección.
+No hay pipeline funcional ni ML, ni dependencias nuevas, ni cambios en el runtime, en la CI, en el dataset, en A, en B0, en B1 ni en B1-FREEZE. La corrección de M01 añade al almacén el módulo estándar `threading`, solo para `get_ident`. B2 no persiste nada de RF-29 ni ningún puntaje, ranking, recomendación o selección.
 
 ## Gobierno
 
-`CLAUDE.md` y `docs/PROGRESS.md` forman parte del conjunto auditado de B1. Solo cambian en una única transición monotónica (Q1, DH-B2-07), del blob histórico de B1 al blob nuevo de B2, con el delta cerrado que enumera el [contrato, §5.2](F35SBXB_B2_Contrato_Verificacion.md#52-delta-y-transición-de-gobierno). Esa transición registra B1 cerrada e integrada y B2 implementada y candidata a auditoría independiente. Sus descendientes no pueden volver atrás, y el contenido histórico de B1 no se reescribe. La transición es el commit `12c1c36e409f81c048fccf7fcb3e6d2a2d5d40aa`, registrado después de existir; el gate la deriva de la historia y la compara con la registrada.
+`CLAUDE.md` y `docs/PROGRESS.md` forman parte del conjunto auditado de B1. Solo cambian en una única transición monotónica (Q1, DH-B2-07), del blob histórico de B1 al blob nuevo de B2, con el delta cerrado que enumera el [contrato, §5.2](F35SBXB_B2_Contrato_Verificacion.md#52-delta-y-transición-de-gobierno). Esa transición registra B1 cerrada e integrada y B2 implementada y candidata a auditoría independiente. Sus descendientes no pueden volver atrás, y el contenido histórico de B1 no se reescribe. La transición es el commit `12c1c36e409f81c048fccf7fcb3e6d2a2d5d40aa`, registrado después de existir; el gate la deriva de la historia y la compara con la registrada. Por esa misma regla, la corrección post-auditoría no toca `CLAUDE.md` ni `docs/PROGRESS.md`: el estado corregido de B2 se registra en estos documentos.
 
 Los estados de gobierno no cambian:
 
@@ -43,4 +44,4 @@ B2 no autoriza ML, scoring, recomendación ni selección automática, y no modif
 
 ## Próximo paso
 
-Auditoría independiente de la implementación. B2 no se declara cerrada, integrada ni productiva: el cierre, el freeze, la integración y la publicación requieren autorización explícita del equipo.
+Reauditoría focal independiente de la corrección de H01, M01 y M02. B2 no se declara cerrada, integrada ni productiva: el cierre, el freeze, la integración y la publicación requieren autorización explícita del equipo.

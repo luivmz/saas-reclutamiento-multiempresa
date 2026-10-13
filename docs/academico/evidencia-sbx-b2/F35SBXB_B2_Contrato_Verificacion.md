@@ -1,8 +1,9 @@
 # F35-SBX-B — B2: contrato de verificación
 
-> Incremento B2 de F35-SBX-B: versión 2.1 del contrato (11/10/2026), implementada el 12/10/2026. Estado: **B2 = IMPLEMENTADA / CANDIDATA A AUDITORÍA INDEPENDIENTE**.
+> Incremento B2 de F35-SBX-B: versión 2.1 del contrato (11/10/2026), implementada y corregida tras la auditoría de la implementación el 12/10/2026. Estado: **B2 = IMPLEMENTADA / CORREGIDA / PENDIENTE DE REAUDITORÍA FOCAL**.
 >
 > - Define las pruebas y el gate sucesor que cumple la implementación de B2. Desde el 12/10/2026 son ejecutables, y la evidencia de la implementación está en §5.
+> - La auditoría independiente de la implementación encontró los hallazgos H01 (HIGH), M01 y M02 (MEDIUM). Su reproducción, su corrección y los casos nuevos P34 a P36 están en §6.
 > - La versión 2 alinea el contrato con las correcciones B2-M01..B2-M05 y fija Q1–Q9 (§4).
 > - La versión 2.1 completa M05 y Q1 tras la reauditoría de `eaac212`: la transición de gobierno de B2 es única y monotónica (§2.3, P25 y P33). La reauditoría final focal de esta versión dio el veredicto «B2-DESIGN APROBADO PARA IMPLEMENTACIÓN».
 > - El diseño que se verifica está en [F35SBXB_B2_Diseno_Almacen.md](F35SBXB_B2_Diseno_Almacen.md).
@@ -51,6 +52,9 @@ Cada prueba vive dentro del gate de B2, como en A y en B1, sin `tests/` producti
 | P31 | Metadatos válidos con contenido ajeno se rechazan | Evidencia con `origin_record_id`, criterio, tipo, procedencia y hashes coherentes entre sí, pero con el texto de otra fila F34, o un texto alterado tras T1 | `E-ORIGEN`; ninguna fila persistida; cierre excepcional | DYN, DAT | B2-M04 |
 | P32 | Modificar y restaurar un artefacto del cierre se detecta | Clon desechable: un commit modifica el manifiesto de B1-FREEZE y otro lo restaura | B1F falla por historia | B1F | B2-M05 |
 | P33 | El gobierno no vuelve atrás tras su transición | Clon desechable: la secuencia de commits blob histórico → blob nuevo de B2 → blob histórico → blob nuevo de B2 en `CLAUDE.md` y `docs/PROGRESS.md` | B1F falla, aunque HEAD termine en el blob nuevo: un descendiente de la transición vuelve al blob histórico y hay una segunda introducción del blob nuevo. Demuestra que el gate lee la ascendencia y no solo el blob final | B1F | B2-M05; Q1 |
+| P34 | Solo la conexión autorizada, sin código de carga ni vías indirectas | AST de todos los contextos que se ejecutan al cargar y de las capacidades de cada módulo; negativos NB2-29..NB2-39 con un marcador en una ruta absoluta; control PB2-01 | Cada negativo se rechaza antes de ejecutar y su marcador no aparece; el almacén sin mutar se acepta | STA, DYN | H01 (§6) |
+| P35 | El almacén pertenece al hilo que lo abre | Desde otro hilo: purga y operaciones normales en `abierto`, `activo` y `finalizado`, y la comprobación interna del cierre; después, purga del propietario | `E-HILO` (o `E-CICLO` si el ciclo de vida ya lo impide), sin tocar SQLite ni cambiar el estado, sin CLOSED; el cierre no se acredita desde otro hilo; el propietario purga con el cierre comprobado | DYN, PUR | M01 (§6) |
+| P36 | El cierre no depende de construir el comprobante | Fallo antes, durante y en el respaldo del comprobante, con estado interno corrupto, con cierre no verificable y con FAILED no disponible, en el cierre excepcional y en la purga | `SbxbStoreError` con la causa original; objeto `bloqueado` o `purgado`, nunca utilizable; conexión cerrada; diagnóstico o comprobante mínimo veraz, sin hashes, conteos, FAILED ni CLOSED inventados | DYN, PUR | M02 (§6) |
 
 P26 a P30 se justifican así:
 
@@ -87,13 +91,13 @@ Ubicación: `docs/academico/tools/f35sbxb2/validate_f35sbxb2.py`. Solo bibliotec
 | SCP | Delta exacto de B2 | Árbol de HEAD, árbol de trabajo, índice y archivos sin seguimiento frente a `72e86c5`: exactamente la lista enumerada de §2.5, con su estado. No hay excepción general (Q2) |
 | FSY | Runtime, dataset y evidencia intactos | Superficies byte a byte iguales a la base, como en B1, y carpetas de B2 con su lista exacta. Sin enlaces, archivos ignorados extra ni `__pycache__` no derivable |
 | FLG | Índice sin flags | Solo `H` en `git ls-files -v` |
-| DEP | Solo biblioteca estándar | Almacén: `sqlite3`, `csv`, `hashlib`, `json`, `re`, `unicodedata` y `os`, este último solo con `os.path.join`, `os.path.dirname` y `os.path.abspath`. Gate: las del gate de B1. `sqlite3` solo en `sbxb_store.py`. Sin importaciones dinámicas |
+| DEP | Solo biblioteca estándar | Almacén: `sqlite3`, `csv`, `hashlib`, `json`, `re`, `unicodedata`, `os`, este último solo con `os.path.join`, `os.path.dirname` y `os.path.abspath`, y `threading`, solo con `get_ident` (corrección de M01). Gate: las del gate de B1. `sqlite3` solo en `sbxb_store.py`. Sin importaciones dinámicas |
 | PRE | Entorno compatible | Los requisitos del preflight (§4.3 del diseño): SQLite 3.37 o posterior realmente cargado, API presentes y PRAGMA efectivos. Si no se cumplen, falla cerrado antes de DYN |
-| STA | Almacén correcto antes de ejecutarlo | AST y catálogo (§2.4) |
-| DYN | Pruebas P01..P33 | Ejecución en proceso desde bytes verificados, con la guarda de §2.4 |
+| STA | Almacén correcto antes de ejecutarlo | AST y catálogo (§2.4), con los contextos de carga y las capacidades de la corrección de H01 |
+| DYN | Pruebas P01..P36 | Ejecución en proceso desde bytes verificados, con la guarda de §2.4 |
 | DET | Determinismo | P11 y P22 |
 | ISO | Aislamiento por tenant | P03, P04, P05, P14 y P23 |
-| PUR | Semántica de purga | P12, P13 y P24 |
+| PUR | Semántica de purga | P12, P13, P24, P35 y P36 |
 | DAT | Solo contenido sintético autorizado | P15, P16, P28, P29 y P31 |
 | CAP | Sin capacidades prohibidas | P17 y P18, más CNT sobre los documentos de B2 con las reglas semánticas de B1 |
 | GOV | Gobierno | Los trece estados exactos y la transición única de gobierno de B2 (§2.3) |
@@ -162,12 +166,17 @@ Desde la transición, el validador de B1-FREEZE falla en FRZ sobre HEAD, como pr
 
 Antes de importar cualquier módulo de B2, el gate lo analiza por AST sobre los bytes leídos:
 
-- **Conexión.** `sqlite3.connect` aparece una sola vez, con la constante `':memory:'` y sin `uri`.
+- **Conexión.** `sqlite3.connect` aparece una sola vez: es la sentencia `conn = sqlite3.connect(':memory:', isolation_level=None)`, directa en `open_tenant_store`, con la constante `':memory:'` y sin `uri` (corrección de H01).
+- **Contextos de carga (corrección de H01).** Lo que se ejecuta al cargar el módulo se limita a valores sin efectos:
+  - valores de módulo: literales, constantes ya definidas y las llamadas puras `re.compile`, `frozenset` y `os.path`;
+  - solo las dos clases de la API, con `__slots__` y métodos;
+  - sin decoradores, anotaciones ni valores por defecto evaluados, y con las importaciones solo a nivel de módulo.
+- **Capacidades (corrección de H01).** Un módulo importado nunca se usa como valor ni se reasigna, y de cada uno solo se usan los atributos de una lista cerrada (con un segundo nivel cerrado para `os.path` y `sqlite3.Connection`). No hay atributos dunder salvo `super().__init__` y el nombre de la clase de una excepción capturada. `type()` solo aparece en comparaciones de identidad, y no hay llamadas sobre expresiones. Así ningún alias ni camino indirecto alcanza `sqlite3.connect`, `open` ni la clase `Connection`.
 - **Métodos prohibidos.** Ni `backup`, `serialize`, `deserialize`, `iterdump`, `enable_load_extension` ni `load_extension`.
 - **Sentencias.** Cada `execute` y `executemany` recibe como primer argumento una entrada del catálogo (un nombre o un subíndice con clave literal), nunca una expresión. `executescript` solo recibe la constante del DDL, en el preflight.
 - **Catálogo de ejecución.** Sin `REPLACE`, `OR REPLACE`, `OR IGNORE`, `ON CONFLICT`, `UPDATE`, `DELETE`, `ATTACH`, `DETACH` ni `PRAGMA`, salvo la lectura de `database_list`. Los `PRAGMA` del preflight son una lista enumerada aparte. Toda escritura comprueba `rowcount == 1`. El DDL coincide con el esquema que el gate construye por su cuenta (doble llave, P28).
 - **Lectura de archivos.** `open` solo con las cuatro rutas fijas de F34 en modo `rb`; ninguna escritura de archivos.
-- **Importaciones.** Ni `time`, `datetime`, `random`, `uuid`, `secrets`, `socket`, `urllib`, `http` ni `subprocess`. De `os`, solo `os.path.join`, `os.path.dirname` y `os.path.abspath`.
+- **Importaciones.** Ni `time`, `datetime`, `random`, `uuid`, `secrets`, `socket`, `urllib`, `http` ni `subprocess`. De `os`, solo `os.path.join`, `os.path.dirname` y `os.path.abspath`; de `threading`, solo `get_ident`.
 - **Referencias.** Ninguna a `app/`, `database/`, `routes/`, `artisan`, `.env`, `pgsql`, `postgres` ni `redis`.
 - **API.** Ninguna función acepta SQL, fragmentos, nombres de tabla ni política de conflicto, y no existe una API de `PRAGMA`. Ningún nombre interno del almacén se usa fuera de él.
 - **Estado del módulo.** Ninguna conexión ni almacén a nivel de módulo.
@@ -385,3 +394,83 @@ Detectores de los negativos DYN: NB2-11 con P31, NB2-12 con P27, NB2-13 con P21,
 | O5 | `preflight_report` sigue disponible en `purgado`, según la tabla de §6.1 del diseño, aunque P13 menciona «cualquier operación» | P13 comprueba todas las demás operaciones; el informe es una copia en memoria, sin conexión |
 | O6 | En el árbol de trabajo local, FSY falla por artefactos previos (`.pyc` de pytest en `ml-service/tests` y el bundle de Vite), los mismos que ya rechazaba el gate de B1 | La validación de referencia se hace en un clon limpio sin remoto |
 | O7 | El gate tarda unos 30 segundos: recálculo de SBX, 21 historias desechables y la batería DYN | Sin efecto en el resultado |
+
+## 6. Corrección post-auditoría de la implementación
+
+Estado: **B2 = IMPLEMENTADA / CORREGIDA / PENDIENTE DE REAUDITORÍA FOCAL**. La corrección se limita a los tres hallazgos de la auditoría y no cambia el diseño, Q1–Q9, P01..P33, la transición de gobierno, B1 ni B1-FREEZE.
+
+La auditoría independiente de la implementación, sobre `5147d7d8cb494b71f9d96412c307083212186593`, encontró un hallazgo HIGH (H01) y dos MEDIUM (M01 y M02), sin otros BLOCKER, HIGH ni MEDIUM. Clasificó O1, O2 y O4 a O7 de §5.6 como LOW confirmados y O3 como resuelto por diseño; esta corrección no los modifica.
+
+### 6.1 Hallazgos y reproducción en RED
+
+Cada defecto se reprodujo antes de corregir, en clones desechables de `5147d7d` y con scripts fuera del repositorio:
+
+| Hallazgo | Defecto | Reproducción |
+|---|---|---|
+| H01 (HIGH) | Una clase privada con un alias de `sqlite3.connect` abre otra base al cargar el módulo. STA contaba las llamadas por el nombre `sqlite3.connect` y no inspeccionaba los cuerpos de clase | Con la prueba de concepto de la auditoría (clase privada, alias, marcador en una ruta absoluta y `close`), el gate terminó 101/0 con código 0 y el marcador se creó |
+| M01 (MEDIUM) | En `purge` desde otro hilo, `close()` y la consulta de comprobación lanzan `ProgrammingError` por afinidad de hilo, y ese error se tomaba como prueba de cierre | En `finalizado` y en `activo`, el comprobante dijo `CLOSED` o `CONNECTION_ABORTED` con `post_close_check = ProgrammingError` y el objeto pasó a `purgado`, pero el hilo propietario seguía usando la conexión |
+| M02 (MEDIUM) | La construcción del comprobante ocurría en el `finally` de `_abort` y de `purge`, antes de actualizar el estado | Con el comprobante roto y, sin parches, con el tenant corrupto, escapó una excepción no contractual (`RuntimeError`, `KeyError`). El objeto quedó en `activo` o `finalizado` sin diagnóstico (`diagnostic` respondió `E-CICLO`), con la conexión cerrada, y las llamadas siguientes también escaparon sin código |
+
+### 6.2 Causa raíz y corrección
+
+- **H01.** La causa era una detección por nombre, más contextos de carga sin inspeccionar. La corrección es semántica y falla cerrada, antes de ejecutar nada (§2.4):
+  - todo lo que se ejecuta al cargar el módulo se limita a valores sin efectos;
+  - cada módulo importado solo expone una lista cerrada de atributos, nunca se usa como valor y nunca se reasigna;
+  - no hay atributos dunder, `type()` fuera de comparaciones de identidad ni llamadas sobre expresiones;
+  - `sqlite3.connect` solo existe en la sentencia autorizada de `open_tenant_store`.
+
+  No depende del autorizador.
+- **M01.** La causa era inferir el cierre de cualquier `ProgrammingError`, sin saber qué hilo era el propietario. La corrección:
+  - el almacén registra el hilo que lo abre (`threading.get_ident`);
+  - toda operación que usa la conexión lo comprueba antes de tocar SQLite, después del ciclo de vida. Desde otro hilo falla con `E-HILO`, sin cambiar el estado ni declarar ningún cierre;
+  - `_close` solo acredita el cierre desde el hilo propietario, donde ese error solo puede deberse al cierre;
+  - `check_same_thread` sigue activo.
+- **M02.** La causa era un comprobante obligatorio dentro del cierre. La corrección:
+  - `_abort` y `purge` bloquean el objeto antes de tocar la conexión;
+  - un fallo inesperado al leer hechos no interrumpe el cierre, que se intenta siempre en `finally`;
+  - el comprobante se construye con `_receipt`. Si falla, se degrada a un mínimo veraz: conserva los hechos establecidos, deja `no_disponible` en lo demás, guarda la causa en `receipt_error` y calcula el hash solo si puede;
+  - `_abort` nunca lanza: el llamador recibe `SbxbStoreError` con el código original, y `diagnostic` y `purge` devuelven copias seguras.
+
+### 6.3 Commits y resultados
+
+| Commit | Contenido | Resultado del gate |
+|---|---|---|
+| `c57d01d6b55cc800ebac8ea9fb056ce0016271dd` | Casos en RED: P34 a P36, NB2-29..NB2-39 y PB2-01 | 101 correctas, 15 fallas: nueve negativos crean su marcador, P35 y P36 fallan y FSY falla por los artefactos locales (O6) |
+| `a332a206feb8e17eca9ea07f464e4c399778d288` | Corrección de H01 en STA | 111 correctas, 5 fallas: quedan P35, P36 y FSY local |
+| `d8305f769df0324fb3c3c591061175d21fc2fa00` | Corrección de M01 y M02 en el almacén, más NB2-40..NB2-42 | 118 correctas y 1 falla (FSY local) en el árbol de trabajo; 119 correctas y 0 fallas en un clon limpio sin remoto |
+
+Esta documentación es un commit posterior y se consulta en Git. Los ataques finales (la prueba de concepto de H01, la purga desde otro hilo de M01 y el comprobante roto de M02) se repitieron con los mismos scripts sobre el código corregido: el gate rechaza H01 antes de ejecutar, sin marcador; M01 responde `E-HILO` sin falso `CLOSED` y el propietario purga después; M02 deja el objeto bloqueado o purgado con diagnóstico veraz.
+
+### 6.4 Casos nuevos
+
+P34 (H01), P35 (M01) y P36 (M02) están en la matriz de §1. Los negativos nuevos del gate son estos:
+
+| Caso | Regla | Negativo |
+|---|---|---|
+| NB2-29 | STA | clase privada con alias de sqlite3.connect que abre un marcador al cargar |
+| NB2-30 | STA | alias de sqlite3.connect a nivel de módulo usado en un cuerpo de clase |
+| NB2-31 | STA | apertura en un argumento por defecto evaluado al definir una función |
+| NB2-32 | STA | apertura en un decorador evaluado al cargar |
+| NB2-33 | STA | apertura en una anotación evaluada al definir una función |
+| NB2-34 | STA | conexión autorizada cambiada a un archivo |
+| NB2-35 | STA | clase Connection obtenida con type() desde la conexión autorizada |
+| NB2-36 | STA | connect alcanzado por un atributo dunder del módulo |
+| NB2-37 | STA | clase sqlite3.Connection llamada directamente al cargar |
+| NB2-38 | STA | import de sqlite3 dentro de un cuerpo de clase |
+| NB2-39 | STA | alias de open en un cuerpo de clase que escribe un marcador |
+| PB2-01 | STA | almacén sin mutar: STA lo acepta y ningún marcador aparece |
+| NB2-40 | DYN | propiedad del hilo sin comprobar antes de tocar SQLite |
+| NB2-41 | DYN | cierre acreditado desde cualquier hilo |
+| NB2-42 | DYN | comprobante sin respaldo ante un fallo de construcción |
+
+NB2-29..NB2-39 siguen el mismo camino de decisión que el gate (STA y, solo si STA acepta, la ejecución) y comprueban que el marcador no aparece. En RED, nueve de ellos crearon su marcador. NB2-34 y NB2-39 ya los rechazaba la versión anterior. PB2-01 es el control benigno. Detectores de los negativos dinámicos nuevos: NB2-40 con P35, NB2-41 con P35, NB2-42 con P36.
+
+### 6.5 Riesgos residuales
+
+| # | Riesgo | Tratamiento |
+|---|---|---|
+| R1 | La política de capacidades de STA es una lista cerrada derivada del código actual: un uso legítimo nuevo de un módulo exige cambiar el gate | Es deliberado: cualquier ampliación pasa por una auditoría del gate |
+| R2 | `threading.get_ident` puede reutilizarse cuando termina el hilo propietario, y otro hilo con el mismo identificador sería tratado como propietario | Es la misma semántica que aplica SQLite con `check_same_thread`; el contrato pide abrir y operar cada almacén en un solo hilo |
+| R3 | El comprobante mínimo omite los hechos observados cuando falla el completo | Es deliberado: no se inventa nada, y `receipt_error` conserva la causa |
+| R4 | `CLAUDE.md` y `docs/PROGRESS.md` siguen diciendo «candidato a auditoría independiente», porque la regla monotónica de §2.3 no admite un tercer blob | El estado corregido vive en estos documentos; un incremento sucesor actualizará el gobierno con su propio contrato |
+| R5 | Las observaciones O1, O2 y O4 a O7 siguen como LOW confirmados | Sin cambios en esta corrección |
