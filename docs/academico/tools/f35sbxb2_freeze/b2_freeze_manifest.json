@@ -1,0 +1,98 @@
+{
+  "manifest_version": 1,
+  "phase": "F35-SBX-B",
+  "increment": "B2-FREEZE",
+  "candidate_commit": "2472fd6fadfc0634ec68cbcb76cfc9fbfe105194",
+  "b2_base": "72e86c5838984ea873d6dd56c179d94217b27317",
+  "prior_anchors": {
+    "b1_audited_anchor": "8e94a60274fe39ebda3e9961bc58036b389dfc00",
+    "b1_freeze_closure": "3d9b78307684a0dfb093e31d28fde290b2b1cb4a",
+    "b2_governance_transition": "12c1c36e409f81c048fccf7fcb3e6d2a2d5d40aa"
+  },
+  "frozen_set": [
+    {
+      "path": "CLAUDE.md",
+      "status_vs_base": "M",
+      "type": "blob",
+      "mode": "100644",
+      "blob": "74cc4a71c56918678e0a70c7f59a3f060d87b6a0",
+      "sha256": "5bb44a43e521047d254a282f5f98b247f902ece6631d8fd5baf45c7003c440fe",
+      "bytes": 20331
+    },
+    {
+      "path": "docs/PROGRESS.md",
+      "status_vs_base": "M",
+      "type": "blob",
+      "mode": "100644",
+      "blob": "07889bf8c82990651539a6e4b8a1098b4bd2d35a",
+      "sha256": "cb57d277c275b8dd5192e87b30844855d03af2ee92e5c12e211d6d07a44e5fe7",
+      "bytes": 34977
+    },
+    {
+      "path": "docs/academico/evidencia-sbx-b2/F35SBXB_B2_Contrato_Verificacion.md",
+      "status_vs_base": "A",
+      "type": "blob",
+      "mode": "100644",
+      "blob": "54b527262cf71842d482f6c1374772a42444d2b1",
+      "sha256": "1916a223a2d51837782f0cb8571ebb050291721a46174a9f0626ca4377b60d92",
+      "bytes": 54474
+    },
+    {
+      "path": "docs/academico/evidencia-sbx-b2/F35SBXB_B2_Diseno_Almacen.md",
+      "status_vs_base": "A",
+      "type": "blob",
+      "mode": "100644",
+      "blob": "fb4315e20438cf1925b25867bb05e87f91b295fb",
+      "sha256": "cf913639166c8c5015af706f5aafb28231420dcd0b2e91e288e297094ea1cf3f",
+      "bytes": 41248
+    },
+    {
+      "path": "docs/academico/evidencia-sbx-b2/README.md",
+      "status_vs_base": "A",
+      "type": "blob",
+      "mode": "100644",
+      "blob": "21318f49fdf42627a24aa294be52a4691d36c099",
+      "sha256": "651aa026499aa50f3d90846e829e63fb44b81b99ca8638ae606c0c99a223aa6d",
+      "bytes": 5593
+    },
+    {
+      "path": "docs/academico/tools/f35sbxb2/sbxb_store.py",
+      "status_vs_base": "A",
+      "type": "blob",
+      "mode": "100644",
+      "blob": "09ac588eb442d80f5270e641cb98cdfe0169166c",
+      "sha256": "0f96ed8f305d649bf906970e6b3baa179df95f373a172887e25cba2a7beb8663",
+      "bytes": 65742
+    },
+    {
+      "path": "docs/academico/tools/f35sbxb2/validate_f35sbxb2.py",
+      "status_vs_base": "A",
+      "type": "blob",
+      "mode": "100644",
+      "blob": "c2b625a5764b6c29391b0f8eb366f6d6716e20bc",
+      "sha256": "403b0ab06189bae334ecf3c8e811cdee611ca0cf194d7ecd98c77fd57111808b",
+      "bytes": 158289
+    }
+  ],
+  "reserved_surfaces": {
+    "docs/academico/evidencia-sbx-b2": [
+      "F35SBXB_B2_Contrato_Verificacion.md",
+      "F35SBXB_B2_Diseno_Almacen.md",
+      "README.md"
+    ],
+    "docs/academico/tools/f35sbxb2": [
+      "sbxb_store.py",
+      "validate_f35sbxb2.py"
+    ]
+  },
+  "freeze_layer": {
+    "docs/academico/evidencia-sbx-b2-freeze": [
+      "F35SBXB_B2_Freeze.md"
+    ],
+    "docs/academico/tools/f35sbxb2_freeze": [
+      "b2_freeze_manifest.json",
+      "test_f35sbxb2_freeze.py",
+      "validate_f35sbxb2_freeze.py"
+    ]
+  }
+}
