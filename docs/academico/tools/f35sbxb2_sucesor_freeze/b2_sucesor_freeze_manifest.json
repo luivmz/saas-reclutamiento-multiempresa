@@ -1,0 +1,56 @@
+{
+  "manifest_version": 1,
+  "phase": "F35-SBX-B",
+  "increment": "B2-SUCCESSOR-FREEZE",
+  "successor_commit": "9d6fb157bb818574217e3675da1849e8d1010962",
+  "freeze_commit": "9961d2d65ed51a17c14aae5db0edb7d71c622c22",
+  "candidate_commit": "2472fd6fadfc0634ec68cbcb76cfc9fbfe105194",
+  "protected_set": [
+    {
+      "path": "docs/academico/evidencia-sbx-b2-sucesor/F35SBXB_B2_Sucesor.md",
+      "status_vs_freeze": "A",
+      "type": "blob",
+      "mode": "100644",
+      "blob": "7578e207080dcaf619e4aabfd7390db428ccf2e4",
+      "sha256": "140c456d3dccdf173e1bcc58a809a503e34ca4fef6185ab28080dae0b450720f",
+      "bytes": 20104
+    },
+    {
+      "path": "docs/academico/tools/f35sbxb2_sucesor/test_f35sbxb2_sucesor.py",
+      "status_vs_freeze": "A",
+      "type": "blob",
+      "mode": "100644",
+      "blob": "4d61e7b1e279dfc65645b4c5df64c4fa2daf1a4c",
+      "sha256": "1352baface5154c4055f1c9a6ae63669d045da9f56eaf2cb218710934df80669",
+      "bytes": 22397
+    },
+    {
+      "path": "docs/academico/tools/f35sbxb2_sucesor/validate_f35sbxb2_sucesor.py",
+      "status_vs_freeze": "A",
+      "type": "blob",
+      "mode": "100644",
+      "blob": "dcb8d7caa0d7de2e299500ee82ea68dd0b231931",
+      "sha256": "69abed7cb9bd29743c1d4d4d33c388da5c93caa66bd9825e85d379892e991265",
+      "bytes": 31979
+    }
+  ],
+  "reserved_surfaces": {
+    "docs/academico/evidencia-sbx-b2-sucesor": [
+      "F35SBXB_B2_Sucesor.md"
+    ],
+    "docs/academico/tools/f35sbxb2_sucesor": [
+      "test_f35sbxb2_sucesor.py",
+      "validate_f35sbxb2_sucesor.py"
+    ]
+  },
+  "closure_layer": {
+    "docs/academico/evidencia-sbx-b2-sucesor-freeze": [
+      "F35SBXB_B2_Sucesor_Freeze.md"
+    ],
+    "docs/academico/tools/f35sbxb2_sucesor_freeze": [
+      "b2_sucesor_freeze_manifest.json",
+      "test_f35sbxb2_sucesor_freeze.py",
+      "validate_f35sbxb2_sucesor_freeze.py"
+    ]
+  }
+}
