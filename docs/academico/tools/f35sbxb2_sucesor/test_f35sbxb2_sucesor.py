@@ -383,6 +383,12 @@ def af13(fx, c):
 
 af13.depth = 1
 
+
+def af14(fx, c):
+    fx.write('public/build/assets/fixture.js', b'console.log("artefacto generado sin origen verificable");\n')
+    hidden = fx.git('status', '--porcelain').strip() == b''         # ignorado: ni git status ni ALC lo ven
+    return [probe(fx, {'MAT'}, mat={'FSY'}, scenario=hidden, why='git status muestra el archivo')]
+
 CASES = (
     ('AF01', 'HEAD con el freeze intacto y estado material válido', (af01,)),
     ('AF02', 'LF añadido a evidence.csv', (af02,)),
@@ -397,6 +403,7 @@ CASES = (
     ('AF11', 'freeze reconstruido con los mismos bytes en otra historia', (af11,)),
     ('AF12', 'evidence.csv alterado con GIT_DIR, GIT_WORK_TREE y GIT_INDEX_FILE hacia un clon limpio', (af12,)),
     ('AF13', 'clon superficial', (af13,)),
+    ('AF14', 'artefacto ignorado en una superficie del runtime, invisible para git status y para ALC', (af14,)),
 )
 
 
