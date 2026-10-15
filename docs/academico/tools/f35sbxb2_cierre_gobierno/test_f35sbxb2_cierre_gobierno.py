@@ -42,7 +42,7 @@ GATE = LAYER_TOOLS + '/validate_f35sbxb2_cierre_gobierno.py'
 TESTS = LAYER_TOOLS + '/test_f35sbxb2_cierre_gobierno.py'
 DOC = 'docs/academico/evidencia-sbx-b2-cierre-gobierno/F35SBXB_B2_Cierre_Gobierno.md'
 LAYER_FILES = (DOC, GATE, TESTS)
-STORE = 'docs/academico/tools/f35sbxb2/sbxb_store.py'
+B2_TOOLS = 'docs/academico/tools/f35sbxb2'        # el almacén se deriva de Git: ningún .py ajeno a B2 lo nombra (DEP)
 B1_GATE = 'docs/academico/tools/f35sbxb/validate_f35sbxb.py'
 SF_VALIDATOR = 'docs/academico/tools/f35sbxb2_sucesor_freeze/validate_f35sbxb2_sucesor_freeze.py'
 SUC_DOC = 'docs/academico/evidencia-sbx-b2-sucesor/F35SBXB_B2_Sucesor.md'
@@ -347,9 +347,11 @@ def gc10(fx, c):
 
 # ---------------------------------------------------------------- integridad de las capas congeladas
 def gc11(fx, c):
-    fx.write(STORE, fx.read(STORE) + b'\n# alterado\n')
-    fx.commit('altera el almacén de B2', STORE)
-    return [probe(fx, {'INT', 'MAT', 'SUC', 'ALC'})]
+    fx.write(c['store'], fx.read(c['store']) + b'\n# alterado\n')
+    fx.commit('altera el almacén de B2', c['store'])
+    # Un comentario no es material para el gate de B2 (SCP compara estados y STA, el código), y la ruta queda fuera de
+    # las tres violaciones visibles del ALC de B2-SUCCESSOR-FREEZE: lo detectan INT y el alcance exacto (ALC).
+    return [probe(fx, {'INT', 'ALC'}, says={'INT': 'capa B2 '})]
 
 
 def gc12(fx, c):
@@ -432,7 +434,8 @@ def gc22(fx, c):
     fx.write(GATE, modified)
     fx.commit('altera el gate de la capa', GATE)
     fx.write(GATE, trusted)
-    out = [probe(fx, {'FRZ'}, label='copia de confianza en el disco')]
+    # La copia de confianza en el disco es un cambio sin confirmar frente a HEAD en la capa: también falla ALC.
+    out = [probe(fx, {'FRZ', 'ALC'}, label='copia de confianza en el disco')]
     fx.write(GATE, modified)
     out.append(probe(fx, {'FRZ', 'DEP'}, label='copia alterada en el disco'))
     return out
@@ -492,9 +495,14 @@ CASES = (
 
 
 def context(base, env):
-    """HEAD probado y commit que completa la capa en su historia (el primero posterior a DEVELOP_MERGE que contiene
-    sus tres archivos)."""
+    """HEAD probado, módulo del almacén de B2 (el único .py de su carpeta que no es el gate), derivado de Git, y commit
+    que completa la capa en su historia (el primero posterior a DEVELOP_MERGE que contiene sus tres archivos)."""
     head = run_git(['rev-parse', '--verify', 'HEAD^{commit}'], base, env).decode('utf-8').strip()
+    names = [x for x in run_git(['ls-tree', '--name-only', '-z', head, B2_TOOLS + '/'], base, env).decode(
+        'utf-8').split('\x00') if x]
+    store = [x for x in names if x.endswith('.py') and not x.rsplit('/', 1)[1].startswith('validate_')]
+    if len(names) != 2 or len(store) != 1:
+        raise Failure(f'precondición: la carpeta de herramientas de B2 no tiene la forma auditada: {names}')
     completion = None
     for commit in run_git(['rev-list', '--reverse', '--ancestry-path', f'{DEVELOP_MERGE}..{head}'], base, env).decode(
             'ascii').split():
@@ -503,7 +511,7 @@ def context(base, env):
         if set(LAYER_FILES) <= names:
             completion = commit
             break
-    return {'head': head, 'completion': completion}
+    return {'head': head, 'completion': completion, 'store': store[0]}
 
 
 def fmt(rules):

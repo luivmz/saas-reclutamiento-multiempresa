@@ -240,7 +240,7 @@ Cada caso trabaja en un clon desechable de HEAD, fuera del repositorio, con conf
 | GC08 | Transición que también cambia otra ruta | GOV |
 | GC09 | Transición hecha en un merge | GOV |
 | GC10 | Transición repartida en dos commits, una ruta en cada uno | GOV |
-| GC11 | Almacén de B2 alterado y confirmado | INT, MAT, SUC y ALC |
+| GC11 | Almacén de B2 alterado y confirmado | INT y ALC (corregido tras el primer GREEN, §5.2) |
 | GC12 | Validador de B2-SUCCESSOR-FREEZE alterado y confirmado | INT, SUC y ALC |
 | GC13 | Modificar → restaurar el documento del sucesor | INT y SUC |
 | GC14 | Rama lateral que altera y restaura el gate de B1, integrada con merge `--no-ff` | INT y MAT |
@@ -251,7 +251,7 @@ Cada caso trabaja en un clon desechable de HEAD, fuera del repositorio, con conf
 | GC19 | Injertos sin efecto | ENT y SUC |
 | GC20 | skip-worktree en `CLAUDE.md` con un cambio que `git status` no ve | GOV, FLG, MAT y SUC |
 | GC21 | Documento de esta capa modificado y confirmado tras completarla | FRZ |
-| GC22 | Gate de esta capa alterado y confirmado: copia de confianza en el disco; copia alterada | FRZ; FRZ y DEP |
+| GC22 | Gate de esta capa alterado y confirmado: copia de confianza en el disco; copia alterada | FRZ y ALC (corregido tras el primer GREEN, §5.2); FRZ y DEP |
 | GC23 | Dato personal ficticio en el documento de esta capa, confirmado | SEM y FRZ |
 | GC24 | Gobierno que anticipa el cierre formal de B2, confirmado | GOV, SEM y MAT |
 | GC25 | Gobierno que altera el estado de G0 real, confirmado | GOV, SEM y MAT |
@@ -270,4 +270,100 @@ Propiedades que cubren:
 
 ## 5. Resultados
 
-Pendiente del commit GREEN.
+### 5.1 Commits
+
+| Commit | Padre | Contenido | Resultado |
+|---|---|---|---|
+| `b5d9b1df280d507976dae245cc1c0b39d7941f79` | `eb02c2d` | Diseño (§1 a §4) y batería GC01..GC26 (RED) | 0 casos correctos y 26 fallas, con 20 ejecuciones: el gate no existía, y GC07–GC10, GC21 y GC22 ni siquiera podían prepararse |
+| `d346597e988d2f7f5d0d84e119709012b67715da` | `b5d9b1d` | Transición de gobierno (§3.3): solo `CLAUDE.md` y `docs/PROGRESS.md` | `B2_CLOSURE_TRANSITION`, registrada en el gate del commit siguiente |
+| El que completa la capa (este) | `d346597` | Gate, correcciones de la batería de §5.2 y estos resultados (GREEN) | Gate 13/0; batería 26/26 (§5.2) |
+
+Ese tercer commit es el ancla de nivel B de este incremento: lo informa la línea INFO de FRZ, y su hash no se guarda en ningún archivo.
+
+### 5.2 GREEN y correcciones de la batería
+
+Los resultados se midieron en clones temporales sin remoto, sobre commits desechables cuyo árbol solo difiere del de este commit en esta sección 5.
+
+- **Primera ejecución del gate: 12/1.** Falló MAT, porque el gate de B2 sobre HEAD fallaba en DEP: su regla rechaza todo `.py` del repositorio que nombre el módulo del almacén, y la batería lo nombraba para preparar GC11. Era un incumplimiento material, no de clase A, y MAT lo detectó como debe. La batería pasó a derivar esa ruta de Git, y el gate dio 13/0, sin cambios.
+- **Primera ejecución completa de la batería: 24/26,** con 28 ejecuciones del gate. Las dos diferencias eran expectativas mal razonadas en RED. El gate no cambió:
+
+| Caso | Esperado en RED | Observado | Causa |
+|---|---|---|---|
+| GC11 | INT, MAT, SUC y ALC | INT y ALC | Un comentario en el almacén no es material para el gate de B2: SCP compara estados (la ruta sigue en `A`) y STA, el código. Es lo que registró AF04 (a) del sucesor (118/1). Además, el almacén queda fuera de las tres violaciones visibles del ALC de B2-SUCCESSOR-FREEZE (su riesgo R2). La alteración la detectan INT y el alcance exacto (ALC) |
+| GC22, copia de confianza | FRZ | FRZ y ALC | El ALC de este gate comprueba además las carpetas de la capa en el disco frente a HEAD, y la copia de confianza en el disco es un cambio sin confirmar frente al gate confirmado |
+
+- **Casos corregidos:** GC11 y GC22 pasan, con 3 ejecuciones del gate. La repetición completa de la batería sobre este commit se registra en el reporte de entrega.
+
+### 5.3 Clase A observada sobre HEAD
+
+| Gate congelado sobre HEAD | Resultado | Fallas |
+|---|---|---|
+| B2 | 113/6 | CTX (solo la rama), B1F 8 (dos commits por la regla 3 y seis del estado efectivo), SCP 42 (14 rutas en tres planos), DYN 1 (P25), GOV 3 (dos «contenido distinto» y «b2 integrada» en `docs/PROGRESS.md`) y P25 |
+| B2-FREEZE | 6/4 | HIS, ARB, IDX y DSK, solo por `CLAUDE.md` y `docs/PROGRESS.md` |
+| Sucesor | 4/3 | CON, MAT y ALC |
+| B2-SUCCESSOR-FREEZE | 10/2 | VIG y ALC; FRZ deriva `89694244b81b0bd84dbe6ae5d04b5c7a198bafef` |
+| B1 | 105/54 | Las mismas reglas que sobre la base `eb02c2d` (GOV, SCP y los 51 casos PB, con GOV idéntico), más CTX por el nombre de la rama, que en `develop` pasa (106/53 sobre la base). SCP pasa de 57 a 66 |
+| B1-FREEZE | 0/2 | FRZ y B1, como sobre la base; FRZ pasa de 20 a 23 |
+
+MAT clasifica exactamente la primera fila, y SUC la cuarta. Las otras se reponen con INT, GOV y SEM (§3.5).
+
+### 5.4 Controles de mutación
+
+La batería se ejecutó contra gates debilitados a propósito, en commits desechables:
+
+| Mutación | Casos que la detectan |
+|---|---|
+| Sin MAT (el gate de B2 no se ejecuta sobre HEAD) | GC15, que pierde MAT; GC16, que pasa a PASS |
+| GOV sin comparar la transición derivada con la registrada | GC07, que pasa a PASS |
+| SEM admite «cerrada» en el ciclo de vida de B2 | GC24, que pierde SEM |
+| Sin INT | GC11, GC13 y GC14, que pierden INT |
+
+### 5.5 Validación
+
+| Comprobación | Resultado |
+|---|---|
+| `validate_f35sbxb2_cierre_gobierno.py` | 13/0, en unos 85 segundos. FRZ informa el commit que completa la capa; GOV deriva `d346597` igual a la registrada; HIS da 12/0 con el ancla derivada `8969424` |
+| `test_f35sbxb2_cierre_gobierno.py` | 26/26 tras las correcciones de §5.2 (24/26 en la primera ejecución completa, con 28 ejecuciones del gate) |
+| Gates anclados en clones limpios sin remoto | B1 sobre `8e94a60`: 159/0. B1-FREEZE sobre `3d9b783`: 14/0. B2 sobre `2472fd6`: 119/0, con la transición `12c1c36`. B2-FREEZE sobre `9961d2d`: 10/0. Sucesor sobre `9d6fb15`: 7/0. B2-SUCCESSOR-FREEZE sobre `8969424`: 12/0, con FRZ en `8969424` |
+| `validate.py` y `validate.py --cierre-f29` | 0 fallas en ambos |
+| `validate_f29.py`, `test_f32_safety.py`, `validate_f33.py` y `validate_f34.py` | 225/0, OK, 451/0 y 403/0 |
+| `validate_f34a.py` | 108/0. Necesita la referencia `develop`; en un clon sin ella falla cerrado en GIT, igual que antes de este incremento |
+| `validate_f34e.py` | 247/1, igual que sobre la base `eb02c2d`: la falla histórica de la regla GIT. Su lista de rutas no autorizadas por DH-02 pasa de 23 a 26 (las tres de esta capa), sin que desaparezca ninguna. El único otro cambio del mensaje es la lista truncada a cinco rutas del alcance de F34B, que por orden alfabético ahora muestra el documento de esta capa |
+| Enlaces relativos | 1125 en `docs/academico` (1120 en la base) y 1525 en todo el repositorio, 0 rotos |
+| MANIFEST y evidencias | 61 hashes y 0 discrepancias; 81 hashes de las evidencias de las prácticas 03, 05, 08 y 11, 0 discrepancias |
+| `git diff --check` frente a `eb02c2d` | Limpio |
+| Delta frente a `eb02c2d` | Exactamente las tres rutas de la capa (A) y las dos de gobierno (M) |
+
+### 5.6 Sucesión vigente
+
+| Gate | Papel | Dónde | Resultado en clon limpio |
+|---|---|---|---|
+| `validate_f35sbxb2_cierre_gobierno.py` | Gate sobre HEAD, en esta rama, `develop` y `main` | HEAD | 13/0 |
+| `validate_f35sbxb2_sucesor_freeze.py` | Cierre de la capa sucesora (dentro de HIS y SUC) | Anclado sobre `8969424` y HEAD | 12/0 y 10/2 (clase A) |
+| `validate_f35sbxb2.py` | Evaluación material (dentro de MAT) | HEAD | 113/6 (clase A) |
+| `validate_f35sbxb2_sucesor.py`, `validate_f35sbxb2_freeze.py` | Capas anteriores de B2 | Anclados sobre `9d6fb15` y `9961d2d` | 7/0 y 10/0 |
+| `validate_f35sbxb2.py` | Gate histórico de B2 | Anclado sobre `2472fd6` | 119/0 |
+| `validate_f35sbxb.py`, `validate_f35sbxb_freeze.py` | Gates históricos de B1 y B1-FREEZE | Anclados sobre `8e94a60` y `3d9b783` | 159/0 y 14/0 |
+
+Esta tabla supera la de §5.6 de B2-SUCCESSOR-FREEZE, congelada en `8969424`.
+
+### 5.7 Riesgos residuales
+
+| # | Nivel | Riesgo | Tratamiento |
+|---|---|---|---|
+| R1 | INFO | El ancla de nivel B solo autentica la capa si se registra fuera: una capa reconstruida con los mismos bytes en otra historia informa otra ancla (GC07) | La auditoría anota el commit que informa FRZ. No se añade otra capa de freeze |
+| R2 | INFO | Tras aprobarse este incremento, el gobierno seguirá diciendo «PENDIENTE DE CIERRE FORMAL» y «candidato a auditoría», como ocurrió con B1 y con B2 (riesgo R4 de su corrección), porque la regla monotónica no admite otra transición sin otro incremento | El cierre formal lo acredita la auditoría sobre el ancla de este incremento. Su registro en el gobierno corresponde al incremento sucesor que el equipo autorice, con su propio delta cerrado |
+| R3 | LOW | SUC solo ve las tres primeras violaciones de cada regla de B2-SUCCESSOR-FREEZE (su R2), y MAT las tres primeras de cada regla del gate de B2 | MAT exige recuentos exactos y predichos; SUC exige un ALC por plano y solo rutas de este incremento entre las visibles. El alcance exacto lo comprueba ALC y la integridad, INT |
+| R4 | INFO | MAT admite en GOV del gate de B2 la declaración «b2 integrada» o «b2 congelada», que su vocabulario congelado rechaza | Es un hecho verificado por ANC (`eb02c2d` integra exactamente el árbol de `8969424`). SEM repite el análisis completo con la sucesión del ciclo de vida, que sigue rechazando el cierre formal y los estados posteriores |
+| R5 | INFO | Cada ejecución tarda unos 85 segundos: el gate de B2 sobre HEAD, B2-SUCCESSOR-FREEZE sobre HEAD y anclado (que a su vez ejecutan el sucesor y el gate de B2) | Es el coste de conservar la evaluación material completa |
+| R6 | INFO | En el checkout del equipo, MAT y SUC fallan por FSY si hay artefactos ignorados preexistentes (GC16) | Es deliberado: el checkout no se limpia y la certificación es en clon limpio |
+| R7 | INFO | Cualquier cambio fuera de las rutas de este incremento hace fallar ALC y MAT, incluido uno legítimo de un incremento futuro | Es una falla de clase A para ese incremento, que aportará su propio gate sucesor |
+| R8 | INFO | El merge en `main` (`5bf4f4e`) no es ancestro de esta rama, así que el gate no lo verifica | Se registró con Git y con el CI (§1.2), y GC02 prueba la integración `--no-ff` sobre él |
+
+### 5.8 Próximo paso
+
+Auditoría independiente de B2-GOVERNMENT-CLOSURE, que anota como ancla el commit que informa la línea INFO de FRZ. Hasta entonces:
+
+- B2-GOVERNMENT-CLOSURE no se aprueba;
+- B2 sigue IMPLEMENTADA / CORREGIDA / REAUDITADA / CONGELADA / INTEGRADA TÉCNICAMENTE / PENDIENTE DE CIERRE FORMAL;
+- no hay push, merge, tag ni release de este incremento.
