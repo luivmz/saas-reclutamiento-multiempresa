@@ -1,12 +1,12 @@
 # F35-SBX-B — B2: registro del cierre formal (R2-A)
 
-> **Estado: R2-A EN CONSTRUCCIÓN: contrato, diseño y batería en RED, sin transición de gobierno ni gate.** Fecha: 18/10/2026. Rama `chore/f35-sbx-b2-r2a-final-closure`, desde `develop` = `04895aacd96f0f03dde84e10a558bbdf26f050c6`.
+> **Estado: R2-A = IMPLEMENTADO / VALIDADO LOCALMENTE / CANDIDATO A AUDITORÍA INDEPENDIENTE.** Fecha: 18/10/2026. Rama `chore/f35-sbx-b2-r2a-final-closure`, desde `develop` = `04895aacd96f0f03dde84e10a558bbdf26f050c6`.
 >
-> - **B2 = IMPLEMENTADA / CORREGIDA / REAUDITADA / CONGELADA / INTEGRADA TÉCNICAMENTE / CIERRE DE GOBIERNO INTEGRADO**, y su gobierno sigue diciendo «PENDIENTE DE CIERRE FORMAL».
+> - **B2 = CIERRE FORMAL PREPARADO / PENDIENTE DE AUDITORÍA R2-A.** El gobierno de esta rama ya registra el cierre (§3.3), pero ese registro solo vale cuando la auditoría independiente apruebe este incremento y el equipo autorice su integración. Hasta entonces, `develop` y `main` siguen diciendo «PENDIENTE DE CIERRE FORMAL».
 > - **B2-GOVERNMENT-CLOSURE = AUDITADO / APROBADO / INTEGRADO**, con la decisión R2-A de la auditoría independiente.
 > - Este incremento no se autoaprueba: lo decide la auditoría independiente sobre su ancla.
 >
-> Las secciones 1 a 4 registran el contrato y el diseño, escritos antes de la transición de gobierno y del gate (commit RED). La sección 5 añadirá los resultados.
+> Las secciones 1 a 4 registran el contrato y el diseño, escritos antes de la transición de gobierno y del gate (commit RED `c2c1f6e`). La sección 5 añade los resultados.
 
 ## 1. Punto de partida verificado
 
@@ -72,7 +72,15 @@ La forma canónica es la que el gobierno ya usa para B1: «B1 (gate sucesor sobr
 
 El cierre significa solo esto: **F35-SBX-B2 completó y cerró su alcance académico y sintético autorizado**, el almacén efímero aislado por organización sintética, con su freeze, su gate sucesor, el cierre de la capa sucesora y el cierre de gobierno auditados e integrados.
 
-No significa autorización productiva, aprobación institucional, legal ni de privacidad, validación con candidatos reales, eficacia institucional demostrada, autorización de datos reales ni de IA de selección, ni autorización automática de F36. Se conservan:
+El cierre no cambia nada fuera de ese alcance:
+
+- no es un permiso de uso productivo;
+- no sustituye la revisión institucional, legal ni de privacidad;
+- no se validó con candidatos reales ni demuestra eficacia institucional;
+- no da paso a datos reales ni a IA de selección de personas;
+- no abre F36 ni ninguna fase productiva.
+
+Se conservan:
 
 | Estado | Valor |
 |---|---|
@@ -125,16 +133,20 @@ R2-A queda aceptado como candidato si se cumple todo:
 | Historia reconstruida o sin la integración del cierre de gobierno | GOV, CTX y FRZ | CF08, CF35 |
 | Alterar una capa congelada | INT, más SUC, MAT, GCL o ALC según la capa | CF12–CF16 |
 | Tocar dataset, runtime o dependencias | MAT, ALC y GCL, más SUC cuando la ruta es visible | CF17–CF20 |
-| Intento de declarar G0 real aprobada o de quitar las restricciones de G0-SBX | GOV, SEM, MAT y GCL | CF28, CF29 |
-| Intento de aprobar ADR-005, desbloquear F36–F40 o habilitar el alcance C | GOV, SEM, MAT y GCL | CF30–CF32 |
-| Intento de permitir datos reales o habilitar scoring, recomendación o selección automática | GOV, SEM, MAT y GCL | CF33, CF34 |
+| Intento de declarar G0 real aprobada | GOV, SEM, MAT y GCL | CF28 |
+| Intento de quitar las restricciones de G0-SBX | GOV, SEM, MAT y GCL | CF29 |
+| Intento de aprobar ADR-005 | GOV, SEM, MAT y GCL | CF30 |
+| Intento de desbloquear F36–F40 | GOV, SEM, MAT y GCL | CF31 |
+| Intento de habilitar el alcance C | GOV, SEM, MAT y GCL | CF32 |
+| Intento de permitir datos reales | GOV, SEM, MAT y GCL | CF33 |
+| Intento de habilitar scoring, recomendación y selección automática | GOV, SEM, MAT y GCL | CF34 |
 | Entorno de Git hostil o incompleto | ENT, FLG y fallo cerrado | CF21–CF24 |
 
 ### 2.7 Por qué es un cierre terminal
 
 - **No hay R2-B.** El texto nuevo describe hechos que no cambian al integrarse R2-A: B2 cerrada, su cierre de gobierno auditado e integrado y el lugar de su registro. No menciona el estado de auditoría de R2-A, así que no queda nada que registrar después.
 - **No hay otro freeze.** El ancla de esta capa es el commit que la completa, que el gate deriva y la auditoría registra fuera, como en las capas anteriores. Un manifiesto no acreditaría nada por sí mismo: las anclas registradas en el gate y los objetos Git verificados son la fuente de verdad.
-- **El ciclo de vida de B2 termina aquí.** El gate admite «cerrada» y rechaza la reapertura y cualquier estado posterior (aprobada, productiva, publicada o desplegada). Un incremento futuro de otra fase que cambie el gobierno producirá una falla de clase A en este gate y aportará su propio gate sucesor, como prevé DH-B13; no es una capa más de B2.
+- **El ciclo de vida de B2 termina aquí.** El gate admite «cerrada» y rechaza la reapertura y cualquier estado posterior («aprobada», «productiva», «publicada» o «desplegada»). Un incremento futuro de otra fase que cambie el gobierno producirá una falla de clase A en este gate y aportará su propio gate sucesor, como prevé DH-B13; no es una capa más de B2.
 
 El único mecanismo nuevo es el gate sucesor de §3.4, que la propia sucesión exige: todos los gates congelados fallan sobre un HEAD con otro gobierno, y el contrato pide que el incremento que lo cambie aporte su gate sobre HEAD.
 
@@ -255,7 +267,7 @@ SEM carga el gate de B1 desde los bytes de su blob en `8e94a60`, verificados, co
 | Implementada, congelada, integrada | Admitidos | Admitidos |
 | Cerrada | Rechazada | Admitida |
 | Pendiente de cierre, reabierta, abierta, en desarrollo o no cerrada | Pendiente admitida | Rechazados |
-| Aprobada, productiva, publicada o desplegada | Rechazados | Rechazados |
+| «Aprobada», «productiva», «publicada» o «desplegada» | Rechazados | Rechazados |
 
 El documento de esta capa pasa las mismas comprobaciones (sin datos personales, afirmaciones positivas ni declaraciones contradictorias), y todos sus archivos son UTF-8 sin BOM, CR ni NUL.
 
@@ -328,4 +340,99 @@ Propiedades que cubren:
 
 ## 5. Resultados
 
-Pendientes: se registrarán en el commit que completa la capa.
+### 5.1 Commits
+
+| Commit | Padre | Contenido | Resultado |
+|---|---|---|---|
+| `c2c1f6e1d0cd8064e6aeab4ae27b53ce92452d6e` | `04895aa` | Diseño (§1 a §4) y batería CF01..CF36 (RED) | 0 casos correctos y 36 fallas, con 30 ejecuciones: el gate no existía, y CF06–CF11 y CF26 ni siquiera podían prepararse |
+| `ddefb7dae00a7b57eb32c1046de634c0be2805de` | `c2c1f6e` | Transición de gobierno (§3.3): solo `CLAUDE.md` y `docs/PROGRESS.md` | `B2_FORMAL_TRANSITION`, registrada en el gate del commit siguiente |
+| El que completa la capa (este) | `ddefb7d` | Gate, correcciones de redacción de este documento (§5.2) y estos resultados (GREEN) | Gate 14/0; batería 36/36 |
+
+Ese tercer commit es el ancla de nivel B de este incremento: lo informa la línea INFO de FRZ, y su hash no se guarda en ningún archivo.
+
+### 5.2 GREEN y correcciones
+
+Los resultados se midieron en clones temporales sin remoto. La batería y los controles de mutación, sobre commits desechables cuyo árbol solo difiere del de este commit en la cabecera de este documento y en esta sección 5; el gate y la regresión, sobre un commit desechable con el árbol de este commit.
+
+- **Comprobación semántica previa de este documento: 9 afirmaciones positivas.** Antes de ejecutar el gate, las mismas piezas del gate de B1 que usa SEM encontraron nueve en el documento del commit RED. Eran falsos positivos de redacción: en §2.3, la negación quedaba lejos de la enumeración que negaba; en §2.6, cada fila «Intento de …» juntaba varias capacidades; y §2.7 y §3.7 enumeraban los estados rechazados sin citarlos. Se reescribieron esas frases sin tocar SEM (§2.3 como lista de negaciones, §2.6 con una fila por amenaza y los estados de §2.7 y §3.7 entre comillas latinas), y la comprobación dio 0 afirmaciones positivas y 0 declaraciones contradictorias.
+- **Primeros casos de la batería: 3/4 (CF02, CF06, CF07 y CF35).** CF35 falló con GCL de más. El espejo de GOV del gate del cierre de gobierno tomaba por ajena a la clase A la regla 3 en los commits que no descienden de `04895aa`, cuando §3.5 la prevé en todo commit posterior a `d346597` sin su blob. En CF35 la capa se monta sobre `363273e` sin el merge `04895aa`, y GCL añadía su falla a las de CTX, GOV y FRZ, que son las que detectan esa historia. Se corrigió el gate, no la batería: el espejo sigue §3.5, y la exigencia de descender de `04895aa` queda en CTX, GOV y FRZ. CF35 y CF04 pasaron después.
+- **Batería completa, repetida desde cero tras la corrección: 36/36,** con 38 ejecuciones del gate en seis tandas paralelas, y ninguna expectativa de RED corregida. La repetición completa de la batería sobre este commit se registra en el reporte de entrega.
+
+### 5.3 Clase A observada sobre HEAD
+
+Medida en la rama y comparada con la base `04895aa` (`develop`), en clones limpios sin remoto:
+
+| Gate congelado sobre HEAD | Resultado | Fallas |
+|---|---|---|
+| B2-GOVERNMENT-CLOSURE | 7/6 (13/0 sobre la base) | La clase A de §3.5, exacta: CTX (solo la rama); SUC 1, el ALC de B2-SUCCESSOR-FREEZE con el gobierno y el documento de esta capa; MAT 3 (CTX material, SCP 51 frente a 42 y GOV con «b2 cerrada»); GOV 8, la regla 3 en `ddefb7d` y en el commit que completa la capa y las seis del estado efectivo; SEM 3, «PENDIENTE DE CIERRE FORMAL» ausente en cada ruta y «b2 cerrada» en `docs/PROGRESS.md`; ALC 3, las tres rutas de esta capa en cada plano |
+| B2-SUCCESSOR-FREEZE | 10/2 (10/2) | VIG 5 y ALC 3, como sobre la base. VIG ve además CTX en la rama y SCP 51 en lugar de 42; ALC muestra el documento de esta capa. FRZ deriva `8969424` |
+| Sucesor | 4/3 (4/3) | CON 1, MAT 2 y ALC 3, como sobre la base; MAT ve CTX en la rama y SCP 51 |
+| B2-FREEZE | 6/4 (6/4) | HIS 6 (3 sobre la base: se suman `c2c1f6e`, `ddefb7d` y el commit que completa la capa), ARB 1, IDX 1 y DSK 2, solo por `CLAUDE.md` y `docs/PROGRESS.md` |
+| B2 | 113/6 (114/5) | CTX (solo la rama); B1F 12 (9: los tres commits nuevos); SCP 51 (42: las tres rutas nuevas en tres planos); DYN 1 (P25); GOV 3, con «b2 cerrada» donde la base tiene «b2 integrada» |
+| B1 | 105/54 (106/53) | GOV 1 y los 51 casos PB, idénticos a los de la base; SCP 75 (66: las tres rutas nuevas en tres planos); más CTX por el nombre de la rama |
+| B1-FREEZE | 0/2 (0/2) | FRZ 27 (24: los tres commits nuevos, solo por `CLAUDE.md` y `docs/PROGRESS.md`) y B1, como sobre la base |
+
+En `develop` y `main` CTX pasa (CF02). GCL clasifica exactamente la primera fila, SUC la segunda y MAT la quinta. Las demás se reponen con INT, GOV y SEM (§3.5).
+
+### 5.4 Controles de mutación
+
+La batería se ejecutó contra gates debilitados a propósito, en commits desechables. Cada mutación la detecta al menos un caso que falla:
+
+| Mutación | Casos que la detectan |
+|---|---|
+| Sin GCL (el gate del cierre de gobierno no se ejecuta sobre HEAD) | CF14 y CF18, que pierden GCL |
+| GOV sin comparar la transición derivada con la registrada | CF08, que pasa a PASS |
+| SEM sin exigir el estado cerrado ni rechazar la reapertura o el estado pendiente | CF06 y CF07, que pierden SEM |
+| Sin INT | CF14 y CF15, que pierden INT |
+| MAT acepta cualquier salida del gate de B2 | CF17 y CF18, que pierden MAT |
+
+### 5.5 Validación
+
+| Comprobación | Resultado |
+|---|---|
+| `validate_f35sbxb2_cierre_formal.py` | 14/0, en unos 160 segundos sin otra carga. FRZ informa el commit que completa la capa; GOV deriva `ddefb7d`, igual a la registrada; HIS da 13/0, con el ancla derivada `363273e` y la transición `d346597`; GCL observa 7/6 con las reglas previstas; SUC, 10/2 con FRZ en `8969424`; MAT, 113/6 con SCP 51 de 51 previstas |
+| `test_f35sbxb2_cierre_formal.py` | 36/36 (§5.2) |
+| Gates anclados en clones limpios sin remoto | B2-GOVERNMENT-CLOSURE sobre `363273e`: 13/0, con FRZ en `363273e` y GOV en `d346597`. B2-SUCCESSOR-FREEZE sobre `8969424`: 12/0, con FRZ en `8969424`. Sucesor sobre `9d6fb15`: 7/0. B2-FREEZE sobre `9961d2d`: 10/0. B2 sobre `2472fd6`: 119/0, con la transición `12c1c36`. B1 sobre `8e94a60`: 159/0. B1-FREEZE sobre `3d9b783`: 14/0, con SBX-01..SBX-18 en 18/18 |
+| `validate.py` y `validate.py --cierre-f29` | 0 fallas en ambos |
+| `validate_f29.py`, `test_f32_safety.py`, `validate_f33.py` y `validate_f34.py` | 225/0, OK (10 pruebas), 451/0 y 403/0 |
+| `validate_f34a.py` | 108/0 |
+| `validate_f34e.py` | 247/1, igual que sobre `363273e` y las anclas anteriores: la falla histórica de la regla GIT. Su lista de rutas no autorizadas por DH-02 pasa de 26 a 29 (las tres de esta capa), sin que desaparezca ninguna, y el resto del mensaje no cambia. Criterios SBX: 18/18 |
+| Enlaces relativos | 1130 en `docs/academico` (1125 en la base) y 1532 en todo el repositorio (1525), 0 rotos |
+| MANIFEST y evidencias | 61 hashes y 0 discrepancias; 81 hashes de las evidencias de las prácticas 03, 05, 08 y 11, 0 discrepancias |
+| `git diff --check` frente a `04895aa` | Limpio, y también frente a `363273e` y `2472fd6` |
+| Delta frente a `04895aa` | Exactamente las tres rutas de la capa (A) y las dos de gobierno (M) |
+| Gobierno de HEAD | Los trece estados y F35-SBX-B INICIADA, sin cambios; B2 con la declaración canónica de §3.3 en las dos rutas y sin «PENDIENTE DE CIERRE FORMAL» |
+
+### 5.6 Sucesión vigente
+
+| Gate | Papel | Dónde | Resultado en clon limpio |
+|---|---|---|---|
+| `validate_f35sbxb2_cierre_formal.py` | Gate sobre HEAD, en esta rama, `develop` y `main` | HEAD | 14/0 |
+| `validate_f35sbxb2_cierre_gobierno.py` | Cierre de gobierno (dentro de HIS y GCL) | Anclado sobre `363273e` y HEAD | 13/0 y 7/6 (clase A) |
+| `validate_f35sbxb2_sucesor_freeze.py` | Cierre de la capa sucesora (dentro de SUC) | Anclado sobre `8969424` y HEAD | 12/0 y 10/2 (clase A) |
+| `validate_f35sbxb2.py` | Evaluación material (dentro de MAT) | HEAD | 113/6 (clase A) |
+| `validate_f35sbxb2_sucesor.py`, `validate_f35sbxb2_freeze.py` | Capas anteriores de B2 | Anclados sobre `9d6fb15` y `9961d2d` | 7/0 y 10/0 |
+| `validate_f35sbxb2.py` | Gate histórico de B2 | Anclado sobre `2472fd6` | 119/0 |
+| `validate_f35sbxb.py`, `validate_f35sbxb_freeze.py` | Gates históricos de B1 y B1-FREEZE | Anclados sobre `8e94a60` y `3d9b783` | 159/0 y 14/0 |
+
+Esta tabla supera la de §5.6 del cierre de gobierno, congelada en `363273e`.
+
+### 5.7 Riesgos residuales
+
+| # | Nivel | Riesgo | Tratamiento |
+|---|---|---|---|
+| R1 | INFO | Hasta que la auditoría independiente apruebe este incremento y el equipo autorice su integración, el registro del cierre en el gobierno de esta rama no vale: `develop` y `main` siguen diciendo «PENDIENTE DE CIERRE FORMAL» | Es el estado de todo candidato. El texto nuevo no menciona el estado de auditoría de R2-A, así que sigue siendo cierto después de integrarse (§2.7) |
+| R2 | INFO | El ancla de nivel B solo autentica la capa si se registra fuera: una capa reconstruida con los mismos bytes en otra historia informa otra ancla (CF08) | La auditoría anota el commit que informa FRZ. No se añade otra capa de freeze |
+| R3 | LOW | GCL, SUC y MAT solo ven las tres primeras violaciones de cada regla del gate que ejecutan | Los tres exigen recuentos exactos y predichos, y comparan una a una las violaciones visibles. El alcance exacto lo comprueba ALC y la integridad, INT |
+| R4 | INFO | Cada ejecución tarda unos 160 segundos sin otra carga, y bastante más con varias en paralelo: el gate del cierre de gobierno anclado y sobre HEAD, B2-SUCCESSOR-FREEZE y el gate de B2 sobre HEAD, que a su vez ejecutan sus propias capas | Es el coste de conservar completa la evaluación vigente |
+| R5 | INFO | En el checkout del equipo, MAT, SUC y GCL fallan por FSY si hay artefactos ignorados preexistentes (CF18) | Es deliberado: el checkout no se limpia y la certificación es en clon limpio |
+| R6 | INFO | Cualquier cambio fuera de las rutas de este incremento hace fallar ALC y MAT, incluido uno legítimo de un incremento futuro, y cualquier cambio del gobierno hace fallar GOV | Es una falla de clase A para ese incremento, que aportará su propio gate sucesor (DH-B13). No es una capa más de B2 (§2.7) |
+| R7 | INFO | Los merges en `main` (`5bf4f4e` y `d5a4b4e`) no son ancestros de esta rama, así que el gate no los verifica | Se registraron con Git y con el CI (§1.2), y CF02 prueba la integración `--no-ff` sobre `d5a4b4e` |
+
+### 5.8 Próximo paso
+
+Auditoría independiente de R2-A, que anota como ancla el commit que informa la línea INFO de FRZ. Hasta entonces:
+
+- R2-A no se aprueba;
+- B2 queda con el cierre formal preparado y pendiente de esa auditoría;
+- no hay push, merge, tag ni release de este incremento.
