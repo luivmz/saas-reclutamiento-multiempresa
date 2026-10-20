@@ -324,7 +324,7 @@ def cb06(fx, c):
     for rel in GOV_PATHS:
         fx.write(rel, fx.git('cat-file', 'blob', f'{BASE}:{rel}'))
     fx.commit('vuelve al gobierno del cierre formal: sin B3', *GOV_PATHS)
-    return [probe(fx, {'GOV', 'SEM', 'ALC'}, says={'GOV': 'regla 3', 'SEM': 'B3'})]
+    return [probe(fx, {'GOV', 'SEM', 'ALC', 'R2A'}, says={'GOV': 'regla 3', 'SEM': 'B3'})]
 
 
 def cb07(fx, c):
@@ -365,7 +365,7 @@ def cb12(fx, c):
 def cb13(fx, c):
     fx.write(c['store'], fx.read(c['store']) + b'\n# alterado\n')
     fx.commit('altera el almacén de B2', c['store'])
-    return [probe(fx, {'INT', 'ALC', 'MAT', 'R2A'} | PIPE_RULES, says={'INT': 'capa B2 '})]
+    return [probe(fx, {'INT', 'ALC', 'R2A'} | PIPE_RULES, says={'INT': 'capa B2 '})]
 
 
 def cb14(fx, c):
