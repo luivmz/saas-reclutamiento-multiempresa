@@ -55,3 +55,9 @@ ml-service/**/*.parquet
 ml-service/**/*.pkl
 ml-service/**/*.pickle
 ml-service/**/*.joblib
+
+# Local SonarQube practice: credentials, scanner cache and real run evidence.
+/.quality/
+/.scannerwork/
+/coverage.xml
+/test-results.xml

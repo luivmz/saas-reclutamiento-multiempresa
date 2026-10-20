@@ -1,0 +1,91 @@
+# Standalone practice. Never overlay onto the normal docker-compose.yml.
+name: reclutamiento-sonarqube
+
+services:
+  sonarqube:
+    # Official Community Build image, pinned from Docker Hub on 2026-10-20.
+    image: sonarqube:community@sha256:0b3408443fb6a311253de27941b10977c9b977fd53be2265947bfe14161308b8
+    ports:
+      - "127.0.0.1:9000:9000"
+    # Embedded H2 is for this local academic practice only, never production.
+    volumes:
+      - sonar_data:/opt/sonarqube/data
+      - sonar_logs:/opt/sonarqube/logs
+      - sonar_extensions:/opt/sonarqube/extensions
+    ulimits:
+      nofile:
+        soft: 131072
+        hard: 131072
+      nproc: 8192
+    profiles: [sonar]
+
+  postgres:
+    image: postgres:17.11-alpine
+    environment:
+      POSTGRES_DB: reclutamiento_testing
+      POSTGRES_USER: reclutamiento
+      POSTGRES_PASSWORD: quality-testing-only
+    # No published port; this database is exclusively for this practice.
+    volumes:
+      - testing_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U reclutamiento -d reclutamiento_testing"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    profiles: [tests]
+
+  qa-app:
+    build:
+      context: .
+      dockerfile: docker/quality/Dockerfile
+    image: reclutamiento-sonar-php:local
+    working_dir: /var/www/html
+    entrypoint: [sh, /var/www/html/docker/quality/check.sh]
+    command: [tests]
+    environment:
+      APP_ENV: testing
+      APP_DEBUG: "false"
+      APP_KEY: ${QUALITY_APP_KEY:?Use tools/sonarqube.ps1 Preparar first}
+      APP_URL: http://localhost
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_DATABASE: reclutamiento_testing
+      DB_USERNAME: reclutamiento
+      DB_PASSWORD: quality-testing-only
+      ML_SERVICE_ENABLED: "false"
+      CACHE_STORE: array
+      SESSION_DRIVER: array
+      QUEUE_CONNECTION: sync
+      MAIL_MAILER: array
+    volumes:
+      - .:/var/www/html
+      - quality_vendor:/var/www/html/vendor
+      - quality_node_modules:/var/www/html/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles: [tests]
+
+  scanner:
+    # Official SonarSource scanner, pinned from Docker Hub on 2026-10-20.
+    image: sonarsource/sonar-scanner-cli@sha256:a3f4215076706c95a17a68c19322ee916e40a3acd081a8c1a1e839e0194afa57
+    working_dir: /var/www/html
+    environment:
+      SONAR_HOST_URL: http://sonarqube:9000
+      SONAR_TOKEN: ${SONAR_TOKEN:-}
+    volumes:
+      # Same absolute path as PHPUnit so Clover paths resolve without rewriting hits.
+      - .:/var/www/html
+      - scanner_cache:/opt/sonar-scanner/.sonar/cache
+    profiles: [sonar]
+
+volumes:
+  sonar_data:
+  sonar_logs:
+  sonar_extensions:
+  testing_data:
+  quality_vendor:
+  quality_node_modules:
+  scanner_cache:

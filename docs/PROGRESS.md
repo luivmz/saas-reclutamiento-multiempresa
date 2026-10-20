@@ -1,5 +1,11 @@
 # Progreso del proyecto
 
+## Practica local de SonarQube 20 de octubre de 2026
+
+Preparacion autorizada en `codex/mejoras-sonarqube`, desde `develop` en `ca36875938eca035c97205921ec5f9633381c571`. Se agregan Compose independiente, scanner, cobertura PHPUnit/PCOV, comandos PowerShell y prompts para V2. Alcance: herramientas y documentacion de calidad; sin cambios funcionales, RF/CU/RNF, fases productivas ni datos reales.
+
+Estado: **PREPARADO, EJECUCION PENDIENTE**. Docker Desktop no inicia por `sailor-ingest.sock`; no se declaran pruebas, cobertura ni analisis V1/V2 ejecutados. La validacion estatica no equivale a ejecutar el sistema. Procedimiento y pendientes en [la guia de esta practica](v1.1/sonarqube/README.md). Los estados de fases que siguen se conservan.
+
 Última actualización: 2026-10-18 (F34E CERRADA; G0 real NO APROBADA; G0-SBX APROBADA CON RESTRICCIONES; F35-SBX sintética HABILITADA; F35-SBX-A CERRADA E INTEGRADA; B0 CERRADA E INTEGRADA; F35-SBX-B INICIADA: B1 CERRADA E INTEGRADA, B2 CERRADA E INTEGRADA).
 
 > El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24; el 25/09/2026, de la Fase 24 a la Fase 25, y ese mismo día, de la Fase 25 a la Fase 26. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron. El 09/10/2026 la cabecera pasó de «2026-10-07 (…; F35-SBX-A CERRADA; F35-SBX-B NO INICIADA; publicación pendiente de regresión post-commits y CI)» al estado integrado de F35-SBX-A con B0 pendiente de auditoría; el mismo día, al inicio de F35-SBX-B con B0 cerrada e integrada. El 12/10/2026 pasó de «B1 en desarrollo» a B1 cerrada e integrada y B2 implementada, candidata a auditoría independiente. El 14/10/2026 pasó a B2 integrada técnicamente y pendiente de cierre formal, con su incremento de cierre de gobierno candidato a auditoría independiente. El 18/10/2026 pasó a B2 cerrada e integrada, con su cierre de gobierno auditado e integrado y su cierre formal registrado.
