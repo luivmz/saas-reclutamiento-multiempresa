@@ -88,7 +88,7 @@ try {
             Write-JsonFile @{status = 'RUNNING'; started = (Get-Date).ToString('o')} $proof
             $before = Get-SourceHash
             try {
-                Invoke-QualityCompose --profile tests up -d --wait postgres
+                Invoke-QualityCompose --profile tests up --detach --wait postgres
                 Invoke-QualityCompose --profile tests run --rm qa-app tests 2>&1 | Tee-Object -FilePath (Join-Path $local 'tests.log')
                 if ((Get-SourceHash) -ne $before) { throw 'El codigo cambio durante las pruebas. Repite Pruebas.' }
                 foreach ($file in @('coverage.xml', 'test-results.xml')) {
@@ -103,12 +103,12 @@ try {
             }
         }
         'Frontend' {
-            Invoke-QualityCompose --profile tests up -d --wait postgres
+            Invoke-QualityCompose --profile tests up --detach --wait postgres
             try { Invoke-QualityCompose --profile tests run --rm qa-app frontend 2>&1 | Tee-Object -FilePath (Join-Path $local 'frontend.log') }
             finally { Invoke-QualityCompose --profile tests stop postgres }
         }
         'Iniciar' {
-            Invoke-QualityCompose --profile sonar up -d sonarqube
+            Invoke-QualityCompose --profile sonar up --detach sonarqube
             Write-Host "Abre $server cuando el servidor este operativo. Primer acceso de esta instalacion nueva: admin / admin; cambia la clave y genera un token."
         }
         'Analizar' {
