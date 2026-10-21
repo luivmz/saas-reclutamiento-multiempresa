@@ -95,9 +95,11 @@ try {
         & git --git-dir=$snapshotGit --work-tree=$repo update-ref "refs/heads/$branch" $head
         if ($LASTEXITCODE -ne 0) { throw 'No se pudo fijar el commit real para el scanner.' }
         & git --git-dir=$snapshotGit --work-tree=$repo symbolic-ref HEAD "refs/heads/$branch"
+        if ($LASTEXITCODE -ne 0) { throw 'No se pudo identificar la rama real para el scanner.' }
         & git --git-dir=$snapshotGit --work-tree=$repo read-tree $head
         if ($LASTEXITCODE -ne 0) { throw 'No se pudo preparar el indice real para el scanner.' }
-        & git --git-dir=$snapshotGit config core.worktree /var/www/html
+        & git --git-dir=$snapshotGit --work-tree=$repo config core.worktree /var/www/html
+        if ($LASTEXITCODE -ne 0) { throw 'No se pudo fijar el directorio Linux del scanner.' }
         [IO.File]::WriteAllText($alternate, "/opt/reclutamiento-git/objects`n", [Text.UTF8Encoding]::new($false))
         $pointer = Join-Path $local 'scanner.git'
         [IO.File]::WriteAllText($pointer, "gitdir: /opt/scanner-git`n", [Text.UTF8Encoding]::new($false))

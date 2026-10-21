@@ -79,6 +79,10 @@ services:
       # Same absolute path as PHPUnit so Clover paths resolve without rewriting hits.
       - .:/var/www/html
       - scanner_cache:/opt/sonar-scanner/.sonar/cache
+      # Runtime test files and local credentials are not source code. Mask them
+      # without changing host permissions or running the scanner as root.
+      - scanner_storage:/var/www/html/storage:ro
+      - scanner_private:/var/www/html/.quality:ro
     profiles: [sonar]
 
 volumes:
@@ -89,3 +93,5 @@ volumes:
   quality_vendor:
   quality_node_modules:
   scanner_cache:
+  scanner_storage:
+  scanner_private:
