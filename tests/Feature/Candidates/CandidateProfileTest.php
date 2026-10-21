@@ -96,6 +96,24 @@ class CandidateProfileTest extends TestCase
         $this->assertSame(0, CandidateDocument::query()->count());
     }
 
+    public function test_rf09_cv_accepts_the_size_limit_and_rejects_one_kilobyte_more(): void
+    {
+        config(['recruitment.cv.max_kb' => 5120]);
+        $candidate = User::factory()->candidate()->create();
+
+        $this->actingAs($candidate)
+            ->post(route('candidate.cv.store'), ['cv' => UploadedFile::fake()->create('limite.pdf', 5120, 'application/pdf')])
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame(5120 * 1024, CandidateDocument::query()->sole()->size_bytes);
+
+        $this->actingAs($candidate)
+            ->post(route('candidate.cv.store'), ['cv' => UploadedFile::fake()->create('exceso.pdf', 5121, 'application/pdf')])
+            ->assertSessionHasErrors('cv');
+
+        $this->assertSame(1, CandidateDocument::query()->count());
+    }
+
     public function test_rf09_staff_cannot_use_candidate_profile_routes(): void
     {
         $hr = User::factory()->hr(Organization::factory()->create())->create();

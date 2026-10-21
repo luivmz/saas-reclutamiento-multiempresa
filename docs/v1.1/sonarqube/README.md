@@ -6,7 +6,7 @@ La practica prepara el diagnostico inicial del sistema de reclutamiento, su mejo
 
 Rama: `codex/mejoras-sonarqube`. Base: `develop`, commit `ca36875938eca035c97205921ec5f9633381c571`.
 
-La rama y su publicacion en GitHub ya existen. Esta preparacion agrega configuracion y herramientas locales, sin cambiar reglas de negocio. Docker Desktop esta instalado, pero su motor no inicia: falla al renombrar `sailor-ingest.sock`. La validacion de sintaxis y Compose se puede efectuar sin el motor. La construccion de imagenes, PHPUnit, cobertura, frontend y los analisis V1/V2 **no se han ejecutado en esta preparacion**. No hay porcentajes, calificaciones ni mejoras verificadas de SonarQube que declarar.
+Docker ya funciona y V1 termino sobre codigo real: 25 130 lineas, cobertura global 57,1 %, duplicacion 0,6 % y seis hallazgos. El detalle y las decisiones estan en [la revision de V1](revision-v1.md). Se aplicaron cuatro refactorizaciones locales y se documentaron dos revisiones justificadas; las reglas de negocio se conservan. Regresion posterior correcta: PHP 412 aprobadas y 8 omitidas, Python 546 aprobadas, frontend 42 aprobadas, build y TypeScript sin errores. **V2 no se ha ejecutado**, por indicacion del usuario. Tampoco se publican estos cambios locales en GitHub ni se modifica main/develop.
 
 Comprobaciones realizadas en esta sesion: parser de PowerShell sin errores; `docker compose config --quiet` correcto; `bash -n` del ejecutor correcto; `php -l` del generador XML correcto; XML derivado conserva la base de pruebas forzada y las suites; rutas nuevas y reglas de ignorado verificadas; `git diff --check` sin errores. Se intento `Preparar` y se detuvo correctamente al detectar el motor no disponible. Estas comprobaciones estaticas no sustituyen la ejecucion en Docker.
 
@@ -66,7 +66,7 @@ La base de pruebas se detiene al finalizar cada comando para liberar memoria ant
 .\tools\sonarqube.ps1 Iniciar
 ```
 
-Abre <http://127.0.0.1:9000>. Espera hasta que el servidor este operativo. En **esta instalacion local nueva**, el acceso inicial es `admin` / `admin`; cambia la clave y conservala de forma privada. Es independiente de las cuentas de GitHub, GitLab y la universidad.
+Abre <http://127.0.0.1:9000>. Espera hasta que el servidor este operativo. En una instalacion nueva el acceso inicial es `admin` / `admin`; en esta PC la clave ya fue cambiada y debe conservarse de forma privada. Es independiente de las cuentas de GitHub, GitLab y la universidad.
 
 Selecciona crear proyecto manualmente con:
 
@@ -104,24 +104,24 @@ Registra cada cambio y su prueba. Despues vuelve a ejecutar:
 
 V2 requiere una linea base V1 real y codigo distinto. Se usa el mismo proyecto de SonarQube con `sonar.projectVersion=2.0`, conservando el historial y las copias de V1. La rama Git separa este trabajo; no se pasa `sonar.branch.name`, que no es necesario para esta practica local.
 
-No se han seleccionado correcciones concretas todavia: falta el diagnostico inicial. No se renombra simplemente la misma ejecucion como V2 ni se modifica codigo para fabricar defectos de partida.
+Las correcciones locales y las dos alertas que requieren clasificacion manual estan en [revision-v1.md](revision-v1.md). No se renombra simplemente la misma ejecucion como V2 ni se modifica codigo para fabricar defectos de partida. El usuario ejecutara V2 y revisara el estado de las alertas; no hay una segunda medicion que declarar todavia.
 
 ## Registro de comparacion
 
-Completa solo con los resultados de ambas ejecuciones. Los valores de ejemplo de la guia no son resultados de este proyecto.
+V1 contiene resultados reales; la columna V2 queda pendiente de la ejecucion del usuario. Los valores de ejemplo de la guia no son resultados de este proyecto. Las calificaciones son las de MQR MODE de este servidor.
 
 | Indicador | V1 | V2 |
 |---|---|---|
-| Quality Gate | Pendiente | Pendiente |
-| Security | Pendiente | Pendiente |
-| Reliability | Pendiente | Pendiente |
-| Maintainability | Pendiente | Pendiente |
-| Security Hotspots y revisados | Pendiente | Pendiente |
-| Coverage y alcance de cobertura | Pendiente | Pendiente |
-| Duplicated Lines | Pendiente | Pendiente |
-| Issues | Pendiente | Pendiente |
-| Cognitive Complexity | Pendiente | Pendiente |
-| Technical Debt | Pendiente | Pendiente |
+| Quality Gate | OK; condicion new_violations = 0 | No ejecutada |
+| Security | C; 2 impactos | No ejecutada |
+| Reliability | C; 4 impactos | No ejecutada |
+| Maintainability | A; 1 impacto | No ejecutada |
+| Security Hotspots y revisados | 0; no aplica porcentaje revisado | No ejecutada |
+| Coverage y alcance de cobertura | 57,1 % global; solo PHP aporta reporte | No ejecutada |
+| Duplicated Lines | 0,6 % | No ejecutada |
+| Issues | 6 distintos | No ejecutada |
+| Cognitive Complexity | 1034 | No ejecutada |
+| Technical Debt | 30 minutos (sqale_index) | No ejecutada |
 
 Un Quality Gate aprobado no certifica que todo el sistema sea correcto, accesible o validado con usuarios. Tampoco un fallo del gate significa que el scanner fallo: un analisis exitoso puede revelar calidad insuficiente. El script conserva el resultado real incluso si el gate es ERROR.
 

@@ -238,7 +238,9 @@ _FINGERPRINT_PATTERN = re.compile(r"[0-9a-f]{64}")
 
 #: Una lectura de ablation debe traer un numero: "sin cambios relevantes" no
 #: seria una conclusion verificable.
-_DECIMAL_PATTERN = re.compile(r"[+-]?\d+\.\d+")
+# Start only at the beginning of a digit run. Without this boundary, search()
+# retries every suffix of a long integer with no dot, causing quadratic work.
+_DECIMAL_PATTERN = re.compile(r"(?<!\d)[+-]?\d+\.\d+")
 
 #: Deteccion de "test" como palabra, no como subcadena de "latest" o similares.
 _TEST_WORD_PATTERN = re.compile(r"\btest\w*\b")

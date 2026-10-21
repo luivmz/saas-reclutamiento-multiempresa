@@ -4,7 +4,7 @@
 
 Preparacion autorizada en `codex/mejoras-sonarqube`, desde `develop` en `ca36875938eca035c97205921ec5f9633381c571`. Se agregan Compose independiente, scanner, cobertura PHPUnit/PCOV, comandos PowerShell y prompts para V2. Alcance: herramientas y documentacion de calidad; sin cambios funcionales, RF/CU/RNF, fases productivas ni datos reales.
 
-Estado: **PREPARADO, EJECUCION PENDIENTE**. Docker Desktop no inicia por `sailor-ingest.sock`; no se declaran pruebas, cobertura ni analisis V1/V2 ejecutados. La validacion estatica no equivale a ejecutar el sistema. Procedimiento y pendientes en [la guia de esta practica](v1.1/sonarqube/README.md). Los estados de fases que siguen se conservan.
+Estado: **V1 ANALIZADA; CORRECCIONES LOCALES VALIDADAS; V2 PENDIENTE**. Docker operativo. V1: 25 130 lineas, cobertura global 57,1 %, duplicacion 0,6 %, seis issues; gate OK con condicion sobre codigo nuevo. Cuatro refactorizaciones locales y dos revisiones justificadas en [la revision de V1](v1.1/sonarqube/revision-v1.md). PHP: 412 aprobadas y 8 omitidas; Python: 546 aprobadas; frontend: 42 aprobadas, build y TypeScript correctos. V2 y la clasificacion manual de las alertas revisadas quedan a cargo del usuario. Sin push de estas correcciones, sin commits nuevos ni cambios en main/develop. Procedimiento en [la guia de esta practica](v1.1/sonarqube/README.md). Los estados de fases que siguen se conservan.
 
 Última actualización: 2026-10-18 (F34E CERRADA; G0 real NO APROBADA; G0-SBX APROBADA CON RESTRICCIONES; F35-SBX sintética HABILITADA; F35-SBX-A CERRADA E INTEGRADA; B0 CERRADA E INTEGRADA; F35-SBX-B INICIADA: B1 CERRADA E INTEGRADA, B2 CERRADA E INTEGRADA).
 

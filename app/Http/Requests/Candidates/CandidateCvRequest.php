@@ -16,6 +16,8 @@ class CandidateCvRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Limite por archivo: 5120 KB por defecto, ademas de exigir PDF.
+        // Revision de la alerta y prueba de frontera: docs/v1.1/sonarqube/revision-v1.md.
         return [
             'cv' => ['required', 'file', 'mimes:pdf', 'mimetypes:application/pdf', 'max:'.(int) config('recruitment.cv.max_kb')],
         ];

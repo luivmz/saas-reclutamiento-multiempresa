@@ -143,6 +143,7 @@ export function DataTable<Row>({
                                 {columns.map((column) => {
                                     const label = labelOf(column);
 
+                                    // Keep cell semantics when the mobile layout uses flex.
                                     return (
                                         <td
                                             key={column.key}

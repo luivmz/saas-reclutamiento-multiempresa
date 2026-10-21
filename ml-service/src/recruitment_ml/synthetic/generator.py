@@ -316,7 +316,9 @@ def censoring_comparison(frame: pd.DataFrame) -> dict[str, Any]:
         left = censored[column].astype(float)
         right = completed[column].astype(float)
         pooled = float(np.sqrt((left.var(ddof=0) + right.var(ddof=0)) / 2.0))
-        if pooled == 0.0:
+        # A standard deviation is nonnegative: divide only by a positive value.
+        # Do not introduce a tolerance that would erase small positive variances.
+        if pooled <= 0.0:
             differences[column] = 0.0
             continue
         differences[column] = round(float((left.mean() - right.mean()) / pooled), 6)

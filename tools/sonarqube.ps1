@@ -57,7 +57,7 @@ function Get-SourceHash {
 }
 
 function Write-JsonFile($Value, [string]$Path) {
-    $Value | ConvertTo-Json -Depth 40 | Set-Content -LiteralPath $Path -Encoding UTF8
+    ConvertTo-Json -InputObject $Value -Depth 40 | Set-Content -LiteralPath $Path -Encoding UTF8
 }
 
 function Read-Sonar([string]$Path) {
@@ -223,7 +223,7 @@ services:
                 $hotspots = @()
                 $page = 1
                 do {
-                    $result = Read-Sonar "api/hotspots/search?projectKey=$project&ps=500&p=$page"
+                    $result = Read-Sonar "api/hotspots/search?project=$project&ps=500&p=$page"
                     $hotspots += @($result.hotspots)
                     $page++
                 } while ($hotspots.Count -lt $result.paging.total)
