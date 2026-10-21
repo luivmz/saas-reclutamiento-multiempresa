@@ -17,7 +17,8 @@ class CandidateCvRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cv' => ['required', 'file', 'mimes:pdf', 'mimetypes:application/pdf', 'max:'.(int) config('recruitment.cv.max_kb')],
+            // A-12: la configuración puede reducir, pero no ampliar, el máximo de 5 MB.
+            'cv' => ['required', 'file', 'mimes:pdf', 'mimetypes:application/pdf', 'max:5120', 'max:'.(int) config('recruitment.cv.max_kb')],
         ];
     }
 

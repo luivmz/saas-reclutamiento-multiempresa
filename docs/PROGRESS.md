@@ -1,8 +1,22 @@
 # Progreso del proyecto
 
-Última actualización: 2026-10-05 (F34E CERRADA; G0 real NO APROBADA; G0-SBX APROBADA CON RESTRICCIONES; F35-SBX sintética HABILITADA, AÚN NO INICIADA; publicación sujeta a CI).
+Última actualización: 2026-10-20 (práctica local SonarQube V1/V2 documentada, pendiente de capturas/revisión; F34E CERRADA; G0 real NO APROBADA; G0-SBX APROBADA CON RESTRICCIONES; F35-SBX sintética HABILITADA, AÚN NO INICIADA; publicación sujeta a CI).
 
 > El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24; el 25/09/2026, de la Fase 24 a la Fase 25, y ese mismo día, de la Fase 25 a la Fase 26. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
+
+## Práctica local SonarQube — V1 congelada / V2 analizada (20/10/2026)
+
+Trabajo académico autorizado por el usuario en `chore/sonarqube-macos-setup`, independiente de F35-SBX; no habilita datos reales ni implementación del motor inteligente.
+
+- V1 preservada: 30 PNG y Markdown sin cambios; Word adicional validado en Microsoft Word, 47 páginas y 30 imágenes embebidas. Sin PDF.
+- Cinco hallazgos Sonar corregidos de forma acotada; los cinco IDs originales quedaron `FIXED` tras el análisis V2 `fad88726-7762-4095-bbe0-7239f78be6ac`. Scanner y procesamiento SUCCESS; mismo Project Key y alcance, sin cambiar reglas/Gate.
+- Regresión actual: PHPUnit **414 passed, 8 skipped, 0 failed, 1506 assertions**; TypeScript PASS; Vitest **48/48**; build PASS. PHPStan **91 errores** y Pint **8 problemas** permanecen como deuda. Sin corrección masiva de formato; Cypress no ejecutado por falta de entorno E2E aislado configurado.
+- Resultado del análisis V2 inicial que debe explicarse: **Quality Gate ERROR**, cobertura de código nuevo **1.7 % < 80 %**. Coverage global **65.6 %** (V1 66.5 %), app **89.6 %** sin cambio; sin LCOV frontend. Los tests TS estaban como fuentes bajo el alcance histórico; véase abajo su reclasificación posterior expresamente autorizada.
+- RF-09/A-12 conserva PDF privado y máximo 5 MB, ahora con tope fijo además del límite configurable menor; RF-23 continúa humana, RF-29 experimental/informativa. Sin cambios de requisitos, permisos ni auditoría.
+- Trazabilidad, RED/GREEN, comandos, métricas, IDs y limitaciones: [reporte V2 preliminar](sonarqube/evidencias/v2/REPORTE_RESULTADOS_V2_PRELIMINAR.md). No se reescriben matrices históricas v1.0 ni documentación V1.
+- Continuación de cobertura (20/10/2026, 21:00–21:02 America/Lima): API confirma período PREVIOUS_VERSION heredado, 178 líneas nuevas totales, 60 a cubrir y 59 sin cubrir. **58/60 son líneas de tests TS clasificados como fuentes**; PHP nuevo 1/1 cubierto, producción TS 0/1. Los cinco IDs originales siguen FIXED. Vitest 4.1.11 excluye los tests de su cobertura y no tiene instalado provider V8/Istanbul; no se instaló nada ni se repitieron suites/scanner. Diagnóstico y líneas exactas en sección 15 del reporte V2.
+- Reclasificación autorizada (20/10/2026, 21:07–21:08 America/Lima): `sonar.tests=tests,resources/js`, `sonar.test.inclusions=tests/**,resources/js/**/*.test.tsx`; **sources y exclusiones históricas productivas intactos**. Ocho tests TS confirmados como UTS. Scanner SUCCESS y CE SUCCESS, análisis `4506671a-dad3-4e66-ab77-94317e92ff9b`. Quedan **11 líneas nuevas productivas, 2 elegibles, 1 cubierta**; New Code Coverage **50.0 %**. Gate **OK** con `ignoredConditions=true` por excepción heredada de cambios pequeños (no modificada): **NO se alcanzó 80 %**. Overall **69.5 %**, app **89.6 %**, Issues/Vulnerabilities/Code Smells 0 y los cinco originales siguen FIXED. La mejora de cobertura agregada es reclasificación, no pruebas nuevas.
+- Siguiente paso: decidir la implementación de LCOV real para la única línea nueva productiva sin cobertura importada, `resources/js/components/ui/sidebar.tsx:621`; ya existen tests SSR sobre ese comportamiento. Diagnóstico documentado en sección 16 del reporte V2, sin modificar código/dependencias ni ejecutar nuevas suites. [Capturas V2 manuales](sonarqube/evidencias/v2/README_CAPTURAS_V2.md) siguen pendientes de cerrar la cobertura; revisión de accesibilidad de la tabla pendiente. Sin Word V2 todavía, sin git add/commit/push/merge.
 
 ## Estado vigente F34E
 

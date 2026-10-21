@@ -159,7 +159,11 @@ describe('Lo que la capa garantiza a cualquiera', () => {
 
     test('el póster no contiene información que solo esté ahí', () => {
         const markup = renderToStaticMarkup(<RecruitmentScenePoster />);
-        const texto = markup.replace(/<[^>]+>/g, '').trim();
+        const texto = markup
+            .split('<')
+            .map((fragment) => fragment.slice(fragment.indexOf('>') + 1))
+            .join('')
+            .trim();
 
         // Ni etapas, ni nombres, ni cifras: todo lo que la portada dice está
         // en el expediente de al lado.

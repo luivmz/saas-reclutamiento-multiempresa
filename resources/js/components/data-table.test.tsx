@@ -6,7 +6,7 @@ import { DataTable } from '@/components/data-table';
  * El apilado en móvil obliga a cambiar el `display` de la tabla, y eso borra
  * sus roles implícitos. Estas pruebas fijan lo que sostiene la semántica
  * cuando eso ocurre: roles explícitos, encabezados que siguen existiendo y la
- * relación `headers` entre cada celda y su columna.
+ * relación `headers` entre cada celda nativa y su columna.
  */
 type Row = { id: number; code: string; title: string };
 
@@ -48,14 +48,29 @@ function headerIds(markup: string): string[] {
 }
 
 describe('DataTable y la semántica que el apilado no debe romper', () => {
-    test('declara los roles de tabla, para que sobrevivan al display:block', () => {
+    test('usa celdas HTML nativas sin sobrescribir su rol ni el enlace de acción', () => {
+        const markup = render();
+        const cells = [...markup.matchAll(/<td\b[^>]*>/g)];
+
+        expect(cells).toHaveLength(rows.length * 3);
+        cells.forEach(([cell]) => {
+            expect(cell).toContain('headers=');
+            expect(cell).not.toContain('role=');
+            expect(cell).not.toContain('tabindex=');
+        });
+        expect(markup.match(/<a href="\/x">Ver<\/a>/g)).toHaveLength(
+            rows.length,
+        );
+    });
+
+    test('conserva los roles estructurales y las celdas nativas', () => {
         const markup = render();
 
         expect(markup).toContain('role="table"');
         expect(markup).toContain('role="rowgroup"');
         expect(markup).toContain('role="row"');
         expect(markup).toContain('role="columnheader"');
-        expect(markup).toContain('role="cell"');
+        expect(markup.match(/<td\b/g)).toHaveLength(rows.length * 3);
     });
 
     test('el encabezado se recorta visualmente, nunca con display:none', () => {
