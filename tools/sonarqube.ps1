@@ -73,18 +73,37 @@ if (-not (Test-Path -LiteralPath $localEnv)) {
 
 Push-Location $repo
 try {
-    # A Windows worktree's .git points to a Windows path, unreadable in Linux.
-    # Overlay only the scanner's pointer; the real Git metadata remains read-only.
+    # JGit does not resolve this Windows worktree correctly inside Linux.
+    # Build scanner-only metadata with the real commit, index and shared objects.
+    # No source file or ref in the user's original Git repository is modified.
     if (Test-Path -LiteralPath (Join-Path $repo '.git') -PathType Leaf) {
         $common = [IO.Path]::GetFullPath((& git rev-parse --path-format=absolute --git-common-dir).Trim())
         $gitDir = [IO.Path]::GetFullPath((& git rev-parse --absolute-git-dir).Trim())
         $prefix = $common.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
         if (-not $gitDir.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) { throw 'La metadata del worktree no pertenece al repositorio esperado.' }
-        $relative = $gitDir.Substring($prefix.Length).Replace('\', '/')
+        $snapshot = Join-Path $local 'scanner-repository'
+        $snapshotGit = Join-Path $snapshot '.git'
+        if (-not (Test-Path -LiteralPath $snapshotGit)) {
+            & git init --quiet $snapshot
+            if ($LASTEXITCODE -ne 0) { throw 'No se pudo preparar metadata aislada del scanner.' }
+        }
+        $alternate = Join-Path $snapshotGit 'objects/info/alternates'
+        [IO.File]::WriteAllText($alternate, "$($common.Replace('\', '/'))/objects`n", [Text.UTF8Encoding]::new($false))
+        $head = (& git rev-parse HEAD).Trim()
+        $branch = (& git branch --show-current).Trim()
+        if (-not $branch) { throw 'El scanner requiere una rama Git identificable.' }
+        & git --git-dir=$snapshotGit --work-tree=$repo update-ref "refs/heads/$branch" $head
+        if ($LASTEXITCODE -ne 0) { throw 'No se pudo fijar el commit real para el scanner.' }
+        & git --git-dir=$snapshotGit --work-tree=$repo symbolic-ref HEAD "refs/heads/$branch"
+        & git --git-dir=$snapshotGit --work-tree=$repo read-tree $head
+        if ($LASTEXITCODE -ne 0) { throw 'No se pudo preparar el indice real para el scanner.' }
+        & git --git-dir=$snapshotGit config core.worktree /var/www/html
+        [IO.File]::WriteAllText($alternate, "/opt/reclutamiento-git/objects`n", [Text.UTF8Encoding]::new($false))
         $pointer = Join-Path $local 'scanner.git'
-        [IO.File]::WriteAllText($pointer, "gitdir: /opt/reclutamiento-git/$relative`n", [Text.UTF8Encoding]::new($false))
+        [IO.File]::WriteAllText($pointer, "gitdir: /opt/scanner-git`n", [Text.UTF8Encoding]::new($false))
         $commonYaml = $common.Replace('\', '/') | ConvertTo-Json -Compress
         $pointerYaml = $pointer.Replace('\', '/') | ConvertTo-Json -Compress
+        $snapshotYaml = $snapshotGit.Replace('\', '/') | ConvertTo-Json -Compress
         $gitCompose = Join-Path $local 'scanner-worktree.yml'
         @"
 services:
@@ -97,6 +116,10 @@ services:
       - type: bind
         source: $pointerYaml
         target: /var/www/html/.git
+        read_only: true
+      - type: bind
+        source: $snapshotYaml
+        target: /opt/scanner-git
         read_only: true
 "@ | Set-Content -LiteralPath $gitCompose -Encoding UTF8
     }
@@ -167,7 +190,7 @@ services:
                 $folder = Join-Path $local ("evidencias/{0}-{1}" -f $Version, (Get-Date -Format 'yyyyMMdd-HHmmssfff'))
                 New-Item -ItemType Directory -Path $folder -Force | Out-Null
                 $number = if ($Version -eq 'V1') { '1.0' } else { '2.0' }
-                Invoke-QualityCompose --profile sonar run --rm --no-deps scanner "-Dsonar.projectVersion=$number" '-Dsonar.qualitygate.wait=false' 2>&1 | Tee-Object -FilePath (Join-Path $folder 'scanner.log')
+                Invoke-QualityCompose --profile sonar run --rm --no-deps scanner "-Dsonar.projectVersion=$number" '-Dsonar.qualitygate.wait=false' '-Dsonar.working.directory=/var/www/html/.scannerwork' 2>&1 | Tee-Object -FilePath (Join-Path $folder 'scanner.log')
                 $taskFile = Join-Path $repo '.scannerwork/report-task.txt'
                 if (-not (Test-Path -LiteralPath $taskFile)) { throw 'El scanner no genero report-task.txt.' }
                 $task = Get-Content -LiteralPath $taskFile -Raw | ConvertFrom-StringData
@@ -182,6 +205,8 @@ services:
                 } while ($true)
                 $metrics = 'security_rating,reliability_rating,sqale_rating,software_quality_security_rating,software_quality_reliability_rating,software_quality_maintainability_rating,software_quality_security_issues,software_quality_reliability_issues,software_quality_maintainability_issues,security_hotspots,security_hotspots_reviewed,coverage,line_coverage,duplicated_lines_density,violations,cognitive_complexity,sqale_index,ncloc,bugs,vulnerabilities,code_smells'
                 $measures = Read-Sonar "api/measures/component?component=$project&metricKeys=$metrics"
+                $lines = @($measures.component.measures | Where-Object metric -eq 'ncloc')
+                if ($lines.Count -ne 1 -or [double]$lines[0].value -le 0) { throw 'Analisis invalido: no se contabilizo codigo propio. No se guardara como linea base.' }
                 $gate = Read-Sonar "api/qualitygates/project_status?analysisId=$($ce.task.analysisId)"
                 Write-JsonFile $measures (Join-Path $folder 'measures.json')
                 Write-JsonFile $gate (Join-Path $folder 'quality-gate.json')
