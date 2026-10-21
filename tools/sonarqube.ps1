@@ -10,6 +10,7 @@ $repo = Split-Path -Parent $PSScriptRoot
 $local = Join-Path $repo '.quality'
 $compose = Join-Path $repo 'docker-compose.quality.yml'
 $localEnv = Join-Path $local 'runtime.env'
+$gitCompose = $null
 $server = 'http://127.0.0.1:9000'
 $project = 'reclutamiento-sonarqube'
 New-Item -ItemType Directory -Path $local -Force | Out-Null
@@ -22,7 +23,9 @@ function Invoke-Docker {
 
 function Invoke-QualityCompose {
     param([Parameter(ValueFromRemainingArguments = $true)][string[]]$ComposeArgs)
-    Invoke-Docker compose --env-file $localEnv -f $compose @ComposeArgs
+    $files = @('-f', $compose)
+    if ($gitCompose) { $files += @('-f', $gitCompose) }
+    Invoke-Docker compose --env-file $localEnv @files @ComposeArgs
 }
 
 function Assert-Engine {
@@ -70,6 +73,33 @@ if (-not (Test-Path -LiteralPath $localEnv)) {
 
 Push-Location $repo
 try {
+    # A Windows worktree's .git points to a Windows path, unreadable in Linux.
+    # Overlay only the scanner's pointer; the real Git metadata remains read-only.
+    if (Test-Path -LiteralPath (Join-Path $repo '.git') -PathType Leaf) {
+        $common = [IO.Path]::GetFullPath((& git rev-parse --path-format=absolute --git-common-dir).Trim())
+        $gitDir = [IO.Path]::GetFullPath((& git rev-parse --absolute-git-dir).Trim())
+        $prefix = $common.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+        if (-not $gitDir.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) { throw 'La metadata del worktree no pertenece al repositorio esperado.' }
+        $relative = $gitDir.Substring($prefix.Length).Replace('\', '/')
+        $pointer = Join-Path $local 'scanner.git'
+        [IO.File]::WriteAllText($pointer, "gitdir: /opt/reclutamiento-git/$relative`n", [Text.UTF8Encoding]::new($false))
+        $commonYaml = $common.Replace('\', '/') | ConvertTo-Json -Compress
+        $pointerYaml = $pointer.Replace('\', '/') | ConvertTo-Json -Compress
+        $gitCompose = Join-Path $local 'scanner-worktree.yml'
+        @"
+services:
+  scanner:
+    volumes:
+      - type: bind
+        source: $commonYaml
+        target: /opt/reclutamiento-git
+        read_only: true
+      - type: bind
+        source: $pointerYaml
+        target: /var/www/html/.git
+        read_only: true
+"@ | Set-Content -LiteralPath $gitCompose -Encoding UTF8
+    }
     if ($Accion -eq 'Validar') {
         Invoke-QualityCompose --profile tests --profile sonar config --quiet
         Write-Host 'Configuracion Compose valida. Esto no ejecuta pruebas ni analiza codigo.'
@@ -109,7 +139,7 @@ try {
         }
         'Iniciar' {
             Invoke-QualityCompose --profile sonar up --detach sonarqube
-            Write-Host "Abre $server cuando el servidor este operativo. Primer acceso de esta instalacion nueva: admin / admin; cambia la clave y genera un token."
+            Write-Host "Abre $server cuando el servidor este operativo. Usa tu cuenta local; admin / admin solo sirve antes del primer cambio de clave."
         }
         'Analizar' {
             $proofPath = Join-Path $local 'tests-proof.json'
@@ -150,7 +180,7 @@ try {
                     if ((Get-Date) -gt $deadline) { throw 'El procesamiento sigue pendiente. No se declararan metricas finales.' }
                     Start-Sleep -Seconds 3
                 } while ($true)
-                $metrics = 'security_rating,reliability_rating,sqale_rating,security_hotspots,security_hotspots_reviewed,coverage,line_coverage,duplicated_lines_density,violations,cognitive_complexity,sqale_index,ncloc,bugs,vulnerabilities,code_smells'
+                $metrics = 'security_rating,reliability_rating,sqale_rating,software_quality_security_rating,software_quality_reliability_rating,software_quality_maintainability_rating,software_quality_security_issues,software_quality_reliability_issues,software_quality_maintainability_issues,security_hotspots,security_hotspots_reviewed,coverage,line_coverage,duplicated_lines_density,violations,cognitive_complexity,sqale_index,ncloc,bugs,vulnerabilities,code_smells'
                 $measures = Read-Sonar "api/measures/component?component=$project&metricKeys=$metrics"
                 $gate = Read-Sonar "api/qualitygates/project_status?analysisId=$($ce.task.analysisId)"
                 Write-JsonFile $measures (Join-Path $folder 'measures.json')
