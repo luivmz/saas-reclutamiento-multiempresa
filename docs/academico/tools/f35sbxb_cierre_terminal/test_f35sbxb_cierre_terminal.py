@@ -348,7 +348,7 @@ def ct06(fx, c):
     for rel in GOV_PATHS:
         fx.write(rel, fx.git('cat-file', 'blob', f'{BASE}:{rel}'))
     fx.commit('vuelve al gobierno de B3', *GOV_PATHS)
-    return [probe(fx, {'GOV', 'SEM', 'ALC'} | FROZEN_GATES, says={'GOV': 'regla 3'})]
+    return [probe(fx, {'GOV', 'SEM', 'ALC'} | FROZEN_GATES, says={'GOV': 'regla 4'})]
 
 
 def ct07(fx, c):
@@ -403,13 +403,13 @@ def ct10(fx, c):
 def ct11(fx, c):
     fx.write(B2_DOC, fx.read(B2_DOC) + b'\nalterado tras el cierre\n')
     fx.commit('altera una capa congelada de B2', B2_DOC)
-    return [probe(fx, {'INT', 'ALC'} | FROZEN_GATES, says={'INT': 'capa B2 '})]
+    return [probe(fx, {'INT', 'ALC', 'B3G', 'R2A'}, says={'INT': 'capa B2 '})]
 
 
 def ct29(fx, c):
     fx.write(PIPELINE, fx.read(PIPELINE) + b'\n# alterado tras el cierre\n')
     fx.commit('altera el pipeline de B3', PIPELINE)
-    return [probe(fx, {'INT', 'B3G'}, says={'INT': 'capa B3'})]
+    return [probe(fx, {'INT', 'B3G', 'ALC'}, says={'INT': 'capa B3'})]
 
 
 # ---------------------------------------------------------------- riesgos LOW y documento de la capa
@@ -486,7 +486,7 @@ def ct20(fx, c):
 
 def ct21(fx, c):
     fx.write('docs/academico/nota_sin_seguimiento.md', b'Nota sin seguimiento.\n')
-    return [probe(fx, {'ALC', 'B3G', 'R2A'})]
+    return [probe(fx, {'ALC', 'B3G', 'R2A', 'MAT'})]
 
 
 # ---------------------------------------------------------------- entorno de Git, historia y contexto
@@ -512,7 +512,7 @@ ct24.depth = 1
 
 def ct32(fx, c):
     readme = fx.text('rev-parse', 'HEAD:README.md')
-    other = fx.text('hash-object', '-w', '--stdin', data=b'README reemplazado\n')
+    other = fx.git('hash-object', '-w', '--stdin', data=b'README reemplazado\n').decode('ascii').strip()
     fx.git('replace', readme, other)
     return [probe(fx, {'ENT', 'B3G', 'R2A'})]
 

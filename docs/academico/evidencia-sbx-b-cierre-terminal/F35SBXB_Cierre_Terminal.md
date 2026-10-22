@@ -1,12 +1,12 @@
 # F35-SBX-B — Cierre terminal
 
-> **Estado: CONTRATO Y DISEÑO (RED).** Fecha: 21/10/2026. Rama `chore/f35-sbx-b-terminal-closure`, desde `develop` = `53c0eb55a8f64f5576c43c2bfb5dccf095e30412`.
+> **Estado: CIERRE TERMINAL IMPLEMENTADO / VALIDADO LOCALMENTE / CANDIDATO A AUDITORÍA INDEPENDIENTE.** Fecha: 22/10/2026. Rama `chore/f35-sbx-b-terminal-closure`, desde `develop` = `53c0eb55a8f64f5576c43c2bfb5dccf095e30412`.
 >
-> - Este documento fija los criterios del cierre terminal de F35-SBX-B, el contrato del incremento y su diseño. La transición de gobierno, el gate y los resultados llegan en los commits siguientes.
+> - Este documento fija los criterios del cierre terminal de F35-SBX-B, el contrato del incremento, su diseño y sus resultados. El gobierno de esta rama ya registra el cierre (§3.3).
 > - El cierre solo vale en el alcance académico y sintético de F35-SBX, y solo cuando la auditoría independiente apruebe este incremento y el equipo autorice su integración. Hasta entonces, `develop` y `main` siguen diciendo «F35-SBX-B INICIADA».
 > - F35-SBX sigue HABILITADA, sin cerrar. Este incremento no se autoaprueba: lo decide la auditoría independiente sobre su ancla.
 >
-> Las secciones 1 a 4 registran la reconstrucción, el contrato y el diseño, escritos antes de la transición de gobierno y del gate (commit RED). La sección 5 añade los resultados.
+> Las secciones 1 a 4 registran la reconstrucción, el contrato y el diseño, escritos antes de la transición de gobierno y del gate (commit RED `56783cb`). El commit que completa la capa solo los corrige donde la medición lo exigió, con su causa en §5.2. La sección 5 registra los resultados.
 
 ## 1. Punto de partida verificado
 
@@ -177,7 +177,7 @@ El cierre queda aceptado como candidato si se cumple todo:
 | Ataque: declarar B cerrada sin B3 | INT, B3G, R2A, MAT y ALC | CT08 |
 | Ataque: sustituir B3 por otro commit con el mismo contenido | CTX, INT, FRZ, GOV y B3G | CT09 |
 | Ataque: reconstruir la historia del cierre con el mismo contenido | GOV | CT10 |
-| Ataque: alterar una capa congelada o un ancla histórica | INT, B3G, R2A, MAT y ALC | CT11, CT29 |
+| Ataque: alterar una capa congelada o un ancla histórica | INT, ALC y B3G, más R2A si la capa es anterior a B3 | CT11, CT29 |
 | Ataque: ocultar o eliminar un riesgo LOW registrado | LOW y FRZ | CT12 |
 | Ataque: habilitar F36 | GOV, SEM, B3G, R2A y MAT | CT13 |
 | Ataque: cerrar F35-SBX | GOV, SEM, B3G, R2A y MAT | CT14 |
@@ -191,7 +191,7 @@ El cierre queda aceptado como candidato si se cumple todo:
 | Ataque: cambiar el gobierno otra vez o fuera de una transición única | GOV | CT04, CT05, CT25, CT26 |
 | Ataque: afirmar una capacidad prohibida o quitar un límite del cierre en este documento | SEM y FRZ | CT30, CT31 |
 | Ataque: código del cierre con dependencias o ejecución dinámica | DEP y FRZ | CT27, CT28 |
-| Ataque: entorno de Git hostil o incompleto | ENT, CTX, FLG y fallo cerrado | CT22..CT24, CT32..CT34 |
+| Ataque: entorno de Git hostil o incompleto | ENT, CTX, FLG y fallo cerrado, más B3G, R2A y MAT cuando el gate congelado también lo rechaza | CT22..CT24, CT32..CT34 |
 
 ### 2.8 Por qué es un cierre terminal
 
@@ -258,7 +258,7 @@ Ubicación: `docs/academico/tools/f35sbxb_cierre_terminal/validate_f35sbxb_cierr
 
 | ID | Comprueba |
 |---|---|
-| ENT | Intérprete aislado y sin `PYTHONPATH`, `PYTHONHOME` ni `PYTHONUSERBASE`; ninguna variable de Git que redirija el repositorio, el índice o los objetos; historia completa, sin injertos ni objetos de reemplazo; el repositorio, a no más de tres niveles de clones compartidos |
+| ENT | Intérprete aislado y sin `PYTHONPATH`, `PYTHONHOME` ni `PYTHONUSERBASE`; ninguna variable de Git que redirija el repositorio, el índice o los objetos; historia completa, sin injertos ni objetos de reemplazo; el repositorio, a no más de dos niveles de clones compartidos |
 | CTX | Rama `chore/f35-sbx-b-terminal-closure`, `develop` o `main`, y el merge `53c0eb5` como ancestro de HEAD |
 | ANC | Anclas de §1.1 íntegras y en cadena, con la transición del cierre; los merges `eb02c2d`, `04895aa`, `ca36875` y `53c0eb5` con sus padres y el árbol de su ancla; los blobs de gobierno registrados de las seis etapas |
 | HIS | El gate de B3, con los bytes de su blob en `8d39d0e`, anclado sobre `8d39d0e` en un clon temporal sin remoto y con sus alternates aplanados: código 0 y 19/0; FRZ en `8d39d0e`, GOV en `fa5664a`, el informe del pipeline con su SHA-256 registrado y R2-A anclado en 14/0 |
@@ -376,7 +376,7 @@ Cada caso trabaja en un clon desechable de HEAD, fuera del repositorio, con obje
 | CT08 | Ataque: B declarada cerrada sin la capa de B3 | INT, B3G, R2A, MAT y ALC |
 | CT09 | Ataque: B3 sustituida por otro commit con el mismo árbol, con la integración y el cierre reconstruidos | CTX, INT, FRZ, GOV y B3G |
 | CT10 | Ataque: historia del cierre reconstruida con el mismo contenido | GOV |
-| CT11 | Ataque: capa congelada de B2 alterada tras el cierre | INT, B3G, R2A, MAT y ALC |
+| CT11 | Ataque: capa congelada de B2 alterada tras el cierre | INT, B3G, R2A y ALC |
 | CT12 | Ataque: riesgo B3-AF-L02 eliminado de este documento | LOW y FRZ |
 | CT13 | Ataque: F36–F40 habilitadas en el gobierno | GOV, SEM, B3G, R2A y MAT |
 | CT14 | Ataque: F35-SBX cerrada en el gobierno | GOV, SEM, B3G, R2A y MAT |
@@ -386,7 +386,7 @@ Cada caso trabaja en un clon desechable de HEAD, fuera del repositorio, con obje
 | CT18 | Ataque: fila de RF-23 alterada en la matriz de trazabilidad | MAT, ALC, B3G y R2A |
 | CT19 | Ataque: RF-29 declarado fuera de lo experimental en el gobierno | GOV y SEM |
 | CT20 | Ataque: archivo del runtime modificado | ALC, MAT, B3G y R2A |
-| CT21 | Ataque: archivo sin seguimiento en el árbol de trabajo | ALC, B3G y R2A |
+| CT21 | Ataque: archivo sin seguimiento en el árbol de trabajo | ALC, B3G, R2A y MAT |
 | CT22 | Ataque: flag assume-unchanged en el índice | FLG, B3G, R2A y MAT |
 | CT23 | Ataque: variable de Git que redirige el repositorio | ENT |
 | CT24 | Ataque: clon superficial | Todas salvo FLG y DEP (fallo cerrado) |
@@ -394,10 +394,10 @@ Cada caso trabaja en un clon desechable de HEAD, fuera del repositorio, con obje
 | CT26 | Ataque: transición introducida en un merge | GOV |
 | CT27 | Ataque: la batería del cierre importa un módulo no autorizado | DEP y FRZ |
 | CT28 | Ataque: la batería del cierre ejecuta código dinámico | DEP y FRZ |
-| CT29 | Ataque: pipeline de B3 alterado tras el cierre | INT y B3G |
+| CT29 | Ataque: pipeline de B3 alterado tras el cierre | INT, B3G y ALC |
 | CT30 | Ataque: este documento afirma que el motor recomienda candidatos | SEM y FRZ |
 | CT31 | Ataque: este documento pierde un límite de §2.3 | SEM y FRZ |
-| CT32 | Ataque: objeto de reemplazo en `refs/replace` | ENT |
+| CT32 | Ataque: objeto de reemplazo en `refs/replace` | ENT, B3G y R2A |
 | CT33 | Ataque: HEAD separado | CTX, B3G, R2A y MAT |
 | CT34 | Ataque: rama no permitida | CTX, B3G, R2A y MAT |
 | CT35 | Ataque: F35-SBX-B cerrada con B3 aún implementada en el gobierno | GOV y SEM |
@@ -407,4 +407,197 @@ Si un conjunto resulta distinto al medirlo en GREEN, se corrige con su causa reg
 
 ## 5. Resultados
 
-Pendiente: se registran en el commit que completa la capa, con las ejecuciones reales.
+### 5.1 Commits
+
+| Commit | Padre | Contenido | Resultado |
+|---|---|---|---|
+| `56783cbe314082ebc1e3c56c03e492e6e7256efc` | `53c0eb5` | Contrato y diseño (§1 a §4) y la batería CT01..CT36 (RED) | Batería 0/36, con 30 ejecuciones: el gate no existía en HEAD; CT06, CT07, CT25, CT26, CT35 y CT36 dependen de la transición, que aún no existía, y CT32 no podía prepararse (§5.2) |
+| `5517a12a4d35c6d8c3281ace2f072ddc692f16f2` | `56783cb` | Transición de gobierno (§3.3): solo `CLAUDE.md`, `docs/PROGRESS.md` y `ACADEMIC_BASELINE.md`, con los blobs `d4ba0968e6ebbcaca667d47954db46f7088fae9a`, `a6322415e7705395dde1e185a3e501155f1989f5` y `e9fb4bbbc1534802fc196cca021eeeef69414571` | `TC_TRANSITION`, registrada en el gate del commit siguiente |
+| El que completa la capa (este) | `5517a12` | Gate, correcciones de §5.2 y estos resultados (GREEN) | Gate 15/0; batería 36/36; 20 de 20 mutaciones detectadas |
+
+Ese tercer commit es el ancla de nivel B de esta capa y el commit de cierre que congela el gate y los artefactos de B (§3.9). Lo informa la línea INFO de FRZ, y su hash no se guarda en ningún archivo.
+
+### 5.2 Medición y correcciones
+
+Todo se midió los días 21 y 22/10/2026 en clones sin remoto, con temporales cortos, nuevos y exclusivos. Las ejecuciones pesadas las lanzó un orquestador que limita cuántas corren a la vez, vigila la memoria del equipo y detiene la tanda ante cualquier síntoma ambiental (§5.6). La batería, la regresión y la autoauditoría se ejecutaron sobre dos commits desechables, hijos de la transición `5517a12`:
+
+- `7fd910dc9508966445bdea0f60b85fbcb28371e8`, con la batería anterior a las correcciones de CT06, CT11, CT21 y CT29;
+- `9e3e1789b8a643ef1d41db7866a896cd6832c790`, con ellas, y árbol `09ec0b4e33615e134ea010aef877556c3d0eb196`.
+
+Su gate es, byte a byte, el de este commit (blob `acc20234fed043af58dcedf3dca858c77c81766f`). Su documento solo difiere del de este commit en la cabecera, en las filas que corrige esta sección y en la sección 5. Los controles de mutación usaron commits desechables iguales al segundo salvo en el gate (§5.6). El gate y los casos que dependen de este documento (CT12, CT30 y CT31) se ejecutaron además sobre un commit desechable con el árbol de este commit.
+
+Correcciones, cada una con su causa medida antes de aplicarla. Ninguna cambia el gate:
+
+- **CT32, arnés de la batería.** En RED el caso no podía prepararse: el arnés pasaba `data` a `Fixture.text`, que no lo admite (`TypeError`). Ahora crea el objeto de reemplazo con `Fixture.git`. Lo que el caso prueba no cambia.
+- **Niveles de clones compartidos.** ENT admite dos niveles, no tres como decía §3.4 en RED. HIS ejecuta el gate de B3, que admite tres, en un clon compartido del repositorio, que suma uno. La batería añade otros dos, su clon base y el del caso, así que se ejecuta desde un repositorio sin alternates. Desde un clon compartido, en la tanda `bat3`, CT01 y CT03 fallaron en ENT y HIS solo por esa causa, confirmada con la función `alternates_depth` del propio gate. Esa tanda se detuvo y no cuenta. Se corrige §3.4.
+- **CT06.** La vuelta al gobierno de B3 reintroduce, en un commit posterior, el blob de B3 y el `ACADEMIC_BASELINE.md` previo, que comparten las cinco etapas anteriores. GOV registra 14 violaciones: las tres visibles son de la regla 4 (los blobs de B2, del cierre de gobierno y del cierre formal, reintroducidos fuera de su transición) y la de la regla 3 es la quinta. CT06 busca ahora «regla 4».
+- **CT11.** El gate de B2 no comprueba los bytes de su propio documento; eso lo hace B2-FREEZE. La alteración solo le suma un commit en B1F, de 20 a 21, que es de su clase A y MAT lo prevé. La detectan INT («capa B2»), B3G, R2A y ALC: CT11 espera ahora esas cuatro.
+- **CT21.** El SCP del gate de B2 también cuenta el archivo sin seguimiento: 79 violaciones frente a las 78 previstas, así que MAT falla. CT21 espera ahora ALC, B3G, R2A y MAT.
+- **CT29.** El pipeline alterado queda modificado frente a `53c0eb5`, fuera del alcance, y ALC también lo rechaza: CT29 espera ahora INT, B3G y ALC.
+- **Fila CT32 de §4.** Decía solo ENT, pero la batería ya esperaba en RED ENT, B3G y R2A, y eso se midió: los gates de B3 y de R2-A también rechazan los objetos de reemplazo en su propio ENT, fuera de su clase A, y el de B2 no los busca. Se corrige la fila, y la de §2.7 sobre el entorno hostil nombra también los gates congelados.
+
+### 5.3 Gate
+
+| Dónde | Resultado |
+|---|---|
+| Rama, sobre `7fd910d` | 15/0 en 446 s |
+| Rama, sobre `9e3e178` | 15/0 en 551 s, con otra ejecución pesada a la vez |
+| Merge `--no-ff` de `9e3e178` en `develop` (`53c0eb5`), y de ese merge en `main` (`9424f1e`) | 15/0 y 15/0, en 589 y 509 s |
+| Commit desechable con el árbol de este commit | 15/0 |
+
+Líneas INFO sobre `9e3e178`:
+
+- ANC: las diecinueve anclas registradas, de `8e94a60` a `5517a12`.
+- HIS: el gate de B3 anclado sobre `8d39d0e`, código 0 y 19/0, con el ancla derivada `8d39d0e`, la transición derivada `fa5664a` y el informe `7efc00ee307c932955f2f3cc10b56dc08c14cd408c1fc7b43f612a712d174967`.
+- B3G, R2A y MAT: los gates de B3, de R2-A y de B2 dan 13/6, 7/7 y 112/7, con SCP en 78 violaciones de 78 previstas. Cada salida es la que prevé su propia lógica.
+- GOV: transición derivada `5517a12`, igual a la registrada.
+- FRZ: el commit que completa la capa, que en la simulación es `9e3e178`.
+
+### 5.4 Clase A medida
+
+Medida sobre `9e3e178`, en la rama, y comparada con la base `53c0eb5` (`develop`), en clones limpios sin remoto. El gate del cierre ejecuta los tres primeros; los demás se miden como información:
+
+| Gate congelado sobre HEAD | Resultado (base) | Fallas sobre HEAD |
+|---|---|---|
+| B3 | 13/6 (19/0) | La clase A de §3.5, exacta: CTX 1, la rama; R2A 6, MAT 3, GOV 8, SEM 9 y ALC 3 |
+| R2-A | 7/7 (9/5) | La clase A de §3.5: CTX 1, la rama; GCL 9 (3), SUC 1, MAT 3 (2), GOV 10 (9), SEM 7 (3) y ALC 3 (3) |
+| B2 | 112/7 (113/6) | CTX 1, la rama; B1F 20 (17: los tres commits de esta capa); SCP 78 (66: las cuatro rutas nuevas o modificadas, en tres planos); DEP 1, el pipeline; DYN 1 (P25); GOV 6 (3). SBX en verde |
+| B2-GOVERNMENT-CLOSURE | 7/6 (8/5) | CTX 1, la rama; SEM 6 (3); SUC 1, MAT 3, GOV 10 y ALC 3, como sobre la base |
+| B2-SUCCESSOR-FREEZE | 10/2 (10/2) | VIG 5 y ALC 3, como sobre la base |
+| Sucesor | 4/3 (4/3) | CON 1, MAT 2 y ALC 3, como sobre la base |
+| B2-FREEZE | 6/4 (6/4) | HIS 14 (11: los tres commits de esta capa); ARB 1, IDX 1 y DSK 2, como sobre la base |
+| B1 | 104/55 (106/53) | CTX 1, la rama; GOV 4 (1), porque el gobierno declara F35-SBX-B CERRADA y su vocabulario solo admite la apertura; SCP 102 (90); los 51 casos PB de la base, ahora por ese mismo motivo; y NB-15, cuya mutación busca la frase «F35-SBX-B INICIADA solo como sandbox», que ya no existe |
+| B1-FREEZE | 0/2 (0/2) | FRZ 35 (32: los tres commits de esta capa) y B1, como sobre la base |
+| F35-SBX-A | Termina con `StopIteration` (igual sobre la base) | Su autoprueba de mutaciones no encuentra la frase canónica del ciclo de vida de A, igual que sobre la base. Anclado en su commit E da 846/0 (§5.7) |
+
+En `develop` y `main` CTX pasa: sobre los merges `--no-ff` (CT02 y la regresión), el gate de B3 da 14/5, el de R2-A 8/6 y el de B2 113/6, con las mismas reglas de clase A sin CTX. B3G, R2A y MAT clasifican exactamente las tres primeras filas; lo que esas fallas enmascaran lo reponen INT, GOV, SEM, LOW, ALC, FRZ y DEP (§3.5).
+
+### 5.5 Batería
+
+**36/36.** Cada caso dio exactamente el resultado de §4 y, donde se indica, con su motivo:
+
+| Tanda | Commit | Casos | Resultado |
+|---|---|---|---|
+| `bat4` | `7fd910d` | CT01..CT36, tres a la vez, con 37 ejecuciones del gate | 32/36. CT06, CT11, CT21 y CT29 fallaron con las expectativas de RED, por las causas de §5.2, y no se cuentan |
+| `cor1` | `9e3e178` | CT01, CT06, CT11, CT21 y CT29, con 5 ejecuciones | 5/5 |
+| Árbol final | Desechable, con el árbol de este commit | CT12, CT30 y CT31, dos a la vez | 3/3 |
+
+En `bat4` no hubo ningún síntoma ambiental y la memoria comprometible libre no bajó de 2,1 GB.
+
+### 5.6 Controles de mutación
+
+Veinte mutaciones del gate, cada una sobre un commit desechable cuyo gate solo difiere del de este commit en la sentencia mutada, con el caso que debe detectarla. Las veinte se detectan, con 20 ejecuciones del gate y sin ningún síntoma ambiental:
+
+| # | Mutación del gate | Caso | Resultado |
+|---|---|---|---|
+| M01 | ENT sin rechazar las variables de Git que redirigen el repositorio | CT23 | Detectada: CT23 pasa a PASS |
+| M02 | CTX sin exigir una rama permitida | CT34 | Detectada: deja de fallar en CTX |
+| M03 | CTX sin exigir `53c0eb5` como ancestro | CT09 | Detectada: deja de fallar en CTX |
+| M04 | B3G sin clasificar la clase A | CT29 | Detectada: deja de fallar en B3G |
+| M05 | R2A sin clasificar la clase A | CT20 | Detectada: deja de fallar en R2A |
+| M06 | MAT acepta cualquier salida del gate de B2 | CT18 | Detectada: deja de fallar en MAT |
+| M07 | INT sin la capa de B3 | CT29 | Detectada: deja de fallar en INT |
+| M08 | INT sin la capa de B2 | CT11 | Detectada: deja de fallar en INT |
+| M09 | FLG sin efecto | CT22 | Detectada: deja de fallar en FLG |
+| M10 | GOV sin comparar la transición derivada con la registrada | CT10 | Detectada: CT10 pasa a PASS |
+| M11 | GOV sin la regla 3 | CT05 | Detectada: la línea FALLA GOV ya no contiene «regla 3» |
+| M12 | SEM sin la declaración canónica del estado vigente | CT19 | Detectada: deja de fallar en SEM |
+| M13 | SEM sin buscar reaperturas | CT07 | Detectada: deja de fallar en SEM |
+| M14 | SEM sin las afirmaciones positivas de este documento | CT30 | Detectada: deja de fallar en SEM |
+| M15 | SEM sin los límites de §2.3 | CT31 | Detectada: deja de fallar en SEM |
+| M16 | LOW sin efecto | CT12 | Detectada: deja de fallar en LOW |
+| M17 | Sin ALC | CT20 | Detectada: deja de fallar en ALC |
+| M18 | Sin FRZ | CT12 | Detectada: deja de fallar en FRZ |
+| M19 | DEP sin comprobar las importaciones | CT27 | Detectada: deja de fallar en DEP |
+| M20 | DEP sin buscar ejecución dinámica | CT28 | Detectada: deja de fallar en DEP |
+
+M01..M12 corrieron tres a la vez. Con M13, M14 y M15 en curso, la memoria comprometible libre del equipo bajó hasta 1,4 GB, por debajo del margen exigido: se detuvo la tanda, esas tres ejecuciones interrumpidas se apartaron sin contarlas y M13..M20 se repitieron dos a la vez. M20 se repitió además entero tras un corte de la sesión. Desde entonces ninguna tanda ha superado dos ejecuciones a la vez.
+
+### 5.7 Regresión
+
+| Comprobación | Resultado |
+|---|---|
+| `validate_f35sbxb_cierre_terminal.py` | 15/0 en la rama (`9e3e178`), en su merge `--no-ff` en `develop` (`62b3114`) y en el de ese merge en `main` (`3699adc`), los tres con el árbol `09ec0b4e`. FRZ informa `9e3e178` y GOV deriva `5517a12`, igual a la registrada |
+| Gates anclados en clones limpios sin remoto | B3 sobre `8d39d0e`: 19/0. R2-A sobre `ad193f9`: 14/0. B2-GOVERNMENT-CLOSURE sobre `363273e`: 13/0. B2-SUCCESSOR-FREEZE sobre `8969424`: 12/0. Sucesor sobre `9d6fb15`: 7/0. B2-FREEZE sobre `9961d2d`: 10/0. B2 sobre `2472fd6`: 119/0. B1 sobre `8e94a60`: 159/0. B1-FREEZE sobre `3d9b783`: 14/0. Validador de A sobre su commit E, `61f94e2`: 846/0 |
+| `test_sbxb_pipeline.py` | 30/30 |
+| `validate.py` y `validate.py --cierre-f29` | 0 fallas en ambos |
+| `validate_f29.py`, `test_f32_safety.py`, `validate_f33.py` y `validate_f34.py` | 225/0, OK, 451/0 y 403/0 |
+| `validate_f34a.py` | 108/0 |
+| `validate_f34e.py` | 247/1, igual que sobre `53c0eb5`: la falla histórica de la regla GIT. Su lista de rutas no autorizadas por DH-02 pasa de 34 a 37, las tres de esta capa, sin que desaparezca ninguna. Su comprobación del cierre de F35-SBX-A, que exige «F35-SBX-B NO INICIADA», nombra ahora también `ACADEMIC_BASELINE.md`, además de `CLAUDE.md` y `docs/PROGRESS.md`, que ya nombraba sobre la base. Criterios SBX: 18/18 |
+| Enlaces relativos | 1154 en `docs/academico` y 1560 en todo el repositorio, 0 rotos |
+| MANIFEST y evidencias | 61 hashes y 0 discrepancias; 81 hashes de las evidencias de las prácticas 03, 05, 08 y 11, 0 discrepancias |
+| `git diff --check` | Limpio frente a `53c0eb5`, `8d39d0e` y `ad193f9` |
+| Delta frente a `53c0eb5` | Exactamente las tres rutas de la capa (A) y las tres de gobierno (M); ninguna fuera de `docs/academico`, `CLAUDE.md` y `docs/PROGRESS.md` |
+| Gobierno de HEAD | Los trece estados sin cambios; la declaración del cierre en el estado vigente de las tres rutas, sin «F35-SBX-B INICIADA» ni «F35-SBX-B NO INICIADA» en lo vigente; «RF-23 sigue humana; RF-29 sigue experimental/informativa.» en las tres |
+| Árboles de trabajo | Sin cambios en los cuatro clones tras la validación |
+
+La regresión corrió con dos bloques a la vez como máximo, sin ningún síntoma ambiental y con la memoria comprometible libre siempre por encima de 10 GB.
+
+### 5.8 SBX-01..SBX-18
+
+Recalculados sobre HEAD por el gate de B2 dentro de MAT, sin ninguna línea FALLA SBX: 18/18 en la rama y en los merges en `develop` y `main`. `validate_f34e.py` sobre HEAD: «SBX: 18/18 cumplen», con G0-SBX APROBADA CON RESTRICCIONES y F35-SBX HABILITADA. B1-FREEZE anclado: SBX-01..SBX-18 sobre HEAD (DH-B13), 18/18. Ningún hecho REV-01..REV-14: G0-SBX sigue vigente (C18).
+
+### 5.9 Autoauditoría
+
+Se intentó romper el cierre por cada vía de la consigna, con el resultado medido:
+
+| Intento | Qué lo rechaza | Evidencia |
+|---|---|---|
+| Declarar B cerrada sin la capa de B3 | INT, B3G, R2A, MAT y ALC | CT08 |
+| Cerrar sobre B3 sin su integración en `develop` | CTX, GOV y FRZ | Sonda P1 |
+| Sustituir B3 o la historia del cierre por contenido equivalente | CTX, INT, FRZ, GOV y B3G; GOV | CT09 y CT10 |
+| Alterar una capa congelada o el pipeline de B3 | INT, ALC, B3G y R2A | CT11 y CT29 |
+| Cambiar un ancla registrada en el propio gate después del cierre | FRZ, ANC e INT, y el fallo cerrado de HIS, B3G, R2A, MAT, GOV y SEM | Sonda P7 |
+| Ocultar o eliminar cualquiera de los tres riesgos LOW | LOW y FRZ | CT12 y las sondas P5 y P6 |
+| Sobredeclarar en el gobierno: F36–F40, F35-SBX, la G0 real, el alcance C, los datos reales, RF-23 o RF-29 | GOV, SEM y los gates congelados | CT13..CT19 |
+| Reabrir B o volver al gobierno de B3 | GOV, SEM y los gates congelados | CT06, CT07, CT35 y CT36 |
+| Afirmar una capacidad prohibida o quitar un límite en este documento | SEM y FRZ | CT30 y CT31 |
+| Tocar archivos fuera del delta | ALC, MAT, B3G y R2A | CT18, CT20 y CT21 |
+| Entorno de Git hostil o incompleto | ENT, FLG, CTX y fallo cerrado | CT22..CT24 y CT32..CT34 |
+| Ejecutar el gate con el temporal dentro del repositorio | Fallo cerrado de HIS, B3G, R2A y MAT | Sonda P2 |
+| Ejecutar una copia del gate fuera del repositorio | Fallo cerrado de todas las reglas | Sonda P3 |
+| Repositorio a tres niveles de clones compartidos | ENT y HIS | Sonda P4 |
+| Debilitar una regla del gate | La batería | 20 de 20 mutaciones detectadas (§5.6) |
+
+Las sondas P1..P7 completan la batería, sobre `9e3e178`, en clones desechables y como mucho dos a la vez:
+
+| Sonda | Escenario | Resultado |
+|---|---|---|
+| P1 | El cierre construido directamente sobre `8d39d0e`, sin el merge de integración `53c0eb5` | 12/3: CTX, GOV (regla 2 y transición derivada distinta de la registrada) y FRZ |
+| P2 | El temporal dentro del repositorio | 11/4: HIS, B3G, R2A y MAT fallan cerrados, con «directorio temporal no disponible fuera del repositorio» |
+| P3 | Una copia del gate fuera del repositorio, ejecutada con el repositorio como directorio de trabajo | 0/15: Git no encuentra el repositorio del gate y DEP no encuentra los archivos de la capa; falla cerrado |
+| P4 | El repositorio a tres niveles de clones compartidos | 13/2: ENT, que admite dos, y HIS, con el gate de B3 anclado a cuatro niveles |
+| P5 | La fila de B3-AF-L01 eliminada de este documento | 13/2: LOW y FRZ |
+| P6 | La fila de B3-R3 eliminada de este documento | 13/2: LOW y FRZ |
+| P7 | El ancla de B3 cambiada por `fa5664a` en el gate, en un commit posterior | 6/9: ANC, HIS, B3G, R2A, MAT, INT, GOV, SEM y FRZ, que señala el propio gate, cambiado después del commit que completa la capa |
+
+| # | Nivel | Hallazgo | Tratamiento |
+|---|---|---|---|
+| TC-H1 | LOW | §3.4 decía en RED que ENT admite tres niveles de clones compartidos; el gate admite dos | Corregido en este commit (§5.2). La condición de ejecución queda como TC-R1 |
+| TC-H2 | LOW | La fila CT32 de §4 no coincidía con la batería de RED | Corregida en este commit (§5.2) |
+| TC-H3 | LOW | Cuatro expectativas de RED (CT06, CT11, CT21 y CT29) no preveían detecciones correctas | Corregidas con su causa medida (§5.2), sin cambiar el gate |
+| TC-H4 | INFO | `README.md` conserva en su bloque «Estado vigente F34E» la frase «F35-SBX AÚN NO INICIADA», anterior a F35-SBX | Fuera del alcance (§3.3): no es un registro exigido por el cierre y el delta no lo admite. Queda para una actualización documental aparte, con autorización del equipo |
+| TC-H5 | INFO | Reintroducir el `ACADEMIC_BASELINE.md` previo, común a cinco etapas, produce una violación de la regla 4 por cada una de las cuatro etapas de B2 a B3 (CT06) | Diagnóstico redundante, no una falta de detección: GOV falla igual y el recuento es exacto |
+
+No quedó ningún hallazgo BLOCKER, HIGH ni MEDIUM abierto.
+
+### 5.10 Riesgos residuales
+
+Los tres riesgos LOW de §2.4 se conservan tal como los clasificó la auditoría de B3, sin corregirlos ni reclasificarlos. Además:
+
+| # | Nivel | Riesgo | Tratamiento |
+|---|---|---|---|
+| TC-R1 | INFO | El gate admite el repositorio a dos niveles de clones compartidos como mucho, y la batería suma dos: se ejecuta desde un repositorio sin alternates | Un clon normal o una copia `--no-local` cumplen la condición. Más allá del límite fallan ENT y HIS, en el gate (sonda P4) y en los casos de la batería (tanda `bat3`): nunca hay un PASS falso |
+| TC-R2 | INFO | El ancla de nivel B solo autentica la capa si se registra fuera: una capa reconstruida con los mismos bytes en otra historia informa otra ancla (CT09 y CT10) | La auditoría anota el commit que informa FRZ |
+| TC-R3 | INFO | El gate trabaja sin red: no consulta el CI ni verifica `9424f1e`, que no es ancestro de esta rama | §1.2 registra el CI y los merges de B3, verificados con Git y con la API pública de GitHub; CT02 y la regresión prueban los merges `--no-ff` |
+| TC-R4 | INFO | Cada ejecución del gate lanza cuatro gates congelados en paralelo y tarda de 7 a 10 minutos sola o con otra, y unos 20 con tres a la vez; la batería completa suma 37 ejecuciones. Con tres a la vez, en un equipo de 32 GB con otras aplicaciones abiertas, la memoria comprometible libre bajó a 1,4 GB | Ejecutar como mucho dos a la vez, con la memoria vigilada (§5.6) |
+| TC-R5 | INFO | La predicción de B3G, R2A y MAT usa la lógica de los propios gates congelados: un error común a esa lógica y a su salida no lo revela la comparación | La clasificación de clase A es propia, y lo enmascarado lo reponen INT, GOV, SEM, LOW, ALC, FRZ y DEP |
+| TC-R6 | INFO | Hasta que la auditoría independiente apruebe este incremento y el equipo autorice su integración, el registro del cierre en el gobierno de esta rama no vale: `develop` y `main` siguen diciendo «F35-SBX-B INICIADA» | Es el estado de todo candidato. El texto nuevo no menciona el estado de auditoría, así que no habrá nada que registrar después (§2.8) |
+
+### 5.11 Pendientes
+
+- La auditoría independiente de este incremento, sobre su ancla: el commit que informa FRZ.
+- Con su aprobación y la autorización expresa del equipo, la publicación de la rama y su integración `--no-ff` en `develop` y `main`, con CI en verde. Este incremento no hace push, merge, tag ni release.
+- El cierre de F35-SBX, que exige otra decisión del equipo y otro incremento. Ninguna fase posterior queda habilitada.
+- La observación TC-H4 sobre `README.md`, para una actualización documental aparte.
+- Los pendientes externos de la G0 real (G0-02, G0-03 y G0-12), que este cierre no cambia.
