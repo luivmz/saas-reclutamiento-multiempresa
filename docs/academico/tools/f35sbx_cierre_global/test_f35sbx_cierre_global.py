@@ -6,7 +6,7 @@ Uso:  python -I docs/academico/tools/f35sbx_cierre_global/test_f35sbx_cierre_glo
 Fija en RED el gate del cierre global de F35-SBX: los estados legítimos (la rama, los merges --no-ff en develop y en
 main, un commit vacío), la transición única y monotónica en las cuatro rutas de gobierno, la reapertura y la
 sobredeclaración (F35-SBX, F36–F40, F36-SBX, G0 real, alcance C, datos reales y RF-29), la integridad de A y de B, el
-runtime y el dataset, los archivos físicos que Git ignora en las superficies materiales (GC-AF-M01), los riesgos
+runtime y el dataset, los archivos físicos que Git ignora o no ve en las superficies materiales (GC-AF-M01), los riesgos
 registrados, el documento de la capa, el alcance, el código de la capa y el entorno de Git hostil o incompleto.
 
 Cada caso trabaja en un clon desechable de HEAD, fuera del repositorio, con objetos compartidos de solo lectura (en
@@ -476,6 +476,53 @@ def gc40(fx, c):
     return [probe(fx, {'FSY'})]
 
 
+def gc41(fx, c):
+    """Archivo dentro de una carpeta .git anidada: Git no lo lista nunca, ni como ignorado ni con ls-files --others sin
+    --exclude-standard, así que solo un recorrido físico lo ve."""
+    fx.write('app/Http/.git/payload.php', b'<?php\n// inerte\n')
+    if fx.git('status', '--porcelain', '--ignored', '--untracked-files=all').strip() or \
+            fx.git('ls-files', '--others', '--', 'app').strip():
+        raise Failure('Git lista el escenario: no queda fuera de su vista')
+    return [probe(fx, {'FSY'})]
+
+
+def gc42(fx, c):
+    """Unión de directorio vacía en app/ hacia una carpeta fuera del clon: Git no la lista y el recorrido de B1 la sigue
+    como una carpeta vacía, así que solo FSY la ve como enlace. Fuera de Windows, un enlace simbólico de directorio."""
+    target = make_temp('gc42-destino')
+    fx.extra.append(target)
+    link = fx.path('app/Union')
+    if os.name == 'nt':
+        if subprocess.run(['cmd', '/c', 'mklink', '/J', link, target], capture_output=True).returncode != 0:
+            raise Failure('no se pudo crear la unión de directorio')
+    else:
+        os.symlink(target, link, target_is_directory=True)
+    with open(fx.path('.git/info/exclude'), 'ab') as f:
+        f.write(b'app/Union\n')
+    if fx.git('status', '--porcelain').strip():
+        raise Failure('git status muestra el escenario: no está oculto')
+    return [probe(fx, {'FSY'})]
+
+
+def gc43(fx, c):
+    """Archivo versionado de routes/ con un byte cambiado, el mismo tamaño y su fecha restaurada, anterior a la del
+    índice: git status y git diff no lo ven. core.checkStat=minimal y core.trustctime=false fijan el escenario en
+    cualquier sistema; en Windows, Git tampoco lo ve con su configuración por defecto. Solo los bytes físicos lo
+    muestran."""
+    rel, full = 'routes/web.php', fx.path('routes/web.php')
+    fx.git('config', 'core.checkStat', 'minimal')
+    fx.git('config', 'core.trustctime', 'false')
+    os.utime(full, (1767225600, 1767225600))        # 01/01/2026, anterior al índice: la entrada no queda en carrera
+    fx.git('update-index', '-q', '--refresh')
+    st, data = os.stat(full), fx.read(rel)
+    with open(full, 'wb') as f:
+        f.write(data[:-1] + (b' ' if data[-1:] == b'\n' else b'\n'))
+    os.utime(full, ns=(st.st_atime_ns, st.st_mtime_ns))
+    if fx.git('status', '--porcelain').strip() or fx.git('diff', '--name-only').strip():
+        raise Failure('Git ve el cambio: el escenario no queda fuera de su vista')
+    return [probe(fx, {'FSY'})]
+
+
 # ---------------------------------------------------------------- entorno de Git, historia y contexto
 def gc22(fx, c):
     fx.git('update-index', '--assume-unchanged', '--', 'CLAUDE.md')
@@ -587,11 +634,14 @@ CASES = (
     ('GC38', 'archivo del dataset oculto por .git/info/exclude', (gc38,)),
     ('GC39', 'carpeta anidada que se ignora a sí misma, con un archivo vacío', (gc39,)),
     ('GC40', '.pyc no derivable en una caché ignorada', (gc40,)),
+    ('GC41', 'archivo en una carpeta .git anidada, que Git no lista', (gc41,)),
+    ('GC42', 'unión de directorio vacía en app/', (gc42,)),
+    ('GC43', 'archivo versionado cambiado sin que Git lo vea', (gc43,)),
 )
 
 
 def context(base, env):
-    """HEAD probado y commit que completa la capa en su historia (el primero posterior a BASE que contiene sus tres
+    """HEAD probado y commit que completa la capa en su historia (el primero posterior a BASE que contiene sus cuatro
     archivos)."""
     head = run_git(['rev-parse', '--verify', 'HEAD^{commit}'], base, env).decode('utf-8').strip()
     completion = None

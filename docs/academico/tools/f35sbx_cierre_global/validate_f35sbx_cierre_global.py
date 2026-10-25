@@ -21,8 +21,11 @@ identificador, y todo error, salida incompleta o estado no evaluable falla cerra
   SEM  semántica del gobierno y del documento de la capa con las piezas verificadas de B1 y R2-A: F35-SBX CERRADA Y
        CONGELADA, F36–F40 bloqueadas, F36-SBX sujeta a una autorización sucesora nueva y ningún otro estado cambiado.
   SBX  SBX-01..SBX-18 recalculados uno por uno sobre HEAD con sbx_eval() del gate de B1, cargado de su blob verificado.
+  FSY  recorrido físico de las superficies materiales del contrato FSY de B1 (§8.3; TSBB-07), sin seguir enlaces y
+       aunque Git las ignore o no las vea: cada archivo idéntico a su blob en el inventario autorizado de f082b41,
+       igual al de la base de B1; ningún archivo extra, generado, ausente ni enlace, salvo las excepciones de B1.
   RSK  los riesgos B3-AF-L01, B3-AF-L02 y B3-R3 (LOW), TC-AF-I01 (INFO) y TC-H4 (INFO), con su nivel y su estado.
-  ALC  alcance exacto frente a f082b41: las tres rutas A de la capa y las cuatro de gobierno M; sin archivos sin
+  ALC  alcance exacto frente a f082b41: las cuatro rutas A de la capa y las cuatro de gobierno M; sin archivos sin
        seguimiento.
   FRZ  nivel B: un único commit posterior a f082b41 completa la capa y, desde él, sus archivos no cambian. Su hash se
        deriva de Git y se registra fuera, nunca en un archivo.
@@ -93,10 +96,11 @@ LAYER_TOOLS = 'docs/academico/tools/f35sbx_cierre_global'
 DOC = LAYER_DOCS + '/F35SBX_Cierre_Global.md'
 VALIDATOR = LAYER_TOOLS + '/validate_f35sbx_cierre_global.py'
 TESTS = LAYER_TOOLS + '/test_f35sbx_cierre_global.py'
-LAYER_FILES = (DOC, VALIDATOR, TESTS)
-LAYER_DIRS = {LAYER_DOCS: ('F35SBX_Cierre_Global.md',),
+FIX_DOC = LAYER_DOCS + '/F35SBX_Cierre_Global_GC-AF-M01.md'       # registro de la corrección GC-AF-M01
+LAYER_FILES = (DOC, VALIDATOR, TESTS, FIX_DOC)
+LAYER_DIRS = {LAYER_DOCS: ('F35SBX_Cierre_Global.md', 'F35SBX_Cierre_Global_GC-AF-M01.md'),
               LAYER_TOOLS: ('test_f35sbx_cierre_global.py', 'validate_f35sbx_cierre_global.py')}
-SCOPE = {DOC: 'A', VALIDATOR: 'A', TESTS: 'A', **{p: 'M' for p in GOV_PATHS}}
+SCOPE = {DOC: 'A', VALIDATOR: 'A', TESTS: 'A', FIX_DOC: 'A', **{p: 'M' for p in GOV_PATHS}}
 
 # ---------------------------------------------------------------- capas congeladas: A desde E y B desde su cierre terminal
 A_DIRS = ('docs/academico/evidencia-sbx', 'docs/academico/tools/f35sbx')
@@ -208,7 +212,7 @@ DEP_ALLOWED = {VALIDATOR: frozenset({'ast', 'hashlib', 'os', 're', 'subprocess',
                TESTS: frozenset({'os', 'subprocess', 'sys'})}
 LOADERS = {VALIDATOR: 'load_verified'}      # única función con ejecución dinámica: los gates de B1 y R2-A verificados
 DYNAMIC_CODE = frozenset({'__import__', 'compile', 'eval', 'exec'})
-ORDER = ('ENT', 'CTX', 'ANC', 'INT', 'FLG', 'GOV', 'SEM', 'SBX', 'RSK', 'ALC', 'FRZ', 'DEP')
+ORDER = ('ENT', 'CTX', 'ANC', 'INT', 'FLG', 'GOV', 'SEM', 'SBX', 'FSY', 'RSK', 'ALC', 'FRZ', 'DEP')
 PLANES = ('HEAD', 'árbol', 'índice')
 TIMEOUT = 3600
 REDIRECTING = ('GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES',
@@ -753,7 +757,8 @@ def reopening(b1, text):
 
 def doc_problems(objs, root, b1, sem, r2a):
     """Los archivos de la capa: UTF-8 sin BOM, CR ni NUL; en el documento, sin datos personales, afirmaciones
-    positivas ni declaraciones contradictorias (fuera de los bloques de código del delta), con los catorce límites."""
+    positivas ni declaraciones contradictorias (fuera de los bloques de código del delta), y en el principal, con los
+    catorce límites."""
     out = []
     for path in LAYER_FILES:
         found = entry(objs, root, path)
@@ -765,7 +770,7 @@ def doc_problems(objs, root, b1, sem, r2a):
             out.append(f'{path}: binario, CR, BOM o tamaño excesivo')
             continue
         text = data.decode('utf-8')
-        if path != DOC:
+        if path not in (DOC, FIX_DOC):
             continue
         hits = [m.group(0) for rx in b1.PII for m in [rx.search(text)] if m]
         if hits:
@@ -778,7 +783,7 @@ def doc_problems(objs, root, b1, sem, r2a):
             out.append(f'{path}: declaraciones de estado contradictorias con el gobierno vigente: {bad[:3]}')
         lines = set(text.splitlines())
         missing = [x for x in LIMITS if x not in lines]
-        if missing:
+        if path == DOC and missing:
             out.append(f'{path}: faltan límites del cierre (§2.5): {missing[:3]}')
     return out
 
@@ -844,6 +849,87 @@ def sbx_problems(b1):
         if not ok:
             out.append(f'{sid}: FAIL — {detail}')
     return out, info
+
+
+# ---------------------------------------------------------------- FSY: superficies físicas (GC-AF-M01)
+def surface_inventory(objs, commit, surfaces):
+    """{ruta: entrada} de los archivos de las superficies en el árbol verificado de un commit."""
+    root = commit_parts(objs, commit)[0]
+    files = {}
+    for surface in surfaces:
+        found = entry(objs, root, surface)
+        if found is None:
+            continue
+        if found[1] == 'tree':
+            files.update({f'{surface}/{rel}': e for rel, e in listing(objs, root, surface).items()})
+        else:
+            files[surface] = found
+    return files
+
+
+JUNCTION_TAG = 0xA0000003           # IO_REPARSE_TAG_MOUNT_POINT: unión de directorio de Windows
+
+
+def junctions(roots):
+    """Uniones de directorio de Windows bajo las superficies, sin seguirlas. Python no las trata como enlaces simbólicos
+    y el recorrido de B1 las sigue como carpetas, así que una unión vacía no le aporta ningún archivo; para FSY son
+    enlaces (TSBB-07). Lo ilegible ya lo señala ese recorrido, que falla cerrado."""
+    found, stack = [], list(roots)
+    while stack:
+        rel = stack.pop()
+        full = os.path.join(ROOT, *rel.split('/'))
+        try:
+            if getattr(os.lstat(full), 'st_reparse_tag', 0) == JUNCTION_TAG:
+                found.append(rel)
+            elif os.path.isdir(full) and not os.path.islink(full):
+                with os.scandir(full) as entries:
+                    stack += [f'{rel}/{e.name}' for e in entries if e.is_dir(follow_symlinks=False)]
+        except OSError:
+            continue
+    return sorted(found)
+
+
+def fsy_problems(objs, head, b1):
+    """FSY de B1 (§8.3 y B1.3; TSBB-07) sobre HEAD, con sus piezas verificadas: el recorrido real de sus superficies
+    materiales, sin seguir enlaces y aunque Git las ignore o no las vea, sus excepciones de metadatos y los .pyc
+    derivables de su fuente. El inventario autorizado es el árbol de esas superficies en f082b41, que debe coincidir
+    con el de HEAD y con el de la base de B1. Ni .gitignore ni .git/info/exclude deciden qué archivo físico es
+    legítimo."""
+    surfaces = b1.RUNTIME_SURFACES
+    want = surface_inventory(objs, BASE, surfaces)
+    out = []
+    head_files = surface_inventory(objs, head, surfaces)
+    if head_files != want:
+        diff = sorted(p for p in set(head_files) | set(want) if head_files.get(p) != want.get(p))
+        out.append(f'el árbol de HEAD difiere del inventario autorizado de {BASE[:12]} en las superficies materiales: '
+                   f'{diff[:5]}')
+    if surface_inventory(objs, b1.B_BASE, surfaces) != want:
+        out.append(f'el inventario de {BASE[:12]} difiere del de la base autorizada de B1 {b1.B_BASE[:12]}')
+    found, problems = b1.walk(surfaces, b1.RT_SKIP_DIRS, frozenset(), b1.RT_PYCACHE_ROOTS)
+    out += problems + b1.exception_problems()
+    out += [f'unión de directorio (enlace de Windows) en una ruta protegida: {rel}' for rel in junctions(surfaces)]
+    extra = sorted(found - set(want))
+    generated = [p for p in extra if p.startswith(b1.RT_GENERATED)]
+    if generated:
+        out.append(f'código generado y no versionado (bundle de Vite, Wayfinder o caché de Laravel): su origen no es '
+                   f'verificable frente al inventario y no se certifica por nombre ni extensión (falla cerrado): '
+                   f'{generated[:5]}')
+    others = [p for p in extra if not p.startswith(b1.RT_GENERATED)]
+    if others:
+        out.append(f'archivos físicos en el runtime, el dataset o la evidencia fuera del inventario autorizado (aunque '
+                   f'Git los ignore o no los vea): {others[:5]}')
+    missing = sorted(set(want) - found)
+    if missing:
+        out.append(f'archivos del inventario autorizado ausentes o reemplazados en el disco: {missing[:5]}')
+    changed = []
+    for path, e in sorted(want.items()):
+        if path in found:
+            data = disk_bytes(path)
+            if e[:2] not in (('100644', 'blob'), ('100755', 'blob')) or data is None or blob_id(data) != e[2]:
+                changed.append(path)
+    if changed:
+        out.append(f'bytes físicos distintos de su blob en el inventario autorizado: {changed[:5]}')
+    return out
 
 
 # ---------------------------------------------------------------- RSK, ALC, FRZ y DEP
@@ -1008,16 +1094,18 @@ def evaluate():
         try:
             mods = {name: load_verified(objs, name) for name in ('b1', 'r2a')}
         except ERRORS as e:
-            closed(('SEM', 'SBX'), f'gates congelados verificados ({e.__class__.__name__}: {e})')
+            closed(('SEM', 'SBX', 'FSY'), f'gates congelados verificados ({e.__class__.__name__}: {e})')
         if mods:
             check('SEM', sem_problems, objs, head, mods['b1'], mods['r2a'])
             sbx = check('SBX', sbx_problems, mods['b1'])
             if sbx:
                 info += sbx[0]
+            check('FSY', fsy_problems, objs, head, mods['b1'])
         check('RSK', rsk_problems, objs, head)
         check('ALC', alc_problems, objs, head)
     except ERRORS as e:
-        closed(('CTX', 'ANC', 'INT', 'GOV', 'SEM', 'SBX', 'RSK', 'ALC', 'FRZ'), f'objetos Git ({e.__class__.__name__}: {e})')
+        closed(('CTX', 'ANC', 'INT', 'GOV', 'SEM', 'SBX', 'FSY', 'RSK', 'ALC', 'FRZ'),
+               f'objetos Git ({e.__class__.__name__}: {e})')
     finally:
         if objs is not None:
             objs.close()
