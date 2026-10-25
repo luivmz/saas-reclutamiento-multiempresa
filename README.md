@@ -151,6 +151,8 @@ SBX-01..SBX-18 CUMPLE. Aprobación interna del equipo REGISTRADA; no constituye 
 
 Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa11cd9185423e2866b0fc936`. El commit C y los merges se consultan en Git, sin hashes futuros/autorreferenciales. Publicación autorizada únicamente tras regresión y CI GREEN de develop/main. Sin tag ni release. F36–F40 siguen BLOQUEADAS y ninguna F36-SBX empieza sin una autorización sucesora nueva, con su propia gobernanza.
 
+**Continuidad tras el cierre de F35-SBX (25/10/2026).** F35-SBX quedó CERRADA, CONGELADA E INTEGRADA, solo en su alcance académico y sintético. El candidato auditado `858b5fa71c01bf794715f78068ea0557fd56a16b` se integró con merges `--no-ff` en `develop` (`e366cbf81f7c6e158ddd848268cf66f1247b4ed8`, CI `tests` run 40221309615 en verde) y en `main` (`06b789f9e9e99268eccfb72a15df2dd30fe47360`, CI `tests` run 40221523362 en verde). Su gate se valida anclado en su rama, `chore/f35-sbx-global-closure`; sobre un HEAD posterior falla por diseño (DG-02). Queda abierta y diferida la deuda LOW GC-AF-L01, no bloqueante, en el [registro de deuda técnica](docs/academico/TECHNICAL_DEBT.md). Para continuar desde otro equipo se usa la [guía de handoff posterior a F35-SBX](docs/academico/handoff/F35SBX_SECONDARY_PC_HANDOFF.md). F36-SBX no está iniciada: ninguna F36-SBX empieza sin una autorización sucesora nueva, con su propia gobernanza.
+
 ## Antecedentes de estado (hasta F34D)
 
 - **v1.0 académica (publicada):** Fases 0 a 12, RF-01 a RF-27; rama `main` y tag `v1.0.0-academic`. Veredicto de la Fase 12: **APTO PARA PUBLICACIÓN** (`docs/final-report/qa-final-report.md`).
