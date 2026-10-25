@@ -6,8 +6,8 @@ Uso:  python -I docs/academico/tools/f35sbx_cierre_global/test_f35sbx_cierre_glo
 Fija en RED el gate del cierre global de F35-SBX: los estados legítimos (la rama, los merges --no-ff en develop y en
 main, un commit vacío), la transición única y monotónica en las cuatro rutas de gobierno, la reapertura y la
 sobredeclaración (F35-SBX, F36–F40, F36-SBX, G0 real, alcance C, datos reales y RF-29), la integridad de A y de B, el
-runtime y el dataset, los riesgos registrados, el documento de la capa, el alcance, el código de la capa y el entorno de
-Git hostil o incompleto.
+runtime y el dataset, los archivos físicos que Git ignora en las superficies materiales (GC-AF-M01), los riesgos
+registrados, el documento de la capa, el alcance, el código de la capa y el entorno de Git hostil o incompleto.
 
 Cada caso trabaja en un clon desechable de HEAD, fuera del repositorio, con objetos compartidos de solo lectura (en
 GC24, un clon superficial), configuración de Git aislada, identidad ficticia y fechas fijas, y ejecuta allí el gate con
@@ -43,7 +43,8 @@ LAYER_TOOLS = 'docs/academico/tools/f35sbx_cierre_global'
 DOC = LAYER_DOCS + '/F35SBX_Cierre_Global.md'
 GATE = LAYER_TOOLS + '/validate_f35sbx_cierre_global.py'
 TESTS = LAYER_TOOLS + '/test_f35sbx_cierre_global.py'
-LAYER_FILES = (DOC, GATE, TESTS)
+FIX_DOC = LAYER_DOCS + '/F35SBX_Cierre_Global_GC-AF-M01.md'
+LAYER_FILES = (DOC, GATE, TESTS, FIX_DOC)
 A_FILE = 'docs/academico/evidencia-sbx/README.md'
 TC_GATE = 'docs/academico/tools/f35sbxb_cierre_terminal/validate_f35sbxb_cierre_terminal.py'
 RUNTIME = 'routes/web.php'
@@ -57,7 +58,7 @@ RF_STATE = 'RF-23 sigue humana; RF-29 sigue experimental/informativa.'
 LOW_ROW = '| B3-AF-L02 | LOW |'
 INFO_ROW = '| TC-AF-I01 | INFO |'
 LIMIT = '- no permite la selección automática;\n'
-RULES = frozenset({'ENT', 'CTX', 'ANC', 'INT', 'FLG', 'GOV', 'SEM', 'SBX', 'RSK', 'ALC', 'FRZ', 'DEP'})
+RULES = frozenset({'ENT', 'CTX', 'ANC', 'INT', 'FLG', 'GOV', 'SEM', 'SBX', 'FSY', 'RSK', 'ALC', 'FRZ', 'DEP'})
 SUMMARY = 'validate_f35sbx_cierre_global: '
 STAMP = '2026-10-24T00:00:00+00:00'
 RUNS = [0]
@@ -379,12 +380,12 @@ def gc14(fx, c):
 def gc15(fx, c):
     fx.write(RUNTIME, fx.read(RUNTIME) + b'\n// alterado\n')
     fx.commit('modifica el runtime', RUNTIME)
-    return [probe(fx, {'ALC', 'SBX'}, says={'SBX': 'SBX-16'})]
+    return [probe(fx, {'ALC', 'SBX', 'FSY'}, says={'SBX': 'SBX-16'})]
 
 
 def gc16(fx, c):
     edit(fx, DATASET, b'ORG-S2,synthetic,', b'ORG-S2,real,', 'altera el dataset sintético')
-    return [probe(fx, {'ALC', 'SBX'})]
+    return [probe(fx, {'ALC', 'SBX', 'FSY'})]
 
 
 # ---------------------------------------------------------------- riesgos y documento de la capa
@@ -424,6 +425,55 @@ def gc20(fx, c):
 def gc21(fx, c):
     fx.write('docs/academico/nota_sin_seguimiento.md', b'Nota sin seguimiento.\n')
     return [probe(fx, {'ALC'})]
+
+
+# ---------------------------------------------------------------- superficies físicas que Git ignora (GC-AF-M01)
+def is_ignored(fx, rel):
+    try:
+        run_git(['check-ignore', '-q', '--', rel], fx.root, fx.env)
+        return True
+    except Failure:
+        return False
+
+
+def hide(fx, files, exclude=None):
+    """Archivos físicos fuera del inventario y ocultos para Git: con exclude, la línea se añade a .git/info/exclude; si
+    no, ya los ignora un .gitignore. Exige que git status no muestre nada y que Git los considere ignorados."""
+    for rel, data in files:
+        fx.write(rel, data)
+    if exclude is not None:
+        with open(fx.path('.git/info/exclude'), 'ab') as f:
+            f.write(exclude.encode('utf-8') + b'\n')
+    if fx.git('status', '--porcelain').strip():
+        raise Failure('git status muestra el escenario: no está oculto')
+    if not all(is_ignored(fx, rel) for rel, _ in files):
+        raise Failure('Git no considera ignorados todos los archivos del escenario')
+
+
+def gc36(fx, c):
+    hide(fx, [('app/Support/Interno/registro_local.php', b'<?php\n// inerte\n')], exclude='app/Support/Interno/')
+    return [probe(fx, {'FSY'})]
+
+
+def gc37(fx, c):
+    hide(fx, [('public/build/assets/chunk-vendor.js', b'export default 0;\n')])
+    return [probe(fx, {'FSY'})]
+
+
+def gc38(fx, c):
+    rel = 'docs/academico/datos-sinteticos/dataset/extra_sintetico.csv'
+    hide(fx, [(rel, b'organization_token,source_type,synthetic_record_id\n')], exclude=rel)
+    return [probe(fx, {'FSY'})]
+
+
+def gc39(fx, c):
+    hide(fx, [('routes/.local/.gitignore', b'*\n'), ('routes/.local/vacio', b'')])
+    return [probe(fx, {'FSY'})]
+
+
+def gc40(fx, c):
+    hide(fx, [('ml-service/src/recruitment_ml/__pycache__/schema.cpython-312.pyc', b'no es bytecode')])
+    return [probe(fx, {'FSY'})]
 
 
 # ---------------------------------------------------------------- entorno de Git, historia y contexto
@@ -532,6 +582,11 @@ CASES = (
     ('GC33', 'cierre construido sobre 9ebb909 sin su integración', (gc33,)),
     ('GC34', 'README.md devuelto a F35-SBX AÚN NO INICIADA', (attack('GC34'),)),
     ('GC35', 'gobierno que cambia RF-29', (attack('GC35'),)),
+    ('GC36', 'archivo de app/ oculto por .git/info/exclude', (gc36,)),
+    ('GC37', 'artefacto de public/build ignorado por .gitignore', (gc37,)),
+    ('GC38', 'archivo del dataset oculto por .git/info/exclude', (gc38,)),
+    ('GC39', 'carpeta anidada que se ignora a sí misma, con un archivo vacío', (gc39,)),
+    ('GC40', '.pyc no derivable en una caché ignorada', (gc40,)),
 )
 
 
