@@ -1,12 +1,12 @@
 # F35-SBX — Cierre global
 
-> **Estado: CONTRATO Y DISEÑO (RED).** Fecha: 24/10/2026. Rama `chore/f35-sbx-global-closure`, desde `develop` = `f082b4165ca756659b998716e2647494a3ec7be6`.
+> **Estado: CIERRE GLOBAL IMPLEMENTADO / VALIDADO LOCALMENTE / CANDIDATO A AUDITORÍA INDEPENDIENTE.** Fecha: 24/10/2026. Rama `chore/f35-sbx-global-closure`, desde `develop` = `f082b4165ca756659b998716e2647494a3ec7be6`.
 >
-> - Este documento reconstruye el alcance global de F35-SBX desde sus contratos, evalúa si puede cerrarse y fija el contrato y el diseño del incremento que registra ese cierre. La transición de gobierno, el gate y los resultados llegan en los commits siguientes.
+> - Este documento reconstruye el alcance global de F35-SBX desde sus contratos, evalúa si puede cerrarse, fija el contrato y el diseño del incremento que registra ese cierre y recoge sus resultados. El gobierno de esta rama ya registra el cierre (§3.2).
 > - El cierre solo vale en el alcance académico y sintético de F35-SBX, y solo cuando la auditoría independiente apruebe este incremento y el equipo autorice su integración. Hasta entonces, `develop` y `main` siguen diciendo «F35-SBX = HABILITADA».
 > - Este incremento no se autoaprueba: lo decide la auditoría independiente sobre su ancla.
 >
-> Las secciones 1 a 4 registran la reconstrucción, la evaluación, el contrato y el diseño, escritos antes de la transición de gobierno y del gate (commit RED). La sección 5 añade los resultados.
+> Las secciones 1 a 4 registran la reconstrucción, la evaluación, el contrato y el diseño, escritos antes de la transición de gobierno y del gate (commit RED `7746bf2`). El commit que completa la capa solo los corrige donde la medición lo exigió, con su causa en §5.2. La sección 5 registra los resultados.
 
 ## 1. Punto de partida verificado
 
@@ -172,7 +172,7 @@ El cierre queda aceptado como candidato si se cumple todo:
 - el gate da 12/0 sobre la rama y sobre los merges `--no-ff` en `develop` y `main` (GC02);
 - la batería da 35/35, con todos los negativos rechazados;
 - los controles de mutación del gate se detectan;
-- `validate_f34e.py` da SBX 18/18 y solo su falla histórica de alcance, y los validadores afectados siguen en verde;
+- `validate_f34e.py` da SBX 18/18 y solo su falla histórica de clase A (DH-B13), y los validadores afectados siguen en verde;
 - enlaces y MANIFEST sin discrepancias, y `git diff --check` limpio.
 
 ### 2.9 Amenazas
@@ -250,7 +250,7 @@ Ubicación: `docs/academico/tools/f35sbx_cierre_global/validate_f35sbx_cierre_gl
 |---|---|
 | ENT | Intérprete aislado y sin `PYTHONPATH`, `PYTHONHOME` ni `PYTHONUSERBASE`; ninguna variable de Git que redirija el repositorio, el índice o los objetos; Git sobre el repositorio de este archivo, con historia completa, sin injertos ni objetos de reemplazo |
 | CTX | Rama `chore/f35-sbx-global-closure`, `develop` o `main`, y el merge `f082b41` como ancestro de HEAD |
-| ANC | Las anclas de §1.1, verificadas y ancestros de HEAD; `f082b41`, con los padres `53c0eb5` y `9ebb909` y el árbol `7e122321` de su ancla |
+| ANC | Las quince anclas de §1.1 desde el commit E de A hasta `f082b41`, verificadas y ancestros de HEAD; `f082b41`, con los padres `53c0eb5` y `9ebb909` y el árbol `7e122321` de su ancla |
 | INT | Estado de A y de B: las carpetas de A y los cinco validadores que A adaptó, idénticos a E; las carpetas de B, del cierre terminal incluido, idénticas a `9ebb909`; en cada commit posterior a `f082b41`, en el índice y en el disco |
 | FLG | Ningún flag en el índice |
 | GOV | Transición única y monotónica de los blobs de `f082b41` a los del cierre global, en las cuatro rutas a la vez, y registrada |
@@ -269,7 +269,7 @@ Ubicación: `docs/academico/tools/f35sbx_cierre_global/validate_f35sbx_cierre_gl
 
 Así el gate tarda segundos, no minutos, y no añade otra cadena de gates anidados.
 
-**Los gates congelados sobre HEAD (DG-02).** Después de este incremento, los gates de A a B fallan sobre HEAD por diseño: su vocabulario solo admite «F35-SBX = HABILITADA». No es una regresión. Siguen acreditando sus estados sobre sus anclas, y `validate_f34e.py` conserva su falla histórica de alcance (DH-B13, clase A), que obliga a la evaluación sucesora completa de SBX-01..SBX-18 que hace este gate.
+**Los gates congelados sobre HEAD (DG-02).** Después de este incremento, los gates de A a B fallan sobre HEAD por diseño: su vocabulario solo admite «F35-SBX = HABILITADA». No es una regresión. Siguen acreditando sus estados sobre sus anclas, y `validate_f34e.py` conserva su falla histórica (DH-B13, clase A), que obliga a la evaluación sucesora completa de SBX-01..SBX-18 que hace este gate.
 
 ### 3.4 SBX-01..SBX-18
 
@@ -332,7 +332,7 @@ Cada caso trabaja en un clon desechable de HEAD, fuera del repositorio, con obje
 | GC03 | Commit posterior sin cambios de contenido | Ninguna |
 | GC04 | Ataque: un blob de gobierno más tras la transición | GOV |
 | GC05 | Ataque: modificar y restaurar el gobierno tras la transición | GOV |
-| GC06 | Ataque: vuelta al gobierno del cierre terminal en las cuatro rutas | GOV y SEM |
+| GC06 | Ataque: vuelta al gobierno del cierre terminal en las cuatro rutas | GOV, SEM y ALC |
 | GC07 | Ataque: F35-SBX reabierta en el estado vigente | GOV y SEM |
 | GC08 | Ataque: F36–F40 habilitadas | GOV y SEM |
 | GC09 | Ataque: F36-SBX iniciada | GOV y SEM |
@@ -367,4 +367,139 @@ Si un conjunto resulta distinto al medirlo en GREEN, se corrige con su causa reg
 
 ## 5. Resultados
 
-Pendiente: se registran en el commit que completa la capa, con las ejecuciones reales.
+### 5.1 Commits
+
+| Commit | Padre | Contenido | Resultado |
+|---|---|---|---|
+| `7746bf2c5182182fa419915b896bb08def503491` | `f082b41` | Contrato y diseño (§1 a §4) y la batería GC01..GC35 (RED) | Batería 0/35, con 30 ejecuciones: el gate no existía en HEAD, y GC06, GC07, GC09, GC28, GC29 y GC34 dependen de la transición o del gate, que aún no existían |
+| `c73611cb992dffd6e4be1fe49bce8b03b53506cd` | `7746bf2` | Transición de gobierno (§3.2): solo `CLAUDE.md`, `docs/PROGRESS.md`, `ACADEMIC_BASELINE.md` y `README.md`, con los blobs `2e988f22864ad86b05395d0d8a91110d9631c4a3`, `200355350414dceaac1ab39ba835f1e7c18a662d`, `5e523302279948389c78cb9dca70b82f5c7b92e4` y `0ed030e53d49f2c8a5f1dc5fca1269b6109020a3` | `GC_TRANSITION`, registrada en el gate del commit siguiente |
+| El que completa la capa (este) | `c73611c` | Gate, correcciones de §5.2 y estos resultados (GREEN) | Gate 12/0; batería 35/35; 15 de 15 mutaciones detectadas |
+
+Ese tercer commit es el ancla de nivel B de esta capa. Lo informa la línea INFO de FRZ, y su hash no se guarda en ningún archivo.
+
+### 5.2 Medición y correcciones
+
+Todo se midió el 24/10/2026, con temporales nuevos y exclusivos y sin ningún síntoma ambiental. El gate, la batería y los controles de mutación corrieron de uno en uno; los validadores, que son ligeros, coincidieron dos veces con la batería. El gate tarda unos 8 segundos. La batería, los controles de mutación y los validadores se ejecutaron sobre commits desechables hijos de la transición `c73611c`, en copias completas sin alternates. Su gate y su batería son, byte a byte, los de este commit, y el último de ellos tiene el árbol de este commit.
+
+Correcciones, cada una con su causa medida antes de aplicarla:
+
+- **GC06, expectativa de la batería.** La vuelta al gobierno del cierre terminal deja las cuatro rutas de gobierno con los blobs de `f082b41`, así que ya no figuran como modificadas frente a la base y ALC también rechaza el alcance. Es una detección correcta que la expectativa de RED no previó: GC06 espera ahora GOV, SEM y ALC. Se corrige también la fila de §4.
+- **Precisiones de redacción de RED.** En §2.8 y §3.3, la falla de `validate_f34e.py` ya no es solo de alcance: también nombra el estado nuevo de F35-SBX (§5.6). ANC verifica las quince anclas de §1.1 desde el commit E hasta `f082b41`, no los commits de F34E ni los merges de `main`, que no son ancestros de esta rama.
+- **INT, revisión del disco (autoauditoría, antes de este commit).** Un borrador del gate omitía las carpetas `__pycache__` al revisar el disco de las capas congeladas, algo que el gate del cierre terminal no admite. Se restauró la comprobación idéntica a la suya, y todas las mediciones de esta sección son posteriores.
+
+### 5.3 Gate
+
+| Dónde | Resultado |
+|---|---|
+| Rama, sobre un commit desechable con el árbol de este commit | 12/0 |
+| Merge `--no-ff` en `develop` (`f082b41`) y de ese merge en `main` (`57eeb53`) | 12/0 y 12/0 (GC02) |
+
+Líneas INFO:
+
+- ANC: las quince anclas registradas, de `61f94e2` a `f082b41`, verificadas y ancestros de HEAD, más la transición registrada.
+- SBX: una línea por criterio, SBX-01..SBX-18 en PASS, con su fuente y su comprobación.
+- GOV: transición derivada `c73611c`, igual a la registrada.
+- FRZ: el commit que completa la capa.
+
+### 5.4 Batería
+
+**35/35**, con 36 ejecuciones del gate en unos cuatro minutos: cada caso dio exactamente el resultado de §4 y, donde se indica, con su motivo.
+
+### 5.5 Controles de mutación
+
+Quince mutaciones del gate, cada una sobre un commit desechable cuyo gate solo difiere del de este commit en la sentencia mutada, con el caso que debe detectarla. Las quince se detectan:
+
+| # | Mutación del gate | Caso | Resultado |
+|---|---|---|---|
+| M01 | ENT sin rechazar las variables de Git que redirigen el repositorio | GC23 | Detectada: GC23 pasa a PASS |
+| M02 | CTX sin exigir una rama permitida | GC27 | Detectada: GC27 pasa a PASS |
+| M03 | ANC sin exigir las anclas como ancestros de HEAD | GC33 | Detectada: deja de fallar en ANC |
+| M04 | INT sin la capa de A | GC13 | Detectada: deja de fallar en INT |
+| M05 | GOV sin comparar la transición derivada con la registrada | GC30 | Detectada: GC30 pasa a PASS |
+| M06 | SEM sin la declaración canónica del estado vigente | GC35 | Detectada: deja de fallar en SEM |
+| M07 | SEM sin las afirmaciones positivas de este documento | GC19 | Detectada: deja de fallar en SEM |
+| M08 | SEM sin los límites de §2.5 | GC20 | Detectada: deja de fallar en SEM |
+| M09 | SBX sin registrar los criterios en FAIL | GC15 | Detectada: deja de fallar en SBX |
+| M10 | RSK sin efecto | GC17 | Detectada: deja de fallar en RSK |
+| M11 | Sin ALC | GC21 | Detectada: GC21 pasa a PASS |
+| M12 | Sin FRZ | GC17 | Detectada: deja de fallar en FRZ |
+| M13 | DEP sin comprobar las importaciones | GC31 | Detectada: deja de fallar en DEP |
+| M14 | DEP sin buscar ejecución dinámica | GC32 | Detectada: deja de fallar en DEP |
+| M15 | FLG sin efecto | GC22 | Detectada: GC22 pasa a PASS |
+
+### 5.6 Validadores y comprobaciones afectados por el delta
+
+| Comprobación | Resultado |
+|---|---|
+| `validate_f35sbx_cierre_global.py` | 12/0 (§5.3) |
+| `test_f35sbx_cierre_global.py` | 35/35 (§5.4) |
+| `validate.py` y `validate.py --cierre-f29` | 0 fallas en ambos |
+| `validate_f29.py`, `test_f32_safety.py`, `validate_f33.py` y `validate_f34.py` | 225/0, OK, 451/0 y 403/0 |
+| `validate_f34a.py` | 108/0. Necesita una rama local `develop`: en un clon sin ella falla cerrado en su regla GIT, igual que sobre la base |
+| `validate_f34e.py` | 247/1, la falla histórica de su regla GIT, con «criterios SBX: 18/18 cumplen». Su lista de rutas no autorizadas por DH-02 pasa de 37 a 40, las tres de esta capa, sin que desaparezca ninguna. Su vocabulario congelado solo admite HABILITADA o BLOQUEADA para F35-SBX, así que la regla añade «F35-SBX = CERRADA Y CONGELADA no admitido» en las cuatro rutas de gobierno. Es una falla histórica de ciclo de vida (DH-B13, clase A), no un incumplimiento de SBX-01..SBX-18 |
+| `test_sbxb_pipeline.py` | 30/30 |
+| Enlaces relativos | 1166 en `docs/academico` y 1575 en todo el repositorio, 0 rotos |
+| MANIFEST y evidencias | 61 hashes y 0 discrepancias; 81 hashes de las evidencias de las prácticas 03, 05, 08 y 11, 0 discrepancias |
+| `git diff --check` | Limpio frente a `f082b41` |
+| Delta frente a `f082b41` | Exactamente las tres rutas de la capa (A) y las cuatro de gobierno (M) |
+
+### 5.7 SBX-01..SBX-18
+
+Recalculados uno por uno sobre HEAD por SBX, con `sbx_eval()` del gate de B1 verificado en su ancla: 18/18 en PASS, con su fuente y su comprobación (§5.3). `validate_f34e.py` también da «criterios SBX: 18/18 cumplen». Ningún hecho REV-01..REV-14: G0-SBX sigue APROBADA CON RESTRICCIONES.
+
+### 5.8 Evidencia reutilizada
+
+No se repitió nada cuya evidencia sigue valiendo por la identidad de los commits, los árboles y el CI:
+
+| Evidencia | Por qué vale sin repetirla |
+|---|---|
+| El cierre terminal: gate 15/0, batería 36/36, 20 mutaciones, sondas P1..P7 y la auditoría independiente | `9ebb909` y sus merges conservan su identidad, y INT exige que B no cambie |
+| Los gates anclados de A a B (A 846/0, B1 159/0, B1-FREEZE 14/0, B2 119/0, B2-FREEZE 10/0, sucesor 7/0, B2-SUCCESSOR-FREEZE 12/0, cierre de gobierno 13/0, R2-A 14/0, B3 19/0 y el cierre terminal 15/0) | Se ejecutan sobre sus anclas, que no cambian; este incremento no toca sus bytes |
+| PHPUnit, TypeScript y la compilación del frontend | CI 66 y 67 en verde sobre `f082b41` y `57eeb53`; este incremento no toca el runtime |
+| Cypress | Fuera del alcance: el delta es solo documentación y gobierno |
+
+### 5.9 Autoauditoría
+
+Se intentó romper el cierre por cada vía de la consigna, con el resultado medido:
+
+| Intento | Qué lo rechaza | Evidencia |
+|---|---|---|
+| Ataque: cierre circular o autorreferente | El gate registra solo hashes que existían antes que él; el ancla de esta capa la deriva FRZ y se registra fuera | §3.8 y GC01 |
+| Ataque: falso PASS por un gate debilitado | La batería | 15 de 15 mutaciones detectadas (§5.5) |
+| Ataque: estado contradictorio o reapertura | GOV y SEM | GC05..GC07 y GC34 |
+| Ataque: habilitar F36, F36-SBX, la G0 real, el alcance C o los datos reales | GOV y SEM | GC08..GC12 |
+| Ataque: relajar G0-SBX o perder una restricción | SEM y SBX: los trece estados exactos y SBX-01..SBX-18 recalculados | GC10..GC12, GC15 y GC16 |
+| Ataque: reinterpretar un riesgo | RSK y FRZ | GC17 y GC18 |
+| Ataque: afirmar una capacidad prohibida o quitar un límite | SEM y FRZ | GC19 y GC20 |
+| Ataque: cambios fuera del alcance, en A, en B, en el runtime o en el dataset | ALC, INT y SBX | GC13..GC16 y GC21 |
+| Ataque: historia distinta de la integrada | CTX, ANC, GOV y FRZ | GC28..GC30 y GC33 |
+| Ataque: entorno de Git hostil o incompleto | ENT, FLG, CTX y fallo cerrado | GC22..GC27 |
+
+| # | Nivel | Hallazgo | Tratamiento |
+|---|---|---|---|
+| GC-H1 | LOW | La expectativa de RED de GC06 no preveía la detección de ALC | Corregida con su causa medida (§5.2), sin cambiar el gate |
+| GC-H2 | LOW | Un borrador del gate omitía `__pycache__` en la revisión del disco de las capas congeladas | Corregido antes de este commit: la comprobación es la del gate del cierre terminal |
+| GC-H3 | INFO | `validate_f34e.py` añade a su falla histórica el estado nuevo de F35-SBX, que su vocabulario congelado no admite | Clasificado como falla histórica de ciclo de vida (DH-B13, clase A): SBX-01..SBX-18 se recalculan aquí y siguen en PASS. El validador congelado no se modifica |
+| GC-H4 | INFO | `validate_f34a.py` necesita una rama local `develop` | Condición del entorno, igual sobre la base; no es una regresión |
+| GC-H5 | INFO | El detector de afirmaciones de B1 trata como concesión cualquier mención de F36 que no esté negada | La regla se redacta en forma negada: «ninguna F36-SBX empieza sin una autorización sucesora nueva» |
+| GC-H6 | INFO | Los documentos de F34E y los de A conservan «F35-SBX = HABILITADA» | Son registros históricos de su momento y no se reescriben (§3.2); el estado vigente está en el gobierno |
+
+No quedó ningún hallazgo BLOCKER, HIGH ni MEDIUM abierto.
+
+### 5.10 Riesgos residuales
+
+Los riesgos de §2.6 se conservan tal como los clasificaron sus auditorías, sin corregirlos ni reclasificarlos. Además:
+
+| # | Nivel | Riesgo | Tratamiento |
+|---|---|---|---|
+| GC-R1 | INFO | El gate no ejecuta los gates congelados sobre HEAD (DG-01) | La identidad de `f082b41` fija la historia auditada, INT exige que A y B no cambien y los gates congelados siguen valiendo anclados |
+| GC-R2 | INFO | El ancla de nivel B solo autentica la capa si se registra fuera | La auditoría anota el commit que informa FRZ |
+| GC-R3 | INFO | El gate trabaja sin red y no verifica `57eeb53`, que no es ancestro de esta rama | GC02 prueba los merges `--no-ff` sobre `f082b41` y `57eeb53`; el CI de la integración se comprueba al integrar |
+| GC-R4 | INFO | SEM hereda el límite de TC-AF-I01: no es un detector universal de lenguaje natural | La auditoría independiente revisa además las afirmaciones |
+
+### 5.11 Pendientes
+
+- La auditoría independiente de este incremento, sobre su ancla: el commit que informa FRZ.
+- Con su aprobación y la autorización expresa del equipo, la publicación de la rama y su integración `--no-ff` en `develop` y `main`, con CI en verde. Este incremento no hace push, merge, tag ni release.
+- Ninguna fase posterior queda en curso: F36–F40 siguen BLOQUEADAS, y ninguna F36-SBX empieza sin una autorización sucesora nueva.
+- Los pendientes externos de la G0 real (G0-02, G0-03 y G0-12), que este cierre no cambia.

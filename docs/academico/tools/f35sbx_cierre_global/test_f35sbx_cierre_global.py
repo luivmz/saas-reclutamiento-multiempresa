@@ -340,7 +340,7 @@ def gc06(fx, c):
     for rel in GOV_PATHS:
         fx.write(rel, fx.git('cat-file', 'blob', f'{BASE}:{rel}'))
     fx.commit('vuelve al gobierno del cierre terminal', *GOV_PATHS)
-    return [probe(fx, {'GOV', 'SEM'})]
+    return [probe(fx, {'GOV', 'SEM', 'ALC'})]
 
 
 # ---------------------------------------------------------------- reapertura y sobredeclaración en el gobierno
