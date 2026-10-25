@@ -1,13 +1,14 @@
 # F35-SBX — Cierre global
 
-> **Estado: CIERRE GLOBAL CON LA CORRECCIÓN GC-AF-M01 / VALIDADO LOCALMENTE / CANDIDATO A REAUDITORÍA FOCAL.** Fecha: 25/10/2026. Rama `chore/f35-sbx-global-closure`, desde `develop` = `f082b4165ca756659b998716e2647494a3ec7be6`.
+> **Estado: CORRECCIÓN GC-AF-M02 — CONTRATO Y PRUEBAS (RED).** Fecha: 25/10/2026. Rama `chore/f35-sbx-global-closure`, desde `develop` = `f082b4165ca756659b998716e2647494a3ec7be6`.
 >
 > - Este documento reconstruye el alcance global de F35-SBX desde sus contratos, evalúa si puede cerrarse, fija el contrato y el diseño del incremento que registra ese cierre y recoge sus resultados. El gobierno de esta rama ya registra el cierre (§3.2).
 > - El cierre solo vale en el alcance académico y sintético de F35-SBX, y solo cuando la auditoría independiente apruebe este incremento y el equipo autorice su integración. Hasta entonces, `develop` y `main` siguen diciendo «F35-SBX = HABILITADA».
 > - Este incremento no se autoaprueba: lo decide la auditoría independiente sobre su ancla.
 > - La auditoría independiente no aprobó el candidato `9f73494033155b3e9d448cc5210b5acfbd59c475` por GC-AF-M01 (MEDIUM): el gate no veía archivos físicos ignorados por Git en las superficies materiales. La corrección añade la regla FSY (§3.3), los casos GC36..GC43 (§4) y su [registro](F35SBX_Cierre_Global_GC-AF-M01.md), con `9f73494` como ancestro.
+> - La reauditoría focal no aprobó el candidato `5c9b04b30e7dd0d882c3a5eec4169d0217f73a17` por GC-AF-M02 (MEDIUM): una superficie o una excepción cuya enumeración falla terminaba certificada. Registró además GC-FIX-L01 (LOW): los recorridos heredados podían entrar en el destino externo de una unión antes de que FSY la rechazara. La corrección da a FSY un recorrido físico previo que falla cerrado y no ejecuta los recorridos heredados ni SBX sobre una superficie sin verificar (§3.3). Añade los casos GC44..GC49 (§4) y conserva `5c9b04b` como ancestro.
 >
-> Las secciones 1 a 4 registran la reconstrucción, la evaluación, el contrato y el diseño, escritos antes de la transición de gobierno y del gate (commit RED `7746bf2`) y ampliados con el diseño de FSY antes de implementarla (commit RED de la corrección, `395a56e`). Los commits GREEN solo los corrigen donde la medición lo exigió, con su causa en §5.2. La sección 5 registra los resultados.
+> Las secciones 1 a 4 registran la reconstrucción, la evaluación, el contrato y el diseño, escritos antes de la transición de gobierno y del gate (commit RED `7746bf2`). Se ampliaron con el diseño de cada corrección antes de implementarla, en los commits RED de GC-AF-M01 (`395a56e`) y de GC-AF-M02. Los commits GREEN solo los corrigen donde la medición lo exigió, con su causa en §5.2. La sección 5 registra los resultados.
 
 ## 1. Punto de partida verificado
 
@@ -165,14 +166,15 @@ Ninguno bloquea el cierre global: los tres LOW afectan a la fuerza de comprobaci
 |---|---|---|
 | `docs/academico/evidencia-sbx-cierre-global/F35SBX_Cierre_Global.md` | A | Este documento |
 | `docs/academico/tools/f35sbx_cierre_global/validate_f35sbx_cierre_global.py` | A | Gate sucesor sobre HEAD |
-| `docs/academico/tools/f35sbx_cierre_global/test_f35sbx_cierre_global.py` | A | Batería GC01..GC43 |
+| `docs/academico/tools/f35sbx_cierre_global/test_f35sbx_cierre_global.py` | A | Batería GC01..GC49 |
 | `docs/academico/evidencia-sbx-cierre-global/F35SBX_Cierre_Global_GC-AF-M01.md` | A | Registro de la corrección GC-AF-M01 |
+| `docs/academico/evidencia-sbx-cierre-global/F35SBX_Cierre_Global_GC-AF-M02.md` | A | Registro de la corrección GC-AF-M02 |
 | `CLAUDE.md`, `docs/PROGRESS.md`, `docs/academico/ACADEMIC_BASELINE.md` y `README.md` | M | Solo mediante la transición de §3.2 |
 
 El cierre queda aceptado como candidato si se cumple todo:
 
 - el gate da 13/0 sobre la rama y sobre los merges `--no-ff` en `develop` y `main` (GC02);
-- la batería da 43/43, con todos los negativos rechazados;
+- la batería da 49/49, con todos los negativos rechazados;
 - los controles de mutación del gate se detectan;
 - `validate_f34e.py` da SBX 18/18 y solo su falla histórica de clase A (DH-B13), y los validadores afectados siguen en verde;
 - enlaces y MANIFEST sin discrepancias, y `git diff --check` limpio.
@@ -190,6 +192,7 @@ El cierre queda aceptado como candidato si se cumple todo:
 | Ataque: afirmar una capacidad prohibida o quitar un límite en este documento | SEM y FRZ | GC19, GC20 |
 | Ataque: archivos fuera del delta | ALC | GC21 |
 | Ataque: archivo físico oculto para Git en una superficie material: ignorado, excluido o fuera de su vista, tras una unión de directorio o con sus bytes cambiados | FSY | GC36..GC43 |
+| Ataque: superficie o excepción que no se puede enumerar, o enlace cuyo destino leería un recorrido heredado | FSY, que falla cerrado, y SBX, que no se evalúa sobre una superficie sin verificar | GC42, GC44..GC47, GC49 |
 | Ataque: entorno de Git hostil o incompleto | ENT, FLG, CTX y fallo cerrado | GC22..GC27 |
 | Ataque: código de la capa con dependencias o ejecución dinámica | DEP y FRZ | GC31, GC32 |
 
@@ -204,7 +207,9 @@ El cierre queda aceptado como candidato si se cumple todo:
   2. Transición de gobierno: un solo padre; cambia exactamente las cuatro rutas de §3.2.
   3. GREEN: el gate, que registra la transición (ya existe: no hay autorreferencia), y los resultados de §5. La auditoría independiente no lo aprobó (GC-AF-M01).
   4. RED de la corrección: los casos GC36..GC40, FSY en GC15 y GC16 y este diseño.
-  5. GREEN de la corrección: la regla FSY, el registro de la corrección, los casos GC41..GC43 de la autoauditoría y los resultados. Añade el cuarto archivo de la capa, así que es el commit que la completa y su ancla.
+  5. GREEN de la corrección: la regla FSY, el registro de la corrección, los casos GC41..GC43 de la autoauditoría y los resultados. La reauditoría focal no lo aprobó (GC-AF-M02).
+  6. RED de GC-AF-M02: los casos GC44..GC49, GC42 reforzado y este diseño.
+  7. GREEN de GC-AF-M02: el recorrido físico previo de FSY, el registro de la corrección y los resultados. Añade el quinto archivo de la capa, así que es el commit que la completa y su ancla.
 
 ### 3.2 Delta de gobierno
 
@@ -260,8 +265,8 @@ Ubicación: `docs/academico/tools/f35sbx_cierre_global/validate_f35sbx_cierre_gl
 | FLG | Ningún flag en el índice |
 | GOV | Transición única y monotónica de los blobs de `f082b41` a los del cierre global, en las cuatro rutas a la vez, y registrada |
 | SEM | Semántica del gobierno vigente y de este documento, con las piezas verificadas de los gates de B1 y R2-A (§3.6) |
-| SBX | SBX-01..SBX-18 recalculados uno por uno sobre HEAD con `sbx_eval()` del gate de B1, cargado de los bytes verificados de su blob (DH-B13) |
-| FSY | Recorrido físico de las superficies materiales del contrato FSY de B1 (B1, §8.3; TSBB-07), sin seguir enlaces y aunque Git las ignore. Cada archivo debe ser idéntico a su blob en el inventario autorizado de `f082b41`, que coincide con el de la base `430f3f5` de B1. No se admiten archivos extra, generados, ausentes ni enlaces; solo las excepciones de metadatos de B1 (§10.3) y los `.pyc` derivables de su fuente. Usa las piezas verificadas del gate de B1, y busca aparte las uniones de directorio de Windows, que ese recorrido sigue como carpetas |
+| SBX | SBX-01..SBX-18 recalculados uno por uno sobre HEAD con `sbx_eval()` del gate de B1, cargado de los bytes verificados de su blob (DH-B13). No se evalúa, y falla cerrado, si el recorrido físico previo de FSY no pudo verificar las superficies: SBX-15 recorre y lee el runtime con el código de F34E, que sigue las uniones y calla los errores de enumeración |
+| FSY | Recorrido físico de las superficies materiales del contrato FSY de B1 (B1, §8.3; TSBB-07), sin seguir enlaces y aunque Git las ignore. Primero, un recorrido propio enumera todas sus carpetas, también las excepciones y las cachés, sin entrar en ningún enlace, unión ni punto de reanálisis, y convierte en falla todo error de enumeración (GC-AF-M02); si encuentra algo, los recorridos heredados no se ejecutan. Después, cada archivo debe ser idéntico a su blob en el inventario autorizado de `f082b41`, que coincide con el de la base `430f3f5` de B1. No se admiten archivos extra, generados, ausentes ni enlaces; solo las excepciones de metadatos de B1 (§10.3) y los `.pyc` derivables de su fuente, con las piezas verificadas del gate de B1 |
 | RSK | Los cinco riesgos de §2.6, con su nivel y su estado |
 | ALC | Alcance exacto frente a `f082b41` en HEAD, el índice y el árbol de trabajo; ningún archivo sin seguimiento |
 | FRZ | Nivel B: un único commit posterior a `f082b41` completa la capa; desde él, nada de la capa cambia. La línea INFO informa ese commit |
@@ -273,7 +278,7 @@ Ubicación: `docs/academico/tools/f35sbx_cierre_global/validate_f35sbx_cierre_gl
 - INT exige que sus bytes no cambien;
 - el gate del cierre terminal ya dio 15/0 anclado sobre `9ebb909` y sobre los dos merges, y esa evidencia se reutiliza.
 
-Así el gate tarda segundos, no minutos, y no añade otra cadena de gates anidados. La integridad de B incluye su superficie física: FSY repite sobre HEAD el recorrido que B1 exigía, con sus mismas superficies, exclusiones y excepciones (corrección GC-AF-M01).
+Así el gate tarda segundos, no minutos, y no añade otra cadena de gates anidados. La integridad de B incluye su superficie física: FSY repite sobre HEAD el recorrido que B1 exigía, con sus mismas superficies, exclusiones y excepciones (corrección GC-AF-M01), después de comprobar que esas superficies se pueden recorrer enteras sin seguir ningún enlace (corrección GC-AF-M02).
 
 **Los gates congelados sobre HEAD (DG-02).** Después de este incremento, los gates de A a B fallan sobre HEAD por diseño: su vocabulario solo admite «F35-SBX = HABILITADA». No es una regresión. Siguen acreditando sus estados sobre sus anclas, y `validate_f34e.py` conserva su falla histórica (DH-B13, clase A), que obliga a la evaluación sucesora completa de SBX-01..SBX-18 que hace este gate.
 
@@ -324,7 +329,7 @@ Ninguna otra fila de tabla los presenta con otra severidad o como resueltos.
 ### 3.8 Raíz de confianza y ancla de este incremento
 
 - **Registradas en el gate:** las anclas de §1.1, los blobs de gobierno y la transición del cierre global, en el commit GREEN.
-- **Derivada y registrada fuera:** el commit que completa la capa (nivel B), el primero con sus cuatro archivos, que el gate informa en la línea INFO de FRZ. La auditoría la anota y comprueba que coincide; ningún archivo guarda su propio hash.
+- **Derivada y registrada fuera:** el commit que completa la capa (nivel B), el primero con sus cinco archivos, que el gate informa en la línea INFO de FRZ. La auditoría la anota y comprueba que coincide; ningún archivo guarda su propio hash.
 - **El merge de `main` (`57eeb53`)** no es ancestro de esta rama. GC02 prueba la integración `--no-ff` sobre él.
 
 ## 4. Pruebas
@@ -374,8 +379,14 @@ Cada caso trabaja en un clon desechable de HEAD, fuera del repositorio, con obje
 | GC39 | Ataque: carpeta anidada de `routes/` con un `.gitignore` que la ignora entera, y un archivo vacío | FSY |
 | GC40 | Ataque: `.pyc` no derivable en una caché `__pycache__` ignorada de `ml-service/src` | FSY |
 | GC41 | Ataque: archivo PHP dentro de una carpeta `.git` anidada de `app/`, que Git no lista nunca, ni con `ls-files --others` sin `--exclude-standard` | FSY |
-| GC42 | Ataque: unión de directorio vacía en `app/` hacia una carpeta externa, que Git no lista y el recorrido de B1 sigue como carpeta vacía | FSY |
+| GC42 | Ataque: unión de directorio vacía en `app/` hacia una carpeta externa, que Git no lista y el recorrido de B1 sigue como carpeta vacía | FSY y SBX |
 | GC43 | Ataque: archivo versionado de `routes/` con un byte cambiado, el mismo tamaño y su fecha restaurada, que `git status` y `git diff` no ven | FSY |
+| GC44 | Ataque: archivo PHP no autorizado en `cypress/results`, con la enumeración de la carpeta denegada por una ACL de NTFS (fuera de Windows, por permisos) y legible por su ruta | FSY y SBX |
+| GC45 | Ataque: excepción `recruitment_ml.egg-info` con la enumeración denegada, aunque solo contenga un `PKG-INFO` | FSY y SBX |
+| GC46 | Ataque: unión de directorio en `app/` hacia una carpeta externa con un archivo que nombra `g0-sandbox`; ninguna línea FALLA nombra ese archivo, porque ningún recorrido entra en el destino | FSY y SBX |
+| GC47 | Ataque: carpeta de `app/` con la enumeración denegada y un archivo, excluida | FSY y SBX |
+| GC48 | Estado legítimo: una carpeta vacía, metadatos de Cypress y de `pip -e`, un `.pyc` derivable y archivos ignorados fuera de las superficies | Ninguna (PASS) |
+| GC49 | Ataque: carpeta con punto final en `cypress/results`, con un archivo; en Windows, su enumeración falla con `FileNotFoundError` | FSY y SBX en Windows; FSY fuera de Windows |
 
 Si un conjunto resulta distinto al medirlo en GREEN, se corrige con su causa registrada en §5, como en las capas anteriores.
 

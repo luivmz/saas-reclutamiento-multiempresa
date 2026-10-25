@@ -6,13 +6,15 @@ Uso:  python -I docs/academico/tools/f35sbx_cierre_global/test_f35sbx_cierre_glo
 Fija en RED el gate del cierre global de F35-SBX: los estados legítimos (la rama, los merges --no-ff en develop y en
 main, un commit vacío), la transición única y monotónica en las cuatro rutas de gobierno, la reapertura y la
 sobredeclaración (F35-SBX, F36–F40, F36-SBX, G0 real, alcance C, datos reales y RF-29), la integridad de A y de B, el
-runtime y el dataset, los archivos físicos que Git ignora o no ve en las superficies materiales (GC-AF-M01), los riesgos
-registrados, el documento de la capa, el alcance, el código de la capa y el entorno de Git hostil o incompleto.
+runtime y el dataset, los archivos físicos que Git ignora o no ve en las superficies materiales (GC-AF-M01), las
+carpetas de esas superficies que no se pueden enumerar y los enlaces cuyo destino ningún recorrido debe leer
+(GC-AF-M02), los riesgos registrados, el documento de la capa, el alcance, el código de la capa y el entorno de Git
+hostil o incompleto.
 
 Cada caso trabaja en un clon desechable de HEAD, fuera del repositorio, con objetos compartidos de solo lectura (en
 GC24, un clon superficial), configuración de Git aislada, identidad ficticia y fechas fijas, y ejecuta allí el gate con
 python -I. Pasa si fallan exactamente las reglas esperadas y, cuando se indica, si las líneas FALLA o INFO contienen el
-motivo esperado. El repositorio original no se modifica.
+motivo esperado o si una línea FALLA no contiene lo que no debe. El repositorio original no se modifica.
 """
 import os
 import sys
@@ -44,7 +46,8 @@ DOC = LAYER_DOCS + '/F35SBX_Cierre_Global.md'
 GATE = LAYER_TOOLS + '/validate_f35sbx_cierre_global.py'
 TESTS = LAYER_TOOLS + '/test_f35sbx_cierre_global.py'
 FIX_DOC = LAYER_DOCS + '/F35SBX_Cierre_Global_GC-AF-M01.md'
-LAYER_FILES = (DOC, GATE, TESTS, FIX_DOC)
+M02_DOC = LAYER_DOCS + '/F35SBX_Cierre_Global_GC-AF-M02.md'
+LAYER_FILES = (DOC, GATE, TESTS, FIX_DOC, M02_DOC)
 A_FILE = 'docs/academico/evidencia-sbx/README.md'
 TC_GATE = 'docs/academico/tools/f35sbxb_cierre_terminal/validate_f35sbxb_cierre_terminal.py'
 RUNTIME = 'routes/web.php'
@@ -215,9 +218,10 @@ def anchor(info):
     return line.split(marker, 1)[1].split(';', 1)[0].strip() if marker in line else None
 
 
-def probe(fx, expected, label='', scenario=True, why='', env=None, says=None, check=None):
+def probe(fx, expected, label='', scenario=True, why='', env=None, says=None, check=None, lacks=None):
     """Una ejecución del gate frente a las reglas que deben fallar (vacío = PASS). says: {regla: texto} que su línea
-    FALLA debe contener; check: comprobación adicional sobre las líneas INFO, que devuelve un motivo o None."""
+    FALLA debe contener; lacks: {regla: texto} que su línea FALLA no debe contener; check: comprobación adicional sobre
+    las líneas INFO, que devuelve un motivo o None."""
     if not scenario:
         return label, expected, None, f'escenario no reproducido: {why}'
     observed, info, fallas, detail = fx.validate(env)
@@ -227,6 +231,9 @@ def probe(fx, expected, label='', scenario=True, why='', env=None, says=None, ch
         for rule, text in (says or {}).items():
             if text not in fallas.get(rule, ''):
                 return label, expected, None, f'la línea FALLA {rule} no contiene «{text}»'
+        for rule, text in (lacks or {}).items():
+            if text in fallas.get(rule, ''):
+                return label, expected, None, f'la línea FALLA {rule} contiene «{text}»'
         if check is not None:
             problem = check(info)
             if problem:
@@ -486,22 +493,29 @@ def gc41(fx, c):
     return [probe(fx, {'FSY'})]
 
 
-def gc42(fx, c):
-    """Unión de directorio vacía en app/ hacia una carpeta fuera del clon: Git no la lista y el recorrido de B1 la sigue
-    como una carpeta vacía, así que solo FSY la ve como enlace. Fuera de Windows, un enlace simbólico de directorio."""
-    target = make_temp('gc42-destino')
-    fx.extra.append(target)
-    link = fx.path('app/Union')
+def link_dir(fx, rel, target):
+    """Unión de directorio (en Windows) o enlace simbólico de directorio (fuera de Windows) del clon hacia una carpeta
+    externa, excluido para que Git no lo muestre."""
+    link = fx.path(rel)
     if os.name == 'nt':
         if subprocess.run(['cmd', '/c', 'mklink', '/J', link, target], capture_output=True).returncode != 0:
             raise Failure('no se pudo crear la unión de directorio')
     else:
         os.symlink(target, link, target_is_directory=True)
     with open(fx.path('.git/info/exclude'), 'ab') as f:
-        f.write(b'app/Union\n')
+        f.write(rel.encode('utf-8') + b'\n')
     if fx.git('status', '--porcelain').strip():
         raise Failure('git status muestra el escenario: no está oculto')
-    return [probe(fx, {'FSY'})]
+
+
+def gc42(fx, c):
+    """Unión de directorio vacía en app/ hacia una carpeta fuera del clon: Git no la lista y el recorrido de B1 la sigue
+    como una carpeta vacía, así que solo FSY la ve como enlace, y SBX no se evalúa sobre una superficie sin verificar.
+    Fuera de Windows, un enlace simbólico de directorio."""
+    target = make_temp('gc42-destino')
+    fx.extra.append(target)
+    link_dir(fx, 'app/Union', target)
+    return [probe(fx, {'FSY', 'SBX'}, says={'FSY': 'app/Union', 'SBX': 'no evaluable'})]
 
 
 def gc43(fx, c):
@@ -521,6 +535,118 @@ def gc43(fx, c):
     if fx.git('status', '--porcelain').strip() or fx.git('diff', '--name-only').strip():
         raise Failure('Git ve el cambio: el escenario no queda fuera de su vista')
     return [probe(fx, {'FSY'})]
+
+
+# ---------------------------------------------------------------- superficies que no se pueden verificar (GC-AF-M02)
+def deny_listing(fx, rel):
+    """Deniega solo la enumeración de una carpeta del clon: en Windows, una ACL de NTFS que niega ListDirectory a Todos
+    (*S-1-1-0); fuera de Windows, permisos sin lectura. Devuelve si os.scandir falla de verdad."""
+    full = fx.path(rel)
+    if os.name == 'nt':
+        subprocess.run(['icacls', full, '/deny', '*S-1-1-0:(RD)'], capture_output=True)
+    else:
+        os.chmod(full, 0o300)
+    try:
+        os.scandir(full).close()
+    except PermissionError:
+        return True
+    return False
+
+
+def allow_listing(fx, rel):
+    full = fx.path(rel)
+    if os.name == 'nt':
+        subprocess.run(['icacls', full, '/remove:d', '*S-1-1-0'], capture_output=True)
+    else:
+        os.chmod(full, 0o755)
+
+
+def unlistable(fx, rel, files, expected, exclude=None, **kw):
+    """Archivos ocultos para Git en una carpeta cuya enumeración se deniega, legibles por su ruta. El permiso se
+    restaura antes de volver, para que el temporal se pueda borrar."""
+    hide(fx, files, exclude)
+    denied = deny_listing(fx, rel)
+    try:
+        readable = all(fx.read(path) == data for path, data in files)
+        return [probe(fx, expected, scenario=denied and readable,
+                      why='la carpeta se puede enumerar o un archivo no se lee por su ruta', **kw)]
+    finally:
+        allow_listing(fx, rel)
+
+
+def gc44(fx, c):
+    return unlistable(fx, 'cypress/results', [('cypress/results/registro_material.php', b'<?php\n// inerte\n')],
+                      {'FSY', 'SBX'}, says={'FSY': 'cypress/results', 'SBX': 'no evaluable'})
+
+
+def gc45(fx, c):
+    egg = 'ml-service/src/recruitment_ml.egg-info'
+    return unlistable(fx, egg, [(f'{egg}/PKG-INFO', b'Metadata-Version: 2.1\nName: recruitment-ml\n')], {'FSY', 'SBX'},
+                      says={'FSY': egg})
+
+
+def gc46(fx, c):
+    """Unión de directorio en app/ hacia una carpeta externa con un archivo que nombra g0-sandbox, el patrón que SBX-15
+    señala al leer el runtime: FSY la rechaza sin entrar en ella y SBX no se evalúa, así que ninguna línea FALLA nombra
+    el archivo externo (GC-FIX-L01). Fuera de Windows, un enlace simbólico de directorio."""
+    target = make_temp('gc46-destino')
+    fx.extra.append(target)
+    with open(os.path.join(target, 'carga_externa.php'), 'wb') as f:
+        f.write(b'<?php\n// g0-sandbox\n')
+    link_dir(fx, 'app/UnionExterna', target)
+    return [probe(fx, {'FSY', 'SBX'}, says={'FSY': 'app/UnionExterna', 'SBX': 'no evaluable'},
+                  lacks={'FSY': 'carga_externa', 'SBX': 'carga_externa'})]
+
+
+def gc47(fx, c):
+    return unlistable(fx, 'app/Support/Bloqueado', [('app/Support/Bloqueado/Oculto.php', b'<?php\n// inerte\n')],
+                      {'FSY', 'SBX'}, exclude='app/Support/Bloqueado/', says={'FSY': 'app/Support/Bloqueado'})
+
+
+def gc48(fx, c):
+    """Estados legítimos que no deben fallar: una carpeta vacía, los metadatos de Cypress y de pip -e que admite B1, un
+    .pyc derivable de su fuente con este intérprete y archivos ignorados fuera de las superficies."""
+    os.makedirs(fx.path('app/Support/Vacia'))
+    hide(fx, [('cypress/results/run.json', b'{}\n'), ('cypress/results/run.log', b'ok\n'),
+              ('ml-service/src/recruitment_ml.egg-info/PKG-INFO', b'Metadata-Version: 2.1\nName: recruitment-ml\n'),
+              ('ml-service/src/recruitment_ml.egg-info/SOURCES.txt', b'src/recruitment_ml/__init__.py\n'),
+              ('storage/logs/local.log', b'registro local\n'), ('vendor/paquete/x.php', b'<?php\n')])
+    source = fx.path('ml-service/src/recruitment_ml/schema.py')
+    if subprocess.run([sys.executable, '-I', '-m', 'py_compile', source], capture_output=True).returncode != 0:
+        raise Failure('no se pudo compilar el .pyc derivable')
+    pyc = f'ml-service/src/recruitment_ml/__pycache__/schema.{sys.implementation.cache_tag}.pyc'
+    if not os.path.isfile(fx.path(pyc)) or not is_ignored(fx, pyc) or fx.git('status', '--porcelain').strip():
+        raise Failure('el .pyc derivable no quedó en su caché ignorada')
+    return [probe(fx, set())]
+
+
+def gc49(fx, c):
+    """Carpeta con punto final en cypress/results, con un archivo. En Windows se crea con el prefijo \\\\?\\: aparece al
+    enumerar su padre, pero la ruta normalizada no la encuentra y su enumeración falla con FileNotFoundError, un OSError
+    que no es de permisos; FSY y SBX fallan cerrados. Fuera de Windows el nombre es corriente, y la excepción de B1
+    rechaza el archivo por su patrón."""
+    rel = 'cypress/results/oculto.'
+    if os.name != 'nt':
+        hide(fx, [(f'{rel}/registro.php', b'<?php\n// inerte\n')])
+        return [probe(fx, {'FSY'}, says={'FSY': 'oculto.'})]
+    os.makedirs(fx.path('cypress/results'), exist_ok=True)
+    folder = '\\\\?\\' + fx.path(rel)
+    os.mkdir(folder)
+    try:
+        with open(folder + '\\registro.php', 'wb') as f:
+            f.write(b'<?php\n// inerte\n')
+        try:
+            os.scandir(fx.path(rel)).close()
+            failing = False
+        except FileNotFoundError:
+            failing = True
+        hidden = not fx.git('status', '--porcelain').strip()
+        return [probe(fx, {'FSY', 'SBX'}, scenario=failing and hidden,
+                      why='la carpeta se puede enumerar por su ruta normalizada o Git la muestra', says={'FSY': 'oculto.'})]
+    finally:
+        for name in os.listdir(folder):
+            os.remove(folder + '\\' + name)
+        os.rmdir(folder)
 
 
 # ---------------------------------------------------------------- entorno de Git, historia y contexto
@@ -637,11 +763,17 @@ CASES = (
     ('GC41', 'archivo en una carpeta .git anidada, que Git no lista', (gc41,)),
     ('GC42', 'unión de directorio vacía en app/', (gc42,)),
     ('GC43', 'archivo versionado cambiado sin que Git lo vea', (gc43,)),
+    ('GC44', 'excepción cypress/results sin enumeración, con un archivo no autorizado', (gc44,)),
+    ('GC45', 'excepción recruitment_ml.egg-info sin enumeración', (gc45,)),
+    ('GC46', 'unión hacia una carpeta externa cuyo archivo SBX-15 señalaría al leerlo', (gc46,)),
+    ('GC47', 'carpeta de app/ sin enumeración, excluida', (gc47,)),
+    ('GC48', 'estados legítimos: carpeta vacía, metadatos de B1, .pyc derivable e ignorados fuera', (gc48,)),
+    ('GC49', 'carpeta con punto final en cypress/results', (gc49,)),
 )
 
 
 def context(base, env):
-    """HEAD probado y commit que completa la capa en su historia (el primero posterior a BASE que contiene sus cuatro
+    """HEAD probado y commit que completa la capa en su historia (el primero posterior a BASE que contiene sus cinco
     archivos)."""
     head = run_git(['rev-parse', '--verify', 'HEAD^{commit}'], base, env).decode('utf-8').strip()
     completion = None
