@@ -10,13 +10,16 @@
 | Referencia | Valor |
 |---|---|
 | Rama estable | `main` |
-| `main` después de este handoff | El que dé Git: `git rev-parse origin/main` después de integrar este incremento. Debe contener el commit del cierre de F35-SBX y el de este handoff. Aquí no se anota para no citar un hash futuro |
+| `HANDOFF_ANCHOR` | `2876d48e4e3aa17aef46f2e73fcd8f85cc16d449`, un commit conocido de este incremento: contiene el registro de GC-AF-L01, esta guía y la continuidad de gobierno. Todo `main` que incluya el handoff lo contiene, también con sus correcciones posteriores; el `main` anterior, `06b789f`, no |
+| `MAIN_HEAD` | Se obtiene después de clonar y actualizar, con `git rev-parse HEAD`. Cambia con el merge administrativo de este incremento, así que aquí no se anota ningún hash futuro |
 | Cierre de F35-SBX en `main` (antecedente) | `06b789f9e9e99268eccfb72a15df2dd30fe47360`, con el CI `tests` en verde: run 40221523362 (#70), job 121253935073 |
 | Cierre de F35-SBX en `develop` | `e366cbf81f7c6e158ddd848268cf66f1247b4ed8`, con el CI `tests` en verde: run 40221309615 (#69), job 121253273972 |
 | Candidato auditado del cierre | `858b5fa71c01bf794715f78068ea0557fd56a16b`, árbol `eb56582de34d57be8a6be2a7b4b33dfecea83970`, conservado en `origin/chore/f35-sbx-global-closure` |
 | Etiquetas | Solo `v1.0.0-academic` y `v1.1.0-academic`. No hay etiquetas ni releases nuevas |
 | F35-SBX | CERRADA, CONGELADA E INTEGRADA, solo en su alcance académico y sintético |
 | F36-SBX | NO iniciada; F36–F40 siguen BLOQUEADAS |
+
+**Cómo se prueba el checkpoint.** `MAIN_HEAD` cambia cuando este incremento se integra en `main`, y la guía no puede citar el hash de ese merge sin citarse a sí misma. Por eso el checkpoint se demuestra con `HANDOFF_ANCHOR`, que ya existe. Si es ancestro de `MAIN_HEAD`, el clon incluye el handoff. Si no lo es, o si Git no conoce ese commit, la PC secundaria no está en el checkpoint posterior al handoff y la receta se detiene (§2). Las comprobaciones del cierre de F35-SBX son necesarias pero no bastan: el `main` anterior, `06b789f`, también las supera.
 
 El estado de gobierno completo está en el bloque «Estado vigente» de [`CLAUDE.md`](../../../CLAUDE.md), igual en [`docs/PROGRESS.md`](../../PROGRESS.md), [`ACADEMIC_BASELINE.md`](../ACADEMIC_BASELINE.md) y [`README.md`](../../../README.md). El cierre está registrado en [`F35SBX_Cierre_Global.md`](../evidencia-sbx-cierre-global/F35SBX_Cierre_Global.md).
 
@@ -34,13 +37,21 @@ git rev-parse HEAD
 git status --short --branch
 ```
 
-Comprobaciones del checkpoint:
+Comprobaciones del checkpoint. La primera es la del handoff y, si falla, la receta se detiene:
 
 ```sh
+MAIN_HEAD=$(git rev-parse HEAD); echo "MAIN_HEAD = $MAIN_HEAD"
+if git merge-base --is-ancestor 2876d48e4e3aa17aef46f2e73fcd8f85cc16d449 HEAD; then
+  echo "OK: este main contiene el handoff posterior a F35-SBX (HANDOFF_ANCHOR)"
+else
+  echo "DETENERSE: este main no contiene el HANDOFF_ANCHOR; no es el checkpoint posterior al handoff"
+fi
 git merge-base --is-ancestor 06b789f9e9e99268eccfb72a15df2dd30fe47360 HEAD && echo "contiene el cierre de F35-SBX"
 git merge-base --is-ancestor 858b5fa71c01bf794715f78068ea0557fd56a16b HEAD && echo "contiene el candidato auditado"
 git ls-remote --tags origin
 ```
+
+Si aparece «DETENERSE», no se sigue con la receta. El `main` clonado es anterior al handoff, por ejemplo `06b789f`, o el handoff aún no está integrado. En ese caso se comprueba con el equipo qué `main` está publicado.
 
 - **Identidad Git.** Se configura la propia de la PC secundaria y se comprueba con `git config user.name` y `git config user.email`. La autenticación con GitHub usa el mecanismo seguro habitual del equipo, sin tokens en comandos ni en documentos.
 - **Finales de línea.** [`.gitattributes`](../../../.gitattributes) fuerza `eol=lf`, así que el clon tiene los mismos bytes en Windows, macOS y Linux.
