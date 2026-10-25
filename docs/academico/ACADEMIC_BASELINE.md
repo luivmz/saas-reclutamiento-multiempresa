@@ -15,14 +15,14 @@ F34E CERRADA (05/10/2026), tras auditoría final PASS y adaptación explícita d
 - ADR-005 = PROPUESTA
 - G0-SBX = APROBADA CON RESTRICCIONES
 - F35 productiva = BLOQUEADA
-- F35-SBX = HABILITADA
+- F35-SBX = CERRADA Y CONGELADA
 - F36–F40 = BLOQUEADAS
 - Alcance C = BLOQUEADO
 - Datos reales = PROHIBIDOS
 
-SBX-01..SBX-18 CUMPLE. Aprobación interna del equipo REGISTRADA; no constituye aprobación jurídica, de privacidad ni validación institucional. F35-SBX exclusivamente sintético. F35-SBX-A CERRADA — diseño, contratos, fixtures sintéticos y validador completados, tras auditoría independiente PASS. Sin runtime productivo ni capacidades de alcance C. F35-SBX-B CERRADA, CONGELADA E INTEGRADA solo como sandbox sintético: B0, B1, B2 y B3 cerradas e integradas, sin ML. RF-23 sigue humana; RF-29 sigue experimental/informativa. Sin scoring, recomendación ni selección automática; sin documentos, audio ni vídeo reales, sin integración productiva ni paso automático a producción. El baseline RF/CU/RNF permanece intacto.
+SBX-01..SBX-18 CUMPLE. Aprobación interna del equipo REGISTRADA; no constituye aprobación jurídica, de privacidad ni validación institucional. F35-SBX CERRADA Y CONGELADA solo como sandbox académico y sintético: F35-SBX-A y F35-SBX-B cerradas e integradas. F35-SBX-A CERRADA — diseño, contratos, fixtures sintéticos y validador completados, tras auditoría independiente PASS. Sin runtime productivo ni capacidades de alcance C. F35-SBX-B CERRADA, CONGELADA E INTEGRADA solo como sandbox sintético: B0, B1, B2 y B3 cerradas e integradas, sin ML. RF-23 sigue humana; RF-29 sigue experimental/informativa. Sin scoring, recomendación ni selección automática; sin documentos, audio ni vídeo reales, sin integración productiva ni paso automático a producción. El baseline RF/CU/RNF permanece intacto.
 
-Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa11cd9185423e2866b0fc936`. El commit C y los merges se consultan en Git, sin hashes futuros/autorreferenciales. Publicación autorizada únicamente tras regresión y CI GREEN de develop/main. Sin tag ni release. El handoff macOS está publicado; F35-SBX-A está CERRADA E INTEGRADA en `develop` y `main`, con su commit E `61f94e23fc30b00a848a4558830b6d65f81dff87`. F35-SBX-B está CERRADA, CONGELADA E INTEGRADA, con su cierre terminal registrado en [`evidencia-sbx-b-cierre-terminal`](evidencia-sbx-b-cierre-terminal/F35SBXB_Cierre_Terminal.md). F36–F40 siguen BLOQUEADAS.
+Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa11cd9185423e2866b0fc936`. El commit C y los merges se consultan en Git, sin hashes futuros/autorreferenciales. Publicación autorizada únicamente tras regresión y CI GREEN de develop/main. Sin tag ni release. El handoff macOS está publicado; F35-SBX-A está CERRADA E INTEGRADA en `develop` y `main`, con su commit E `61f94e23fc30b00a848a4558830b6d65f81dff87`. F35-SBX-B está CERRADA, CONGELADA E INTEGRADA, con su cierre terminal registrado en [`evidencia-sbx-b-cierre-terminal`](evidencia-sbx-b-cierre-terminal/F35SBXB_Cierre_Terminal.md). F35-SBX está CERRADA Y CONGELADA, con su cierre global registrado en [`evidencia-sbx-cierre-global`](evidencia-sbx-cierre-global/F35SBX_Cierre_Global.md). F36–F40 siguen BLOQUEADAS: ninguna F36-SBX empieza sin una autorización sucesora nueva, con su propia gobernanza.
 
 ## Proyecto
 
