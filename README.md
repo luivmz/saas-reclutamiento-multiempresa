@@ -142,14 +142,14 @@ F34E CERRADA (05/10/2026), tras auditoría final PASS y adaptación explícita d
 - ADR-005 = PROPUESTA
 - G0-SBX = APROBADA CON RESTRICCIONES
 - F35 productiva = BLOQUEADA
-- F35-SBX = HABILITADA
+- F35-SBX = CERRADA Y CONGELADA
 - F36–F40 = BLOQUEADAS
 - Alcance C = BLOQUEADO
 - Datos reales = PROHIBIDOS
 
-SBX-01..SBX-18 CUMPLE. Aprobación interna del equipo REGISTRADA; no constituye aprobación jurídica, de privacidad ni validación institucional. F35-SBX exclusivamente sintético. F35-SBX AÚN NO INICIADA. RF-23 sigue humana; RF-29 sigue experimental/informativa. Sin scoring, recomendación ni selección automática; sin documentos, audio ni vídeo reales, sin integración productiva ni paso automático a producción. El baseline RF/CU/RNF permanece intacto.
+SBX-01..SBX-18 CUMPLE. Aprobación interna del equipo REGISTRADA; no constituye aprobación jurídica, de privacidad ni validación institucional. F35-SBX CERRADA Y CONGELADA solo como sandbox académico y sintético: F35-SBX-A y F35-SBX-B cerradas e integradas, con su cierre global registrado en [`evidencia-sbx-cierre-global`](docs/academico/evidencia-sbx-cierre-global/F35SBX_Cierre_Global.md). RF-23 sigue humana; RF-29 sigue experimental/informativa. Sin scoring, recomendación ni selección automática; sin documentos, audio ni vídeo reales, sin integración productiva ni paso automático a producción. El baseline RF/CU/RNF permanece intacto.
 
-Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa11cd9185423e2866b0fc936`. El commit C y los merges se consultan en Git, sin hashes futuros/autorreferenciales. Publicación autorizada únicamente tras regresión y CI GREEN de develop/main. Sin tag ni release. Próximo trabajo autorizado aquí: handoff macOS, no iniciar F35-SBX.
+Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa11cd9185423e2866b0fc936`. El commit C y los merges se consultan en Git, sin hashes futuros/autorreferenciales. Publicación autorizada únicamente tras regresión y CI GREEN de develop/main. Sin tag ni release. F36–F40 siguen BLOQUEADAS y ninguna F36-SBX empieza sin una autorización sucesora nueva, con su propia gobernanza.
 
 ## Antecedentes de estado (hasta F34D)
 
