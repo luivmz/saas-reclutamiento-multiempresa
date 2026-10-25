@@ -20,12 +20,15 @@ identificador, y todo error, salida incompleta o estado no evaluable falla cerra
   GOV  transición única y monotónica en las cuatro rutas de gobierno, registrada; estado efectivo en HEAD, índice y disco.
   SEM  semántica del gobierno y del documento de la capa con las piezas verificadas de B1 y R2-A: F35-SBX CERRADA Y
        CONGELADA, F36–F40 bloqueadas, F36-SBX sujeta a una autorización sucesora nueva y ningún otro estado cambiado.
-  SBX  SBX-01..SBX-18 recalculados uno por uno sobre HEAD con sbx_eval() del gate de B1, cargado de su blob verificado.
+  SBX  SBX-01..SBX-18 recalculados uno por uno sobre HEAD con sbx_eval() del gate de B1, cargado de su blob verificado;
+       no se evalúan si FSY no pudo verificar la superficie física, porque SBX-15 la recorre y la lee.
   FSY  recorrido físico de las superficies materiales del contrato FSY de B1 (§8.3; TSBB-07), sin seguir enlaces y
-       aunque Git las ignore o no las vea: cada archivo idéntico a su blob en el inventario autorizado de f082b41,
-       igual al de la base de B1; ningún archivo extra, generado, ausente ni enlace, salvo las excepciones de B1.
+       aunque Git las ignore o no las vea. Primero, todas sus carpetas, excepciones incluidas, se enumeran sin entrar
+       en ningún enlace, unión ni punto de reanálisis, y todo error de enumeración falla cerrado (GC-AF-M02); después,
+       cada archivo idéntico a su blob en el inventario autorizado de f082b41, igual al de la base de B1, y ningún
+       archivo extra, generado, ausente ni enlace, salvo las excepciones de B1.
   RSK  los riesgos B3-AF-L01, B3-AF-L02 y B3-R3 (LOW), TC-AF-I01 (INFO) y TC-H4 (INFO), con su nivel y su estado.
-  ALC  alcance exacto frente a f082b41: las cuatro rutas A de la capa y las cuatro de gobierno M; sin archivos sin
+  ALC  alcance exacto frente a f082b41: las cinco rutas A de la capa y las cuatro de gobierno M; sin archivos sin
        seguimiento.
   FRZ  nivel B: un único commit posterior a f082b41 completa la capa y, desde él, sus archivos no cambian. Su hash se
        deriva de Git y se registra fuera, nunca en un archivo.
@@ -97,10 +100,12 @@ DOC = LAYER_DOCS + '/F35SBX_Cierre_Global.md'
 VALIDATOR = LAYER_TOOLS + '/validate_f35sbx_cierre_global.py'
 TESTS = LAYER_TOOLS + '/test_f35sbx_cierre_global.py'
 FIX_DOC = LAYER_DOCS + '/F35SBX_Cierre_Global_GC-AF-M01.md'       # registro de la corrección GC-AF-M01
-LAYER_FILES = (DOC, VALIDATOR, TESTS, FIX_DOC)
-LAYER_DIRS = {LAYER_DOCS: ('F35SBX_Cierre_Global.md', 'F35SBX_Cierre_Global_GC-AF-M01.md'),
+M02_DOC = LAYER_DOCS + '/F35SBX_Cierre_Global_GC-AF-M02.md'       # registro de la corrección GC-AF-M02
+LAYER_FILES = (DOC, VALIDATOR, TESTS, FIX_DOC, M02_DOC)
+LAYER_DIRS = {LAYER_DOCS: ('F35SBX_Cierre_Global.md', 'F35SBX_Cierre_Global_GC-AF-M01.md',
+                           'F35SBX_Cierre_Global_GC-AF-M02.md'),
               LAYER_TOOLS: ('test_f35sbx_cierre_global.py', 'validate_f35sbx_cierre_global.py')}
-SCOPE = {DOC: 'A', VALIDATOR: 'A', TESTS: 'A', FIX_DOC: 'A', **{p: 'M' for p in GOV_PATHS}}
+SCOPE = {DOC: 'A', VALIDATOR: 'A', TESTS: 'A', FIX_DOC: 'A', M02_DOC: 'A', **{p: 'M' for p in GOV_PATHS}}
 
 # ---------------------------------------------------------------- capas congeladas: A desde E y B desde su cierre terminal
 A_DIRS = ('docs/academico/evidencia-sbx', 'docs/academico/tools/f35sbx')
@@ -770,7 +775,7 @@ def doc_problems(objs, root, b1, sem, r2a):
             out.append(f'{path}: binario, CR, BOM o tamaño excesivo')
             continue
         text = data.decode('utf-8')
-        if path not in (DOC, FIX_DOC):
+        if path not in (DOC, FIX_DOC, M02_DOC):
             continue
         hits = [m.group(0) for rx in b1.PII for m in [rx.search(text)] if m]
         if hits:
@@ -851,7 +856,7 @@ def sbx_problems(b1):
     return out, info
 
 
-# ---------------------------------------------------------------- FSY: superficies físicas (GC-AF-M01)
+# ---------------------------------------------------------------- FSY: superficies físicas (GC-AF-M01 y GC-AF-M02)
 def surface_inventory(objs, commit, surfaces):
     """{ruta: entrada} de los archivos de las superficies en el árbol verificado de un commit."""
     root = commit_parts(objs, commit)[0]
@@ -868,33 +873,57 @@ def surface_inventory(objs, commit, surfaces):
 
 
 JUNCTION_TAG = 0xA0000003           # IO_REPARSE_TAG_MOUNT_POINT: unión de directorio de Windows
+REPARSE_POINT = 0x400               # FILE_ATTRIBUTE_REPARSE_POINT: enlace, unión u otro punto de reanálisis de NTFS
+S_IFMT, S_IFDIR, S_IFLNK = 0o170000, 0o040000, 0o120000             # tipo de archivo en st_mode, sin el módulo stat
 
 
-def junctions(roots):
-    """Uniones de directorio de Windows bajo las superficies, sin seguirlas. Python no las trata como enlaces simbólicos
-    y el recorrido de B1 las sigue como carpetas, así que una unión vacía no le aporta ningún archivo; para FSY son
-    enlaces (TSBB-07). Lo ilegible ya lo señala ese recorrido, que falla cerrado."""
-    found, stack = [], list(roots)
+def physical_scan(roots):
+    """Primer recorrido de FSY (GC-AF-M02), antes de cualquier recorrido heredado de B1 o de F34E: enumera todas las
+    carpetas de las superficies, también las excepciones de B1 y las cachés de Python, y señala sin entrar en ellos los
+    enlaces simbólicos, las uniones de directorio y cualquier otro punto de reanálisis (GC-FIX-L01). Todo error al leer
+    los metadatos de una entrada o al enumerar una carpeta es un problema: lo que no se pudo recorrer nunca cuenta como
+    limpio (falla cerrado)."""
+    out, stack = [], []
+
+    def visit(rel, st):
+        if st.st_mode & S_IFMT == S_IFLNK:
+            kind = 'enlace simbólico'
+        elif getattr(st, 'st_file_attributes', 0) & REPARSE_POINT:
+            kind = ('unión de directorio (enlace de Windows)' if getattr(st, 'st_reparse_tag', 0) == JUNCTION_TAG
+                    else 'punto de reanálisis de NTFS')
+        else:
+            if st.st_mode & S_IFMT == S_IFDIR:
+                stack.append(rel)
+            return
+        out.append(f'{kind} en una ruta protegida, sin seguirlo: {rel}')
+
+    for rel in roots:
+        try:
+            st = os.lstat(os.path.join(ROOT, *rel.split('/')))
+        except FileNotFoundError:
+            continue                    # superficie ausente: el inventario dice si falta alguno de sus archivos
+        except OSError as e:
+            out.append(f'{rel}: metadatos ilegibles ({e.__class__.__name__}): no se puede verificar (falla cerrado)')
+            continue
+        visit(rel, st)
     while stack:
         rel = stack.pop()
-        full = os.path.join(ROOT, *rel.split('/'))
         try:
-            if getattr(os.lstat(full), 'st_reparse_tag', 0) == JUNCTION_TAG:
-                found.append(rel)
-            elif os.path.isdir(full) and not os.path.islink(full):
-                with os.scandir(full) as entries:
-                    stack += [f'{rel}/{e.name}' for e in entries if e.is_dir(follow_symlinks=False)]
-        except OSError:
-            continue
-    return sorted(found)
+            with os.scandir(os.path.join(ROOT, *rel.split('/'))) as entries:
+                for item in entries:
+                    visit(f'{rel}/{item.name}', item.stat(follow_symlinks=False))
+        except OSError as e:
+            out.append(f'{rel}: carpeta no enumerable ({e.__class__.__name__}): no se puede verificar (falla cerrado)')
+    return sorted(out)
 
 
-def fsy_problems(objs, head, b1):
+def fsy_problems(objs, head, b1, scan):
     """FSY de B1 (§8.3 y B1.3; TSBB-07) sobre HEAD, con sus piezas verificadas: el recorrido real de sus superficies
     materiales, sin seguir enlaces y aunque Git las ignore o no las vea, sus excepciones de metadatos y los .pyc
     derivables de su fuente. El inventario autorizado es el árbol de esas superficies en f082b41, que debe coincidir
     con el de HEAD y con el de la base de B1. Ni .gitignore ni .git/info/exclude deciden qué archivo físico es
-    legítimo."""
+    legítimo. scan son los problemas del recorrido físico previo: si hay alguno, los recorridos heredados de B1, que
+    siguen las uniones como carpetas y callan los errores de enumeración en las excepciones, no se ejecutan."""
     surfaces = b1.RUNTIME_SURFACES
     want = surface_inventory(objs, BASE, surfaces)
     out = []
@@ -905,9 +934,10 @@ def fsy_problems(objs, head, b1):
                    f'{diff[:5]}')
     if surface_inventory(objs, b1.B_BASE, surfaces) != want:
         out.append(f'el inventario de {BASE[:12]} difiere del de la base autorizada de B1 {b1.B_BASE[:12]}')
+    if scan:
+        return out + scan
     found, problems = b1.walk(surfaces, b1.RT_SKIP_DIRS, frozenset(), b1.RT_PYCACHE_ROOTS)
     out += problems + b1.exception_problems()
-    out += [f'unión de directorio (enlace de Windows) en una ruta protegida: {rel}' for rel in junctions(surfaces)]
     extra = sorted(found - set(want))
     generated = [p for p in extra if p.startswith(b1.RT_GENERATED)]
     if generated:
@@ -928,7 +958,7 @@ def fsy_problems(objs, head, b1):
             if e[:2] not in (('100644', 'blob'), ('100755', 'blob')) or data is None or blob_id(data) != e[2]:
                 changed.append(path)
     if changed:
-        out.append(f'bytes físicos distintos de su blob en el inventario autorizado: {changed[:5]}')
+        out.append(f'bytes físicos ilegibles o distintos de su blob en el inventario autorizado: {changed[:5]}')
     return out
 
 
@@ -1097,10 +1127,18 @@ def evaluate():
             closed(('SEM', 'SBX', 'FSY'), f'gates congelados verificados ({e.__class__.__name__}: {e})')
         if mods:
             check('SEM', sem_problems, objs, head, mods['b1'], mods['r2a'])
-            sbx = check('SBX', sbx_problems, mods['b1'])
-            if sbx:
-                info += sbx[0]
-            check('FSY', fsy_problems, objs, head, mods['b1'])
+            try:
+                scan = physical_scan(mods['b1'].RUNTIME_SURFACES)
+            except ERRORS as e:
+                scan = [f'recorrido físico no evaluable ({e.__class__.__name__}: {e}) (falla cerrado)']
+            if scan:
+                closed(('SBX',), 'la superficie física no está verificada (FSY): SBX-15 la recorrería y la leería con el '
+                                 'código de F34E, que sigue las uniones y calla los errores de enumeración')
+            else:
+                sbx = check('SBX', sbx_problems, mods['b1'])
+                if sbx:
+                    info += sbx[0]
+            check('FSY', fsy_problems, objs, head, mods['b1'], scan)
         check('RSK', rsk_problems, objs, head)
         check('ALC', alc_problems, objs, head)
     except ERRORS as e:

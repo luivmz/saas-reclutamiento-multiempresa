@@ -1,8 +1,9 @@
 # F35-SBX — Cierre global: corrección GC-AF-M01
 
-> **Estado: CORRECCIÓN IMPLEMENTADA / VALIDADA LOCALMENTE / CANDIDATA A REAUDITORÍA FOCAL.** Fecha: 25/10/2026. Rama `chore/f35-sbx-global-closure`.
+> **Estado: CORRECCIÓN REAUDITADA — CONFIRMADA PARA LOS ARCHIVOS QUE GIT IGNORA; LA COMPLETA GC-AF-M02.** Fecha: 25/10/2026. Rama `chore/f35-sbx-global-closure`.
 >
 > - Registra la corrección del único hallazgo bloqueante de la auditoría independiente del candidato `9f73494033155b3e9d448cc5210b5acfbd59c475`: GC-AF-M01 (MEDIUM). El candidato auditado se conserva como ancestro visible y no se reescribe.
+> - La reauditoría focal de su commit, `5c9b04b30e7dd0d882c3a5eec4169d0217f73a17`, confirmó que FSY rechaza los archivos ignorados, excluidos o con los bytes cambiados. También encontró GC-AF-M02 (MEDIUM): una excepción de B1 cuya enumeración falla terminaba certificada. Este registro se conserva como el de su momento. El [registro de GC-AF-M02](F35SBX_Cierre_Global_GC-AF-M02.md) precisa lo que aquí se dice de los errores de lectura y de las uniones.
 > - Forma parte de la capa del cierre global, junto con el [documento principal](F35SBX_Cierre_Global.md), y lo valida el mismo gate. No cambia ningún estado de gobierno: la propuesta sigue siendo F35-SBX CERRADA Y CONGELADA solo en su alcance académico y sintético.
 
 ## 1. Hallazgo
@@ -149,4 +150,4 @@ Ningún estado de la clase de GC-AF-M01 da un falso PASS: la única sonda sin fa
 | GC-M01-H6 | INFO | FSY falla en un checkout de trabajo con artefactos de build, cachés de Laravel, `.pyc` de otra versión de Python o metadatos del sistema como `.DS_Store` | Es el contrato de B1 (§8.3 y B1.3): lo que no está en el inventario no se certifica. El gate se ejecuta en un clon limpio, como los gates de B |
 | GC-M01-H7 | INFO | Lo que hay fuera de las superficies no se recorre: `vendor/`, `node_modules/`, `storage/`, `ml-service/.venv/` y `ml-service/artifacts/` (S20) | Exclusión contractual de B1, §8.3: no altera el código versionado ni el dataset |
 
-No queda ningún hallazgo BLOCKER, HIGH ni MEDIUM abierto.
+Al cerrar esta corrección no se conocía ningún hallazgo BLOCKER, HIGH ni MEDIUM abierto. La reauditoría focal encontró después GC-AF-M02 (MEDIUM), que se trata en su registro.

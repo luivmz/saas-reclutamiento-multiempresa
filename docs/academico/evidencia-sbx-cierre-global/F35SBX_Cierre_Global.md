@@ -1,6 +1,6 @@
 # F35-SBX — Cierre global
 
-> **Estado: CORRECCIÓN GC-AF-M02 — CONTRATO Y PRUEBAS (RED).** Fecha: 25/10/2026. Rama `chore/f35-sbx-global-closure`, desde `develop` = `f082b4165ca756659b998716e2647494a3ec7be6`.
+> **Estado: CIERRE GLOBAL CON LAS CORRECCIONES GC-AF-M01 Y GC-AF-M02 / VALIDADO LOCALMENTE / CANDIDATO A REAUDITORÍA FOCAL.** Fecha: 25/10/2026. Rama `chore/f35-sbx-global-closure`, desde `develop` = `f082b4165ca756659b998716e2647494a3ec7be6`.
 >
 > - Este documento reconstruye el alcance global de F35-SBX desde sus contratos, evalúa si puede cerrarse, fija el contrato y el diseño del incremento que registra ese cierre y recoge sus resultados. El gobierno de esta rama ya registra el cierre (§3.2).
 > - El cierre solo vale en el alcance académico y sintético de F35-SBX, y solo cuando la auditoría independiente apruebe este incremento y el equipo autorice su integración. Hasta entonces, `develop` y `main` siguen diciendo «F35-SBX = HABILITADA».
@@ -399,23 +399,34 @@ Si un conjunto resulta distinto al medirlo en GREEN, se corrige con su causa reg
 | `7746bf2c5182182fa419915b896bb08def503491` | `f082b41` | Contrato y diseño (§1 a §4) y la batería GC01..GC35 (RED) | Batería 0/35, con 30 ejecuciones: el gate no existía en HEAD, y GC06, GC07, GC09, GC28, GC29 y GC34 dependen de la transición o del gate, que aún no existían |
 | `c73611cb992dffd6e4be1fe49bce8b03b53506cd` | `7746bf2` | Transición de gobierno (§3.2): solo `CLAUDE.md`, `docs/PROGRESS.md`, `ACADEMIC_BASELINE.md` y `README.md`, con los blobs `2e988f22864ad86b05395d0d8a91110d9631c4a3`, `200355350414dceaac1ab39ba835f1e7c18a662d`, `5e523302279948389c78cb9dca70b82f5c7b92e4` y `0ed030e53d49f2c8a5f1dc5fca1269b6109020a3` | `GC_TRANSITION`, registrada en el gate del commit siguiente |
 | `9f73494033155b3e9d448cc5210b5acfbd59c475` | `c73611c` | Gate, correcciones de §5.2 y los resultados de entonces (GREEN) | Gate 12/0; batería 35/35; 15 de 15 mutaciones detectadas. CANDIDATO AUDITADO / NO APROBADO / SUPERADO POR CORRECCIÓN: la auditoría independiente no lo aprobó por GC-AF-M01 (MEDIUM). Se conserva como ancestro visible, sin reescribirlo |
-| `395a56eedc76f7c35b056b7b4372f4573885b084` | `9f73494` | RED de la corrección: GC36..GC40, FSY en las expectativas de GC15, GC16 y GC24, y el diseño de FSY | Batería 7/40, con 33 fallas y 39 ejecuciones. El gate aún no tenía FSY, y el commit cambia la capa después de `9f73494`, así que FRZ falla en todos los casos: los siete correctos ya esperaban FRZ, y GC28 y GC29 no se pueden preparar sin el registro de la corrección. Contra el gate de `9f73494`, GC36..GC40 dan PASS: es el falso PASS de GC-AF-M01 |
-| El que completa la capa (este) | `395a56e` | GREEN de la corrección: la regla FSY, el registro de la corrección, los casos GC41..GC43 de la autoauditoría y estos resultados | Gate 13/0; batería 43/43; 10 de 10 mutaciones de FSY detectadas, con el control sin mutar en verde |
+| `395a56eedc76f7c35b056b7b4372f4573885b084` | `9f73494` | RED de GC-AF-M01: GC36..GC40, FSY en las expectativas de GC15, GC16 y GC24, y el diseño de FSY | Batería 7/40, con 33 fallas y 39 ejecuciones. El gate aún no tenía FSY, y el commit cambia la capa después de `9f73494`, así que FRZ falla en todos los casos: los siete correctos ya esperaban FRZ, y GC28 y GC29 no se pueden preparar sin el registro de la corrección. Contra el gate de `9f73494`, GC36..GC40 dan PASS: es el falso PASS de GC-AF-M01 |
+| `5c9b04b30e7dd0d882c3a5eec4169d0217f73a17` | `395a56e` | GREEN de GC-AF-M01: la regla FSY, su registro, los casos GC41..GC43 de la autoauditoría y los resultados de entonces | Gate 13/0; batería 43/43; 10 de 10 mutaciones de FSY detectadas. CANDIDATO REAUDITADO / NO APROBADO / SUPERADO POR CORRECCIÓN. La reauditoría focal confirmó GC-AF-M01 para los archivos que Git ignora y no lo aprobó por GC-AF-M02 (MEDIUM). Se conserva como ancestro visible, sin reescribirlo |
+| `59d80f88e06a2096030c85bdaa30468b7da6ccac` | `5c9b04b` | RED de GC-AF-M02: GC44..GC49, GC42 reforzado, la comprobación `lacks` de la batería y el diseño del recorrido físico previo | Contra el gate de `5c9b04b`, 1 de 7 casos focales correctos. GC44, GC45 y GC49 dan PASS: el falso PASS. GC42 y GC47 no cierran SBX, y en GC46 SBX-15 lee el archivo externo. Solo pasa GC48, el positivo. La batería completa no se ejecutó en este commit: como en `395a56e`, FRZ fallaría en todos los casos |
+| El que completa la capa (este) | `59d80f8` | GREEN de GC-AF-M02: el recorrido físico previo de FSY, SBX cerrado sobre una superficie sin verificar, el registro de la corrección y estos resultados | Gate 13/0; batería 49/49; 7 de 7 mutaciones de la corrección detectadas, con el control sin mutar en verde |
 
-Ese quinto commit es el ancla de nivel B de esta capa: el primero con sus cuatro archivos. Lo informa la línea INFO de FRZ, y su hash no se guarda en ningún archivo.
+Ese séptimo commit es el ancla de nivel B de esta capa: el primero con sus cinco archivos. Lo informa la línea INFO de FRZ, y su hash no se guarda en ningún archivo.
 
 ### 5.2 Medición y correcciones
 
-Todo se midió con temporales nuevos y exclusivos y sin ningún síntoma ambiental, en dos rondas: la de `9f73494`, el 24/10/2026, y la de este commit, el 25/10/2026, después de la auditoría. En las dos, el gate, la batería y los controles de mutación corrieron de uno en uno, sobre commits desechables en copias completas sin alternates: hijos de la transición `c73611c` en la primera y de `395a56e`, como este commit, en la segunda. Su gate y su batería son, byte a byte, los del commit medido, y el último de ellos tiene su árbol. En la primera ronda, los validadores, que son ligeros, coincidieron dos veces con la batería; en la segunda no se solapó nada. El gate tarda unos cinco segundos.
+Todo se midió con temporales nuevos y exclusivos y sin ningún síntoma ambiental, en tres rondas:
 
-Correcciones, cada una con su causa medida antes de aplicarla. Las tres primeras son de `9f73494`; las demás, de la corrección:
+- la de `9f73494`, el 24/10/2026;
+- la de `5c9b04b`, el 25/10/2026, después de la auditoría;
+- la de este commit, el mismo día, después de la reauditoría focal.
+
+En las tres, el gate, la batería y los controles de mutación corrieron de uno en uno, sobre commits desechables en copias completas sin alternates. Fueron hijos de la transición `c73611c`, de `395a56e` y de `59d80f8`, este último el mismo padre que este commit. Su gate y su batería son, byte a byte, los del commit medido, y el último de ellos tiene su árbol. En la primera ronda, los validadores, que son ligeros, coincidieron dos veces con la batería; en las otras dos no se solapó nada. El gate tarda unos cinco segundos.
+
+Correcciones, cada una con su causa medida antes de aplicarla. Las tres primeras son de `9f73494`; las tres siguientes, de la corrección GC-AF-M01 (`5c9b04b`); las demás, de GC-AF-M02:
 
 - **GC06, expectativa de la batería.** La vuelta al gobierno del cierre terminal deja las cuatro rutas de gobierno con los blobs de `f082b41`, así que ya no figuran como modificadas frente a la base y ALC también rechaza el alcance. Es una detección correcta que la expectativa de RED no previó: GC06 espera ahora GOV, SEM y ALC. Se corrige también la fila de §4.
 - **Precisiones de redacción de RED.** En §2.8 y §3.3, la falla de `validate_f34e.py` ya no es solo de alcance: también nombra el estado nuevo de F35-SBX (§5.6). ANC verifica las quince anclas de §1.1 desde el commit E hasta `f082b41`, no los commits de F34E ni los merges de `main`, que no son ancestros de esta rama.
-- **INT, revisión del disco (autoauditoría, antes de este commit).** Un borrador del gate omitía las carpetas `__pycache__` al revisar el disco de las capas congeladas, algo que el gate del cierre terminal no admite. Se restauró la comprobación idéntica a la suya, y todas las mediciones de esta sección son posteriores.
-- **GC-AF-M01 (auditoría independiente de `9f73494`).** El gate no recorría el disco de las superficies materiales, así que no veía los archivos que Git ignora. Lo corrigen FSY (§3.3) y GC36..GC40. La reproducción, la causa raíz, el contrato de las superficies y las sondas están en el [registro de la corrección](F35SBX_Cierre_Global_GC-AF-M01.md).
-- **GC41..GC43 (autoauditoría de la defensa, después del commit RED de la corrección).** Son tres estados de la misma clase que Git no muestra, ni siquiera como ignorados: un archivo dentro de una carpeta `.git` anidada, una unión de directorio vacía y un archivo versionado con un byte cambiado, el mismo tamaño y su fecha restaurada. Su RED se midió antes de este commit: contra el gate de `9f73494`, los tres dan PASS. La unión vacía mostró que el recorrido de B1 sigue las uniones de Windows como carpetas, así que FSY las busca aparte (§3.3). Cada caso detecta además una corrección ingenua (§5.5).
-- **Precisión de redacción de RED.** La invariante 1 de §2.7 decía «las tres rutas de esta capa»; con el registro de la corrección son cuatro.
+- **INT, revisión del disco (autoauditoría, antes de `9f73494`).** Un borrador del gate omitía las carpetas `__pycache__` al revisar el disco de las capas congeladas, algo que el gate del cierre terminal no admite. Se restauró la comprobación idéntica a la suya, y todas las mediciones de esta sección son posteriores.
+- **GC-AF-M01 (auditoría independiente de `9f73494`).** El gate no recorría el disco de las superficies materiales, así que no veía los archivos que Git ignora. Lo corrigen FSY (§3.3) y GC36..GC40. La reproducción, la causa raíz, el contrato de las superficies y las sondas están en el [registro de GC-AF-M01](F35SBX_Cierre_Global_GC-AF-M01.md).
+- **GC41..GC43 (autoauditoría de GC-AF-M01, después de su commit RED).** Son tres estados de la misma clase que Git no muestra, ni siquiera como ignorados: un archivo dentro de una carpeta `.git` anidada, una unión de directorio vacía y un archivo versionado con un byte cambiado, el mismo tamaño y su fecha restaurada. Su RED se midió antes de `5c9b04b`: contra el gate de `9f73494`, los tres dan PASS. Cada caso detecta además una corrección ingenua (§5.5).
+- **Precisión de redacción de RED.** La invariante 1 de §2.7 decía «las tres rutas de esta capa»; con los registros de las correcciones son cinco.
+- **GC-AF-M02 (reauditoría focal de `5c9b04b`).** Una superficie o una excepción cuya enumeración falla terminaba certificada: la revisión de las excepciones de B1 calla los errores de `os.walk`, y la búsqueda de uniones del gate los capturaba. Lo corrige el recorrido físico previo de FSY, que falla cerrado (§3.3), con GC44, GC45, GC47 y GC49. La reproducción, la causa raíz y las sondas están en el [registro de GC-AF-M02](F35SBX_Cierre_Global_GC-AF-M02.md).
+- **GC-FIX-L01 (reauditoría focal de `5c9b04b`).** Los recorridos heredados entraban en el destino externo de una unión, y SBX-15 llegaba a leerlo. Si el recorrido previo encuentra algo, no se ejecutan ni los recorridos heredados de FSY ni SBX (GC42 y GC46). Por eso GC42 espera también SBX, una detección más fuerte que la anterior.
+- **M16 y M23.** La sentencia de M16 cambió, porque FSY recibe ahora el recorrido previo, y se repitió. La búsqueda de uniones que M23 debilitaba ya no existe, y la sustituye N07 (§5.5).
 
 ### 5.3 Gate
 
@@ -433,11 +444,21 @@ Líneas INFO:
 
 ### 5.4 Batería
 
-**43/43**, con 44 ejecuciones del gate en unos cinco minutos: cada caso dio exactamente el resultado de §4 y, donde se indica, con su motivo. GC36..GC43 fallan solo en FSY, y GC15 y GC16, en ALC, FSY y SBX.
+**49/49**, con 50 ejecuciones del gate en unos cinco minutos (304 s). Cada caso dio exactamente el resultado de §4 y, donde se indica, con su motivo:
+
+- GC36..GC41 y GC43 fallan solo en FSY;
+- GC42, GC44..GC47 y GC49 fallan en FSY y SBX;
+- GC48 pasa;
+- GC15 y GC16 fallan en ALC, FSY y SBX.
 
 ### 5.5 Controles de mutación
 
-Cada mutación corre sobre un commit desechable cuyo gate solo difiere del gate medido en la sentencia mutada, con los casos que deben detectarla. Las quince primeras se midieron en `9f73494` y se detectaron todas. No se repitieron: sus sentencias y sus casos no cambian, y FSY no puede devolverle a un caso la regla que la mutación le quita, así que cada caso sigue fallando. Las de FSY se midieron sobre el gate de este commit, con un control sin mutar en el que GC36..GC43 dan el resultado de §4. Cinco de ellas son correcciones ingenuas que la batería debe rechazar. Las diez se detectan. M22 se detectó en una segunda medición: en la primera, llamaba a `check-ignore` con las opciones de Git del gate (`--literal-pathspecs`), que ese comando no admite, así que no hacía lo que pretendía. M26 mide una redundancia y sobrevive, como se esperaba: ALC, SBX y la comparación de bytes ya rechazan cualquier cambio confirmado del runtime o del dataset.
+Cada mutación corre sobre un commit desechable cuyo gate solo difiere del gate medido en la sentencia mutada, con los casos que deben detectarla.
+
+- **M01..M26.** Las quince primeras se midieron en `9f73494`, y M16..M26 en `5c9b04b`. No se repitieron: sus sentencias y sus casos no cambian, y en esos casos el recorrido previo no encuentra nada, así que su camino por el gate es el mismo. Hay dos excepciones: M16, cuya sentencia cambió y se repitió con la nueva, y M23, cuya búsqueda de uniones desapareció y la sustituye N07.
+- **M22** se detectó en una segunda medición. En la primera llamaba a `check-ignore` con las opciones de Git del gate (`--literal-pathspecs`), que ese comando no admite, así que no hacía lo que pretendía.
+- **M26** mide una redundancia y sobrevive, como se esperaba: ALC, SBX y la comparación de bytes ya rechazan cualquier cambio confirmado del runtime o del dataset.
+- **N01..N07**, las de GC-AF-M02, se midieron sobre el gate de este commit, con un control sin mutar en el que GC42 y GC44..GC49 dan el resultado de §4. Las siete se detectan.
 
 | # | Mutación del gate | Caso | Resultado |
 |---|---|---|---|
@@ -456,17 +477,24 @@ Cada mutación corre sobre un commit desechable cuyo gate solo difiere del gate 
 | M13 | DEP sin comprobar las importaciones | GC31 | Detectada: deja de fallar en DEP |
 | M14 | DEP sin buscar ejecución dinámica | GC32 | Detectada: deja de fallar en DEP |
 | M15 | FLG sin efecto | GC22 | Detectada: GC22 pasa a PASS |
-| M16 | FSY sin efecto | GC36 | Detectada: GC36 pasa a PASS |
+| M16 | FSY sin efecto, repetida con su sentencia nueva | GC36 y GC44 | Detectada: GC36 pasa a PASS y GC44 deja de fallar en FSY |
 | M17 | FSY sin los archivos extra que no son código generado | GC36 | Detectada: GC36 pasa a PASS |
 | M18 | FSY sin el código generado | GC37 | Detectada: GC37 pasa a PASS |
 | M19 | Corrección ingenua: solo los dos archivos de la reproducción del auditor | GC36 y GC37 | Detectada: los dos pasan a PASS, con otro nombre y otra profundidad |
 | M20 | Corrección ingenua: solo las rutas de un nivel, como `app/ignorado.php` | GC36 | Detectada: GC36 pasa a PASS |
 | M21 | Corrección ingenua: solo archivos PHP y JavaScript | GC38 y GC39 | Detectada: los dos pasan a PASS |
 | M22 | Corrección ingenua: respeta lo que Git ignora | GC36 y GC37 | Detectada: los dos pasan a PASS |
-| M23 | FSY sin buscar las uniones de directorio | GC42 | Detectada: GC42 pasa a PASS |
+| M23 | FSY sin buscar las uniones de directorio, en `5c9b04b` | GC42 | Detectada entonces. Su sentencia ya no existe; la sustituye N07 |
 | M24 | Corrección ingenua: el listado de Git sin `--exclude-standard` en lugar del recorrido físico | GC41 | Detectada: GC41 pasa a PASS |
 | M25 | FSY sin comparar los bytes del disco | GC43 | Detectada: GC43 pasa a PASS |
 | M26 | Redundancia: FSY sin comparar el árbol de HEAD con el inventario | GC15 y GC16 | Sobrevive, como se esperaba: siguen fallando en ALC, FSY y SBX |
+| N01 | Vuelve a silenciar `PermissionError` al enumerar | GC44, GC45 y GC47 | Detectada: GC44 y GC45 pasan a PASS, y GC47 deja de fallar en SBX |
+| N02 | Vuelve a ignorar todo `OSError` al enumerar | GC44 y GC49 | Detectada: los dos pasan a PASS |
+| N03 | Solo falla con `PermissionError` e ignora los demás `OSError` | GC49 | Detectada: GC49 pasa a PASS |
+| N04 | Omite la defensa: el recorrido previo no se usa | GC42, GC44 y GC46 | Detectada: GC42 y GC44 pasan a PASS, y en GC46 SBX deja de ser «no evaluable» |
+| N05 | FSY ejecuta los recorridos heredados aunque el recorrido previo falle | GC46 | Detectada: la línea FALLA de FSY nombra el archivo externo |
+| N06 | SBX se evalúa sobre una superficie sin verificar | GC42 y GC46 | Detectada: GC42 deja de fallar en SBX, y en GC46 SBX-15 lee el archivo externo |
+| N07 | Detección de uniones debilitada: solo los enlaces simbólicos | GC42 y GC46 | Detectada: GC42 pasa a PASS, y en GC46 SBX-15 lee el archivo externo |
 
 ### 5.6 Validadores y comprobaciones afectados por el delta
 
@@ -475,16 +503,16 @@ Medidos sobre el árbol de este commit:
 | Comprobación | Resultado |
 |---|---|
 | `validate_f35sbx_cierre_global.py` | 13/0 (§5.3) |
-| `test_f35sbx_cierre_global.py` | 43/43 (§5.4) |
+| `test_f35sbx_cierre_global.py` | 49/49 (§5.4) |
 | `validate.py` y `validate.py --cierre-f29` | 0 fallas en ambos |
 | `validate_f29.py`, `test_f32_safety.py`, `validate_f33.py` y `validate_f34.py` | 225/0, OK, 451/0 y 403/0 |
 | `validate_f34a.py` | 108/0. Necesita una rama local `develop`: en un clon sin ella falla cerrado en su regla GIT, igual que sobre la base |
-| `validate_f34e.py` | 247/1, la falla histórica de su regla GIT, con «criterios SBX: 18/18 cumplen». Su lista de rutas no autorizadas por DH-02 pasa de 37 a 41, las cuatro de esta capa, sin que desaparezca ninguna; frente a `9f73494`, solo se añade el registro de la corrección. Su vocabulario congelado solo admite HABILITADA o BLOQUEADA para F35-SBX, así que la regla añade «F35-SBX = CERRADA Y CONGELADA no admitido» en las cuatro rutas de gobierno. Es una falla histórica de ciclo de vida (DH-B13, clase A), no un incumplimiento de SBX-01..SBX-18 |
+| `validate_f34e.py` | 247/1, la falla histórica de su regla GIT, con «criterios SBX: 18/18 cumplen». Su lista de rutas no autorizadas por DH-02 pasa de 37 a 42, las cinco de esta capa, sin que desaparezca ninguna; frente a `5c9b04b`, solo se añade el registro de GC-AF-M02. Su vocabulario congelado solo admite HABILITADA o BLOQUEADA para F35-SBX, así que la regla añade «F35-SBX = CERRADA Y CONGELADA no admitido» en las cuatro rutas de gobierno. Es una falla histórica de ciclo de vida (DH-B13, clase A), no un incumplimiento de SBX-01..SBX-18 |
 | `test_sbxb_pipeline.py` | 30/30 |
-| Enlaces relativos | 1171 en `docs/academico` y 1580 en todo el repositorio, 0 rotos |
+| Enlaces relativos | 1177 en `docs/academico` y 1586 en todo el repositorio, 0 rotos |
 | MANIFEST y evidencias | 61 hashes y 0 discrepancias; 81 hashes de las evidencias de las prácticas 03, 05, 08 y 11, 0 discrepancias |
 | `git diff --check` | Limpio frente a `f082b41` |
-| Delta frente a `f082b41` | Exactamente las cuatro rutas de la capa (A) y las cuatro de gobierno (M) |
+| Delta frente a `f082b41` | Exactamente las cinco rutas de la capa (A) y las cuatro de gobierno (M) |
 
 ### 5.7 SBX-01..SBX-18
 
@@ -498,7 +526,7 @@ No se repitió nada cuya evidencia sigue valiendo por la identidad de los commit
 |---|---|
 | El cierre terminal: gate 15/0, batería 36/36, 20 mutaciones, sondas P1..P7 y la auditoría independiente | `9ebb909` y sus merges conservan su identidad, y INT exige que B no cambie |
 | Los gates anclados de A a B (A 846/0, B1 159/0, B1-FREEZE 14/0, B2 119/0, B2-FREEZE 10/0, sucesor 7/0, B2-SUCCESSOR-FREEZE 12/0, cierre de gobierno 13/0, R2-A 14/0, B3 19/0 y el cierre terminal 15/0) | Se ejecutan sobre sus anclas, que no cambian; este incremento no toca sus bytes |
-| Las quince mutaciones de `9f73494` | Sus sentencias y sus casos no cambian (§5.5) |
+| Las mutaciones M01..M15 de `9f73494` y M17..M22 y M24..M26 de `5c9b04b` | Sus sentencias y sus casos no cambian, y en esos casos el recorrido previo no encuentra nada (§5.5) |
 | PHPUnit, TypeScript y la compilación del frontend | CI 66 y 67 en verde sobre `f082b41` y `57eeb53`; este incremento no toca el runtime |
 | Cypress | Fuera del alcance: el delta es solo documentación y gobierno |
 
@@ -509,14 +537,15 @@ Se intentó romper el cierre por cada vía de la consigna, con el resultado medi
 | Intento | Qué lo rechaza | Evidencia |
 |---|---|---|
 | Ataque: cierre circular o autorreferente | El gate registra solo hashes que existían antes que él; el ancla de esta capa la deriva FRZ y se registra fuera | §3.8 y GC01 |
-| Ataque: falso PASS por un gate debilitado | La batería | 15 de 15 mutaciones detectadas en `9f73494` y las diez de FSY en este commit (§5.5) |
+| Ataque: falso PASS por un gate debilitado | La batería | 15 de 15 mutaciones en `9f73494`, las diez de FSY en `5c9b04b` y las siete de GC-AF-M02 en este commit (§5.5) |
 | Ataque: estado contradictorio o reapertura | GOV y SEM | GC05..GC07 y GC34 |
 | Ataque: habilitar F36, F36-SBX, la G0 real, el alcance C o los datos reales | GOV y SEM | GC08..GC12 |
 | Ataque: relajar G0-SBX o perder una restricción | SEM y SBX: los trece estados exactos y SBX-01..SBX-18 recalculados | GC10..GC12, GC15 y GC16 |
 | Ataque: reinterpretar un riesgo | RSK y FRZ | GC17 y GC18 |
 | Ataque: afirmar una capacidad prohibida o quitar un límite | SEM y FRZ | GC19 y GC20 |
 | Ataque: cambios fuera del alcance, en A, en B, en el runtime o en el dataset | ALC, INT, SBX y FSY | GC13..GC16 y GC21 |
-| Ataque: archivo físico oculto para Git en una superficie material: ignorado, excluido, en una carpeta `.git` anidada, tras una unión o un enlace, o con sus bytes cambiados | FSY, que recorre el disco sin consultar a Git | GC36..GC43, las mutaciones de FSY (§5.5) y las sondas del [registro de la corrección](F35SBX_Cierre_Global_GC-AF-M01.md) |
+| Ataque: archivo físico oculto para Git en una superficie material: ignorado, excluido, en una carpeta `.git` anidada o con sus bytes cambiados | FSY, que recorre el disco sin consultar a Git | GC36..GC41 y GC43, las mutaciones de FSY (§5.5) y las sondas del [registro de GC-AF-M01](F35SBX_Cierre_Global_GC-AF-M01.md) |
+| Ataque: superficie o excepción que no se puede enumerar, o unión o enlace cuyo destino leería un recorrido heredado | El recorrido físico previo de FSY, que falla cerrado, y SBX, que no se evalúa sobre lo no verificado | GC42, GC44..GC47 y GC49, N01..N07 y las sondas del [registro de GC-AF-M02](F35SBX_Cierre_Global_GC-AF-M02.md) |
 | Ataque: historia distinta de la integrada | CTX, ANC, GOV y FRZ | GC28..GC30 y GC33 |
 | Ataque: entorno de Git hostil o incompleto | ENT, FLG, CTX y fallo cerrado | GC22..GC27 |
 
@@ -528,8 +557,10 @@ Se intentó romper el cierre por cada vía de la consigna, con el resultado medi
 | GC-H4 | INFO | `validate_f34a.py` necesita una rama local `develop` | Condición del entorno, igual sobre la base; no es una regresión |
 | GC-H5 | INFO | El detector de afirmaciones de B1 trata como concesión cualquier mención de F36 que no esté negada | La regla se redacta en forma negada: «ninguna F36-SBX empieza sin una autorización sucesora nueva» |
 | GC-H6 | INFO | Los documentos de F34E y los de A conservan «F35-SBX = HABILITADA» | Son registros históricos de su momento y no se reescriben (§3.2); el estado vigente está en el gobierno |
-| GC-AF-M01 | MEDIUM | Auditoría independiente de `9f73494`: el gate no veía los archivos físicos que Git ignora en las superficies materiales | Corregido en este commit con FSY y GC36..GC43; ver el [registro de la corrección](F35SBX_Cierre_Global_GC-AF-M01.md) |
-| GC-H7 | LOW | Autoauditoría de FSY: el recorrido de B1 sigue las uniones de directorio de Windows como carpetas, así que una unión vacía no le aporta ningún archivo | Corregido antes de este commit: FSY busca las uniones aparte y las rechaza como enlaces (GC42) |
+| GC-AF-M01 | MEDIUM | Auditoría independiente de `9f73494`: el gate no veía los archivos físicos que Git ignora en las superficies materiales | Corregido en `5c9b04b` con FSY y GC36..GC43. La reauditoría focal lo confirmó para los archivos ignorados y abrió GC-AF-M02; ver el [registro de GC-AF-M01](F35SBX_Cierre_Global_GC-AF-M01.md) |
+| GC-H7 | LOW | Autoauditoría de FSY: el recorrido de B1 sigue las uniones de directorio de Windows como carpetas, así que una unión vacía no le aporta ningún archivo | Corregido antes de `5c9b04b`. En este commit las señala el recorrido físico previo (GC42) |
+| GC-AF-M02 | MEDIUM | Reauditoría focal de `5c9b04b`: una superficie o una excepción cuya enumeración falla terminaba certificada | Corregido en este commit con el recorrido físico previo de FSY, que falla cerrado; ver el [registro de GC-AF-M02](F35SBX_Cierre_Global_GC-AF-M02.md) |
+| GC-FIX-L01 | LOW | Reauditoría focal de `5c9b04b`: los recorridos heredados entraban en el destino externo de una unión, y SBX-15 llegaba a leerlo | Corregido en este commit: sobre una superficie sin verificar no se ejecuta nada heredado (GC42 y GC46) |
 
 No queda ningún hallazgo BLOCKER, HIGH ni MEDIUM abierto.
 
@@ -543,11 +574,12 @@ Los riesgos de §2.6 se conservan tal como los clasificaron sus auditorías, sin
 | GC-R2 | INFO | El ancla de nivel B solo autentica la capa si se registra fuera | La auditoría anota el commit que informa FRZ |
 | GC-R3 | INFO | El gate trabaja sin red y no verifica `57eeb53`, que no es ancestro de esta rama | GC02 prueba los merges `--no-ff` sobre `f082b41` y `57eeb53`; el CI de la integración se comprueba al integrar |
 | GC-R4 | INFO | SEM hereda el límite de TC-AF-I01: no es un detector universal de lenguaje natural | La auditoría independiente revisa además las afirmaciones |
-| GC-R5 | INFO | FSY exige que las superficies materiales no tengan artefactos generados, cachés ni archivos locales | Es el contrato de B1 (§8.3 y B1.3): el gate se ejecuta en un clon limpio, como los gates de B. Los límites medidos de FSY están en el registro de la corrección, §7 |
+| GC-R5 | INFO | FSY exige que las superficies materiales no tengan artefactos generados, cachés ni archivos locales, y que se puedan enumerar enteras | Es el contrato de B1 (§8.3 y B1.3): el gate se ejecuta en un clon limpio, como los gates de B. Los límites medidos de FSY están en los registros de GC-AF-M01 (§7) y de GC-AF-M02 (§6) |
+| GC-R6 | INFO | Entre el recorrido previo y los heredados pasan unos segundos | Cambiar el checkout mientras el gate corre queda fuera de su modelo de amenazas (registro de GC-AF-M02, §6) |
 
 ### 5.11 Pendientes
 
-- La reauditoría focal de la corrección GC-AF-M01 y la auditoría independiente de este incremento, sobre su ancla: el commit que informa FRZ.
+- La reauditoría focal de la corrección GC-AF-M02 y la auditoría independiente de este incremento, sobre su ancla: el commit que informa FRZ.
 - Con su aprobación y la autorización expresa del equipo, la publicación de la rama y su integración `--no-ff` en `develop` y `main`, con CI en verde. Este incremento no hace push, merge, tag ni release.
 - Ninguna fase posterior queda en curso: F36–F40 siguen BLOQUEADAS, y ninguna F36-SBX empieza sin una autorización sucesora nueva.
 - Los pendientes externos de la G0 real (G0-02, G0-03 y G0-12), que este cierre no cambia.
