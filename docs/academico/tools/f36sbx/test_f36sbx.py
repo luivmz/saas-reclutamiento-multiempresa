@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
-"""Pruebas negativas y mutantes de validate_f36sbx.py, versión 2.
+"""Pruebas negativas, mutantes y controles positivos de validate_f36sbx.py, versión 3 (AF2).
 
 Todo ocurre en memoria, sobre copias de la fotografía del repositorio: no se escribe ningún archivo. La
-evidencia de equipo válida, la dependencia y el ADR de los controles positivos son ficticios y solo existen
-en memoria. Cada mutante debe hacer fallar su regla y, cuando se indica, con un motivo concreto; si la mutación
-ya no se puede aplicar, la prueba falla.
+evidencia de equipo válida, el informe de auditoría, la dependencia y el ADR de los controles positivos son
+ficticios y solo existen en memoria. Cada mutante debe hacer fallar su regla y, cuando se indica, con un motivo
+concreto; si la mutación ya no se puede aplicar, la prueba falla.
 
 Grupos: T (control), M (gobierno, matriz, threat model, plan, alcance, dependencias, PII y enlaces),
-C (contrato), R (relaciones del ejemplo), E (semántica de la evidencia de equipo), GR (registro de evidencia
-en el repositorio), G (regla de decisión) y AUD (falsos PASS de la auditoría AF1, reconstruidos).
+C (contrato), R (relaciones del ejemplo), H (cadena de hashes y sello de test), X (aislamiento entre tenants y
+procedencia), E (semántica de la evidencia de equipo), D (informe y ADR: bloque canónico y coherencia),
+GR (registro de evidencia en el repositorio), G (regla de decisión), AUD (falsos PASS de la auditoría AF1),
+AF2-01..AF2-33 (pruebas obligatorias de la auditoría AF2, que incluyen sus doce falsos PASS reconstruidos) y
+P (controles positivos, incluidos los resellados).
+
+Los mutantes del ejemplo se evalúan, salvo que se indique, con todos sus hashes recalculados y test vuelto a
+sellar: así solo puede fallar la invariante semántica que se prueba (hashes válidos de contenido inválido).
 
 Uso: python -I -B docs/academico/tools/f36sbx/test_f36sbx.py
 """
@@ -34,12 +40,16 @@ CDATE = '2026-10-26'
 RDATE = '2026-10-27'
 AUTH = ['EI-01', 'EI-07', 'EI-09', 'EI-10']
 F34 = 'docs/academico/datos-sinteticos/dataset/'
+SEAL = 'el sello de test no coincide'
 
 results = []
 
 
 def ok(cond, cid, desc, detail):
     results.append((bool(cond), cid, desc, detail))
+
+
+NOT_APPLICABLE = (AssertionError, KeyError, IndexError, TypeError, ValueError, StopIteration, AttributeError)
 
 
 # ---------------------------------------------------------------- utilidades de mutación
@@ -111,7 +121,7 @@ def case(cid, desc, mutation, rule, needle=None):
     snap = copy.deepcopy(BASE)
     try:
         mutation(snap)
-    except (AssertionError, KeyError, IndexError, TypeError, ValueError) as e:
+    except NOT_APPLICABLE as e:
         ok(False, cid, desc, f'mutación no aplicable: {e.__class__.__name__}: {e}')
         return
     fails = failing(snap)
@@ -119,6 +129,19 @@ def case(cid, desc, mutation, rule, needle=None):
     detail = f'falla {rule}' + (f' («{needle}»)' if needle else '') if hit else \
         f'esperaba FALLA {rule}' + (f' con «{needle}»' if needle else '') + f'; fallaron {sorted({n for n, _ in fails})}'
     ok(hit, cid, desc, detail)
+
+
+def pos(cid, desc, mutation):
+    """Control positivo: la mutación es legítima y el validador completo pasa sin fallas (gate NO SUPERADO)."""
+    snap = copy.deepcopy(BASE)
+    try:
+        mutation(snap)
+    except NOT_APPLICABLE as e:
+        ok(False, cid, desc, f'mutación no aplicable: {e.__class__.__name__}: {e}')
+        return
+    res, gate = v.run(snap)
+    fl = [f'{n}: {m[:200]}' for n, ok_, m in res if not ok_]
+    ok(not fl and gate == 'NO SUPERADO', cid, desc, f'sin fallas, gate {gate}' if not fl else f'fallas: {fl}')
 
 
 # ---------------------------------------------------------------- ejemplo de conformidad
@@ -136,19 +159,136 @@ def out(ex, n):
 
 
 def rehash(a):
-    """Recalcula content_hash y el de la provenance, para que la mutación pruebe solo su invariante."""
+    """Recalcula content_hash, el de la provenance y record_hash de un artefacto, y nada más."""
     a['content_hash'] = v.sha256(v.canonical(a['content']))
     a['provenance']['content_hash'] = a['content_hash']
+    a['record_hash'] = v.artifact_record_hash(a)
+
+
+def rehash_fragment(ex, n):
+    """Recalcula text_hash y fragment_hash de un fragmento, y nada más (sus outputs quedan desactualizados)."""
+    f = frg(ex, n)
+    a = next(x for x in ex['artifacts'] if x['synthetic_id'] == f['artifact_id'])
+    text = v.resolve_text(a['content'], f['text_path'], CONTRACT['artifact_types'][a['artifact_type']]['text_paths'])
+    f['text_hash'] = v.sha256(text[f['char_start']:f['char_end']].encode('utf-8'))
+    f['fragment_hash'] = v.fragment_record_hash(f)
+
+
+def rehash_all(ex):
+    """Recalcula toda la cadena de hashes de registro, pero conserva el sello de test: no vuelve a sellar."""
+    test = ex['partition_manifest']['partitions']['test']
+    seal = test['seal_sha256']
+    v.seal_bundle(ex, CONTRACT)
+    test['seal_sha256'] = seal
 
 
 def reseal(ex):
-    pairs = sorted([a['synthetic_id'], a['content_hash']] for a in ex['artifacts'] if a['partition'] == 'test')
-    ex['partition_manifest']['partitions']['test']['seal_sha256'] = v.sha256(v.canonical(pairs))
+    """Recalcula toda la cadena de hashes y vuelve a sellar test."""
+    v.seal_bundle(ex, CONTRACT)
 
 
-def rel(cid, desc, fn, needle):
-    """Mutante del ejemplo de conformidad: debe hacer fallar CTR con el motivo indicado."""
-    case(cid, desc, jmut(EX, fn), 'CTR', needle)
+def rel(cid, desc, fn, needle, mode='reseal'):
+    """Mutante del ejemplo que debe hacer fallar CTR con el motivo indicado.
+
+    mode='reseal': hashes válidos y test resellado; 'rehash': registros recalculados sin resellar;
+    'raw': sin recalcular nada."""
+    def g(e):
+        fn(e)
+        if mode == 'reseal':
+            reseal(e)
+        elif mode == 'rehash':
+            rehash_all(e)
+    case(cid, desc, jmut(EX, g), 'CTR', needle)
+
+
+def bundle_of(fn, mode):
+    ex = v.strict_json(BASE['texts'][EX])
+    fn(ex)
+    (reseal if mode == 'reseal' else rehash_all)(ex)
+    return ex, v.bundle_errors(CONTRACT, ex, BASE['upstream'])
+
+
+def seal_only(cid, desc, fn):
+    """Cambio coherente de test con los registros recalculados y sin resellar: el único error es el sello, y el
+    validador completo FALLA en CTR."""
+    try:
+        _, errs = bundle_of(fn, 'rehash')
+    except NOT_APPLICABLE as e:
+        ok(False, cid, desc, f'mutación no aplicable: {e.__class__.__name__}: {e}')
+        return
+    only = len(errs) == 1 and errs[0].startswith('REL-11 ' + SEAL)
+    snap = copy.deepcopy(BASE)
+    jmut(EX, lambda e: (fn(e), rehash_all(e)))(snap)
+    hit = [m for n, m in failing(snap) if n == 'CTR' and SEAL in m]
+    ok(only and hit, cid, desc, 'solo lo detecta el sello y el validador falla' if only and hit else
+       f'errores {errs[:3]}; validador {"falla" if hit else "no falla"} en CTR')
+
+
+def resealed(cid, desc, fn):
+    """Control positivo resellado: el mismo cambio, con test vuelto a sellar, es conforme y el validador pasa."""
+    try:
+        _, errs = bundle_of(fn, 'reseal')
+    except NOT_APPLICABLE as e:
+        ok(False, cid, desc, f'mutación no aplicable: {e.__class__.__name__}: {e}')
+        return
+    if errs:
+        ok(False, cid, desc, f'errores {errs[:3]}')
+        return
+    pos(cid, desc, jmut(EX, lambda e: (fn(e), reseal(e))))
+
+
+def remap(obj, table):
+    """Copia de obj con cada cadena sustituida por su valor en table (valores completos, nunca subcadenas)."""
+    if isinstance(obj, dict):
+        return {k: remap(x, table) for k, x in obj.items()}
+    if isinstance(obj, list):
+        return [remap(x, table) for x in obj]
+    return table.get(obj, obj) if isinstance(obj, str) else obj
+
+
+def transplant(table, partition='test', ids=None):
+    """Trasplante coherente de identidad: sustituye valores en todos los registros de una partición y en el
+    manifiesto; ids(e) añade a la tabla los identificadores que cambian de organización."""
+    def f(e):
+        t = dict(table)
+        if ids:
+            t.update(ids(e))
+        for key in ('artifacts', 'fragments', 'outputs'):
+            e[key] = [remap(r, t) if r['partition'] == partition else r for r in e[key]]
+        e['partition_manifest'] = remap(e['partition_manifest'], t)
+    return f
+
+
+def test_ids_to(org):
+    def f(e):
+        return {r[k]: r[k].replace('ORG-S1', org) for key, k in (('artifacts', 'synthetic_id'),
+                                                                 ('fragments', 'fragment_id'), ('outputs', 'output_id'))
+                for r in e[key] if r['partition'] == 'test'}
+    return f
+
+
+TO_APP = transplant({'APP-00013': 'APP-00015'})
+TO_VAC = transplant({'VAC-0004': 'VAC-0010', 'APP-00013': 'APP-00053', 'APP-00014': 'APP-00054',
+                     'CRI-0016': 'CRI-0045', 'CRI-0017': 'CRI-0046'})
+TO_ORG = transplant({'ORG-S1': 'ORG-S2', 'VAC-0004': 'VAC-0002', 'APP-00013': 'APP-00003', 'APP-00014': 'APP-00004',
+                     'CRI-0016': 'CRI-0007', 'CRI-0017': 'CRI-0008', 'ANT36-S1-02': 'ANT36-S2-02'},
+                    ids=test_ids_to('ORG-S2'))
+TO_SCENARIO = transplant({'SC36-02': 'SC36-03'})
+TO_FAMILY = transplant({'TF36-BB': 'TF36-CC', 'TPL36-BB-01': 'TPL36-CC-01', 'TPL36-BB-02': 'TPL36-CC-02',
+                        'TPL36-BB-03': 'TPL36-CC-03'})
+
+
+def upref(e, source, ref):
+    """Referencia upstream con el hash del manifiesto F34 (el que ya cita el ejemplo para esa tabla)."""
+    sha = next(r['sha256'] for a in e['artifacts'] for r in a['provenance']['upstream_refs'] if r['source'] == F34 + source)
+    return {'source': F34 + source, 'ref': ref, 'sha256': sha}
+
+
+def add_ref(n, source, ref, sha=None):
+    def f(e):
+        r = upref(e, source, ref) if sha is None else {'source': source, 'ref': ref, 'sha256': sha}
+        art(e, n)['provenance']['upstream_refs'].append(r)
+    return f
 
 
 # ---------------------------------------------------------------- evidencia de equipo en memoria
@@ -162,15 +302,82 @@ def approvals(date=RDATE):
 
 
 def common(fg, n=1):
-    return {'schema': 'f36sbx-team-evidence/v1', 'criterion_id': fg, 'gate_id': 'F36-SBX-GATE',
-            'gate_version': '2', 'candidate_commit': CAND, 'record_id': f'F36SBX-{fg}-{n:03d}',
+    return {'schema': 'f36sbx-team-evidence/v2', 'criterion_id': fg, 'gate_id': 'F36-SBX-GATE',
+            'gate_version': '3', 'candidate_commit': CAND, 'record_id': f'F36SBX-{fg}-{n:03d}',
             'recorded_at': RDATE}
 
 
-REPORT_BYTES = (f'# Informe de auditoría (prueba en memoria)\n\nCandidato auditado: {CAND}\n'
-                f'Veredicto: aprobado con observaciones.\n').encode('utf-8')
-ADR_BYTES = ('# ADR-006 (prueba en memoria)\n\nExcepción sandbox y sintética a ADR-005 §6.4 para F36-SBX.\n'
-             ).encode('utf-8')
+REPORT_PROSE = (
+    '# Informe de auditoría independiente de F36-SBX (prueba en memoria)\n\n'
+    '## Alcance\n\n'
+    'Revisión ficticia, solo en memoria, del paquete F36-SBX: contrato de evidencia, ejemplo de conformidad, '
+    'validador, batería de pruebas y documentos de diseño. No existe fuera de esta prueba y no aprueba nada real.\n\n'
+    '## Hallazgos\n\n'
+    'Los hallazgos abiertos y su severidad constan únicamente en el bloque canónico de metadatos de este informe; '
+    'el texto humano no los repite, para no crear una segunda fuente.\n\n'
+    '## Conclusión\n\n'
+    'La conclusión normativa es la del bloque canónico. Este texto solo describe el alcance de la revisión.\n')
+ADR_PROSE = (
+    '# ADR-006 · Excepción sintética de F36-SBX (prueba en memoria)\n\n'
+    '## Contexto\n\n'
+    'Documento ficticio, solo en memoria, que ejercita las comprobaciones de FG-12 del gate sucesor de F36-SBX. '
+    'Se relaciona con ADR-005 como una excepción acotada al sandbox sintético y no existe fuera de esta prueba.\n\n'
+    '## Decisión\n\n'
+    'La decisión normativa, su relación con ADR-005, su alcance, las EI que cubre y la decisión sobre EI-09 constan '
+    'únicamente en el bloque canónico de metadatos.\n\n'
+    '## Consecuencias\n\n'
+    'Ninguna fuera de la prueba: no habilita datos reales, producción ni capacidades bloqueadas.\n')
+
+
+def doc_bytes(prose, info, meta, extra=''):
+    return (prose + f'\n```{info}\n{json.dumps(meta, ensure_ascii=False, indent=2)}\n```\n' + extra).encode('utf-8')
+
+
+def report_meta(d):
+    return {'metadata_schema': 'f36sbx-audit-report/v1', 'gate_id': 'F36-SBX-GATE', 'gate_version': '3',
+            'criterion_id': 'FG-02', 'candidate_commit': d['candidate_commit'], 'auditor': copy.deepcopy(d['auditor']),
+            'verdict': d['verdict'], 'findings_open': copy.deepcopy(d['findings_open']), 'report_date': RDATE}
+
+
+def adr_meta(d):
+    adr = d['successor_adr']
+    return {'metadata_schema': 'f36sbx-adr/v1', 'gate_id': 'F36-SBX-GATE', 'gate_version': '3', 'base_commit': v.BASE,
+            'adr_id': adr['id'], 'status': adr['status'], 'relation_to_adr005': adr['relation_to_adr005'],
+            'scope': adr['scope'], 'covered_ei': list(d['covered_ei']), 'ei09_decision': d['ei09_decision'],
+            'decided_on': CDATE}
+
+
+def set_report(meta_fn=None, prose=None, extra='', raw=None):
+    """Reescribe el informe de FG-02 desde el registro vigente (metadatos, texto o bytes) y actualiza su SHA-256."""
+    def f(docs, ctx):
+        meta = report_meta(docs['FG-02'])
+        if meta_fn:
+            meta_fn(meta)
+        data = raw if raw is not None else doc_bytes(REPORT_PROSE if prose is None else prose,
+                                                     'f36sbx-audit-metadata', meta, extra)
+        ctx['evidence'][REPORT] = data
+        docs['FG-02']['audit_report']['sha256'] = v.sha256(data)
+    return f
+
+
+def set_adr(meta_fn=None, prose=None, extra='', raw=None):
+    """Reescribe el ADR sucesor desde el registro FG-12 vigente y actualiza su SHA-256."""
+    def f(docs, ctx):
+        meta = adr_meta(docs['FG-12'])
+        if meta_fn:
+            meta_fn(meta)
+        data = raw if raw is not None else doc_bytes(ADR_PROSE if prose is None else prose,
+                                                     'f36sbx-adr-metadata', meta, extra)
+        ctx['repo_files'][ADR_PATH] = data
+        docs['FG-12']['successor_adr']['sha256'] = v.sha256(data)
+    return f
+
+
+def both(*fns):
+    def f(docs, ctx):
+        for fn in fns:
+            fn(docs, ctx)
+    return f
 
 
 def evidence_docs(auth):
@@ -184,9 +391,9 @@ def evidence_docs(auth):
     cond_c = sorted(set(auth) & set(v.SCOPE_C_CONDITIONAL))
     return {
         'FG-02': {**common('FG-02'),
-                  'auditor': {'name': 'Sesión de auditoría independiente AF2 (prueba en memoria)',
+                  'auditor': {'name': 'Sesión de auditoría independiente AF3 (prueba en memoria)',
                               'kind': 'sesion_de_auditoria_independiente', 'independent_of_candidate': True},
-                  'audit_report': {'path': REPORT, 'sha256': v.sha256(REPORT_BYTES)},
+                  'audit_report': {'path': REPORT, 'sha256': None},
                   'verdict': 'APROBADO_CON_OBSERVACIONES',
                   'findings_open': {'blocker': 0, 'high': 0, 'medium_requiring_fix': 0, 'medium_accepted': 1,
                                     'low': 2}},
@@ -196,7 +403,7 @@ def evidence_docs(auth):
                   'approvals': approvals(), 'quorum': '3/3'},
         'FG-12': {**common('FG-12'),
                   'successor_adr': None if not cond_c else {
-                      'id': 'ADR-006', 'path': ADR_PATH, 'sha256': v.sha256(ADR_BYTES), 'status': 'APROBADO',
+                      'id': 'ADR-006', 'path': ADR_PATH, 'sha256': None, 'status': 'APROBADO',
                       'relation_to_adr005': 'EXCEPCION_SANDBOX_SINTETICA_ADR005_6_4',
                       'scope': 'ALCANCE_C_SOLO_SINTETICO'},
                   'covered_ei': cond_c,
@@ -225,12 +432,15 @@ def build(auth=AUTH, mutate=None, team=('FG-02', 'FG-03', 'FG-10', 'FG-12')):
         if c['id'] in team:
             c['status'], c['evidence'] = 'CUMPLE', path(c['id'])
     docs = evidence_docs(auth)
-    ctx = {'state': state, 'schema': schema, 'evidence': {REPORT: REPORT_BYTES}, 'repo_files': {ADR_PATH: ADR_BYTES},
-           'classes': v.EXPECTED_CLASSES,
+    # El ADR forma parte del commit candidato (no cambia después); el informe se registra en gate/evidencia/.
+    ctx = {'state': state, 'schema': schema, 'evidence': {}, 'repo_files': {}, 'classes': v.EXPECTED_CLASSES,
            'gate_doc': status_doc(BASE['texts'][G], {fg: 'CUMPLE' for fg in team}),
            'facts': {CAND: {'commit': True, 'from_base': True, 'ancestor': True, 'date': CDATE,
                             'gate_doc': BASE['texts'][G],
                             'changed': sorted([S, G, REPORT, *(path(fg) for fg in team)])}}}
+    set_report()(docs, ctx)
+    if docs['FG-12']['successor_adr'] is not None:
+        set_adr()(docs, ctx)
     if mutate:
         mutate(docs, ctx)
     for fg, doc in docs.items():
@@ -250,7 +460,7 @@ def ev_case(cid, desc, fg, mutate, needle, auth=AUTH):
         ctx = build(auth, mutate)
         errs = v.team_evidence_errors(fg, ctx)
         gate = decide(ctx)
-    except (AssertionError, KeyError, IndexError, TypeError, ValueError) as e:
+    except NOT_APPLICABLE as e:
         ok(False, cid, desc, f'mutación no aplicable: {e.__class__.__name__}: {e}')
         return
     hit = [e for e in errs if needle in e]
@@ -261,7 +471,7 @@ def ev_case(cid, desc, fg, mutate, needle, auth=AUTH):
 def register(team=('FG-02',), mutate=None, statuses=None):
     """Mutación del repositorio: registra en memoria la evidencia de los criterios indicados, como lo haría el equipo."""
     def f(s):
-        ctx = build(AUTH if 'FG-03' in team else AUTH, mutate, team)
+        ctx = build(AUTH, mutate, team)
         state = json.loads(s['texts'][S])
         state['candidate_commit'] = CAND
         for c in state['criteria']:
@@ -278,6 +488,26 @@ def register(team=('FG-02',), mutate=None, statuses=None):
     return f
 
 
+def af2(cid, desc, fg, mutate, needle):
+    """Prueba obligatoria AF2 sobre la evidencia: inválida en memoria con el motivo indicado, gate NO SUPERADO y,
+    registrada en el repositorio, el validador completo FALLA en GATE con el mismo motivo."""
+    team = ('FG-02',) if fg == 'FG-02' else ('FG-02', 'FG-03', fg)
+    try:
+        ctx = build(AUTH, mutate)
+        errs = v.team_evidence_errors(fg, ctx)
+        gate = decide(ctx)
+        snap = copy.deepcopy(BASE)
+        register(team, mutate)(snap)
+        repo = [m for n, m in failing(snap) if n == 'GATE' and needle in m]
+    except NOT_APPLICABLE as e:
+        ok(False, cid, desc, f'mutación no aplicable: {e.__class__.__name__}: {e}')
+        return
+    hit = [e for e in errs if needle in e]
+    ok(hit and gate == 'NO SUPERADO' and repo, cid, desc,
+       f'{fg} inválida («{needle}»), gate {gate} y validador FALLA' if hit and repo else
+       f'esperaba «{needle}»; errores {errs[:3]}; gate {gate}; validador {"falla" if repo else "no falla"}')
+
+
 # ---------------------------------------------------------------- batería
 
 def main():
@@ -290,13 +520,15 @@ def main():
     ok(not fails and gate == 'NO SUPERADO', 'T00', 'control: repositorio real sin fallas y gate NO SUPERADO',
        f'gate {gate}' if not fails else f'fallas reales: {fails}')
     ex = v.strict_json(BASE['texts'][EX])
-    contract = v.strict_json(BASE['texts'][C])
-    ok(v.bundle_errors(contract, ex, BASE['upstream']) == [], 'T01',
-       'control: el ejemplo de conformidad cumple REL-01..REL-12', 'sin errores')
+    ok(v.bundle_errors(CONTRACT, ex, BASE['upstream']) == [], 'T01',
+       'control: el ejemplo de conformidad cumple REL-01..REL-14', 'sin errores')
+    again = copy.deepcopy(ex)
+    reseal(again)
+    ok(again == ex, 'T01b', 'control: el ejemplo ya está sellado (volver a sellarlo no cambia ningún byte)', '')
     # Robustez: con un contrato roto, la validación de registros falla cerrado y nunca lanza una excepción.
-    broken = copy.deepcopy(contract)
-    broken['upstream_ref_bindings'].pop(F34 + 'applications.csv')
-    for cid, desc, c_ in (('T02', 'contrato sin vínculo con la postulación', broken), ('T03', 'contrato vacío', {}),
+    broken = copy.deepcopy(CONTRACT)
+    broken['upstream_files'].pop(F34 + 'applications.csv')
+    for cid, desc, c_ in (('T02', 'contrato sin la tabla de postulaciones', broken), ('T03', 'contrato vacío', {}),
                           ('T04', 'contrato que no es un objeto', None)):
         try:
             errs = v.bundle_errors(c_, ex, BASE['upstream'])
@@ -394,8 +626,10 @@ def main():
     case('M57', 'falta el ejemplo de conformidad', lambda s: s['texts'].update({EX: None}), 'STR')
     case('M58', 'el README no enlaza el esquema de evidencia',
          sub(PR, '](gate/f36sbx_team_evidence_schema.json)', '](gate/esquema.json)'), 'STR')
+    case('M59', 'falta el documento de corrección AF2', lambda s: s['texts'].update({v.PKG + '/F36SBX_Correccion_AF2.md': None}),
+         'STR', 'F36SBX_Correccion_AF2.md')
 
-    # ---------------- contrato cerrado v2 (C)
+    # ---------------- contrato cerrado v3 (C)
     c_cases = [
         ('C01', 'source_type admite real', lambda d: d['source_type_allowed'].append('real'), 'source_type_allowed'),
         ('C02', 'tipo de artefacto desconocido (audio_recording)',
@@ -429,8 +663,8 @@ def main():
         ('C18', 'fuentes prohibidas recortadas', lambda d: d.update(forbidden_upstream_sources=['docs/academico/g0-evidence']),
          'fuentes prohibidas'),
         ('C19', 'estado del contrato cambiado', lambda d: d.update(status='APROBADO'), 'identidad'),
-        ('C20', 'sin vínculo obligatorio con la postulación',
-         lambda d: d['upstream_ref_bindings'].pop(F34 + 'applications.csv'), 'vínculos obligatorios'),
+        ('C20', 'sin la tabla de postulaciones', lambda d: d['upstream_files'].pop(F34 + 'applications.csv'),
+         'archivos upstream'),
         ('C21', 'el generador admite LLM', lambda d: d['generator_policy'].update(llm_allowed=True), 'generador'),
         ('C22', 'prefijo de marcador cambiado', lambda d: d['synthetic_markers'].update(synthetic_id_prefix='SBXE-'), 'marcadores'),
         ('C23', 'patrón de artefacto abierto', lambda d: d['identifier_patterns'].update(artifact_id='^.*$'), 'artifact_id'),
@@ -439,41 +673,69 @@ def main():
         ('C26', 'marcador de grupo en una observación',
          lambda d: d['artifact_types']['human_observation']['content_fields'].append('grupo_sintetico'), 'marcador de grupo'),
         ('C27', 'fuente upstream extra (g0-evidence)',
-         lambda d: d['upstream_files'].update({'docs/academico/g0-evidence/x.csv': 'id'}), 'archivos upstream'),
+         lambda d: d['upstream_files'].update({'docs/academico/g0-evidence/x.csv': {
+             'key': 'id', 'scope': 'tenant', 'context': {}, 'cardinality': 'any_same_vacancy'}}), 'archivos upstream'),
         ('C28', 'manifiesto de particiones sin sello',
          lambda d: d['partition_fields'].update(test=['artifacts']), 'manifiesto de particiones'),
-        ('C29', 'relaciones incompletas', lambda d: d['relations'].pop('REL-07'), 'relaciones'),
+        ('C29', 'relaciones incompletas', lambda d: d['relations'].pop('REL-13'), 'relaciones'),
+        # v3 (AF2): tenants, fuentes globales, cadena de hashes, configuración y cobertura.
+        ('C33', 'fuente global admitida (competencies.csv)',
+         lambda d: d['global_upstream_sources'].append(F34 + 'competencies.csv'), 'fuentes globales'),
+        ('C34', 'annotator_token deja de estar ligado al tenant', lambda d: d['tenant_bound_tokens'].remove('annotator_token'),
+         'tokens ligados al tenant'),
+        ('C35', 'patrón de autor sin grupo de tenant', lambda d: d['identifier_patterns'].update(author_token='^EV-S[1-3]-[0-9]{2}$'),
+         'patrones de autor y anotador'),
+        ('C36', 'cardinalidad libre para la postulación',
+         lambda d: d['upstream_files'][F34 + 'applications.csv'].update(cardinality='any_same_vacancy'), 'archivos upstream'),
+        ('C37', 'contexto de la postulación sin la dimensión postulación',
+         lambda d: d['upstream_files'][F34 + 'applications.csv']['context'].pop('application'), 'archivos upstream'),
+        ('C38', 'cobertura mínima de un escenario', lambda d: d['example_coverage'].update(min_scenarios=1), 'cobertura mínima'),
+        ('C39', 'identificador del ejemplo abierto', lambda d: d.update(example_id_value=None), 'identificador cerrado'),
+        ('C40', 'etiqueta de record_hash cambiada', lambda d: d['hash_scheme']['record_hash'].update(tag='otra'),
+         'esquema de hashes'),
+        ('C41', 'sello v1 sin registros', lambda d: d['splits'].update(seal_algorithm='f36sbx-test-seal-sha256-v1'),
+         'garantías de partición'),
+        ('C42', 'sobre sin record_hash', lambda d: d['artifact_envelope_fields'].remove('record_hash'), 'sobre del artefacto'),
+        ('C43', 'output sin fragment_ref_hashes', lambda d: d['output_fields'].remove('fragment_ref_hashes'), 'campos del output'),
+        ('C44', 'fragmento sin artifact_record_hash', lambda d: d['fragment_fields'].remove('artifact_record_hash'),
+         'campos del fragmento'),
+        ('C45', 'configuración del método con temperature', lambda d: d['method_config_fields'].append('temperature'),
+         'configuración del método'),
+        ('C46', 'top_k sin límite razonable', lambda d: d.update(top_k_range=[1, 1000]), 'configuración del método'),
+        ('C47', 'normalización semántica admitida', lambda d: d['enums']['normalization'].append('semantica'), 'normalization'),
+        ('C48', 'identificador global personal', lambda d: d['global_identifiers']['question_id'].update(personal=True),
+         'identificadores globales'),
+        ('C49', 'identificador de contenido sin clase (evaluator_ref)',
+         lambda d: (d['content_field_types'].update(evaluator_ref='pattern:author_token'),
+                    d['artifact_types']['human_observation']['content_fields'].append('evaluator_ref')), 'sin clase única'),
+        ('C50', 'identificador con dos clases (criterion_id interno y upstream)',
+         lambda d: d['internal_references'].update(criterion_id='fragments'), 'sin clase única'),
+        ('C51', 'identificador global nuevo sin documentar (vacancy_ref)',
+         lambda d: d['global_identifiers'].update(vacancy_ref={'scope': 'global', 'personal': False,
+                                                               'resolved_upstream': False, 'semantics': ''}),
+         'identificadores globales'),
     ]
     for cid, desc, fn, needle in c_cases:
         case(cid, desc, jmut(C, fn), 'CTR', needle)
     case('C30', 'cambio sin efecto semántico detectado por el hash (texto de una relación)',
          jmut(C, lambda d: d['relations'].update({'REL-01': 'texto distinto'})), 'CTR', 'idéntico a la versión cerrada')
     case('C31', 'clave nueva de primer nivel', jmut(C, lambda d: d.update(real_data_allowed=False)), 'CTR',
-         'idéntico a la versión cerrada')
+         'claves de primer nivel distintas')
     case('C32', 'clave duplicada en el contrato',
-         sub(C, '"contract_version": "2",', '"contract_version": "2",\n  "contract_version": "3",'), 'CTR', 'JSON inválido')
+         sub(C, '"contract_version": "3",', '"contract_version": "3",\n  "contract_version": "4",'), 'CTR', 'JSON inválido')
 
-    # ---------------- relaciones del ejemplo de conformidad (R)
+    # ---------------- relaciones del ejemplo de conformidad (R): hashes válidos y test resellado, salvo indicación
     def r_set(n, **kw):
-        def f(e):
-            a = art(e, n)
-            a.update(kw)
-        return f
+        return lambda e: art(e, n).update(kw)
 
-    def r_content(n, fn, rehash_=True):
-        def f(e):
-            a = art(e, n)
-            fn(a['content'])
-            if rehash_:
-                rehash(a)
-                reseal(e)
-        return f
+    def r_content(n, fn):
+        return lambda e: fn(art(e, n)['content'])
 
     rel('R01', 'source_type desconocido', r_set(1, source_type='real'), 'source_type desconocido')
     rel('R02', 'artifact_type desconocido', r_set(1, artifact_type='audio_recording'), 'artifact_type desconocido')
     rel('R03', 'author_kind desconocido', r_content(3, lambda c: c.update(author_kind='system')), 'author_kind con valor desconocido')
-    rel('R04', 'partición train', lambda e: (art(e, 2).update(partition='train')), "partición 'train' prohibida")
-    rel('R05', 'partición desconocida', lambda e: (art(e, 2).update(partition='holdout')), "partición desconocida 'holdout'")
+    rel('R04', 'partición train', r_set(2, partition='train'), "partición 'train' prohibida")
+    rel('R05', 'partición desconocida', r_set(2, partition='holdout'), "partición desconocida 'holdout'")
     rel('R06', 'provenance ausente', lambda e: art(e, 1).pop('provenance'), 'provenance ausente')
     rel('R07', 'provenance mal formada: semilla de texto', lambda e: art(e, 1)['provenance'].update(seed='3601'), 'semilla')
     rel('R08', 'provenance mal formada: upstream_refs no es lista',
@@ -485,20 +747,19 @@ def main():
         'referencia un fragmento inexistente')
     rel('R11', 'mezcla de organización en un fragmento', lambda e: frg(e, 1).update(synthetic_organization_id='ORG-S2'),
         'mezcla de synthetic_organization_id')
-    rel('R12', 'mezcla de escenario en la vacante', lambda e: art(e, 2).update(scenario_id='SC36-02'),
+    rel('R12', 'mezcla de escenario en la vacante', r_set(2, scenario_id='SC36-02'),
         'vacante mezclada entre organizaciones o escenarios')
     rel('R13', 'mezcla de vacante y postulación en un output',
         lambda e: out(e, 1).update(fragment_refs=['SBX36-ORG-S1-FRG-0001', 'SBX36-ORG-S1-FRG-0004']),
         'mezcla de application_token')
-    rel('R14', 'postulación de otra vacante en F34', lambda e: art(e, 1).update(application_token='APP-00013'),
+    rel('R14', 'postulación de otra vacante en F34', r_set(1, application_token='APP-00013'),
         'la postulación F34 es de otra vacante')
     rel('R15', 'propiedad adicional peligrosa en un output', lambda e: out(e, 1).update(score=0.9), "sobran ['score']")
-    rel('R16', 'propiedad adicional en el sobre de un artefacto', lambda e: art(e, 1).update(real_data=False), "sobran ['real_data']")
+    rel('R16', 'propiedad adicional en el sobre de un artefacto', r_set(1, real_data=False), "sobran ['real_data']")
     rel('R17', 'test deja de estar sellado',
         lambda e: e['partition_manifest']['partitions']['test'].update(sealed=False), 'no está sellada')
     rel('R18', 'artefacto de test cambiado sin volver a sellar',
-        lambda e: (art(e, 6)['content'].update(title_synthetic='[SINTÉTICO] Constancia sintética distinta.'),
-                   rehash(art(e, 6))), 'sello de test no coincide')
+        r_content(6, lambda c: c.update(title_synthetic='[SINTÉTICO] Constancia sintética distinta.')), SEAL, 'rehash')
     rel('R19', 'umbrales ajustados con un output de test',
         lambda e: e['partition_manifest']['thresholds']['tuning_outputs'].append('SBX36-ORG-S1-OUT-0002'),
         'test no puede ajustar')
@@ -513,32 +774,32 @@ def main():
     rel('R23', 'vacante en dos particiones',
         lambda e: (art(e, 5).update(partition='test'),
                    e['partition_manifest']['partitions']['dev']['artifacts'].remove('SBX36-ORG-S1-ART-0005'),
-                   e['partition_manifest']['partitions']['test']['artifacts'].append('SBX36-ORG-S1-ART-0005'), reseal(e)),
+                   e['partition_manifest']['partitions']['test']['artifacts'].append('SBX36-ORG-S1-ART-0005')),
         'vacante en varias particiones')
     rel('R24', 'sin la referencia upstream a la postulación',
         lambda e: art(e, 1)['provenance'].update(upstream_refs=art(e, 1)['provenance']['upstream_refs'][:1]),
-        'falta la referencia upstream a su application_token')
+        'debe citar exactamente su application_token')
     rel('R25', 'referencia upstream con hash falso',
         lambda e: art(e, 1)['provenance']['upstream_refs'][0].update(sha256='0' * 64), 'distinto del manifiesto F34')
     rel('R26', 'referencia upstream a un id inexistente',
         lambda e: art(e, 1)['provenance']['upstream_refs'][1].update(ref='APP-99999'), "'APP-99999' no existe")
     rel('R27', 'content_hash que no corresponde al contenido',
-        lambda e: art(e, 3)['content'].update(text_synthetic='[SINTÉTICO] Otro texto.'), 'content_hash incorrecto')
-    rel('R28', 'fragment_hash incorrecto', lambda e: frg(e, 2).update(fragment_hash='0' * 64), 'fragment_hash incorrecto')
+        r_content(3, lambda c: c.update(text_synthetic='[SINTÉTICO] Otro texto.')), 'content_hash incorrecto', 'raw')
+    rel('R28', 'fragment_hash incorrecto', lambda e: frg(e, 2).update(fragment_hash='0' * 64), 'fragment_hash incorrecto', 'raw')
     rel('R29', 'offsets fuera del texto', lambda e: frg(e, 3).update(char_end=10 ** 6), 'offsets fuera del texto')
     rel('R30', 'text_path inválido', lambda e: frg(e, 1).update(text_path='sections/9/text_synthetic'), 'text_path')
     rel('R31', 'abstención con fragmentos', lambda e: out(e, 1).update(abstained=True), 'abstención no coincide')
     rel('R32', 'output con una EI BLOCKED', lambda e: out(e, 1).update(ei='EI-19'), '(BLOCKED)')
     rel('R33', 'input_manifest_hash incorrecto', lambda e: out(e, 2).update(input_manifest_hash='0' * 64),
-        'input_manifest_hash incorrecto')
+        'input_manifest_hash incorrecto', 'raw')
     rel('R34', 'texto sin [SINTÉTICO]', r_content(1, lambda c: c['sections'][0].update(text_synthetic='Licenciatura real.')),
         'sin el prefijo [SINTÉTICO]')
     rel('R35', 'texto con un correo', r_content(3, lambda c: c.update(
         text_synthetic='[SINTÉTICO] Contacto ' + 'evaluadora' + '@' + 'colegio.pe')), 'patrón de PII')
     rel('R36', 'texto no NFC', r_content(3, lambda c: c.update(
-        text_synthetic='[SINTÉTICO] La persona evaluadora sinte' + '́' + 'tica anota un ejemplo.')), 'no está en NFC')
+        text_synthetic='[SINTÉTICO] La persona evaluadora sintética anota un ejemplo.')), 'no está en NFC')
     rel('R36b', 'texto sin prefijo por descomposición Unicode', r_content(3, lambda c: c.update(
-        text_synthetic='[SINTE' + '́' + 'TICO] La persona evaluadora sintética anota un ejemplo.')), 'sin el prefijo')
+        text_synthetic='[SINTÉTICO] La persona evaluadora sintética anota un ejemplo.')), 'sin el prefijo')
     rel('R37', 'documento renderizado desde algo que no es un CV', r_content(8, lambda c: c.update(
         rendered_from='SBX36-ORG-S1-ART-0002')), 'REL-10')
     rel('R38', 'variante contrafactual de otra vacante', r_content(7, lambda c: c.update(
@@ -546,7 +807,7 @@ def main():
     rel('R39', 'anotación con un criterio de otra vacante', r_content(4, lambda c: c.update(criterion_id='CRI-0016')),
         'REL-08')
     rel('R40', 'identificadores repetidos', lambda e: frg(e, 2).update(fragment_id='SBX36-ORG-S1-FRG-0001'), 'REL-03')
-    rel('R41', 'identificador de otra organización', lambda e: art(e, 1).update(synthetic_id='SBX36-ORG-S2-ART-0001'), 'REL-03')
+    rel('R41', 'identificador de otra organización', r_set(1, synthetic_id='SBX36-ORG-S2-ART-0001'), 'REL-03')
     rel('R42', 'transcripción sin revisar', r_content(2, lambda c: c.update(review_status='cruda')),
         'review_status con valor desconocido')
     rel('R43', 'campo de contenido adicional', r_content(1, lambda c: c.update(score=1)), 'contenido distinto del tipo')
@@ -557,28 +818,205 @@ def main():
     rel('R46', 'plantilla de otra familia', lambda e: art(e, 1)['provenance'].update(template_id='TPL36-BB-01'),
         'no pertenece a la familia')
     rel('R47', 'ejemplo que no se declara ejemplo', lambda e: e.update(example_only=False), 'solo ejemplo')
+    rel('R48', 'method_config con top_k 0', lambda e: out(e, 1)['method_config'].update(top_k=0), 'method_config fuera')
+    rel('R49', 'method_config con un campo adicional (temperature)',
+        lambda e: out(e, 1)['method_config'].update(temperature=0.7), 'method_config fuera')
+    rel('R50', 'method_config con normalización desconocida',
+        lambda e: out(e, 1)['method_config'].update(normalization='semantica'), 'method_config fuera')
+    rel('R51', 'method_config con top_k booleano', lambda e: out(e, 1)['method_config'].update(top_k=True),
+        'method_config fuera')
+    rel('R52', 'nota del ejemplo con un carácter invisible',
+        lambda e: e.update(note=e['note'].replace('Ejemplo', 'Ejem​plo', 1)), 'debe declararse solo ejemplo')
+    rel('R53', 'texto con un carácter invisible (U+200B)', r_content(3, lambda c: c.update(
+        text_synthetic='[SINTÉTICO] La persona evaluadora​ sintética anota un ejemplo.')), 'caracteres invisibles')
+    rel('R54', 'fragment_ref_hashes en otro orden', lambda e: out(e, 1).update(
+        fragment_ref_hashes=list(reversed(out(e, 1)['fragment_ref_hashes']))), 'fragment_ref_hashes no coincide', 'raw')
+    rel('R55', 'abstained como entero', lambda e: out(e, 2).update(abstained=1), 'abstained debe ser booleano')
+    rel('R56', 'familia de plantilla con un carácter invisible',
+        lambda e: (art(e, 1).update(template_family='TF36-AA​'),
+                   art(e, 1)['provenance'].update(template_family='TF36-AA​')), 'template_family fuera de patrón')
+    rel('R57', 'provenance con un campo adicional (llm_generated)',
+        lambda e: art(e, 1)['provenance'].update(llm_generated=False), 'provenance distinta del contrato')
+    rel('R58', 'fragmento con un campo adicional', lambda e: frg(e, 1).update(confidence=0.9), 'campos distintos del contrato')
+    rel('R59', 'manifiesto con un campo adicional', lambda e: e['partition_manifest'].update(notes='x'),
+        'manifiesto de particiones ausente o con campos distintos')
+    rel('R60', 'lista de secciones vacía', r_content(1, lambda c: c.update(sections=[])), 'debe ser una lista no vacía')
+    rel('R61', 'upstream_refs vacía', lambda e: art(e, 1)['provenance'].update(upstream_refs=[]), 'sin referencias upstream')
+    rel('R62', 'fragment_refs con repetidos',
+        lambda e: out(e, 1).update(fragment_refs=['SBX36-ORG-S1-FRG-0001', 'SBX36-ORG-S1-FRG-0001']),
+        'identificadores únicos')
+    rel('R63', 'artefacto repetido en la lista de una partición',
+        lambda e: e['partition_manifest']['partitions']['dev']['artifacts'].append('SBX36-ORG-S1-ART-0001'),
+        'lista de artefactos inválida')
+    rel('R64', 'enumerado desconocido en una anotación', r_content(4, lambda c: c.update(relevance='parcial')),
+        'relevance con valor desconocido')
+
+    # ---------------- cadena de hashes y sello de test (H)
+    rel('H01', 'semilla cambiada sin recalcular record_hash', lambda e: art(e, 1)['provenance'].update(seed=3611),
+        'record_hash incorrecto', 'raw')
+    rel('H02', 'artefacto recalculado sin actualizar su fragmento',
+        lambda e: (art(e, 1)['provenance'].update(seed=3611), rehash(art(e, 1))),
+        'artifact_record_hash no es el record_hash vigente', 'raw')
+    rel('H03', 'record_hash sustituido por el content_hash (esquema anterior)',
+        lambda e: art(e, 2).update(record_hash=art(e, 2)['content_hash']), 'record_hash incorrecto', 'raw')
+    rel('H04', 'sello declarado con el algoritmo v1',
+        lambda e: e['partition_manifest']['partitions']['test'].update(seal_algorithm='f36sbx-test-seal-sha256-v1'),
+        'algoritmo de sello')
+    rel('H05', 'sello calculado con el esquema v1 (pares [id, content_hash])',
+        lambda e: e['partition_manifest']['partitions']['test'].update(seal_sha256=v.sha256(v.canonical(sorted(
+            [a['synthetic_id'], a['content_hash']] for a in e['artifacts'] if a['partition'] == 'test')))), SEAL, 'raw')
+    rel('H06', 'output de ajuste cambiado sin recalcular su output_hash',
+        lambda e: out(e, 1)['method_config'].update(top_k=7), 'output_hash incorrecto', 'raw')
+    rel('H07', 'fragmento de test sin recalcular text_hash',
+        lambda e: frg(e, 4).update(char_start=frg(e, 4)['char_start'] + 1), 'text_hash incorrecto', 'raw')
+    seal_only('H08', 'artefacto de dev usado por el ajuste, cambiado sin resellar (lo fija el output de ajuste)',
+              r_content(3, lambda c: c.update(text_synthetic=c['text_synthetic'] + ' Sin cambios de contexto.')))
+    seal_only('H09', 'output de ajuste recalculado sin resellar', lambda e: out(e, 1)['method_config'].update(top_k=7))
+    seal_only('H10', 'oro de dev cambiado sin resellar (tuning_gold)', r_content(4, lambda c: c.update(overlap_stratum='alto')))
+    seal_only('H11', 'output de test recalculado sin resellar (test_outputs)',
+              lambda e: out(e, 3).update(query_criterion_id='CRI-0018'))
+    rel('H12', 'fragmento de test sin outputs, recalculado sin resellar (test_fragments)',
+        lambda e: (e.update(outputs=[o for o in e['outputs'] if o['partition'] == 'dev']), reseal(e),
+                   frg(e, 4).update(char_start=frg(e, 4)['char_start'] + 1), rehash_all(e)), SEAL, 'raw')
+
+    # ---------------- aislamiento entre tenants y procedencia (X): hashes válidos y test resellado
+    rel('X01', 'criterio del contenido sin su referencia upstream', r_content(4, lambda c: c.update(criterion_id='CRI-0005')),
+        'falta la referencia upstream de content.criterion_id')
+    rel('X02', 'referencia upstream a la vacante repetida',
+        lambda e: art(e, 1)['provenance']['upstream_refs'].append(dict(art(e, 1)['provenance']['upstream_refs'][0])),
+        'repetida o inválida')
+    rel('X03', 'referencia a otra postulación de la misma vacante', add_ref(1, 'applications.csv', 'APP-00002'),
+        'de otra postulación')
+    rel('X04', 'referencia upstream con un campo adicional',
+        lambda e: art(e, 1)['provenance']['upstream_refs'][0].update(note='libre'), 'referencia upstream mal formada')
+    rel('X05', 'referencia upstream a una URL', add_ref(1, 'https://example.invalid/x.csv', 'X', '0' * 64),
+        'global no admitida')
+    rel('X06', 'referencia upstream a g0-evidence', add_ref(1, 'docs/academico/g0-evidence/x.csv', 'X', '0' * 64),
+        'global no admitida')
+    rel('X07', 'autor con un tenant inexistente (EV-S4-01)', r_content(3, lambda c: c.update(author_token='EV-S4-01')),
+        'author_token fuera de patrón')
+    rel('X08', 'anotador de ORG-S2 en una anotación de ORG-S1', r_content(4, lambda c: c.update(annotator_token='ANT36-S2-01')),
+        "annotator_token 'ANT36-S2-01' es de ORG-S2")
+    rel('X09', 'segunda vacante propia citada (otra vacante de ORG-S1)', add_ref(1, 'vacancies.csv', 'VAC-0010'),
+        'de otra vacante')
+    rel('X10', 'trasplante de un solo artefacto de test a ORG-S2 sin sus referencias',
+        lambda e: art(e, 6).update(synthetic_organization_id='ORG-S2', synthetic_id='SBX36-ORG-S2-ART-0006'), 'REL-04')
+
+    # ---------------- pruebas obligatorias de la auditoría AF2 (AF2-01..AF2-33)
+    fg02 = lambda fn: lambda docs, ctx: fn(docs['FG-02'])  # noqa: E731
+    fg03 = lambda fn: lambda docs, ctx: fn(docs['FG-03'])  # noqa: E731
+    fg10 = lambda fn: lambda docs, ctx: fn(docs['FG-10'])  # noqa: E731
+    fg12 = lambda fn: lambda docs, ctx: fn(docs['FG-12'])  # noqa: E731
+
+    # AF2-M01 · coherencia entre el registro y el informe o el ADR.
+    af2('AF2-01', 'FG-02 APROBADO en el registro y NO_APROBADO en el informe', 'FG-02',
+        set_report(lambda m: m.update(verdict='NO_APROBADO_PARA_INTEGRACION')), 'no coincide con el del registro')
+    af2('AF2-02', 'FG-02 con HIGH = 0 en el registro y HIGH = 2 en el informe', 'FG-02',
+        set_report(lambda m: m['findings_open'].update(high=2)), 'recuentos de hallazgos del informe no coinciden')
+    af2('AF2-03', 'informe que solo contiene el SHA del candidato', 'FG-02', set_report(raw=CAND.encode('ascii')),
+        'exactamente un bloque')
+    af2('AF2-04', 'auditor «...» (registro e informe coherentes)', 'FG-02',
+        both(fg02(lambda d: d['auditor'].update(name='...')), set_report()), 'identidad del auditor')
+    af2('AF2-05', 'auditor de caracteres invisibles U+200B (registro e informe coherentes)', 'FG-02',
+        both(fg02(lambda d: d['auditor'].update(name='​​​')), set_report()), 'caracteres invisibles')
+    af2('AF2-06', 'metadatos del informe con otro commit', 'FG-02',
+        set_report(lambda m: m.update(candidate_commit=OTHER)), 'el commit de los metadatos no es el candidato')
+    af2('AF2-07', 'veredicto aprobatorio distinto en el informe', 'FG-02',
+        set_report(lambda m: m.update(verdict='APROBADO_PARA_INTEGRACION')), 'no coincide con el del registro')
+    af2('AF2-08', 'recuentos distintos en el informe (LOW)', 'FG-02',
+        set_report(lambda m: m['findings_open'].update(low=3)), 'recuentos de hallazgos del informe no coinciden')
+    af2('AF2-09', 'FG-12 APROBADO en el registro y PROPUESTO en el ADR', 'FG-12',
+        set_adr(lambda m: m.update(status='PROPUESTO')), 'status de los metadatos')
+    af2('AF2-10', 'metadatos del ADR de otro contexto (otro gate)', 'FG-12',
+        set_adr(lambda m: m.update(gate_id='G0-SBX')), 'otro contexto')
+    af2('AF2-11', 'covered_ei distinta en el ADR', 'FG-12',
+        set_adr(lambda m: m.update(covered_ei=['EI-10', 'EI-11'])), 'covered_ei de los metadatos')
+    af2('AF2-12', 'decisión sobre EI-09 distinta en el ADR', 'FG-12',
+        set_adr(lambda m: m.update(ei09_decision='NO_CABE_EN_ALCANCE_B')), 'ei09_decision de los metadatos')
+
+    # AF2-M02 · cadena de hashes y sello de test: cambios coherentes, registros recalculados y sin resellar.
+    seal_only('AF2-13', 'application_token de test trasplantado (APP-00013 → APP-00015) sin resellar', TO_APP)
+    seal_only('AF2-14', 'vacante de test trasplantada (VAC-0004 → VAC-0010, con sus postulaciones y criterios) sin resellar',
+              TO_VAC)
+    seal_only('AF2-15', 'organización de test trasplantada (ORG-S1 → ORG-S2, con identificadores y referencias) sin resellar',
+              TO_ORG)
+    seal_only('AF2-16', 'escenario de test cambiado (SC36-02 → SC36-03) sin resellar', TO_SCENARIO)
+    seal_only('AF2-17', 'familia de plantilla de test cambiada (TF36-BB → TF36-CC) sin resellar', TO_FAMILY)
+    seal_only('AF2-18', 'generator_version de un artefacto de test cambiada sin resellar',
+              lambda e: art(e, 6)['provenance'].update(generator_version='0.2.0'))
+    seal_only('AF2-19', 'semilla de un artefacto de test cambiada sin resellar',
+              lambda e: art(e, 6)['provenance'].update(seed=3616))
+    seal_only('AF2-20', 'provenance upstream de test cambiada (criterio legítimo añadido) sin resellar',
+              add_ref(6, 'criteria.csv', 'CRI-0018'))
+    rel('AF2-21', 'contexto de un fragmento de test cambiado sin recalcular su hash',
+        lambda e: frg(e, 4).update(application_token='APP-00015'), 'fragment_hash incorrecto', 'raw')
+    rel('AF2-22', 'contexto de un output de test cambiado sin recalcular su hash',
+        lambda e: out(e, 3).update(application_token='APP-00015'), 'output_hash incorrecto', 'raw')
+    rel('AF2-23', 'fragmento de entrada cambiado y recalculado, sin recalcular el output',
+        lambda e: (frg(e, 4).update(char_end=frg(e, 4)['char_end'] - 1), rehash_fragment(e, 4)),
+        'fragment_ref_hashes no coincide', 'raw')
+    seal_only('AF2-24', 'oro de test (anotación de relevancia) cambiado sin resellar',
+              r_content(9, lambda c: c.update(relevance='no_relevante')))
+    resealed('P-01', 'control positivo resellado: el trasplante de postulación, con test vuelto a sellar, es conforme', TO_APP)
+    resealed('P-02', 'control positivo resellado: el trasplante coherente a ORG-S2, con test vuelto a sellar, es conforme',
+             TO_ORG)
+    resealed('P-03', 'control positivo resellado: la semilla de test cambiada y resellada es conforme',
+             lambda e: art(e, 6)['provenance'].update(seed=3616))
+    resealed('P-04', 'control positivo resellado: el oro de test cambiado y resellado es conforme',
+             r_content(9, lambda c: c.update(relevance='no_relevante')))
+
+    # AF2-M03 · aislamiento entre tenants: autores y referencias upstream contextuales.
+    rel('AF2-25', 'autor de ORG-S2 (EV-S2-01) en una observación de ORG-S1', r_content(3, lambda c: c.update(author_token='EV-S2-01')),
+        "author_token 'EV-S2-01' es de ORG-S2")
+    rel('AF2-26', 'referencia upstream adicional a una postulación de ORG-S2 (APP-00003)', add_ref(1, 'applications.csv', 'APP-00003'),
+        "'APP-00003' de otra organización")
+    rel('AF2-27', 'referencia upstream a un criterio de otra vacante de la misma organización (CRI-0045)',
+        add_ref(1, 'criteria.csv', 'CRI-0045'), "'CRI-0045' de otra vacante")
+    rel('AF2-28', 'referencia upstream a un criterio de otro escenario (CRI-0016, SC36-02)', add_ref(1, 'criteria.csv', 'CRI-0016'),
+        "'CRI-0016' de otro escenario")
+    rel('AF2-29', 'referencia upstream desconocida (CRI-9999)', add_ref(1, 'criteria.csv', 'CRI-9999'), "'CRI-9999' no existe")
+    rel('AF2-30', 'fuente global no admitida (competencies.csv, con su hash real del manifiesto F34)',
+        add_ref(1, F34 + 'competencies.csv', 'CMP-S1-01', COMPETENCIES_SHA), 'global no admitida')
+    resealed('P-05', 'control positivo: referencia legítima a otro criterio de la misma vacante (CRI-0005)',
+             add_ref(1, 'criteria.csv', 'CRI-0005'))
+    resealed('P-06', 'control positivo: anotador y autor de su propia organización (ANT36-S1-09, EV-S1-07)',
+             lambda e: (art(e, 4)['content'].update(annotator_token='ANT36-S1-09'),
+                        art(e, 3)['content'].update(author_token='EV-S1-07')))
+
+    # AF2-L01 · identificador del ejemplo cerrado y cobertura mínima.
+    rel('AF2-31', 'example_id como objeto', lambda e: e.update(example_id={'id': 'f36sbx-contract-example'}),
+        'example_id debe ser exactamente')
+    rel('AF2-32', 'example_id con candidate_score', lambda e: e.update(example_id={'candidate_score': 1}),
+        'example_id debe ser exactamente')
+    rel('AF2-33', 'ejemplo vacío',
+        lambda e: (e.update(artifacts=[], fragments=[], outputs=[]),
+                   e['partition_manifest']['partitions']['dev'].update(artifacts=[]),
+                   e['partition_manifest']['partitions']['test'].update(artifacts=[]),
+                   e['partition_manifest']['thresholds'].update(tuning_outputs=[])), 'REL-14 cobertura mínima')
+    rel('L01', 'ejemplo sin test', lambda e: (
+        e.update(artifacts=[a for a in e['artifacts'] if a['partition'] == 'dev'],
+                 fragments=[f for f in e['fragments'] if f['partition'] == 'dev'],
+                 outputs=[o for o in e['outputs'] if o['partition'] == 'dev']),
+        e['partition_manifest']['partitions']['test'].update(artifacts=[])), 'test sin artefactos')
+    rel('L02', 'ejemplo sin abstención', lambda e: (
+        e.update(outputs=[o for o in e['outputs'] if not o['abstained']])), 'sin outputs con abstención')
+    rel('L03', 'ejemplo sin un tipo de artefacto (rendered_document)', lambda e: (
+        e.update(artifacts=[a for a in e['artifacts'] if a['artifact_type'] != 'rendered_document']),
+        e['partition_manifest']['partitions']['dev']['artifacts'].remove('SBX36-ORG-S1-ART-0008')), 'faltan tipos de artefacto')
+    rel('L04', 'ejemplo con un solo escenario', TO_SCENARIO_ONE, 'menos de dos escenarios')
+    rel('L05', 'ejemplo sin oro en test', lambda e: (
+        e.update(artifacts=[a for a in e['artifacts'] if a['synthetic_id'] != 'SBX36-ORG-S1-ART-0009']),
+        e['partition_manifest']['partitions']['test']['artifacts'].remove('SBX36-ORG-S1-ART-0009')), 'test sin anotaciones de oro')
 
     # ---------------- semántica de la evidencia de equipo (E)
     full = build()
     ok(all(v.team_evidence_errors(fg, full) == [] for fg in v.FG_TEAM) and decide(full) == 'SUPERADO', 'E00',
-       'control positivo en memoria: las cuatro evidencias son válidas y el gate da SUPERADO',
+       'control positivo en memoria: las cuatro evidencias, el informe y el ADR son válidos y el gate da SUPERADO',
        str({fg: v.team_evidence_errors(fg, full)[:2] for fg in v.FG_TEAM}))
     no_c = build(['EI-01', 'EI-07'], team=('FG-02', 'FG-03', 'FG-10'))
     no_c['state']['criteria'][11]['status'] = 'NO APLICA'
     ok(decide(no_c) == 'SUPERADO', 'E00b', 'control positivo: solo EI ALLOWED, FG-10 sin dependencias nuevas y FG-12 NO APLICA',
        decide(no_c))
-
-    def fg02(fn):
-        return lambda docs, ctx: fn(docs['FG-02'])
-
-    def fg03(fn):
-        return lambda docs, ctx: fn(docs['FG-03'])
-
-    def fg10(fn):
-        return lambda docs, ctx: fn(docs['FG-10'])
-
-    def fg12(fn):
-        return lambda docs, ctx: fn(docs['FG-12'])
 
     def both_auth(lst):
         def f(docs, ctx):
@@ -611,21 +1049,20 @@ def main():
             'está PROPUESTO')
     ev_case('E14', 'FG-12 de otro contexto (otro gate)', 'FG-12', fg12(lambda d: d.update(gate_id='G0-SBX')),
             'otro contexto')
-    ev_case('E14b', 'FG-12 con un ADR de otro contexto', 'FG-12',
-            lambda docs, ctx: ctx['repo_files'].update({ADR_PATH: b'# ADR-006\n\nOtro proyecto.\n'})
-            or docs['FG-12']['successor_adr'].update(sha256=v.sha256(b'# ADR-006\n\nOtro proyecto.\n')),
-            'no corresponde a este contexto')
+    ev_case('E14b', 'FG-12 con un ADR que no cita F36-SBX ni ADR-005', 'FG-12',
+            set_adr(prose=ADR_PROSE.replace('F36-SBX', 'otro proyecto').replace('ADR-005', 'otra decisión')),
+            'otro contexto')
     ev_case('E15', 'FG-12 que intenta autorizar una EI BLOCKED', 'FG-12',
             fg12(lambda d: d.update(covered_ei=['EI-10', 'EI-19'])), 'EI-19, que es BLOCKED')
     # Refuerzos de las mismas invariantes.
     ev_case('E16', 'FG-02 con JSON de claves duplicadas', 'FG-02',
             lambda docs, ctx: docs.update({'FG-02': b'{"schema": "a", "schema": "b"}'}), 'no es JSON')
     ev_case('E17', 'FG-02 con informe de otro hash', 'FG-02', fg02(lambda d: d['audit_report'].update(sha256='0' * 64)),
-            'SHA-256 del informe')
-    ev_case('E18', 'FG-02 con informe que no nombra el candidato', 'FG-02',
-            lambda docs, ctx: ctx['evidence'].update({REPORT: b'# Informe sin commit\n'})
-            or docs['FG-02']['audit_report'].update(sha256=v.sha256(b'# Informe sin commit\n')), 'no nombra el commit')
-    ev_case('E19', 'FG-02 con auditor genérico', 'FG-02', fg02(lambda d: d['auditor'].update(name='N/A')), 'inequívoca')
+            'SHA-256 es distinto')
+    ev_case('E18', 'FG-02 con informe sin bloque canónico', 'FG-02',
+            set_report(raw=REPORT_PROSE.encode('utf-8')), 'exactamente un bloque')
+    ev_case('E19', 'FG-02 con auditor genérico (N/A)', 'FG-02',
+            both(fg02(lambda d: d['auditor'].update(name='N/A')), set_report()), 'identidad del auditor')
     ev_case('E20', 'FG-02 con auditor no independiente', 'FG-02',
             fg02(lambda d: d['auditor'].update(independent_of_candidate=False)), 'independiente')
     ev_case('E21', 'FG-02 con un recuento booleano', 'FG-02', fg02(lambda d: d['findings_open'].update(blocker=False)),
@@ -666,9 +1103,9 @@ def main():
     ev_case('E38', 'FG-12 con id de ADR reservado', 'FG-12', fg12(lambda d: d['successor_adr'].update(id='ADR-005')),
             'reservado')
     ev_case('E39', 'FG-12 con un ADR inexistente', 'FG-12', lambda docs, ctx: ctx['repo_files'].clear(), 'no existe')
-    ev_case('E40', 'FG-12 sin decisión sobre EI-09 autorizada', 'FG-12', fg12(lambda d: d.update(ei09_decision='SIN_DECISION')),
-            'EI-09 autorizada sin la decisión')
-    ev_case('E41', 'FG-12 que no cubre EI-10', 'FG-12', fg12(lambda d: d.update(covered_ei=[])), 'no cubre')
+    ev_case('E40', 'FG-12 sin decisión sobre EI-09 autorizada', 'FG-12',
+            both(fg12(lambda d: d.update(ei09_decision='SIN_DECISION')), set_adr()), 'EI-09 autorizada sin la decisión')
+    ev_case('E41', 'FG-12 que no cubre EI-10', 'FG-12', both(fg12(lambda d: d.update(covered_ei=[])), set_adr()), 'no cubre')
     ev_case('E42', 'FG-12 sin ADR con EI-10 autorizada', 'FG-12', fg12(lambda d: d.update(successor_adr=None, covered_ei=[])),
             'exigen un ADR sucesor')
     ev_case('E43', 'FG-12 que cubre una EI ALLOWED', 'FG-12', fg12(lambda d: d.update(covered_ei=['EI-10', 'EI-07'])),
@@ -678,12 +1115,105 @@ def main():
     ev_case('E45', 'record_id de otro criterio', 'FG-03', fg03(lambda d: d.update(record_id='F36SBX-FG-02-001')), 'record_id')
     ev_case('E46', 'evidencia citada por el estado en otra ruta', 'FG-02',
             lambda docs, ctx: ctx['state']['criteria'][1].update(evidence=EV + 'otra.json'), 'debe citar exactamente')
+    ev_case('E47', 'FG-12 con el ADR fuera de docs/', 'FG-12', fg12(lambda d: d['successor_adr'].update(path='storage/adr.md')),
+            'ruta del ADR inválida')
+    ev_case('E48', 'FG-12 con el ADR cambiado después del candidato', 'FG-12',
+            lambda docs, ctx: ctx['facts'][CAND].update(changed=ctx['facts'][CAND]['changed'] + [ADR_PATH]),
+            'el paquete cambió después')
+
+    # ---------------- informe y ADR: bloque canónico, texto exterior y coherencia (D)
+    block = 'f36sbx-audit-metadata'
+    ev_case('D01', 'informe con dos bloques canónicos', 'FG-02',
+            lambda docs, ctx: set_report(extra=f'\n```{block}\n{{}}\n```\n')(docs, ctx), 'exactamente un bloque')
+    ev_case('D02', 'informe con otro bloque f36sbx ambiguo', 'FG-02',
+            set_report(extra='\n```F36SBX-audit-metadata-v0\n{}\n```\n'), 'otro bloque f36sbx ambiguo')
+    ev_case('D03', 'bloque del informe con claves duplicadas', 'FG-02',
+            set_report(raw=(REPORT_PROSE + f'\n```{block}\n{{"verdict": "a", "verdict": "b"}}\n```\n').encode('utf-8')),
+            'no es un objeto JSON válido')
+    ev_case('D04', 'bloque del informe con un campo adicional', 'FG-02', set_report(lambda m: m.update(notes='x')),
+            'metadatos con campos distintos')
+    ev_case('D05', 'bloque del informe sin report_date', 'FG-02', set_report(lambda m: m.pop('report_date')),
+            'metadatos con campos distintos')
+    ev_case('D06', 'informe sin la sección de hallazgos', 'FG-02',
+            set_report(prose=REPORT_PROSE.replace('## Hallazgos', '## Notas')), 'faltan las secciones')
+    ev_case('D07', 'informe no NFC', 'FG-02', set_report(prose=REPORT_PROSE.replace('Revisión', 'Revisión')),
+            'no está en NFC')
+    ev_case('D08', 'informe con un carácter de control bidireccional (U+202E)', 'FG-02',
+            set_report(prose=REPORT_PROSE.replace('Revisión', 'Revisión‮')), 'caracteres invisibles')
+    ev_case('D09', 'report_date anterior al candidato', 'FG-02', set_report(lambda m: m.update(report_date='2026-10-01')),
+            'report_date inválida')
+    ev_case('D10', 'informe de otro criterio (FG-03)', 'FG-02', set_report(lambda m: m.update(criterion_id='FG-03')),
+            'otro contexto')
+    ev_case('D11', 'informe de otra versión del gate', 'FG-02', set_report(lambda m: m.update(gate_version='2')),
+            'otro contexto')
+    ev_case('D12', 'informe que no es UTF-8', 'FG-02',
+            set_report(raw=REPORT_PROSE.encode('latin-1', 'replace')), 'no es UTF-8')
+    ev_case('D13', 'JSON señuelo fuera del bloque con recuentos', 'FG-02',
+            set_report(extra='\n```json\n{"high": 2}\n```\n'), 'aserciones de veredicto o de recuentos')
+    ev_case('D14', 'auditor distinto en el informe', 'FG-02',
+            set_report(lambda m: m['auditor'].update(name='Otra sesión de auditoría ficticia')),
+            'el auditor de los metadatos no coincide')
+    ev_case('D15', 'tipo de auditor distinto en el informe', 'FG-02',
+            set_report(lambda m: m['auditor'].update(kind='docente')), 'el auditor de los metadatos no coincide')
+    ev_case('D16', 'recuento booleano en el informe (false por 0)', 'FG-02',
+            set_report(lambda m: m['findings_open'].update(high=False)), 'recuentos de hallazgos del informe no coinciden')
+    ev_case('D17', 'veredicto canónico fuera del bloque', 'FG-02',
+            set_report(prose=REPORT_PROSE + '\nNO_APROBADO_PARA_INTEGRACION\n'), 'aparece fuera del bloque')
+    ev_case('D18', 'recuento afirmado fuera del bloque (HIGH = 2)', 'FG-02',
+            set_report(prose=REPORT_PROSE + '\nHIGH = 2\n'), 'aserciones de veredicto o de recuentos')
+    ev_case('D19', 'veredicto afirmado fuera del bloque (Veredicto: …)', 'FG-02',
+            set_report(prose=REPORT_PROSE + '\nVeredicto: rechazado.\n'), 'aserciones de veredicto o de recuentos')
+    ev_case('D20', 'informe con solo el bloque', 'FG-02', set_report(prose=''), 'contenido humano insuficiente')
+    ev_case('D21', 'identidad del auditor con U+200B dentro del nombre', 'FG-02',
+            both(fg02(lambda d: d['auditor'].update(name='Revisora​Externa Ficticia')), set_report()),
+            'caracteres invisibles')
+    ev_case('D22', 'identidad del auditor con espacios al inicio', 'FG-02',
+            both(fg02(lambda d: d['auditor'].update(name=' Revisora Externa Ficticia')), set_report()), 'espacios')
+    ev_case('D23', 'identidad del auditor genérica («Auditor independiente»)', 'FG-02',
+            both(fg02(lambda d: d['auditor'].update(name='Auditor independiente')), set_report()), 'marcador de posición')
+    ev_case('D24', 'identidad del auditor no NFC', 'FG-02',
+            both(fg02(lambda d: d['auditor'].update(name='Sesión de auditoría ficticia')), set_report()), 'no está en NFC')
+    ev_case('D25', 'bloque del informe que es una lista', 'FG-02',
+            set_report(raw=(REPORT_PROSE + f'\n```{block}\n[]\n```\n').encode('utf-8')), 'no es un objeto JSON válido')
+    ev_case('D26', 'ADR con dos bloques canónicos', 'FG-12',
+            set_adr(extra='\n```f36sbx-adr-metadata\n{}\n```\n'), 'exactamente un bloque')
+    ev_case('D27', 'ADR sin su id en el título', 'FG-12', set_adr(prose=ADR_PROSE.replace('# ADR-006 ·', '# ADR sucesor ·')),
+            'el título no nombra su id')
+    ev_case('D28', 'ADR con el estado afirmado fuera del bloque', 'FG-12',
+            set_adr(prose=ADR_PROSE + '\nEstado: vigente.\n'), 'aserción o token de estado')
+    ev_case('D29', 'ADR con un token de estado fuera del bloque', 'FG-12',
+            set_adr(prose=ADR_PROSE + '\nEste ADR queda PROPUESTO hasta nueva revisión.\n'), 'aserción o token de estado')
+    ev_case('D30', 'ADR con la relación canónica fuera del bloque', 'FG-12',
+            set_adr(prose=ADR_PROSE + '\nEXCEPCION_SANDBOX_SINTETICA_ADR005_6_4\n'), 'token canónico')
+    ev_case('D31', 'ADR decidido después del commit candidato que lo contiene', 'FG-12',
+            set_adr(lambda m: m.update(decided_on='2026-10-27')), 'decided_on')
+    ev_case('D32', 'id del ADR distinto en sus metadatos', 'FG-12', set_adr(lambda m: m.update(adr_id='ADR-007')),
+            'adr_id de los metadatos')
+    ev_case('D33', 'alcance distinto en los metadatos del ADR', 'FG-12', set_adr(lambda m: m.update(scope='ALCANCE_C_REAL')),
+            'scope de los metadatos')
+    ev_case('D34', 'covered_ei repetida en los metadatos del ADR', 'FG-12',
+            set_adr(lambda m: m.update(covered_ei=['EI-10', 'EI-10'])), 'covered_ei de los metadatos')
+    ev_case('D35', 'metadatos del ADR con otra base', 'FG-12', set_adr(lambda m: m.update(base_commit=OTHER)), 'otro contexto')
+    ev_case('D36', 'metadatos del ADR de otra versión del gate', 'FG-12', set_adr(lambda m: m.update(gate_version='2')),
+            'otro contexto')
+    ev_case('D37', 'metadatos del ADR que citan el commit candidato (campo no admitido)', 'FG-12',
+            set_adr(lambda m: m.update(applies_to_candidate_commit=CAND)), 'metadatos con campos distintos')
+    ev_case('D38', 'ADR con un carácter invisible', 'FG-12', set_adr(prose=ADR_PROSE.replace('Contexto\n', 'Contexto⁠\n', 1)),
+            'caracteres invisibles')
+    ev_case('D39', 'ADR sin la sección de consecuencias', 'FG-12',
+            set_adr(prose=ADR_PROSE.replace('## Consecuencias', '## Otras notas')), 'faltan las secciones')
+    ev_case('D40', 'ADR con estado RECHAZADO en registro y bloque', 'FG-12',
+            both(fg12(lambda d: d['successor_adr'].update(status='RECHAZADO')), set_adr()), 'está RECHAZADO')
+    ev_case('D41', 'ADR con ei09_decision vacía en sus metadatos', 'FG-12', set_adr(lambda m: m.update(ei09_decision=None)),
+            'ei09_decision de los metadatos')
+    ev_case('D42', 'informe con el auditor del bloque como texto', 'FG-02',
+            set_report(lambda m: m.update(auditor='Sesión de auditoría independiente AF3')), 'auditor con campos distintos')
 
     # ---------------- registro de evidencia en el repositorio (GR)
     snap = copy.deepcopy(BASE)
     register()(snap)
     res, gate = v.run(snap)
-    fl = [f'{n}: {m[:120]}' for n, ok_, m in res if not ok_]
+    fl = [f'{n}: {m[:160]}' for n, ok_, m in res if not ok_]
     ok(not fl and gate == 'NO SUPERADO', 'GR01', 'control positivo: registro parcial válido de FG-02 (el gate sigue NO SUPERADO)',
        f'gate {gate}' if not fl else f'fallas: {fl}')
     case('GR02', 'FG-02 en CUMPLE con evidencia vacía', register(mutate=lambda d, c: d.update({'FG-02': b''})), 'GATE',
@@ -729,13 +1259,21 @@ def main():
     case('GR22', 'FG-04 declarado distinto del recalculado', jmut(S, lambda d: d['criteria'][3].update(status='NO CUMPLE')),
          'GATE', 'AUTO declarados')
     case('GR23', 'clave duplicada en el estado del gate',
-         sub(S, '"gate_version": "2",', '"gate_version": "2",\n  "gate_version": "3",'), 'GATE', 'JSON inválido')
+         sub(S, '"gate_version": "3",', '"gate_version": "3",\n  "gate_version": "4",'), 'GATE', 'JSON inválido')
     case('GR24', 'tabla FG del documento distinta del JSON', sub(G, '| Regla FRZ | CUMPLE |', '| Regla FRZ | PENDIENTE |'),
          'GATE', 'tabla FG')
     case('GR25', 'AUTO declarado CUMPLE con el gobierno roto', sub('CLAUDE.md', '- F36-SBX-GATE = NO SUPERADO\n', ''),
          'GATE', 'AUTO declarados')
     case('GR26', 'candidate_commit con formato inválido', jmut(S, lambda d: d.update(candidate_commit='HEAD')), 'GATE',
          'fuera de formato')
+    case('GR27', 'esquema de evidencia v1 (sin bloque canónico)', jmut(SCH, lambda d: d.update(schema_tag='f36sbx-team-evidence/v1')),
+         'GATE', 'idéntico a la versión cerrada')
+    case('GR28', 'esquema cuyo ADR cita el commit que lo contiene',
+         jmut(SCH, lambda d: d['criteria']['FG-12']['adr_metadata_fields'].append('applies_to_candidate_commit')), 'GATE',
+         'nunca el commit que lo contiene')
+    case('GR29', 'PII en el ADR citado por FG-12',
+         register(('FG-02', 'FG-03', 'FG-12'), set_adr(prose=ADR_PROSE + '\nContacto: adr' + '@' + 'colegio.pe\n')),
+         'PII', 'ADR_006_prueba_en_memoria.md: correo')
 
     # ---------------- regla de decisión (G)
     def stub(errors):
@@ -781,6 +1319,23 @@ def main():
        and not v.doc_status_only('| FG-02 | x | EQUIPO | y | PENDIENTE |', '| FG-02 | z | EQUIPO | y | PENDIENTE |'),
        'G16', 'el documento del gate solo admite cambios en la columna Estado', '')
 
+    # ---------------- controles positivos adicionales (P)
+    names = ['Dra. Ficticia Núñez-Ejemplo (revisora académica)', 'Sesión AF3 · revisión independiente ficticia', 'Ana']
+    bad_names = {n: v.identity_errors(n, 'identidad') for n in names}
+    ok(not any(bad_names.values()), 'P-07', 'control positivo: identidades visibles con tildes, guiones y puntuación son válidas',
+       str({k: e for k, e in bad_names.items() if e}))
+    ok(all(v.identity_errors(n, 'identidad') for n in ('', '  ', '...', 'N/A', '​​​', 'Revisora‮Externa',
+                                                        'TBD', 'auditoría independiente', 'x' * 121)),
+       'P-08', 'contraste: identidades vacías, invisibles, genéricas o demasiado largas son inválidas', '')
+    ctx = build(mutate=set_report(extra='\n```text\nNota técnica sin valores normativos.\n```\n'))
+    ok(v.team_evidence_errors('FG-02', ctx) == [], 'P-09', 'control positivo: un bloque de código ajeno, sin tokens ni '
+       'aserciones, no invalida el informe', str(v.team_evidence_errors('FG-02', ctx)[:2]))
+    pos('P-10', 'control positivo: registro de FG-02, FG-03 y FG-12 con informe y ADR válidos (gate NO SUPERADO: falta FG-10)',
+        register(('FG-02', 'FG-03', 'FG-12')))
+    pos('P-11', 'límite documentado: un artefacto de dev fuera del ajuste puede cambiar sin resellar (dev no se sella)',
+        jmut(EX, lambda e: (r_content(5, lambda c: c.update(text_synthetic=c['text_synthetic'] + ' Variante.'))(e),
+                            rehash_all(e))))
+
     # ---------------- falsos PASS de la auditoría AF1, reconstruidos sobre 06e933e (AUD)
     for i, fg in enumerate(v.FG_TEAM, 1):
         case(f'AUD-{i:02d}', f'{fg} en CUMPLE con un archivo cualquiera ({{}})',
@@ -815,7 +1370,15 @@ def main():
     return 1 if bad else 0
 
 
+def TO_SCENARIO_ONE(e):
+    """Todo el ejemplo en un solo escenario (SC36-01)."""
+    transplant({'SC36-02': 'SC36-01'})(e)
+
+
 BASE = v.collect(v.ROOT)
+CONTRACT = v.strict_json(BASE['texts'][C])
+COMPETENCIES_SHA = ((v.json_bytes(BASE['upstream'][F34 + 'manifest.json']) or {}).get('files', {})
+                    .get('competencies.csv', {}).get('sha256', 'e' * 64))
 
 if __name__ == '__main__':
     sys.exit(main())
