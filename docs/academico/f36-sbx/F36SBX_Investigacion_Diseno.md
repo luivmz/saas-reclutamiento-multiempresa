@@ -72,7 +72,7 @@ PC secundaria declarada por el equipo: Intel Core i5-10400F (6 núcleos y 12 hil
 Solo diseño. Sigue la forma de F35-SBX-B: herramientas académicas fuera del runtime.
 
 ```
-fixtures sintéticos (contrato F36-SBX v1, sellados por manifiesto)
+fixtures sintéticos (contrato F36-SBX v3, test sellado con el sello v2)
   → guardia de entrada: marcadores synthetic-only, PII y tamaños (falla cerrado)
   → índice por postulación (organización sintética + postulación; nunca global)
   → consulta iniciada por el evaluador simulado, después de su calificación

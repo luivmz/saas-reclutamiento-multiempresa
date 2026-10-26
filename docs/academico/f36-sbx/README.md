@@ -1,6 +1,6 @@
 # F36-SBX — Autorización, investigación y diseño de la inteligencia sobre evidencia
 
-> Fase F36-SBX, versión 2 (26/10/2026), en la rama `feature/f36-sbx-authorization-design`, desde `main` = `b8892af39a6492d8dd44a36290604efc602380cd`. La versión 1 (`06e933e`) **no fue aprobada para integración** por la auditoría independiente AF1. Esta versión es su corrección focal y es **candidata a una segunda auditoría independiente**. Solo documentación, gobierno y validadores documentales: sin ML, sin NLP, sin dependencias nuevas, sin runtime y sin datos reales.
+> Fase F36-SBX, versión 3 (26/10/2026), en la rama `feature/f36-sbx-authorization-design`, desde `main` = `b8892af39a6492d8dd44a36290604efc602380cd`. La versión 1 (`06e933e`) **no fue aprobada para integración** por la auditoría independiente AF1, ni la versión 2 (`2a4e68c`) por la auditoría independiente AF2. Esta versión es la corrección focal de AF2 y es **candidata a una tercera auditoría independiente**. Solo documentación, gobierno y validadores documentales: sin ML, sin NLP, sin dependencias nuevas, sin runtime y sin datos reales.
 
 ## Estado
 
