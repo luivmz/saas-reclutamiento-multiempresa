@@ -22,6 +22,7 @@
 7. [Gate sucesor](F36SBX_Gate_Sucesor.md), [estado del gate](gate/f36sbx_gate_state.json) y [esquema de la evidencia de equipo](gate/f36sbx_team_evidence_schema.json): FG-01..FG-14 y el plan de entrada a F37-SBX.
 8. [Trazabilidad](F36SBX_Trazabilidad.md).
 9. [Corrección AF1](F36SBX_Correccion_AF1.md): hallazgos de la primera auditoría, falsos PASS reproducidos y cómo los impide el nuevo oracle.
+10. [Corrección AF2](F36SBX_Correccion_AF2.md): bloque canónico del informe y del ADR, cadena de hashes con sello v2, aislamiento entre tenants y cobertura mínima del ejemplo (contrato v3 y esquema de evidencia v2).
 
 La evidencia de los criterios de equipo (FG-02, FG-03, FG-10 y FG-12) se archivará en `gate/evidencia/`, con el formato de la [sección 8 del gate](F36SBX_Gate_Sucesor.md#8-formato-de-la-evidencia-de-equipo), cuando exista. Hoy esa carpeta no existe.
 
@@ -30,6 +31,7 @@ La evidencia de los criterios de equipo (FG-02, FG-03, FG-10 y FG-12) se archiva
 ```sh
 python -I -B docs/academico/tools/f36sbx/validate_f36sbx.py
 python -I -B docs/academico/tools/f36sbx/test_f36sbx.py
+python -I -B docs/academico/tools/f36sbx/meta_f36sbx.py   # ablaciones y mutación de hojas (lento)
 ```
 
 Solo usan la biblioteca estándar de Python 3.12. El validador admite las ramas `feature/f36-sbx-authorization-design`, `develop` y `main`, y compara contra la base `b8892af`.
