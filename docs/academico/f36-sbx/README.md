@@ -32,3 +32,6 @@ python -I -B docs/academico/tools/f36sbx/test_f36sbx.py
 ```
 
 Solo usan la biblioteca estándar de Python 3.12. El validador admite las ramas `feature/f36-sbx-authorization-design`, `develop` y `main`, y compara contra la base `b8892af`.
+
+- **Anclaje.** Tras la integración, el validador sigue pasando mientras `develop` o `main` no tengan, frente a `b8892af`, cambios ajenos a F36-SBX. Un HEAD posterior con otros cambios hace fallar la regla FRZ por diseño, como DG-02 en F35-SBX. En ese caso se valida anclado en esta rama.
+- **Gates congelados de F35-SBX.** Sobre esta rama fallan las mismas reglas que sobre `main`, más la de contexto (CTX), porque cada gate solo admite su rama, `develop` y `main`. El cierre global suma además SEM: trata como cambio de gobierno no autorizado cualquier estado nuevo de F36-SBX (GC09 y GC-H5). Siguen valiendo anclados en sus ramas (DG-02).

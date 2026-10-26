@@ -63,7 +63,7 @@ PC secundaria declarada por el equipo: Intel Core i5-10400F (6 núcleos y 12 hil
 **Decisiones de diseño derivadas:**
 
 1. **CPU primero.** La línea base reproducible corre en CPU, con hilos fijados y semillas declaradas. La GPU solo serviría para comparar latencia, nunca para producir el resultado de referencia.
-2. **GPU sin núcleos tensoriales.** La familia GTX 16 no los tiene, así que no se cuenta con aceleración de precisión mixta. Si alguna vez se usa la GPU, se prefiere FP32. F37-SBX debe verificar el comportamiento en FP16 antes de usarlo.
+2. **GPU sin núcleos tensoriales.** La familia GTX 16 no los tiene, así que la precisión mixta no obtiene la aceleración que esos núcleos dan en otras GPU. Si alguna vez se usa la GPU, se prefiere FP32. F37-SBX debe medir el comportamiento en FP16 antes de usarlo.
 3. **Memoria compartida.** Docker Desktop y WSL2 compiten con el host por los 16 GB. F37-SBX debe fijar en WSL2 un límite de memoria explícito y medir el pico de cada ejecución (plan de evaluación, métrica R-03).
 4. **Sin descargas implícitas.** Ningún modelo se descarga en tiempo de ejecución: un artefacto se registra antes con su hash SHA-256, su licencia y su origen (TEI-17).
 
