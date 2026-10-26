@@ -49,4 +49,14 @@ Cubre lo que F37-SBX podría hacer si el gate se supera: las capacidades ALLOWED
 
 ## Controles que F36-SBX ya verifica
 
-En este incremento, `validate_f36sbx.py` verifica TEI-01 (sin PII en el paquete), TEI-14 y TEI-15 (la matriz bloquea scoring, ranking e inferencias), TEI-17 y TEI-18 (sin importaciones fuera de la biblioteca estándar en `tools/f36sbx`) y TEI-22 (ninguna superficie congelada, productiva ni de dependencias cambia). Los demás controles se diseñan aquí y se prueban en F37-SBX, si el gate se supera.
+En este incremento, `validate_f36sbx.py` verifica:
+
+- TEI-01 y TEI-02: no hay PII en el paquete, en sus herramientas ni en la evidencia, y los textos del ejemplo pasan la guardia EI-05.
+- TEI-05: en el ejemplo de conformidad, ningún fragmento ni output mezcla organización, escenario, vacante o postulación (REL-05, REL-06 y REL-07).
+- TEI-08: hay partición cerrada, `test` sellado y ajuste solo con `dev` (REL-11).
+- TEI-09, TEI-10 y TEI-12: los outputs no tienen texto propio y la cadena de provenance se recalcula entera (REL-02, REL-06 y REL-07).
+- TEI-14 y TEI-15: la matriz fijada bloquea scoring, ranking e inferencias, y el contrato prohíbe campos y tokens de puntaje o de persona.
+- TEI-17 y TEI-18: no hay importaciones fuera de la biblioteca estándar ni bytes de control en `tools/f36sbx`.
+- TEI-22: ninguna superficie congelada, productiva ni de dependencias cambia.
+
+Los demás controles se diseñan aquí y se prueban en F37-SBX, si el gate se supera.

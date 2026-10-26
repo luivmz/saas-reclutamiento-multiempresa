@@ -107,9 +107,10 @@ La revocación se registra en un incremento nuevo y no reescribe este charter. C
 |---|---|
 | [Matriz de capacidades](F36SBX_Matriz_Capacidades.md) | Clasifica cada capacidad como ALLOWED, CONDITIONAL o BLOCKED, con su CAP-xx y su alcance |
 | [Investigación y diseño](F36SBX_Investigacion_Diseno.md) | Tareas, enfoques, viabilidad de hardware, arquitectura conceptual y propuesta de ADR sucesor |
-| [Contrato de evidencia](F36SBX_Contrato_Evidencia.md) y [`f36sbx_evidence_contract.json`](contrato/f36sbx_evidence_contract.json) | Tipos de evidencia sintética, procedencia, marcadores, particiones y fuga |
+| [Contrato de evidencia](F36SBX_Contrato_Evidencia.md), [`f36sbx_evidence_contract.json`](contrato/f36sbx_evidence_contract.json) y [ejemplo de conformidad](contrato/f36sbx_contract_example.json) | Contrato cerrado de la evidencia sintética: registros, procedencia, marcadores, particiones, fuga y relaciones REL-01..REL-12, con un ejemplo mínimo que las ejercita |
 | [Threat model](F36SBX_Threat_Model.md) | Amenazas TEI-01..TEI-22 con controles fail-closed |
 | [Plan de evaluación](F36SBX_Plan_Evaluacion.md) | Métricas por tarea, oráculos y umbrales declarados antes de medir. Sin resultados |
-| [Gate sucesor](F36SBX_Gate_Sucesor.md) y [`f36sbx_gate_state.json`](gate/f36sbx_gate_state.json) | Criterios FG-01..FG-14, regla PASS/FAIL y plan de entrada a F37-SBX |
+| [Gate sucesor](F36SBX_Gate_Sucesor.md), [`f36sbx_gate_state.json`](gate/f36sbx_gate_state.json) y [`f36sbx_team_evidence_schema.json`](gate/f36sbx_team_evidence_schema.json) | Criterios FG-01..FG-14, regla PASS/FAIL, formato cerrado de la evidencia de equipo, vínculo con el candidato auditado y plan de entrada a F37-SBX |
+| [Corrección AF1](F36SBX_Correccion_AF1.md) | Hallazgos de la primera auditoría independiente, falsos PASS reproducidos y cómo los impide el nuevo oracle |
 | [Trazabilidad](F36SBX_Trazabilidad.md) | Relación con F30, F33, F34, F35, los RF y las amenazas anteriores |
 | [`validate_f36sbx.py`](../tools/f36sbx/validate_f36sbx.py) y [`test_f36sbx.py`](../tools/f36sbx/test_f36sbx.py) | Validador fail-closed del paquete y sus pruebas negativas y mutantes |

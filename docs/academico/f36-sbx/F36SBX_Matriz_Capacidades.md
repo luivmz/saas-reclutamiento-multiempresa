@@ -15,6 +15,8 @@
 1. Una fila que cita una CAP **BLOQUEADA** en la [matriz F33](../diseno-inteligente/F33_Matriz_Capacidades_y_Restricciones.md) es BLOCKED.
 2. Una fila que cita una CAP **FUTURA** no puede ser ALLOWED.
 3. Una fila de alcance C no puede ser ALLOWED.
+4. La clase y el alcance de cada EI están fijados en el validador. Reclasificar una EI, por ejemplo EI-09, exige un incremento auditado.
+5. Una capacidad ALLOWED no puede nombrar técnicas de alcance C ni bloqueadas: embeddings, búsqueda semántica, OCR, LLM, PDF, DOCX, NER, extracción, transformers, Whisper, STT o audio.
 
 F36-SBX nunca relaja una clasificación de F33.
 
