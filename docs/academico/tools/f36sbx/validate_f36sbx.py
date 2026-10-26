@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Validador fail-closed del paquete F36-SBX (autorización, investigación y diseño), versión 2.
+"""Validador fail-closed del paquete F36-SBX (autorización, investigación y diseño), versión 3 (AF2).
 
 Solo biblioteca estándar. No ejecuta ML ni NLP, no usa red y no escribe archivos.
 
 - Recalcula el F36-SBX-GATE y exige que coincida con el declarado.
-- Valida la semántica de la evidencia de equipo (FG-02, FG-03, FG-10 y FG-12) y su vínculo con el commit
-  candidato auditado; la existencia de un archivo no basta.
-- Valida el contrato de evidencia cerrado (v2) y, con él, el ejemplo de conformidad: estructura, provenance,
-  relaciones entre objetos y particiones (REL-01..REL-12).
+- Valida la semántica de la evidencia de equipo (FG-02, FG-03, FG-10 y FG-12), su vínculo con el commit
+  candidato auditado y su coherencia exacta con el bloque canónico del informe de auditoría o del ADR.
+- Valida el contrato de evidencia cerrado (v3) y, con él, el ejemplo de conformidad: estructura, hashes de
+  contenido, de registro, de fragmento y de output, sello de test, provenance contextual, aislamiento entre
+  tenants y cobertura mínima (REL-01..REL-14).
 
 Uso: python -I -B docs/academico/tools/f36sbx/validate_f36sbx.py
 """
@@ -43,16 +44,25 @@ TEAM_SCHEMA = PKG + '/gate/f36sbx_team_evidence_schema.json'
 F33_MATRIX = 'docs/academico/diseno-inteligente/F33_Matriz_Capacidades_y_Restricciones.md'
 PKG_DOCS = ['README.md', 'F36SBX_Charter.md', 'F36SBX_Matriz_Capacidades.md', 'F36SBX_Investigacion_Diseno.md',
             'F36SBX_Contrato_Evidencia.md', 'F36SBX_Threat_Model.md', 'F36SBX_Plan_Evaluacion.md',
-            'F36SBX_Gate_Sucesor.md', 'F36SBX_Trazabilidad.md', 'F36SBX_Correccion_AF1.md']
+            'F36SBX_Gate_Sucesor.md', 'F36SBX_Trazabilidad.md', 'F36SBX_Correccion_AF1.md', 'F36SBX_Correccion_AF2.md']
 PKG_DATA = [CONTRACT, EXAMPLE, GATE_STATE, TEAM_SCHEMA]
 PKG_FILES = [f'{PKG}/{n}' for n in PKG_DOCS] + PKG_DATA
 GOV_FILES = ['CLAUDE.md', 'README.md', 'docs/PROGRESS.md', 'docs/academico/ACADEMIC_BASELINE.md']
 F34 = 'docs/academico/datos-sinteticos/dataset/'
-UPSTREAM_FILES = [F34 + 'applications.csv', F34 + 'criteria.csv', F34 + 'vacancies.csv', F34 + 'manifest.json']
+UPSTREAM_FILES = [F34 + 'applications.csv', F34 + 'criteria.csv', F34 + 'vacancies.csv', F34 + 'manifest.json',
+                  F34 + 'competencies.csv']
 
 # Integridad de los artefactos cerrados: SHA-256 de su JSON canónico. Cambiarlos exige un incremento auditado.
-CONTRACT_SHA256 = 'b68cf631dce7a7141a2dc708273adfd07ae71e0c14dca869ce833b765adb754a'
-TEAM_SCHEMA_SHA256 = 'b87b1cc9e8e4820cc432abf05d7370075b1b49b52a10f3d0092ac5269a510c5e'
+CONTRACT_SHA256 = 'd9b70951efb3e1162628f6e09fecf4f214aa342df8f825bff7a907f24ea3fb03'
+TEAM_SCHEMA_SHA256 = '89cbc2286730bd301834ec43a7bf959c7343de266f2e78b10e96edd906da92f2'
+
+# Etiquetas de dominio de los hashes de registro (sección hash_scheme del contrato).
+TAG_RECORD = 'f36sbx-artifact-record-v1'
+TAG_FRAGMENT = 'f36sbx-fragment-v1'
+TAG_INPUT = 'f36sbx-input-manifest-v1'
+TAG_OUTPUT = 'f36sbx-output-v1'
+TAG_SEAL = 'f36sbx-test-seal-v2'
+SEAL_ALGORITHM = 'f36sbx-test-seal-sha256-v2'
 
 # Estado vigente de los cuatro documentos de gobierno: exactamente estas líneas, una vez cada una.
 REQUIRED_STATE = ['G0 real = NO APROBADA', 'G0-09 = CUMPLIDO', 'G0-14 = CUMPLIDO', 'G0-02 = PENDIENTE EXTERNO',
@@ -124,15 +134,27 @@ THREAT_TOPICS = ['injection', 'malicioso', 'envenenamiento', 'fuga criterio', 'o
 M_IDS = [f'M-{i:02d}' for i in range(1, 14)]
 R_IDS = [f'R-{i:02d}' for i in range(1, 6)]
 
-# Invariantes del contrato v2 que se comprueban además de su hash.
+# Invariantes del contrato v3 que se comprueban además de su hash.
 CONTRACT_KEYS = ['contract_id', 'contract_version', 'status', 'environment', 'source_type_allowed', 'generator_policy',
-                 'allowed_upstream_sources', 'upstream_files', 'upstream_manifest', 'upstream_ref_bindings',
-                 'content_upstream_bindings', 'forbidden_upstream_sources', 'synthetic_markers', 'identifier_patterns',
-                 'enums', 'content_field_types', 'artifact_envelope_fields', 'artifact_types', 'fragment_fields',
-                 'output_fields', 'output_ei', 'context_fields', 'provenance_fields', 'example_fields',
-                 'partition_manifest_fields', 'partition_fields', 'threshold_fields', 'hashing', 'relations',
-                 'group_marker_only_in', 'forbidden_fields', 'forbidden_field_tokens', 'splits']
+                 'allowed_upstream_sources', 'upstream_files', 'global_upstream_sources', 'global_upstream_policy',
+                 'upstream_manifest', 'content_upstream_bindings', 'tenant_bound_tokens', 'internal_references',
+                 'global_identifiers', 'forbidden_upstream_sources',
+                 'synthetic_markers', 'identifier_patterns', 'enums', 'content_field_types',
+                 'artifact_envelope_fields', 'artifact_types', 'fragment_fields', 'output_fields',
+                 'method_config_fields', 'top_k_range', 'output_ei', 'context_fields', 'provenance_fields',
+                 'example_fields', 'example_id_value', 'example_coverage', 'partition_manifest_fields',
+                 'partition_fields', 'threshold_fields', 'hash_scheme', 'relations', 'group_marker_only_in',
+                 'forbidden_fields', 'forbidden_field_tokens', 'splits']
 ALLOWED_UPSTREAM = {'docs/academico/datos-sinteticos/dataset', 'docs/academico/evidencia-sbx/fixtures'}
+EXPECTED_UPSTREAM_FILES = {
+    F34 + 'applications.csv': {'key': 'application_token', 'scope': 'tenant', 'cardinality': 'exactly_one_own',
+                               'context': {'organization': 'organization_token', 'vacancy': 'vacancy_token',
+                                           'application': 'application_token'}},
+    F34 + 'criteria.csv': {'key': 'criterion_id', 'scope': 'tenant', 'cardinality': 'any_same_vacancy',
+                           'context': {'vacancy': 'vacancy_token'}},
+    F34 + 'vacancies.csv': {'key': 'vacancy_token', 'scope': 'tenant', 'cardinality': 'exactly_one_own',
+                            'context': {'organization': 'organization_token', 'vacancy': 'vacancy_token'}},
+}
 REQUIRED_FORBIDDEN_SOURCES = {'docs/academico/g0-evidence', 'storage', 'database', 'http://', 'https://'}
 MARKERS = {'synthetic_id_prefix': 'SBX36-', 'text_prefix': '[SINTÉTICO]', 'source_type': 'synthetic',
            'environment': 'sandbox', 'hash_algorithm': 'f36sbx-content-sha256-v1',
@@ -142,18 +164,25 @@ ARTIFACT_TYPES = {'cv_document': 'A', 'certificate': 'A', 'interview_transcript'
                   'rendered_document': 'B'}
 ENVELOPE = ['synthetic_id', 'artifact_type', 'stage', 'synthetic_organization_id', 'scenario_id', 'vacancy_token',
             'application_token', 'partition', 'template_family', 'source_type', 'environment', 'hash_algorithm',
-            'content', 'content_hash', 'provenance']
+            'content', 'content_hash', 'provenance', 'record_hash']
 CONTEXT = ['synthetic_organization_id', 'scenario_id', 'vacancy_token', 'application_token', 'partition']
-FRAGMENT_FIELDS = ['fragment_id', 'artifact_id', *CONTEXT, 'text_path', 'char_start', 'char_end', 'fragment_hash']
-OUTPUT_FIELDS = ['output_id', 'ei', 'method_id', 'method_version', *CONTEXT, 'query_criterion_id', 'fragment_refs',
-                 'abstained', 'input_manifest_hash', 'output_hash']
+FRAGMENT_FIELDS = ['fragment_id', 'artifact_id', 'artifact_record_hash', *CONTEXT, 'text_path', 'char_start',
+                   'char_end', 'text_hash', 'fragment_hash']
+OUTPUT_FIELDS = ['output_id', 'ei', 'method_id', 'method_version', 'method_config', *CONTEXT, 'query_criterion_id',
+                 'fragment_refs', 'fragment_ref_hashes', 'abstained', 'input_manifest_hash', 'output_hash']
 PROVENANCE = ['generator_id', 'generator_version', 'template_id', 'template_family', 'seed', 'upstream_refs',
               'content_hash']
+TENANT_TOKENS = ['author_token', 'annotator_token']
+INTERNAL_REFERENCES = {'fragment_id': 'fragments', 'variant_of': 'artifacts', 'rendered_from': 'artifacts'}
 EXPECTED_SPLITS = {'partitions': ['dev', 'test'], 'forbidden_partitions': ['train'], 'train_allowed': False,
                    'group_by': ['template_family', 'vacancy_token'], 'test_sealed_before_any_run': True,
-                   'seal_algorithm': 'f36sbx-test-seal-sha256-v1', 'thresholds_fit_on': 'dev',
-                   'test_used_for_tuning': False, 'temporal_embargo': 'process_splits_f34',
-                   'counterfactual_pairs_same_partition': True}
+                   'seal_algorithm': SEAL_ALGORITHM, 'thresholds_fit_on': 'dev', 'test_used_for_tuning': False,
+                   'temporal_embargo': 'process_splits_f34', 'counterfactual_pairs_same_partition': True}
+EXPECTED_COVERAGE = {'artifact_types': list(ARTIFACT_TYPES), 'min_fragments': 1, 'min_outputs_with_fragments': 1,
+                     'min_abstained_outputs': 1, 'min_test_artifacts': 1, 'min_test_gold_annotations': 1,
+                     'min_test_outputs': 1, 'min_tuning_outputs': 1, 'min_scenarios': 2}
+EXPECTED_HASH_TAGS = {'record_hash': TAG_RECORD, 'fragment_hash': TAG_FRAGMENT, 'input_manifest_hash': TAG_INPUT,
+                      'output_hash': TAG_OUTPUT, 'seal_sha256': TAG_SEAL}
 REQUIRED_FORBIDDEN_FIELDS = {'name', 'dni', 'email', 'phone', 'address', 'photo', 'age', 'gender', 'score', 'rank',
                              'recommendation', 'suitability', 'suggested_level', 'emotion', 'personality',
                              'honesty', 'intelligence', 'stress', 'nervousness', 'voice', 'face', 'prosody',
@@ -161,7 +190,7 @@ REQUIRED_FORBIDDEN_FIELDS = {'name', 'dni', 'email', 'phone', 'address', 'photo'
 REQUIRED_FORBIDDEN_TOKENS = {'name', 'dni', 'email', 'phone', 'gender', 'score', 'rank', 'recommendation', 'fit',
                              'verdict', 'emotion', 'personality', 'honesty', 'intelligence', 'stress',
                              'nervousness', 'voice', 'face', 'biometric', 'level', 'hire', 'select', 'discard'}
-REL_IDS = [f'REL-{i:02d}' for i in range(1, 13)]
+REL_IDS = [f'REL-{i:02d}' for i in range(1, 15)]
 
 FG_IDS = [f'FG-{i:02d}' for i in range(1, 15)]
 FG_TEAM = ('FG-02', 'FG-03', 'FG-10', 'FG-12')
@@ -169,21 +198,34 @@ FG_NA_ALLOWED = frozenset({'FG-12'})
 AUTO_STATUSES = frozenset({'CUMPLE', 'NO CUMPLE'})
 TEAM_STATUSES = frozenset({'CUMPLE', 'PENDIENTE', 'NO CUMPLE'})
 STATUSES = AUTO_STATUSES | TEAM_STATUSES | {'NO APLICA'}
+GATE_VERSION = '3'
+TEAM_SCHEMA_TAG = 'f36sbx-team-evidence/v2'
 GATE_KEYS = {'gate_id', 'gate_version', 'authorizes', 'cannot_authorize', 'base_commit', 'candidate_commit',
              'team_evidence_schema', 'criteria', 'f37_authorized_ei', 'revocation', 'declared_result'}
 CANNOT_AUTHORIZE = {'produccion', 'datos_reales', 'pii_real', 'audio_video_real', 'seleccion_automatica',
                     'scoring_ranking_recomendacion', 'cambio_rf23_rf21_rf29', 'g0_real', 'alcance_c_producto',
                     'endpoints_migraciones_ui', 'ei_blocked'}
-PLACEHOLDERS = {'auditor', 'auditora', 'independiente', 'auditor independiente', 'auditoría independiente',
-                'auditoria independiente', 'n/a', 'na', 'tbd', 'pendiente', 'desconocido', 'anónimo', 'anonimo',
-                'none', 'null', 'x', '-', '?'}
+# Marcadores de posición que nunca identifican a una persona (comparados sin puntuación ni mayúsculas).
+PLACEHOLDERS = {'auditor', 'auditora', 'independiente', 'auditor independiente', 'auditora independiente',
+                'auditoria independiente', 'auditoría independiente', 'n a', 'na', 'tbd', 'todo', 'pendiente',
+                'desconocido', 'desconocida', 'anonimo', 'anónimo', 'anonima', 'anónima', 'none', 'null', 'nadie',
+                'nombre', 'nombre del auditor', 'xxx', 'test', 'prueba'}
+# Categorías Unicode prohibidas en identidades y en documentos humanos: control, formato (U+200B, U+202E…),
+# uso privado, no asignados y separadores de línea o de párrafo.
+INVISIBLE_CATEGORIES = frozenset({'Cc', 'Cf', 'Co', 'Cn', 'Zl', 'Zp'})
 HEX40 = re.compile(r'[0-9a-f]{40}')
 HEX64 = re.compile(r'[0-9a-f]{64}')
 INDEX = re.compile(r'0|[1-9][0-9]*')
+FENCE_RX = re.compile(r'^```(?P<info>[^\n`]*)\n(?P<body>.*?)\n```[ \t]*$', re.M | re.S)
+# Aserciones normativas fuera del bloque canónico (también entre comillas, como en un JSON señuelo).
+COUNT_ASSERTION_RX = re.compile(r'(?i)\b(blocker|high|medium[ _]requiring[ _]fix|medium[ _]accepted|low)\b["\']?\s*[:=]\s*\d')
+VERDICT_ASSERTION_RX = re.compile(r'(?i)\b(veredicto|verdict)\b["\']?\s*[:=]')
+STATUS_ASSERTION_RX = re.compile(r'(?i)\b(estado|status)\b["\']?\s*[:=]')
+ADR_STATUS_TOKENS = ('PROPUESTO', 'APROBADO', 'RECHAZADO', 'REVOCADO')
 
 STDLIB = frozenset({'ast', 'copy', 'csv', 'datetime', 'hashlib', 'importlib', 'io', 'json', 'os', 're', 'subprocess',
-                    'sys', 'unicodedata', 'pathlib', 'unittest', 'tempfile'})
-LOCAL_MODULES = frozenset({'validate_f36sbx'})
+                    'sys', 'unicodedata', 'pathlib', 'unittest', 'tempfile', 'itertools', 'contextlib', 'types'})
+LOCAL_MODULES = frozenset({'validate_f36sbx', 'test_f36sbx'})
 ML_IMPORT = re.compile(r'^\s*(?:import|from)\s+(torch|transformers|sentence_transformers|spacy|sklearn|pypdf|'
                        r'pdfplumber|docx|pytesseract|ollama|openai|anthropic|faiss|chromadb|whisper|numpy|'
                        r'pandas|requests|urllib3|httpx)\b', re.M)
@@ -200,6 +242,23 @@ F35_FROZEN = ('docs/academico/evidencia-sbx', 'docs/academico/g0-', 'docs/academ
 
 
 # ---------------------------------------------------------------- utilidades
+
+_CACHE = {}
+
+
+def memo(kind, key, fn):
+    """Memoriza un resultado que depende solo de key (textos inmutables o rutas que no cambian en el proceso).
+
+    Solo acelera las baterías, que evalúan cientos de fotografías casi iguales; clear_caches() lo vacía."""
+    k = (kind, key)
+    if k not in _CACHE:
+        _CACHE[k] = fn()
+    return _CACHE[k]
+
+
+def clear_caches():
+    _CACHE.clear()
+
 
 def norm(text):
     """NFKC y guiones unificados, para que una variante tipográfica no esquive una regla."""
@@ -233,6 +292,110 @@ def sha256(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def tagged_hash(tag, obj):
+    """Hash de registro con separación de dominio: sha256(etiqueta + «\\n» + JSON canónico)."""
+    return sha256(tag.encode('utf-8') + b'\n' + canonical(obj))
+
+
+def without(record, key):
+    return {k: v for k, v in record.items() if k != key}
+
+
+def artifact_record_hash(a):
+    return tagged_hash(TAG_RECORD, without(a, 'record_hash'))
+
+
+def fragment_record_hash(f):
+    return tagged_hash(TAG_FRAGMENT, without(f, 'fragment_hash'))
+
+
+def output_record_hash(o):
+    return tagged_hash(TAG_OUTPUT, without(o, 'output_hash'))
+
+
+def input_manifest_hash(fragments, application, partition):
+    pool = sorted([f.get('fragment_id'), f.get('fragment_hash')] for f in fragments
+                  if f.get('application_token') == application and f.get('partition') == partition)
+    return tagged_hash(TAG_INPUT, {'application_token': application, 'partition': partition, 'fragments': pool})
+
+
+def test_seal(ex, contract_version):
+    """Sello v2: registros, fragmentos y outputs de test, outputs de ajuste, oro de dev y umbrales.
+
+    Los outputs de ajuste fijan por transitividad los fragmentos y artefactos de dev que usan; el oro de dev, las
+    anotaciones con las que se ajustan los umbrales. El resto de dev no se sella: es la partición de desarrollo."""
+    arts = [a for a in ex['artifacts'] if a.get('partition') == 'test']
+    gold = [a for a in ex['artifacts'] if a.get('partition') == 'dev' and a.get('artifact_type') == 'relevance_annotation']
+    frs = [f for f in ex['fragments'] if f.get('partition') == 'test']
+    outs = {o.get('output_id'): o for o in ex['outputs']}
+    tests = [o for o in ex['outputs'] if o.get('partition') == 'test']
+    pm = ex['partition_manifest']
+    tuning = pm['thresholds']['tuning_outputs']
+    preimage = {
+        'seal_algorithm': SEAL_ALGORITHM, 'contract_version': contract_version,
+        'test_artifacts': sorted([a.get('synthetic_id'), a.get('record_hash')] for a in arts),
+        'test_fragments': sorted([f.get('fragment_id'), f.get('fragment_hash')] for f in frs),
+        'test_outputs': sorted([o.get('output_id'), o.get('output_hash')] for o in tests),
+        'tuning_outputs': sorted([x, (outs.get(x) or {}).get('output_hash')] for x in tuning),
+        'tuning_gold': sorted([a.get('synthetic_id'), a.get('record_hash')] for a in gold),
+        'thresholds': pm['thresholds'], 'test_used_for_tuning': pm['test_used_for_tuning'],
+    }
+    return tagged_hash(TAG_SEAL, preimage)
+
+
+def resolve_text(content, path, patterns):
+    """Texto apuntado por text_path si coincide con un patrón del tipo; None en cualquier otro caso."""
+    if not isinstance(path, str) or not isinstance(content, dict):
+        return None
+    parts = path.split('/')
+    if not any(len(p.split('/')) == len(parts) and all(x == y or (x == '*' and INDEX.fullmatch(y))
+                                                       for x, y in zip(p.split('/'), parts)) for p in patterns):
+        return None
+    cur = content
+    for part in parts:
+        if isinstance(cur, list) and INDEX.fullmatch(part) and int(part) < len(cur):
+            cur = cur[int(part)]
+        elif isinstance(cur, dict) and part in cur:
+            cur = cur[part]
+        else:
+            return None
+    return cur if isinstance(cur, str) else None
+
+
+def seal_bundle(ex, contract):
+    """Recalcula, en orden de dependencias, todos los hashes derivados de un ejemplo y vuelve a sellar test.
+
+    Solo la usan quienes construyen o mutan ejemplos en memoria (pruebas y generador): el validador verifica,
+    nunca corrige."""
+    types = contract['artifact_types']
+    arts = {}
+    for a in ex['artifacts']:
+        a['content_hash'] = sha256(canonical(a.get('content')))
+        if isinstance(a.get('provenance'), dict):
+            a['provenance']['content_hash'] = a['content_hash']
+        a['record_hash'] = artifact_record_hash(a)
+        arts[a.get('synthetic_id')] = a
+    for f in ex['fragments']:
+        a = arts.get(f.get('artifact_id'))
+        if a is not None:
+            f['artifact_record_hash'] = a['record_hash']
+            spec = types.get(a.get('artifact_type')) or {}
+            text = resolve_text(a.get('content'), f.get('text_path'), spec.get('text_paths') or [])
+            s0, s1 = f.get('char_start'), f.get('char_end')
+            if text is not None and type(s0) is int and type(s1) is int:
+                f['text_hash'] = sha256(text[s0:s1].encode('utf-8'))
+        f['fragment_hash'] = fragment_record_hash(f)
+    frs = {f.get('fragment_id'): f for f in ex['fragments']}
+    for o in ex['outputs']:
+        refs = o.get('fragment_refs') if isinstance(o.get('fragment_refs'), list) else []
+        o['fragment_ref_hashes'] = [(frs.get(r) or {}).get('fragment_hash') for r in refs]
+        o['input_manifest_hash'] = input_manifest_hash(ex['fragments'], o.get('application_token'), o.get('partition'))
+        o['output_hash'] = output_record_hash(o)
+    test = ex['partition_manifest']['partitions']['test']
+    test['seal_sha256'] = test_seal(ex, contract['contract_version'])
+    return ex
+
+
 def parse_date(value):
     if not isinstance(value, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', value):
         return None
@@ -240,6 +403,34 @@ def parse_date(value):
         return datetime.date.fromisoformat(value)
     except ValueError:
         return None
+
+
+def invisible_chars(text, allow_layout=False):
+    """Caracteres de control, formato, privados, no asignados o separadores de línea (U+200B, U+202E…)."""
+    layout = {'\n', '\t'} if allow_layout else set()
+    return [c for c in text if c not in layout and unicodedata.category(c) in INVISIBLE_CATEGORIES]
+
+
+def identity_errors(value, label, min_letters=3, max_length=120):
+    """Identidad declarada estructuralmente válida. No autentica a nadie: eso sigue siendo revisión humana."""
+    if not isinstance(value, str):
+        return [f'{label}: no es texto']
+    e = []
+    if value != value.strip():
+        e.append(f'{label}: tiene espacios al inicio o al final')
+    bad = invisible_chars(value)
+    if bad:
+        e.append(f'{label}: contiene caracteres invisibles o de control {[f"U+{ord(c):04X}" for c in bad[:3]]}')
+    if not unicodedata.is_normalized('NFC', value):
+        e.append(f'{label}: no está en NFC')
+    if sum(1 for c in value if unicodedata.category(c).startswith('L')) < min_letters:
+        e.append(f'{label}: sin contenido visible suficiente (mínimo {min_letters} letras)')
+    if len(value) > max_length:
+        e.append(f'{label}: supera {max_length} caracteres')
+    key = re.sub(r'[\W_]+', ' ', value.casefold()).strip()
+    if not key or key in PLACEHOLDERS:
+        e.append(f'{label}: es un marcador de posición')
+    return e
 
 
 def git(root, *args):
@@ -413,11 +604,11 @@ def rule_lnk(s):
                 continue
             content = texts_by_path.get(str(target))
             if content is None:
-                if not target.exists():
+                if not memo('exists', str(target), target.exists):
                     broken.append(f'{rel}→{link}')
                     continue
                 if anchor and target.suffix == '.md':
-                    content = target.read_text(encoding='utf-8')
+                    content = memo('read', str(target), lambda: target.read_text(encoding='utf-8'))
             if anchor and target.suffix == '.md' and content is not None:
                 if anchor not in {slug(h) for h in re.findall(r'^#+ (.+)$', content, re.M)}:
                     broken.append(f'{rel}→{link}')
@@ -479,23 +670,25 @@ def state_claims(text):
                 yield m.group('subj'), state
 
 
+def forbidden_claims(text):
+    # Sin marcado Markdown: «**F37-SBX** = …» no esquiva la regla.
+    t = re.sub(r'[*`_]', '', norm(text))
+    return [f'{label} «{t[m.start():m.start() + 40].strip()}»' for pattern, label in FORBIDDEN_CLAIMS
+            for m in re.finditer(norm(pattern), t)]
+
+
 def rule_sem(s):
     hits = []
     for rel in PKG_FILES + GOV_FILES:
         text = s['texts'].get(rel)
-        if text is None:
-            continue
-        # Sin marcado Markdown: «**F37-SBX** = …» no esquiva la regla.
-        t = re.sub(r'[*`_]', '', norm(text))
-        for pattern, label in FORBIDDEN_CLAIMS:
-            for m in re.finditer(norm(pattern), t):
-                hits.append(f'{rel}: {label} «{t[m.start():m.start() + 40].strip()}»')
+        if text is not None:
+            hits += [f'{rel}: {h}' for h in memo('claims', text, lambda: forbidden_claims(text))]
     out = [(not hits, f'sin afirmaciones de estado prohibidas; encontradas: {hits}')]
     bad = []
     scopes = {p: s['texts'].get(p) for p in PKG_FILES if p.endswith('.md')}
     scopes.update({p: state_block(s['texts'].get(p)) for p in GOV_FILES})
     for rel, text in scopes.items():
-        for subj, st in state_claims(text or ''):
+        for subj, st in memo('states', text or '', lambda: list(state_claims(text or ''))):
             if st not in allowed_states(subj):
                 bad.append(f'{rel}: «{subj} = {st}»')
     out.append((not bad, f'cada afirmación «sujeto = ESTADO» usa un estado admitido para su sujeto; '
@@ -584,14 +777,14 @@ def rule_cap(s):
     return out
 
 
-# ---------------------------------------------------------------- contrato de evidencia v2
+# ---------------------------------------------------------------- contrato de evidencia v3
 
 def field_tokens(name):
     return set(name.lower().split('_'))
 
 
 def contract_semantic_errors(c, root):
-    """Invariantes del contrato v2 con mensajes explícitos (el hash fija además todo lo demás)."""
+    """Invariantes del contrato v3 con mensajes explícitos (el hash fija además todo lo demás)."""
     e = []
 
     def need(cond, msg):
@@ -600,8 +793,8 @@ def contract_semantic_errors(c, root):
 
     need(list(c) == CONTRACT_KEYS, f'claves de primer nivel distintas del contrato cerrado: '
                                    f'faltan {sorted(set(CONTRACT_KEYS) - set(c))}, sobran {sorted(set(c) - set(CONTRACT_KEYS))}')
-    need(c.get('contract_id') == 'f36sbx-evidence-contract' and c.get('contract_version') == '2'
-         and c.get('status') == 'DISENO', 'identidad: f36sbx-evidence-contract v2 en estado DISENO')
+    need(c.get('contract_id') == 'f36sbx-evidence-contract' and c.get('contract_version') == '3'
+         and c.get('status') == 'DISENO', 'identidad: f36sbx-evidence-contract v3 en estado DISENO')
     need(c.get('environment') == 'sandbox', 'environment debe ser sandbox')
     need(c.get('source_type_allowed') == ['synthetic'], 'source_type_allowed debe ser exactamente ["synthetic"]')
     need(c.get('generator_policy') == {'llm_allowed': False, 'template_based': True, 'seed_required': True,
@@ -610,15 +803,23 @@ def contract_semantic_errors(c, root):
     up = c.get('allowed_upstream_sources')
     need(isinstance(up, list) and set(up) == ALLOWED_UPSTREAM and len(up) == len(set(up))
          and all((Path(root) / u).is_dir() for u in up), 'fuentes upstream admitidas fuera de la lista cerrada')
-    files = c.get('upstream_files')
-    need(files == {F34 + 'applications.csv': 'application_token', F34 + 'criteria.csv': 'criterion_id',
-                   F34 + 'vacancies.csv': 'vacancy_token'}, 'archivos upstream distintos de las tres tablas F34')
+    need(c.get('upstream_files') == EXPECTED_UPSTREAM_FILES,
+         'archivos upstream distintos de las tres tablas F34 tipadas por tenant, con su contexto y cardinalidad')
+    need(c.get('global_upstream_sources') == [], 'fuentes globales: la allowlist debe estar cerrada y vacía en v3')
+    need(isinstance(c.get('global_upstream_policy'), str) and c['global_upstream_policy'].strip(),
+         'falta la política documentada de fuentes globales')
     need(c.get('upstream_manifest') == F34 + 'manifest.json', 'manifiesto upstream distinto del de F34')
-    need(c.get('upstream_ref_bindings') == {F34 + 'applications.csv': 'application_token',
-                                            F34 + 'vacancies.csv': 'vacancy_token'},
-         'provenance: faltan los vínculos obligatorios con la postulación y la vacante')
     need(c.get('content_upstream_bindings') == {'criterion_id': F34 + 'criteria.csv'},
          'provenance: falta el vínculo de criterion_id con criteria.csv')
+    need(c.get('tenant_bound_tokens') == TENANT_TOKENS, 'tokens ligados al tenant: author_token y annotator_token')
+    need(c.get('internal_references') == INTERNAL_REFERENCES,
+         'referencias internas: fragment_id a fragments, variant_of y rendered_from a artifacts')
+    gid = c.get('global_identifiers') if isinstance(c.get('global_identifiers'), dict) else None
+    need(gid is not None and list(gid) == ['question_id'] and all(
+        isinstance(v, dict) and set(v) == {'scope', 'personal', 'resolved_upstream', 'semantics'}
+        and v['scope'] == 'global' and v['personal'] is False and v['resolved_upstream'] is False
+        and isinstance(v['semantics'], str) and v['semantics'].strip() for v in gid.values()),
+         'identificadores globales: solo question_id, tipado, no personal, sin resolución upstream y documentado')
     need(isinstance(c.get('forbidden_upstream_sources'), list)
          and REQUIRED_FORBIDDEN_SOURCES <= set(c['forbidden_upstream_sources']),
          f'fuentes prohibidas incompletas: deben incluir {sorted(REQUIRED_FORBIDDEN_SOURCES)}')
@@ -627,6 +828,9 @@ def contract_semantic_errors(c, root):
     for key in ('artifact_id', 'fragment_id', 'output_id'):
         need(isinstance(pats.get(key), str) and pats[key].startswith('^SBX36-(ORG-S[1-3])-'),
              f'patrón {key}: debe fijar el prefijo SBX36- y la organización sintética')
+    need(pats.get('author_token') == '^EV-(S[1-3])-[0-9]{2}$'
+         and pats.get('annotator_token') == '^ANT36-(S[1-3])-[0-9]{2}$',
+         'patrones de autor y anotador: deben fijar el tenant en su grupo S1..S3')
     for key, value in pats.items():
         try:
             re.compile(value)
@@ -642,6 +846,7 @@ def contract_semantic_errors(c, root):
     need(enums.get('review_status') == ['revisada_sintetica'], 'review_status: solo revisada_sintetica')
     need(enums.get('transcript_kind') == ['texto_sintetico_revisado'], 'transcript_kind: solo texto sintético revisado')
     need(enums.get('stage') == ['A', 'B'], 'stage: solo A y B')
+    need(enums.get('normalization') == ['nfkc_casefold'], 'normalization: solo nfkc_casefold')
     need(set(enums.get('observation_kind') or []) <= {'conducta_observada', 'aclaracion'},
          'observation_kind: solo conducta observada o aclaración, nunca una inferencia')
     need(set(enums.get('format') or []) <= {'pdf', 'docx'}, 'format: solo pdf o docx')
@@ -653,6 +858,13 @@ def contract_semantic_errors(c, root):
         ok = kind in ('text', 'list') or (isinstance(kind, str) and (
             (kind.startswith('enum:') and kind[5:] in enums) or (kind.startswith('pattern:') and kind[8:] in pats)))
         need(ok, f'tipo de campo de contenido desconocido: {field} = {kind!r}')
+    # Todo identificador con patrón del contenido tiene exactamente una clase: tenant, upstream, interno o global.
+    classes = [set(c.get('tenant_bound_tokens') or []), set(c.get('content_upstream_bindings') or {}),
+               set(c.get('internal_references') or {}), set(gid or {})]
+    pattern_fields = {f for f, k in cft.items() if isinstance(k, str) and k.startswith('pattern:')}
+    need(set().union(*classes) == pattern_fields and sum(map(len, classes)) == len(pattern_fields),
+         f'identificadores del contenido sin clase única (tenant, upstream, interno o global): '
+         f'{sorted(pattern_fields ^ set().union(*classes))}')
     record_fields = []
     for name, spec in types.items():
         if not isinstance(spec, dict) or set(spec) != {'stage', 'content_fields', 'list_items', 'text_paths',
@@ -669,11 +881,14 @@ def contract_semantic_errors(c, root):
              f'{name}: fragmentable incoherente con text_paths')
         need(('grupo_sintetico' in cf) == (name == 'counterfactual_pair'), f'{name}: marcador de grupo fuera de lugar')
         record_fields += cf + [x for v in items.values() for x in v]
-    need(c.get('artifact_envelope_fields') == ENVELOPE, 'sobre del artefacto distinto del cerrado')
-    need(c.get('fragment_fields') == FRAGMENT_FIELDS, 'campos del fragmento distintos: la cadena de provenance '
-                                                      'exige artifact_id, text_path, offsets y fragment_hash')
-    need(c.get('output_fields') == OUTPUT_FIELDS, 'campos del output distintos: exige fragment_refs, abstained, '
-                                                  'input_manifest_hash y output_hash, sin texto ni puntaje')
+    need(c.get('artifact_envelope_fields') == ENVELOPE, 'sobre del artefacto distinto del cerrado: exige record_hash')
+    need(c.get('fragment_fields') == FRAGMENT_FIELDS, 'campos del fragmento distintos: la cadena exige artifact_id, '
+                                                      'artifact_record_hash, text_path, offsets, text_hash y fragment_hash')
+    need(c.get('output_fields') == OUTPUT_FIELDS, 'campos del output distintos: exige method_config, fragment_refs, '
+                                                  'fragment_ref_hashes, abstained, input_manifest_hash y output_hash, '
+                                                  'sin texto ni puntaje')
+    need(c.get('method_config_fields') == ['normalization', 'top_k'] and c.get('top_k_range') == [1, 20],
+         'configuración del método distinta de {normalization, top_k 1..20}')
     need(c.get('context_fields') == CONTEXT, 'campos de contexto distintos de organización, escenario, vacante, '
                                              'postulación y partición')
     need(c.get('output_ei') == ['EI-07', 'EI-09', 'EI-10'] and all(
@@ -684,12 +899,19 @@ def contract_semantic_errors(c, root):
          'provenance: faltan campos obligatorios del artefacto o de la referencia upstream')
     need(c.get('example_fields') == ['example_id', 'contract_version', 'example_only', 'note', 'artifacts',
                                      'fragments', 'outputs', 'partition_manifest'], 'campos del ejemplo distintos')
+    need(c.get('example_id_value') == 'f36sbx-contract-example', 'identificador cerrado del ejemplo distinto')
+    need(c.get('example_coverage') == EXPECTED_COVERAGE, 'cobertura mínima del ejemplo distinta de la exigida')
     need(c.get('partition_manifest_fields') == ['partitions', 'thresholds', 'test_used_for_tuning']
-         and c.get('partition_fields') == {'dev': ['artifacts'], 'test': ['artifacts', 'sealed', 'seal_sha256']}
+         and c.get('partition_fields') == {'dev': ['artifacts'],
+                                           'test': ['artifacts', 'sealed', 'seal_algorithm', 'seal_sha256']}
          and c.get('threshold_fields') == ['tuning_partition', 'tuning_outputs'],
-         'manifiesto de particiones distinto: test debe estar sellado y los umbrales, ajustados con dev')
+         'manifiesto de particiones distinto: test debe estar sellado con el sello v2 y los umbrales, ajustados con dev')
+    hs = c.get('hash_scheme') if isinstance(c.get('hash_scheme'), dict) else {}
+    need(all(isinstance(hs.get(k), dict) and hs[k].get('tag') == tag for k, tag in EXPECTED_HASH_TAGS.items())
+         and all(isinstance(hs.get(k), str) for k in ('canonical_json', 'tagged_hash', 'content_hash', 'text_hash')),
+         'esquema de hashes distinto: etiquetas de registro, fragmento, manifiesto, output y sello v2')
     need(isinstance(c.get('relations'), dict) and sorted(c['relations']) == REL_IDS
-         and all(isinstance(v, str) and v for v in c['relations'].values()), 'relaciones REL-01..REL-12 incompletas')
+         and all(isinstance(v, str) and v for v in c['relations'].values()), 'relaciones REL-01..REL-14 incompletas')
     need(c.get('group_marker_only_in') == ['counterfactual_pair'], 'el marcador de grupo solo va en counterfactual_pair')
     forb = c.get('forbidden_fields') if isinstance(c.get('forbidden_fields'), list) else []
     need(REQUIRED_FORBIDDEN_FIELDS <= set(forb), f'campos prohibidos incompletos: '
@@ -697,16 +919,15 @@ def contract_semantic_errors(c, root):
     toks = c.get('forbidden_field_tokens') if isinstance(c.get('forbidden_field_tokens'), list) else []
     need(REQUIRED_FORBIDDEN_TOKENS <= set(toks), f'tokens prohibidos incompletos: '
                                                  f'faltan {sorted(REQUIRED_FORBIDDEN_TOKENS - set(toks))}')
-    record_fields += ENVELOPE + FRAGMENT_FIELDS + OUTPUT_FIELDS + PROVENANCE + ['source', 'ref', 'sha256',
-                                                                                  'partitions', 'thresholds',
-                                                                                  'tuning_partition',
-                                                                                  'tuning_outputs', 'sealed',
-                                                                                  'seal_sha256', 'artifacts']
+    record_fields += ENVELOPE + FRAGMENT_FIELDS + OUTPUT_FIELDS + PROVENANCE + [
+        'source', 'ref', 'sha256', 'partitions', 'thresholds', 'tuning_partition', 'tuning_outputs', 'sealed',
+        'seal_algorithm', 'seal_sha256', 'artifacts', 'normalization', 'top_k']
     leaked = sorted({f for f in record_fields if f in forb or field_tokens(f) & set(toks)})
     need(not leaked, f'campos de registro prohibidos o con tokens prohibidos: {leaked}')
     need(c.get('splits') == EXPECTED_SPLITS, 'garantías de partición distintas: solo dev y test, train prohibido, '
-                                             'separación por familia y vacante, test sellado, umbrales en dev, '
-                                             'test sin ajuste, embargo temporal y pares en la misma partición')
+                                             'separación por familia y vacante, test sellado con el sello v2, '
+                                             'umbrales en dev, test sin ajuste, embargo temporal y pares en la '
+                                             'misma partición')
     return e
 
 
@@ -715,37 +936,19 @@ def load_upstream(c, upstream):
     try:
         files = json.loads(upstream[c['upstream_manifest']].decode('utf-8'))['files']
         tables, hashes = {}, {}
-        for path, key in c['upstream_files'].items():
+        for path, spec in c['upstream_files'].items():
             data = upstream[path]
             declared = (files.get(path.rsplit('/', 1)[1]) or {}).get('sha256')
             hashes[path] = (declared, sha256(data))
+            key = spec['key']
             tables[path] = {r[key]: r for r in csv.DictReader(io.StringIO(data.decode('utf-8'))) if key in r}
         return tables, hashes
-    except (KeyError, AttributeError, TypeError, ValueError, UnicodeDecodeError):
+    except Exception:  # noqa: BLE001 — una tabla ilegible falla cerrado
         return None
-
-
-def resolve_text(content, path, patterns):
-    """Texto apuntado por text_path si coincide con un patrón del tipo; None en cualquier otro caso."""
-    if not isinstance(path, str) or not isinstance(content, dict):
-        return None
-    parts = path.split('/')
-    if not any(len(p.split('/')) == len(parts) and all(x == y or (x == '*' and INDEX.fullmatch(y))
-                                                       for x, y in zip(p.split('/'), parts)) for p in patterns):
-        return None
-    cur = content
-    for part in parts:
-        if isinstance(cur, list) and INDEX.fullmatch(part) and int(part) < len(cur):
-            cur = cur[int(part)]
-        elif isinstance(cur, dict) and part in cur:
-            cur = cur[part]
-        else:
-            return None
-    return cur if isinstance(cur, str) else None
 
 
 def bundle_errors(c, ex, upstream):
-    """Invariantes REL-01..REL-12 de un conjunto de registros frente al contrato. Lista vacía = conforme."""
+    """Invariantes REL-01..REL-14 de un conjunto de registros frente al contrato. Lista vacía = conforme."""
     errs = []
     try:
         _bundle(c, ex, upstream, errs.append)
@@ -763,8 +966,8 @@ def _bundle(c, ex, upstream, add):
     for path, (declared, actual) in hashes.items():
         if declared != actual:
             add(f'REL-02 {path}: hash distinto del declarado en el manifiesto F34')
-    app_src = next((p for p, f in c['upstream_ref_bindings'].items() if f == 'application_token'), None)
-    vac_src = next((p for p, f in c['upstream_ref_bindings'].items() if f == 'vacancy_token'), None)
+    src_by_key = {spec['key']: path for path, spec in c['upstream_files'].items()}
+    app_src, vac_src = src_by_key.get('application_token'), src_by_key.get('vacancy_token')
     cri_src = c['content_upstream_bindings'].get('criterion_id')
     if app_src not in tables or vac_src not in tables or cri_src not in tables:
         add('REL-02 el contrato no vincula la postulación, la vacante y el criterio con tablas F34 (falla cerrado)')
@@ -775,8 +978,10 @@ def _bundle(c, ex, upstream, add):
     if set(ex) != set(c['example_fields']):
         add(f'REL-01 ejemplo: campos distintos del contrato: {sorted(set(ex) ^ set(c["example_fields"]))}')
     prefix = c['synthetic_markers']['text_prefix']
+    if ex.get('example_id') != c['example_id_value']:
+        add(f'REL-14 ejemplo: example_id debe ser exactamente {c["example_id_value"]!r}')
     if ex.get('example_only') is not True or ex.get('contract_version') != c['contract_version'] \
-            or not str(ex.get('note', '')).startswith(prefix):
+            or not isinstance(ex.get('note'), str) or not ex['note'].startswith(prefix) or invisible_chars(ex['note']):
         add('REL-01 ejemplo: debe declararse solo ejemplo, de la versión del contrato y [SINTÉTICO]')
     pats = {k: re.compile(v) for k, v in c['identifier_patterns'].items()}
     enums, types, cft = c['enums'], c['artifact_types'], c['content_field_types']
@@ -793,6 +998,9 @@ def _bundle(c, ex, upstream, add):
     if dup:
         add(f'REL-03 identificadores repetidos: {dup}')
     arts = {a.get('synthetic_id'): a for a in lists['artifacts'] if isinstance(a.get('synthetic_id'), str)}
+    vac_scenario = {}
+    for a in arts.values():
+        vac_scenario.setdefault(a.get('vacancy_token'), a.get('scenario_id'))
 
     def check_org(rid, kind, org, label):
         m = pats[kind].fullmatch(rid) if isinstance(rid, str) else None
@@ -812,8 +1020,9 @@ def _bundle(c, ex, upstream, add):
             add(f'REL-11 {label}: partición {part!r} prohibida')
         elif part not in enums['partition']:
             add(f'REL-11 {label}: partición desconocida {part!r}')
-        vac = tables[vac_src].get(rec.get('vacancy_token'))
-        app = tables[app_src].get(rec.get('application_token'))
+        vac = tables[vac_src].get(rec.get('vacancy_token')) if isinstance(rec.get('vacancy_token'), str) else None
+        app = tables[app_src].get(rec.get('application_token')) \
+            if isinstance(rec.get('application_token'), str) else None
         if vac is None:
             add(f'REL-04 {label}: la vacante {rec.get("vacancy_token")!r} no existe en F34')
         elif vac.get('organization_token') != rec.get('synthetic_organization_id'):
@@ -824,17 +1033,22 @@ def _bundle(c, ex, upstream, add):
                                                                             rec.get('synthetic_organization_id')):
             add(f'REL-04 {label}: la postulación F34 es de otra vacante u organización')
 
+    def check_text(label, where, value):
+        if not isinstance(value, str) or not value.startswith(prefix):
+            add(f'REL-12 {label}: {where} sin el prefijo [SINTÉTICO]')
+        elif not unicodedata.is_normalized('NFC', value):
+            add(f'REL-12 {label}: {where} no está en NFC')
+        elif invisible_chars(value):
+            add(f'REL-12 {label}: {where} contiene caracteres invisibles o de control')
+        elif any(p.search(value) for p, _ in PII_PATTERNS):
+            add(f'REL-12 {label}: {where} contiene un patrón de PII')
+        elif len(value) > 4000:
+            add(f'REL-12 {label}: {where} supera 4000 caracteres')
+
     def check_value(label, field, value, spec, where):
         kind = cft.get(field)
         if kind == 'text':
-            if not isinstance(value, str) or not value.startswith(prefix):
-                add(f'REL-12 {label}: {where}{field} sin el prefijo [SINTÉTICO]')
-            elif not unicodedata.is_normalized('NFC', value):
-                add(f'REL-12 {label}: {where}{field} no está en NFC')
-            elif any(p.search(value) for p, _ in PII_PATTERNS):
-                add(f'REL-12 {label}: {where}{field} contiene un patrón de PII')
-            elif len(value) > 4000:
-                add(f'REL-12 {label}: {where}{field} supera 4000 caracteres')
+            check_text(label, f'{where}{field}', value)
         elif kind == 'list':
             item_fields = spec['list_items'].get(field)
             if not isinstance(value, list) or not value or item_fields is None:
@@ -847,7 +1061,7 @@ def _bundle(c, ex, upstream, add):
                 for sub in item_fields:
                     check_value(label, sub, item[sub], spec, f'{where}{field}/{i}/')
         elif isinstance(kind, str) and kind.startswith('enum:'):
-            if value not in enums[kind[5:]]:
+            if not isinstance(value, str) or value not in enums[kind[5:]]:
                 add(f'REL-01 {label}: {where}{field} con valor desconocido {value!r}')
         elif isinstance(kind, str) and kind.startswith('pattern:'):
             if not (isinstance(value, str) and pats[kind[8:]].fullmatch(value)):
@@ -855,7 +1069,22 @@ def _bundle(c, ex, upstream, add):
         else:
             add(f'REL-01 {label}: campo de contenido desconocido {where}{field}')
 
-    # REL-01, REL-02, REL-04 y REL-12: cada artefacto.
+    def ref_context(src, row):
+        """Contexto del registro F34 citado: organización, vacante, postulación y escenario del ejemplo."""
+        spec = c['upstream_files'][src]
+        ctx = {dim: row.get(col) for dim, col in spec['context'].items()}
+        if 'vacancy' in ctx and 'organization' not in ctx:
+            vrow = tables[vac_src].get(ctx['vacancy'])
+            ctx['organization'] = vrow.get('organization_token') if vrow else None
+        if 'vacancy' in ctx and ctx['vacancy'] in vac_scenario:
+            ctx['scenario'] = vac_scenario[ctx['vacancy']]
+        return ctx
+
+    dims = {'organization': ('synthetic_organization_id', 'de otra organización'),
+            'scenario': ('scenario_id', 'de otro escenario'), 'vacancy': ('vacancy_token', 'de otra vacante'),
+            'application': ('application_token', 'de otra postulación')}
+
+    # REL-01, REL-02, REL-04, REL-12 y REL-13: cada artefacto.
     for a in lists['artifacts']:
         aid = a.get('synthetic_id', '?')
         label = f'artefacto {aid}'
@@ -888,8 +1117,15 @@ def _bundle(c, ex, upstream, add):
             for field in spec['content_fields']:
                 if field in content:
                     check_value(label, field, content[field], spec, '')
+            for field in c['tenant_bound_tokens']:
+                m = pats[field].fullmatch(content[field]) if isinstance(content.get(field), str) else None
+                if field in content and m and f'ORG-{m.group(1)}' != a.get('synthetic_organization_id'):
+                    add(f'REL-13 {label}: {field} {content[field]!r} es de ORG-{m.group(1)}, no de la organización '
+                        f'del artefacto (cross-tenant)')
         if not (isinstance(content, dict) and a.get('content_hash') == sha256(canonical(content))):
             add(f'REL-01 {label}: content_hash incorrecto')
+        if a.get('record_hash') != artifact_record_hash(a):
+            add(f'REL-01 {label}: record_hash incorrecto: el registro cambió sin recalcular su hash')
         p = a.get('provenance')
         if not isinstance(p, dict):
             add(f'REL-02 {label}: provenance ausente o mal formada')
@@ -900,8 +1136,8 @@ def _bundle(c, ex, upstream, add):
         if not (isinstance(p.get('generator_id'), str) and pats['generator_id'].fullmatch(p['generator_id'])
                 and isinstance(p.get('generator_version'), str) and pats['semver'].fullmatch(p['generator_version'])):
             add(f'REL-02 {label}: generador o versión fuera de patrón')
-        mt = pats['template_id'].fullmatch(p.get('template_id') or '') if isinstance(p.get('template_id'), str) else None
-        mf = pats['template_family'].fullmatch(a.get('template_family') or '') \
+        mt = pats['template_id'].fullmatch(p['template_id']) if isinstance(p.get('template_id'), str) else None
+        mf = pats['template_family'].fullmatch(a['template_family']) \
             if isinstance(a.get('template_family'), str) else None
         if not mt or not mf or mt.group(1) != mf.group(1) or p.get('template_family') != a.get('template_family'):
             add(f'REL-02 {label}: la plantilla de la provenance no pertenece a la familia del artefacto')
@@ -913,7 +1149,7 @@ def _bundle(c, ex, upstream, add):
         if not isinstance(refs, list) or not refs:
             add(f'REL-02 {label}: sin referencias upstream')
             refs = []
-        seen = set()
+        seen, per_source = set(), {}
         for r in refs:
             if not isinstance(r, dict) or set(r) != set(c['provenance_fields']['upstream_ref']):
                 add(f'REL-02 {label}: referencia upstream mal formada')
@@ -924,18 +1160,29 @@ def _bundle(c, ex, upstream, add):
                 continue
             seen.add((src, ref))
             if src not in c['upstream_files']:
-                add(f'REL-02 {label}: fuente upstream no admitida {src!r}')
+                kind = 'global no admitida (allowlist cerrada)' if src not in c['global_upstream_sources'] else 'global'
+                add(f'REL-13 {label}: fuente upstream {kind}: {src!r}')
                 continue
+            per_source.setdefault(src, []).append(ref)
             if r['sha256'] != hashes[src][0] or r['sha256'] != hashes[src][1]:
                 add(f'REL-02 {label}: hash de {src} distinto del manifiesto F34 o del archivo')
-            if ref not in tables[src]:
+            row = tables[src].get(ref)
+            if row is None:
                 add(f'REL-02 {label}: {ref!r} no existe en {src}')
-        for src, field in c['upstream_ref_bindings'].items():
-            if (src, a.get(field)) not in seen:
-                add(f'REL-02 {label}: falta la referencia upstream a su {field} en {src}')
+                continue
+            ctx = ref_context(src, row)
+            for dim, (field, wording) in dims.items():
+                if dim in ctx and ctx[dim] != a.get(field):
+                    add(f'REL-13 {label}: referencia upstream {ref!r} {wording} ({ctx[dim]!r} frente a {a.get(field)!r})')
+        for src, spec_src in c['upstream_files'].items():
+            got = per_source.get(src, [])
+            if spec_src['cardinality'] == 'exactly_one_own':
+                own = a.get(spec_src['key'])
+                if got != [own]:
+                    add(f'REL-02 {label}: debe citar exactamente su {spec_src["key"]} en {src}; cita {got}')
         if isinstance(content, dict):
             for field, src in c['content_upstream_bindings'].items():
-                if field in content and (src, content[field]) not in seen:
+                if field in content and content[field] not in per_source.get(src, []):
                     add(f'REL-02 {label}: falta la referencia upstream de content.{field}')
 
     # REL-05: aislamiento de vacante, postulación, familia y partición.
@@ -965,10 +1212,14 @@ def _bundle(c, ex, upstream, add):
         check_org(fid, 'fragment_id', f.get('synthetic_organization_id'), label)
         if isinstance(fid, str):
             frs[fid] = f
+        if f.get('fragment_hash') != fragment_record_hash(f):
+            add(f'REL-06 {label}: fragment_hash incorrecto: el fragmento cambió sin recalcular su hash')
         a = arts.get(f.get('artifact_id'))
         if a is None:
             add(f'REL-06 {label}: referencia un artefacto inexistente {f.get("artifact_id")!r}')
             continue
+        if f.get('artifact_record_hash') != a.get('record_hash'):
+            add(f'REL-06 {label}: artifact_record_hash no es el record_hash vigente de su artefacto')
         spec = types.get(a.get('artifact_type'))
         if not spec or not spec['fragmentable']:
             add(f'REL-06 {label}: su artefacto no es fragmentable')
@@ -983,11 +1234,13 @@ def _bundle(c, ex, upstream, add):
         s0, s1 = f.get('char_start'), f.get('char_end')
         if type(s0) is not int or type(s1) is not int or not 0 <= s0 < s1 <= len(text):
             add(f'REL-06 {label}: offsets fuera del texto')
-        elif f.get('fragment_hash') != sha256(text[s0:s1].encode('utf-8')):
-            add(f'REL-06 {label}: fragment_hash incorrecto')
+        elif f.get('text_hash') != sha256(text[s0:s1].encode('utf-8')):
+            add(f'REL-06 {label}: text_hash incorrecto')
 
     # REL-07: outputs.
     outs = {}
+    mc_fields = c['method_config_fields']
+    k_min, k_max = c['top_k_range']
     for o in lists['outputs']:
         oid = o.get('output_id', '?')
         label = f'output {oid}'
@@ -998,6 +1251,8 @@ def _bundle(c, ex, upstream, add):
         check_context(o, label)
         if isinstance(oid, str):
             outs[oid] = o
+        if o.get('output_hash') != output_record_hash(o):
+            add(f'REL-07 {label}: output_hash incorrecto: el output cambió sin recalcular su hash')
         ei = o.get('ei')
         if ei not in c['output_ei']:
             add(f'REL-07 {label}: EI {ei!r} no admitida para outputs'
@@ -1005,7 +1260,11 @@ def _bundle(c, ex, upstream, add):
         if not (isinstance(o.get('method_id'), str) and pats['method_id'].fullmatch(o['method_id'])
                 and isinstance(o.get('method_version'), str) and pats['semver'].fullmatch(o['method_version'])):
             add(f'REL-07 {label}: método o versión fuera de patrón')
-        row = tables[cri_src].get(o.get('query_criterion_id'))
+        mc = o.get('method_config')
+        if not isinstance(mc, dict) or set(mc) != set(mc_fields) or mc.get('normalization') not in enums['normalization'] \
+                or type(mc.get('top_k')) is not int or not k_min <= mc['top_k'] <= k_max:
+            add(f'REL-07 {label}: method_config fuera de la configuración cerrada')
+        row = tables[cri_src].get(o.get('query_criterion_id')) if isinstance(o.get('query_criterion_id'), str) else None
         if row is None or row.get('vacancy_token') != o.get('vacancy_token'):
             add(f'REL-07 {label}: el criterio de la consulta no existe en F34 o es de otra vacante')
         refs = o.get('fragment_refs')
@@ -1020,20 +1279,17 @@ def _bundle(c, ex, upstream, add):
             for k in c['context_fields']:
                 if f.get(k) != o.get(k):
                     add(f'REL-07 {label}: mezcla de {k} con el fragmento {r}')
+        ref_hashes = o.get('fragment_ref_hashes')
+        if ref_hashes != [(frs.get(r) or {}).get('fragment_hash') for r in refs]:
+            add(f'REL-07 {label}: fragment_ref_hashes no coincide con los fragment_hash vigentes de sus fragmentos')
         ab = o.get('abstained')
         if type(ab) is not bool:
             add(f'REL-07 {label}: abstained debe ser booleano')
         elif ab != (len(refs) == 0):
             add(f'REL-07 {label}: la abstención no coincide con la ausencia de fragmentos')
-        pool = sorted([fid, f.get('fragment_hash')] for fid, f in frs.items()
-                      if (f.get('application_token'), f.get('partition')) == (o.get('application_token'),
-                                                                               o.get('partition')))
-        if o.get('input_manifest_hash') != sha256(canonical(pool)):
+        if o.get('input_manifest_hash') != input_manifest_hash(lists['fragments'], o.get('application_token'),
+                                                               o.get('partition')):
             add(f'REL-07 {label}: input_manifest_hash incorrecto')
-        payload = {k: o.get(k) for k in ('abstained', 'ei', 'fragment_refs', 'method_id', 'method_version',
-                                         'output_id', 'query_criterion_id')}
-        if o.get('output_hash') != sha256(canonical(payload)):
-            add(f'REL-07 {label}: output_hash incorrecto')
 
     # REL-08, REL-09 y REL-10: referencias entre artefactos.
     for aid, a in arts.items():
@@ -1041,18 +1297,18 @@ def _bundle(c, ex, upstream, add):
         t = a.get('artifact_type')
         label = f'artefacto {aid}'
         if t == 'relevance_annotation':
-            f = frs.get(content.get('fragment_id'))
+            f = frs.get(content.get('fragment_id')) if isinstance(content.get('fragment_id'), str) else None
             if f is None:
                 add(f'REL-08 {label}: la anotación referencia un fragmento inexistente')
             else:
                 for k in c['context_fields']:
                     if f.get(k) != a.get(k):
                         add(f'REL-08 {label}: mezcla de {k} con el fragmento anotado')
-            row = tables[cri_src].get(content.get('criterion_id'))
+            row = tables[cri_src].get(content.get('criterion_id')) if isinstance(content.get('criterion_id'), str) else None
             if row is None or row.get('vacancy_token') != a.get('vacancy_token'):
                 add(f'REL-08 {label}: el criterio no existe en F34 o es de otra vacante')
         elif t == 'counterfactual_pair':
-            b = arts.get(content.get('variant_of'))
+            b = arts.get(content.get('variant_of')) if isinstance(content.get('variant_of'), str) else None
             if b is None or b is a:
                 add(f'REL-09 {label}: la variante referencia un artefacto inexistente')
             elif not types.get(b.get('artifact_type'), {}).get('fragmentable'):
@@ -1062,7 +1318,7 @@ def _bundle(c, ex, upstream, add):
                     if b.get(k) != a.get(k):
                         add(f'REL-09 {label}: mezcla de {k} con su variante')
         elif t == 'rendered_document':
-            b = arts.get(content.get('rendered_from'))
+            b = arts.get(content.get('rendered_from')) if isinstance(content.get('rendered_from'), str) else None
             if b is None or b.get('artifact_type') != 'cv_document':
                 add(f'REL-10 {label}: el origen no existe o no es un cv_document')
             else:
@@ -1070,7 +1326,7 @@ def _bundle(c, ex, upstream, add):
                     if b.get(k) != a.get(k):
                         add(f'REL-10 {label}: mezcla de {k} con su origen')
 
-    # REL-11: manifiesto de particiones, sello de test y ajuste solo con dev.
+    # REL-11: manifiesto de particiones, sello v2 de test y ajuste solo con dev.
     pm = ex.get('partition_manifest')
     if not isinstance(pm, dict) or set(pm) != set(c['partition_manifest_fields']):
         add('REL-11 manifiesto de particiones ausente o con campos distintos del contrato')
@@ -1078,53 +1334,47 @@ def _bundle(c, ex, upstream, add):
     parts = pm['partitions']
     if not isinstance(parts, dict):
         add('REL-11 particiones mal formadas')
-    else:
-        for name in parts:
-            if name not in c['splits']['partitions']:
-                kind = 'prohibida' if name in c['splits']['forbidden_partitions'] else 'desconocida'
-                add(f'REL-11 partición {kind} en el manifiesto: {name!r}')
-        if set(parts) != set(c['splits']['partitions']):
-            add('REL-11 el manifiesto debe declarar exactamente dev y test')
-        listed = {}
-        for name, spec in parts.items():
-            expected = c['partition_fields'].get(name)
-            if expected is None:
-                continue
-            if not isinstance(spec, dict) or set(spec) != set(expected):
-                add(f'REL-11 partición {name}: campos distintos de {expected}')
-                continue
-            ids = spec['artifacts']
-            if not isinstance(ids, list) or not all(isinstance(i, str) for i in ids) or len(set(ids)) != len(ids):
-                add(f'REL-11 partición {name}: lista de artefactos inválida')
-                continue
-            for i in ids:
-                if i in listed:
-                    add(f'REL-11 {i} figura en dos particiones')
-                listed[i] = name
-                if i not in arts:
-                    add(f'REL-11 partición {name}: artefacto inexistente {i!r}')
-                elif arts[i].get('partition') != name:
-                    add(f'REL-11 {i} está en {name} y declara {arts[i].get("partition")!r}')
-        missing = sorted(set(arts) - set(listed))
-        if missing:
-            add(f'REL-11 artefactos fuera del manifiesto: {missing}')
-        test = parts.get('test')
-        if isinstance(test, dict) and set(test) == set(c['partition_fields']['test']):
-            if test['sealed'] is not True:
-                add('REL-11 la partición test no está sellada')
-            pairs = sorted([i, a.get('content_hash')] for i, a in arts.items() if a.get('partition') == 'test')
-            if test['seal_sha256'] != sha256(canonical(pairs)):
-                add('REL-11 el sello de test no coincide con sus artefactos')
+        return
+    for name in parts:
+        if name not in c['splits']['partitions']:
+            kind = 'prohibida' if name in c['splits']['forbidden_partitions'] else 'desconocida'
+            add(f'REL-11 partición {kind} en el manifiesto: {name!r}')
+    if set(parts) != set(c['splits']['partitions']):
+        add('REL-11 el manifiesto debe declarar exactamente dev y test')
+    listed = {}
+    for name, spec in parts.items():
+        expected = c['partition_fields'].get(name)
+        if expected is None:
+            continue
+        if not isinstance(spec, dict) or set(spec) != set(expected):
+            add(f'REL-11 partición {name}: campos distintos de {expected}')
+            continue
+        pids = spec['artifacts']
+        if not isinstance(pids, list) or not all(isinstance(i, str) for i in pids) or len(set(pids)) != len(pids):
+            add(f'REL-11 partición {name}: lista de artefactos inválida')
+            continue
+        for i in pids:
+            if i in listed:
+                add(f'REL-11 {i} figura en dos particiones')
+            listed[i] = name
+            if i not in arts:
+                add(f'REL-11 partición {name}: artefacto inexistente {i!r}')
+            elif arts[i].get('partition') != name:
+                add(f'REL-11 {i} está en {name} y declara {arts[i].get("partition")!r}')
+    missing = sorted(set(arts) - set(listed))
+    if missing:
+        add(f'REL-11 artefactos fuera del manifiesto: {missing}')
     th = pm['thresholds']
+    tuning = []
     if not isinstance(th, dict) or set(th) != set(c['threshold_fields']):
         add('REL-11 umbrales mal formados')
     else:
         if th['tuning_partition'] != c['splits']['thresholds_fit_on']:
             add(f'REL-11 umbrales ajustados en {th["tuning_partition"]!r}: solo se ajusta con dev')
-        tuning = th['tuning_outputs']
-        if not isinstance(tuning, list):
-            add('REL-11 tuning_outputs debe ser una lista')
+        if not isinstance(th['tuning_outputs'], list) or len(set(map(str, th['tuning_outputs']))) != len(th['tuning_outputs']):
+            add('REL-11 tuning_outputs debe ser una lista sin repetidos')
         else:
+            tuning = th['tuning_outputs']
             for x in tuning:
                 if x not in outs:
                     add(f'REL-11 output de ajuste inexistente {x!r}')
@@ -1132,6 +1382,38 @@ def _bundle(c, ex, upstream, add):
                     add(f'REL-11 el output de ajuste {x} es de {outs[x].get("partition")!r}: test no puede ajustar')
     if pm['test_used_for_tuning'] is not False:
         add('REL-11 test_used_for_tuning debe ser false')
+    test = parts.get('test')
+    if isinstance(test, dict) and set(test) == set(c['partition_fields']['test']):
+        if test['sealed'] is not True:
+            add('REL-11 la partición test no está sellada')
+        if test['seal_algorithm'] != c['splits']['seal_algorithm']:
+            add('REL-11 algoritmo de sello distinto del sello v2')
+        if isinstance(th, dict) and set(th) == set(c['threshold_fields']) and isinstance(th['tuning_outputs'], list):
+            if test['seal_sha256'] != test_seal(ex, c['contract_version']):
+                add('REL-11 el sello de test no coincide: un registro, fragmento u output de test, un output de ajuste '
+                    'o los umbrales cambiaron sin volver a sellar')
+
+    # REL-14: cobertura mínima del ejemplo.
+    cov = c['example_coverage']
+    present = {a.get('artifact_type') for a in arts.values()}
+    test_arts = [a for a in arts.values() if a.get('partition') == 'test']
+    checks = [
+        (set(cov['artifact_types']) <= present, f'faltan tipos de artefacto {sorted(set(cov["artifact_types"]) - present)}'),
+        (len(frs) >= cov['min_fragments'], 'sin fragmentos suficientes'),
+        (sum(1 for o in outs.values() if o.get('fragment_refs')) >= cov['min_outputs_with_fragments'],
+         'sin outputs con fragmentos'),
+        (sum(1 for o in outs.values() if o.get('abstained') is True) >= cov['min_abstained_outputs'],
+         'sin outputs con abstención'),
+        (len(test_arts) >= cov['min_test_artifacts'], 'test sin artefactos'),
+        (sum(1 for a in test_arts if a.get('artifact_type') == 'relevance_annotation') >= cov['min_test_gold_annotations'],
+         'test sin anotaciones de oro'),
+        (sum(1 for o in outs.values() if o.get('partition') == 'test') >= cov['min_test_outputs'], 'test sin outputs'),
+        (len(tuning) >= cov['min_tuning_outputs'], 'sin outputs de ajuste en dev'),
+        (len({a.get('scenario_id') for a in arts.values()}) >= cov['min_scenarios'], 'menos de dos escenarios'),
+    ]
+    for cond, msg in checks:
+        if not cond:
+            add(f'REL-14 cobertura mínima del ejemplo: {msg}')
 
 
 def rule_ctr(s):
@@ -1140,17 +1422,17 @@ def rule_ctr(s):
     if not isinstance(c, dict):
         return [(False, 'contrato de evidencia: JSON inválido o con claves duplicadas (falla cerrado)')]
     digest = sha256(canonical(c))
-    out.append((digest == CONTRACT_SHA256, f'contrato idéntico a la versión cerrada v2 (SHA-256 canónico '
+    out.append((digest == CONTRACT_SHA256, f'contrato idéntico a la versión cerrada v3 (SHA-256 canónico '
                                            f'{digest[:12]}, esperado {CONTRACT_SHA256[:12]})'))
     errs = contract_semantic_errors(c, s['root'])
-    out.append((not errs, f'invariantes del contrato: solo sintético, cerrado, provenance y particiones; '
+    out.append((not errs, f'invariantes del contrato: solo sintético, cerrado, hashes, provenance y particiones; '
                           f'errores: {errs}'))
     if errs:
         out.append((False, 'ejemplo de conformidad no evaluado: el contrato no es válido (falla cerrado)'))
         return out
     ex = strict_json(s['texts'].get(EXAMPLE) or '')
     berrs = bundle_errors(c, ex, s['upstream'])
-    out.append((not berrs, f'ejemplo de conformidad conforme a REL-01..REL-12; errores: {berrs}'))
+    out.append((not berrs, f'ejemplo de conformidad conforme a REL-01..REL-14; errores: {berrs}'))
     return out
 
 
@@ -1179,7 +1461,7 @@ def rule_eva(s):
     needed = sorted(k for k, v in EXPECTED_CLASSES.items() if v in ('ALLOWED', 'CONDITIONAL'))
     uncovered = [e for e in needed if e not in covered]
     out.append((not uncovered, f'cada EI ALLOWED o CONDITIONAL tiene métrica; sin métrica: {uncovered}'))
-    blocked = sorted(e for e in covered if EXPECTED_CLASSES.get(e) != 'ALLOWED' and EXPECTED_CLASSES.get(e) != 'CONDITIONAL')
+    blocked = sorted(e for e in covered if EXPECTED_CLASSES.get(e) not in ('ALLOWED', 'CONDITIONAL'))
     out.append((not blocked, f'ninguna EI BLOCKED o desconocida tiene métrica; con métrica: {blocked}'))
     m = re.search(r'^## 6\. Resultados\n+(.*)', text, re.M | re.S)
     out.append((bool(m) and m.group(1).strip().startswith('**No hay resultados.**'),
@@ -1205,25 +1487,29 @@ def rule_frz(s):
     return out
 
 
+def tool_errors(rel, src):
+    try:
+        tree = ast.parse(src or '')
+    except SyntaxError:
+        return [f'{rel}: no se puede analizar']
+    errs = []
+    for node in ast.walk(tree):
+        names = []
+        if isinstance(node, ast.Import):
+            names = [a.name.split('.')[0] for a in node.names]
+        elif isinstance(node, ast.ImportFrom):
+            names = [(node.module or '').split('.')[0]]
+        errs += [f'{rel}: importa {n}' for n in names if n not in STDLIB and n not in LOCAL_MODULES]
+    if '\x08' in (src or ''):
+        errs.append(f'{rel}: contiene bytes de retroceso (0x08), que anulan patrones como \\b')
+    return errs
+
+
 def rule_dep(s):
     errs = []
     for rel, src in sorted(s['tools'].items()):
-        if not rel.endswith('.py'):
-            continue
-        try:
-            tree = ast.parse(src or '')
-        except SyntaxError:
-            errs.append(f'{rel}: no se puede analizar')
-            continue
-        for node in ast.walk(tree):
-            names = []
-            if isinstance(node, ast.Import):
-                names = [a.name.split('.')[0] for a in node.names]
-            elif isinstance(node, ast.ImportFrom):
-                names = [(node.module or '').split('.')[0]]
-            errs += [f'{rel}: importa {n}' for n in names if n not in STDLIB and n not in LOCAL_MODULES]
-        if '\x08' in (src or ''):
-            errs.append(f'{rel}: contiene bytes de retroceso (0x08), que anulan patrones como \\b')
+        if rel.endswith('.py'):
+            errs += memo('dep', (rel, src), lambda: tool_errors(rel, src))
     for rel, src in sorted(s['changed_py'].items()):
         errs += [f'{rel}: importa {m.group(1)} (ML, NLP o red)' for m in ML_IMPORT.finditer(src or '')]
     return [(not errs, f'solo biblioteca estándar y ningún import de ML, NLP o red; encontrados: {sorted(set(errs))}')]
@@ -1234,11 +1520,13 @@ def rule_pii(s):
     scope = {p: s['texts'].get(p) for p in PKG_FILES}
     scope.update({p: t for p, t in s['tools'].items() if p.endswith('.py')})
     scope.update({p: b.decode('utf-8', 'replace') for p, b in s['evidence'].items() if isinstance(b, bytes)})
+    scope.update({p: b.decode('utf-8', 'replace') for p, b in s['repo_files'].items() if isinstance(b, bytes)})
     for rel, text in scope.items():
-        for pattern, label in PII_PATTERNS:
-            if text and pattern.search(text):
-                hits.append(f'{rel}: {label}')
-    return [(not hits, f'sin patrones de PII en el paquete, sus herramientas ni la evidencia; encontrados: {hits}')]
+        if text:
+            hits += [f'{rel}: {label}' for label in memo('pii', text, lambda: [
+                label for pattern, label in PII_PATTERNS if pattern.search(text)])]
+    return [(not hits, f'sin patrones de PII en el paquete, sus herramientas, la evidencia ni el ADR citado; '
+                       f'encontrados: {hits}')]
 
 
 # ---------------------------------------------------------------- evidencia de equipo y gate
@@ -1254,17 +1542,27 @@ def team_schema_errors(sch):
             e.append(msg)
     crit = sch.get('criteria') if isinstance(sch.get('criteria'), dict) else {}
     get = lambda fg, k: (crit.get(fg) or {}).get(k)  # noqa: E731
-    need(sch.get('schema_tag') == 'f36sbx-team-evidence/v1' and sch.get('gate_id') == 'F36-SBX-GATE'
-         and sch.get('gate_version') == '2', 'identidad del esquema y del gate')
+    need(sch.get('schema_tag') == TEAM_SCHEMA_TAG and sch.get('gate_id') == 'F36-SBX-GATE'
+         and sch.get('gate_version') == GATE_VERSION, 'identidad del esquema y del gate')
     need(sch.get('evidence_paths') == {fg: f'{GATE_EVIDENCE}{fg}.json' for fg in FG_TEAM},
          'rutas fijas de la evidencia de FG-02, FG-03, FG-10 y FG-12')
     need(sch.get('team_members') == list(MEMBERS), 'lista cerrada de los tres integrantes')
     need((sch.get('candidate_binding') or {}).get('descends_from') == BASE, 'el candidato desciende de la base')
+    vi = sch.get('visible_identity') if isinstance(sch.get('visible_identity'), dict) else {}
+    need(vi.get('min_letters') == 3 and vi.get('max_length') == 120 and 'autenticada' in str(vi.get('limit')),
+         'identidad visible: mínimo 3 letras, máximo 120 caracteres y límite documentado')
+    hd = sch.get('human_document') if isinstance(sch.get('human_document'), dict) else {}
+    need(hd.get('min_letters_outside_block') == 200, 'documento humano: mínimo 200 letras fuera del bloque canónico')
     ap = sch.get('approvals') if isinstance(sch.get('approvals'), dict) else {}
     need(ap.get('required_vote') == 'APRUEBA' and ap.get('quorum') == '3/3', 'aprobación explícita con quórum 3/3')
     need(set(get('FG-02', 'passing_verdicts') or []) <= {'APROBADO_PARA_INTEGRACION', 'APROBADO_CON_OBSERVACIONES'}
          and set(get('FG-02', 'must_be_zero') or []) >= {'blocker', 'high', 'medium_requiring_fix'},
          'FG-02: solo veredictos aprobatorios y cero BLOCKER, HIGH y MEDIUM que requiere corrección')
+    need(get('FG-02', 'report_block') == 'f36sbx-audit-metadata'
+         and get('FG-02', 'report_metadata_schema') == 'f36sbx-audit-report/v1'
+         and set(get('FG-02', 'coherence') or []) >= {'candidate_commit', 'auditor', 'verdict', 'findings_open'}
+         and bool(get('FG-02', 'report_headings')),
+         'FG-02: bloque canónico del informe y coherencia exacta con el registro')
     need(get('FG-03', 'passing_decision') == 'AUTORIZA_INICIO_F37_SBX'
          and get('FG-03', 'authorizable_classes') == ['ALLOWED', 'CONDITIONAL'],
          'FG-03: autorización explícita y solo EI ALLOWED o CONDITIONAL')
@@ -1276,6 +1574,13 @@ def team_schema_errors(sch):
          and get('FG-12', 'ei09_passing_decision') == 'CABE_EN_ALCANCE_B'
          and not any(re.fullmatch(str(get('FG-12', 'adr_id_pattern') or ''), f'ADR-00{i}') for i in range(1, 6)),
          'FG-12: ADR sucesor APROBADO y distinto de ADR-001..ADR-005, cobertura solo de EI CONDITIONAL de alcance C')
+    need(get('FG-12', 'adr_block') == 'f36sbx-adr-metadata' and get('FG-12', 'adr_metadata_schema') == 'f36sbx-adr/v1'
+         and bool(get('FG-12', 'adr_headings'))
+         and {'gate_id', 'gate_version', 'base_commit'} <= set(get('FG-12', 'adr_metadata_fields') or [])
+         and 'applies_to_candidate_commit' not in (get('FG-12', 'adr_metadata_fields') or []),
+         'FG-12: bloque canónico del ADR, con contexto de gate, versión y base (nunca el commit que lo contiene)')
+    need('candidate_commit' in (get('FG-02', 'report_metadata_fields') or []),
+         'FG-02: los metadatos del informe nombran el commit candidato auditado')
     return e
 
 
@@ -1325,6 +1630,45 @@ def binding_errors(sha, facts, gate_doc):
     return e
 
 
+def human_document(data, label, block_info, headings, min_letters):
+    """Documento humano con un único bloque canónico: devuelve (metadatos, texto exterior, errores)."""
+    if not isinstance(data, bytes) or not data.strip():
+        return None, '', [f'{label}: no existe o está vacío']
+    try:
+        text = data.decode('utf-8')
+    except UnicodeDecodeError:
+        return None, '', [f'{label}: no es UTF-8']
+    e = []
+    if not unicodedata.is_normalized('NFC', text):
+        e.append(f'{label}: no está en NFC')
+    bad = invisible_chars(text, allow_layout=True)
+    if bad:
+        e.append(f'{label}: contiene caracteres invisibles o de control {[f"U+{ord(c):04X}" for c in bad[:3]]}')
+    fences = list(FENCE_RX.finditer(text))
+    mine = [m for m in fences if m.group('info').strip() == block_info]
+    others = [m for m in fences if m not in mine and 'f36sbx' in m.group('info').casefold()]
+    if len(mine) != 1:
+        return None, text, e + [f'{label}: debe contener exactamente un bloque «{block_info}» (hay {len(mine)})']
+    if others:
+        e.append(f'{label}: otro bloque f36sbx ambiguo además del canónico')
+    m = mine[0]
+    meta = strict_json(m.group('body'))
+    outside = text[:m.start()] + text[m.end():]
+    if not isinstance(meta, dict):
+        e.append(f'{label}: el bloque canónico no es un objeto JSON válido sin claves duplicadas')
+        meta = None
+    lines = [ln.strip() for ln in outside.splitlines() if ln.strip()]
+    if not lines or not lines[0].startswith('# '):
+        e.append(f'{label}: debe empezar con un título de nivel 1')
+    missing = [h for h in headings if h not in lines]
+    if missing:
+        e.append(f'{label}: faltan las secciones {missing}')
+    letters = sum(1 for ch in outside if unicodedata.category(ch).startswith('L'))
+    if letters < min_letters:
+        e.append(f'{label}: contenido humano insuficiente fuera del bloque ({letters} letras, mínimo {min_letters})')
+    return meta, outside, e
+
+
 def approval_errors(fg, ev, ctx, cdate, rdate):
     rule, members = ctx['schema']['approvals'], ctx['schema']['team_members']
     ap = ev.get('approvals')
@@ -1345,7 +1689,7 @@ def approval_errors(fg, ev, ctx, cdate, rdate):
         d = parse_date(a['date'])
         if d is None or (cdate and d < cdate) or (rdate and d > rdate):
             e.append(f'{fg}: fecha de aprobación de {a["member"]!r} inválida o fuera del registro')
-    if len(names) != len(set(names)):
+    if len(names) != len(set(map(str, names))):
         e.append(f'{fg}: integrante duplicado en las aprobaciones')
     approving = {a['member'] for a in ap if isinstance(a, dict) and a.get('member') in members
                  and a.get('vote') == rule['required_vote']}
@@ -1372,52 +1716,80 @@ def authorized_list_errors(fg, lst, ctx):
     return e
 
 
+def findings_errors(fo, c, label):
+    if not isinstance(fo, dict) or set(fo) != set(c['findings_fields']):
+        return [f'{label}: findings_open con campos distintos del esquema']
+    e = []
+    for k in c['findings_fields']:
+        n = fo[k]
+        if type(n) is not int or n < 0:
+            e.append(f'{label}: findings_open.{k} debe ser un entero no negativo')
+        elif k in c['must_be_zero'] and n:
+            e.append(f'{label}: {k} abiertos = {n}')
+    return e
+
+
+def auditor_errors(au, c, label):
+    if not isinstance(au, dict) or set(au) != set(c['auditor_fields']):
+        return [f'{label}: auditor con campos distintos del esquema']
+    e = identity_errors(au['name'], f'{label}: identidad del auditor')
+    if au['kind'] not in c['auditor_kinds']:
+        e.append(f'{label}: tipo de auditor desconocido {au["kind"]!r}')
+    if au['independent_of_candidate'] is not True:
+        e.append(f'{label}: el auditor no se declara independiente del candidato')
+    return e
+
+
 def fg02_errors(ev, ctx, cdate, rdate):
     c, e = ctx['schema']['criteria']['FG-02'], []
-    au = ev.get('auditor')
-    if not isinstance(au, dict) or set(au) != set(c['auditor_fields']):
-        e.append('FG-02: auditor con campos distintos del esquema')
-    else:
-        name = au['name']
-        if not isinstance(name, str) or not 3 <= len(name.strip()) <= 120 \
-                or name.strip().casefold() in PLACEHOLDERS:
-            e.append('FG-02: auditor no identificado de forma inequívoca')
-        if au['kind'] not in c['auditor_kinds']:
-            e.append(f'FG-02: tipo de auditor desconocido {au["kind"]!r}')
-        if au['independent_of_candidate'] is not True:
-            e.append('FG-02: el auditor no se declara independiente del candidato')
-    rep = ev.get('audit_report')
-    if not isinstance(rep, dict) or set(rep) != set(c['audit_report_fields']):
-        e.append('FG-02: referencia al informe de auditoría mal formada')
-    else:
-        p = rep['path']
-        if not (isinstance(p, str) and p.startswith(GATE_EVIDENCE) and p.endswith('.md')
-                and '..' not in p.split('/') and '\\' not in p):
-            e.append('FG-02: el informe debe ser un .md dentro de gate/evidencia/')
-        else:
-            data = ctx['evidence'].get(p)
-            if not isinstance(data, bytes) or not data.strip():
-                e.append('FG-02: el informe de auditoría no existe o está vacío')
-            elif sha256(data) != rep['sha256']:
-                e.append('FG-02: SHA-256 del informe distinto del declarado')
-            elif not isinstance(ev.get('candidate_commit'), str) \
-                    or ev['candidate_commit'] not in data.decode('utf-8', 'replace'):
-                e.append('FG-02: el informe no nombra el commit candidato completo')
+    min_letters = ctx['schema']['human_document']['min_letters_outside_block']
+    e += auditor_errors(ev.get('auditor'), c, 'FG-02')
     verdict = ev.get('verdict')
     if verdict not in c['verdicts']:
         e.append(f'FG-02: veredicto desconocido {verdict!r}')
     elif verdict not in c['passing_verdicts']:
         e.append(f'FG-02: veredicto {verdict}: no aprueba el candidato')
-    fo = ev.get('findings_open')
-    if not isinstance(fo, dict) or set(fo) != set(c['findings_fields']):
-        e.append('FG-02: findings_open con campos distintos del esquema')
-    else:
-        for k in c['findings_fields']:
-            n = fo[k]
-            if type(n) is not int or n < 0:
-                e.append(f'FG-02: findings_open.{k} debe ser un entero no negativo')
-            elif k in c['must_be_zero'] and n:
-                e.append(f'FG-02: {k} abiertos = {n}')
+    e += findings_errors(ev.get('findings_open'), c, 'FG-02')
+    rep = ev.get('audit_report')
+    if not isinstance(rep, dict) or set(rep) != set(c['audit_report_fields']):
+        return e + ['FG-02: referencia al informe de auditoría mal formada']
+    p = rep['path']
+    if not (isinstance(p, str) and p.startswith(GATE_EVIDENCE) and p.endswith('.md')
+            and '..' not in p.split('/') and '\\' not in p):
+        return e + ['FG-02: el informe debe ser un .md dentro de gate/evidencia/']
+    data = ctx['evidence'].get(p)
+    if not isinstance(data, bytes) or sha256(data) != rep['sha256']:
+        return e + ['FG-02: el informe de auditoría no existe o su SHA-256 es distinto del declarado']
+    meta, outside, derr = human_document(data, 'FG-02: informe', c['report_block'], c['report_headings'], min_letters)
+    e += derr
+    for token in c['verdicts']:
+        if token in outside:
+            e.append(f'FG-02: informe: el token canónico {token} aparece fuera del bloque (segunda fuente)')
+    if COUNT_ASSERTION_RX.search(outside) or VERDICT_ASSERTION_RX.search(outside):
+        e.append('FG-02: informe: aserciones de veredicto o de recuentos fuera del bloque canónico (segunda fuente)')
+    if meta is None:
+        return e
+    if set(meta) != set(c['report_metadata_fields']):
+        return e + [f'FG-02: informe: metadatos con campos distintos: faltan '
+                    f'{sorted(set(c["report_metadata_fields"]) - set(meta))}, sobran {sorted(set(meta) - set(c["report_metadata_fields"]))}']
+    if meta['metadata_schema'] != c['report_metadata_schema'] or meta['gate_id'] != ctx['schema']['gate_id'] \
+            or meta['gate_version'] != ctx['schema']['gate_version'] or meta['criterion_id'] != 'FG-02':
+        e.append('FG-02: informe: metadatos de otro esquema, gate, versión o criterio (otro contexto)')
+    if meta['candidate_commit'] != ev.get('candidate_commit'):
+        e.append('FG-02: informe: el commit de los metadatos no es el candidato del registro')
+    # Coherencia exacta: se comparan los JSON canónicos, para que 1 y true o 0 y false no pasen por iguales.
+    e += auditor_errors(meta['auditor'], c, 'FG-02: informe')
+    if canonical(meta['auditor']) != canonical(ev.get('auditor')):
+        e.append('FG-02: informe: el auditor de los metadatos no coincide con el del registro')
+    if canonical(meta['verdict']) != canonical(verdict):
+        e.append(f'FG-02: informe: el veredicto del informe ({meta["verdict"]!r}) no coincide con el del registro '
+                 f'({verdict!r})')
+    e += findings_errors(meta['findings_open'], c, 'FG-02: informe')
+    if canonical(meta['findings_open']) != canonical(ev.get('findings_open')):
+        e.append('FG-02: informe: los recuentos de hallazgos del informe no coinciden con los del registro')
+    d = parse_date(meta['report_date'])
+    if d is None or (cdate and d < cdate) or (rdate and d > rdate):
+        e.append('FG-02: informe: report_date inválida o fuera del intervalo del candidato y del registro')
     return e
 
 
@@ -1475,8 +1847,10 @@ def fg10_errors(ev, ctx, cdate, rdate):
         names.append(n.lower())
         if not (isinstance(d['version'], str) and re.fullmatch(c['version_pattern'], d['version'])):
             e.append(f'FG-10: {n}: versión no fijada con == exacto')
-        if not (isinstance(d['purpose'], str) and 10 <= len(d['purpose'].strip()) <= 300):
-            e.append(f'FG-10: {n}: propósito ausente o genérico')
+        purpose = d['purpose']
+        if not isinstance(purpose, str) or invisible_chars(purpose) or not 10 <= len(purpose.strip()) <= 300 \
+                or sum(1 for ch in purpose if unicodedata.category(ch).startswith('L')) < 10:
+            e.append(f'FG-10: {n}: propósito ausente, genérico o con caracteres invisibles')
         if d['license'] not in c['licenses']:
             e.append(f'FG-10: {n}: licencia fuera de la lista admitida')
         if d['source'] not in c['sources']:
@@ -1497,8 +1871,8 @@ def fg10_errors(ev, ctx, cdate, rdate):
             if sc['reviewed_by'] not in ctx['schema']['team_members']:
                 e.append(f'FG-10: {n}: revisor no reconocido')
         rel = d['related_ei']
-        if not isinstance(rel, list) or not rel:
-            e.append(f'FG-10: {n}: sin EI relacionadas')
+        if not isinstance(rel, list) or not rel or len({str(x) for x in rel}) != len(rel):
+            e.append(f'FG-10: {n}: EI relacionadas ausentes o repetidas')
         else:
             for x in rel:
                 if x not in auth:
@@ -1520,6 +1894,7 @@ def fg10_errors(ev, ctx, cdate, rdate):
 
 def fg12_errors(ev, ctx, cdate, rdate):
     c, e = ctx['schema']['criteria']['FG-12'], []
+    min_letters = ctx['schema']['human_document']['min_letters_outside_block']
     auth = fg03_list(ctx)
     if auth is None:
         e.append('FG-12: requiere una autorización FG-03 válida')
@@ -1537,45 +1912,72 @@ def fg12_errors(ev, ctx, cdate, rdate):
             e.append(f'FG-12: intenta autorizar {x}, que es BLOCKED')
         elif x not in c['coverable_ei']:
             e.append(f'FG-12: {x} no es una EI CONDITIONAL de alcance C')
+    d09 = ev.get('ei09_decision')
+    if d09 not in c['ei09_decisions']:
+        e.append('FG-12: falta la decisión explícita sobre EI-09')
+    elif 'EI-09' in auth and d09 != c['ei09_passing_decision']:
+        e.append(f'FG-12: EI-09 autorizada sin la decisión {c["ei09_passing_decision"]}')
     adr = ev.get('successor_adr')
     if adr is None:
         if need:
             e.append(f'FG-12: {need} exigen un ADR sucesor APROBADO')
         if cov:
             e.append('FG-12: covered_ei sin ADR sucesor')
-    elif not isinstance(adr, dict) or set(adr) != set(c['adr_fields']):
-        e.append('FG-12: successor_adr con campos distintos del esquema')
-    else:
-        if not (isinstance(adr['id'], str) and re.fullmatch(c['adr_id_pattern'], adr['id'])):
-            e.append('FG-12: id de ADR inválido o reservado (ADR-001..ADR-005)')
-        if adr['status'] not in c['adr_statuses']:
-            e.append(f'FG-12: estado de ADR desconocido {adr["status"]!r}')
-        elif adr['status'] != c['passing_adr_status']:
-            e.append(f'FG-12: el ADR sucesor está {adr["status"]}, no {c["passing_adr_status"]}')
-        if adr['relation_to_adr005'] not in c['relations_to_adr005']:
-            e.append('FG-12: relación con ADR-005 no admitida')
-        if adr['scope'] not in c['scopes']:
-            e.append('FG-12: alcance del ADR no admitido')
-        if not safe_doc_path(adr['path']):
-            e.append('FG-12: ruta del ADR inválida')
-        else:
-            data = ctx['repo_files'].get(adr['path'])
-            if not isinstance(data, bytes):
-                e.append('FG-12: el ADR sucesor no existe en el repositorio')
-            elif sha256(data) != adr['sha256']:
-                e.append('FG-12: SHA-256 del ADR distinto del declarado')
-            else:
-                text = data.decode('utf-8', 'replace')
-                if not (isinstance(adr['id'], str) and adr['id'] in text and 'F36-SBX' in text and 'ADR-005' in text):
-                    e.append('FG-12: el ADR no corresponde a este contexto (su id, F36-SBX y ADR-005)')
-        if set(need) - set(cov):
-            e.append(f'FG-12: el ADR no cubre {sorted(set(need) - set(cov))}')
-    d09 = ev.get('ei09_decision')
-    if d09 not in c['ei09_decisions']:
-        e.append('FG-12: falta la decisión explícita sobre EI-09')
-    elif 'EI-09' in auth and d09 != c['ei09_passing_decision']:
-        e.append(f'FG-12: EI-09 autorizada sin la decisión {c["ei09_passing_decision"]}')
-    return e + approval_errors('FG-12', ev, ctx, cdate, rdate)
+        return e + approval_errors('FG-12', ev, ctx, cdate, rdate)
+    if not isinstance(adr, dict) or set(adr) != set(c['adr_fields']):
+        return e + ['FG-12: successor_adr con campos distintos del esquema'] + approval_errors('FG-12', ev, ctx, cdate, rdate)
+    if not (isinstance(adr['id'], str) and re.fullmatch(c['adr_id_pattern'], adr['id'])):
+        e.append('FG-12: id de ADR inválido o reservado (ADR-001..ADR-005)')
+    if adr['status'] not in c['adr_statuses']:
+        e.append(f'FG-12: estado de ADR desconocido {adr["status"]!r}')
+    elif adr['status'] != c['passing_adr_status']:
+        e.append(f'FG-12: el ADR sucesor está {adr["status"]}, no {c["passing_adr_status"]}')
+    if adr['relation_to_adr005'] not in c['relations_to_adr005']:
+        e.append('FG-12: relación con ADR-005 no admitida')
+    if adr['scope'] not in c['scopes']:
+        e.append('FG-12: alcance del ADR no admitido')
+    if set(need) - set(cov):
+        e.append(f'FG-12: el ADR no cubre {sorted(set(need) - set(cov))}')
+    e += approval_errors('FG-12', ev, ctx, cdate, rdate)
+    if not safe_doc_path(adr['path']):
+        return e + ['FG-12: ruta del ADR inválida']
+    data = ctx['repo_files'].get(adr['path'])
+    if not isinstance(data, bytes) or sha256(data) != adr['sha256']:
+        return e + ['FG-12: el ADR sucesor no existe en el repositorio o su SHA-256 es distinto del declarado']
+    meta, outside, derr = human_document(data, 'FG-12: ADR', c['adr_block'], c['adr_headings'], min_letters)
+    e += derr
+    lines = [ln.strip() for ln in outside.splitlines() if ln.strip()]
+    if not (lines and isinstance(adr['id'], str) and lines[0].startswith('# ') and adr['id'] in lines[0]
+            and 'F36-SBX' in outside and 'ADR-005' in outside):
+        e.append('FG-12: ADR: el título no nombra su id o el texto no cita F36-SBX y ADR-005 (otro contexto)')
+    if STATUS_ASSERTION_RX.search(outside) or any(re.search(rf'\b{t}\b', outside) for t in ADR_STATUS_TOKENS):
+        e.append('FG-12: ADR: aserción o token de estado fuera del bloque canónico (segunda fuente)')
+    for token in c['relations_to_adr005'] + c['scopes'] + c['ei09_decisions']:
+        if token in outside:
+            e.append(f'FG-12: ADR: el token canónico {token} aparece fuera del bloque (segunda fuente)')
+    if meta is None:
+        return e
+    if set(meta) != set(c['adr_metadata_fields']):
+        return e + [f'FG-12: ADR: metadatos con campos distintos: faltan '
+                    f'{sorted(set(c["adr_metadata_fields"]) - set(meta))}, sobran {sorted(set(meta) - set(c["adr_metadata_fields"]))}']
+    # El ADR está dentro del commit candidato: su contexto es el gate, su versión y la base, nunca el propio commit.
+    if meta['metadata_schema'] != c['adr_metadata_schema'] or meta['gate_id'] != ctx['schema']['gate_id'] \
+            or meta['gate_version'] != ctx['schema']['gate_version'] or meta['base_commit'] != BASE:
+        e.append('FG-12: ADR: metadatos de otro esquema, gate, versión o base (otro contexto)')
+    for reg, key in (('id', 'adr_id'), ('status', 'status'), ('relation_to_adr005', 'relation_to_adr005'),
+                     ('scope', 'scope')):
+        if canonical(meta[key]) != canonical(adr[reg]):
+            e.append(f'FG-12: ADR: {key} de los metadatos ({meta[key]!r}) no coincide con el registro ({adr[reg]!r})')
+    mcov = meta['covered_ei']
+    if not isinstance(mcov, list) or not all(isinstance(x, str) for x in mcov) or len(set(mcov)) != len(mcov) \
+            or sorted(mcov) != sorted(map(str, cov)):
+        e.append(f'FG-12: ADR: covered_ei de los metadatos ({mcov!r}) no coincide con el registro ({cov!r})')
+    if canonical(meta['ei09_decision']) != canonical(d09):
+        e.append(f'FG-12: ADR: ei09_decision de los metadatos ({meta["ei09_decision"]!r}) no coincide con el registro')
+    dd = parse_date(meta['decided_on'])
+    if dd is None or cdate is None or dd > cdate:
+        e.append('FG-12: ADR: decided_on inválida o posterior al commit candidato que contiene el ADR')
+    return e
 
 
 SPECIFIC = {'FG-02': fg02_errors, 'FG-03': fg03_errors, 'FG-10': fg10_errors, 'FG-12': fg12_errors}
@@ -1668,8 +2070,8 @@ def rule_gate(s, auto):
         return [(False, 'estado del gate: JSON inválido o con claves duplicadas (falla cerrado)')], 'NO SUPERADO'
     out.append((set(state) == GATE_KEYS, f'estado del gate con esquema cerrado; diferencias: '
                                          f'{sorted(set(state) ^ GATE_KEYS)}'))
-    out.append((state.get('gate_id') == 'F36-SBX-GATE' and state.get('gate_version') == '2'
-                and state.get('base_commit') == BASE and state.get('team_evidence_schema') == 'f36sbx-team-evidence/v1',
+    out.append((state.get('gate_id') == 'F36-SBX-GATE' and state.get('gate_version') == GATE_VERSION
+                and state.get('base_commit') == BASE and state.get('team_evidence_schema') == TEAM_SCHEMA_TAG,
                 'identidad, versión, base y esquema de evidencia del gate'))
     ca = state.get('cannot_authorize')
     scope_ok = state.get('authorizes') == ['F37-SBX'] and isinstance(ca, list) and set(ca) == CANNOT_AUTHORIZE \
@@ -1677,7 +2079,7 @@ def rule_gate(s, auto):
     out.append((scope_ok, 'el gate solo autoriza F37-SBX y declara la lista cerrada de lo que no puede autorizar'))
     schema = strict_json(s['texts'].get(TEAM_SCHEMA) or '')
     schema_ok = isinstance(schema, dict) and sha256(canonical(schema)) == TEAM_SCHEMA_SHA256
-    out.append((schema_ok, 'esquema de evidencia EQUIPO idéntico a la versión cerrada f36sbx-team-evidence/v1'))
+    out.append((schema_ok, f'esquema de evidencia EQUIPO idéntico a la versión cerrada {TEAM_SCHEMA_TAG}'))
     serr = team_schema_errors(schema)
     out.append((not serr, f'invariantes del esquema de evidencia EQUIPO; errores: {serr}'))
     crit = state.get('criteria') if isinstance(state.get('criteria'), list) else []
@@ -1727,8 +2129,8 @@ def rule_gate(s, auto):
             errs = [f'{fg}: evidencia no evaluable ({exc.__class__.__name__}, falla cerrado)']
         if errs:
             invalid[fg] = errs
-    out.append((not invalid, f'cada criterio EQUIPO en CUMPLE tiene evidencia semánticamente válida; '
-                             f'inválidas: {invalid}'))
+    out.append((not invalid, f'cada criterio EQUIPO en CUMPLE tiene evidencia semánticamente válida y coherente '
+                             f'con su informe o ADR; inválidas: {invalid}'))
     referenced = {f'{GATE_EVIDENCE}{fg}.json' for fg in cumple}
     fg02 = json_bytes(s['evidence'].get(f'{GATE_EVIDENCE}FG-02.json'))
     if 'FG-02' in cumple and isinstance(fg02, dict) and isinstance(fg02.get('audit_report'), dict):

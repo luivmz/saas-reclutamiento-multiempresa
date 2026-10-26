@@ -1,8 +1,8 @@
 {
   "example_id": "f36sbx-contract-example",
-  "contract_version": "2",
+  "contract_version": "3",
   "example_only": true,
-  "note": "[SINTÉTICO] Ejemplo mínimo de conformidad del contrato F36-SBX v2: ejercita REL-01..REL-12. No es un corpus ni un dataset, no autoriza ninguna capacidad y no contiene datos reales.",
+  "note": "[SINTÉTICO] Ejemplo mínimo de conformidad del contrato F36-SBX v3: ejercita REL-01..REL-14 con dos escenarios, oro en test y outputs con y sin fragmentos. No es un corpus ni un dataset, no autoriza ninguna capacidad y no contiene datos reales.",
   "artifacts": [
     {
       "synthetic_id": "SBX36-ORG-S1-ART-0001",
@@ -49,7 +49,8 @@
           }
         ],
         "content_hash": "617c606c7896e01fcb4be3467d2f4c80d5fffbcd67993a0fc596005f6ce3c809"
-      }
+      },
+      "record_hash": "fba88f9ef3f4238abfb7a03889cf530b392e40e159ca7ea9e46d353ec52a8961"
     },
     {
       "synthetic_id": "SBX36-ORG-S1-ART-0002",
@@ -99,7 +100,8 @@
           }
         ],
         "content_hash": "c292dce31ac1a2df864faa57a7a1eed587f71bb7b6903d377aef6287f33c7d4f"
-      }
+      },
+      "record_hash": "a54f94656fa4e86d8526b357c97cb73350f72404d1f11219e506be707bb91881"
     },
     {
       "synthetic_id": "SBX36-ORG-S1-ART-0003",
@@ -140,7 +142,8 @@
           }
         ],
         "content_hash": "dd86d60bc2ebe70ba049fb5aae5d830eba53828506d3872abd1c16db53cb4b25"
-      }
+      },
+      "record_hash": "7ebb45328575b24474765e4d5af8dc9b2ec2f1b2ddb3fab70ed2210fd824f0b5"
     },
     {
       "synthetic_id": "SBX36-ORG-S1-ART-0004",
@@ -159,10 +162,10 @@
         "fragment_id": "SBX36-ORG-S1-FRG-0002",
         "criterion_id": "CRI-0004",
         "relevance": "relevante",
-        "annotator_token": "ANT36-01",
+        "annotator_token": "ANT36-S1-01",
         "overlap_stratum": "medio"
       },
-      "content_hash": "0c8bec0b0c1a34e03d676b05094c4ed2fac2ce98ea77b35bcd440c304dfd1804",
+      "content_hash": "fc9ea3425fbbcc15b1465c6c515fb1132198f19cb65ce23d16b478d725867e79",
       "provenance": {
         "generator_id": "GEN36-plantillas-f36",
         "generator_version": "0.1.0",
@@ -186,8 +189,9 @@
             "sha256": "65898a8d9c8c431bfff48a84859647f5c69c9299485cf02e2d27ddfb52f5ee12"
           }
         ],
-        "content_hash": "0c8bec0b0c1a34e03d676b05094c4ed2fac2ce98ea77b35bcd440c304dfd1804"
-      }
+        "content_hash": "fc9ea3425fbbcc15b1465c6c515fb1132198f19cb65ce23d16b478d725867e79"
+      },
+      "record_hash": "8b5713603b94dbf8cea1e4c3f63f3854438c6e67743a995ceda756badaa3f053"
     },
     {
       "synthetic_id": "SBX36-ORG-S1-ART-0005",
@@ -227,14 +231,15 @@
           }
         ],
         "content_hash": "f82e55e18818a369062e3d88dcf83d446f795672e05750f1837072422244354e"
-      }
+      },
+      "record_hash": "555d63f36897291f3ff620759fdfd6fcd264e0f87a2d921c62e196b81cf920b3"
     },
     {
       "synthetic_id": "SBX36-ORG-S1-ART-0006",
       "artifact_type": "certificate",
       "stage": "A",
       "synthetic_organization_id": "ORG-S1",
-      "scenario_id": "SC36-01",
+      "scenario_id": "SC36-02",
       "vacancy_token": "VAC-0004",
       "application_token": "APP-00013",
       "partition": "test",
@@ -266,14 +271,15 @@
           }
         ],
         "content_hash": "6436e5b2fcc8cdeab7b0a15491ccaea387f5d56fab8a9fc3715e875018932e36"
-      }
+      },
+      "record_hash": "3d195eb7d01df1029464e6ab0450c2b43855b8a90efe0606018d47165860259e"
     },
     {
       "synthetic_id": "SBX36-ORG-S1-ART-0007",
       "artifact_type": "counterfactual_pair",
       "stage": "B",
       "synthetic_organization_id": "ORG-S1",
-      "scenario_id": "SC36-01",
+      "scenario_id": "SC36-02",
       "vacancy_token": "VAC-0004",
       "application_token": "APP-00014",
       "partition": "test",
@@ -306,7 +312,8 @@
           }
         ],
         "content_hash": "34381ca8a0f240262f7e7b05f0e47d7f56846fe3f46f49280b8490eae335207a"
-      }
+      },
+      "record_hash": "a939ee4f2a500d1fa15aba1e978eef3f84a971c56dd05c48e9a989f9d23f01bb"
     },
     {
       "synthetic_id": "SBX36-ORG-S1-ART-0008",
@@ -345,13 +352,63 @@
           }
         ],
         "content_hash": "a48aee8c19454be976c9a05f58c13c8205480b29a1f80dc4d90d590757182fe2"
-      }
+      },
+      "record_hash": "6112946b0f9c5f15a8c4e595e3ae029a4a596b39620c185a4c938ff20c1deb73"
+    },
+    {
+      "synthetic_id": "SBX36-ORG-S1-ART-0009",
+      "artifact_type": "relevance_annotation",
+      "stage": "A",
+      "synthetic_organization_id": "ORG-S1",
+      "scenario_id": "SC36-02",
+      "vacancy_token": "VAC-0004",
+      "application_token": "APP-00013",
+      "partition": "test",
+      "template_family": "TF36-BB",
+      "source_type": "synthetic",
+      "environment": "sandbox",
+      "hash_algorithm": "f36sbx-content-sha256-v1",
+      "content": {
+        "fragment_id": "SBX36-ORG-S1-FRG-0004",
+        "criterion_id": "CRI-0016",
+        "relevance": "relevante",
+        "annotator_token": "ANT36-S1-02",
+        "overlap_stratum": "alto"
+      },
+      "content_hash": "f8bd6769a9b2f658b5b1f93f7c5104219deaeae27d805e2aa7f4d54f9f54436d",
+      "provenance": {
+        "generator_id": "GEN36-plantillas-f36",
+        "generator_version": "0.1.0",
+        "template_id": "TPL36-BB-03",
+        "template_family": "TF36-BB",
+        "seed": 3609,
+        "upstream_refs": [
+          {
+            "source": "docs/academico/datos-sinteticos/dataset/vacancies.csv",
+            "ref": "VAC-0004",
+            "sha256": "04def2e4f115c921586ba46c603c552c3a583344d54a67d69f75ca5c64f00b7a"
+          },
+          {
+            "source": "docs/academico/datos-sinteticos/dataset/applications.csv",
+            "ref": "APP-00013",
+            "sha256": "15a9a125a11e6c9d14e6d5d239c1c10685786785db7ca02747c0b0230cd5ba82"
+          },
+          {
+            "source": "docs/academico/datos-sinteticos/dataset/criteria.csv",
+            "ref": "CRI-0016",
+            "sha256": "65898a8d9c8c431bfff48a84859647f5c69c9299485cf02e2d27ddfb52f5ee12"
+          }
+        ],
+        "content_hash": "f8bd6769a9b2f658b5b1f93f7c5104219deaeae27d805e2aa7f4d54f9f54436d"
+      },
+      "record_hash": "da5e60b4392dc605a6d7b23d926a13fa3ae4202a188eeb27f00cc7182015445b"
     }
   ],
   "fragments": [
     {
       "fragment_id": "SBX36-ORG-S1-FRG-0001",
       "artifact_id": "SBX36-ORG-S1-ART-0001",
+      "artifact_record_hash": "fba88f9ef3f4238abfb7a03889cf530b392e40e159ca7ea9e46d353ec52a8961",
       "synthetic_organization_id": "ORG-S1",
       "scenario_id": "SC36-01",
       "vacancy_token": "VAC-0001",
@@ -360,11 +417,13 @@
       "text_path": "sections/1/text_synthetic",
       "char_start": 56,
       "char_end": 89,
-      "fragment_hash": "7768468c8db13e840a19867ea140f30966e2671bda851dd9c12fea8b235c2c71"
+      "text_hash": "7768468c8db13e840a19867ea140f30966e2671bda851dd9c12fea8b235c2c71",
+      "fragment_hash": "a0e7dde798d1f02a49f817f187abe38fccc15bee0c9bbac48dc2bf66dc2f20e9"
     },
     {
       "fragment_id": "SBX36-ORG-S1-FRG-0002",
       "artifact_id": "SBX36-ORG-S1-ART-0002",
+      "artifact_record_hash": "a54f94656fa4e86d8526b357c97cb73350f72404d1f11219e506be707bb91881",
       "synthetic_organization_id": "ORG-S1",
       "scenario_id": "SC36-01",
       "vacancy_token": "VAC-0001",
@@ -373,11 +432,13 @@
       "text_path": "turns/1/text_synthetic",
       "char_start": 47,
       "char_end": 91,
-      "fragment_hash": "cc3c21a62f7de977332ae4269f2fda68fdfb07e01f5ed337775562109c6370cf"
+      "text_hash": "cc3c21a62f7de977332ae4269f2fda68fdfb07e01f5ed337775562109c6370cf",
+      "fragment_hash": "16fdd418581b3e646ceb9cb0958f6280d6b60151833d7cf93c8a0b441e6d5565"
     },
     {
       "fragment_id": "SBX36-ORG-S1-FRG-0003",
       "artifact_id": "SBX36-ORG-S1-ART-0003",
+      "artifact_record_hash": "7ebb45328575b24474765e4d5af8dc9b2ec2f1b2ddb3fab70ed2210fd824f0b5",
       "synthetic_organization_id": "ORG-S1",
       "scenario_id": "SC36-01",
       "vacancy_token": "VAC-0001",
@@ -386,20 +447,23 @@
       "text_path": "text_synthetic",
       "char_start": 67,
       "char_end": 94,
-      "fragment_hash": "141c220e9be91394ceb0c982653668b995742647d55ffe5cc4d8aa9d1cb131f9"
+      "text_hash": "141c220e9be91394ceb0c982653668b995742647d55ffe5cc4d8aa9d1cb131f9",
+      "fragment_hash": "72523287131350c8873371d3d3f2395f3df32c1eb7dd2633274d969c3a7d8403"
     },
     {
       "fragment_id": "SBX36-ORG-S1-FRG-0004",
       "artifact_id": "SBX36-ORG-S1-ART-0006",
+      "artifact_record_hash": "3d195eb7d01df1029464e6ab0450c2b43855b8a90efe0606018d47165860259e",
       "synthetic_organization_id": "ORG-S1",
-      "scenario_id": "SC36-01",
+      "scenario_id": "SC36-02",
       "vacancy_token": "VAC-0004",
       "application_token": "APP-00013",
       "partition": "test",
       "text_path": "title_synthetic",
       "char_start": 39,
       "char_end": 69,
-      "fragment_hash": "bc11869d098726549da58eb8a4df60ff812fe245905ab433df90b27a398d6db3"
+      "text_hash": "bc11869d098726549da58eb8a4df60ff812fe245905ab433df90b27a398d6db3",
+      "fragment_hash": "9f419ce37ad811aefa4fdb3e2139b5be42482af197f9930044d28cd1609deaf6"
     }
   ],
   "outputs": [
@@ -408,6 +472,10 @@
       "ei": "EI-07",
       "method_id": "MTH36-busqueda-lexica-exacta",
       "method_version": "0.1.0",
+      "method_config": {
+        "normalization": "nfkc_casefold",
+        "top_k": 5
+      },
       "synthetic_organization_id": "ORG-S1",
       "scenario_id": "SC36-01",
       "vacancy_token": "VAC-0001",
@@ -418,25 +486,59 @@
         "SBX36-ORG-S1-FRG-0001",
         "SBX36-ORG-S1-FRG-0002"
       ],
+      "fragment_ref_hashes": [
+        "a0e7dde798d1f02a49f817f187abe38fccc15bee0c9bbac48dc2bf66dc2f20e9",
+        "16fdd418581b3e646ceb9cb0958f6280d6b60151833d7cf93c8a0b441e6d5565"
+      ],
       "abstained": false,
-      "input_manifest_hash": "4a3983b3894273d6a9ffe3263ac5ee15639617155233ab601f46e4a6d42172fc",
-      "output_hash": "c7a37f5823d3068efa236a85afaddfcf9fd3d3afd7e89c4f710b7f961daa4818"
+      "input_manifest_hash": "eefa14cc7828ecb62a02dfb0b44aa2df2d3dc614b0c557c34749974de6e66c1b",
+      "output_hash": "2d9fabb8442da161130ddaf026dc8aad9b29a7b20bde5a5e9fe309383abd73bf"
     },
     {
       "output_id": "SBX36-ORG-S1-OUT-0002",
       "ei": "EI-07",
       "method_id": "MTH36-busqueda-lexica-exacta",
       "method_version": "0.1.0",
+      "method_config": {
+        "normalization": "nfkc_casefold",
+        "top_k": 5
+      },
       "synthetic_organization_id": "ORG-S1",
-      "scenario_id": "SC36-01",
+      "scenario_id": "SC36-02",
+      "vacancy_token": "VAC-0004",
+      "application_token": "APP-00013",
+      "partition": "test",
+      "query_criterion_id": "CRI-0017",
+      "fragment_refs": [],
+      "fragment_ref_hashes": [],
+      "abstained": true,
+      "input_manifest_hash": "db1886dcd6aa9450b22971c459187e53dcc920cda4260be2469ae65e0b54d01f",
+      "output_hash": "4e2eb27ee620663f2cc49e323ed560c6d11157f9d787f1bd82de6adf662f7920"
+    },
+    {
+      "output_id": "SBX36-ORG-S1-OUT-0003",
+      "ei": "EI-07",
+      "method_id": "MTH36-busqueda-lexica-exacta",
+      "method_version": "0.1.0",
+      "method_config": {
+        "normalization": "nfkc_casefold",
+        "top_k": 5
+      },
+      "synthetic_organization_id": "ORG-S1",
+      "scenario_id": "SC36-02",
       "vacancy_token": "VAC-0004",
       "application_token": "APP-00013",
       "partition": "test",
       "query_criterion_id": "CRI-0016",
-      "fragment_refs": [],
-      "abstained": true,
-      "input_manifest_hash": "1222a671fa719f20912849d12de07192beebb7a58078285817d1ed1c984f36ae",
-      "output_hash": "29c45b7992c65f3a23ee4978c7db6613d9b09c5c08677a7e7991e95f19219b68"
+      "fragment_refs": [
+        "SBX36-ORG-S1-FRG-0004"
+      ],
+      "fragment_ref_hashes": [
+        "9f419ce37ad811aefa4fdb3e2139b5be42482af197f9930044d28cd1609deaf6"
+      ],
+      "abstained": false,
+      "input_manifest_hash": "db1886dcd6aa9450b22971c459187e53dcc920cda4260be2469ae65e0b54d01f",
+      "output_hash": "38e9d29a39e9cbc74d360e1783a3004e4ea9c2939245fab79cab4907028484a4"
     }
   ],
   "partition_manifest": {
@@ -454,10 +556,12 @@
       "test": {
         "artifacts": [
           "SBX36-ORG-S1-ART-0006",
-          "SBX36-ORG-S1-ART-0007"
+          "SBX36-ORG-S1-ART-0007",
+          "SBX36-ORG-S1-ART-0009"
         ],
         "sealed": true,
-        "seal_sha256": "570e7965f24581b3cff415f09962a3e1eb9188d734fa7fe7819dd4db3c0dc159"
+        "seal_algorithm": "f36sbx-test-seal-sha256-v2",
+        "seal_sha256": "851dbd3215e3e58d006aeae85b5cc329a86eca50784e50799ba22a6a672d8e68"
       }
     },
     "thresholds": {

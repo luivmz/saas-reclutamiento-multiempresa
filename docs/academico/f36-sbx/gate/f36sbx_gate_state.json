@@ -1,6 +1,6 @@
 {
   "gate_id": "F36-SBX-GATE",
-  "gate_version": "2",
+  "gate_version": "3",
   "authorizes": ["F37-SBX"],
   "cannot_authorize": [
     "produccion",
@@ -17,7 +17,7 @@
   ],
   "base_commit": "b8892af39a6492d8dd44a36290604efc602380cd",
   "candidate_commit": null,
-  "team_evidence_schema": "f36sbx-team-evidence/v1",
+  "team_evidence_schema": "f36sbx-team-evidence/v2",
   "criteria": [
     {"id": "FG-01", "kind": "auto", "status": "CUMPLE"},
     {"id": "FG-02", "kind": "team", "status": "PENDIENTE", "evidence": null},
