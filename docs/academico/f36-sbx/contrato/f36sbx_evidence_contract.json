@@ -1,0 +1,73 @@
+{
+  "contract_id": "f36sbx-evidence-contract",
+  "contract_version": "1",
+  "status": "DISENO",
+  "environment": "sandbox",
+  "source_type_allowed": ["synthetic"],
+  "generator_policy": {
+    "llm_allowed": false,
+    "template_based": true,
+    "seed_required": true,
+    "byte_reproducible": true
+  },
+  "allowed_upstream_sources": [
+    "docs/academico/datos-sinteticos/dataset",
+    "docs/academico/evidencia-sbx/fixtures"
+  ],
+  "forbidden_upstream_sources": [
+    "docs/academico/g0-evidence",
+    "storage",
+    "database",
+    "http://",
+    "https://"
+  ],
+  "synthetic_markers": {
+    "synthetic_id_prefix": "SBX36-",
+    "text_prefix": "[SINTÉTICO]",
+    "source_type": "synthetic",
+    "environment": "sandbox",
+    "hash_algorithm": "f36sbx-content-sha256-v1",
+    "synthetic_organization_ids": ["ORG-S1", "ORG-S2", "ORG-S3"]
+  },
+  "provenance_required": {
+    "artifact": ["generator_id", "generator_version", "template_id", "seed", "upstream_refs", "content_hash"],
+    "fragment": ["fragment_id", "artifact_id", "char_start", "char_end", "fragment_hash"],
+    "output": ["method_id", "method_version", "input_manifest_hash", "output_hash"]
+  },
+  "artifact_types": {
+    "cv_document": {"stage": "A", "fields": ["synthetic_id", "synthetic_organization_id", "application_token", "sections", "source_type", "environment", "hash_algorithm", "content_hash"]},
+    "certificate": {"stage": "A", "fields": ["synthetic_id", "synthetic_organization_id", "application_token", "issuer_synthetic", "title_synthetic", "source_type", "environment", "hash_algorithm", "content_hash"]},
+    "interview_transcript": {"stage": "A", "fields": ["synthetic_id", "synthetic_organization_id", "application_token", "question_id", "turns", "review_status", "source_type", "environment", "hash_algorithm", "content_hash"]},
+    "human_observation": {"stage": "A", "fields": ["synthetic_id", "synthetic_organization_id", "application_token", "author_kind", "author_token", "observation_kind", "text_synthetic", "source_type", "environment", "hash_algorithm", "content_hash"]},
+    "relevance_annotation": {"stage": "A", "fields": ["synthetic_id", "synthetic_organization_id", "fragment_id", "criterion_id", "relevance", "annotator_token", "overlap_stratum", "source_type", "environment"]},
+    "adversarial_case": {"stage": "A", "fields": ["synthetic_id", "synthetic_organization_id", "attack_kind", "text_synthetic", "expected_outcome", "source_type", "environment", "hash_algorithm", "content_hash"]},
+    "counterfactual_pair": {"stage": "B", "fields": ["synthetic_id", "synthetic_organization_id", "variant_of", "perturbation", "grupo_sintetico", "source_type", "environment", "hash_algorithm", "content_hash"]},
+    "rendered_document": {"stage": "B", "fields": ["synthetic_id", "synthetic_organization_id", "rendered_from", "format", "source_type", "environment", "hash_algorithm", "content_hash"]}
+  },
+  "closed_values": {
+    "author_kind": ["human_synthetic"],
+    "review_status": ["revisada_sintetica"],
+    "observation_kind": ["conducta_observada", "aclaracion"],
+    "relevance": ["relevante", "no_relevante"],
+    "overlap_stratum": ["alto", "medio", "nulo"],
+    "expected_outcome": ["rechazo", "abstencion"],
+    "format": ["pdf", "docx"]
+  },
+  "group_marker_only_in": ["counterfactual_pair"],
+  "forbidden_fields": [
+    "name", "full_name", "first_name", "last_name", "dni", "document_number", "email", "phone", "address",
+    "photo", "image", "age", "birth_date", "gender", "sex", "nationality", "ethnicity", "religion", "health",
+    "disability", "marital_status", "score", "rank", "ranking", "recommendation", "recommended", "fit",
+    "suitability", "best_candidate", "suggested_level", "verdict", "emotion", "personality", "honesty",
+    "intelligence", "stress", "nervousness", "voice", "face", "prosody", "accent", "audio", "video", "biometric"
+  ],
+  "splits": {
+    "partitions": ["dev", "test"],
+    "train_allowed": false,
+    "group_by": ["template_family", "vacancy_token"],
+    "test_sealed_before_any_run": true,
+    "thresholds_fit_on": "dev",
+    "temporal_embargo": "process_splits_f34",
+    "counterfactual_pairs_same_partition": true
+  }
+}
