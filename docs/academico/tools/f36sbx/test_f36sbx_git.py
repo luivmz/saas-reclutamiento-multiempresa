@@ -941,6 +941,14 @@ def e2e_af5(tmp):
     kind = 'unión de directorios (junction)' if os.name == 'nt' else 'enlace simbólico de directorio'
     sb.scenario('AF5-M01-G04', f'directorio del paquete redirigido con una {kind} a una copia externa idéntica '
                 '(componente ancestral)', (LINKED,), redirected(), unredirected)
+    try:
+        redirected()()
+        why = v.read_normative(clone, v.PLAN)
+    finally:
+        unredirected()
+    ok(why[0] is None and str(why[1]).startswith('enlace simbólico o unión de directorios en la ruta'), 'AF5-M01-G04b',
+       f'read_normative rechaza la ruta con un componente ancestral redirigido ({kind}) antes de leerla, con su motivo',
+       str(why)[:140])
     sb.scenario('AF5-M01-G05', f'directorio del paquete redirigido con una {kind} y plan externo modificado',
                 (LINKED,), redirected(True), unredirected)
     try:
@@ -984,6 +992,16 @@ def e2e_af5(tmp):
         os.rmdir(tools_link) if os.name == 'nt' else os.unlink(tools_link)
     sb.scenario('AF5-M01-G16', f'subdirectorio de las herramientas del validador redirigido con una {kind} a código '
                 'externo (recorrido del directorio)', (LINKED,), tools_redirected, tools_restored)
+    try:
+        tools_redirected()
+        walked = v.walk_normative(clone, v.TOOLS)
+    finally:
+        tools_restored()
+    extra = f'{v.TOOLS}/extra'
+    inside = [p for p in walked if p.startswith(extra + '/')]
+    ok(walked.get(extra, (b'', None))[0] is None and str(walked.get(extra, (None, ''))[1]).startswith('enlace')
+       and not inside, 'AF5-M01-G16b', f'walk_normative no entra en el subdirectorio redirigido ({kind}): lo registra '
+       'como una sola entrada con su motivo', f'entrada {walked.get(extra)}, archivos recorridos dentro: {inside}')
 
     sb.scenario('AF5-M01-G08', 'plan sacado del índice (no versionado) y presente en el árbol de trabajo',
                 (CHANGED_AFTER,), lambda: git(clone, 'rm', '-q', '--cached', v.PLAN), lambda: git(clone, 'add', v.PLAN))
