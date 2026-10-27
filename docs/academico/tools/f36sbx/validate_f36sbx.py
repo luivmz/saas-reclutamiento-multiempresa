@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validador fail-closed del paquete F36-SBX (autorización, investigación y diseño), versión 5 (AF4).
+"""Validador fail-closed del paquete F36-SBX (autorización, investigación y diseño), versión 6 (AF5).
 
 Solo biblioteca estándar. No ejecuta ML ni NLP, no usa red y no escribe archivos (tampoco el índice de Git).
 
@@ -12,6 +12,8 @@ Solo biblioteca estándar. No ejecuta ML ni NLP, no usa red y no escribe archivo
   tenants, cobertura mínima y contexto canónico de todo output (REL-01..REL-15).
 - Consulta Git por una única vía endurecida (objetos reales, sin refs/replace) y compara el árbol de trabajo
   con el índice por sus bytes, sin confiar en assume-unchanged, skip-worktree ni en la caché de stat (AF4).
+- Lee cada entrada normativa una sola vez, como archivo regular y sin seguir enlaces ni redirecciones, y exige
+  que sea un blob 100644 del commit candidato: lo validado es lo que el candidato fija (AF5).
 
 Uso: python -I -B docs/academico/tools/f36sbx/validate_f36sbx.py
 """
@@ -50,7 +52,7 @@ F33_MATRIX = 'docs/academico/diseno-inteligente/F33_Matriz_Capacidades_y_Restric
 PKG_DOCS = ['README.md', 'F36SBX_Charter.md', 'F36SBX_Matriz_Capacidades.md', 'F36SBX_Investigacion_Diseno.md',
             'F36SBX_Contrato_Evidencia.md', 'F36SBX_Threat_Model.md', 'F36SBX_Plan_Evaluacion.md',
             'F36SBX_Gate_Sucesor.md', 'F36SBX_Trazabilidad.md', 'F36SBX_Correccion_AF1.md', 'F36SBX_Correccion_AF2.md',
-            'F36SBX_Correccion_AF3.md', 'F36SBX_Correccion_AF4.md']
+            'F36SBX_Correccion_AF3.md', 'F36SBX_Correccion_AF4.md', 'F36SBX_Correccion_AF5.md']
 PKG_DATA = [CONTRACT, EXAMPLE, GATE_STATE, TEAM_SCHEMA]
 PKG_FILES = [f'{PKG}/{n}' for n in PKG_DOCS] + PKG_DATA
 GOV_FILES = ['CLAUDE.md', 'README.md', 'docs/PROGRESS.md', 'docs/academico/ACADEMIC_BASELINE.md']
