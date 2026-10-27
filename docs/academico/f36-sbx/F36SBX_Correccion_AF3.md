@@ -115,7 +115,7 @@ Las pruebas AF3-26..AF3-35 cubren `placeholder` en el registro y en el bloque (t
 
 ### 6.1 Ejecución completa sobre el candidato final
 
-Pendiente de registrar tras ejecutar `meta_f36sbx.py ablaciones` sobre el commit final de documentación.
+`meta_f36sbx.py ablaciones` sobre `4107ba6` (2118 s), con línea base sin fallas en memoria y con Git real: **113 ablaciones, 113 detectadas por casos pertinentes, ninguna solo por excepción y 0 supervivientes.** Las ramas defensivas de la primera ejecución se detectan con U16 y U17 (una sola entrada con la ruta exacta), U18 (blob legible), y con AF3-01, AF3-11 y los escenarios G (resolución con error). `meta_f36sbx.py hojas` dio 505 mutaciones de forma, 810 sustituciones y 243 mutaciones y sustituciones de evidencia, con 0 falsos PASS. El código no cambió después de esa ejecución: este registro es el único cambio posterior.
 
 ## 7. No regresión de AF2
 
