@@ -1303,7 +1303,7 @@ def main():
         return f
     no_blob = 'no es un blob regular versionado en el commit candidato'
     af2('AF3-01', 'ADR que no existe en el árbol del commit candidato (ignorado, sin versionar o ausente)', 'FG-12',
-        adr_entry(lambda b: {'error': 'no existe en el árbol del commit'}), no_blob)
+        adr_entry(lambda b: {'error': 'no existe en el árbol del commit'}), f'{no_blob}: no existe en el árbol del commit')
     af2('AF3-02', 'ADR versionado solo en otro commit, no en el candidato', 'FG-12',
         lambda docs, ctx: ctx['adr_blobs'].update({(OTHER, ADR_PATH): ctx['adr_blobs'].pop((CAND, ADR_PATH))}), no_blob)
     af2('AF3-03', 'ruta del ADR que es un árbol (directorio) en el commit candidato', 'FG-12',
@@ -1321,9 +1321,11 @@ def main():
          chain(register(), lambda s: s.update(ignored=[path('FG-02')])), 'GATE', 'Git lo ignora')
     case('AF3-10', 'no se puede comprobar con Git si la evidencia es versionable (falla cerrado)',
          chain(register(), setkey('ignored', None)), 'GATE', 'no se pudo comprobar con Git')
-    ok(v.blob_problem(blob(b'# ADR\n')) is None and v.blob_problem(None) and v.blob_problem({'error': 'x'})
+    ok(v.blob_problem(blob(b'# ADR\n')) is None and v.blob_problem(None)
+       and v.blob_problem({'error': 'motivo de Git'}) == 'motivo de Git'
        and v.blob_problem({**blob(b'a'), 'object': '0' * 40}), 'AF3-11',
-       'contraste: blob_problem acepta un blob regular íntegro y rechaza la ausencia, el error y un objeto que no corresponde', '')
+       'contraste: blob_problem acepta un blob regular íntegro y rechaza la ausencia, el error (conservando su motivo) '
+       'y un objeto que no corresponde', '')
 
     # ---------------- AF3-L01: marcadores de identidad tras normalizar (validación estructural, no autenticación)
     def auditor_named(name):

@@ -139,6 +139,27 @@ def unit(tmp):
     check('U14', 'ruta que sale del árbol con ..', c1, 'docs/adr/../LEEME.md', 'fuera de formato')
     check('U15', 'commit fuera de formato', 'HEAD', 'docs/adr/ADR_006.md', 'fuera de formato')
 
+    # Ramas defensivas que Git real no produce con rutas válidas: se simula su salida y debe fallar cerrado.
+    real = v.git_bytes
+    obj = git(repo, 'rev-parse', f'{c1}:docs/adr/ADR_006.md').encode('ascii')
+
+    def simulated(cid, desc, fake, needle):
+        v.git_bytes = fake
+        try:
+            b = v.git_blob(repo, c1, 'docs/adr/ADR_006.md')
+        finally:
+            v.git_bytes = real
+        ok('error' in b and needle in b['error'], cid, desc, b.get('error', f'sin error: {str(b)[:120]}'))
+    entry = b'100644 blob ' + obj + b'\t'
+    simulated('U16', 'git devuelve dos entradas para la ruta (simulado)',
+              lambda root, *a, **k: entry + b'docs/adr/ADR_006.md\0' + entry + b'docs/adr/OTRO.md\0' if 'ls-tree' in a
+              else real(root, *a, **k), 'no identifica exactamente una entrada')
+    simulated('U17', 'git devuelve una entrada con otra ruta (simulado)',
+              lambda root, *a, **k: entry + b'docs/adr/OTRO.md\0' if 'ls-tree' in a else real(root, *a, **k),
+              'no identifica exactamente una entrada')
+    simulated('U18', 'git no puede leer el blob después de resolverlo (simulado)',
+              lambda root, *a, **k: None if 'cat-file' in a else real(root, *a, **k), 'no se pudo leer el blob')
+
 
 # ---------------------------------------------------------------- G: validador completo en un clon compartido
 
@@ -232,16 +253,17 @@ def e2e(tmp):
                f'faltan {missing}; fallas {[f"{n}: {m[:140]}" for n, m in fails][:3]}')
 
     no_blob = 'no es un blob regular versionado en el commit candidato'
+    absent = f'{no_blob}: no existe en el árbol del commit'
     changed_after = 'el paquete cambió después del commit auditado'
     scenario('G01', 'control positivo realista: ADR versionado como blob regular del commit candidato',
              cand, ADR_PATH, blob_sha)
     ignored = adr_text(note=' Copia ignorada.')
     scenario('G02', 'ADR válido solo en el sistema de archivos, bajo un directorio ignorado (htmlcov/)',
-             cand, IGNORED_ADR, hashlib.sha256(ignored).hexdigest(), (no_blob,),
+             cand, IGNORED_ADR, hashlib.sha256(ignored).hexdigest(), (absent,),
              lambda: write(clone, IGNORED_ADR, ignored), lambda: (clone / IGNORED_ADR).unlink())
     untracked = adr_text(note=' Copia sin versionar.')
     scenario('G03', 'ADR sin versionar en el árbol de trabajo, ausente del commit candidato',
-             cand, UNTRACKED_ADR, hashlib.sha256(untracked).hexdigest(), (no_blob, changed_after),
+             cand, UNTRACKED_ADR, hashlib.sha256(untracked).hexdigest(), (absent, changed_after),
              lambda: write(clone, UNTRACKED_ADR, untracked), lambda: (clone / UNTRACKED_ADR).unlink())
     swapped = adr_text(note=' Sustituido en el árbol de trabajo.')
     scenario('G04', 'ADR versionado y sustituido en el árbol de trabajo, con el SHA-256 de la copia sustituida',
@@ -254,9 +276,9 @@ def e2e(tmp):
     scenario('G06', 'ruta del ADR que es un árbol en el commit candidato', cand, TREE_PATH, blob_sha,
              (no_blob, 'tipo tree'))
     scenario('G07', 'ruta inexistente en el commit candidato', cand, 'docs/academico/f36-sbx/ADR_009_no_existe.md',
-             blob_sha, (no_blob,))
+             blob_sha, (absent,))
     scenario('G08', 'candidate_commit incorrecto: commit anterior, que no contiene el ADR', base_head, ADR_PATH,
-             blob_sha, (no_blob,))
+             blob_sha, (absent,))
     exclude = clone / '.git' / 'info' / 'exclude'
     original_exclude = exclude.read_bytes() if exclude.exists() else b''
     scenario('G09', 'evidencia de equipo que Git ignora (exclusión local): ningún commit podría contenerla',
@@ -274,7 +296,7 @@ def e2e(tmp):
     git(clone, 'add', LATER_ADR)
     commit(clone, 'ADR añadido después del candidato')
     scenario('G11', 'ADR existente en HEAD y en el árbol de trabajo pero añadido después del commit candidato',
-             cand, LATER_ADR, hashlib.sha256(later).hexdigest(), (no_blob, changed_after))
+             cand, LATER_ADR, hashlib.sha256(later).hexdigest(), (absent, changed_after))
 
 
 def main():
