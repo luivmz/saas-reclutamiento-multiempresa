@@ -1,6 +1,6 @@
 # F36-SBX — Trazabilidad
 
-> Fase F36-SBX, versión 2 (26/10/2026): añade la trazabilidad de las auditorías AF1 y AF2 (sección 5). Candidata a una tercera auditoría independiente. F36-SBX no modifica ningún RF, CU ni RNF, ni los RF candidatos. No promueve nada al baseline.
+> Fase F36-SBX, versión 3 (26/10/2026): añade la trazabilidad de las auditorías AF1, AF2 y AF3 (sección 5). Candidata a una cuarta auditoría independiente. F36-SBX no modifica ningún RF, CU ni RNF, ni los RF candidatos. No promueve nada al baseline.
 
 ## 1. Requisitos relacionados (sin cambios)
 
@@ -53,7 +53,8 @@ G0 real = NO APROBADA; G0-02, G0-03 y G0-12 = PENDIENTE EXTERNO; G0-09 y G0-14 =
 | Auditoría | Candidato | Resultado | Corrección |
 |---|---|---|---|
 | AF1 | `06e933e` | No aprobado: 2 MEDIUM, más 3 defectos del oracle encontrados al corregir | [Corrección AF1](F36SBX_Correccion_AF1.md) |
-| AF2 | `2a4e68c` | No aprobado: 0 BLOCKER, 0 HIGH, 3 MEDIUM y 1 LOW | [Corrección AF2](F36SBX_Correccion_AF2.md). AF2-M01/M02/M03 y AF2-L01 corregidos por implementación, pendientes de tercera auditoría independiente |
+| AF2 | `2a4e68c` | No aprobado: 0 BLOCKER, 0 HIGH, 3 MEDIUM y 1 LOW | [Corrección AF2](F36SBX_Correccion_AF2.md). La tercera auditoría dio por corregidos AF2-M02, AF2-M03 y AF2-L01, y no corregido de forma integral AF2-M01: su parte pendiente, la pertenencia del ADR al candidato, es AF3-M01 |
+| AF3 | `ecb22cc` | No aprobado: 0 BLOCKER, 0 HIGH, 2 MEDIUM y 1 LOW | [Corrección AF3](F36SBX_Correccion_AF3.md). AF3-M01, AF3-M02 y AF3-L01 corregidos por implementación, pendientes de cuarta auditoría independiente |
 
 | Hallazgo AF2 | Control | Dónde se documenta | Pruebas |
 |---|---|---|---|
@@ -62,4 +63,10 @@ G0 real = NO APROBADA; G0-02, G0-03 y G0-12 = PENDIENTE EXTERNO; G0-09 y G0-14 =
 | AF2-M03 | Autores, anotadores y referencias upstream ligados a su contexto; sin fuentes globales | [Contrato §7](F36SBX_Contrato_Evidencia.md#7-aislamiento-entre-organizaciones) | AF2-25..AF2-30, X01..X10, P-05, P-06 |
 | AF2-L01 | `example_id` cerrado y cobertura mínima del ejemplo | [Contrato §9](F36SBX_Contrato_Evidencia.md#9-ejemplo-de-conformidad) | AF2-31..AF2-33, L01..L05 |
 
-Las amenazas afectadas son TEI-05, TEI-06, TEI-08, TEI-12 y TEI-22 del [threat model](F36SBX_Threat_Model.md), sin renumerar. Las pruebas están en [`test_f36sbx.py`](../tools/f36sbx/test_f36sbx.py) y las metapruebas, en [`meta_f36sbx.py`](../tools/f36sbx/meta_f36sbx.py).
+| Hallazgo AF3 | Control | Dónde se documenta | Pruebas |
+|---|---|---|---|
+| AF3-M01 | El ADR es el blob regular `candidate_commit:path` y sus bytes se leen de Git; la evidencia de equipo es versionable | [Gate §8.6](F36SBX_Gate_Sucesor.md#86-informe-y-adr-fuente-estructurada-canónica) y §9 | AF3-01..AF3-11; con Git real, U01..U15 y G01..G11 |
+| AF3-M02 | Contexto canónico de todo output, abstenciones y outputs de ajuste incluidos (REL-15) | [Contrato §7.1](F36SBX_Contrato_Evidencia.md#71-contexto-canónico-rel-15) | AF3-12..AF3-25, P-12..P-14, C52..C54 |
+| AF3-L01 | Marcadores de identidad normalizados e identidades genéricas rechazadas | [Gate §8.6](F36SBX_Gate_Sucesor.md#86-informe-y-adr-fuente-estructurada-canónica) | AF3-26..AF3-35, P-07, P-08 |
+
+Las amenazas afectadas son TEI-05, TEI-06, TEI-08, TEI-12 y TEI-22 del [threat model](F36SBX_Threat_Model.md), sin renumerar. Las pruebas están en [`test_f36sbx.py`](../tools/f36sbx/test_f36sbx.py) y en [`test_f36sbx_git.py`](../tools/f36sbx/test_f36sbx_git.py), y las metapruebas, en [`meta_f36sbx.py`](../tools/f36sbx/meta_f36sbx.py).

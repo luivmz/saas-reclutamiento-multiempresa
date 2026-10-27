@@ -1,6 +1,6 @@
 # F36-SBX — Gate sucesor (F36-SBX-GATE) y plan de entrada a F37-SBX
 
-> Fase F36-SBX, versión 3 (26/10/2026), con `gate_version = 3` y el esquema de evidencia `f36sbx-team-evidence/v2`. Corrige AF1-M01 ([corrección AF1](F36SBX_Correccion_AF1.md)) y AF2-M01 ([corrección AF2](F36SBX_Correccion_AF2.md)). Candidata a una tercera auditoría independiente. **Resultado vigente: F36-SBX-GATE = NO SUPERADO. F37-SBX = BLOQUEADA.**
+> Fase F36-SBX, versión 4 (26/10/2026), con `gate_version = 3` y el esquema de evidencia `f36sbx-team-evidence/v2`, sin cambios de formato. Corrige AF1-M01 ([corrección AF1](F36SBX_Correccion_AF1.md)), AF2-M01 ([corrección AF2](F36SBX_Correccion_AF2.md)) y AF3-M01 y AF3-L01 ([corrección AF3](F36SBX_Correccion_AF3.md)): el ADR se lee del blob Git del commit candidato y los marcadores de identidad se comparan normalizados. Candidata a una cuarta auditoría independiente. **Resultado vigente: F36-SBX-GATE = NO SUPERADO. F37-SBX = BLOQUEADA.**
 
 ## 1. Nombre y propósito
 
@@ -36,7 +36,7 @@ Ningún validador «aprueba» por sí solo. SUPERADO exige FG-02 y FG-03, que so
 | FG-04 | Los estados de gobierno siguen intactos en `CLAUDE.md`, `README.md`, `docs/PROGRESS.md` y `ACADEMIC_BASELINE.md` | AUTO | Regla GOV | CUMPLE |
 | FG-05 | F35-SBX congelada, el runtime y las dependencias no cambian desde la base | AUTO | Regla FRZ | CUMPLE |
 | FG-06 | La matriz de capacidades es coherente con F33, está fijada y bloquea todo lo prohibido | AUTO | Regla CAP | CUMPLE |
-| FG-07 | El contrato de evidencia es válido, cerrado y solo sintético, y su ejemplo de conformidad cumple REL-01..REL-14 | AUTO | Regla CTR | CUMPLE |
+| FG-07 | El contrato de evidencia es válido, cerrado y solo sintético, y su ejemplo de conformidad cumple REL-01..REL-15 | AUTO | Regla CTR | CUMPLE |
 | FG-08 | Cada amenaza TEI tiene control y comportamiento fail-closed | AUTO | Regla THR | CUMPLE |
 | FG-09 | El plan de evaluación cubre cada EI ALLOWED o CONDITIONAL y declara que no hay resultados | AUTO | Regla EVA | CUMPLE |
 | FG-10 | Registro de dependencias del candidato, también para declarar que no hay ninguna nueva: versión exacta, propósito, licencia, origen, revisión de la cadena de suministro, EI relacionadas y aprobación | EQUIPO | `gate/evidencia/FG-10.json` con el formato 8.4. Nunca es NO APLICA | PENDIENTE |
@@ -107,6 +107,8 @@ El esquema cerrado es [`f36sbx_team_evidence_schema.json`](gate/f36sbx_team_evid
 
 Son JSON estrictos: sin claves duplicadas y con exactamente los campos del esquema. Un archivo vacío, un texto genérico o un campo adicional invalidan la evidencia. En `gate/evidencia/` no puede haber archivos sin citar ni enlaces simbólicos.
 
+**Evidencia versionable.** Un archivo de `gate/evidencia/` que Git ignora no puede llegar a ningún commit: ni por `.gitignore` ni por una exclusión local (`.git/info/exclude`). Por eso la regla GATE falla si la evidencia está ignorada, y falla también, de forma cerrada, si Git no puede determinarlo.
+
 **Aprobaciones (FG-03, FG-10 y FG-12).** `approvals` es una lista de exactamente tres objetos `{member, vote, date}`, uno por integrante: `Coronacion Meza Fredy`, `Peña Arroyo Anthony` y `Vila Meza Luis Antonio`. La identidad se compara exacta, sin coincidencias aproximadas, y debe coincidir con los integrantes que declara `CLAUDE.md`. Cada voto tiene que ser `APRUEBA` y `quorum` debe valer `3/3`. Una persona duplicada, dos de tres, un voto `RECHAZA` o `SE_ABSTIENE` o una fecha fuera del registro invalidan la evidencia.
 
 ### 8.2 FG-02 — auditoría independiente
@@ -154,6 +156,16 @@ FG-12 exige una FG-03 válida. F36-SBX no aprueba ningún ADR sucesor ni decide 
 
 **Vínculo.** El registro cita la ruta y el SHA-256 del documento entero, así que el bloque queda fijado por ese hash: cambiar una coma del documento invalida el registro, y cambiar el bloque sin cambiar el registro produce una contradicción.
 
+**El ADR es un blob del commit candidato (AF3-M01).** Para FG-12, los bytes del ADR **se leen de Git, nunca del árbol de trabajo**:
+
+1. El validador resuelve `candidate_commit:path`, tratando la ruta de forma literal (sin comodines). La ruta tiene que identificar exactamente una entrada del árbol de ese commit.
+2. Esa entrada tiene que ser un blob regular, de modo `100644`. Un árbol, un enlace simbólico (`120000`), un submódulo (`160000`) o un ejecutable (`100755`) no valen.
+3. Lee los bytes con `git cat-file` y comprueba que corresponden al identificador del objeto.
+4. El SHA-256 que declara el registro se calcula sobre **esos bytes del blob**, con `git cat-file blob <commit>:<ruta>`. No se calcula sobre la copia del árbol de trabajo, que puede diferir, por ejemplo en los finales de línea.
+5. El bloque canónico se lee de esos mismos bytes.
+
+Un ADR que solo existe en el sistema de archivos falla siempre: ignorado (por ejemplo, bajo `htmlcov/`), sin versionar, añadido o sustituido después del commit, o con el hash de otra copia. Falla también un registro que cita un commit equivocado o una ruta inexistente. Además, el vínculo de la sección 9 hace fallar cualquier cambio del ADR posterior al candidato.
+
 | Bloque | Campos |
 |---|---|
 | Informe (`f36sbx-audit-report/v1`) | `metadata_schema`, `gate_id`, `gate_version`, `criterion_id = FG-02`, `candidate_commit`, `auditor`, `verdict`, `findings_open` y `report_date` |
@@ -185,7 +197,7 @@ FG-12 exige una FG-03 válida. F36-SBX no aprueba ningún ADR sucesor ni decide 
 
 **Forma del documento.** UTF-8 en NFC, sin caracteres de control (salvo salto de línea y tabulador), de formato, privados ni no asignados. Empieza con un título de nivel 1, tiene las secciones `## Alcance`, `## Hallazgos` y `## Conclusión` (informe) o `## Contexto`, `## Decisión` y `## Consecuencias` (ADR), y al menos 200 letras fuera del bloque. El título del ADR nombra su id, y su texto cita F36-SBX y ADR-005.
 
-**Identidad visible.** El nombre del auditor es texto NFC, sin espacios al inicio ni al final, sin caracteres de control, de formato (U+200B, U+202E…), privados, no asignados ni separadores de línea, con al menos tres letras, como máximo 120 caracteres y distinto de un marcador de posición («auditor», «N/A», «TBD»…). **Una identidad declarada estructuralmente válida no es una identidad externa autenticada.**
+**Identidad visible.** El nombre del auditor es texto NFC, sin espacios al inicio ni al final, sin caracteres de control, de formato (U+200B, U+202E…), privados, no asignados ni separadores de línea, con al menos tres letras, como máximo 120 caracteres y distinto de un marcador de posición («auditor», «N/A», «TBD», «placeholder»…). Los marcadores se comparan después de normalizar mayúsculas, tildes, dígitos y puntuación, así que `PLACEHOLDER`, `<Placeholder 1>`, `place_holder` o `Auditor 1` también se rechazan. Una identidad formada solo por palabras genéricas, como «Revisora externa independiente», tampoco nombra a nadie y se rechaza. **Una identidad declarada estructuralmente válida no es una identidad externa autenticada.** La lista de marcadores es una guardia estructural, no un mecanismo de autenticación.
 
 **Lo que sigue siendo revisión humana.** El validador no interpreta la prosa (sin NLP): una contradicción escrita en prosa libre que evite los tokens y las aserciones anteriores no es detectable por estructura. Tampoco puede autenticar al auditor, comprobar su independencia real ni juzgar si la auditoría es correcta. El equipo debe leer el informe y el ADR antes de registrar FG-02 y FG-12.
 
@@ -197,4 +209,4 @@ FG-12 exige una FG-03 válida. F36-SBX no aprueba ningún ADR sucesor ni decide 
 2. Desciende de la base `b8892af` y es ancestro del HEAD que se valida (o es el propio HEAD).
 3. Entre ese commit y el árbol de trabajo solo cambian las rutas de registro: `gate/evidencia/`, `gate/f36sbx_gate_state.json` y, en este documento, únicamente la columna Estado de la tabla FG.
 
-Así, una auditoría de otro commit no sirve. Tampoco sirve la de un commit anterior si después cambió cualquier otra parte del paquete: lo auditado tiene que ser exactamente lo que se registra. El ADR sucesor de FG-12 está fuera de las rutas de registro, así que forma parte del commit auditado y no puede cambiar después; el informe de FG-02, en cambio, se registra después del candidato, dentro de `gate/evidencia/`. Esta versión del validador exige además que el gobierno siga declarando NO SUPERADO. Declarar el gate SUPERADO necesita un incremento sucesor auditado que actualice el gobierno y el validador. Mientras tanto, la función de decisión se prueba con controles positivos en memoria, que nunca se escriben en el repositorio.
+Así, una auditoría de otro commit no sirve. Tampoco sirve la de un commit anterior si después cambió cualquier otra parte del paquete: lo auditado tiene que ser exactamente lo que se registra. El ADR sucesor de FG-12 está fuera de las rutas de registro, así que forma parte del commit auditado y no puede cambiar después. Su pertenencia no se presume: se comprueba leyendo el blob `candidate_commit:path` (sección 8.6). El informe de FG-02, en cambio, se registra después del candidato, dentro de `gate/evidencia/`, y tiene que ser versionable. Esta versión del validador exige además que el gobierno siga declarando NO SUPERADO. Declarar el gate SUPERADO necesita un incremento sucesor auditado que actualice el gobierno y el validador. Mientras tanto, la función de decisión se prueba con controles positivos en memoria, que nunca se escriben en el repositorio.

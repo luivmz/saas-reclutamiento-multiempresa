@@ -1,6 +1,6 @@
 # F36-SBX — Contrato de datos y de evidencia sintética
 
-> Fase F36-SBX, versión 3 (26/10/2026). Corrige AF1-M02 ([corrección AF1](F36SBX_Correccion_AF1.md)) y AF2-M02, AF2-M03 y AF2-L01 ([corrección AF2](F36SBX_Correccion_AF2.md)). Candidata a una tercera auditoría independiente. **Es un contrato de diseño: F36-SBX no genera ningún corpus.** La fuente normativa es [`f36sbx_evidence_contract.json`](contrato/f36sbx_evidence_contract.json) (`contract_version = 3`); este documento lo explica y, si difiriera, manda el JSON. Su [ejemplo de conformidad](contrato/f36sbx_contract_example.json) demuestra que el contrato se puede cumplir. Ambos los verifica [`validate_f36sbx.py`](../tools/f36sbx/validate_f36sbx.py) con la regla CTR.
+> Fase F36-SBX, versión 4 (26/10/2026). Corrige AF1-M02 ([corrección AF1](F36SBX_Correccion_AF1.md)), AF2-M02, AF2-M03 y AF2-L01 ([corrección AF2](F36SBX_Correccion_AF2.md)) y AF3-M02 ([corrección AF3](F36SBX_Correccion_AF3.md)). Candidata a una cuarta auditoría independiente. **Es un contrato de diseño: F36-SBX no genera ningún corpus.** La fuente normativa es [`f36sbx_evidence_contract.json`](contrato/f36sbx_evidence_contract.json) (`contract_version = 4`); este documento lo explica y, si difiriera, manda el JSON. Su [ejemplo de conformidad](contrato/f36sbx_contract_example.json) demuestra que el contrato se puede cumplir. Ambos los verifica [`validate_f36sbx.py`](../tools/f36sbx/validate_f36sbx.py) con la regla CTR.
 
 ## 1. Principios
 
@@ -59,7 +59,7 @@ Exactamente: `fragment_id`, `artifact_id`, `artifact_record_hash`, los cinco cam
 
 ### 3.4 Output de localización
 
-Exactamente: `output_id`, `ei` (solo EI-07, EI-09 o EI-10), `method_id`, `method_version`, `method_config`, los cinco campos de contexto, `query_criterion_id`, `fragment_refs`, `fragment_ref_hashes`, `abstained`, `input_manifest_hash` y `output_hash`. `method_config` es cerrado: `normalization` (solo `nfkc_casefold`) y `top_k` (entero de 1 a 20). **El output no tiene ningún campo de texto ni de puntaje**: solo cita fragmentos (TEI-09 y TEI-14). `abstained` es booleano y es verdadero exactamente cuando no hay fragmentos.
+Exactamente: `output_id`, `ei` (solo EI-07, EI-09 o EI-10), `method_id`, `method_version`, `method_config`, los cinco campos de contexto, `query_criterion_id`, `fragment_refs`, `fragment_ref_hashes`, `abstained`, `input_manifest_hash` y `output_hash`. `method_config` es cerrado: `normalization` (solo `nfkc_casefold`) y `top_k` (entero de 1 a 20). **El output no tiene ningún campo de texto ni de puntaje**: solo cita fragmentos (TEI-09 y TEI-14). `abstained` es booleano y es verdadero exactamente cuando no hay fragmentos. Sus cinco campos de contexto no son libres: son el contexto canónico de su postulación (sección 7.1, REL-15), también cuando se abstiene.
 
 ### 3.5 Estratos y tamaño
 
@@ -124,7 +124,7 @@ El escenario de una referencia es el que el conjunto asigna a su vacante (REL-05
 | Sin conjunto de entrenamiento | El ajuste fino está BLOCKED (EI-22) | `train_allowed = false` en el contrato |
 | Unidad de partición | `template_family` + `vacancy_token`. Ninguna familia de plantillas ni vacante aparece en más de una partición | REL-05 |
 | Manifiesto | `partitions` (`dev` con `artifacts`; `test` con `artifacts`, `sealed`, `seal_algorithm` y `seal_sha256`), `thresholds` (`tuning_partition` y `tuning_outputs`) y `test_used_for_tuning`. Cada artefacto figura una sola vez y en su partición | REL-11 |
-| Umbrales | Se ajustan solo con outputs de `dev` (`tuning_partition = dev`). `test_used_for_tuning = false` | REL-11: un output de `test` entre los de ajuste falla |
+| Umbrales | Se ajustan solo con outputs de `dev` (`tuning_partition = dev`). La partición que cuenta es la canónica de la postulación del output, no la que declara. `test_used_for_tuning = false` | REL-11 y REL-15: un output de ajuste cuya postulación es de `test` falla, aunque se declare `dev` |
 | Embargo temporal | Si se usan instantes del proceso, las vacantes de `test` cierran después de las de `dev`, con una purga igual a la de `process_splits` de F34 | `temporal_embargo = process_splits_f34` en el contrato |
 | Contrafactuales | Las dos variantes van en la misma organización, escenario, vacante, partición y familia | REL-09 |
 | Anotación | Dos anotadores independientes; el acuerdo se mide antes de usar el oro | Plan de evaluación, en F37-SBX |
@@ -162,6 +162,17 @@ Así, el sello detecta cualquier cambio de un registro de test (postulación, va
 | Referencias upstream | Cada referencia se resuelve en su tabla y su contexto (organización, escenario, vacante y postulación, según la tabla) debe ser el del artefacto. Una referencia de otro tenant, de otra vacante, de otro escenario o de otra postulación falla | REL-13 |
 | Fuentes globales | No hay ninguna admitida; una fuente fuera de las tres tablas tipadas falla | REL-13 |
 | Fragmentos, outputs y referencias internas | Mismo contexto que su artefacto, sus fragmentos o el registro que citan | REL-06 a REL-10 |
+| Contexto canónico de los outputs | Todo output, también una abstención y un output de ajuste, tiene el contexto canónico de su postulación (sección 7.1) | REL-15 |
+
+### 7.1 Contexto canónico (REL-15)
+
+La fuente del contexto es una sola: **los artefactos de la postulación en el conjunto** (`canonical_context`, con clave `application_token` y fuente `artifacts`). Como REL-05 obliga a que una postulación tenga una sola organización, escenario y vacante, y una vacante una sola partición, ese contexto es único. De él se derivan:
+
+- los fragmentos, que deben tener el contexto de su artefacto (REL-06);
+- todo output, que debe tener exactamente la organización, el escenario, la vacante, la postulación y la partición canónicas de su postulación. Así lo exige REL-15, también a una abstención, aunque no cite fragmentos que lo delaten, y a un output de ajuste;
+- el ajuste: un output de ajuste debe ser de `dev` por el contexto canónico de su postulación (REL-11).
+
+Un output cuya postulación no tiene artefactos en el conjunto no tiene contexto canónico y falla. También falla si el contexto es ambiguo. No se pueden inventar el escenario, la partición ni la vacante de una abstención, ni cambiarlos: con todos los hashes recalculados y `test` resellado, el cambio sigue fallando. Lo que sí admite el contrato es una abstención legítima de otra postulación que tenga evidencia en el conjunto, con su contexto canónico.
 
 ## 8. Relaciones verificables
 
@@ -177,16 +188,17 @@ Así, el sello detecta cualquier cambio de un registro de test (postulación, va
 | REL-08 | Cada anotación cita un fragmento existente de su contexto y un criterio F34 de su vacante |
 | REL-09 | Cada par contrafactual cita una variante fragmentable de su misma organización, escenario, vacante, partición y familia |
 | REL-10 | Cada documento renderizado cita un `cv_document` de su misma postulación, partición y familia |
-| REL-11 | Manifiesto cerrado: solo `dev` y `test`, cada artefacto una vez y en su partición, `test` sellado con el sello v2 y umbrales ajustados solo con outputs de `dev` |
+| REL-11 | Manifiesto cerrado: solo `dev` y `test`, cada artefacto una vez y en su partición, `test` sellado con el sello v2 y umbrales ajustados solo con outputs de `dev` por el contexto canónico de su postulación |
 | REL-12 | Textos NFC, con `[SINTÉTICO]`, sin caracteres invisibles ni de control y sin patrones de PII |
 | REL-13 | Aislamiento entre tenants: autores y anotadores de la organización del artefacto, referencias upstream resueltas y compatibles con su contexto, sin fuentes globales, y cada identificador del contenido con una sola clase |
 | REL-14 | Identificador cerrado del ejemplo y cobertura mínima |
+| REL-15 | Contexto canónico: todo output, también una abstención sin fragmentos y un output de ajuste, tiene la organización, el escenario, la vacante, la postulación y la partición de su postulación, derivados de sus artefactos del conjunto; una postulación sin artefactos o con contexto ambiguo no admite outputs |
 
 ## 9. Ejemplo de conformidad
 
-[`f36sbx_contract_example.json`](contrato/f36sbx_contract_example.json) contiene el mínimo que ejercita las catorce relaciones: nueve artefactos sintéticos de ORG-S1, cuatro fragmentos y tres outputs, en dos escenarios (SC36-01 con VAC-0001 en `dev` y SC36-02 con VAC-0004 en `test`). Tiene oro en `dev` y en `test`, un output de ajuste en `dev`, un output de test con fragmentos y otro con abstención, y su `test` está sellado con el sello v2. **No es un corpus ni un dataset y no autoriza ninguna capacidad.** Sus textos están escritos a mano, sin datos reales, y sus hashes los calculan las funciones del propio validador.
+[`f36sbx_contract_example.json`](contrato/f36sbx_contract_example.json) contiene el mínimo que ejercita las quince relaciones: nueve artefactos sintéticos de ORG-S1, cuatro fragmentos y tres outputs, en dos escenarios (SC36-01 con VAC-0001 en `dev` y SC36-02 con VAC-0004 en `test`). Tiene oro en `dev` y en `test`, un output de ajuste en `dev`, un output de test con fragmentos y otro con abstención, y su `test` está sellado con el sello v2. **No es un corpus ni un dataset y no autoriza ninguna capacidad.** Sus textos están escritos a mano, sin datos reales, y sus hashes los calculan las funciones del propio validador.
 
-Su `example_id` es exactamente `f36sbx-contract-example`. La cobertura mínima (`example_coverage`) exige los ocho tipos de artefacto, al menos un fragmento, un output con fragmentos, un output con abstención, un artefacto de test, una anotación de oro en test, un output de test, un output de ajuste y dos escenarios: un ejemplo vacío o recortado no es conforme. Sirve como objetivo de las pruebas de mutación: cualquier mutación que rompa una relación falla, y la mutación exhaustiva de sus hojas está en [`meta_f36sbx.py`](../tools/f36sbx/meta_f36sbx.py).
+Su `example_id` es exactamente `f36sbx-contract-example`. La cobertura mínima (`example_coverage`) exige los ocho tipos de artefacto, al menos un fragmento, un output con fragmentos, un output con abstención, un artefacto de test, una anotación de oro en test, un output de test, un output de ajuste y dos escenarios: un ejemplo vacío o recortado no es conforme. Sirve como objetivo de las pruebas de mutación: cualquier mutación que rompa una relación falla. La mutación exhaustiva de sus hojas, que incluye la sustitución de cada valor por otro válido de su dominio con todo resellado, está en [`meta_f36sbx.py`](../tools/f36sbx/meta_f36sbx.py).
 
 ## 10. Garantía de que ninguna fuente real entra
 
