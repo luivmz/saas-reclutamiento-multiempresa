@@ -1,6 +1,6 @@
 # F36-SBX — Trazabilidad
 
-> Fase F36-SBX, versión 3 (26/10/2026): añade la trazabilidad de las auditorías AF1, AF2 y AF3 (sección 5). Candidata a una cuarta auditoría independiente. F36-SBX no modifica ningún RF, CU ni RNF, ni los RF candidatos. No promueve nada al baseline.
+> Fase F36-SBX, versión 4 (27/10/2026): añade la trazabilidad de las auditorías AF1, AF2, AF3 y AF4 (sección 5). Candidata a una quinta auditoría independiente. F36-SBX no modifica ningún RF, CU ni RNF, ni los RF candidatos. No promueve nada al baseline.
 
 ## 1. Requisitos relacionados (sin cambios)
 
@@ -54,7 +54,8 @@ G0 real = NO APROBADA; G0-02, G0-03 y G0-12 = PENDIENTE EXTERNO; G0-09 y G0-14 =
 |---|---|---|---|
 | AF1 | `06e933e` | No aprobado: 2 MEDIUM, más 3 defectos del oracle encontrados al corregir | [Corrección AF1](F36SBX_Correccion_AF1.md) |
 | AF2 | `2a4e68c` | No aprobado: 0 BLOCKER, 0 HIGH, 3 MEDIUM y 1 LOW | [Corrección AF2](F36SBX_Correccion_AF2.md). La tercera auditoría dio por corregidos AF2-M02, AF2-M03 y AF2-L01, y no corregido de forma integral AF2-M01: su parte pendiente, la pertenencia del ADR al candidato, es AF3-M01 |
-| AF3 | `ecb22cc` | No aprobado: 0 BLOCKER, 0 HIGH, 2 MEDIUM y 1 LOW | [Corrección AF3](F36SBX_Correccion_AF3.md). AF3-M01, AF3-M02 y AF3-L01 corregidos por implementación, pendientes de cuarta auditoría independiente |
+| AF3 | `ecb22cc` | No aprobado: 0 BLOCKER, 0 HIGH, 2 MEDIUM y 1 LOW | [Corrección AF3](F36SBX_Correccion_AF3.md). La cuarta auditoría reprodujo sus pruebas sin falsos PASS en esas familias y señaló AF4-M01, AF4-M02 y AF4-L01 |
+| AF4 | `57efbfc` | No aprobado: 0 BLOCKER, 0 HIGH, 2 MEDIUM y 1 LOW | [Corrección AF4](F36SBX_Correccion_AF4.md). AF4-M01, AF4-M02 y AF4-L01 corregidos por implementación, junto con los defectos propios AF4-PR01..PR05, pendientes de quinta auditoría independiente |
 
 | Hallazgo AF2 | Control | Dónde se documenta | Pruebas |
 |---|---|---|---|
@@ -69,4 +70,11 @@ G0 real = NO APROBADA; G0-02, G0-03 y G0-12 = PENDIENTE EXTERNO; G0-09 y G0-14 =
 | AF3-M02 | Contexto canónico de todo output, abstenciones y outputs de ajuste incluidos (REL-15) | [Contrato §7.1](F36SBX_Contrato_Evidencia.md#71-contexto-canónico-rel-15) | AF3-12..AF3-25, P-12..P-14, C52..C54 |
 | AF3-L01 | Marcadores de identidad normalizados e identidades genéricas rechazadas | [Gate §8.6](F36SBX_Gate_Sucesor.md#86-informe-y-adr-fuente-estructurada-canónica) | AF3-26..AF3-35, P-07, P-08 |
 
-Las amenazas afectadas son TEI-05, TEI-06, TEI-08, TEI-12 y TEI-22 del [threat model](F36SBX_Threat_Model.md), sin renumerar. Las pruebas están en [`test_f36sbx.py`](../tools/f36sbx/test_f36sbx.py) y en [`test_f36sbx_git.py`](../tools/f36sbx/test_f36sbx_git.py), y las metapruebas, en [`meta_f36sbx.py`](../tools/f36sbx/meta_f36sbx.py).
+| Hallazgo AF4 | Control | Dónde se documenta | Pruebas |
+|---|---|---|---|
+| AF4-M01 | El árbol de trabajo se compara con el índice por sus bytes. Las marcas `assume-unchanged` y `skip-worktree`, los conflictos, los objetos ausentes y las operaciones en curso fallan cerrado | [Gate §9](F36SBX_Gate_Sucesor.md#9-vínculo-con-el-candidato-auditado) | AF4-01..AF4-09 y AF4-12; con Git real, AF4-M01-1..7, AF4-M01-A1..A13 y W01..W19 |
+| AF4-M02 | Una sola vía hacia Git, sobre objetos reales: sin `refs/replace` ni variables `GIT_*` heredadas, con el SHA-1 del commit verificado; `refs/replace` e injertos fallan cerrado | [Gate §8.6 y §9](F36SBX_Gate_Sucesor.md#86-informe-y-adr-fuente-estructurada-canónica) | AF4-10 y AF4-11; con Git real, AF4-M02-1..5, AF4-M02-A1..A4 y RP01..RP07 |
+| AF4-L01 | Una identidad contiene al menos una palabra distintiva, tras normalizar | [Gate §8.6](F36SBX_Gate_Sucesor.md#86-informe-y-adr-fuente-estructurada-canónica) | AF4-L01-01..29, AF4-L01-P1, AF4-L01-P2, P-07 |
+| AF4-PR01..PR05 | Entradas normativas versionables, injertos, caché de stat y filtros locales, entorno de Git saneado y validador de solo lectura | [Corrección AF4 §6](F36SBX_Correccion_AF4.md#6-revisión-del-oracle-y-hallazgos-propios) | AF4-06..AF4-08, AF4-11, RP07, W06, W16, W18, AF4-M01-A5, A7, A11 y A13, AF4-M02-A1 y A3 |
+
+Las amenazas afectadas son TEI-05, TEI-06, TEI-08, TEI-12 y TEI-22 del [threat model](F36SBX_Threat_Model.md), sin renumerar; AF4 solo afecta a TEI-22. Las pruebas están en [`test_f36sbx.py`](../tools/f36sbx/test_f36sbx.py) y en [`test_f36sbx_git.py`](../tools/f36sbx/test_f36sbx_git.py), y las metapruebas, en [`meta_f36sbx.py`](../tools/f36sbx/meta_f36sbx.py).

@@ -50,7 +50,7 @@ F33_MATRIX = 'docs/academico/diseno-inteligente/F33_Matriz_Capacidades_y_Restric
 PKG_DOCS = ['README.md', 'F36SBX_Charter.md', 'F36SBX_Matriz_Capacidades.md', 'F36SBX_Investigacion_Diseno.md',
             'F36SBX_Contrato_Evidencia.md', 'F36SBX_Threat_Model.md', 'F36SBX_Plan_Evaluacion.md',
             'F36SBX_Gate_Sucesor.md', 'F36SBX_Trazabilidad.md', 'F36SBX_Correccion_AF1.md', 'F36SBX_Correccion_AF2.md',
-            'F36SBX_Correccion_AF3.md']
+            'F36SBX_Correccion_AF3.md', 'F36SBX_Correccion_AF4.md']
 PKG_DATA = [CONTRACT, EXAMPLE, GATE_STATE, TEAM_SCHEMA]
 PKG_FILES = [f'{PKG}/{n}' for n in PKG_DOCS] + PKG_DATA
 GOV_FILES = ['CLAUDE.md', 'README.md', 'docs/PROGRESS.md', 'docs/academico/ACADEMIC_BASELINE.md']
