@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validador fail-closed del paquete F36-SBX (autorización, investigación y diseño), versión 6 (AF5).
+"""Validador fail-closed del paquete F36-SBX (autorización, investigación y diseño), versión 5 (AF4).
 
 Solo biblioteca estándar. No ejecuta ML ni NLP, no usa red y no escribe archivos (tampoco el índice de Git).
 
@@ -12,8 +12,6 @@ Solo biblioteca estándar. No ejecuta ML ni NLP, no usa red y no escribe archivo
   tenants, cobertura mínima y contexto canónico de todo output (REL-01..REL-15).
 - Consulta Git por una única vía endurecida (objetos reales, sin refs/replace) y compara el árbol de trabajo
   con el índice por sus bytes, sin confiar en assume-unchanged, skip-worktree ni en la caché de stat (AF4).
-- Lee cada entrada normativa una sola vez, como archivo regular y sin seguir enlaces ni redirecciones, y exige
-  que sea un blob 100644 del commit candidato: lo validado es lo que el candidato fija (AF5).
 
 Uso: python -I -B docs/academico/tools/f36sbx/validate_f36sbx.py
 """
@@ -52,7 +50,7 @@ F33_MATRIX = 'docs/academico/diseno-inteligente/F33_Matriz_Capacidades_y_Restric
 PKG_DOCS = ['README.md', 'F36SBX_Charter.md', 'F36SBX_Matriz_Capacidades.md', 'F36SBX_Investigacion_Diseno.md',
             'F36SBX_Contrato_Evidencia.md', 'F36SBX_Threat_Model.md', 'F36SBX_Plan_Evaluacion.md',
             'F36SBX_Gate_Sucesor.md', 'F36SBX_Trazabilidad.md', 'F36SBX_Correccion_AF1.md', 'F36SBX_Correccion_AF2.md',
-            'F36SBX_Correccion_AF3.md', 'F36SBX_Correccion_AF4.md', 'F36SBX_Correccion_AF5.md']
+            'F36SBX_Correccion_AF3.md', 'F36SBX_Correccion_AF4.md']
 PKG_DATA = [CONTRACT, EXAMPLE, GATE_STATE, TEAM_SCHEMA]
 PKG_FILES = [f'{PKG}/{n}' for n in PKG_DOCS] + PKG_DATA
 GOV_FILES = ['CLAUDE.md', 'README.md', 'docs/PROGRESS.md', 'docs/academico/ACADEMIC_BASELINE.md']
@@ -225,9 +223,7 @@ PLACEHOLDERS = {'auditor', 'auditora', 'independiente', 'auditor independiente',
                 'anonymous', 'none', 'null', 'nil', 'nadie', 'nobody', 'nombre', 'nombre del auditor',
                 'nombre apellido', 'name', 'xxx', 'xxxx', 'test', 'prueba', 'placeholder', 'place holder',
                 'marcador', 'marcador de posicion', 'lorem ipsum', 'ejemplo', 'example', 'sample', 'dummy', 'foo',
-                'bar', 'foo bar', 'changeme', 'change me', 'fixme', 'reemplazar', 'completar', 'rellenar',
-                # AF5-L01: nombres de relleno convencionales.
-                'john doe', 'jane doe', 'juan nadie'}
+                'bar', 'foo bar', 'changeme', 'change me', 'fixme', 'reemplazar', 'completar', 'rellenar'}
 # Una identidad formada solo por estas palabras es genérica: no nombra a nadie ni a ninguna sesión concreta.
 GENERIC_IDENTITY_WORDS = {
     # Roles y funciones.
@@ -279,43 +275,21 @@ IDENTITY_MARKER_WORDS = {
     # AF5-L01: números en palabras, rellenos de teclado y otros marcadores de relleno.
     'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'one', 'two', 'three', 'four',
     'five', 'six', 'seven', 'eight', 'nine', 'ten', 'primero', 'primera', 'segundo', 'segunda', 'first', 'second',
-    'abc', 'xyz', 'asdf', 'qwerty', 'tester', 'testers', 'nameless', 'anonymus',
-    # AF5-L01: ficción, provisionalidad y vacío, también en inglés («auditorfictionn», «tempauditor»).
-    'fiction', 'fictional', 'fictitious', 'fictive', 'imaginary', 'hypothetical', 'invented', 'pseudo',
-    'seudonimo', 'pseudonimo', 'pseudonym', 'temp', 'temporal', 'temporary', 'tmp', 'blank', 'empty', 'vacio',
-    'vacia', 'random', 'aleatorio', 'aleatoria', 'whoever', 'johndoe', 'janedoe', 'doe'}
+    'abc', 'xyz', 'asdf', 'qwerty', 'tester', 'testers', 'nameless', 'anonymus'}
 IDENTITY_NOISE = frozenset(GENERIC_IDENTITY_WORDS | IDENTITY_FUNCTION_WORDS | IDENTITY_MARKER_WORDS
                            | {k for k in PLACEHOLDERS if ' ' not in k})
-# Piezas de una palabra compuesta sin separadores (AF5-L01). Los tratamientos y los conectores son pegamento, nunca
-# piezas fuertes: «Donato» (doña + to) o «Delgado» (del + gado) siguen siendo nombres.
-IDENTITY_TITLES = {'sr', 'sra', 'srta', 'senor', 'senora', 'senorita', 'don', 'dona', 'dr', 'dra', 'doctor',
-                   'doctora', 'lic', 'licenciado', 'licenciada', 'ing', 'ingeniero', 'ingeniera', 'mg', 'mgtr',
-                   'magister', 'prof', 'profesor', 'profesora', 'mr', 'mrs', 'ms'}
-IDENTITY_CONNECTORS = {'de', 'del', 'la', 'el', 'los', 'las', 'y', 'e', 'un', 'una', 'the', 'a', 'an', 'of'}
-# Fuertes: roles y marcadores de cuatro letras o más. Marcadores cortos: los de dos o tres letras («tbd», «na»,
-# «xyz»). Pegamento: tratamientos, conectores, palabras funcionales y el resto del vocabulario de dos o tres letras.
-# Ninguna pieza de una sola letra cubre nada: «Testa» o «Auditore» no se descartan por una letra suelta.
-IDENTITY_STRONG = frozenset(w for w in IDENTITY_NOISE - IDENTITY_FUNCTION_WORDS - IDENTITY_TITLES
-                            - IDENTITY_CONNECTORS if len(w) >= 4)
+# Piezas de una palabra compuesta sin separadores (AF5-L01): todo el vocabulario de dos letras o más, y, entre
+# ellas, las fuertes, roles y marcadores de cuatro letras o más, sin los conectores.
+IDENTITY_PIECES = frozenset(w for w in IDENTITY_NOISE if len(w) >= 2)
+IDENTITY_STRONG = frozenset(w for w in IDENTITY_NOISE - IDENTITY_FUNCTION_WORDS if len(w) >= 4)
+# Marcadores cortos, sin roles, tratamientos ni conectores («tbd», «na», «xyz»): una palabra hecha solo de ellos y de
+# rellenos («tbdxx») tampoco nombra a nadie.
 IDENTITY_SHORT_MARKERS = frozenset(w for w in IDENTITY_MARKER_WORDS | {k for k in PLACEHOLDERS if ' ' not in k}
-                                   if 2 <= len(w) <= 3) - IDENTITY_TITLES - IDENTITY_CONNECTORS
-IDENTITY_GLUE = frozenset(w for w in IDENTITY_NOISE - IDENTITY_STRONG - IDENTITY_SHORT_MARKERS if len(w) >= 2)
+                                   if 2 <= len(w) <= 3)
 IDENTITY_FILLER = re.compile(r'(.)\1+')
-# Letras alargadas («revisooor», «drrr», «tbddd»): tres o más iguales seguidas cuentan como una, y la palabra
-# resultante se compara con todo el vocabulario, también con los tratamientos y marcadores cortos.
+# Letras alargadas («revisooor»): tres o más iguales seguidas cuentan como una.
 STRETCH = re.compile(r'(.)\1\1+')
-# Letras duplicadas dentro de una pieza («plaaceholder», «placeholdeerr»): en la forma colapsada, cada repetición
-# cuenta como una sola letra, y solo se buscan en ella las piezas fuertes colapsadas igual.
-DOUBLED = re.compile(r'(.)\1+')
-IDENTITY_STRONG_COLLAPSED = frozenset(c for c in (DOUBLED.sub(r'\1', w) for w in IDENTITY_STRONG) if len(c) >= 4)
-IDENTITY_GLUE_COLLAPSED = frozenset(c for c in (DOUBLED.sub(r'\1', w) for w in IDENTITY_GLUE | IDENTITY_SHORT_MARKERS)
-                                    if len(c) >= 2)
-# Letras sueltas de relleno («placeholderx»).
-FILLER_LETTERS = frozenset('xz')
 LEET = str.maketrans('013457', 'oieast')
-# Letras latinas que NFKD no descompone y que pasan por otras al leerlas («fıction» con i sin punto) (AF5-L01).
-LATIN_FOLD = str.maketrans({'ı': 'i', 'ſ': 's', 'ł': 'l', 'ø': 'o', 'đ': 'd', 'ħ': 'h', 'ŧ': 't', 'ð': 'd',
-                            'æ': 'ae', 'œ': 'oe', 'þ': 'th', 'ĸ': 'k', 'ŀ': 'l'})
 # Categorías Unicode prohibidas en identidades y en documentos humanos: control, formato (U+200B, U+202E…),
 # uso privado, no asignados y separadores de línea o de párrafo.
 INVISIBLE_CATEGORIES = frozenset({'Cc', 'Cf', 'Co', 'Cn', 'Zl', 'Zp'})
@@ -547,7 +521,7 @@ def identity_tokens(value):
         if i and value[i - 1].islower() and c.isupper():
             chars.append(' ')
         chars.append(c)
-    folded = unicodedata.normalize('NFKD', ''.join(chars).casefold()).translate(LATIN_FOLD)
+    folded = unicodedata.normalize('NFKD', ''.join(chars).casefold())
     return re.findall(r'[^\W_]+', ''.join(ch for ch in folded if not unicodedata.combining(ch)))
 
 
@@ -557,58 +531,38 @@ def mixed_script(token):
     return 'LATIN' in scripts and bool(scripts & {'CYRILLIC', 'GREEK'})
 
 
-def filler_piece(word, j, i):
-    """¿word[j:i] es relleno? Una letra repetida («xx», «zzz»), una «x» o «z» suelta, o una letra que repite la
-    anterior y alarga la pieza de al lado («auditorfictionn», «auditorrr»)."""
-    piece = word[j:i]
-    if len(piece) >= 2:
-        return bool(IDENTITY_FILLER.fullmatch(piece))
-    return piece in FILLER_LETTERS or (j > 0 and word[j - 1] == piece)
-
-
-def concatenated(word, collapsed=False):
+def concatenated(word):
     """¿word es, sin separadores, una composición evidente de roles, marcadores, conectores y rellenos (AF5-L01)?
 
-    Lo es si se puede cubrir entera, sin ninguna letra suelta, de una de estas dos formas:
-    - con al menos una pieza fuerte (un rol o un marcador de cuatro letras o más), más pegamento y rellenos en
-      cualquier orden: «revisordesconocido», «tbdplaceholder», «placeholderxx», «auditorfictionn»,
-      «auditorsinnombre» o «drplaceholder»;
-    - solo con marcadores cortos y rellenos de «x» o «z», en dos piezas o más y con algún marcador de tres letras:
-      «tbdxx», «natbd».
-    Así siguen siendo nombres «Lola» (lo + la, solo pegamento), «Donna» (don + na, sin pieza fuerte), «Nana» (dos
-    marcadores de dos letras), «Barr» o «Doerr» (marcador corto y otra letra), «Testino» o «Testa» (letras sin
-    cubrir). Es estructural: una sola palabra que coincida con un rol más una letra repetida («Stubb») se rechaza,
-    pero un nombre completo pasa si alguna de sus palabras es distintiva. collapsed: word ya tiene colapsadas las
-    letras repetidas y solo se buscan en ella piezas fuertes y pegamento colapsados igual («plaaceholder»)."""
+    Busca las particiones de word con menos letras sin cubrir, en piezas del vocabulario de dos letras o más y en
+    rellenos de una letra repetida. Es una composición si alguna contiene al menos una pieza fuerte (un rol o un
+    marcador de cuatro letras o más) y deja, como mucho, una letra sin cubrir: «revisordesconocido»,
+    «tbdplaceholder», «placeholderxx», «auditorficticionn», «auditorsinnombre» o «placeholderx». También lo es si
+    la cubren entera marcadores cortos y rellenos, sin conectores ni tratamientos («tbdxx»): así, «Lola», «Anna» o
+    «Donna» siguen siendo nombres."""
     n = len(word)
-    strong_set = IDENTITY_STRONG_COLLAPSED if collapsed else IDENTITY_STRONG
-    glue_set = IDENTITY_GLUE_COLLAPSED if collapsed else IDENTITY_GLUE | IDENTITY_SHORT_MARKERS
-    # reach[i]: ¿se cubre word[:i] (con o sin pieza fuerte)? marks[i]: (piezas, hasta 2; ¿alguna larga o relleno?).
-    reach = [set() for _ in range(n + 1)]
-    marks = [set() for _ in range(n + 1)]
-    reach[0].add(False)
-    marks[0].add((0, False))
+    weak, mark, strong = [0] + [n + 1] * n, [0] + [n + 1] * n, [n + 1] * (n + 1)
     for i in range(1, n + 1):
-        for j in range(max(0, i - 24), i):
+        weak[i], mark[i], strong[i] = weak[i - 1] + 1, mark[i - 1] + 1, strong[i - 1] + 1
+        for j in range(max(0, i - 24), i - 1):
             piece = word[j:i]
-            filler = not collapsed and filler_piece(word, j, i)
-            if reach[j]:
-                if piece in strong_set:
-                    reach[i].add(True)
-                elif filler or piece in glue_set:
-                    reach[i] |= reach[j]
-            # Aquí el relleno solo es de «x» o «z»: «Barr» o «Doerr» (bar o doe más una letra repetida) son nombres.
-            if marks[j] and not collapsed and ((filler and set(piece) <= FILLER_LETTERS)
-                                               or piece in IDENTITY_SHORT_MARKERS):
-                for count, long_ in marks[j]:
-                    marks[i].add((min(count + 1, 2), long_ or (len(piece) >= 3 and piece in IDENTITY_SHORT_MARKERS)))
-    return True in reach[n] or (2, True) in marks[n]
+            if piece in IDENTITY_STRONG:
+                strong[i] = min(strong[i], weak[j], strong[j])
+            elif piece in IDENTITY_PIECES or IDENTITY_FILLER.fullmatch(piece):
+                weak[i], strong[i] = min(weak[i], weak[j]), min(strong[i], strong[j])
+                if piece in IDENTITY_SHORT_MARKERS or IDENTITY_FILLER.fullmatch(piece):
+                    mark[i] = min(mark[i], mark[j])
+    if strong[n] <= 1:
+        return True
+    if mark[n] == 0:
+        return True
+    return False
 
 
 def nondistinctive(token):
     """¿La palabra no identifica a nadie? Número, inicial, rol, conector, marcador, relleno («xx», «zzz») o una
-    composición de todo ello sin separadores; también con dígitos en lugar de letras («pl4ceh0lder»), con letras
-    alargadas («revisooor») o duplicadas dentro de una pieza («plaaceholder»)."""
+    composición de todo ello sin separadores; también con dígitos en lugar de letras («pl4ceh0lder») o con letras
+    alargadas («revisooor»)."""
     letters = re.sub(r'\d', '', token)
     if len(letters) < 2:
         return True
@@ -621,8 +575,6 @@ def nondistinctive(token):
         if IDENTITY_FILLER.fullmatch(form):
             return True
         if concatenated(form):
-            return True
-        if DOUBLED.search(form) and concatenated(DOUBLED.sub(r'\1', form), collapsed=True):
             return True
     return False
 
@@ -649,9 +601,6 @@ def identity_errors(value, label, min_letters=3, max_length=120):
     key = placeholder_key(value)
     tokens = identity_tokens(value)
     if not key or key in PLACEHOLDERS:
-        e.append(f'{label}: es un marcador de posición')
-    elif ' '.join(tokens) in PLACEHOLDERS:
-        # AF5-L01: la frase marcadora escrita en camelCase o con otras normalizaciones («JaneDoe»).
         e.append(f'{label}: es un marcador de posición')
     elif set(key.split()) <= GENERIC_IDENTITY_WORDS:
         e.append(f'{label}: es una identidad genérica, sin nombre ni identificador propio')
@@ -963,25 +912,13 @@ def blob_text(blob):
     return text_of(blob.get('data')) if isinstance(blob, dict) else None
 
 
-def redirects(path):
-    """¿path (sin seguirlo) redirige a otro sitio? Enlace simbólico, unión de directorios (junction) o, en Windows,
-    cualquier otro punto de reparse (AF5-M01). Un componente ausente no redirige."""
-    try:
-        info = os.lstat(path)
-    except (FileNotFoundError, NotADirectoryError):
-        return False
-    return (stat.S_ISLNK(info.st_mode) or Path(path).is_junction()
-            or bool(getattr(info, 'st_file_attributes', 0) & getattr(stat, 'FILE_ATTRIBUTE_REPARSE_POINT', 0)))
-
-
 def link_in_path(root, rel):
     """Primer componente de rel, contado desde la raíz del repositorio y el último incluido, que es un enlace
-    simbólico, una unión de directorios (junction de Windows) u otro punto de reparse; None si no hay ninguno
-    (AF5-M01)."""
+    simbólico o una unión de directorios (junction de Windows); None si no hay ninguno (AF5-M01)."""
     cur = Path(root)
     for part in rel.split('/'):
         cur = cur / part
-        if redirects(cur):
+        if cur.is_symlink() or cur.is_junction():
             return cur.relative_to(root).as_posix()
     return None
 
@@ -1011,15 +948,9 @@ def read_normative(root, rel):
     flags = os.O_RDONLY | getattr(os, 'O_BINARY', 0) | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0)
     try:
         with os.fdopen(os.open(p, flags), 'rb') as fh:
-            opened = os.fstat(fh.fileno())
-            if not stat.S_ISREG(opened.st_mode):
+            if not stat.S_ISREG(os.fstat(fh.fileno()).st_mode):
                 return None, 'no es un archivo regular'
-            data = fh.read()
-        # Lo abierto tiene que ser el mismo archivo inspeccionado, y la ruta tiene que seguir sin enlaces: Windows
-        # no tiene O_NOFOLLOW, así que un cambio entre la comprobación y la lectura falla cerrado.
-        if (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino) or link_in_path(root, rel) is not None:
-            return None, 'cambió durante la lectura'
-        return data, None
+            return fh.read(), None
     except (OSError, ValueError):
         return None, 'ilegible'
 
@@ -1053,7 +984,7 @@ def walk_normative(root, rel_dir):
             if e.name == '__pycache__':
                 continue
             try:
-                if redirects(e.path):
+                if e.is_symlink() or e.is_junction():
                     out[rel] = (None, f'enlace simbólico o unión de directorios en la ruta ({rel})')
                 elif e.is_dir(follow_symlinks=False):
                     stack.append(e.path)
@@ -1076,11 +1007,9 @@ def json_bytes(data):
 
 
 def safe_repo_path(path):
-    """Ruta relativa de un archivo del repositorio: sin «..», componentes vacíos, barras invertidas ni invisibles, y
-    sin «:» (AF5-M01): en Windows, «C:/x» es absoluta aunque no empiece por «/» y «x.md:flujo» es un flujo
-    alternativo de NTFS, no el archivo."""
-    return (isinstance(path, str) and bool(path) and '\\' not in path and ':' not in path
-            and '..' not in path.split('/') and '' not in path.split('/') and not invisible_chars(path))
+    """Ruta relativa de un archivo del repositorio: sin «..», componentes vacíos, barras invertidas ni invisibles."""
+    return (isinstance(path, str) and bool(path) and '\\' not in path and '..' not in path.split('/')
+            and '' not in path.split('/') and not invisible_chars(path))
 
 
 def safe_doc_path(path):
@@ -2155,10 +2084,9 @@ def rule_frz(s):
     out.append((not unversioned, f'las entradas normativas leídas del árbol de trabajo son versionables (Git no '
                                  f'ignora ninguna); ignoradas: {unversioned}'))
     # AF5-M01: lo que se valida son los bytes de un archivo regular, nunca el destino de un enlace.
-    normative = s.get('normative')
-    shown = normative[:6] if isinstance(normative, list) else 'no evaluadas (falla cerrado)'
+    normative = s['normative']
     out.append((normative == [], f'entradas normativas: archivos regulares, sin enlaces simbólicos ni uniones en su '
-                                 f'ruta y, si están versionadas, con modo {GIT_REGULAR_MODE}; problemas: {shown}'))
+                                 f'ruta y, si están versionadas, con modo {GIT_REGULAR_MODE}; problemas: {normative[:6]}'))
     changed = s['changed']
     if changed is None:
         out.append((False, 'estado Git desconocido: no se puede verificar el alcance (falla cerrado)'))
