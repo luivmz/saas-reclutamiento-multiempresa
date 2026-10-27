@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pruebas con Git real del validador F36-SBX: AF3-M01, AF4-M01 y AF4-M02.
+"""Pruebas con Git real del validador F36-SBX: AF3-M01, AF4-M01, AF4-M02 y AF5-M01.
 
 En memoria, test_f36sbx.py solo puede simular Git. Aquí se usa Git de verdad:
 
@@ -13,7 +13,12 @@ En memoria, test_f36sbx.py solo puede simular Git. Aquí se usa Git de verdad:
   commit candidato con un ADR sintético y evidencia SINTÉTICA de FG-03 y FG-12 sin confirmar, sobre el que se
   ejecuta el validador completo: un control positivo y los ataques de AF3-M01;
 - AF4-M01-* y AF4-M02-*: el validador completo sobre dos clones más, con las pruebas que exige la cuarta
-  auditoría (numeradas como en ella) y ataques propios (sufijo A).
+  auditoría (numeradas como en ella) y ataques propios (sufijo A);
+- AF5-M01-G*: el validador completo sobre dos clones más: entradas normativas redirigidas (enlace simbólico, unión
+  de directorios, enlace duro), no versionadas, ignoradas, sustituidas, con bytes consumidos distintos, con fallos
+  de Git simulados y candidatos con el plan como enlace, submódulo o ausente, incluida la reproducción de la quinta
+  auditoría. Los enlaces simbólicos reales necesitan privilegio en Windows: sin él, esos casos se informan como
+  OMITIDOS (nunca como correctos) y se ejecutan en Linux (WSL).
 
 Todo ocurre en el directorio temporal del sistema y se borra al terminar. Nunca escribe en el repositorio original
 (se comprueba antes y después, también su índice), no usa red y no registra evidencia real.
@@ -855,6 +860,247 @@ def e2e_m02(tmp):
     sb.scenario('AF4-M02-A4', 'control positivo: sin refs/replace ni injertos, el mismo candidato vuelve a ser válido')
 
 
+# ---------------------------------------------------------------- AF5-M01: entradas normativas regulares y ligadas
+
+LINKED = ('FRZ', 'entradas normativas')
+UNBOUND = 'entradas normativas no ligadas'
+skipped = []
+
+
+def can_symlink(tmp):
+    """¿Este sistema deja crear enlaces simbólicos? (Windows sin modo desarrollador ni administrador, no)."""
+    probe = tmp / 'sonda-enlace'
+    try:
+        os.symlink(tmp, probe, target_is_directory=True)
+    except (OSError, NotImplementedError):
+        return False
+    os.unlink(probe)
+    return True
+
+
+def dir_link(target, link):
+    """Redirección de un directorio: unión (junction) en Windows, enlace simbólico en el resto."""
+    if os.name == 'nt':
+        r = subprocess.run(['cmd', '/c', 'mklink', '/J', str(link), str(target)], capture_output=True)
+        if r.returncode or not Path(link).is_junction():
+            raise RuntimeError(f'mklink /J: {r.stderr.decode("utf-8", "replace").strip()}')
+    else:
+        os.symlink(target, link, target_is_directory=True)
+
+
+def skip(cid, desc, why):
+    """Un caso que este sistema no puede ejecutar: se informa aparte y nunca cuenta como correcto."""
+    skipped.append((cid, desc, why))
+
+
+def e2e_af5(tmp):
+    """AF5-M01: toda entrada normativa es un archivo regular versionado en el candidato; lo que se valida son sus
+    bytes, nunca los de un destino externo, y cualquier redirección, ausencia o discrepancia falla cerrado."""
+    symlinks = can_symlink(tmp)
+    ext = tmp / 'externo-af5'
+    ext.mkdir()
+    sb = Sandbox(tmp, 'clon-af5')
+    clone = sb.clone
+    plan = clone / v.PLAN
+    plan0 = plan.read_bytes()
+    plan1 = plan0 + b'\nTexto cambiado fuera del candidato, solo en el archivo externo.\n'
+    pkg = clone / v.PKG
+    saved = {}
+
+    sb.scenario('AF5-M01-G01', 'control positivo: plan de evaluación regular, versionado en el candidato')
+
+    def hardlink():
+        (ext / 'plan-duro.md').write_bytes(plan0)
+        plan.unlink()
+        os.link(ext / 'plan-duro.md', plan)
+
+    def unhardlink():
+        plan.unlink()
+        plan.write_bytes(plan0)
+        (ext / 'plan-duro.md').unlink()
+    sb.scenario('AF5-M01-G02', 'control positivo: plan como enlace duro a un archivo externo con los mismos bytes (lo '
+                'que se valida son los bytes, idénticos a los del blob)', (), hardlink, unhardlink)
+    sb.scenario('AF5-M01-G03', 'plan como enlace duro y destino externo modificado después: los bytes consumidos ya no '
+                'son los del candidato', (CHANGED_AFTER,),
+                lambda: (hardlink(), (ext / 'plan-duro.md').write_bytes(plan1)), unhardlink)
+
+    moved = ext / 'paquete'
+
+    def redirected(change=False):
+        def f():
+            shutil.move(str(pkg), str(moved))
+            dir_link(moved, pkg)
+            if change:
+                (moved / Path(v.PLAN).name).write_bytes(plan1)
+        return f
+
+    def unredirected():
+        os.rmdir(pkg) if os.name == 'nt' else os.unlink(pkg)
+        shutil.move(str(moved), str(pkg))
+        plan.write_bytes(plan0)
+    kind = 'unión de directorios (junction)' if os.name == 'nt' else 'enlace simbólico de directorio'
+    sb.scenario('AF5-M01-G04', f'directorio del paquete redirigido con una {kind} a una copia externa idéntica '
+                '(componente ancestral)', (LINKED,), redirected(), unredirected)
+    sb.scenario('AF5-M01-G05', f'directorio del paquete redirigido con una {kind} y plan externo modificado',
+                (LINKED,), redirected(True), unredirected)
+    try:
+        redirected(True)()
+        v.clear_caches()
+        consumed = v.collect(clone)['texts'].get(v.PLAN)
+    finally:
+        unredirected()
+    ok(consumed is None, 'AF5-M01-G05b', f'con el paquete redirigido por una {kind}, el validador no consume el plan '
+       'externo modificado (ningún byte del destino llega a las reglas)', f'texto consumido: {str(consumed)[:60]!r}')
+
+    def file_symlink(change=False):
+        def f():
+            (ext / 'plan.md').write_bytes(plan1 if change else plan0)
+            plan.unlink()
+            os.symlink(ext / 'plan.md', plan)
+        return f
+
+    def unsymlink():
+        plan.unlink()
+        plan.write_bytes(plan0)
+    if symlinks:
+        sb.scenario('AF5-M01-G06', 'plan sustituido en el árbol de trabajo por un enlace simbólico a una copia externa '
+                    'idéntica', (LINKED,), file_symlink(), unsymlink)
+        sb.scenario('AF5-M01-G07', 'plan como enlace simbólico a una copia externa modificada', (LINKED, CHANGED_AFTER),
+                    file_symlink(True), unsymlink)
+    else:
+        for cid in ('AF5-M01-G06', 'AF5-M01-G07'):
+            skip(cid, 'plan como enlace simbólico de archivo en el árbol de trabajo',
+                 'sin privilegio para crear enlaces simbólicos (cubierto en WSL)')
+
+    tools_ext = ext / 'herramientas'
+    tools_link = clone / v.TOOLS / 'extra'
+
+    def tools_redirected():
+        tools_ext.mkdir(exist_ok=True)
+        (tools_ext / 'ayuda.py').write_bytes(b'# herramienta externa sintetica\n')
+        dir_link(tools_ext, tools_link)
+
+    def tools_restored():
+        os.rmdir(tools_link) if os.name == 'nt' else os.unlink(tools_link)
+    sb.scenario('AF5-M01-G16', f'subdirectorio de las herramientas del validador redirigido con una {kind} a código '
+                'externo (recorrido del directorio)', (LINKED,), tools_redirected, tools_restored)
+
+    sb.scenario('AF5-M01-G08', 'plan sacado del índice (no versionado) y presente en el árbol de trabajo',
+                (CHANGED_AFTER,), lambda: git(clone, 'rm', '-q', '--cached', v.PLAN), lambda: git(clone, 'add', v.PLAN))
+    exclude = clone / '.git' / 'info' / 'exclude'
+    exclude0 = exclude.read_bytes() if exclude.exists() else b''
+
+    def ignored():
+        git(clone, 'rm', '-q', '--cached', v.PLAN)
+        write(clone, '.git/info/exclude', exclude0 + f'\n/{v.PLAN}\n'.encode('utf-8'))
+
+    def unignored():
+        write(clone, '.git/info/exclude', exclude0)
+        git(clone, 'add', v.PLAN)
+    sb.scenario('AF5-M01-G09', 'plan sacado del índice e ignorado localmente', (('FRZ', 'versionables'), CHANGED_AFTER),
+                ignored, unignored)
+    sb.scenario('AF5-M01-G10', 'plan sustituido en el árbol de trabajo después del candidato', (CHANGED_AFTER,),
+                lambda: plan.write_bytes(plan1), lambda: plan.write_bytes(plan0))
+
+    real_read = v.read_normative
+
+    def consumed_differs():
+        def fake(root, rel):
+            data, reason = real_read(root, rel)
+            return (data + b'\nBytes consumidos distintos.\n', reason) if rel == v.PLAN and data else (data, reason)
+        v.read_normative = fake
+
+    def consumed_restored():
+        v.read_normative = real_read
+    sb.scenario('AF5-M01-G11', 'bytes consumidos distintos de los protegidos (lectura alterada, simulado) con el '
+                'archivo, el índice y el commit intactos: lo comparado con Git es lo consumido', (CHANGED_AFTER,),
+                consumed_differs, consumed_restored)
+
+    real_tree = v.git_tree
+
+    def tree_fails():
+        v.git_tree = lambda root, sha: None if sha == sb.cand else real_tree(root, sha)
+
+    def tree_restored():
+        v.git_tree = real_tree
+    sb.scenario('AF5-M01-G12', 'Git no puede leer el árbol del commit candidato (simulado): la integridad normativa no '
+                'se establece y falla cerrado', (UNBOUND,), tree_fails, tree_restored)
+    idx = clone / '.git' / 'index'
+
+    def ghost_entry():
+        saved['index'] = idx.read_bytes()
+        git(clone, 'update-index', '--cacheinfo', f'100644,{"4" * 40},{v.PLAN}')
+    sb.scenario('AF5-M01-G13', 'entrada del índice del plan con un objeto que no existe', (('FRZ', 'sin su objeto blob'),
+                UNRELIABLE), ghost_entry, lambda: idx.write_bytes(saved['index']))
+
+    real_link = v.link_in_path
+    calls = []
+
+    def racing(root, rel):
+        calls.append(rel)
+        return real_link(root, rel) if len(calls) == 1 else rel
+    v.link_in_path = racing
+    try:
+        race = v.read_normative(clone, v.PLAN)
+    finally:
+        v.link_in_path = real_link
+    ok(race == (None, 'cambió durante la lectura'), 'AF5-M01-G14', 'la ruta pasa a ser un enlace entre la comprobación '
+       'y la lectura (simulado; Windows no tiene O_NOFOLLOW): falla cerrado', str(race)[:120])
+    ok(v.read_normative(clone, v.PLAN) == (plan0, None) and v.read_normative(clone, f'{v.PKG}/no-existe.md') == (None, None)
+       and v.read_normative(clone, v.PKG)[1] == 'no es un archivo regular', 'AF5-M01-G15',
+       'contraste de read_normative: bytes de un archivo regular; ausente sin motivo; un directorio no es un archivo')
+
+    # Candidatos con el plan como objeto no regular (Codex). En Linux, Git crea el enlace simbólico real; en Windows
+    # sin enlaces, un archivo de texto con la ruta: en ambos casos el modo del índice y del commit es 120000.
+    sb2 = Sandbox(tmp, 'clon-af5-enlaces')
+    c2 = sb2.clone
+    (ext / 'plan-codex.md').write_bytes(plan0)
+
+    def committed_entry(mode, obj, msg):
+        git(c2, 'update-index', '--cacheinfo', f'{mode},{obj},{v.PLAN}')
+        cand = commit(c2, msg)
+        target = c2 / v.PLAN
+        if target.is_symlink() or target.is_file():
+            target.unlink()
+        elif target.is_dir():
+            shutil.rmtree(target)
+        git(c2, 'checkout', '--', v.PLAN) if mode != '160000' else (c2 / v.PLAN).mkdir()
+        return cand
+
+    link_ext = git(c2, 'hash-object', '-w', '--stdin', stdin=str(ext / 'plan-codex.md').encode('utf-8'))
+    cand_ext = committed_entry('120000', link_ext, 'candidato con el plan como enlace simbólico a un archivo externo')
+    real = (c2 / v.PLAN).is_symlink()
+    form = 'enlace simbólico real' if real else 'archivo de texto con la ruta (sin enlaces en este sistema)'
+    sb2.scenario('AF5-M01-G20', f'reproducción de la quinta auditoría: plan versionado como enlace a un archivo externo, '
+                 f'objetivo intacto ({form})', (LINKED, UNBOUND), candidate=cand_ext)
+    sb2.scenario('AF5-M01-G21', f'reproducción de la quinta auditoría: solo se modifica el archivo externo ({form})',
+                 (LINKED, UNBOUND), lambda: (ext / 'plan-codex.md').write_bytes(plan1), candidate=cand_ext,
+                 note=lambda: f'git status del plan: {git(c2, "status", "--porcelain", "--", v.PLAN)!r}')
+    link_int = git(c2, 'hash-object', '-w', '--stdin', stdin=b'F36SBX_Charter.md')
+    cand_int = committed_entry('120000', link_int, 'candidato con el plan como enlace a otro archivo interno')
+    sb2.scenario('AF5-M01-G22', 'plan versionado como enlace a otro archivo interno del paquete (la regla exige un '
+                 'archivo regular)', (LINKED, UNBOUND), candidate=cand_int)
+    cand_sub = committed_entry('160000', sb2.base_head, 'candidato con el plan como submódulo')
+    sb2.scenario('AF5-M01-G23', 'plan versionado como submódulo (objeto de tipo commit, no blob)', (LINKED, UNBOUND),
+                 candidate=cand_sub)
+    git(c2, 'rm', '-q', '-r', '--cached', v.PLAN)
+    shutil.rmtree(c2 / v.PLAN, ignore_errors=True)
+    write(c2, v.PLAN, plan0)
+    git(c2, 'add', v.PLAN)
+    cand_ok = commit(c2, 'candidato con el plan regular de nuevo')
+    sb2.scenario('AF5-M01-G24', 'control positivo: el plan vuelve a ser un archivo regular versionado en el candidato',
+                 candidate=cand_ok)
+    git(c2, 'rm', '-q', '--cached', v.PLAN)
+    cand_abs = commit(c2, 'candidato sin el plan')
+    sb2.scenario('AF5-M01-G25', 'plan ausente del commit candidato y presente sin versionar en el árbol de trabajo',
+                 ('no pertenece al commit candidato', CHANGED_AFTER), candidate=cand_abs)
+    git(c2, 'add', v.PLAN)
+    commit(c2, 'plan regular en un commit posterior al candidato')
+    sb2.scenario('AF5-M01-G26', 'candidato con el plan como enlace (120000) y HEAD posterior con el plan regular: el '
+                 'modo se comprueba en el árbol del candidato, no solo en el índice',
+                 ('no es un blob regular en el commit candidato', CHANGED_AFTER), candidate=cand_int)
+
+
 def main():
     if hasattr(sys.stdout, 'reconfigure'):
         sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -866,7 +1112,7 @@ def main():
     before = snapshot()
     tmp = Path(tempfile.mkdtemp(prefix='f36sbx-git-'))
     try:
-        for part in (unit, worktree, replacement, e2e, e2e_m01, e2e_m02):
+        for part in (unit, worktree, replacement, e2e, e2e_m01, e2e_m02, e2e_af5):
             try:
                 part(tmp)
             except Exception as e:  # noqa: BLE001 — una parte que no se puede ejecutar es una falla, nunca un PASS
@@ -881,7 +1127,10 @@ def main():
     bad = [r for r in results if not r[0]]
     for ok_, cid, desc, detail in results:
         print(f'{"OK   " if ok_ else "FALLA"} {cid} {desc}: {detail}')
-    print(f'test_f36sbx_git: {len(results) - len(bad)} casos correctos, {len(bad)} fallas')
+    for cid, desc, why in skipped:
+        print(f'OMITIDO {cid} {desc}: {why}')
+    print(f'test_f36sbx_git: {len(results) - len(bad)} casos correctos, {len(bad)} fallas, {len(skipped)} omitidos '
+          f'(no cuentan como correctos)')
     return 1 if bad else 0
 
 

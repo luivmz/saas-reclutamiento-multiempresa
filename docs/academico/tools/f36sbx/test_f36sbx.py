@@ -446,7 +446,7 @@ def build(auth=AUTH, mutate=None, team=('FG-02', 'FG-03', 'FG-10', 'FG-12')):
     ctx = {'state': state, 'schema': schema, 'evidence': {}, 'adr_blobs': {}, 'classes': v.EXPECTED_CLASSES,
            'gate_doc': status_doc(BASE['texts'][G], {fg: 'CUMPLE' for fg in team}),
            'facts': {CAND: {'commit': True, 'from_base': True, 'ancestor': True, 'date': CDATE,
-                            'gate_doc': BASE['texts'][G], 'git_state': [],
+                            'gate_doc': BASE['texts'][G], 'git_state': [], 'normative': [],
                             'changed': sorted([S, G, REPORT, *(path(fg) for fg in team)])}}}
     set_report()(docs, ctx)
     if docs['FG-12']['successor_adr'] is not None:
@@ -1432,6 +1432,97 @@ def main():
        and not v.same_blob(lf.replace(b'\n', b'\r'), obj) and not v.same_blob(lf.replace(b'\n', b'\r\n'), obj, eol=False),
        'AF4-12', 'contraste: el árbol de trabajo solo equivale a su objeto con los mismos bytes o con la conversión '
        'LF→CRLF completa de un checkout; un fin de línea suelto, un CR aislado o un byte más es un cambio', '')
+
+    # ---------------- AF5-L01: composiciones genéricas sin separadores (validación estructural, no autenticación)
+    for cid, name in (('AF5-L01-01', 'tbdplaceholder'), ('AF5-L01-02', 'placeholderxx'),
+                      ('AF5-L01-03', 'auditorfictionn')):
+        af2(cid, f'reproducción de la quinta auditoría: auditor «{name}» en el registro y en el bloque del informe',
+            'FG-02', auditor_named(name), composite)
+    variants5 = [
+        ('AF5-L01-04', 'TBDPlaceholder', 'camelCase de marcador corto y marcador'),
+        ('AF5-L01-05', 'AuditorFictionN', 'camelCase con la última letra repetida'),
+        ('AF5-L01-06', 'Auditor Fíctionn', 'tilde y letra repetida'),
+        ('AF5-L01-07', 'auditorfıctionn', '«ı» sin punto, que NFKD no descompone'),
+        ('AF5-L01-08', 'ＴＢＤＰＬＡＣＥＨＯＬＤＥＲ', 'ancho completo'),
+        ('AF5-L01-09', 'placeh0lderxx', 'dígito por letra y relleno'),
+        ('AF5-L01-10', 'plaaceholder', 'letra duplicada dentro de la pieza'),
+        ('AF5-L01-11', 'placeholdeerr', 'dos letras duplicadas'),
+        ('AF5-L01-12', 'tbdxx', 'marcador corto y relleno'), ('AF5-L01-13', 'natbd', 'dos marcadores cortos'),
+        ('AF5-L01-14', 'tempauditor', 'provisionalidad y rol'), ('AF5-L01-15', 'Revisor Fictional', 'ficción en inglés'),
+        ('AF5-L01-16', 'JaneDoe', 'nombre de relleno convencional en camelCase'),
+        ('AF5-L01-17', 'John Doe', 'nombre de relleno convencional'),
+        ('AF5-L01-18', 'drplaceholder', 'tratamiento y marcador'),
+        ('AF5-L01-19', 'auditorsinnombre', 'rol, conector y marcador'),
+        ('AF5-L01-20', 'xxplaceholderxx', 'relleno a ambos lados'),
+    ]
+    for cid, name, why in variants5:
+        ev_case(cid, f'auditor «{name}» ({why})', 'FG-02', auditor_named(name), 'marcador de posición'
+                if v.placeholder_key(name) in v.PLACEHOLDERS or ' '.join(v.identity_tokens(name)) in v.PLACEHOLDERS
+                else composite)
+    bulk_neg = ['placeholdertbd', 'tbdtbd', 'auditorfictional', 'auditorfictitious', 'pl4ceholderzz',
+                'placeholderplaceholder', 'auditortbd', 'tbdauditor', 'nnauditor', 'auditorrr', 'placeholderr',
+                'unknownuser', 'testuser', 'dummyauditor', 'auditordummy', 'Tbdplaceholder Xx', 'nameplaceholder',
+                'yournamehere', 'Revisor tbdplaceholder', 'revisor anonimoxx', 'Plaçeholderxx', 'placeholdér',
+                'xxtbdxx', 'auditorficticionn', 'placeholderx', 'fictionauditor', 'reviewerunknown', 'nobodyxx',
+                'johndoe', 'auditortemp', 'TBD-TBD', 'xxxauditorxxx', 'auditor123', 'a.u.d.i.t.o.r', 'PLACEHOLDER-XX',
+                'auditoor', 'revisoraficticia', 'nombreapellido', 'xxtbd', 'tbdxxx', 'Auditor-TBD-XX', 'Juan Nadie',
+                'auditorauditor', 'revisorrrrr', 'sinnombre', 'noname', 'unknownn', 'anonymous123', 'xyzauditor',
+                'emptyname', 'randomuser', 'pseudoauditor', 'temporaryreviewer', 'blankblank', 'AUDITORFICTIONN',
+                'drrr', 'tbddd', 'revisooor']
+    accepted = [n for n in bulk_neg if not v.identity_errors(n, 'identidad')]
+    ok(not accepted, 'AF5-L01-21', f'{len(bulk_neg)} variantes adversariales más (concatenaciones, rellenos, letras '
+       'repetidas, dígitos, tildes, inglés y nombres de relleno): todas se rechazan', f'aceptadas: {accepted}')
+    legit5 = ['Lola', 'Ella', 'Donna', 'Elena', 'Anna', 'Ana', 'Lola Mendoza', 'Ella Ramírez', 'Donna Pérez',
+              'Elena Huamán', 'Anna Rojas', 'Nadia', 'Tito', 'Toño', 'Dante', 'Delia', 'Ellen', 'Dolores', 'Testino',
+              'Todorov', 'Nicanor', 'Unamuno', 'Delgado', 'Concepción', 'Sinforoso', 'Lorenzo', 'Asunción', 'Otto',
+              'Ivonne', 'Joanna', 'Mariella', 'Allen', 'Nadal', 'Tadeo', 'Mena', 'Ponce', 'Eli', 'Edu', 'Ada', 'Ian',
+              'Noa', 'Teo', 'Aitana', 'Nayeli', 'Dalia', 'Sonia', 'Ximena', 'Xochitl', 'Abel', 'Itzel', 'Ninoska',
+              'Anabel', 'Bella', 'Leila', 'Lluvia', 'Sesto', 'Domenica', 'Donato', 'Tessa', 'Dora', 'Lía', 'Max',
+              'Elsa', 'Isis', 'Yoyo Ma', 'Llosa', 'Ottone', 'Annabella', 'Revisora Lola', 'Auditor Anna',
+              'Dra. Ella Paz', 'Juan Pérez', 'Ñusta', 'Zoe', 'Sesión AF-07 Ana', 'Barr', 'Doerr', 'Nana', 'Templeton',
+              'Testa', 'Auditore', 'Stubbs', 'Foxx', 'Demos', 'Demora', 'Donatella', 'Randall', 'Blanca', 'Temple',
+              'Barbara', 'Nadine', 'Tomasa', 'Abbott', 'Nilda', 'Fiona', 'Ficcion Ruiz', 'Søren Kierkegaard',
+              'Łukasz Nowak', 'Grupo Andino Sesión 7 Luz']
+    wrong5 = {n: e for n in legit5 if (e := v.identity_errors(n, 'identidad'))}
+    ok(not wrong5, 'AF5-L01-P1', f'control positivo: {len(legit5)} nombres plausibles (también «Lola», «Ella», «Donna», '
+       '«Elena», «Anna», «Nana», «Barr», «Testino» o «Donato», que se pueden partir en piezas del vocabulario) siguen '
+       'siendo válidos', str(wrong5))
+    pos('AF5-L01-P2', 'control positivo: registro de FG-02 con la auditora «Lola Donato» (nombre formado por piezas '
+        'del vocabulario)', register(mutate=auditor_named('Lola Donato')))
+    ok(v.concatenated('placeholderxx') and not v.concatenated('donna') and not v.concatenated('nana')
+       and not v.concatenated('testino') and v.concatenated('tbdxx') and not v.concatenated('barr'), 'AF5-L01-22',
+       'contraste directo de concatenated(): composición con pieza fuerte o de marcadores cortos, nunca solo pegamento '
+       'o letras sueltas', '')
+
+    # ---------------- AF5-M01: entradas normativas que no son archivos regulares ligados al candidato (en memoria)
+    link = [f'{v.PLAN}: enlace simbólico o unión de directorios en la ruta ({v.PLAN})']
+    case('AF5-M01-01', 'entrada normativa que es un enlace simbólico en el árbol de trabajo: FRZ falla',
+         setkey('normative', link), 'FRZ', 'entradas normativas')
+    case('AF5-M01-02', 'entrada normativa con modo 120000 en el índice: FRZ falla',
+         setkey('normative', [f'{v.PLAN}: no es una entrada regular del índice (modo 120000)']), 'FRZ',
+         'entradas normativas')
+    case('AF5-M01-03', 'vista de entradas normativas no evaluada: FRZ falla cerrado', setkey('normative', None), 'FRZ',
+         'entradas normativas')
+    ev_case('AF5-M01-04', 'vínculo con un candidato cuyo plan es un enlace (modo 120000 en el commit)', 'FG-12',
+            lambda docs, ctx: ctx['facts'][CAND].update(
+                normative=[f'{v.PLAN}: no es un blob regular en el commit candidato (modo 120000)']),
+            'entradas normativas no ligadas')
+    ev_case('AF5-M01-05', 'vínculo con un candidato al que le falta una entrada normativa', 'FG-12',
+            lambda docs, ctx: ctx['facts'][CAND].update(normative=[f'{v.PLAN}: no pertenece al commit candidato']),
+            'entradas normativas no ligadas')
+    ev_case('AF5-M01-06', 'vínculo sin la vista normativa evaluada (falla cerrado)', 'FG-12',
+            lambda docs, ctx: ctx['facts'][CAND].pop('normative'), 'entradas normativas no ligadas')
+    ev_case('AF5-M01-07', 'vínculo con la vista normativa de un tipo inesperado (falla cerrado)', 'FG-12',
+            lambda docs, ctx: ctx['facts'][CAND].update(normative='ok'), 'entradas normativas no ligadas')
+    case('AF5-M01-08', 'registro en el repositorio con una entrada normativa enlazada: GATE falla en el vínculo',
+         chain(register(), lambda s: s['facts'][CAND].update(normative=link)), 'GATE', 'entradas normativas no ligadas')
+    ok(not v.safe_repo_path('../fuera/plan.md') and not v.safe_repo_path('/etc/passwd')
+       and not v.safe_repo_path('C:/fuera.md') and not v.safe_repo_path('docs/../../fuera.md')
+       and not v.safe_repo_path(f'{v.PLAN}:flujo') and v.safe_repo_path(v.PLAN)
+       and all(v.read_normative(v.ROOT, p) == (None, 'ruta fuera de formato')
+               for p in ('../fuera.md', 'C:/fuera.md', f'{v.PLAN}:flujo')), 'AF5-M01-09',
+       'rutas que escapan del repositorio (.., absolutas, con unidad o con flujo alternativo NTFS): read_normative las '
+       'rechaza sin leerlas', '')
 
     # ---------------- registro de evidencia en el repositorio (GR)
     snap = copy.deepcopy(BASE)
