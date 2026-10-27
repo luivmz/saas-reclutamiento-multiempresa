@@ -360,15 +360,23 @@ def set_report(meta_fn=None, prose=None, extra='', raw=None):
     return f
 
 
+def blob(data, mode='100644', kind='blob'):
+    """Resolución de git_blob tal como la devuelve el validador para un blob del commit candidato."""
+    return {'mode': mode, 'type': kind, 'object': v.git_blob_id(data), 'data': data}
+
+
 def set_adr(meta_fn=None, prose=None, extra='', raw=None):
-    """Reescribe el ADR sucesor desde el registro FG-12 vigente y actualiza su SHA-256."""
+    """Reescribe el ADR sucesor desde el registro FG-12 vigente, como blob del commit candidato, y actualiza su SHA-256.
+
+    En memoria, el ADR solo existe como resolución de candidate_commit:path; la resolución con Git real la prueba
+    test_f36sbx_git.py."""
     def f(docs, ctx):
         meta = adr_meta(docs['FG-12'])
         if meta_fn:
             meta_fn(meta)
         data = raw if raw is not None else doc_bytes(ADR_PROSE if prose is None else prose,
                                                      'f36sbx-adr-metadata', meta, extra)
-        ctx['repo_files'][ADR_PATH] = data
+        ctx['adr_blobs'][(docs['FG-12']['candidate_commit'], ADR_PATH)] = blob(data)
         docs['FG-12']['successor_adr']['sha256'] = v.sha256(data)
     return f
 
@@ -433,7 +441,7 @@ def build(auth=AUTH, mutate=None, team=('FG-02', 'FG-03', 'FG-10', 'FG-12')):
             c['status'], c['evidence'] = 'CUMPLE', path(c['id'])
     docs = evidence_docs(auth)
     # El ADR forma parte del commit candidato (no cambia después); el informe se registra en gate/evidencia/.
-    ctx = {'state': state, 'schema': schema, 'evidence': {}, 'repo_files': {}, 'classes': v.EXPECTED_CLASSES,
+    ctx = {'state': state, 'schema': schema, 'evidence': {}, 'adr_blobs': {}, 'classes': v.EXPECTED_CLASSES,
            'gate_doc': status_doc(BASE['texts'][G], {fg: 'CUMPLE' for fg in team}),
            'facts': {CAND: {'commit': True, 'from_base': True, 'ancestor': True, 'date': CDATE,
                             'gate_doc': BASE['texts'][G],
@@ -482,7 +490,7 @@ def register(team=('FG-02',), mutate=None, statuses=None):
         s['texts'][S] = json.dumps(state, ensure_ascii=False, indent=2)
         s['texts'][G] = status_doc(s['texts'][G], statuses or {fg: 'CUMPLE' for fg in team})
         s['evidence'] = {p: b for p, b in ctx['evidence'].items() if p == REPORT or p in {path(fg) for fg in team}}
-        s['repo_files'] = dict(ctx['repo_files'])
+        s['adr_blobs'] = dict(ctx['adr_blobs'])
         s['facts'] = ctx['facts']
         s['changed'] = set(s['changed']) | set(s['evidence'])
     return f
@@ -1102,7 +1110,8 @@ def main():
             'requiere una autorización FG-03 válida')
     ev_case('E38', 'FG-12 con id de ADR reservado', 'FG-12', fg12(lambda d: d['successor_adr'].update(id='ADR-005')),
             'reservado')
-    ev_case('E39', 'FG-12 con un ADR inexistente', 'FG-12', lambda docs, ctx: ctx['repo_files'].clear(), 'no existe')
+    ev_case('E39', 'FG-12 con un ADR sin resolver en el commit candidato', 'FG-12', lambda docs, ctx: ctx['adr_blobs'].clear(),
+            'no es un blob regular versionado en el commit candidato')
     ev_case('E40', 'FG-12 sin decisión sobre EI-09 autorizada', 'FG-12',
             both(fg12(lambda d: d.update(ei09_decision='SIN_DECISION')), set_adr()), 'EI-09 autorizada sin la decisión')
     ev_case('E41', 'FG-12 que no cubre EI-10', 'FG-12', both(fg12(lambda d: d.update(covered_ei=[])), set_adr()), 'no cubre')
@@ -1225,6 +1234,38 @@ def main():
             both(fg02(lambda d: d['auditor'].update(name='Revisora​Externa Ficticia')), escaped_report),
             'caracteres invisibles')
 
+    # ---------------- AF3-M01: el ADR es el blob de candidate_commit:path (decisión, en memoria)
+    # La resolución con Git real (ignorados, sin versionar, sustituidos, tipos) la prueba test_f36sbx_git.py.
+    def adr_entry(fn):
+        """Mutación de la resolución Git del ADR para el commit candidato."""
+        def f(docs, ctx):
+            key = (docs['FG-12']['candidate_commit'], ADR_PATH)
+            ctx['adr_blobs'][key] = fn(ctx['adr_blobs'][key])
+        return f
+    no_blob = 'no es un blob regular versionado en el commit candidato'
+    af2('AF3-01', 'ADR que no existe en el árbol del commit candidato (ignorado, sin versionar o ausente)', 'FG-12',
+        adr_entry(lambda b: {'error': 'no existe en el árbol del commit'}), no_blob)
+    af2('AF3-02', 'ADR versionado solo en otro commit, no en el candidato', 'FG-12',
+        lambda docs, ctx: ctx['adr_blobs'].update({(OTHER, ADR_PATH): ctx['adr_blobs'].pop((CAND, ADR_PATH))}), no_blob)
+    af2('AF3-03', 'ruta del ADR que es un árbol (directorio) en el commit candidato', 'FG-12',
+        adr_entry(lambda b: {**b, 'type': 'tree', 'mode': '040000'}), no_blob)
+    af2('AF3-04', 'ADR que es un enlace simbólico (modo 120000)', 'FG-12', adr_entry(lambda b: {**b, 'mode': '120000'}), no_blob)
+    af2('AF3-05', 'ADR que es un submódulo (tipo commit, modo 160000)', 'FG-12',
+        adr_entry(lambda b: {**b, 'type': 'commit', 'mode': '160000'}), no_blob)
+    af2('AF3-06', 'ADR ejecutable (modo 100755)', 'FG-12', adr_entry(lambda b: {**b, 'mode': '100755'}), no_blob)
+    af2('AF3-07', 'resolución con bytes que no son los del objeto Git (bytes del árbol de trabajo)', 'FG-12',
+        adr_entry(lambda b: {**b, 'data': b['data'] + b'\nCopia del arbol de trabajo.\n'}), 'los bytes no son los del objeto')
+    af2('AF3-08', 'SHA-256 declarado de otra copia del ADR, distinta del blob del candidato', 'FG-12',
+        lambda docs, ctx: docs['FG-12']['successor_adr'].update(sha256=v.sha256(b'otra copia del ADR')),
+        'no es el del blob del ADR en el commit candidato')
+    case('AF3-09', 'evidencia que Git ignora (nunca podría estar en un commit)',
+         chain(register(), lambda s: s.update(ignored=[path('FG-02')])), 'GATE', 'Git lo ignora')
+    case('AF3-10', 'no se puede comprobar con Git si la evidencia es versionable (falla cerrado)',
+         chain(register(), setkey('ignored', None)), 'GATE', 'no se pudo comprobar con Git')
+    ok(v.blob_problem(blob(b'# ADR\n')) is None and v.blob_problem(None) and v.blob_problem({'error': 'x'})
+       and v.blob_problem({**blob(b'a'), 'object': '0' * 40}), 'AF3-11',
+       'contraste: blob_problem acepta un blob regular íntegro y rechaza la ausencia, el error y un objeto que no corresponde', '')
+
     # ---------------- registro de evidencia en el repositorio (GR)
     snap = copy.deepcopy(BASE)
     register()(snap)
@@ -1289,7 +1330,7 @@ def main():
          'nunca el commit que lo contiene')
     case('GR29', 'PII en el ADR citado por FG-12',
          register(('FG-02', 'FG-03', 'FG-12'), set_adr(prose=ADR_PROSE + '\nContacto: adr' + '@' + 'colegio.pe\n')),
-         'PII', 'ADR_006_prueba_en_memoria.md: correo')
+         'PII', f'ADR_006_prueba_en_memoria.md ({CAND[:12]}): correo')
 
     # ---------------- regla de decisión (G)
     def stub(errors):

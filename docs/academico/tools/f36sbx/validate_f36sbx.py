@@ -213,6 +213,7 @@ PLACEHOLDERS = {'auditor', 'auditora', 'independiente', 'auditor independiente',
 # Categorías Unicode prohibidas en identidades y en documentos humanos: control, formato (U+200B, U+202E…),
 # uso privado, no asignados y separadores de línea o de párrafo.
 INVISIBLE_CATEGORIES = frozenset({'Cc', 'Cf', 'Co', 'Cn', 'Zl', 'Zp'})
+GIT_REGULAR_MODE = '100644'
 HEX40 = re.compile(r'[0-9a-f]{40}')
 HEX64 = re.compile(r'[0-9a-f]{64}')
 INDEX = re.compile(r'0|[1-9][0-9]*')
@@ -224,8 +225,9 @@ STATUS_ASSERTION_RX = re.compile(r'(?i)\b(estado|status)\b["\']?\s*[:=]')
 ADR_STATUS_TOKENS = ('PROPUESTO', 'APROBADO', 'RECHAZADO', 'REVOCADO')
 
 STDLIB = frozenset({'ast', 'copy', 'csv', 'datetime', 'hashlib', 'importlib', 'io', 'json', 'os', 're', 'subprocess',
-                    'sys', 'unicodedata', 'pathlib', 'unittest', 'tempfile', 'itertools', 'contextlib', 'types'})
-LOCAL_MODULES = frozenset({'validate_f36sbx', 'test_f36sbx'})
+                    'sys', 'unicodedata', 'pathlib', 'unittest', 'tempfile', 'itertools', 'contextlib', 'types',
+                    'shutil', 'stat'})
+LOCAL_MODULES = frozenset({'validate_f36sbx', 'test_f36sbx', 'test_f36sbx_git'})
 ML_IMPORT = re.compile(r'^\s*(?:import|from)\s+(torch|transformers|sentence_transformers|spacy|sklearn|pypdf|'
                        r'pdfplumber|docx|pytesseract|ollama|openai|anthropic|faiss|chromadb|whisper|numpy|'
                        r'pandas|requests|urllib3|httpx)\b', re.M)
@@ -438,6 +440,91 @@ def git(root, *args):
     return r.returncode, r.stdout
 
 
+def git_bytes(root, *args, stdin=None):
+    """Salida binaria de git, sin decodificar ni convertir finales de línea; None si git falla."""
+    try:
+        r = subprocess.run(['git', *args], cwd=root, input=stdin, capture_output=True)
+    except OSError:
+        return None
+    return r.stdout if r.returncode == 0 else None
+
+
+def git_blob(root, sha, path):
+    """Blob regular de commit:path leído de Git, nunca del árbol de trabajo. Única vía para documentos de un commit.
+
+    Devuelve {'mode', 'type', 'object', 'data'} o {'error': motivo}. La ruta se trata literalmente (sin
+    comodines) y tiene que identificar exactamente una entrada del árbol del commit; solo vale un blob regular
+    (modo 100644): un árbol, un enlace simbólico, un submódulo o un ejecutable no lo son. Un archivo ignorado,
+    sin versionar o añadido después del commit no existe en ese árbol."""
+    if not (isinstance(sha, str) and HEX40.fullmatch(sha)) or not safe_doc_path(path):
+        return {'error': 'commit o ruta fuera de formato'}
+    out = git_bytes(root, '--literal-pathspecs', 'ls-tree', '-z', '--full-tree', sha, '--', path)
+    if out is None:
+        return {'error': 'no se pudo leer el árbol del commit (falla cerrado)'}
+    entries = []
+    for raw in (x for x in out.split(b'\0') if x):
+        meta, sep, name = raw.partition(b'\t')
+        fields = meta.split(b' ')
+        if not sep or len(fields) != 3:
+            return {'error': 'entrada del árbol ilegible (falla cerrado)'}
+        entries.append([x.decode('utf-8', 'replace') for x in (*fields, name)])
+    if not entries:
+        return {'error': 'no existe en el árbol del commit: ignorado, sin versionar, añadido después o ruta inexistente'}
+    if len(entries) != 1 or entries[0][3] != path:
+        return {'error': 'la ruta no identifica exactamente una entrada del árbol del commit'}
+    mode, kind, obj, _ = entries[0]
+    if kind != 'blob' or mode != GIT_REGULAR_MODE:
+        return {'error': f'no es un blob regular (tipo {kind}, modo {mode})', 'type': kind, 'mode': mode}
+    data = git_bytes(root, 'cat-file', 'blob', obj)
+    if data is None:
+        return {'error': 'no se pudo leer el blob (falla cerrado)'}
+    return {'mode': mode, 'type': kind, 'object': obj, 'data': data}
+
+
+def git_blob_id(data):
+    """Identificador de objeto Git (SHA-1) de un blob con estos bytes."""
+    return hashlib.sha1(b'blob %d\0' % len(data) + data).hexdigest()
+
+
+def blob_problem(blob):
+    """Motivo por el que una resolución de git_blob no es un blob regular íntegro; None si lo es."""
+    if not isinstance(blob, dict):
+        return 'sin resolver en Git (falla cerrado)'
+    if 'error' in blob:
+        return str(blob['error'])
+    data, obj = blob.get('data'), blob.get('object')
+    if blob.get('type') != 'blob' or blob.get('mode') != GIT_REGULAR_MODE or not isinstance(data, bytes):
+        return f'no es un blob regular (tipo {blob.get("type")}, modo {blob.get("mode")})'
+    if not (isinstance(obj, str) and HEX40.fullmatch(obj)) or git_blob_id(data) != obj:
+        return 'los bytes no son los del objeto Git resuelto (falla cerrado)'
+    return None
+
+
+def git_ignored(root, paths):
+    """Rutas que Git ignora y que, por tanto, ningún commit contiene; None si no se puede determinar (falla cerrado)."""
+    paths = sorted(p for p in paths if isinstance(p, str))
+    if not paths:
+        return []
+    try:
+        r = subprocess.run(['git', 'check-ignore', '--stdin', '-z'], cwd=root,
+                           input=b''.join(p.encode('utf-8') + b'\0' for p in paths), capture_output=True)
+    except OSError:
+        return None
+    if r.returncode not in (0, 1):
+        return None
+    return sorted(x.decode('utf-8', 'replace') for x in r.stdout.split(b'\0') if x)
+
+
+def blob_text(blob):
+    """Texto de un blob, con los finales de línea normalizados como al leer un archivo de texto; None si no vale."""
+    if not isinstance(blob, dict) or not isinstance(blob.get('data'), bytes):
+        return None
+    try:
+        return blob['data'].decode('utf-8').replace('\r\n', '\n').replace('\r', '\n')
+    except UnicodeDecodeError:
+        return None
+
+
 def read(root, rel):
     try:
         return (Path(root) / rel).read_text(encoding='utf-8')
@@ -482,8 +569,7 @@ def git_facts(root, sha):
         f['changed'] = sorted({ln.strip() for ln in (diff + untracked).splitlines() if ln.strip()})
     code, out = git(root, 'show', '-s', '--format=%cs', sha)
     f['date'] = out.strip() if code == 0 else None
-    code, out = git(root, 'show', f'{sha}:{GATE_DOC}')
-    f['gate_doc'] = out if code == 0 else None
+    f['gate_doc'] = blob_text(git_blob(root, sha, GATE_DOC))
     return f
 
 
@@ -535,11 +621,15 @@ def collect(root=ROOT):
             adr = ev.get('successor_adr')
             if isinstance(adr, dict) and safe_doc_path(adr.get('path')):
                 adr_paths.add(adr['path'])
-    facts = {sha: git_facts(root, sha) for sha in sorted(shas) if HEX40.fullmatch(sha)}
-    repo_files = {p: read_bytes(root, p) for p in sorted(adr_paths)}
+    candidates = sorted(sha for sha in shas if HEX40.fullmatch(sha))
+    facts = {sha: git_facts(root, sha) for sha in candidates}
+    # El ADR se lee del árbol Git de cada commit candidato citado, nunca del árbol de trabajo (AF3-M01).
+    adr_blobs = {(sha, p): git_blob(root, sha, p) for sha in candidates for p in sorted(adr_paths)}
+    # La evidencia que Git ignora no puede formar parte de ningún commit: no vale como evidencia.
+    ignored = git_ignored(root, [p for p in evidence if p != GATE_EVIDENCE])
     return {'root': str(root), 'texts': texts, 'upstream': upstream, 'tools': tools, 'evidence': evidence,
             'branch': branch, 'base_ok': base_ok, 'changed': changed, 'base_gov': base_gov,
-            'changed_py': changed_py, 'facts': facts, 'repo_files': repo_files}
+            'changed_py': changed_py, 'facts': facts, 'adr_blobs': adr_blobs, 'ignored': ignored}
 
 
 def state_block(text):
@@ -1520,7 +1610,8 @@ def rule_pii(s):
     scope = {p: s['texts'].get(p) for p in PKG_FILES}
     scope.update({p: t for p, t in s['tools'].items() if p.endswith('.py')})
     scope.update({p: b.decode('utf-8', 'replace') for p, b in s['evidence'].items() if isinstance(b, bytes)})
-    scope.update({p: b.decode('utf-8', 'replace') for p, b in s['repo_files'].items() if isinstance(b, bytes)})
+    scope.update({f'{p} ({sha[:12]})': b['data'].decode('utf-8', 'replace') for (sha, p), b in s['adr_blobs'].items()
+                  if isinstance(b, dict) and isinstance(b.get('data'), bytes)})
     for rel, text in scope.items():
         if text:
             hits += [f'{rel}: {label}' for label in memo('pii', text, lambda: [
@@ -1941,9 +2032,14 @@ def fg12_errors(ev, ctx, cdate, rdate):
     e += approval_errors('FG-12', ev, ctx, cdate, rdate)
     if not safe_doc_path(adr['path']):
         return e + ['FG-12: ruta del ADR inválida']
-    data = ctx['repo_files'].get(adr['path'])
-    if not isinstance(data, bytes) or sha256(data) != adr['sha256']:
-        return e + ['FG-12: el ADR sucesor no existe en el repositorio o su SHA-256 es distinto del declarado']
+    # Pertenencia al candidato: solo cuentan los bytes del blob candidate_commit:path, leídos de Git (AF3-M01).
+    blob = ctx['adr_blobs'].get((ev.get('candidate_commit'), adr['path']))
+    why = blob_problem(blob)
+    if why is not None:
+        return e + [f'FG-12: el ADR sucesor no es un blob regular versionado en el commit candidato: {why}']
+    data = blob['data']
+    if sha256(data) != adr['sha256']:
+        return e + ['FG-12: el SHA-256 declarado no es el del blob del ADR en el commit candidato']
     meta, outside, derr = human_document(data, 'FG-12: ADR', c['adr_block'], c['adr_headings'], min_letters)
     e += derr
     lines = [ln.strip() for ln in outside.splitlines() if ln.strip()]
@@ -2116,7 +2212,7 @@ def rule_gate(s, auto):
     out.append((not cand_err, f'vínculo con el commit candidato auditado (nulo mientras no haya evidencia); '
                               f'errores: {cand_err}'))
     ctx = {'state': state, 'schema': schema if schema_ok and not serr else None, 'evidence': s['evidence'],
-           'facts': s['facts'], 'repo_files': s['repo_files'], 'classes': EXPECTED_CLASSES,
+           'facts': s['facts'], 'adr_blobs': s['adr_blobs'], 'classes': EXPECTED_CLASSES,
            'gate_doc': s['texts'].get(GATE_DOC)}
 
     def team_errors(fg):
@@ -2139,6 +2235,11 @@ def rule_gate(s, auto):
     unreadable = sorted(p for p, b in s['evidence'].items() if not isinstance(b, bytes))
     out.append((not stray and not unreadable, f'gate/evidencia/ solo contiene evidencia citada y archivos regulares; '
                                               f'sin citar: {stray}; enlaces o ilegibles: {unreadable}'))
+    ignored = s['ignored']
+    ign_err = ['no se pudo comprobar con Git si la evidencia es versionable (falla cerrado)'] if ignored is None \
+        else [f'{p}: Git lo ignora, así que ningún commit puede contenerlo' for p in ignored]
+    out.append((not ign_err, f'la evidencia de equipo es versionable: Git no ignora ningún archivo de gate/evidencia/; '
+                             f'errores: {ign_err}'))
     auth = state.get('f37_authorized_ei')
     auth_err = []
     if auth is not None:
@@ -2149,7 +2250,7 @@ def rule_gate(s, auto):
             auth_err.append('f37_authorized_ei declarada sin FG-03 en CUMPLE')
     out.append((not auth_err, f'autorización de F37-SBX coherente con la matriz y con FG-03; errores: {auth_err}'))
     result = evaluate_gate(state, EXPECTED_CLASSES, team_errors)
-    if result == 'SUPERADO' and (mismatch or struct or cand_err or invalid or not schema_ok or serr):
+    if result == 'SUPERADO' and (mismatch or struct or cand_err or invalid or not schema_ok or serr or ign_err):
         result = 'NO SUPERADO'
     out.append((state.get('declared_result') == result,
                 f'resultado declarado {state.get("declared_result")!r} = recalculado {result!r}'))
