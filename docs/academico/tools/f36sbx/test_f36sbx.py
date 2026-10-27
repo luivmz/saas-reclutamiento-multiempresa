@@ -1453,8 +1453,9 @@ def main():
        'G16', 'el documento del gate solo admite cambios en la columna Estado', '')
 
     # ---------------- controles positivos adicionales (P)
+    # AF4-L01: «Revisora Externa Ficticia» (roles y un marcador, sin nombre propio) pasó a AF4-L01-25.
     names = ['Dra. Ficticia Núñez-Ejemplo (revisora académica)', 'Sesión AF3 · revisión independiente ficticia', 'Ana',
-             'Revisora Externa Ficticia', 'Jo Ficticio', 'Sesión de auditoría independiente AF3 (prueba en memoria)']
+             'Revisora Externa Ficticia Quispe', 'Jo Ficticio', 'Sesión de auditoría independiente AF3 (prueba en memoria)']
     bad_names = {n: v.identity_errors(n, 'identidad') for n in names}
     ok(not any(bad_names.values()), 'P-07', 'control positivo: identidades visibles con tildes, guiones y puntuación son válidas',
        str({k: e for k, e in bad_names.items() if e}))

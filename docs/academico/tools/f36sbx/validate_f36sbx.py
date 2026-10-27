@@ -225,12 +225,59 @@ PLACEHOLDERS = {'auditor', 'auditora', 'independiente', 'auditor independiente',
                 'marcador', 'marcador de posicion', 'lorem ipsum', 'ejemplo', 'example', 'sample', 'dummy', 'foo',
                 'bar', 'foo bar', 'changeme', 'change me', 'fixme', 'reemplazar', 'completar', 'rellenar'}
 # Una identidad formada solo por estas palabras es genérica: no nombra a nadie ni a ninguna sesión concreta.
-GENERIC_IDENTITY_WORDS = {'auditor', 'auditora', 'auditores', 'auditoras', 'auditoria', 'revisor', 'revisora',
-                          'revisores', 'revision', 'independiente', 'independientes', 'externo', 'externa', 'interno',
-                          'interna', 'sesion', 'equipo', 'persona', 'responsable', 'academico', 'academica',
-                          'docente', 'integrante', 'tercero', 'tercera', 'de', 'del', 'la', 'el', 'los', 'las', 'y',
-                          'e', 'un', 'una', 'reviewer', 'independent', 'external', 'session', 'team', 'member',
-                          'the', 'a', 'an', 'of'}
+GENERIC_IDENTITY_WORDS = {
+    # Roles y funciones.
+    'auditor', 'auditora', 'auditores', 'auditoras', 'auditoria', 'auditorias', 'revisor', 'revisora', 'revisores',
+    'revisoras', 'revision', 'revisiones', 'evaluador', 'evaluadora', 'evaluadores', 'evaluacion', 'inspector',
+    'inspectora', 'inspeccion', 'verificador', 'verificadora', 'verificacion', 'validador', 'validadora',
+    'validacion', 'aprobador', 'aprobadora', 'aprobacion', 'examinador', 'examinadora', 'perito', 'perita',
+    'analista', 'consultor', 'consultora', 'asesor', 'asesora', 'experto', 'experta', 'especialista', 'tecnico',
+    'tecnica', 'profesional', 'independiente', 'independientes', 'externo', 'externa', 'externos', 'externas',
+    'interno', 'interna', 'internos', 'internas', 'sesion', 'sesiones', 'equipo', 'grupo', 'comite', 'comision',
+    'persona', 'personas', 'responsable', 'responsables', 'encargado', 'encargada', 'academico', 'academica',
+    'docente', 'docentes', 'integrante', 'integrantes', 'miembro', 'miembros', 'participante', 'tercero', 'tercera',
+    'terceros', 'parte', 'usuario', 'usuaria', 'autor', 'autora', 'firmante', 'titular', 'sistema', 'agente', 'bot',
+    'administrador', 'administradora',
+    # Tratamientos.
+    'sr', 'sra', 'srta', 'senor', 'senora', 'senorita', 'don', 'dona', 'dr', 'dra', 'doctor', 'doctora', 'lic',
+    'licenciado', 'licenciada', 'ing', 'ingeniero', 'ingeniera', 'mg', 'mgtr', 'magister', 'prof', 'profesor',
+    'profesora', 'mr', 'mrs', 'ms',
+    # Conectores.
+    'de', 'del', 'la', 'el', 'los', 'las', 'y', 'e', 'un', 'una',
+    # Inglés.
+    'reviewer', 'reviewers', 'auditors', 'audit', 'auditing', 'review', 'assessor', 'evaluator', 'examiner',
+    'verifier', 'approver', 'expert', 'consultant', 'independent', 'external', 'internal', 'session', 'team',
+    'member', 'members', 'user', 'person', 'people', 'staff', 'officer', 'agent', 'system', 'admin', 'administrator',
+    'owner', 'author', 'signer', 'party', 'third', 'the', 'a', 'an', 'of'}
+# AF4-L01: palabras funcionales que tampoco identifican (preposiciones, conjunciones, negaciones, pronombres)…
+IDENTITY_FUNCTION_WORDS = {'en', 'con', 'sin', 'por', 'para', 'al', 'lo', 'o', 'u', 'ni', 'no', 'su', 'sus', 'se',
+                           'que', 'tal', 'aqui', 'aca', 'este', 'esta', 'ese', 'esa', 'otro', 'otra', 'and', 'or',
+                           'in', 'on', 'at', 'by', 'for', 'to', 'with', 'without', 'not', 'me', 'my', 'your', 'our',
+                           'here', 'this', 'that', 'other'}
+# … y palabras que marcan un hueco por rellenar o una identidad ausente, ficticia o de relleno. Se suman a las
+# de una sola palabra de PLACEHOLDERS.
+IDENTITY_MARKER_WORDS = {
+    'place', 'holder', 'posicion', 'lorem', 'ipsum', 'dolor', 'amet', 'change', 'fix', 'pending', 'pendientes',
+    'desconocidos', 'desconocidas', 'anonimos', 'anonimas', 'anon', 'anonimizado', 'anonimizada', 'incognito',
+    'incognita', 'ignoto', 'ignota', 'unnamed', 'unidentified', 'unspecified', 'undefined', 'unassigned', 'nn', 'sn',
+    'nombres', 'apellido', 'apellidos', 'surname', 'firstname', 'lastname', 'fullname', 'username', 'definir',
+    'asignar', 'confirmar', 'identificar', 'determinar', 'especificar', 'indicar', 'precisar', 'complete', 'rellene',
+    'reemplace', 'sustituir', 'sustituya', 'insertar', 'inserte', 'ingresar', 'ingrese', 'escribir', 'escriba',
+    'editar', 'edite', 'enter', 'insert', 'replace', 'fill', 'definido', 'definida', 'asignado', 'asignada',
+    'identificado', 'identificada', 'determinado', 'determinada', 'indeterminado', 'indeterminada', 'especificado',
+    'especificada', 'indicado', 'indicada', 'disponible', 'aplica', 'consta', 'tests', 'testing', 'pruebas',
+    'ejemplos', 'examples', 'samples', 'muestra', 'demo', 'mock', 'stub', 'fake', 'falso', 'falsa', 'ficticio',
+    'ficticia', 'ficticios', 'ficticias', 'generico', 'generica', 'generic', 'imaginario', 'imaginaria',
+    'hipotetico', 'hipotetica', 'inventado', 'inventada', 'supuesto', 'supuesta', 'simulado', 'simulada', 'baz',
+    'qux', 'quux', 'fulano', 'fulana', 'mengano', 'mengana', 'zutano', 'zutana', 'perengano', 'perengana',
+    'alguien', 'cualquiera', 'someone', 'somebody', 'anyone', 'tbc', 'wip', 'redacted', 'omitido', 'omitida',
+    'oculto', 'oculta', 'reservado', 'reservada', 'confidencial'}
+IDENTITY_NOISE = frozenset(GENERIC_IDENTITY_WORDS | IDENTITY_FUNCTION_WORDS | IDENTITY_MARKER_WORDS
+                           | {k for k in PLACEHOLDERS if ' ' not in k})
+# Piezas de una concatenación sin separadores («auditorplaceholder»): roles y marcadores de cuatro letras o más.
+IDENTITY_SEGMENTS = frozenset(w for w in IDENTITY_NOISE - IDENTITY_FUNCTION_WORDS if len(w) >= 4)
+IDENTITY_FILLER = re.compile(r'(.)\1+')
+LEET = str.maketrans('013457', 'oieast')
 # Categorías Unicode prohibidas en identidades y en documentos humanos: control, formato (U+200B, U+202E…),
 # uso privado, no asignados y separadores de línea o de párrafo.
 INVISIBLE_CATEGORIES = frozenset({'Cc', 'Cf', 'Co', 'Cn', 'Zl', 'Zp'})
@@ -454,8 +501,54 @@ def placeholder_key(value):
     return re.sub(r'[\W\d_]+', ' ', folded).strip()
 
 
+def identity_tokens(value):
+    """Palabras alfanuméricas de una identidad (AF4-L01): camelCase separado, sin mayúsculas ni tildes, y con la
+    forma compatible de cada carácter (NFKD: «ＡＵＤＩＴＯＲ» es «auditor»)."""
+    chars = []
+    for i, c in enumerate(value):
+        if i and value[i - 1].islower() and c.isupper():
+            chars.append(' ')
+        chars.append(c)
+    folded = unicodedata.normalize('NFKD', ''.join(chars).casefold())
+    return re.findall(r'[^\W_]+', ''.join(ch for ch in folded if not unicodedata.combining(ch)))
+
+
+def mixed_script(token):
+    """¿La palabra mezcla letras latinas con cirílicas o griegas? Es la forma de un homógrafo («аuditor»)."""
+    scripts = {unicodedata.name(c, '').split(' ')[0] for c in token if c.isalpha()}
+    return 'LATIN' in scripts and bool(scripts & {'CYRILLIC', 'GREEK'})
+
+
+def concatenated(word):
+    """¿word es la unión, sin separadores, de roles o marcadores de cuatro letras o más («revisordesconocido»)?"""
+    reach = {0}
+    for i in range(4, len(word) + 1):
+        if any(j in reach and word[j:i] in IDENTITY_SEGMENTS for j in range(max(0, i - 24), i - 3)):
+            reach.add(i)
+    return len(word) in reach
+
+
+def nondistinctive(token):
+    """¿La palabra no identifica a nadie? Número, inicial, rol, conector, marcador, relleno («xx», «zzz») o unión de
+    roles y marcadores; también con dígitos en lugar de letras («pl4ceh0lder»)."""
+    letters = re.sub(r'\d', '', token)
+    if len(letters) < 2:
+        return True
+    for form in {letters, token.translate(LEET)}:
+        if form in IDENTITY_NOISE:
+            return True
+        if IDENTITY_FILLER.fullmatch(form):
+            return True
+        if concatenated(form):
+            return True
+    return False
+
+
 def identity_errors(value, label, min_letters=3, max_length=120):
-    """Identidad declarada estructuralmente válida. No autentica a nadie: eso sigue siendo revisión humana."""
+    """Identidad declarada estructuralmente válida. No autentica a nadie: eso sigue siendo revisión humana.
+
+    Tiene que contener al menos una palabra distintiva: no basta con combinar roles, conectores, marcadores de
+    posición, rellenos, números o iniciales («Auditor placeholder», «revisor desconocido»), en ningún orden."""
     if not isinstance(value, str):
         return [f'{label}: no es texto']
     e = []
@@ -471,10 +564,16 @@ def identity_errors(value, label, min_letters=3, max_length=120):
     if len(value) > max_length:
         e.append(f'{label}: supera {max_length} caracteres')
     key = placeholder_key(value)
+    tokens = identity_tokens(value)
     if not key or key in PLACEHOLDERS:
         e.append(f'{label}: es un marcador de posición')
     elif set(key.split()) <= GENERIC_IDENTITY_WORDS:
         e.append(f'{label}: es una identidad genérica, sin nombre ni identificador propio')
+    elif all(nondistinctive(t) for t in tokens):
+        e.append(f'{label}: es una identidad compuesta sin nombre propio (solo roles, conectores, marcadores, '
+                 f'rellenos, números o iniciales)')
+    if any(mixed_script(t) for t in tokens):
+        e.append(f'{label}: mezcla letras latinas con cirílicas o griegas en una palabra (posible homógrafo)')
     return e
 
 
