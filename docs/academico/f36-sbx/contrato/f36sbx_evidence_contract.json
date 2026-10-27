@@ -1,6 +1,6 @@
 {
   "contract_id": "f36sbx-evidence-contract",
-  "contract_version": "3",
+  "contract_version": "4",
   "status": "DISENO",
   "environment": "sandbox",
   "source_type_allowed": ["synthetic"],
@@ -152,6 +152,12 @@
   "top_k_range": [1, 20],
   "output_ei": ["EI-07", "EI-09", "EI-10"],
   "context_fields": ["synthetic_organization_id", "scenario_id", "vacancy_token", "application_token", "partition"],
+  "canonical_context": {
+    "key": "application_token",
+    "source": "artifacts",
+    "fields": ["synthetic_organization_id", "scenario_id", "vacancy_token", "application_token", "partition"],
+    "applies_to": ["outputs", "tuning_outputs"]
+  },
   "provenance_fields": {
     "artifact": ["generator_id", "generator_version", "template_id", "template_family", "seed", "upstream_refs", "content_hash"],
     "upstream_ref": ["source", "ref", "sha256"]
@@ -200,7 +206,8 @@
     "REL-11": "El manifiesto de particiones es cerrado: solo dev y test, cada artefacto una vez y en su partición, test sellado con el sello v2 (que fija también los outputs de ajuste, el oro de dev y los umbrales) y umbrales ajustados solo con outputs de dev",
     "REL-12": "Todo texto es NFC, empieza por [SINTÉTICO], no tiene caracteres invisibles ni de control y no contiene correo, teléfono ni DNI",
     "REL-13": "Aislamiento entre tenants: autores y anotadores son de la organización del artefacto; cada referencia upstream se resuelve y es compatible con su organización, escenario, vacante y postulación; no hay fuentes globales admitidas y todo identificador con patrón del contenido está clasificado como de tenant, upstream, interno o global documentado",
-    "REL-14": "El ejemplo tiene el identificador cerrado y la cobertura mínima: los ocho tipos, fragmentos, outputs con fragmentos y con abstención, test con artefactos, oro y outputs, ajuste en dev y al menos dos escenarios"
+    "REL-14": "El ejemplo tiene el identificador cerrado y la cobertura mínima: los ocho tipos, fragmentos, outputs con fragmentos y con abstención, test con artefactos, oro y outputs, ajuste en dev y al menos dos escenarios",
+    "REL-15": "Contexto canónico: cada output, también una abstención sin fragmentos y un output de ajuste, tiene la organización, el escenario, la vacante, la postulación y la partición de su postulación, derivados de los artefactos del conjunto; un output de una postulación sin artefactos en el conjunto o con contexto ambiguo no es válido"
   },
   "group_marker_only_in": ["counterfactual_pair"],
   "forbidden_fields": [

@@ -1,8 +1,8 @@
 {
   "example_id": "f36sbx-contract-example",
-  "contract_version": "3",
+  "contract_version": "4",
   "example_only": true,
-  "note": "[SINTÉTICO] Ejemplo mínimo de conformidad del contrato F36-SBX v3: ejercita REL-01..REL-14 con dos escenarios, oro en test y outputs con y sin fragmentos. No es un corpus ni un dataset, no autoriza ninguna capacidad y no contiene datos reales.",
+  "note": "[SINTÉTICO] Ejemplo mínimo de conformidad del contrato F36-SBX v4: ejercita REL-01..REL-15 con dos escenarios, oro en test y outputs con y sin fragmentos. No es un corpus ni un dataset, no autoriza ninguna capacidad y no contiene datos reales.",
   "artifacts": [
     {
       "synthetic_id": "SBX36-ORG-S1-ART-0001",
@@ -561,7 +561,7 @@
         ],
         "sealed": true,
         "seal_algorithm": "f36sbx-test-seal-sha256-v2",
-        "seal_sha256": "851dbd3215e3e58d006aeae85b5cc329a86eca50784e50799ba22a6a672d8e68"
+        "seal_sha256": "006f7729c38f8b1edb667a25d6641b1da63634158ab75ecc9d3c50867336ec7f"
       }
     },
     "thresholds": {

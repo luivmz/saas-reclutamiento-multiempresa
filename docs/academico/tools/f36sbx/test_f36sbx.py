@@ -19,6 +19,7 @@ sellar: así solo puede fallar la invariante semántica que se prueba (hashes v�
 Uso: python -I -B docs/academico/tools/f36sbx/test_f36sbx.py
 """
 import copy
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -529,7 +530,7 @@ def main():
        f'gate {gate}' if not fails else f'fallas reales: {fails}')
     ex = v.strict_json(BASE['texts'][EX])
     ok(v.bundle_errors(CONTRACT, ex, BASE['upstream']) == [], 'T01',
-       'control: el ejemplo de conformidad cumple REL-01..REL-14', 'sin errores')
+       'control: el ejemplo de conformidad cumple REL-01..REL-15', 'sin errores')
     again = copy.deepcopy(ex)
     reseal(again)
     ok(again == ex, 'T01b', 'control: el ejemplo ya está sellado (volver a sellarlo no cambia ningún byte)', '')
@@ -543,6 +544,10 @@ def main():
             ok(bool(errs), cid, f'registros con {desc}: errores, sin excepción', errs[:1])
         except Exception as e:  # noqa: BLE001
             ok(False, cid, f'registros con {desc}: errores, sin excepción', f'excepción {e.__class__.__name__}')
+    # T05 · oráculo independiente: el esquema de hashes documentado, reimplementado aquí sin usar el validador.
+    diverge = independent_hash_errors(ex)
+    ok(not diverge, 'T05', 'control: los hashes y el sello del ejemplo coinciden con una reimplementación independiente '
+       'del esquema documentado (sin las funciones del validador)', str(diverge[:3]))
 
     nbh = '‑'
     # ---------------- gobierno y afirmaciones de estado
@@ -730,7 +735,12 @@ def main():
     case('C31', 'clave nueva de primer nivel', jmut(C, lambda d: d.update(real_data_allowed=False)), 'CTR',
          'claves de primer nivel distintas')
     case('C32', 'clave duplicada en el contrato',
-         sub(C, '"contract_version": "3",', '"contract_version": "3",\n  "contract_version": "4",'), 'CTR', 'JSON inválido')
+         sub(C, '"contract_version": "4",', '"contract_version": "4",\n  "contract_version": "5",'), 'CTR', 'JSON inválido')
+    case('C52', 'contexto canónico que no se aplica a los outputs de ajuste',
+         jmut(C, lambda d: d['canonical_context'].update(applies_to=['outputs'])), 'CTR', 'contexto canónico')
+    case('C53', 'contexto canónico sin la partición', jmut(C, lambda d: d['canonical_context']['fields'].remove('partition')),
+         'CTR', 'contexto canónico')
+    case('C54', 'contrato sin REL-15', jmut(C, lambda d: d['relations'].pop('REL-15')), 'CTR', 'relaciones REL-01..REL-15')
 
     # ---------------- relaciones del ejemplo de conformidad (R): hashes válidos y test resellado, salvo indicación
     def r_set(n, **kw):
@@ -1016,6 +1026,55 @@ def main():
         e.update(artifacts=[a for a in e['artifacts'] if a['synthetic_id'] != 'SBX36-ORG-S1-ART-0009']),
         e['partition_manifest']['partitions']['test']['artifacts'].remove('SBX36-ORG-S1-ART-0009')), 'test sin anotaciones de oro')
 
+    # ---------------- AF3-M02: contexto canónico de todo output (REL-15); hashes válidos y test resellado
+    def abst(n, app, vac, scen, part, criterion):
+        """Abstención nueva de ORG-S1, sin fragmentos, con el contexto indicado."""
+        def f(e):
+            o = copy.deepcopy(out(e, 2))
+            o.update(output_id=f'SBX36-ORG-S1-OUT-{n:04d}', application_token=app, vacancy_token=vac, scenario_id=scen,
+                     partition=part, query_criterion_id=criterion, fragment_refs=[], abstained=True)
+            e['outputs'].append(o)
+        return f
+    canonical = 'distinto del contexto canónico de su postulación'
+    rel('AF3-12', 'abstención con scenario SC36-01 sobre una postulación de SC36-02', lambda e: out(e, 2).update(scenario_id='SC36-01'),
+        f"scenario_id 'SC36-01' {canonical}")
+    rel('AF3-13', 'abstención con un scenario inexistente (SC36-99)', lambda e: out(e, 2).update(scenario_id='SC36-99'),
+        f"scenario_id 'SC36-99' {canonical}")
+    rel('AF3-14', 'abstención con otra organización (ORG-S2, con identificador coherente)',
+        lambda e: out(e, 2).update(synthetic_organization_id='ORG-S2', output_id='SBX36-ORG-S2-OUT-0002'),
+        f"synthetic_organization_id 'ORG-S2' {canonical}")
+    rel('AF3-15', 'abstención de otra vacante y postulación coherentes en F34 pero sin evidencia en el conjunto (VAC-0010)',
+        lambda e: out(e, 2).update(vacancy_token='VAC-0010', application_token='APP-00053', query_criterion_id='CRI-0045'),
+        "'APP-00053' no tiene artefactos en el conjunto")
+    rel('AF3-16', 'abstención de otra postulación de la misma vacante sin evidencia (APP-00015)',
+        lambda e: out(e, 2).update(application_token='APP-00015'), "'APP-00015' no tiene artefactos en el conjunto")
+    rel('AF3-17', 'abstención con una postulación de dev y la vacante de test',
+        lambda e: out(e, 2).update(application_token='APP-00001'), f"vacancy_token 'VAC-0004' {canonical}")
+    rel('AF3-18', 'abstención en dev sobre una postulación y una vacante de test', lambda e: out(e, 2).update(partition='dev'),
+        f"partition 'dev' {canonical}")
+    rel('AF3-19', 'abstención en dev añadida a tuning_outputs sobre evidencia de test',
+        lambda e: (out(e, 2).update(partition='dev'),
+                   e['partition_manifest']['thresholds']['tuning_outputs'].append('SBX36-ORG-S1-OUT-0002')),
+        'no es de dev por el contexto canónico de su postulación')
+    rel('AF3-20', 'abstención en test sobre una postulación de dev',
+        abst(4, 'APP-00002', 'VAC-0001', 'SC36-01', 'test', 'CRI-0005'), f"partition 'test' {canonical}")
+    rel('AF3-21', 'contexto incorrecto con los hashes recalculados y sin resellar',
+        lambda e: out(e, 2).update(scenario_id='SC36-01'), 'REL-15', 'rehash')
+    rel('AF3-22', 'contexto incorrecto sin recalcular ningún hash', lambda e: out(e, 2).update(scenario_id='SC36-01'), 'REL-15', 'raw')
+    rel('AF3-23', 'output con fragmentos y otro scenario', lambda e: out(e, 3).update(scenario_id='SC36-01'),
+        f"REL-15 output SBX36-ORG-S1-OUT-0003: scenario_id 'SC36-01' {canonical}")
+    rel('AF3-24', 'output de ajuste con el scenario de test', lambda e: out(e, 1).update(scenario_id='SC36-02'),
+        f"REL-15 output SBX36-ORG-S1-OUT-0001: scenario_id 'SC36-02' {canonical}")
+    rel('AF3-25', 'postulación con contexto ambiguo (dos escenarios en sus artefactos)',
+        lambda e: art(e, 2).update(scenario_id='SC36-02'), 'contexto canónico de su postulación es ambiguo')
+    resealed('P-12', 'control positivo: abstención válida en dev (APP-00002, SC36-01)',
+             abst(4, 'APP-00002', 'VAC-0001', 'SC36-01', 'dev', 'CRI-0005'))
+    resealed('P-13', 'control positivo: abstención válida en test de una postulación con evidencia no fragmentable (APP-00014)',
+             abst(5, 'APP-00014', 'VAC-0004', 'SC36-02', 'test', 'CRI-0018'))
+    resealed('P-14', 'control positivo: abstención válida de dev usada como output de ajuste',
+             lambda e: (abst(4, 'APP-00002', 'VAC-0001', 'SC36-01', 'dev', 'CRI-0005')(e),
+                        e['partition_manifest']['thresholds']['tuning_outputs'].append('SBX36-ORG-S1-OUT-0004')))
+
     # ---------------- semántica de la evidencia de equipo (E)
     full = build()
     ok(all(v.team_evidence_errors(fg, full) == [] for fg in v.FG_TEAM) and decide(full) == 'SUPERADO', 'E00',
@@ -1266,6 +1325,21 @@ def main():
        and v.blob_problem({**blob(b'a'), 'object': '0' * 40}), 'AF3-11',
        'contraste: blob_problem acepta un blob regular íntegro y rechaza la ausencia, el error y un objeto que no corresponde', '')
 
+    # ---------------- AF3-L01: marcadores de identidad tras normalizar (validación estructural, no autenticación)
+    def auditor_named(name):
+        return both(fg02(lambda d: d['auditor'].update(name=name)), set_report())
+    placeholder = 'marcador de posición'
+    af2('AF3-26', 'auditor «placeholder» en el registro y en el bloque del informe', 'FG-02', auditor_named('placeholder'),
+        placeholder)
+    for cid, name in (('AF3-27', 'PLACEHOLDER'), ('AF3-28', '<Placeholder 1>'), ('AF3-29', 'place_holder'),
+                      ('AF3-30', 'Pláceholder'), ('AF3-31', 'Auditor 1'), ('AF3-32', 'por definir')):
+        ev_case(cid, f'auditor «{name}» (variante tras normalizar mayúsculas, tildes, dígitos y puntuación)', 'FG-02',
+                auditor_named(name), placeholder)
+    ev_case('AF3-33', 'auditor «placeholder» con un espacio final', 'FG-02', auditor_named('placeholder '), 'espacios')
+    ev_case('AF3-34', 'auditor «placeholder» con U+200B', 'FG-02', auditor_named('placeholder​'), 'caracteres invisibles')
+    ev_case('AF3-35', 'auditor genérico, sin nombre propio («Revisora externa independiente»)', 'FG-02',
+            auditor_named('Revisora externa independiente'), 'identidad genérica')
+
     # ---------------- registro de evidencia en el repositorio (GR)
     snap = copy.deepcopy(BASE)
     register()(snap)
@@ -1377,12 +1451,14 @@ def main():
        'G16', 'el documento del gate solo admite cambios en la columna Estado', '')
 
     # ---------------- controles positivos adicionales (P)
-    names = ['Dra. Ficticia Núñez-Ejemplo (revisora académica)', 'Sesión AF3 · revisión independiente ficticia', 'Ana']
+    names = ['Dra. Ficticia Núñez-Ejemplo (revisora académica)', 'Sesión AF3 · revisión independiente ficticia', 'Ana',
+             'Revisora Externa Ficticia', 'Jo Ficticio', 'Sesión de auditoría independiente AF3 (prueba en memoria)']
     bad_names = {n: v.identity_errors(n, 'identidad') for n in names}
     ok(not any(bad_names.values()), 'P-07', 'control positivo: identidades visibles con tildes, guiones y puntuación son válidas',
        str({k: e for k, e in bad_names.items() if e}))
     ok(all(v.identity_errors(n, 'identidad') for n in ('', '  ', '...', 'N/A', '​​​', 'Revisora‮Externa',
-                                                        'TBD', 'auditoría independiente', 'x' * 121)),
+                                                        'TBD', 'auditoría independiente', 'x' * 121, 'placeholder',
+                                                        'PLACEHOLDER', 'Auditor independiente externo')),
        'P-08', 'contraste: identidades vacías, invisibles, genéricas o demasiado largas son inválidas', '')
     ctx = build(mutate=set_report(extra='\n```text\nNota técnica sin valores normativos.\n```\n'))
     ok(v.team_evidence_errors('FG-02', ctx) == [], 'P-09', 'control positivo: un bloque de código ajeno, sin tokens ni '
@@ -1425,6 +1501,53 @@ def main():
         print(f'{"OK   " if ok_ else "FALLA"} {cid} {desc}: {detail}')
     print(f'test_f36sbx: {len(results) - len(bad)} casos correctos, {len(bad)} fallas')
     return 1 if bad else 0
+
+
+def independent_hash_errors(ex):
+    """Recalcula los hashes del ejemplo con una implementación propia del esquema documentado en el contrato.
+
+    No usa ninguna función del validador: si validador y generador compartieran un error, esta comprobación lo
+    vería como una divergencia frente a la especificación."""
+    def canon(o):
+        return json.dumps(o, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')
+
+    def tagged(tag, o):
+        return hashlib.sha256(tag.encode('utf-8') + b'\n' + canon(o)).hexdigest()
+
+    def drop(rec, key):
+        return {k: x for k, x in rec.items() if k != key}
+    errs = []
+    for a in ex['artifacts']:
+        if a['content_hash'] != hashlib.sha256(canon(a['content'])).hexdigest():
+            errs.append(f'{a["synthetic_id"]}: content_hash')
+        if a['record_hash'] != tagged('f36sbx-artifact-record-v1', drop(a, 'record_hash')):
+            errs.append(f'{a["synthetic_id"]}: record_hash')
+    for f in ex['fragments']:
+        if f['fragment_hash'] != tagged('f36sbx-fragment-v1', drop(f, 'fragment_hash')):
+            errs.append(f'{f["fragment_id"]}: fragment_hash')
+    for o in ex['outputs']:
+        pool = sorted([f['fragment_id'], f['fragment_hash']] for f in ex['fragments']
+                      if (f['application_token'], f['partition']) == (o['application_token'], o['partition']))
+        manifest = {'application_token': o['application_token'], 'partition': o['partition'], 'fragments': pool}
+        if o['input_manifest_hash'] != tagged('f36sbx-input-manifest-v1', manifest):
+            errs.append(f'{o["output_id"]}: input_manifest_hash')
+        if o['output_hash'] != tagged('f36sbx-output-v1', drop(o, 'output_hash')):
+            errs.append(f'{o["output_id"]}: output_hash')
+    pm = ex['partition_manifest']
+    by_id = {o['output_id']: o for o in ex['outputs']}
+    preimage = {
+        'seal_algorithm': 'f36sbx-test-seal-sha256-v2', 'contract_version': ex['contract_version'],
+        'test_artifacts': sorted([a['synthetic_id'], a['record_hash']] for a in ex['artifacts'] if a['partition'] == 'test'),
+        'test_fragments': sorted([f['fragment_id'], f['fragment_hash']] for f in ex['fragments'] if f['partition'] == 'test'),
+        'test_outputs': sorted([o['output_id'], o['output_hash']] for o in ex['outputs'] if o['partition'] == 'test'),
+        'tuning_outputs': sorted([x, by_id[x]['output_hash']] for x in pm['thresholds']['tuning_outputs']),
+        'tuning_gold': sorted([a['synthetic_id'], a['record_hash']] for a in ex['artifacts']
+                              if a['partition'] == 'dev' and a['artifact_type'] == 'relevance_annotation'),
+        'thresholds': pm['thresholds'], 'test_used_for_tuning': pm['test_used_for_tuning'],
+    }
+    if pm['partitions']['test']['seal_sha256'] != tagged('f36sbx-test-seal-v2', preimage):
+        errs.append('seal_sha256')
+    return errs
 
 
 def TO_SCENARIO_ONE(e):

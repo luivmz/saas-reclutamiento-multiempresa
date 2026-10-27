@@ -1,25 +1,33 @@
 #!/usr/bin/env python3
-"""Metapruebas de validate_f36sbx.py y de su batería (AF2): ablaciones y mutación exhaustiva de hojas.
+"""Metapruebas de validate_f36sbx.py y de sus baterías (AF3): ablaciones y mutación exhaustiva de hojas.
 
-1. Ablación. Anula, una por una, cada regla, cada función de evidencia y cada comprobación AF2 del validador
-   (sobre su árbol sintáctico, en memoria) y ejecuta la batería completa contra ese validador debilitado. Cada
-   ablación tiene que ser detectada por al menos un caso; si alguna sobrevive, la batería no prueba esa pieza.
+1. Ablación. Anula, una por una, cada regla, cada función de evidencia y cada comprobación AF2 y AF3 del
+   validador (sobre su árbol sintáctico, en memoria) y ejecuta contra ese validador debilitado la batería en
+   memoria y, cuando la pieza depende de Git, también la batería con Git real (test_f36sbx_git.py). Cada ablación
+   tiene que ser detectada por al menos un caso concreto que falle por su motivo: una excepción global, o un caso
+   que solo falla porque su mutación ya no se puede montar, no cuenta como detección pertinente.
 2. Mutación de hojas. Cambia, de una en una, cada hoja y cada lista u objeto del ejemplo de conformidad y de la
-   evidencia de equipo en memoria (sufijo en textos, +1 en enteros, booleano invertido, clave adicional,
-   elemento quitado o repetido):
-   - sin recalcular hashes, toda mutación del ejemplo tiene que fallar, salvo la nota libre del ejemplo;
-   - con los registros recalculados y sin resellar, solo pueden pasar los artefactos de dev que no usa el ajuste;
-   - con todo recalculado y test resellado, lo que pasa se compara con la lista cerrada de cambios legítimos;
-   - en la evidencia, mutar un solo lado (registro, informe o ADR) tiene que invalidarla, salvo el propósito
-     libre de una dependencia.
+   evidencia de equipo en memoria:
+   - familia de forma (sufijo en textos, +1 en enteros, booleano invertido, clave adicional, elemento quitado o
+     repetido): sin recalcular hashes, toda mutación del ejemplo tiene que fallar, salvo la nota libre; con los
+     registros recalculados y sin resellar, solo pueden pasar los artefactos de dev que no usa el ajuste; con test
+     resellado, lo que pasa se compara con la lista cerrada de cambios legítimos;
+   - familia de sustitución (AF3): cada texto se sustituye por otro valor VÁLIDO de su dominio (el de otro
+     registro del conjunto, un valor enumerado del contrato o un identificador F34 coherente) y se resella todo.
+     Lo que sigue pasando tiene que ser un cambio legítimo cerrado, nunca un cambio de contexto o de partición;
+   - en la evidencia, mutar o sustituir un solo lado (registro, informe o ADR) tiene que invalidarla, salvo los
+     campos libres cerrados (propósito, licencia admitida y revisor de una dependencia).
 
-No escribe archivos ni usa red. Uso: python -I -B docs/academico/tools/f36sbx/meta_f36sbx.py [ablaciones|hojas]
+No escribe archivos fuera de los directorios temporales de test_f36sbx_git.py y no usa red.
+Uso: python -I -B docs/academico/tools/f36sbx/meta_f36sbx.py [ablaciones|hojas]
 """
 import ast
 import contextlib
 import copy
+import csv
 import io
 import json
+import re
 import sys
 import types
 from pathlib import Path
@@ -29,15 +37,22 @@ sys.path.insert(0, str(HERE))
 import validate_f36sbx as v  # noqa: E402
 import test_f36sbx as t  # noqa: E402
 
+
+def git_suite():
+    """test_f36sbx_git.py, importado solo cuando una ablación lo necesita (la mutación de hojas no lo usa)."""
+    import test_f36sbx_git
+    return test_f36sbx_git
+
 VALIDATOR = HERE / 'validate_f36sbx.py'
 SRC = VALIDATOR.read_text(encoding='utf-8')
+MEM, GIT = ('mem',), ('mem', 'git')
 
-# Ablaciones sobre el código del validador: (etiqueta, tipo, aguja). 'if' anula la condición de la única sentencia
-# if/elif cuya condición contiene la aguja o, si la aguja contiene «=>», cuyo «condición => primera sentencia» la
-# contiene (así no coincide el if que envuelve a la comprobación); 'assign' vacía la asignación que la contiene;
-# 'dictval' vacía el valor de esa clave en el único literal de diccionario que la tiene; 'need' hace verdadera la
-# condición del need() que la contiene. Si la aguja no coincide exactamente una vez, la ablación no es aplicable y
-# cuenta como superviviente.
+# Ablaciones sobre el código del validador: (etiqueta, tipo, aguja[, baterías]). 'if' anula la condición de la
+# única sentencia if/elif cuya condición contiene la aguja o, si la aguja contiene «=>», cuyo «condición => primera
+# sentencia» la contiene (así no coincide el if que envuelve a la comprobación); 'assign' vacía la asignación que
+# la contiene; 'dictval' vacía el valor de esa clave en el único literal de diccionario que la tiene; 'need' hace
+# verdadera la condición del need() que la contiene. Si la aguja no coincide exactamente una vez, la ablación no es
+# aplicable y cuenta como superviviente.
 SOURCE_ABLATIONS = [
     # AF2-M01: identidad visible, documento humano y coherencia con el registro.
     ('identidad: caracteres invisibles', 'assign', 'bad = invisible_chars(value)'),
@@ -96,7 +111,7 @@ SOURCE_ABLATIONS = [
     ('texto: caracteres invisibles', 'if', "invisible_chars(value) => add(f'REL-12"),
     ('texto: NFC', 'if', "is_normalized('NFC', value) => add(f'REL-12"),
     ('output: method_config cerrado', 'if', 'not isinstance(mc, dict)'),
-    # Contrato v3 y esquema v2.
+    # Contrato y esquema.
     ('contrato: clase única de cada identificador', 'need', 'set().union(*classes) == pattern_fields'),
     ('contrato: identificadores globales documentados', 'need', "list(gid) == ['question_id']"),
     ('contrato: archivos upstream tipados', 'need', "c.get('upstream_files') == EXPECTED_UPSTREAM_FILES"),
@@ -105,16 +120,52 @@ SOURCE_ABLATIONS = [
     ('contrato: cobertura mínima', 'need', "c.get('example_coverage') == EXPECTED_COVERAGE"),
     ('contrato: esquema de hashes', 'need', "hs.get(k), dict) and hs[k].get('tag') == tag"),
     ('esquema: el ADR no cita el commit que lo contiene', 'need', "'applies_to_candidate_commit' not in"),
+    # AF3-M01: el ADR es el blob de candidate_commit:path y la evidencia es versionable.
+    ('git: la ruta existe en el árbol del commit', 'if', 'not entries', GIT),
+    ('git: una sola entrada, con la ruta exacta', 'if', 'len(entries) != 1 or entries[0][3] != path', GIT),
+    ('git: blob regular (100644)', 'if', "kind != 'blob' or mode != GIT_REGULAR_MODE", GIT),
+    ('git: blob legible', 'if', "data is None => return {'error': 'no se pudo leer el blob", GIT),
+    ('blob: resolución con error', 'if', "'error' in blob", GIT),
+    ('blob: tipo y modo de la resolución', 'if', "blob.get('type') != 'blob'", GIT),
+    ('blob: bytes del objeto Git', 'if', 'git_blob_id(data) != obj', GIT),
+    ('FG-12: el ADR es un blob del commit candidato', 'if', 'why is not None', GIT),
+    ('FG-12: SHA-256 del blob del candidato', 'if', "sha256(data) != adr['sha256']", GIT),
+    ('evidencia: Git no la ignora', 'assign', 'ign_err = ', GIT),
+    # AF3-M02: contexto canónico de todo output.
+    ('REL-15: postulación sin evidencia en el conjunto', 'if', 'not expected => return'),
+    ('REL-15: contexto canónico ambiguo', 'if', 'len(expected) != 1'),
+    ('REL-15: campo distinto del contexto canónico', 'if', 'rec.get(k) != val'),
+    ('REL-11: partición canónica del output de ajuste', 'if', "parts_of != {c['splits']['thresholds_fit_on']}"),
+    ('contrato: contexto canónico', 'need', "c.get('canonical_context') == EXPECTED_CANONICAL"),
+    # AF3-L01: identidad genérica.
+    ('identidad: genérica, sin nombre propio', 'if', 'set(key.split()) <= GENERIC_IDENTITY_WORDS'),
 ]
 
+
+def fs_git_blob(m):
+    """Mutante del comportamiento anterior a AF3: el «blob» se lee del árbol de trabajo."""
+    def f(root, sha, path):
+        data = m.read_bytes(root, path)
+        return {'error': 'x'} if data is None else {'mode': '100644', 'type': 'blob', 'object': m.git_blob_id(data),
+                                                    'data': data}
+    return f
+
+
+# Ablaciones de función: (nombre, fábrica del reemplazo a partir del módulo, baterías).
 FUNCTION_ABLATIONS = [
-    ('fg02_errors', lambda *a: []), ('fg03_errors', lambda *a: []), ('fg10_errors', lambda *a: []),
-    ('fg12_errors', lambda *a: []), ('team_evidence_errors', lambda *a: []), ('binding_errors', lambda *a: []),
-    ('approval_errors', lambda *a: []), ('identity_errors', lambda *a, **k: []), ('bundle_errors', lambda *a: []),
-    ('contract_semantic_errors', lambda *a: []), ('team_schema_errors', lambda *a: []),
-    ('state_claims', lambda *a: iter(())), ('doc_status_only', lambda *a: True), ('test_seal', lambda *a: 'x'),
-    ('evaluate_gate', lambda st, c, e: 'SUPERADO' if isinstance(st, dict) else 'NO SUPERADO'),
+    ('fg02_errors', lambda m: lambda *a: [], MEM), ('fg03_errors', lambda m: lambda *a: [], MEM),
+    ('fg10_errors', lambda m: lambda *a: [], MEM), ('fg12_errors', lambda m: lambda *a: [], MEM),
+    ('team_evidence_errors', lambda m: lambda *a: [], MEM), ('binding_errors', lambda m: lambda *a: [], MEM),
+    ('approval_errors', lambda m: lambda *a: [], MEM), ('identity_errors', lambda m: lambda *a, **k: [], MEM),
+    ('bundle_errors', lambda m: lambda *a: [], MEM), ('contract_semantic_errors', lambda m: lambda *a: [], MEM),
+    ('team_schema_errors', lambda m: lambda *a: [], MEM), ('state_claims', lambda m: lambda *a: iter(()), MEM),
+    ('doc_status_only', lambda m: lambda *a: True, MEM), ('test_seal', lambda m: lambda *a: 'x', MEM),
+    ('evaluate_gate', lambda m: lambda st, c, e: 'SUPERADO' if isinstance(st, dict) else 'NO SUPERADO', MEM),
+    ('git_blob', fs_git_blob, GIT), ('git_ignored', lambda m: lambda *a: [], GIT),
+    ('blob_problem', lambda m: lambda b: None, GIT),
+    ('placeholder_key', lambda m: lambda value: re.sub(r'[\W_]+', ' ', value.casefold()).strip(), MEM),
 ]
+EXCEPTION_MARKS = ('mutación no aplicable', 'escenario no ejecutable', 'excepción')
 
 
 def ablated_tree(kind, needle):
@@ -147,59 +198,83 @@ def load(tree):
     return mod
 
 
-def battery(mod, resealed=False):
-    """Ejecuta la batería completa contra mod y devuelve los casos que fallan.
+def run_suite(module, mod):
+    """Ejecuta una batería (test_f36sbx o test_f36sbx_git) contra mod; devuelve los casos que fallan."""
+    module.v = mod
+    module.results.clear()
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            module.main()
+    except Exception as e:  # noqa: BLE001 — una batería que no termina no es una detección pertinente
+        return [(module.__name__, f'excepción global {e.__class__.__name__}')]
+    finally:
+        module.v = v
+    return [(cid, str(detail)) for ok, cid, _, detail in module.results if not ok]
 
-    Con resealed=True, el ejemplo de la fotografía se vuelve a sellar antes con el propio mod: una ablación del
-    sello ya no la delatan los controles positivos, y solo la detectan los casos negativos."""
-    t.v = mod
-    t.results.clear()
+
+def battery(mod, suites=MEM, resealed=False):
+    """Casos que fallan con mod, por batería. Con resealed=True, el ejemplo de la fotografía se vuelve a sellar
+    antes con el propio mod: una ablación del sello ya no la delatan los controles positivos."""
     saved = t.BASE['texts'][v.EXAMPLE]
     try:
         if resealed:
             ex = mod.strict_json(saved)
             mod.seal_bundle(ex, t.CONTRACT)
             t.BASE['texts'][v.EXAMPLE] = json.dumps(ex, ensure_ascii=False, indent=2)
-        with contextlib.redirect_stdout(io.StringIO()):
-            t.main()
-    except Exception as e:  # noqa: BLE001 — una batería que no termina cuenta como detección
-        return [f'excepción {e.__class__.__name__}']
+        fails = run_suite(t, mod)
+        if 'git' in suites:
+            fails += [(f'git:{cid}', d) for cid, d in run_suite(git_suite(), mod)]
     finally:
-        t.v = v
         t.BASE['texts'][v.EXAMPLE] = saved
-    return sorted(cid for ok, cid, _, _ in t.results if not ok)
+    return fails
+
+
+def classify(fails, base):
+    """Separa las detecciones pertinentes (un caso concreto falla por su motivo) de las debidas a excepciones."""
+    new = [(cid, d) for cid, d in fails if cid not in base]
+    exc = sorted(cid for cid, d in new if d.startswith(EXCEPTION_MARKS) or cid in ('UNIT', 'E2E'))
+    return sorted(cid for cid, _ in new if cid not in exc), exc
 
 
 def ablations():
-    base = battery(load(ast.parse(SRC)))
-    print(f'línea base: {len(base)} casos fallan {base}')
+    base_fails = battery(load(ast.parse(SRC)), GIT)
+    base = {cid for cid, _ in base_fails}
+    print(f'línea base (memoria y Git real): {len(base)} casos fallan {sorted(base)}')
     rows = []
+
+    def record(label, mod, suites, resealed=False):
+        rows.append((label, *classify(battery(mod, suites, resealed), base)))
     for name, _ in v.RULES:
         mod = load(ast.parse(SRC))
         mod.RULES = [(n, (lambda s: []) if n == name else fn) for n, fn in mod.RULES]
-        rows.append((f'regla {name} anulada', sorted(set(battery(mod)) - set(base))))
-    for name, repl in FUNCTION_ABLATIONS:
+        record(f'regla {name} anulada', mod, MEM)
+    for name, factory, suites in FUNCTION_ABLATIONS:
         mod = load(ast.parse(SRC))
+        repl = factory(mod)
         setattr(mod, name, repl)
         if name in ('fg02_errors', 'fg03_errors', 'fg10_errors', 'fg12_errors'):
             mod.SPECIFIC[f'FG-{name[2:4]}'] = repl
-        rows.append((f'función {name} anulada', sorted(set(battery(mod)) - set(base))))
+        record(f'función {name} anulada', mod, suites)
         if name == 'test_seal':
-            rows.append((f'función {name} anulada, con el ejemplo resellado', sorted(set(battery(mod, True)) - set(base))))
-    for label, kind, needle in SOURCE_ABLATIONS:
+            record(f'función {name} anulada, con el ejemplo resellado', mod, suites, True)
+    for entry in SOURCE_ABLATIONS:
+        label, kind, needle = entry[:3]
+        suites = entry[3] if len(entry) > 3 else MEM
         tree, hits = ablated_tree(kind, needle)
         if hits != 1:
-            rows.append((f'{label} (no aplicable: {hits} coincidencias)', []))
+            rows.append((f'{label} (no aplicable: {hits} coincidencias)', [], []))
             continue
-        rows.append((label, sorted(set(battery(load(tree))) - set(base))))
+        record(label, load(tree), suites)
         if kind == 'dictval':
-            rows.append((f'{label}, con el ejemplo resellado', sorted(set(battery(load(tree), True)) - set(base))))
-    survivors = [label for label, killed in rows if not killed]
-    for label, killed in rows:
-        print(f'{"DETECTADA " if killed else "SOBREVIVE "} {label}: {len(killed)} casos {killed[:6]}'
-              f'{" …" if len(killed) > 6 else ""}')
-    print(f'ablaciones: {len(rows)}, detectadas {len(rows) - len(survivors)}, sobreviven {len(survivors)}')
-    return not base and not survivors
+            record(f'{label}, con el ejemplo resellado', load(tree), suites, True)
+    bad = 0
+    for label, killed, exc in rows:
+        state = 'DETECTADA ' if killed else ('SOLO EXCEPCIÓN' if exc else 'SOBREVIVE ')
+        bad += not killed
+        print(f'{state} {label}: {len(killed)} casos {killed[:6]}{" …" if len(killed) > 6 else ""}'
+              + (f' · por excepción: {exc[:4]}' if exc else ''))
+    print(f'ablaciones: {len(rows)}, detectadas por casos pertinentes {len(rows) - bad}, sin detección pertinente {bad}')
+    return not base and not bad
 
 
 # ---------------------------------------------------------------- mutación de hojas
@@ -253,6 +328,14 @@ def label(ex, path):
     return '/'.join(out)
 
 
+def field_of(path):
+    """Nombre del campo de una hoja: su clave o, si es un elemento de lista, la clave de la lista."""
+    for p in reversed(path):
+        if isinstance(p, str):
+            return p
+    return ''
+
+
 # Cambios legítimos que siguen siendo conformes tras recalcular y resellar: (sufijo de ruta, mutación).
 LEGIT_RESEALED = {('text_synthetic', 'sufijo'), ('issuer_synthetic', 'sufijo'), ('title_synthetic', 'sufijo'),
                   ('seed', '+1'), ('char_start', '+1'), ('char_end', '+1'), ('top_k', '+1'), ('note', 'sufijo'),
@@ -260,12 +343,64 @@ LEGIT_RESEALED = {('text_synthetic', 'sufijo'), ('issuer_synthetic', 'sufijo'), 
                   ('fragment_refs', 'sin el último')}
 # Artefactos de dev que no usa el ajuste: pueden cambiar sin resellar (dev no se sella; límite documentado).
 UNSEALED_DEV = {'SBX36-ORG-S1-ART-0005', 'SBX36-ORG-S1-ART-0008'}
+# Familia de sustitución: valores válidos del dominio que no aparecen en el ejemplo (F34 coherente u otro tenant).
+EXTRA_VALUES = {'scenario_id': ['SC36-99'], 'vacancy_token': ['VAC-0010'], 'application_token': ['APP-00015', 'APP-00053'],
+                'synthetic_organization_id': ['ORG-S2'], 'author_token': ['EV-S1-07', 'EV-S2-01'],
+                'annotator_token': ['ANT36-S1-09', 'ANT36-S2-01'], 'query_criterion_id': ['CRI-0018', 'CRI-0045'],
+                'criterion_id': ['CRI-0005', 'CRI-0018'], 'template_family': ['TF36-CC']}
+HASH_FIELDS = {'content_hash', 'record_hash', 'artifact_record_hash', 'text_hash', 'fragment_hash',
+               'input_manifest_hash', 'output_hash', 'seal_sha256', 'sha256', 'fragment_ref_hashes'}
+# Campos cuyo valor puede cambiar, dentro de su dominio, sin romper ninguna relación: contenido libre o enumerado.
+FREE_FIELDS = {'section_kind', 'text_synthetic', 'issuer_synthetic', 'title_synthetic', 'speaker_role', 'relevance',
+               'overlap_stratum', 'observation_kind', 'attack_kind', 'expected_outcome', 'format', 'grupo_sintetico',
+               'note'}
+
+
+def criterion_vacancies():
+    data = t.BASE['upstream'][v.F34 + 'criteria.csv'].decode('utf-8')
+    return {r['criterion_id']: r['vacancy_token'] for r in csv.DictReader(io.StringIO(data))}
+
+
+def legit_swap(path, field, old, new, vac_of):
+    """¿La sustitución, conforme tras resellar, es un cambio legítimo cerrado y no una relación rota?"""
+    if field in FREE_FIELDS:
+        return True
+    if field == 'fragment_id' and path[0] == 'artifacts':
+        # Una anotación de oro que pasa a otro fragmento: REL-08 ya exige que exista y sea de su mismo contexto.
+        return True
+    if field == 'application_token' and path[0] == 'outputs':
+        # Un output de otra postulación con evidencia en su mismo contexto: REL-15 ya exige ese contexto canónico.
+        return True
+    if field in ('author_token', 'annotator_token'):
+        return old.split('-')[1] == new.split('-')[1]
+    if field == 'template_id':
+        return old.split('-')[1] == new.split('-')[1]
+    if field == 'query_criterion_id':
+        return vac_of.get(old) is not None and vac_of.get(old) == vac_of.get(new)
+    return False
+
+
+def alternatives(ex0, contract):
+    """Valores válidos alternativos de cada campo de texto: los vistos en el conjunto, los enumerados y los extra."""
+    seen = {}
+    for path, value in nodes(ex0):
+        if isinstance(value, str) and path:
+            seen.setdefault(field_of(path), set()).add(value)
+    enums = contract['enums']
+    for field, kind in contract['content_field_types'].items():
+        if kind.startswith('enum:'):
+            seen.setdefault(field, set()).update(enums[kind[5:]])
+    for field in ('partition', 'stage', 'artifact_type'):
+        seen.setdefault(field, set()).update(enums[field])
+    for field, extra in EXTRA_VALUES.items():
+        seen.setdefault(field, set()).update(extra)
+    return seen
 
 
 def example_leaves():
     ex0 = v.strict_json(t.BASE['texts'][v.EXAMPLE])
     up = t.BASE['upstream']
-    problems, stats = [], {'raw': 0, 'rehash': 0, 'reseal': 0, 'borradas': 0, 'legitimas': 0}
+    problems, stats = [], {'raw': 0, 'borradas': 0, 'legitimas': 0, 'swaps': 0, 'swaps_legitimos': 0}
     for path, value in list(nodes(ex0)):
         if not path:
             continue
@@ -299,9 +434,40 @@ def example_leaves():
                     stats['legitimas'] += 1
                 else:
                     problems.append(f'resellada pasa y no es un cambio legítimo cerrado: {where} ({kind})')
-    print(f'ejemplo: {stats["raw"]} mutaciones de hoja; resellado: {stats["legitimas"]} cambios legítimos conformes, '
-          f'{stats["borradas"]} borradas por el recálculo (hashes y sello)')
+    # Familia de sustitución por valores válidos del dominio, con todo recalculado y test resellado.
+    alts, vac_of = alternatives(ex0, t.CONTRACT), criterion_vacancies()
+    for path, value in list(nodes(ex0)):
+        field = field_of(path)
+        if not path or not isinstance(value, str) or field in HASH_FIELDS:
+            continue
+        for new in sorted(alts.get(field, set()) - {value}):
+            ex = put(copy.deepcopy(ex0), path, new)
+            try:
+                t.reseal(ex)
+            except Exception:  # noqa: BLE001
+                pass
+            stats['swaps'] += 1
+            if ex != ex0 and not v.bundle_errors(t.CONTRACT, ex, up):
+                if legit_swap(path, field, value, new, vac_of):
+                    stats['swaps_legitimos'] += 1
+                else:
+                    problems.append(f'sustitución válida y resellada que pasa: {label(ex0, path)}: {value} → {new}')
+    print(f'ejemplo: {stats["raw"]} mutaciones de forma (resellado: {stats["legitimas"]} cambios legítimos conformes, '
+          f'{stats["borradas"]} borradas por el recálculo) y {stats["swaps"]} sustituciones por valores válidos del '
+          f'dominio ({stats["swaps_legitimos"]} cambios legítimos conformes)')
     return problems
+
+
+def evidence_alternatives():
+    schema = v.strict_json(t.BASE['texts'][v.TEAM_SCHEMA])
+    crit = schema['criteria']
+    return {'verdict': crit['FG-02']['verdicts'], 'kind': crit['FG-02']['auditor_kinds'],
+            'decision': crit['FG-03']['decisions'], 'numbering_f36_m01': crit['FG-03']['numbering_values'],
+            'license': crit['FG-10']['licenses'], 'approval_status': crit['FG-10']['approval_statuses'],
+            'vote': schema['approvals']['votes'], 'member': schema['team_members'],
+            'reviewed_by': schema['team_members'], 'status': crit['FG-12']['adr_statuses'],
+            'ei09_decision': crit['FG-12']['ei09_decisions'], 'authorized_ei': ['EI-02', 'EI-08', 'EI-19'],
+            'covered_ei': ['EI-08', 'EI-11', 'EI-19'], 'related_ei': ['EI-11', 'EI-07']}
 
 
 def evidence_leaves():
@@ -319,8 +485,13 @@ def evidence_leaves():
     for path, value in list(nodes(t.adr_meta(json.loads(ctx0['evidence'][t.path('FG-12')])))):
         if path:
             sides.append(('ADR', 'FG-12', path, value))
+    alts = evidence_alternatives()
+    legit_free = {('FG-10', 'purpose', 'sufijo'), ('FG-10', 'license', 'sustitución'), ('FG-10', 'reviewed_by', 'sustitución')}
     for side, fg, path, value in sides:
-        for kind, new in mutations(value):
+        candidates = list(mutations(value))
+        if isinstance(value, str):
+            candidates += [('sustitución', x) for x in alts.get(field_of(path), []) if x != value]
+        for kind, new in candidates:
             count += 1
             if side == 'registro':
                 def mutate(docs, ctx, fg=fg, path=path, new=new):
@@ -333,10 +504,10 @@ def evidence_leaves():
                 errs = v.team_evidence_errors(fg, t.build(t.AUTH, mutate))
             except Exception as e:  # noqa: BLE001
                 errs = [f'excepción {e.__class__.__name__}']
-            legit = side == 'registro' and fg == 'FG-10' and path[-1] == 'purpose' and kind == 'sufijo'
+            legit = side == 'registro' and (fg, field_of(path), kind) in legit_free
             if not errs and not legit:
-                problems.append(f'{side} {fg}: {"/".join(map(str, path))} ({kind}) sigue siendo válido')
-    print(f'evidencia: {count} mutaciones de un solo lado (registro, informe o ADR)')
+                problems.append(f'{side} {fg}: {"/".join(map(str, path))} ({kind} → {new!r}) sigue siendo válido')
+    print(f'evidencia: {count} mutaciones y sustituciones de un solo lado (registro, informe o ADR)')
     return problems
 
 

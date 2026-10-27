@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""Validador fail-closed del paquete F36-SBX (autorización, investigación y diseño), versión 3 (AF2).
+"""Validador fail-closed del paquete F36-SBX (autorización, investigación y diseño), versión 4 (AF3).
 
 Solo biblioteca estándar. No ejecuta ML ni NLP, no usa red y no escribe archivos.
 
 - Recalcula el F36-SBX-GATE y exige que coincida con el declarado.
 - Valida la semántica de la evidencia de equipo (FG-02, FG-03, FG-10 y FG-12), su vínculo con el commit
-  candidato auditado y su coherencia exacta con el bloque canónico del informe de auditoría o del ADR.
-- Valida el contrato de evidencia cerrado (v3) y, con él, el ejemplo de conformidad: estructura, hashes de
+  candidato auditado y su coherencia exacta con el bloque canónico del informe de auditoría o del ADR. El ADR se
+  lee del blob Git de candidate_commit, nunca del árbol de trabajo.
+- Valida el contrato de evidencia cerrado (v4) y, con él, el ejemplo de conformidad: estructura, hashes de
   contenido, de registro, de fragmento y de output, sello de test, provenance contextual, aislamiento entre
-  tenants y cobertura mínima (REL-01..REL-14).
+  tenants, cobertura mínima y contexto canónico de todo output (REL-01..REL-15).
 
 Uso: python -I -B docs/academico/tools/f36sbx/validate_f36sbx.py
 """
@@ -53,7 +54,7 @@ UPSTREAM_FILES = [F34 + 'applications.csv', F34 + 'criteria.csv', F34 + 'vacanci
                   F34 + 'competencies.csv']
 
 # Integridad de los artefactos cerrados: SHA-256 de su JSON canónico. Cambiarlos exige un incremento auditado.
-CONTRACT_SHA256 = 'd9b70951efb3e1162628f6e09fecf4f214aa342df8f825bff7a907f24ea3fb03'
+CONTRACT_SHA256 = '5587f183ab2d89a8f2b4959f6ebf62a984184cfe592bb9da737356c9ab0b695f'
 TEAM_SCHEMA_SHA256 = '89cbc2286730bd301834ec43a7bf959c7343de266f2e78b10e96edd906da92f2'
 
 # Etiquetas de dominio de los hashes de registro (sección hash_scheme del contrato).
@@ -141,7 +142,8 @@ CONTRACT_KEYS = ['contract_id', 'contract_version', 'status', 'environment', 'so
                  'global_identifiers', 'forbidden_upstream_sources',
                  'synthetic_markers', 'identifier_patterns', 'enums', 'content_field_types',
                  'artifact_envelope_fields', 'artifact_types', 'fragment_fields', 'output_fields',
-                 'method_config_fields', 'top_k_range', 'output_ei', 'context_fields', 'provenance_fields',
+                 'method_config_fields', 'top_k_range', 'output_ei', 'context_fields', 'canonical_context',
+                 'provenance_fields',
                  'example_fields', 'example_id_value', 'example_coverage', 'partition_manifest_fields',
                  'partition_fields', 'threshold_fields', 'hash_scheme', 'relations', 'group_marker_only_in',
                  'forbidden_fields', 'forbidden_field_tokens', 'splits']
@@ -190,7 +192,10 @@ REQUIRED_FORBIDDEN_FIELDS = {'name', 'dni', 'email', 'phone', 'address', 'photo'
 REQUIRED_FORBIDDEN_TOKENS = {'name', 'dni', 'email', 'phone', 'gender', 'score', 'rank', 'recommendation', 'fit',
                              'verdict', 'emotion', 'personality', 'honesty', 'intelligence', 'stress',
                              'nervousness', 'voice', 'face', 'biometric', 'level', 'hire', 'select', 'discard'}
-REL_IDS = [f'REL-{i:02d}' for i in range(1, 15)]
+REL_IDS = [f'REL-{i:02d}' for i in range(1, 16)]
+# REL-15: el contexto canónico de una postulación es el de sus artefactos del conjunto, y lo hereda todo output.
+EXPECTED_CANONICAL = {'key': 'application_token', 'source': 'artifacts', 'fields': CONTEXT,
+                      'applies_to': ['outputs', 'tuning_outputs']}
 
 FG_IDS = [f'FG-{i:02d}' for i in range(1, 15)]
 FG_TEAM = ('FG-02', 'FG-03', 'FG-10', 'FG-12')
@@ -205,11 +210,22 @@ GATE_KEYS = {'gate_id', 'gate_version', 'authorizes', 'cannot_authorize', 'base_
 CANNOT_AUTHORIZE = {'produccion', 'datos_reales', 'pii_real', 'audio_video_real', 'seleccion_automatica',
                     'scoring_ranking_recomendacion', 'cambio_rf23_rf21_rf29', 'g0_real', 'alcance_c_producto',
                     'endpoints_migraciones_ui', 'ei_blocked'}
-# Marcadores de posición que nunca identifican a una persona (comparados sin puntuación ni mayúsculas).
+# Marcadores de posición que nunca identifican a una persona. Se comparan con placeholder_key(): sin mayúsculas,
+# tildes, dígitos ni puntuación, así que «PLACEHOLDER», «<Placeholder 1>» y «place_holder» son el mismo marcador.
 PLACEHOLDERS = {'auditor', 'auditora', 'independiente', 'auditor independiente', 'auditora independiente',
-                'auditoria independiente', 'auditoría independiente', 'n a', 'na', 'tbd', 'todo', 'pendiente',
-                'desconocido', 'desconocida', 'anonimo', 'anónimo', 'anonima', 'anónima', 'none', 'null', 'nadie',
-                'nombre', 'nombre del auditor', 'xxx', 'test', 'prueba'}
+                'auditoria independiente', 'n a', 'na', 'n d', 'nd', 'tbd', 'tba', 'todo', 'pendiente', 'por definir',
+                'por asignar', 'sin nombre', 'desconocido', 'desconocida', 'unknown', 'anonimo', 'anonima',
+                'anonymous', 'none', 'null', 'nil', 'nadie', 'nobody', 'nombre', 'nombre del auditor',
+                'nombre apellido', 'name', 'xxx', 'xxxx', 'test', 'prueba', 'placeholder', 'place holder',
+                'marcador', 'marcador de posicion', 'lorem ipsum', 'ejemplo', 'example', 'sample', 'dummy', 'foo',
+                'bar', 'foo bar', 'changeme', 'change me', 'fixme', 'reemplazar', 'completar', 'rellenar'}
+# Una identidad formada solo por estas palabras es genérica: no nombra a nadie ni a ninguna sesión concreta.
+GENERIC_IDENTITY_WORDS = {'auditor', 'auditora', 'auditores', 'auditoras', 'auditoria', 'revisor', 'revisora',
+                          'revisores', 'revision', 'independiente', 'independientes', 'externo', 'externa', 'interno',
+                          'interna', 'sesion', 'equipo', 'persona', 'responsable', 'academico', 'academica',
+                          'docente', 'integrante', 'tercero', 'tercera', 'de', 'del', 'la', 'el', 'los', 'las', 'y',
+                          'e', 'un', 'una', 'reviewer', 'independent', 'external', 'session', 'team', 'member',
+                          'the', 'a', 'an', 'of'}
 # Categorías Unicode prohibidas en identidades y en documentos humanos: control, formato (U+200B, U+202E…),
 # uso privado, no asignados y separadores de línea o de párrafo.
 INVISIBLE_CATEGORIES = frozenset({'Cc', 'Cf', 'Co', 'Cn', 'Zl', 'Zp'})
@@ -413,6 +429,13 @@ def invisible_chars(text, allow_layout=False):
     return [c for c in text if c not in layout and unicodedata.category(c) in INVISIBLE_CATEGORIES]
 
 
+def placeholder_key(value):
+    """Clave de comparación de una identidad: sin mayúsculas, tildes, dígitos ni puntuación."""
+    folded = unicodedata.normalize('NFKD', value.casefold())
+    folded = ''.join(ch for ch in folded if not unicodedata.combining(ch))
+    return re.sub(r'[\W\d_]+', ' ', folded).strip()
+
+
 def identity_errors(value, label, min_letters=3, max_length=120):
     """Identidad declarada estructuralmente válida. No autentica a nadie: eso sigue siendo revisión humana."""
     if not isinstance(value, str):
@@ -429,9 +452,11 @@ def identity_errors(value, label, min_letters=3, max_length=120):
         e.append(f'{label}: sin contenido visible suficiente (mínimo {min_letters} letras)')
     if len(value) > max_length:
         e.append(f'{label}: supera {max_length} caracteres')
-    key = re.sub(r'[\W_]+', ' ', value.casefold()).strip()
+    key = placeholder_key(value)
     if not key or key in PLACEHOLDERS:
         e.append(f'{label}: es un marcador de posición')
+    elif set(key.split()) <= GENERIC_IDENTITY_WORDS:
+        e.append(f'{label}: es una identidad genérica, sin nombre ni identificador propio')
     return e
 
 
@@ -883,8 +908,11 @@ def contract_semantic_errors(c, root):
 
     need(list(c) == CONTRACT_KEYS, f'claves de primer nivel distintas del contrato cerrado: '
                                    f'faltan {sorted(set(CONTRACT_KEYS) - set(c))}, sobran {sorted(set(c) - set(CONTRACT_KEYS))}')
-    need(c.get('contract_id') == 'f36sbx-evidence-contract' and c.get('contract_version') == '3'
-         and c.get('status') == 'DISENO', 'identidad: f36sbx-evidence-contract v3 en estado DISENO')
+    need(c.get('contract_id') == 'f36sbx-evidence-contract' and c.get('contract_version') == '4'
+         and c.get('status') == 'DISENO', 'identidad: f36sbx-evidence-contract v4 en estado DISENO')
+    need(c.get('canonical_context') == EXPECTED_CANONICAL,
+         'contexto canónico: clave application_token, fuente artifacts, los cinco campos de contexto y aplicación a '
+         'outputs y tuning_outputs')
     need(c.get('environment') == 'sandbox', 'environment debe ser sandbox')
     need(c.get('source_type_allowed') == ['synthetic'], 'source_type_allowed debe ser exactamente ["synthetic"]')
     need(c.get('generator_policy') == {'llm_allowed': False, 'template_based': True, 'seed_required': True,
@@ -1001,7 +1029,7 @@ def contract_semantic_errors(c, root):
          and all(isinstance(hs.get(k), str) for k in ('canonical_json', 'tagged_hash', 'content_hash', 'text_hash')),
          'esquema de hashes distinto: etiquetas de registro, fragmento, manifiesto, output y sello v2')
     need(isinstance(c.get('relations'), dict) and sorted(c['relations']) == REL_IDS
-         and all(isinstance(v, str) and v for v in c['relations'].values()), 'relaciones REL-01..REL-14 incompletas')
+         and all(isinstance(v, str) and v for v in c['relations'].values()), 'relaciones REL-01..REL-15 incompletas')
     need(c.get('group_marker_only_in') == ['counterfactual_pair'], 'el marcador de grupo solo va en counterfactual_pair')
     forb = c.get('forbidden_fields') if isinstance(c.get('forbidden_fields'), list) else []
     need(REQUIRED_FORBIDDEN_FIELDS <= set(forb), f'campos prohibidos incompletos: '
@@ -1038,7 +1066,7 @@ def load_upstream(c, upstream):
 
 
 def bundle_errors(c, ex, upstream):
-    """Invariantes REL-01..REL-14 de un conjunto de registros frente al contrato. Lista vacía = conforme."""
+    """Invariantes REL-01..REL-15 de un conjunto de registros frente al contrato. Lista vacía = conforme."""
     errs = []
     try:
         _bundle(c, ex, upstream, errs.append)
@@ -1327,6 +1355,27 @@ def _bundle(c, ex, upstream, add):
         elif f.get('text_hash') != sha256(text[s0:s1].encode('utf-8')):
             add(f'REL-06 {label}: text_hash incorrecto')
 
+    # REL-15: contexto canónico de cada postulación, el de sus artefactos del conjunto. Es la única fuente del
+    # contexto de un output: también de una abstención, que no cita fragmentos, y de un output de ajuste.
+    canon_spec = c['canonical_context']
+    canon = {}
+    for a in arts.values():
+        canon.setdefault(a.get(canon_spec['key']), set()).add(tuple(a.get(k) for k in canon_spec['fields']))
+
+    def canonical_errors(rec, label):
+        expected = canon.get(rec.get(canon_spec['key']))
+        if not expected:
+            return [f'REL-15 {label}: su postulación {rec.get(canon_spec["key"])!r} no tiene artefactos en el conjunto: '
+                    f'el output no tiene contexto canónico']
+        if len(expected) != 1:
+            return [f'REL-15 {label}: el contexto canónico de su postulación es ambiguo (falla cerrado)']
+        errs = []
+        for k, val in zip(canon_spec['fields'], next(iter(expected))):
+            if rec.get(k) != val:
+                errs.append(f'REL-15 {label}: {k} {rec.get(k)!r} distinto del contexto canónico de su postulación '
+                            f'({val!r})')
+        return errs
+
     # REL-07: outputs.
     outs = {}
     mc_fields = c['method_config_fields']
@@ -1339,6 +1388,8 @@ def _bundle(c, ex, upstream, add):
                 f'sobran {sorted(set(o) - set(c["output_fields"]))}')
         check_org(oid, 'output_id', o.get('synthetic_organization_id'), label)
         check_context(o, label)
+        for err in canonical_errors(o, label):
+            add(err)
         if isinstance(oid, str):
             outs[oid] = o
         if o.get('output_hash') != output_record_hash(o):
@@ -1470,6 +1521,13 @@ def _bundle(c, ex, upstream, add):
                     add(f'REL-11 output de ajuste inexistente {x!r}')
                 elif outs[x].get('partition') != 'dev':
                     add(f'REL-11 el output de ajuste {x} es de {outs[x].get("partition")!r}: test no puede ajustar')
+                else:
+                    # La partición que cuenta es la canónica de su postulación, no la que declara el output.
+                    exp = canon.get(outs[x].get(canon_spec['key'])) or set()
+                    parts_of = {dict(zip(canon_spec['fields'], ctx)).get('partition') for ctx in exp}
+                    if parts_of != {c['splits']['thresholds_fit_on']}:
+                        add(f'REL-11 el output de ajuste {x} no es de dev por el contexto canónico de su postulación '
+                            f'({sorted(map(str, parts_of))})')
     if pm['test_used_for_tuning'] is not False:
         add('REL-11 test_used_for_tuning debe ser false')
     test = parts.get('test')
@@ -1512,7 +1570,7 @@ def rule_ctr(s):
     if not isinstance(c, dict):
         return [(False, 'contrato de evidencia: JSON inválido o con claves duplicadas (falla cerrado)')]
     digest = sha256(canonical(c))
-    out.append((digest == CONTRACT_SHA256, f'contrato idéntico a la versión cerrada v3 (SHA-256 canónico '
+    out.append((digest == CONTRACT_SHA256, f'contrato idéntico a la versión cerrada v4 (SHA-256 canónico '
                                            f'{digest[:12]}, esperado {CONTRACT_SHA256[:12]})'))
     errs = contract_semantic_errors(c, s['root'])
     out.append((not errs, f'invariantes del contrato: solo sintético, cerrado, hashes, provenance y particiones; '
@@ -1522,7 +1580,7 @@ def rule_ctr(s):
         return out
     ex = strict_json(s['texts'].get(EXAMPLE) or '')
     berrs = bundle_errors(c, ex, s['upstream'])
-    out.append((not berrs, f'ejemplo de conformidad conforme a REL-01..REL-14; errores: {berrs}'))
+    out.append((not berrs, f'ejemplo de conformidad conforme a REL-01..REL-15; errores: {berrs}'))
     return out
 
 
