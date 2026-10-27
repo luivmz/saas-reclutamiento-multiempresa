@@ -18,6 +18,7 @@ sellar: así solo puede fallar la invariante semántica que se prueba (hashes v�
 
 Uso: python -I -B docs/academico/tools/f36sbx/test_f36sbx.py
 """
+import ast
 import copy
 import hashlib
 import json
@@ -1341,6 +1342,96 @@ def main():
     ev_case('AF3-34', 'auditor «placeholder» con U+200B', 'FG-02', auditor_named('placeholder​'), 'caracteres invisibles')
     ev_case('AF3-35', 'auditor genérico, sin nombre propio («Revisora externa independiente»)', 'FG-02',
             auditor_named('Revisora externa independiente'), 'identidad genérica')
+
+    # ---------------- AF4-L01: identidades genéricas compuestas (validación estructural, no autenticación)
+    composite = 'identidad compuesta sin nombre propio'
+    for cid, name in (('AF4-L01-01', 'Auditor placeholder'), ('AF4-L01-02', 'auditor sin nombre'),
+                      ('AF4-L01-03', 'revisor desconocido')):
+        af2(cid, f'reproducción de la cuarta auditoría: auditor «{name}» en el registro y en el bloque del informe',
+            'FG-02', auditor_named(name), composite)
+    variants = [
+        ('AF4-L01-04', 'Revisor TBD', 'rol y marcador'), ('AF4-L01-05', 'Auditora N/A', 'rol y «no aplica»'),
+        ('AF4-L01-06', 'Nombre del revisor', 'marcador, conector y rol'),
+        ('AF4-L01-07', 'Auditor por asignar', 'hueco por rellenar'), ('AF4-L01-08', 'Sesión desconocida', 'sesión sin identificador'),
+        ('AF4-L01-09', 'Revisor anónimo 2', 'número en lugar de nombre'),
+        ('AF4-L01-10', 'Placeholder Auditor Externo', 'marcador delante'),
+        ('AF4-L01-11', 'Auditor X', 'una inicial suelta'), ('AF4-L01-12', 'Revisor ZZZZZ', 'relleno de una letra repetida'),
+        ('AF4-L01-13', 'Persona sin identificar', 'identidad ausente'), ('AF4-L01-14', 'Test User', 'marcador en inglés'),
+        ('AF4-L01-15', 'Fulano de Tal', 'nombre de relleno'),
+        ('AF4-L01-16', 'AuditorPlaceholder', 'camelCase sin separador'),
+        ('AF4-L01-17', 'auditor_placeholder', 'guion bajo como separador'),
+        ('AF4-L01-18', 'auditorplaceholder', 'concatenación sin separador ni mayúsculas'),
+        ('AF4-L01-19', 'Aud1tor Pl4ceh0lder', 'dígitos en lugar de letras'),
+        ('AF4-L01-20', 'ＡＵＤＩＴＯＲ ＰＬＡＣＥＨＯＬＤＥＲ', 'letras de ancho completo'),
+        ('AF4-L01-21', 'Revisor N.N.', '«nomen nescio»'), ('AF4-L01-22', 'Revisor 2026 TBD', 'año y marcador'),
+        ('AF4-L01-23', '{{auditor_name}}', 'variable de plantilla'), ('AF4-L01-24', 'Your name here', 'texto de plantilla'),
+        ('AF4-L01-25', 'Revisora Externa Ficticia', 'roles y «ficticia», sin nombre propio'),
+        ('AF4-L01-26', 'Dr. Desconocido', 'tratamiento y marcador'),
+        ('AF4-L01-27', 'Equipo revisor anónimo', 'solo roles y marcador'),
+        ('AF4-L01-29', 'AuditorNN', 'camelCase con un relleno de dos letras'),
+    ]
+    for cid, name, why in variants:
+        ev_case(cid, f'auditor «{name}» ({why})', 'FG-02', auditor_named(name), composite)
+    ev_case('AF4-L01-28', 'auditor con un homógrafo cirílico («Аuditor Ana»)', 'FG-02', auditor_named('Аuditor Ana'),
+            'posible homógrafo')
+    legit = ['Ezio Auditore', 'Nil Puig', 'Ana Test', "D'Alessandro, Lucía", 'De la Cruz, Rosa', 'Bo Li',
+             'Revisor externo Pérez', 'Sesión 7f3a9c de auditoría independiente', 'Equipo auditor AF4-Externo',
+             'Νίκος Παπαδόπουλος', 'Revisora externa Quispe-Ejemplo (ficticia)', 'McDonald Ruiz']
+    wrong = {n: e for n in legit if (e := v.identity_errors(n, 'identidad'))}
+    ok(not wrong, 'AF4-L01-P1', 'control positivo: nombres legítimos que contienen roles, marcadores, conectores, '
+       'tildes, apóstrofos o letras griegas siguen siendo válidos', str(wrong))
+    pos('AF4-L01-P2', 'control positivo: registro de FG-02 con un auditor de nombre propio junto a su rol',
+        register(mutate=auditor_named('Revisor externo Pérez (sesión AF4)')))
+
+    # ---------------- AF4-M01 y AF4-M02: estado de Git no fiable y entradas no versionables (en memoria)
+    flags = ['assume-unchanged en 1 entradas del índice: [\'routes/web.php\']']
+    case('AF4-01', 'estado Git no fiable (marca assume-unchanged): FRZ falla', setkey('git_state', flags), 'FRZ',
+         'estado Git fiable')
+    case('AF4-02', 'estado Git no fiable (refs/replace): FRZ falla',
+         setkey('git_state', ['refs/replace presentes, que sustituyen objetos en la vista habitual de Git: [x]']), 'FRZ',
+         'refs/replace')
+    ev_case('AF4-03', 'vínculo con el candidato con el estado Git no fiable', 'FG-02',
+            lambda docs, ctx: ctx['facts'][CAND].update(git_state=flags), 'estado Git no fiable')
+    ev_case('AF4-04', 'vínculo con el candidato sin estado Git evaluado (falla cerrado)', 'FG-02',
+            lambda docs, ctx: ctx['facts'][CAND].pop('git_state'), 'estado Git no fiable')
+    case('AF4-05', 'registro en el repositorio con el estado Git no fiable: GATE falla en el vínculo',
+         chain(register(), lambda s: s['facts'][CAND].update(git_state=flags)), 'GATE', 'estado Git no fiable')
+    case('AF4-06', 'documento del paquete que Git ignora (ningún commit lo contiene)',
+         setkey('ignored', [v.MATRIX]), 'FRZ', 'versionables')
+    case('AF4-07', 'herramienta del validador que Git ignora', setkey('ignored', [v.TOOLS + '/validate_f36sbx.py']),
+         'FRZ', 'versionables')
+    case('AF4-08', 'no se puede comprobar si las entradas son versionables (falla cerrado)', setkey('ignored', None),
+         'FRZ', 'no se pudo comprobar con Git')
+    case('AF4-09', 'cambio productivo visible solo en el árbol de trabajo (alcance)', add_changed('routes/web.php'), 'FRZ',
+         'routes/web.php')
+    src = (HERE / 'validate_f36sbx.py').read_text(encoding='utf-8')
+    tree = ast.parse(src)
+    calls = [n for n in ast.walk(tree) if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+             and isinstance(n.func.value, ast.Name) and n.func.value.id == 'subprocess']
+    runner = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'git_run')
+    inside = [n for n in ast.walk(runner) if n in calls]
+    ok(len(calls) == 1 and inside and '--no-replace-objects' in v.GIT_GLOBAL and 'core.commitGraph=false' in v.GIT_GLOBAL
+       and v.GIT_ENV.get('GIT_NO_REPLACE_OBJECTS') == '1', 'AF4-10',
+       'una sola llamada a subprocess en el validador, dentro de git_run, con --no-replace-objects, '
+       'GIT_NO_REPLACE_OBJECTS=1 y sin grafo de commits', f'{len(calls)} llamadas a subprocess')
+    saved = dict(v.os.environ)
+    try:
+        v.os.environ.update(GIT_DIR='no-existe', GIT_INDEX_FILE='no-existe', GIT_REPLACE_REF_BASE='refs/heads/',
+                            GIT_NO_REPLACE_OBJECTS='')
+        env = v.git_env()
+    finally:
+        v.os.environ.clear()
+        v.os.environ.update(saved)
+    ok(not [k for k in env if k.upper().startswith('GIT_') and k not in v.GIT_ENV] and env.get('GIT_NO_REPLACE_OBJECTS') == '1',
+       'AF4-11', 'el entorno de Git del validador descarta toda variable GIT_* heredada (GIT_DIR, GIT_INDEX_FILE, '
+       'GIT_REPLACE_REF_BASE…) y fija GIT_NO_REPLACE_OBJECTS=1', str(sorted(k for k in env if k.upper().startswith('GIT_'))))
+    lf = b'# ADR\n\nUna linea.\nOtra linea.\n'
+    obj = v.git_blob_id(lf)
+    ok(v.same_blob(lf, obj) and v.same_blob(lf.replace(b'\n', b'\r\n'), obj)
+       and not v.same_blob(lf.replace(b'\n', b'\r\n', 1), obj) and not v.same_blob(lf + b' ', obj)
+       and not v.same_blob(lf.replace(b'\n', b'\r'), obj) and not v.same_blob(lf.replace(b'\n', b'\r\n'), obj, eol=False),
+       'AF4-12', 'contraste: el árbol de trabajo solo equivale a su objeto con los mismos bytes o con la conversión '
+       'LF→CRLF completa de un checkout; un fin de línea suelto, un CR aislado o un byte más es un cambio', '')
 
     # ---------------- registro de evidencia en el repositorio (GR)
     snap = copy.deepcopy(BASE)
