@@ -1208,6 +1208,22 @@ def main():
             'ei09_decision de los metadatos')
     ev_case('D42', 'informe con el auditor del bloque como texto', 'FG-02',
             set_report(lambda m: m.update(auditor='Sesión de auditoría independiente AF3')), 'auditor con campos distintos')
+    # Regresiones aisladas, añadidas tras la metaprueba de ablación: solo falla la regla indicada.
+    ev_case('D43', 'identidad del auditor con menos de tres letras (Jo)', 'FG-02',
+            both(fg02(lambda d: d['auditor'].update(name='Jo')), set_report()), 'sin contenido visible suficiente')
+    ev_case('D44', 'informe sin título de nivel 1', 'FG-02',
+            set_report(prose=REPORT_PROSE.split('\n', 2)[2]), 'debe empezar con un título')
+
+    def escaped_report(docs, ctx):
+        """Bloque del informe con escapes JSON: el documento queda en ASCII, NFC y sin caracteres invisibles."""
+        meta = json.dumps(report_meta(docs['FG-02']), ensure_ascii=True, indent=2)
+        set_report(raw=(REPORT_PROSE + f'\n```f36sbx-audit-metadata\n{meta}\n```\n').encode('utf-8'))(docs, ctx)
+    ev_case('D45', 'identidad no NFC escondida con escapes JSON en el bloque del informe', 'FG-02',
+            both(fg02(lambda d: d['auditor'].update(name='Sesión de auditoría ficticia')), escaped_report),
+            'no está en NFC')
+    ev_case('D46', 'identidad con U+200B escondida con escapes JSON en el bloque del informe', 'FG-02',
+            both(fg02(lambda d: d['auditor'].update(name='Revisora​Externa Ficticia')), escaped_report),
+            'caracteres invisibles')
 
     # ---------------- registro de evidencia en el repositorio (GR)
     snap = copy.deepcopy(BASE)

@@ -33,15 +33,17 @@ VALIDATOR = HERE / 'validate_f36sbx.py'
 SRC = VALIDATOR.read_text(encoding='utf-8')
 
 # Ablaciones sobre el código del validador: (etiqueta, tipo, aguja). 'if' anula la condición de la única sentencia
-# if/elif cuyo «condición => primera sentencia» contiene la aguja; 'assign' vacía la asignación que la contiene;
+# if/elif cuya condición contiene la aguja o, si la aguja contiene «=>», cuyo «condición => primera sentencia» la
+# contiene (así no coincide el if que envuelve a la comprobación); 'assign' vacía la asignación que la contiene;
 # 'dictval' vacía el valor de esa clave en el único literal de diccionario que la tiene; 'need' hace verdadera la
-# condición del need() que la contiene.
+# condición del need() que la contiene. Si la aguja no coincide exactamente una vez, la ablación no es aplicable y
+# cuenta como superviviente.
 SOURCE_ABLATIONS = [
     # AF2-M01: identidad visible, documento humano y coherencia con el registro.
     ('identidad: caracteres invisibles', 'assign', 'bad = invisible_chars(value)'),
     ('identidad: mínimo de letras', 'if', "startswith('L')) < min_letters"),
     ('identidad: marcadores de posición', 'if', 'key in PLACEHOLDERS'),
-    ('identidad: NFC', 'if', "is_normalized('NFC', value)"),
+    ('identidad: NFC', 'if', "is_normalized('NFC', value) => e.append"),
     ('identidad: espacios exteriores', 'if', 'value != value.strip()'),
     ('auditor: identidad completa', 'assign', "e = identity_errors(au['name']"),
     ('documento: un único bloque canónico', 'if', 'len(mine) != 1'),
@@ -50,21 +52,21 @@ SOURCE_ABLATIONS = [
     ('documento: NFC', 'if', "is_normalized('NFC', text)"),
     ('documento: secciones requeridas', 'if', "missing => e.append(f'{label}: faltan las secciones"),
     ('documento: contenido humano mínimo', 'if', 'letters < min_letters'),
-    ('documento: título de nivel 1', 'if', 'debe empezar con un título'),
+    ('documento: título de nivel 1', 'if', "=> e.append(f'{label}: debe empezar con un título"),
     ('informe: tokens canónicos fuera del bloque', 'if', "token in outside => e.append(f'FG-02"),
     ('informe: aserciones fuera del bloque', 'if', 'COUNT_ASSERTION_RX.search(outside)'),
-    ('informe: contexto de los metadatos', 'if', 'FG-02: informe: metadatos de otro esquema'),
+    ('informe: contexto de los metadatos', 'if', "=> e.append('FG-02: informe: metadatos de otro esquema"),
     ('informe: commit candidato', 'if', "meta['candidate_commit'] != ev.get('candidate_commit')"),
     ('informe: auditor coherente', 'if', "canonical(meta['auditor'])"),
     ('informe: veredicto coherente', 'if', "canonical(meta['verdict'])"),
     ('informe: recuentos coherentes', 'if', "canonical(meta['findings_open'])"),
-    ('informe: fecha', 'if', 'report_date inválida'),
-    ('ADR: título y contexto textual', 'if', 'el título no nombra su id'),
+    ('informe: fecha', 'if', "=> e.append('FG-02: informe: report_date inválida"),
+    ('ADR: título y contexto textual', 'if', "=> e.append('FG-12: ADR: el título no nombra su id"),
     ('ADR: estado fuera del bloque', 'if', 'STATUS_ASSERTION_RX.search(outside)'),
     ('ADR: tokens canónicos fuera del bloque', 'if', "token in outside => e.append(f'FG-12"),
-    ('ADR: contexto de los metadatos', 'if', 'FG-12: ADR: metadatos de otro esquema'),
+    ('ADR: contexto de los metadatos', 'if', "=> e.append('FG-12: ADR: metadatos de otro esquema"),
     ('ADR: id, estado, relación y alcance coherentes', 'if', 'canonical(meta[key]) != canonical(adr[reg])'),
-    ('ADR: covered_ei coherente', 'if', 'covered_ei de los metadatos'),
+    ('ADR: covered_ei coherente', 'if', "=> e.append(f'FG-12: ADR: covered_ei de los metadatos"),
     ('ADR: ei09_decision coherente', 'if', "canonical(meta['ei09_decision'])"),
     ('ADR: decided_on no posterior al candidato', 'if', 'dd is None or cdate is None or dd > cdate'),
     # AF2-M02: cadena de hashes y sello de test.
@@ -92,6 +94,7 @@ SOURCE_ABLATIONS = [
     ('ejemplo: example_id cerrado', 'if', "ex.get('example_id') != c['example_id_value']"),
     ('ejemplo: cobertura mínima', 'if', "not cond => add(f'REL-14"),
     ('texto: caracteres invisibles', 'if', "invisible_chars(value) => add(f'REL-12"),
+    ('texto: NFC', 'if', "is_normalized('NFC', value) => add(f'REL-12"),
     ('output: method_config cerrado', 'if', 'not isinstance(mc, dict)'),
     # Contrato v3 y esquema v2.
     ('contrato: clase única de cada identificador', 'need', 'set().union(*classes) == pattern_fields'),
@@ -119,7 +122,8 @@ def ablated_tree(kind, needle):
     hits = 0
     for node in ast.walk(tree):
         if kind == 'if' and isinstance(node, ast.If):
-            key = f'{ast.get_source_segment(SRC, node.test)} => {ast.get_source_segment(SRC, node.body[0])}'
+            test = ast.get_source_segment(SRC, node.test)
+            key = f'{test} => {ast.get_source_segment(SRC, node.body[0])}' if '=>' in needle else test
             if needle in key:
                 node.test, hits = ast.Constant(False), hits + 1
         elif kind == 'assign' and isinstance(node, ast.Assign):
@@ -143,17 +147,26 @@ def load(tree):
     return mod
 
 
-def battery(mod):
-    """Ejecuta la batería completa contra mod y devuelve los casos que fallan."""
+def battery(mod, resealed=False):
+    """Ejecuta la batería completa contra mod y devuelve los casos que fallan.
+
+    Con resealed=True, el ejemplo de la fotografía se vuelve a sellar antes con el propio mod: una ablación del
+    sello ya no la delatan los controles positivos, y solo la detectan los casos negativos."""
     t.v = mod
     t.results.clear()
+    saved = t.BASE['texts'][v.EXAMPLE]
     try:
+        if resealed:
+            ex = mod.strict_json(saved)
+            mod.seal_bundle(ex, t.CONTRACT)
+            t.BASE['texts'][v.EXAMPLE] = json.dumps(ex, ensure_ascii=False, indent=2)
         with contextlib.redirect_stdout(io.StringIO()):
             t.main()
     except Exception as e:  # noqa: BLE001 — una batería que no termina cuenta como detección
         return [f'excepción {e.__class__.__name__}']
     finally:
         t.v = v
+        t.BASE['texts'][v.EXAMPLE] = saved
     return sorted(cid for ok, cid, _, _ in t.results if not ok)
 
 
@@ -171,12 +184,16 @@ def ablations():
         if name in ('fg02_errors', 'fg03_errors', 'fg10_errors', 'fg12_errors'):
             mod.SPECIFIC[f'FG-{name[2:4]}'] = repl
         rows.append((f'función {name} anulada', sorted(set(battery(mod)) - set(base))))
+        if name == 'test_seal':
+            rows.append((f'función {name} anulada, con el ejemplo resellado', sorted(set(battery(mod, True)) - set(base))))
     for label, kind, needle in SOURCE_ABLATIONS:
         tree, hits = ablated_tree(kind, needle)
         if hits != 1:
             rows.append((f'{label} (no aplicable: {hits} coincidencias)', []))
             continue
         rows.append((label, sorted(set(battery(load(tree))) - set(base))))
+        if kind == 'dictval':
+            rows.append((f'{label}, con el ejemplo resellado', sorted(set(battery(load(tree), True)) - set(base))))
     survivors = [label for label, killed in rows if not killed]
     for label, killed in rows:
         print(f'{"DETECTADA " if killed else "SOBREVIVE "} {label}: {len(killed)} casos {killed[:6]}'
