@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Validador fail-closed del paquete F36-SBX (autorización, investigación y diseño), versión 4 (AF3).
+"""Validador fail-closed del paquete F36-SBX (autorización, investigación y diseño), versión 5 (AF4).
 
-Solo biblioteca estándar. No ejecuta ML ni NLP, no usa red y no escribe archivos.
+Solo biblioteca estándar. No ejecuta ML ni NLP, no usa red y no escribe archivos (tampoco el índice de Git).
 
 - Recalcula el F36-SBX-GATE y exige que coincida con el declarado.
 - Valida la semántica de la evidencia de equipo (FG-02, FG-03, FG-10 y FG-12), su vínculo con el commit
@@ -10,6 +10,8 @@ Solo biblioteca estándar. No ejecuta ML ni NLP, no usa red y no escribe archivo
 - Valida el contrato de evidencia cerrado (v4) y, con él, el ejemplo de conformidad: estructura, hashes de
   contenido, de registro, de fragmento y de output, sello de test, provenance contextual, aislamiento entre
   tenants, cobertura mínima y contexto canónico de todo output (REL-01..REL-15).
+- Consulta Git por una única vía endurecida (objetos reales, sin refs/replace) y compara el árbol de trabajo
+  con el índice por sus bytes, sin confiar en assume-unchanged, skip-worktree ni en la caché de stat (AF4).
 
 Uso: python -I -B docs/academico/tools/f36sbx/validate_f36sbx.py
 """
@@ -19,7 +21,9 @@ import datetime
 import hashlib
 import io
 import json
+import os
 import re
+import stat
 import subprocess
 import sys
 import unicodedata
@@ -231,6 +235,19 @@ GENERIC_IDENTITY_WORDS = {'auditor', 'auditora', 'auditores', 'auditoras', 'audi
 # uso privado, no asignados y separadores de línea o de párrafo.
 INVISIBLE_CATEGORIES = frozenset({'Cc', 'Cf', 'Co', 'Cn', 'Zl', 'Zp'})
 GIT_REGULAR_MODE = '100644'
+# Vista normativa de Git (AF4-M02): objetos reales, sin las sustituciones de refs/replace ni la caché del grafo de
+# commits, sin fsmonitor y sin escrituras opcionales. git_env() quita además toda variable GIT_* heredada
+# (GIT_DIR, GIT_INDEX_FILE, GIT_OBJECT_DIRECTORY, GIT_REPLACE_REF_BASE, GIT_*_PATHSPECS…), que cambiaría el
+# repositorio, el índice, los objetos o las rutas consultados. La única consulta con pathspec (git_blob) los trata
+# literalmente. Ninguna opción desactiva los injertos (info/grafts): git_state_problems() los rechaza.
+GIT_GLOBAL = ('--no-replace-objects', '--no-optional-locks', '-c', 'core.commitGraph=false',
+              '-c', 'core.fsmonitor=false', '-c', 'core.untrackedCache=false')
+GIT_ENV = {'GIT_NO_REPLACE_OBJECTS': '1', 'GIT_OPTIONAL_LOCKS': '0'}
+# Operaciones de Git en curso: el árbol de trabajo no corresponde a ningún commit (estado ambiguo).
+GIT_PENDING = ('MERGE_HEAD', 'CHERRY_PICK_HEAD', 'REVERT_HEAD', 'REBASE_HEAD', 'rebase-merge', 'rebase-apply',
+               'sequencer', 'BISECT_LOG')
+# Modos del índice cuyo contenido se compara con el árbol de trabajo: archivo, ejecutable y enlace simbólico.
+WORKTREE_MODES = frozenset({'100644', '100755', '120000'})
 HEX40 = re.compile(r'[0-9a-f]{40}')
 HEX64 = re.compile(r'[0-9a-f]{64}')
 INDEX = re.compile(r'0|[1-9][0-9]*')
@@ -461,18 +478,35 @@ def identity_errors(value, label, min_letters=3, max_length=120):
     return e
 
 
-def git(root, *args):
-    r = subprocess.run(['git', *args], cwd=root, capture_output=True, text=True, encoding='utf-8')
+def git_env():
+    """Entorno normativo de Git: el del proceso sin ninguna variable GIT_* heredada, más GIT_ENV (AF4-M02)."""
+    env = {k: x for k, x in os.environ.items() if not k.upper().startswith('GIT_')}
+    env.update(GIT_ENV)
+    return env
+
+
+def git_run(root, *args, stdin=None):
+    """Única vía del validador hacia Git (AF4-M02): (código de salida, bytes de stdout); (None, b'') si no se ejecuta.
+
+    Antepone GIT_GLOBAL y usa git_env(): objetos reales sin refs/replace, sin grafo de commits ni fsmonitor, sin
+    escrituras opcionales y sin variables GIT_* heredadas. No decodifica ni convierte finales de línea."""
+    try:
+        r = subprocess.run(['git', *GIT_GLOBAL, *args], cwd=root, input=stdin, capture_output=True, env=git_env())
+    except (OSError, ValueError):
+        return None, b''
     return r.returncode, r.stdout
 
 
+def git(root, *args):
+    """Salida de texto de git_run (UTF-8, finales de línea normalizados); código -1 si Git no se puede ejecutar."""
+    code, out = git_run(root, *args)
+    return (-1 if code is None else code), out.decode('utf-8', 'replace').replace('\r\n', '\n')
+
+
 def git_bytes(root, *args, stdin=None):
-    """Salida binaria de git, sin decodificar ni convertir finales de línea; None si git falla."""
-    try:
-        r = subprocess.run(['git', *args], cwd=root, input=stdin, capture_output=True)
-    except OSError:
-        return None
-    return r.stdout if r.returncode == 0 else None
+    """Salida binaria de git_run, sin decodificar ni convertir finales de línea; None si git falla."""
+    code, out = git_run(root, *args, stdin=stdin)
+    return out if code == 0 else None
 
 
 def git_blob(root, sha, path):
@@ -481,8 +515,8 @@ def git_blob(root, sha, path):
     Devuelve {'mode', 'type', 'object', 'data'} o {'error': motivo}. La ruta se trata literalmente (sin
     comodines) y tiene que identificar exactamente una entrada del árbol del commit; solo vale un blob regular
     (modo 100644): un árbol, un enlace simbólico, un submódulo o un ejecutable no lo son. Un archivo ignorado,
-    sin versionar o añadido después del commit no existe en ese árbol."""
-    if not (isinstance(sha, str) and HEX40.fullmatch(sha)) or not safe_doc_path(path):
+    sin versionar o añadido después del commit no existe en ese árbol. Lee objetos reales (git_run)."""
+    if not (isinstance(sha, str) and HEX40.fullmatch(sha)) or not safe_repo_path(path):
         return {'error': 'commit o ruta fuera de formato'}
     out = git_bytes(root, '--literal-pathspecs', 'ls-tree', '-z', '--full-tree', sha, '--', path)
     if out is None:
@@ -527,18 +561,191 @@ def blob_problem(blob):
 
 
 def git_ignored(root, paths):
-    """Rutas que Git ignora y que, por tanto, ningún commit contiene; None si no se puede determinar (falla cerrado)."""
+    """Rutas sin versionar que Git ignora y que, por tanto, ningún commit contiene; None si no se puede determinar
+    (falla cerrado). Un archivo versionado nunca está ignorado."""
     paths = sorted(p for p in paths if isinstance(p, str))
     if not paths:
         return []
+    code, out = git_run(root, 'check-ignore', '--stdin', '-z',
+                        stdin=b''.join(p.encode('utf-8', 'surrogateescape') + b'\0' for p in paths))
+    if code not in (0, 1):
+        return None
+    return sorted(x.decode('utf-8', 'replace') for x in out.split(b'\0') if x)
+
+
+def git_commit(root, sha):
+    """Commit real sha, verificado (el SHA-1 de sus bytes es sha): {'tree', 'parents', 'date'}; None si no lo es.
+
+    date es la fecha del committer en su propia zona horaria, la de «git show -s --format=%cs». Un objeto
+    inexistente, de otro tipo (también una etiqueta que apunte a un commit) o ilegible devuelve None."""
+    if not (isinstance(sha, str) and HEX40.fullmatch(sha)):
+        return None
+    data = git_bytes(root, 'cat-file', 'commit', sha)
+    if data is None:
+        return None
+    if hashlib.sha1(b'commit %d\0' % len(data) + data).hexdigest() != sha:
+        return None
+    head = data.split(b'\n\n', 1)[0].decode('utf-8', 'replace').split('\n')
+    trees = [ln[5:] for ln in head if ln.startswith('tree ')]
+    committer = [ln for ln in head if ln.startswith('committer ')]
+    m = re.fullmatch(r'committer .* (\d+) ([+-])(\d\d)(\d\d)', committer[0]) if len(committer) == 1 else None
+    if len(trees) != 1 or not HEX40.fullmatch(trees[0]) or m is None:
+        return None
     try:
-        r = subprocess.run(['git', 'check-ignore', '--stdin', '-z'], cwd=root,
-                           input=b''.join(p.encode('utf-8') + b'\0' for p in paths), capture_output=True)
-    except OSError:
+        offset = datetime.timedelta(hours=int(m.group(3)), minutes=int(m.group(4)))
+        tz = datetime.timezone(-offset if m.group(2) == '-' else offset)
+        date = datetime.datetime.fromtimestamp(int(m.group(1)), tz).date().isoformat()
+    except (OverflowError, OSError, ValueError):
         return None
-    if r.returncode not in (0, 1):
+    return {'tree': trees[0], 'parents': [ln[7:] for ln in head if ln.startswith('parent ')], 'date': date}
+
+
+def git_tree(root, sha):
+    """Árbol completo del commit real sha, {ruta: (modo, objeto)}; None si no se puede leer (falla cerrado)."""
+    out = git_bytes(root, 'ls-tree', '-r', '-z', '--full-tree', sha)
+    if out is None:
         return None
-    return sorted(x.decode('utf-8', 'replace') for x in r.stdout.split(b'\0') if x)
+    tree = {}
+    for raw in (x for x in out.split(b'\0') if x):
+        meta, sep, name = raw.partition(b'\t')
+        fields = meta.decode('ascii', 'replace').split(' ')
+        if not sep or len(fields) != 3:
+            return None
+        tree[name.decode('utf-8', 'surrogateescape')] = (fields[0], fields[2])
+    return tree
+
+
+def git_filemode(root):
+    """¿Cuenta el bit de ejecución del árbol de trabajo? Como en Git: nunca en Windows ni con core.fileMode=false."""
+    code, out = git_run(root, 'config', '--type=bool', '--get', 'core.fileMode')
+    return os.name != 'nt' and not (code == 0 and out.strip() == b'false')
+
+
+def same_blob(data, obj, eol=True):
+    """¿Estos bytes del árbol de trabajo son el objeto obj, o su conversión exacta LF→CRLF de un checkout de Git?
+
+    Solo se tolera la conversión completa de un blob sin CR (cada LF pasa a CRLF), como la que hace Git con
+    core.autocrlf o eol=crlf. Cualquier otro cambio, aunque sea de un solo fin de línea, es un cambio."""
+    if git_blob_id(data) == obj:
+        return True
+    lf = data.replace(b'\r\n', b'\n')
+    return eol and lf != data and b'\r' not in lf and lf.replace(b'\n', b'\r\n') == data and git_blob_id(lf) == obj
+
+
+def worktree_state(root):
+    """Índice y árbol de trabajo vistos sin confiar en la caché ni en las marcas del índice (AF4-M01).
+
+    - index: entradas en etapa 0 del índice, {ruta: (modo, objeto)};
+    - dirty: rutas del índice cuyo archivo falta, no es del tipo del índice o no tiene los bytes de su objeto.
+      Se calcula aquí, sobre los bytes, nunca con el stat cacheado, assume-unchanged ni skip-worktree;
+    - untracked: archivos sin versionar que Git no ignora;
+    - problems: lo que hace la vista no fiable: marcas assume-unchanged o skip-worktree, entradas sin fusionar,
+      submódulos o modos desconocidos, objetos ausentes o archivos ilegibles.
+    Lo que no se puede leer queda en None y añade su problema: falla cerrado."""
+    st = {'index': None, 'dirty': None, 'untracked': None, 'problems': []}
+    problems = st['problems']
+    out = git_bytes(root, 'ls-files', '-z', '-v', '-s')
+    if out is None:
+        problems.append('no se pudo leer el índice de Git')
+        return st
+    index = {}
+    marks = {'assume-unchanged': [], 'skip-worktree': [], 'sin fusionar (conflicto)': [],
+             'submódulo o modo no verificable': []}
+    for raw in (x for x in out.split(b'\0') if x):
+        meta, sep, name = raw.partition(b'\t')
+        fields = meta.decode('ascii', 'replace').split(' ')
+        if not sep or len(fields) != 4 or len(fields[0]) != 1:
+            problems.append('entrada del índice ilegible')
+            return st
+        tag, mode, obj, stage = fields
+        path = name.decode('utf-8', 'surrogateescape')
+        if tag.islower():
+            marks['assume-unchanged'].append(path)
+        if tag in 'Ss':
+            marks['skip-worktree'].append(path)
+        if stage != '0':
+            marks['sin fusionar (conflicto)'].append(path)
+        elif mode not in WORKTREE_MODES or not HEX40.fullmatch(obj):
+            marks['submódulo o modo no verificable'].append(path)
+        else:
+            index[path] = (mode, obj)
+    for kind, paths in marks.items():
+        if paths:
+            problems.append(f'{kind} en {len(paths)} entradas del índice: {sorted(set(paths))[:4]}')
+    query = ''.join(f'{obj}\n' for obj in sorted({obj for _, obj in index.values()})).encode('ascii')
+    out = git_bytes(root, 'cat-file', '--batch-check=%(objectname) %(objecttype)', stdin=query)
+    kinds = dict(ln.split(' ', 1) for ln in (out or b'').decode('ascii', 'replace').splitlines() if ' ' in ln)
+    unresolved = sorted(p for p, (_, obj) in index.items() if kinds.get(obj) != 'blob')
+    if out is None or unresolved:
+        problems.append(f'entradas del índice sin su objeto blob en el repositorio: {unresolved[:4]}')
+    filemode = git_filemode(root)
+    dirty, unreadable = set(), []
+    for path, (mode, obj) in index.items():
+        p = Path(root) / path
+        try:
+            info = p.lstat()
+            if mode == '120000' and stat.S_ISLNK(info.st_mode):
+                data = os.fsencode(os.readlink(p))
+            else:
+                data = p.read_bytes() if stat.S_ISREG(info.st_mode) else None
+        except (FileNotFoundError, NotADirectoryError):
+            data = None
+        except (OSError, ValueError):
+            unreadable.append(path)
+            continue
+        if data is None or not same_blob(data, obj, eol=mode != '120000'):
+            dirty.add(path)
+        elif filemode and mode != '120000' and bool(info.st_mode & stat.S_IXUSR) != (mode == '100755'):
+            dirty.add(path)
+    if unreadable:
+        problems.append(f'archivos versionados ilegibles en el árbol de trabajo: {sorted(unreadable)[:4]}')
+    out = git_bytes(root, 'ls-files', '-z', '--others', '--exclude-standard')
+    if out is None:
+        problems.append('no se pudieron listar los archivos sin versionar')
+    else:
+        st['untracked'] = {x.decode('utf-8', 'surrogateescape') for x in out.split(b'\0') if x}
+    st['index'], st['dirty'] = index, dirty
+    return st
+
+
+def git_state_problems(root):
+    """Estado del repositorio que hace ambigua la vista normativa (AF4-M02): refs/replace, injertos y operaciones en
+    curso. Lista vacía si no hay ninguno; lo que no se pudo comprobar también es un problema (falla cerrado).
+
+    Las refs/replace no cambian lo que lee el validador (git_run las ignora), pero sí lo que ve quien revisa con
+    Git sin --no-replace-objects: esa ambigüedad falla cerrado. Los injertos los aplica Git siempre."""
+    problems = []
+    out = git_bytes(root, 'for-each-ref', '--format=%(refname)', 'refs/replace/')
+    if out is None:
+        problems.append('no se pudieron listar las refs/replace')
+    elif out.strip():
+        refs = sorted(out.decode('utf-8', 'replace').split())
+        problems.append(f'refs/replace presentes, que sustituyen objetos en la vista habitual de Git: {refs[:4]}')
+    names = ['info/grafts', *GIT_PENDING]
+    out = git_bytes(root, 'rev-parse', *[x for name in names for x in ('--git-path', name)])
+    paths = out.decode('utf-8', 'replace').splitlines() if out is not None else []
+    if len(paths) != len(names):
+        return problems + ['no se pudo resolver el directorio de Git']
+    for name, rel in zip(names, paths):
+        if os.path.lexists(Path(root) / rel):
+            problems.append('injertos (info/grafts), que Git aplica aunque se desactiven los reemplazos'
+                            if name == 'info/grafts' else f'operación de Git en curso ({name})')
+    return problems
+
+
+def changed_since(root, sha, wt):
+    """Rutas en las que el índice o el árbol de trabajo difieren del commit real sha, más las no versionadas.
+
+    Compara objetos (árbol de sha frente al índice) y bytes (árbol de trabajo frente al índice, ya calculados en
+    worktree_state): no depende de las marcas del índice ni de su caché de stat. None si algo no se pudo leer."""
+    if wt.get('index') is None or wt.get('dirty') is None or wt.get('untracked') is None:
+        return None
+    tree = git_tree(root, sha)
+    if tree is None:
+        return None
+    index = wt['index']
+    staged = {p for p in set(tree) | set(index) if tree.get(p) != index.get(p)}
+    return sorted(staged.union(wt['dirty'], wt['untracked']))
 
 
 def blob_text(blob):
@@ -575,26 +782,29 @@ def json_bytes(data):
         return None
 
 
+def safe_repo_path(path):
+    """Ruta relativa de un archivo del repositorio: sin «..», componentes vacíos, barras invertidas ni invisibles."""
+    return (isinstance(path, str) and bool(path) and '\\' not in path and '..' not in path.split('/')
+            and '' not in path.split('/') and not invisible_chars(path))
+
+
 def safe_doc_path(path):
-    return (isinstance(path, str) and path.startswith('docs/') and path.endswith('.md') and '\\' not in path
-            and '..' not in path.split('/') and '' not in path.split('/'))
+    return safe_repo_path(path) and path.startswith('docs/') and path.endswith('.md')
 
 
-def git_facts(root, sha):
-    """Hechos Git de un commit candidato; todo lo no evaluable queda en falso o None (falla cerrado)."""
-    f = {'commit': False, 'from_base': False, 'ancestor': False, 'changed': None, 'date': None, 'gate_doc': None}
-    code, out = git(root, 'cat-file', '-t', sha)
-    if code != 0 or out.strip() != 'commit':
+def git_facts(root, sha, wt, problems):
+    """Hechos Git del commit candidato real; todo lo no evaluable queda en falso o None (falla cerrado).
+
+    problems: lo que hace ambigua la vista de Git o del árbol de trabajo (AF4); con algo ahí, nada se vincula."""
+    f = {'commit': False, 'from_base': False, 'ancestor': False, 'changed': None, 'date': None, 'gate_doc': None,
+         'git_state': list(problems)}
+    info = git_commit(root, sha)
+    if info is None:
         return f
-    f['commit'] = True
-    f['from_base'] = git(root, 'merge-base', '--is-ancestor', BASE, sha)[0] == 0
-    f['ancestor'] = git(root, 'merge-base', '--is-ancestor', sha, 'HEAD')[0] == 0
-    c1, diff = git(root, 'diff', '--name-only', '--no-renames', sha)
-    c2, untracked = git(root, 'ls-files', '--others', '--exclude-standard')
-    if c1 == 0 and c2 == 0:
-        f['changed'] = sorted({ln.strip() for ln in (diff + untracked).splitlines() if ln.strip()})
-    code, out = git(root, 'show', '-s', '--format=%cs', sha)
-    f['date'] = out.strip() if code == 0 else None
+    f['commit'], f['date'] = True, info['date']
+    f['from_base'] = git_run(root, 'merge-base', '--is-ancestor', BASE, sha)[0] == 0
+    f['ancestor'] = git_run(root, 'merge-base', '--is-ancestor', sha, 'HEAD')[0] == 0
+    f['changed'] = changed_since(root, sha, wt)
     f['gate_doc'] = blob_text(git_blob(root, sha, GATE_DOC))
     return f
 
@@ -621,18 +831,15 @@ def collect(root=ROOT):
                     evidence[rel] = None
                 elif p.is_file():
                     evidence[rel] = read_bytes(root, rel)
+    # Estado de Git y del árbol de trabajo, visto sin refs/replace ni marcas del índice (AF4).
+    wt = worktree_state(root)
+    git_state = git_state_problems(root) + wt['problems']
     code, branch = git(root, 'rev-parse', '--abbrev-ref', 'HEAD')
     branch = branch.strip() if code == 0 else None
-    base_ok = git(root, 'merge-base', '--is-ancestor', BASE, 'HEAD')[0] == 0
-    changed = None
-    c1, diff = git(root, 'diff', '--name-only', '--no-renames', BASE)
-    c2, untracked = git(root, 'ls-files', '--others', '--exclude-standard')
-    if c1 == 0 and c2 == 0:
-        changed = {ln.strip() for ln in (diff + untracked).splitlines() if ln.strip()}
-    base_gov = {}
-    for rel in GOV_FILES:
-        c, out = git(root, 'show', f'{BASE}:{rel}')
-        base_gov[rel] = out if c == 0 else None
+    base_ok = git_run(root, 'merge-base', '--is-ancestor', BASE, 'HEAD')[0] == 0
+    changed = changed_since(root, BASE, wt)
+    changed = None if changed is None else set(changed)
+    base_gov = {rel: blob_text(git_blob(root, BASE, rel)) for rel in GOV_FILES}
     changed_py = {rel: read(root, rel) for rel in sorted(changed or ()) if rel.endswith('.py')}
     # Commits candidatos citados por el estado del gate o por la evidencia, y ADR sucesores citados por FG-12.
     shas, adr_paths = set(), set()
@@ -648,14 +855,17 @@ def collect(root=ROOT):
             if isinstance(adr, dict) and safe_doc_path(adr.get('path')):
                 adr_paths.add(adr['path'])
     candidates = sorted(sha for sha in shas if HEX40.fullmatch(sha))
-    facts = {sha: git_facts(root, sha) for sha in candidates}
+    facts = {sha: git_facts(root, sha, wt, git_state) for sha in candidates}
     # El ADR se lee del árbol Git de cada commit candidato citado, nunca del árbol de trabajo (AF3-M01).
     adr_blobs = {(sha, p): git_blob(root, sha, p) for sha in candidates for p in sorted(adr_paths)}
-    # La evidencia que Git ignora no puede formar parte de ningún commit: no vale como evidencia.
-    ignored = git_ignored(root, [p for p in evidence if p != GATE_EVIDENCE])
+    # Lo que Git ignora no puede formar parte de ningún commit: ni evidencia (AF3) ni ninguna otra entrada
+    # normativa leída del árbol de trabajo (AF4): paquete, gobierno, herramientas y fuentes F34.
+    inputs = [p for src in (texts, upstream, tools, evidence) for p in src if p != GATE_EVIDENCE]
+    ignored = git_ignored(root, inputs)
     return {'root': str(root), 'texts': texts, 'upstream': upstream, 'tools': tools, 'evidence': evidence,
             'branch': branch, 'base_ok': base_ok, 'changed': changed, 'base_gov': base_gov,
-            'changed_py': changed_py, 'facts': facts, 'adr_blobs': adr_blobs, 'ignored': ignored}
+            'changed_py': changed_py, 'facts': facts, 'adr_blobs': adr_blobs, 'ignored': ignored,
+            'git_state': git_state}
 
 
 def state_block(text):
@@ -1621,6 +1831,16 @@ def rule_eva(s):
 def rule_frz(s):
     out = [(s['branch'] in BRANCHES, f'rama admitida: {s["branch"]}'),
            (s['base_ok'], f'la base {BASE[:7]} es ancestro de HEAD')]
+    # AF4: con una vista de Git ambigua (marcas del índice, conflictos, operaciones en curso, refs/replace o
+    # injertos) no se puede afirmar nada sobre el alcance ni sobre el vínculo con un candidato.
+    problems = s['git_state']
+    out.append((problems == [], f'estado Git fiable: sin assume-unchanged ni skip-worktree, conflictos, operaciones '
+                                f'en curso, refs/replace ni injertos; problemas: {problems}'))
+    ignored = s['ignored']
+    unversioned = ['no se pudo comprobar con Git (falla cerrado)'] if ignored is None else \
+        [p for p in ignored if not p.startswith(GATE_EVIDENCE)]
+    out.append((not unversioned, f'las entradas normativas leídas del árbol de trabajo son versionables (Git no '
+                                 f'ignora ninguna); ignoradas: {unversioned}'))
     changed = s['changed']
     if changed is None:
         out.append((False, 'estado Git desconocido: no se puede verificar el alcance (falla cerrado)'))
@@ -1766,6 +1986,9 @@ def binding_errors(sha, facts, gate_doc):
         e.append(f'{sha[:12]} no desciende de la base {BASE[:7]}')
     if not f.get('ancestor'):
         e.append(f'{sha[:12]} no es ancestro de HEAD')
+    gs = f.get('git_state')
+    if not isinstance(gs, list) or gs:
+        e.append(f'estado Git no fiable: el vínculo con el candidato no es evaluable (falla cerrado): {gs}')
     changed = f.get('changed')
     if changed is None:
         e.append('cambios posteriores al candidato no evaluables (falla cerrado)')
@@ -2296,7 +2519,8 @@ def rule_gate(s, auto):
                                               f'sin citar: {stray}; enlaces o ilegibles: {unreadable}'))
     ignored = s['ignored']
     ign_err = ['no se pudo comprobar con Git si la evidencia es versionable (falla cerrado)'] if ignored is None \
-        else [f'{p}: Git lo ignora, así que ningún commit puede contenerlo' for p in ignored]
+        else [f'{p}: Git lo ignora, así que ningún commit puede contenerlo' for p in ignored
+              if p.startswith(GATE_EVIDENCE)]
     out.append((not ign_err, f'la evidencia de equipo es versionable: Git no ignora ningún archivo de gate/evidencia/; '
                              f'errores: {ign_err}'))
     auth = state.get('f37_authorized_ei')

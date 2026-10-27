@@ -445,7 +445,7 @@ def build(auth=AUTH, mutate=None, team=('FG-02', 'FG-03', 'FG-10', 'FG-12')):
     ctx = {'state': state, 'schema': schema, 'evidence': {}, 'adr_blobs': {}, 'classes': v.EXPECTED_CLASSES,
            'gate_doc': status_doc(BASE['texts'][G], {fg: 'CUMPLE' for fg in team}),
            'facts': {CAND: {'commit': True, 'from_base': True, 'ancestor': True, 'date': CDATE,
-                            'gate_doc': BASE['texts'][G],
+                            'gate_doc': BASE['texts'][G], 'git_state': [],
                             'changed': sorted([S, G, REPORT, *(path(fg) for fg in team)])}}}
     set_report()(docs, ctx)
     if docs['FG-12']['successor_adr'] is not None:
