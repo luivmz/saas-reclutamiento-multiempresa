@@ -171,7 +171,33 @@ La revisión encontró además cinco defectos, corregidos en AF4. Los numera est
 
 ### 7.1 Ejecución focal de ablaciones
 
-PENDIENTE: se registra al terminar la ejecución.
+**Qué se ejecutó y por qué.** AF4 cambia tres piezas del oracle: la vista de Git del validador (todas sus funciones Git), la identidad y el vínculo con el candidato. El resto no cambia: contrato, ejemplo, hashes, sello, tenants, REL-15, matriz y gobierno. Por eso no se repitió la ablación completa, de más de media hora, sino una ejecución focal de 58 ablaciones.
+
+- **Dónde.** En un clon local aislado del candidato (`git clone --shared`), para no depender del árbol de trabajo mientras se redactaba esta documentación.
+- **Línea base.** Sin fallas, en memoria y con Git real.
+- **P1, vista de Git de AF4.** Las 23 ablaciones AF4-M01, AF4-M02 y AF4; 18 de ellas, solo contra la batería con Git real.
+- **P2, piezas que dependen de las funciones cambiadas.** 35 ablaciones:
+  - las comprobaciones Git de AF3 y sus funciones: resolución del blob, blob íntegro, FG-12 y evidencia ignorada;
+  - todas las de identidad: AF2, AF3 y AF4-L01;
+  - `binding_errors` y la regla FRZ.
+- **`meta_f36sbx.py hojas`**, completa.
+
+**Resultado sobre `9fbfb2d`** (P1 y P2 en paralelo):
+
+- **P1** (2311 s): 23 ablaciones, 22 detectadas por casos pertinentes y 1 solo por excepciones, «cambios: índice frente al commit». No era un defecto del oracle. La ablación de tipo `assign` convertía el conjunto de cambios en una lista, `list.union` lanzaba una excepción y los escenarios fallaban como no ejecutables. `d27eedd` construye ese conjunto con un `if` explícito, con la misma semántica, y la ablación anula esa condición.
+- **P2** (2218 s): 35 ablaciones, las 35 detectadas por casos pertinentes y 0 supervivientes.
+- **`hojas`**: 505 mutaciones de forma, 810 sustituciones por valores válidos y 243 mutaciones y sustituciones de evidencia, con 0 falsos PASS.
+
+Algunas ablaciones fallan además en algún caso por excepción, sin que eso cuente como detección. `blob_problem` y «FG-12: el ADR es un blob del commit candidato» lo hacen en AF3-01, AF3-02 y E39, como en AF3. `git_commit` anterior a AF4 lo hace en la parte W, porque aquel código no capturaba un Git no ejecutable (W17). Las tres tienen detecciones pertinentes.
+
+**Reejecución dirigida sobre `d27eedd`** (436 s), con línea base sin fallas: las tres ablaciones de `changed_since()`, que son la corregida, la función entera y los archivos sin versionar. **3 de 3 detectadas por casos pertinentes.** La corregida la detectan ahora AF4-M01-A11, AF4-M02-2, G10 y G11.
+
+**Total: 58 ablaciones focales, 58 detectadas por casos pertinentes, 0 supervivientes.** Después de la ejecución focal solo cambiaron dos cosas:
+
+- `ee34342` añadió este documento a `PKG_DOCS`, un dato y no una comprobación;
+- `d27eedd` reescribió esa comparación.
+
+Este registro es el único cambio posterior a la reejecución.
 
 ## 8. Límites
 
