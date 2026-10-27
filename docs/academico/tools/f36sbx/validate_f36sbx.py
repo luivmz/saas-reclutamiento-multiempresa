@@ -843,7 +843,10 @@ def changed_since(root, sha, wt):
     if tree is None:
         return None
     index = wt['index']
-    staged = {p for p in set(tree) | set(index) if tree.get(p) != index.get(p)}
+    staged = set()
+    for p in set(tree) | set(index):
+        if tree.get(p) != index.get(p):
+            staged.add(p)
     return sorted(staged.union(wt['dirty'], wt['untracked']))
 
 

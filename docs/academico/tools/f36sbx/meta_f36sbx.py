@@ -153,7 +153,7 @@ SOURCE_ABLATIONS = [
     ('AF4-M01 · árbol de trabajo: bit de ejecución', 'if', "filemode and mode != '120000'", GIT_ONLY),
     ('AF4-M01 · árbol de trabajo: archivos ilegibles', 'if', 'unreadable => problems.append', GIT_ONLY),
     ('AF4-M01 · sin versionar: archivos que Git no ignora', 'assign', "st['untracked'] = ", GIT_ONLY),
-    ('AF4-M01 · cambios: índice frente al commit', 'assign', 'staged = {p for p in', GIT_ONLY),
+    ('AF4-M01 · cambios: índice frente al commit', 'if', 'tree.get(p) != index.get(p)', GIT_ONLY),
     ('AF4-M01 · FRZ: entradas normativas versionables', 'assign', 'unversioned = '),
     ('AF4 · FRZ: estado Git fiable', 'assign', "problems = s['git_state']"),
     ('AF4 · vínculo: estado Git no fiable', 'if', 'not isinstance(gs, list) or gs'),
