@@ -49,7 +49,7 @@ VALIDATOR = HERE / 'validate_f36sbx.py'
 SRC = VALIDATOR.read_text(encoding='utf-8')
 MEM, GIT, GIT_ONLY = ('mem',), ('mem', 'git'), ('git',)
 # Partes de test_f36sbx_git.py: si una entera no se puede ejecutar, es una excepción, no una detección pertinente.
-GIT_PARTS = {'UNIT', 'WORKTREE', 'REPLACEMENT', 'E2E', 'E2E_M01', 'E2E_M02'}
+GIT_PARTS = {'UNIT', 'WORKTREE', 'REPLACEMENT', 'E2E', 'E2E_M01', 'E2E_M02', 'E2E_AF5'}
 
 # Ablaciones sobre el código del validador: (etiqueta, tipo, aguja[, baterías]). 'if' anula la condición de la
 # única sentencia if/elif cuya condición contiene la aguja o, si la aguja contiene «=>», cuyo «condición => primera
@@ -170,15 +170,47 @@ SOURCE_ABLATIONS = [
     ('AF4-L01 · palabra: concatenación', 'if', 'concatenated(form)'),
     ('AF4-L01 · palabra: dígitos en lugar de letras', 'assign', 'LEET = str.maketrans'),
     ('AF4-L01 · palabra: camelCase', 'if', 'value[i - 1].islower() and c.isupper()'),
+    # AF5-M01: entradas normativas regulares, sin enlaces y ligadas al candidato.
+    ('AF5-M01 · lectura: enlace en la ruta', 'if', "link is not None => return None, f'enlace", GIT),
+    ('AF5-M01 · lectura: archivo regular', 'if', "not stat.S_ISREG(info.st_mode) => return None, 'no es", GIT),
+    ('AF5-M01 · lectura: lo abierto es lo inspeccionado', 'if', '(opened.st_dev, opened.st_ino)', GIT_ONLY),
+    ('AF5-M01 · ruta: componente que redirige', 'if', 'redirects(cur)', GIT),
+    ('AF5-M01 · recorrido: entrada que redirige', 'if', 'redirects(e.path)', GIT),
+    ('AF5-M01 · índice: bytes consumidos, no releídos', 'if', 'preread is not None and path in preread', GIT_ONLY),
+    ('AF5-M01 · índice: modo regular de la entrada normativa', 'if', 'mode != GIT_REGULAR_MODE => normative', GIT),
+    ('AF5-M01 · candidato: entrada requerida presente', 'if', 'p not in tree', GIT_ONLY),
+    ('AF5-M01 · candidato: blob regular', 'if', 'p in tree and tree[p][0] != GIT_REGULAR_MODE', GIT_ONLY),
+    ('AF5-M01 · FRZ: entradas normativas', 'assign', "normative = s.get('normative')"),
+    ('AF5-M01 · vínculo: entradas normativas', 'if', 'not isinstance(nv, list) or nv'),
+    # AF5-L01: composiciones genéricas sin separadores.
+    ('AF5-L01 · composición: pieza fuerte', 'if', 'piece in strong_set'),
+    ('AF5-L01 · composición: pegamento y relleno', 'if', 'filler or piece in glue_set'),
+    ('AF5-L01 · composición: solo marcadores cortos', 'if', 'marks[j] and not collapsed'),
+    ('AF5-L01 · palabra: letras duplicadas', 'if', 'DOUBLED.search(form) and concatenated('),
+    ('AF5-L01 · palabra: letras alargadas', 'if', 'STRETCH.search(letters)'),
+    ('AF5-L01 · palabra: letras latinas sin descomposición', 'assign', 'LATIN_FOLD = str.maketrans'),
+    ('AF5-L01 · identidad: frase marcadora en camelCase', 'if', "' '.join(tokens) in PLACEHOLDERS"),
 ]
 
 
 def fs_git_blob(m):
     """Mutante del comportamiento anterior a AF3: el «blob» se lee del árbol de trabajo."""
     def f(root, sha, path):
-        data = m.read_bytes(root, path)
+        data = m.read_normative(root, path)[0]
         return {'error': 'x'} if data is None else {'mode': '100644', 'type': 'blob', 'object': m.git_blob_id(data),
                                                     'data': data}
+    return f
+
+
+def following_read(m):
+    """Mutante anterior a AF5: lee la entrada normativa siguiendo enlaces y uniones de directorios."""
+    def f(root, rel):
+        try:
+            return (Path(root) / rel).read_bytes(), None
+        except FileNotFoundError:
+            return None, None
+        except OSError:
+            return None, 'ilegible'
     return f
 
 
@@ -236,14 +268,23 @@ FUNCTION_ABLATIONS = [
      'AF4-M02 · función git_env que conserva las variables GIT_* heredadas'),
     ('git_commit', legacy_commit, GIT_ONLY, 'AF4-M02 · función git_commit anterior a AF4'),
     ('git_state_problems', lambda m: lambda root: [], GIT_ONLY, 'AF4-M02 · función git_state_problems anulada'),
-    ('changed_since', lambda m: lambda root, sha, wt: [], GIT_ONLY, 'AF4-M01 · función changed_since anulada'),
+    ('changed_since', lambda m: lambda root, sha, wt, tree=None: [], GIT_ONLY, 'AF4-M01 · función changed_since anulada'),
     ('same_blob', lenient_eol, GIT, 'AF4-M01 · función same_blob que tolera cualquier fin de línea'),
     ('same_blob', lambda m: lambda data, obj, eol=True: m.git_blob_id(data) == obj, GIT,
      'AF4-M01 · función same_blob sin la conversión LF→CRLF de un checkout'),
     # AF4-L01.
     ('nondistinctive', lambda m: lambda token: False, MEM, 'AF4-L01 · función nondistinctive anulada'),
     ('identity_tokens', lambda m: lambda value: value.split(), MEM, 'AF4-L01 · función identity_tokens sin normalizar'),
-    ('concatenated', lambda m: lambda word: False, MEM, 'AF4-L01 · función concatenated anulada'),
+    ('concatenated', lambda m: lambda word, collapsed=False: False, MEM, 'AF4-L01 · función concatenated anulada'),
+    # AF5-M01: lectura normativa sin enlaces y ligada al candidato.
+    ('read_normative', following_read, GIT, 'AF5-M01 · función read_normative que sigue enlaces'),
+    ('link_in_path', lambda m: lambda root, rel: None, GIT, 'AF5-M01 · función link_in_path anulada'),
+    ('redirects', lambda m: lambda path: m.os.path.islink(path), GIT,
+     'AF5-M01 · función redirects sin uniones ni puntos de reparse'),
+    ('safe_repo_path', lambda m: lambda path: isinstance(path, str) and bool(path) and '..' not in path.split('/'),
+     MEM, 'AF5-M01 · función safe_repo_path sin «:», barras invertidas ni componentes vacíos'),
+    # AF5-L01.
+    ('filler_piece', lambda m: lambda word, j, i: False, MEM, 'AF5-L01 · función filler_piece anulada'),
 ]
 EXCEPTION_MARKS = ('mutación no aplicable', 'escenario no ejecutable', 'excepción')
 
