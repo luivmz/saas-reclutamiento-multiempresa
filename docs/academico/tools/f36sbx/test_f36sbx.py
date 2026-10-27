@@ -1454,6 +1454,8 @@ def main():
         ('AF5-L01-18', 'drplaceholder', 'tratamiento y marcador'),
         ('AF5-L01-19', 'auditorsinnombre', 'rol, conector y marcador'),
         ('AF5-L01-20', 'xxplaceholderxx', 'relleno a ambos lados'),
+        ('AF5-L01-23', 'AuditorE', 'rol e inicial en camelCase: solo se ve al separar las palabras'),
+        ('AF5-L01-24', 'MrX', 'tratamiento e inicial en camelCase'),
     ]
     for cid, name, why in variants5:
         ev_case(cid, f'auditor «{name}» ({why})', 'FG-02', auditor_named(name), 'marcador de posición'
