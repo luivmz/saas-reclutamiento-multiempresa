@@ -1,6 +1,6 @@
 # F36-SBX — Corrección AF2 (segunda auditoría independiente)
 
-> Fase F36-SBX, corrección focal del 26/10/2026, en la rama `feature/f36-sbx-authorization-design`, sobre el candidato auditado `2a4e68c913cf378fe5f5543f9dc537fd45760c63`. Candidata a una **tercera auditoría independiente**. Los MEDIUM quedan **corregidos por implementación, pendientes de tercera auditoría independiente**: este documento no los declara cerrados.
+> Fase F36-SBX, corrección focal del 26/10/2026, en la rama `feature/f36-sbx-authorization-design`, sobre el candidato auditado `2a4e68c913cf378fe5f5543f9dc537fd45760c63`. Candidata a una **tercera auditoría independiente**. **AF2-M01/M02/M03 y AF2-L01 corregidos por implementación, pendientes de tercera auditoría independiente.** Este documento no los declara cerrados: los cierra, o no, esa auditoría.
 
 ## 1. Veredicto recibido
 
@@ -67,10 +67,20 @@ Cualquier cambio de postulación, vacante, organización, escenario, familia, ge
 
 ## 7. Pruebas y metapruebas
 
-- [`test_f36sbx.py`](../tools/f36sbx/test_f36sbx.py) incluye AF2-01..AF2-33 y los grupos H, X, D, L y P. Las pruebas de evidencia AF2 se comprueban en memoria y registradas en la fotografía del repositorio, donde el validador completo falla.
-- [`meta_f36sbx.py`](../tools/f36sbx/meta_f36sbx.py) anula cada comprobación AF2 en el árbol sintáctico del validador y exige que la batería lo detecte. Además muta una a una cada hoja del ejemplo y de la evidencia: sin recalcular, todo falla; resellado, solo pasan los cambios legítimos de su lista cerrada.
+- [`test_f36sbx.py`](../tools/f36sbx/test_f36sbx.py) incluye AF2-01..AF2-33 y los grupos H, X, D, L y P: 425 casos. Las pruebas de evidencia AF2 se comprueban en memoria y, además, registradas en la fotografía del repositorio, donde el validador completo falla.
+- [`meta_f36sbx.py`](../tools/f36sbx/meta_f36sbx.py) hace dos metapruebas:
+  - **Mutación de hojas.** 505 mutaciones del ejemplo y 155 de la evidencia (660 en total), con 0 falsos PASS. Sin recalcular, toda mutación del ejemplo falla, salvo la nota libre. Con los registros recalculados y sin resellar, solo pasan los artefactos de dev que el ajuste no usa. Con test resellado, solo pasan los cambios legítimos de su lista cerrada. En la evidencia, mutar un solo lado (registro, informe o ADR) la invalida, salvo el propósito libre de una dependencia.
+  - **Ablación.** Anula cada regla, cada función de evidencia y cada comprobación AF2 en el árbol sintáctico del validador, y exige que la batería lo detecte. Las ablaciones del sello se repiten con el ejemplo resellado por el validador debilitado, para que solo puedan detectarlas los casos negativos. Resultado final: **93 ablaciones, 93 detectadas y 0 supervivientes**, con la batería sin fallas en la línea base.
+- **Lo que encontró la ablación.** La primera ejecución dio 86 ablaciones, 81 detectadas y 5 supervivientes; la segunda, 93 y 1. Ninguna superviviente se debía a un defecto del validador, que no cambió:
+  - el mínimo de letras de la identidad y el título de nivel 1 del informe no tenían un caso que los aislara, porque cada caso que los ejercitaba fallaba también por otra regla (nuevos D43 y D44);
+  - tres ablaciones no llegaron a aplicarse por un defecto del emparejador de la metaprueba, que también coincidía con el `if` que envolvía la comprobación (corregido);
+  - la regla NFC de la identidad la tapaba la regla NFC del documento, porque el informe repetía el nombre literal. Con el bloque escrito con escapes JSON el documento queda en NFC y solo la identidad lo detecta (nuevos D45 y, para U+200B, D46).
 
-## 8. Lo que no cambia
+## 8. Documentación sincronizada
+
+El [contrato](F36SBX_Contrato_Evidencia.md) describe el contrato normativo v3: hashes, sello v2, resellado, provenance, referencias upstream tipadas, aislamiento entre organizaciones, REL-01..REL-14 y cobertura mínima. El [gate](F36SBX_Gate_Sucesor.md#86-informe-y-adr-fuente-estructurada-canónica) describe el esquema de evidencia v2 y la fuente estructurada canónica del informe y del ADR. El [threat model](F36SBX_Threat_Model.md) actualiza los controles de TEI-05, TEI-06, TEI-08, TEI-12 y TEI-22, sin renumerar. La [trazabilidad](F36SBX_Trazabilidad.md) relaciona cada hallazgo AF2 con su control, su documento y sus pruebas.
+
+## 9. Lo que no cambia
 
 - F36-SBX = EN DISEÑO; F36-SBX-GATE = NO SUPERADO; FG-02, FG-03, FG-10 y FG-12 siguen pendientes, sin evidencia registrada; F37-SBX = BLOQUEADA.
 - G0 real = NO APROBADA; G0-SBX = APROBADA CON RESTRICCIONES; ADR-005 = PROPUESTA; Alcance C = BLOQUEADO; Datos reales = PROHIBIDOS.

@@ -1,6 +1,6 @@
 # F36-SBX — Trazabilidad
 
-> Fase F36-SBX, versión 1 (26/10/2026). Candidata a auditoría independiente. F36-SBX no modifica ningún RF, CU ni RNF, ni los RF candidatos. No promueve nada al baseline.
+> Fase F36-SBX, versión 2 (26/10/2026): añade la trazabilidad de las auditorías AF1 y AF2 (sección 5). Candidata a una tercera auditoría independiente. F36-SBX no modifica ningún RF, CU ni RNF, ni los RF candidatos. No promueve nada al baseline.
 
 ## 1. Requisitos relacionados (sin cambios)
 
@@ -47,3 +47,19 @@
 ## 4. Estado de G0 y de las puertas
 
 G0 real = NO APROBADA; G0-02, G0-03 y G0-12 = PENDIENTE EXTERNO; G0-09 y G0-14 = CUMPLIDO; G0-SBX = APROBADA CON RESTRICCIONES, con alcance solo en F35-SBX; ADR-005 = PROPUESTA; F36-SBX-GATE = NO SUPERADO. F36-SBX no cambia ninguno de estos estados de la G0 real ni de G0-SBX.
+
+## 5. Auditorías independientes y correcciones
+
+| Auditoría | Candidato | Resultado | Corrección |
+|---|---|---|---|
+| AF1 | `06e933e` | No aprobado: 2 MEDIUM, más 3 defectos del oracle encontrados al corregir | [Corrección AF1](F36SBX_Correccion_AF1.md) |
+| AF2 | `2a4e68c` | No aprobado: 0 BLOCKER, 0 HIGH, 3 MEDIUM y 1 LOW | [Corrección AF2](F36SBX_Correccion_AF2.md). AF2-M01/M02/M03 y AF2-L01 corregidos por implementación, pendientes de tercera auditoría independiente |
+
+| Hallazgo AF2 | Control | Dónde se documenta | Pruebas |
+|---|---|---|---|
+| AF2-M01 | Bloque canónico del informe y del ADR, coherencia exacta con el registro e identidad visible | [Gate §8.6](F36SBX_Gate_Sucesor.md#86-informe-y-adr-fuente-estructurada-canónica) | AF2-01..AF2-12, D01..D46 |
+| AF2-M02 | Hashes con etiqueta por nivel y sello de test v2 | [Contrato §5 y §6](F36SBX_Contrato_Evidencia.md#5-hashes-y-procedencia) | AF2-13..AF2-24, H01..H12, P-01..P-04 |
+| AF2-M03 | Autores, anotadores y referencias upstream ligados a su contexto; sin fuentes globales | [Contrato §7](F36SBX_Contrato_Evidencia.md#7-aislamiento-entre-organizaciones) | AF2-25..AF2-30, X01..X10, P-05, P-06 |
+| AF2-L01 | `example_id` cerrado y cobertura mínima del ejemplo | [Contrato §9](F36SBX_Contrato_Evidencia.md#9-ejemplo-de-conformidad) | AF2-31..AF2-33, L01..L05 |
+
+Las amenazas afectadas son TEI-05, TEI-06, TEI-08, TEI-12 y TEI-22 del [threat model](F36SBX_Threat_Model.md), sin renumerar. Las pruebas están en [`test_f36sbx.py`](../tools/f36sbx/test_f36sbx.py) y las metapruebas, en [`meta_f36sbx.py`](../tools/f36sbx/meta_f36sbx.py).
