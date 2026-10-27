@@ -223,7 +223,9 @@ PLACEHOLDERS = {'auditor', 'auditora', 'independiente', 'auditor independiente',
                 'anonymous', 'none', 'null', 'nil', 'nadie', 'nobody', 'nombre', 'nombre del auditor',
                 'nombre apellido', 'name', 'xxx', 'xxxx', 'test', 'prueba', 'placeholder', 'place holder',
                 'marcador', 'marcador de posicion', 'lorem ipsum', 'ejemplo', 'example', 'sample', 'dummy', 'foo',
-                'bar', 'foo bar', 'changeme', 'change me', 'fixme', 'reemplazar', 'completar', 'rellenar'}
+                'bar', 'foo bar', 'changeme', 'change me', 'fixme', 'reemplazar', 'completar', 'rellenar',
+                # AF5-L01: nombres de relleno convencionales.
+                'john doe', 'jane doe', 'juan nadie'}
 # Una identidad formada solo por estas palabras es genérica: no nombra a nadie ni a ninguna sesión concreta.
 GENERIC_IDENTITY_WORDS = {
     # Roles y funciones.
@@ -271,13 +273,47 @@ IDENTITY_MARKER_WORDS = {
     'hipotetico', 'hipotetica', 'inventado', 'inventada', 'supuesto', 'supuesta', 'simulado', 'simulada', 'baz',
     'qux', 'quux', 'fulano', 'fulana', 'mengano', 'mengana', 'zutano', 'zutana', 'perengano', 'perengana',
     'alguien', 'cualquiera', 'someone', 'somebody', 'anyone', 'tbc', 'wip', 'redacted', 'omitido', 'omitida',
-    'oculto', 'oculta', 'reservado', 'reservada', 'confidencial'}
+    'oculto', 'oculta', 'reservado', 'reservada', 'confidencial',
+    # AF5-L01: números en palabras, rellenos de teclado y otros marcadores de relleno.
+    'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'one', 'two', 'three', 'four',
+    'five', 'six', 'seven', 'eight', 'nine', 'ten', 'primero', 'primera', 'segundo', 'segunda', 'first', 'second',
+    'abc', 'xyz', 'asdf', 'qwerty', 'tester', 'testers', 'nameless', 'anonymus',
+    # AF5-L01: ficción, provisionalidad y vacío, también en inglés («auditorfictionn», «tempauditor»).
+    'fiction', 'fictional', 'fictitious', 'fictive', 'imaginary', 'hypothetical', 'invented', 'pseudo',
+    'seudonimo', 'pseudonimo', 'pseudonym', 'temp', 'temporal', 'temporary', 'tmp', 'blank', 'empty', 'vacio',
+    'vacia', 'random', 'aleatorio', 'aleatoria', 'whoever', 'johndoe', 'janedoe', 'doe'}
 IDENTITY_NOISE = frozenset(GENERIC_IDENTITY_WORDS | IDENTITY_FUNCTION_WORDS | IDENTITY_MARKER_WORDS
                            | {k for k in PLACEHOLDERS if ' ' not in k})
-# Piezas de una concatenación sin separadores («auditorplaceholder»): roles y marcadores de cuatro letras o más.
-IDENTITY_SEGMENTS = frozenset(w for w in IDENTITY_NOISE - IDENTITY_FUNCTION_WORDS if len(w) >= 4)
+# Piezas de una palabra compuesta sin separadores (AF5-L01). Los tratamientos y los conectores son pegamento, nunca
+# piezas fuertes: «Donato» (doña + to) o «Delgado» (del + gado) siguen siendo nombres.
+IDENTITY_TITLES = {'sr', 'sra', 'srta', 'senor', 'senora', 'senorita', 'don', 'dona', 'dr', 'dra', 'doctor',
+                   'doctora', 'lic', 'licenciado', 'licenciada', 'ing', 'ingeniero', 'ingeniera', 'mg', 'mgtr',
+                   'magister', 'prof', 'profesor', 'profesora', 'mr', 'mrs', 'ms'}
+IDENTITY_CONNECTORS = {'de', 'del', 'la', 'el', 'los', 'las', 'y', 'e', 'un', 'una', 'the', 'a', 'an', 'of'}
+# Fuertes: roles y marcadores de cuatro letras o más. Marcadores cortos: los de dos o tres letras («tbd», «na»,
+# «xyz»). Pegamento: tratamientos, conectores, palabras funcionales y el resto del vocabulario de dos o tres letras.
+# Ninguna pieza de una sola letra cubre nada: «Testa» o «Auditore» no se descartan por una letra suelta.
+IDENTITY_STRONG = frozenset(w for w in IDENTITY_NOISE - IDENTITY_FUNCTION_WORDS - IDENTITY_TITLES
+                            - IDENTITY_CONNECTORS if len(w) >= 4)
+IDENTITY_SHORT_MARKERS = frozenset(w for w in IDENTITY_MARKER_WORDS | {k for k in PLACEHOLDERS if ' ' not in k}
+                                   if 2 <= len(w) <= 3) - IDENTITY_TITLES - IDENTITY_CONNECTORS
+IDENTITY_GLUE = frozenset(w for w in IDENTITY_NOISE - IDENTITY_STRONG - IDENTITY_SHORT_MARKERS if len(w) >= 2)
 IDENTITY_FILLER = re.compile(r'(.)\1+')
+# Letras alargadas («revisooor», «drrr», «tbddd»): tres o más iguales seguidas cuentan como una, y la palabra
+# resultante se compara con todo el vocabulario, también con los tratamientos y marcadores cortos.
+STRETCH = re.compile(r'(.)\1\1+')
+# Letras duplicadas dentro de una pieza («plaaceholder», «placeholdeerr»): en la forma colapsada, cada repetición
+# cuenta como una sola letra, y solo se buscan en ella las piezas fuertes colapsadas igual.
+DOUBLED = re.compile(r'(.)\1+')
+IDENTITY_STRONG_COLLAPSED = frozenset(c for c in (DOUBLED.sub(r'\1', w) for w in IDENTITY_STRONG) if len(c) >= 4)
+IDENTITY_GLUE_COLLAPSED = frozenset(c for c in (DOUBLED.sub(r'\1', w) for w in IDENTITY_GLUE | IDENTITY_SHORT_MARKERS)
+                                    if len(c) >= 2)
+# Letras sueltas de relleno («placeholderx»).
+FILLER_LETTERS = frozenset('xz')
 LEET = str.maketrans('013457', 'oieast')
+# Letras latinas que NFKD no descompone y que pasan por otras al leerlas («fıction» con i sin punto) (AF5-L01).
+LATIN_FOLD = str.maketrans({'ı': 'i', 'ſ': 's', 'ł': 'l', 'ø': 'o', 'đ': 'd', 'ħ': 'h', 'ŧ': 't', 'ð': 'd',
+                            'æ': 'ae', 'œ': 'oe', 'þ': 'th', 'ĸ': 'k', 'ŀ': 'l'})
 # Categorías Unicode prohibidas en identidades y en documentos humanos: control, formato (U+200B, U+202E…),
 # uso privado, no asignados y separadores de línea o de párrafo.
 INVISIBLE_CATEGORIES = frozenset({'Cc', 'Cf', 'Co', 'Cn', 'Zl', 'Zp'})
@@ -509,7 +545,7 @@ def identity_tokens(value):
         if i and value[i - 1].islower() and c.isupper():
             chars.append(' ')
         chars.append(c)
-    folded = unicodedata.normalize('NFKD', ''.join(chars).casefold())
+    folded = unicodedata.normalize('NFKD', ''.join(chars).casefold()).translate(LATIN_FOLD)
     return re.findall(r'[^\W_]+', ''.join(ch for ch in folded if not unicodedata.combining(ch)))
 
 
@@ -519,27 +555,72 @@ def mixed_script(token):
     return 'LATIN' in scripts and bool(scripts & {'CYRILLIC', 'GREEK'})
 
 
-def concatenated(word):
-    """¿word es la unión, sin separadores, de roles o marcadores de cuatro letras o más («revisordesconocido»)?"""
-    reach = {0}
-    for i in range(4, len(word) + 1):
-        if any(j in reach and word[j:i] in IDENTITY_SEGMENTS for j in range(max(0, i - 24), i - 3)):
-            reach.add(i)
-    return len(word) in reach
+def filler_piece(word, j, i):
+    """¿word[j:i] es relleno? Una letra repetida («xx», «zzz»), una «x» o «z» suelta, o una letra que repite la
+    anterior y alarga la pieza de al lado («auditorfictionn», «auditorrr»)."""
+    piece = word[j:i]
+    if len(piece) >= 2:
+        return bool(IDENTITY_FILLER.fullmatch(piece))
+    return piece in FILLER_LETTERS or (j > 0 and word[j - 1] == piece)
+
+
+def concatenated(word, collapsed=False):
+    """¿word es, sin separadores, una composición evidente de roles, marcadores, conectores y rellenos (AF5-L01)?
+
+    Lo es si se puede cubrir entera, sin ninguna letra suelta, de una de estas dos formas:
+    - con al menos una pieza fuerte (un rol o un marcador de cuatro letras o más), más pegamento y rellenos en
+      cualquier orden: «revisordesconocido», «tbdplaceholder», «placeholderxx», «auditorfictionn»,
+      «auditorsinnombre» o «drplaceholder»;
+    - solo con marcadores cortos y rellenos de «x» o «z», en dos piezas o más y con algún marcador de tres letras:
+      «tbdxx», «natbd».
+    Así siguen siendo nombres «Lola» (lo + la, solo pegamento), «Donna» (don + na, sin pieza fuerte), «Nana» (dos
+    marcadores de dos letras), «Barr» o «Doerr» (marcador corto y otra letra), «Testino» o «Testa» (letras sin
+    cubrir). Es estructural: una sola palabra que coincida con un rol más una letra repetida («Stubb») se rechaza,
+    pero un nombre completo pasa si alguna de sus palabras es distintiva. collapsed: word ya tiene colapsadas las
+    letras repetidas y solo se buscan en ella piezas fuertes y pegamento colapsados igual («plaaceholder»)."""
+    n = len(word)
+    strong_set = IDENTITY_STRONG_COLLAPSED if collapsed else IDENTITY_STRONG
+    glue_set = IDENTITY_GLUE_COLLAPSED if collapsed else IDENTITY_GLUE | IDENTITY_SHORT_MARKERS
+    # reach[i]: ¿se cubre word[:i] (con o sin pieza fuerte)? marks[i]: (piezas, hasta 2; ¿alguna larga o relleno?).
+    reach = [set() for _ in range(n + 1)]
+    marks = [set() for _ in range(n + 1)]
+    reach[0].add(False)
+    marks[0].add((0, False))
+    for i in range(1, n + 1):
+        for j in range(max(0, i - 24), i):
+            piece = word[j:i]
+            filler = not collapsed and filler_piece(word, j, i)
+            if reach[j]:
+                if piece in strong_set:
+                    reach[i].add(True)
+                elif filler or piece in glue_set:
+                    reach[i] |= reach[j]
+            # Aquí el relleno solo es de «x» o «z»: «Barr» o «Doerr» (bar o doe más una letra repetida) son nombres.
+            if marks[j] and not collapsed and ((filler and set(piece) <= FILLER_LETTERS)
+                                               or piece in IDENTITY_SHORT_MARKERS):
+                for count, long_ in marks[j]:
+                    marks[i].add((min(count + 1, 2), long_ or (len(piece) >= 3 and piece in IDENTITY_SHORT_MARKERS)))
+    return True in reach[n] or (2, True) in marks[n]
 
 
 def nondistinctive(token):
-    """¿La palabra no identifica a nadie? Número, inicial, rol, conector, marcador, relleno («xx», «zzz») o unión de
-    roles y marcadores; también con dígitos en lugar de letras («pl4ceh0lder»)."""
+    """¿La palabra no identifica a nadie? Número, inicial, rol, conector, marcador, relleno («xx», «zzz») o una
+    composición de todo ello sin separadores; también con dígitos en lugar de letras («pl4ceh0lder»), con letras
+    alargadas («revisooor») o duplicadas dentro de una pieza («plaaceholder»)."""
     letters = re.sub(r'\d', '', token)
     if len(letters) < 2:
         return True
-    for form in {letters, token.translate(LEET)}:
+    forms = {letters, token.translate(LEET)}
+    if STRETCH.search(letters):
+        forms.add(STRETCH.sub(r'\1', letters))
+    for form in forms:
         if form in IDENTITY_NOISE:
             return True
         if IDENTITY_FILLER.fullmatch(form):
             return True
         if concatenated(form):
+            return True
+        if DOUBLED.search(form) and concatenated(DOUBLED.sub(r'\1', form), collapsed=True):
             return True
     return False
 
@@ -566,6 +647,9 @@ def identity_errors(value, label, min_letters=3, max_length=120):
     key = placeholder_key(value)
     tokens = identity_tokens(value)
     if not key or key in PLACEHOLDERS:
+        e.append(f'{label}: es un marcador de posición')
+    elif ' '.join(tokens) in PLACEHOLDERS:
+        # AF5-L01: la frase marcadora escrita en camelCase o con otras normalizaciones («JaneDoe»).
         e.append(f'{label}: es un marcador de posición')
     elif set(key.split()) <= GENERIC_IDENTITY_WORDS:
         e.append(f'{label}: es una identidad genérica, sin nombre ni identificador propio')
@@ -731,12 +815,14 @@ def same_blob(data, obj, eol=True):
     return eol and lf != data and b'\r' not in lf and lf.replace(b'\n', b'\r\n') == data and git_blob_id(lf) == obj
 
 
-def worktree_state(root):
+def worktree_state(root, preread=None):
     """Índice y árbol de trabajo vistos sin confiar en la caché ni en las marcas del índice (AF4-M01).
 
     - index: entradas en etapa 0 del índice, {ruta: (modo, objeto)};
     - dirty: rutas del índice cuyo archivo falta, no es del tipo del índice o no tiene los bytes de su objeto.
-      Se calcula aquí, sobre los bytes, nunca con el stat cacheado, assume-unchanged ni skip-worktree;
+      Se calcula aquí, sobre los bytes, nunca con el stat cacheado, assume-unchanged ni skip-worktree. Para las
+      entradas normativas (preread) se comparan los mismos bytes que se consumen, leídos una sola vez y sin seguir
+      enlaces (AF5-M01): un enlace normativo cuenta como cambio, aunque su ruta destino coincida con el blob;
     - untracked: archivos sin versionar que Git no ignora;
     - problems: lo que hace la vista no fiable: marcas assume-unchanged o skip-worktree, entradas sin fusionar,
       submódulos o modos desconocidos, objetos ausentes o archivos ilegibles.
@@ -781,20 +867,29 @@ def worktree_state(root):
     dirty, unreadable = set(), []
     for path, (mode, obj) in index.items():
         p = Path(root) / path
-        try:
-            info = p.lstat()
-            if mode == '120000' and stat.S_ISLNK(info.st_mode):
-                data = os.fsencode(os.readlink(p))
-            else:
-                data = p.read_bytes() if stat.S_ISREG(info.st_mode) else None
-        except (FileNotFoundError, NotADirectoryError):
-            data = None
-        except (OSError, ValueError):
-            unreadable.append(path)
-            continue
+        info = None
+        if preread is not None and path in preread:
+            data = preread[path]
+            try:
+                info = p.lstat()
+            except OSError:
+                info = None
+        else:
+            try:
+                info = p.lstat()
+                if mode == '120000' and stat.S_ISLNK(info.st_mode):
+                    data = os.fsencode(os.readlink(p))
+                else:
+                    data = p.read_bytes() if stat.S_ISREG(info.st_mode) else None
+            except (FileNotFoundError, NotADirectoryError):
+                data = None
+            except (OSError, ValueError):
+                unreadable.append(path)
+                continue
         if data is None or not same_blob(data, obj, eol=mode != '120000'):
             dirty.add(path)
-        elif filemode and mode != '120000' and bool(info.st_mode & stat.S_IXUSR) != (mode == '100755'):
+        elif filemode and mode != '120000' and info is not None \
+                and bool(info.st_mode & stat.S_IXUSR) != (mode == '100755'):
             dirty.add(path)
     if unreadable:
         problems.append(f'archivos versionados ilegibles en el árbol de trabajo: {sorted(unreadable)[:4]}')
@@ -832,14 +927,14 @@ def git_state_problems(root):
     return problems
 
 
-def changed_since(root, sha, wt):
+def changed_since(root, sha, wt, tree=None):
     """Rutas en las que el índice o el árbol de trabajo difieren del commit real sha, más las no versionadas.
 
     Compara objetos (árbol de sha frente al índice) y bytes (árbol de trabajo frente al índice, ya calculados en
     worktree_state): no depende de las marcas del índice ni de su caché de stat. None si algo no se pudo leer."""
     if wt.get('index') is None or wt.get('dirty') is None or wt.get('untracked') is None:
         return None
-    tree = git_tree(root, sha)
+    tree = git_tree(root, sha) if tree is None else tree
     if tree is None:
         return None
     index = wt['index']
@@ -850,29 +945,123 @@ def changed_since(root, sha, wt):
     return sorted(staged.union(wt['dirty'], wt['untracked']))
 
 
-def blob_text(blob):
-    """Texto de un blob, con los finales de línea normalizados como al leer un archivo de texto; None si no vale."""
-    if not isinstance(blob, dict) or not isinstance(blob.get('data'), bytes):
+def text_of(data):
+    """Texto UTF-8 de unos bytes, con los finales de línea normalizados como al leer un archivo de texto; None si no
+    son bytes o no son UTF-8."""
+    if not isinstance(data, bytes):
         return None
     try:
-        return blob['data'].decode('utf-8').replace('\r\n', '\n').replace('\r', '\n')
+        return data.decode('utf-8').replace('\r\n', '\n').replace('\r', '\n')
     except UnicodeDecodeError:
         return None
 
 
-def read(root, rel):
-    try:
-        return (Path(root) / rel).read_text(encoding='utf-8')
-    except (OSError, UnicodeDecodeError):
-        return None
+def blob_text(blob):
+    """Texto de un blob, con los finales de línea normalizados como al leer un archivo de texto; None si no vale."""
+    return text_of(blob.get('data')) if isinstance(blob, dict) else None
 
 
-def read_bytes(root, rel):
+def redirects(path):
+    """¿path (sin seguirlo) redirige a otro sitio? Enlace simbólico, unión de directorios (junction) o, en Windows,
+    cualquier otro punto de reparse (AF5-M01). Un componente ausente no redirige."""
     try:
-        p = Path(root) / rel
-        return None if p.is_symlink() or not p.is_file() else p.read_bytes()
+        info = os.lstat(path)
+    except (FileNotFoundError, NotADirectoryError):
+        return False
+    return (stat.S_ISLNK(info.st_mode) or Path(path).is_junction()
+            or bool(getattr(info, 'st_file_attributes', 0) & getattr(stat, 'FILE_ATTRIBUTE_REPARSE_POINT', 0)))
+
+
+def link_in_path(root, rel):
+    """Primer componente de rel, contado desde la raíz del repositorio y el último incluido, que es un enlace
+    simbólico, una unión de directorios (junction de Windows) u otro punto de reparse; None si no hay ninguno
+    (AF5-M01)."""
+    cur = Path(root)
+    for part in rel.split('/'):
+        cur = cur / part
+        if redirects(cur):
+            return cur.relative_to(root).as_posix()
+    return None
+
+
+def read_normative(root, rel):
+    """Bytes de una entrada normativa, leída una sola vez como archivo regular y sin seguir ningún enlace (AF5-M01).
+
+    Devuelve (bytes, None) o (None, motivo). Ningún componente de la ruta puede ser un enlace simbólico ni una
+    unión de directorios, y el último tiene que ser un archivo regular: así, los bytes que se consumen son los que
+    worktree_state compara con Git, y no los de un destino externo. Un archivo ausente devuelve (None, None): de su
+    ausencia se ocupan las reglas que lo exigen."""
+    if not safe_repo_path(rel):
+        return None, 'ruta fuera de formato'
+    p = Path(root) / rel
+    try:
+        link = link_in_path(root, rel)
+        if link is not None:
+            return None, f'enlace simbólico o unión de directorios en la ruta ({link})'
+        info = p.lstat()
+    except (FileNotFoundError, NotADirectoryError):
+        return None, None
+    except (OSError, ValueError):
+        return None, 'ilegible'
+    if not stat.S_ISREG(info.st_mode):
+        return None, 'no es un archivo regular'
+    # Sin seguir un enlace aparecido entre la comprobación y la apertura (O_NOFOLLOW) ni bloquearse ante una FIFO.
+    flags = os.O_RDONLY | getattr(os, 'O_BINARY', 0) | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0)
+    try:
+        with os.fdopen(os.open(p, flags), 'rb') as fh:
+            opened = os.fstat(fh.fileno())
+            if not stat.S_ISREG(opened.st_mode):
+                return None, 'no es un archivo regular'
+            data = fh.read()
+        # Lo abierto tiene que ser el mismo archivo inspeccionado, y la ruta tiene que seguir sin enlaces: Windows
+        # no tiene O_NOFOLLOW, así que un cambio entre la comprobación y la lectura falla cerrado.
+        if (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino) or link_in_path(root, rel) is not None:
+            return None, 'cambió durante la lectura'
+        return data, None
+    except (OSError, ValueError):
+        return None, 'ilegible'
+
+
+def walk_normative(root, rel_dir):
+    """Archivos bajo rel_dir, recorridos sin seguir enlaces: {ruta: (bytes, motivo)} como read_normative (AF5-M01).
+
+    Un enlace, una unión o un tipo especial queda con su motivo y no se recorre; si lo es el propio directorio, o si
+    no es un directorio, queda la entrada rel_dir con su motivo. Omite __pycache__."""
+    try:
+        link = link_in_path(root, rel_dir)
     except OSError:
-        return None
+        return {rel_dir: (None, 'ilegible')}
+    if link is not None:
+        return {rel_dir: (None, f'enlace simbólico o unión de directorios en la ruta ({link})')}
+    base = Path(root) / rel_dir
+    if not base.exists():
+        return {}
+    if not base.is_dir():
+        return {rel_dir: (None, 'no es un directorio')}
+    out, stack = {}, [base]
+    while stack:
+        d = stack.pop()
+        try:
+            entries = sorted(os.scandir(d), key=lambda x: x.name)
+        except OSError:
+            out[Path(d).relative_to(root).as_posix()] = (None, 'ilegible')
+            continue
+        for e in entries:
+            rel = Path(e.path).relative_to(root).as_posix()
+            if e.name == '__pycache__':
+                continue
+            try:
+                if redirects(e.path):
+                    out[rel] = (None, f'enlace simbólico o unión de directorios en la ruta ({rel})')
+                elif e.is_dir(follow_symlinks=False):
+                    stack.append(e.path)
+                elif e.is_file(follow_symlinks=False):
+                    out[rel] = read_normative(root, rel)
+                else:
+                    out[rel] = (None, 'no es un archivo regular')
+            except OSError:
+                out[rel] = (None, 'ilegible')
+    return dict(sorted(out.items()))
 
 
 def json_bytes(data):
@@ -885,56 +1074,60 @@ def json_bytes(data):
 
 
 def safe_repo_path(path):
-    """Ruta relativa de un archivo del repositorio: sin «..», componentes vacíos, barras invertidas ni invisibles."""
-    return (isinstance(path, str) and bool(path) and '\\' not in path and '..' not in path.split('/')
-            and '' not in path.split('/') and not invisible_chars(path))
+    """Ruta relativa de un archivo del repositorio: sin «..», componentes vacíos, barras invertidas ni invisibles, y
+    sin «:» (AF5-M01): en Windows, «C:/x» es absoluta aunque no empiece por «/» y «x.md:flujo» es un flujo
+    alternativo de NTFS, no el archivo."""
+    return (isinstance(path, str) and bool(path) and '\\' not in path and ':' not in path
+            and '..' not in path.split('/') and '' not in path.split('/') and not invisible_chars(path))
 
 
 def safe_doc_path(path):
     return safe_repo_path(path) and path.startswith('docs/') and path.endswith('.md')
 
 
-def git_facts(root, sha, wt, problems):
+def git_facts(root, sha, wt, problems, normative=(), required=(), wt_normative=()):
     """Hechos Git del commit candidato real; todo lo no evaluable queda en falso o None (falla cerrado).
 
-    problems: lo que hace ambigua la vista de Git o del árbol de trabajo (AF4); con algo ahí, nada se vincula."""
+    problems: lo que hace ambigua la vista de Git o del árbol de trabajo (AF4); con algo ahí, nada se vincula.
+    normative y required (AF5-M01): toda entrada normativa presente en el commit candidato tiene que ser en él un
+    blob regular (100644), y las requeridas tienen que estar en él; wt_normative, los problemas de esas entradas en
+    el árbol de trabajo. Todo eso queda en 'normative': una lista vacía es un vínculo íntegro."""
     f = {'commit': False, 'from_base': False, 'ancestor': False, 'changed': None, 'date': None, 'gate_doc': None,
-         'git_state': list(problems)}
+         'git_state': list(problems), 'normative': None}
     info = git_commit(root, sha)
     if info is None:
         return f
     f['commit'], f['date'] = True, info['date']
     f['from_base'] = git_run(root, 'merge-base', '--is-ancestor', BASE, sha)[0] == 0
     f['ancestor'] = git_run(root, 'merge-base', '--is-ancestor', sha, 'HEAD')[0] == 0
-    f['changed'] = changed_since(root, sha, wt)
+    tree = git_tree(root, sha)
+    f['changed'] = changed_since(root, sha, wt, tree)
     f['gate_doc'] = blob_text(git_blob(root, sha, GATE_DOC))
+    if tree is not None:
+        entries = list(wt_normative)
+        for p in sorted(required):
+            if p not in tree:
+                entries.append(f'{p}: no pertenece al commit candidato')
+        for p in sorted(normative):
+            if p in tree and tree[p][0] != GIT_REGULAR_MODE:
+                entries.append(f'{p}: no es un blob regular en el commit candidato (modo {tree[p][0]})')
+        f['normative'] = entries
     return f
 
 
 def collect(root=ROOT):
     """Fotografía de todo lo que evalúan las reglas. Las pruebas la mutan en memoria."""
-    texts = {rel: read(root, rel) for rel in PKG_FILES + GOV_FILES + [F33_MATRIX]}
-    upstream = {rel: read_bytes(root, rel) for rel in UPSTREAM_FILES}
-    tools = {}
-    tdir = Path(root) / TOOLS
-    if tdir.is_dir():
-        for p in sorted(tdir.rglob('*')):
-            if p.is_file() and '__pycache__' not in p.parts:
-                tools[p.relative_to(root).as_posix()] = read(root, p.relative_to(root).as_posix())
-    evidence = {}
-    edir = Path(root) / GATE_EVIDENCE
-    if edir.exists() or edir.is_symlink():
-        if edir.is_symlink() or not edir.is_dir():
-            evidence[GATE_EVIDENCE] = None
-        else:
-            for p in sorted(edir.rglob('*')):
-                rel = p.relative_to(root).as_posix()
-                if p.is_symlink() or (not p.is_file() and not p.is_dir()):
-                    evidence[rel] = None
-                elif p.is_file():
-                    evidence[rel] = read_bytes(root, rel)
+    # Entradas normativas (AF5-M01): cada una se lee una sola vez, como archivo regular y sin seguir enlaces; esos
+    # mismos bytes son los que se consumen y los que worktree_state compara con el índice.
+    raw = {rel: read_normative(root, rel) for rel in PKG_FILES + GOV_FILES + [F33_MATRIX] + UPSTREAM_FILES}
+    tool_raw, evidence_raw = walk_normative(root, TOOLS), walk_normative(root, GATE_EVIDENCE)
+    texts = {rel: text_of(raw[rel][0]) for rel in PKG_FILES + GOV_FILES + [F33_MATRIX]}
+    upstream = {rel: raw[rel][0] for rel in UPSTREAM_FILES}
+    tools = {rel: text_of(data) for rel, (data, _) in tool_raw.items()}
+    evidence = {rel: data for rel, (data, _) in evidence_raw.items()}
+    entries = {**raw, **tool_raw, **evidence_raw}
     # Estado de Git y del árbol de trabajo, visto sin refs/replace ni marcas del índice (AF4).
-    wt = worktree_state(root)
+    wt = worktree_state(root, {rel: data for rel, (data, _) in entries.items()})
     git_state = git_state_problems(root) + wt['problems']
     code, branch = git(root, 'rev-parse', '--abbrev-ref', 'HEAD')
     branch = branch.strip() if code == 0 else None
@@ -942,7 +1135,19 @@ def collect(root=ROOT):
     changed = changed_since(root, BASE, wt)
     changed = None if changed is None else set(changed)
     base_gov = {rel: blob_text(git_blob(root, BASE, rel)) for rel in GOV_FILES}
-    changed_py = {rel: read(root, rel) for rel in sorted(changed or ()) if rel.endswith('.py')}
+    changed_py = {}
+    for rel in sorted(changed or ()):
+        if rel.endswith('.py'):
+            entries.setdefault(rel, read_normative(root, rel))
+            changed_py[rel] = text_of(entries[rel][0])
+    # Una entrada normativa es un archivo regular sin enlaces en su ruta y, si está versionada, con modo 100644.
+    normative = []
+    for rel, (_, reason) in sorted(entries.items()):
+        mode = ((wt['index'] or {}).get(rel) or (GIT_REGULAR_MODE,))[0]
+        if reason is not None:
+            normative.append(f'{rel}: {reason}')
+        if mode != GIT_REGULAR_MODE:
+            normative.append(f'{rel}: no es una entrada regular del índice (modo {mode})')
     # Commits candidatos citados por el estado del gate o por la evidencia, y ADR sucesores citados por FG-12.
     shas, adr_paths = set(), set()
     state = strict_json(texts.get(GATE_STATE) or '')
@@ -957,7 +1162,11 @@ def collect(root=ROOT):
             if isinstance(adr, dict) and safe_doc_path(adr.get('path')):
                 adr_paths.add(adr['path'])
     candidates = sorted(sha for sha in shas if HEX40.fullmatch(sha))
-    facts = {sha: git_facts(root, sha, wt, git_state) for sha in candidates}
+    # Toda entrada normativa leída tiene que ser en el candidato un blob regular; salvo la evidencia, que se registra
+    # después, tiene que estar en él (AF5-M01).
+    paths = [rel for rel, (data, reason) in entries.items() if data is not None or reason is not None]
+    required = [rel for rel in paths if not rel.startswith(GATE_EVIDENCE)]
+    facts = {sha: git_facts(root, sha, wt, git_state, paths, required, normative) for sha in candidates}
     # El ADR se lee del árbol Git de cada commit candidato citado, nunca del árbol de trabajo (AF3-M01).
     adr_blobs = {(sha, p): git_blob(root, sha, p) for sha in candidates for p in sorted(adr_paths)}
     # Lo que Git ignora no puede formar parte de ningún commit: ni evidencia (AF3) ni ninguna otra entrada
@@ -967,7 +1176,7 @@ def collect(root=ROOT):
     return {'root': str(root), 'texts': texts, 'upstream': upstream, 'tools': tools, 'evidence': evidence,
             'branch': branch, 'base_ok': base_ok, 'changed': changed, 'base_gov': base_gov,
             'changed_py': changed_py, 'facts': facts, 'adr_blobs': adr_blobs, 'ignored': ignored,
-            'git_state': git_state}
+            'git_state': git_state, 'normative': normative}
 
 
 def state_block(text):
@@ -1943,6 +2152,11 @@ def rule_frz(s):
         [p for p in ignored if not p.startswith(GATE_EVIDENCE)]
     out.append((not unversioned, f'las entradas normativas leídas del árbol de trabajo son versionables (Git no '
                                  f'ignora ninguna); ignoradas: {unversioned}'))
+    # AF5-M01: lo que se valida son los bytes de un archivo regular, nunca el destino de un enlace.
+    normative = s.get('normative')
+    shown = normative[:6] if isinstance(normative, list) else 'no evaluadas (falla cerrado)'
+    out.append((normative == [], f'entradas normativas: archivos regulares, sin enlaces simbólicos ni uniones en su '
+                                 f'ruta y, si están versionadas, con modo {GIT_REGULAR_MODE}; problemas: {shown}'))
     changed = s['changed']
     if changed is None:
         out.append((False, 'estado Git desconocido: no se puede verificar el alcance (falla cerrado)'))
@@ -2091,6 +2305,10 @@ def binding_errors(sha, facts, gate_doc):
     gs = f.get('git_state')
     if not isinstance(gs, list) or gs:
         e.append(f'estado Git no fiable: el vínculo con el candidato no es evaluable (falla cerrado): {gs}')
+    nv = f.get('normative')
+    if not isinstance(nv, list) or nv:
+        e.append(f'entradas normativas no ligadas al commit candidato como blobs regulares (falla cerrado): '
+                 f'{nv[:4] if isinstance(nv, list) else nv}')
     changed = f.get('changed')
     if changed is None:
         e.append('cambios posteriores al candidato no evaluables (falla cerrado)')
