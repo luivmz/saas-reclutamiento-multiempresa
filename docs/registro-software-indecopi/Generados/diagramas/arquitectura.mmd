@@ -1,0 +1,18 @@
+%% AS-IS · snapshot b8892af39a6492d8dd44a36290604efc602380cd
+flowchart TB
+  U["Personas<br/>Cinco roles del sistema"]
+  B["Navegador web<br/>React / Inertia"]
+  L["Aplicación Laravel<br/>Rutas · Policies · servicios<br/>Eloquent · auditoría"]
+  M["ML experimental<br/>FastAPI / scikit-learn<br/>Riesgo del proceso<br/>No decisor"]
+  P["PostgreSQL<br/>Estados y decisiones"]
+  R["Redis<br/>Sesiones · caché · cola"]
+  D["Disco local privado<br/>CV PDF autorizado"]
+  Q["Worker de notificaciones<br/>Database y correo"]
+  U --> B
+  B --> L
+  L -.-> M
+  L --> P
+  L --> R
+  L --> D
+  R --> Q
+%% ML opcional fuera de Compose. Sandbox académico excluido de este runtime.

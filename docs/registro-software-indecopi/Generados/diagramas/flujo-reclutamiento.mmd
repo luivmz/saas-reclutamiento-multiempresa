@@ -1,0 +1,26 @@
+%% AS-IS · snapshot b8892af39a6492d8dd44a36290604efc602380cd
+flowchart TB
+  R1["1 Requerimiento<br/>Solicitante"]
+  R2["Revisión y observación<br/>RR. HH."]
+  R3["Aprobación o rechazo<br/>Aprobador / Dirección"]
+  R4["Configurar y publicar<br/>RR. HH."]
+  P1["2 Perfil CV y postulación<br/>Postulante"]
+  P2["Revisión / preselección<br/>RR. HH."]
+  P3["Programar sesiones<br/>RR. HH."]
+  P4["Evaluación / entrevista<br/>Evaluador asignado"]
+  F1["3 Ranking ponderado<br/>Servicio determinista"]
+  F2["Decisión final humana<br/>Aprobador / Dirección<br/>Confirma y justifica"]
+  F3["Registrar selección<br/>RR. HH."]
+  F4["Cerrar y notificar<br/>RR. HH. / aplicación"]
+  R1 --> R2
+  R2 --> R3
+  R3 --> R4
+  P1 --> P2
+  P2 --> P3
+  P3 --> P4
+  F1 --> F2
+  F2 --> F3
+  F3 --> F4
+  R4 --> P1
+  P4 --> F1
+%% Ranking determinista; decisión final humana. El alcance termina en selección y cierre.

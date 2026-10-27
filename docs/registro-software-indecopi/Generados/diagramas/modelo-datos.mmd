@@ -1,0 +1,27 @@
+%% AS-IS · snapshot b8892af39a6492d8dd44a36290604efc602380cd
+flowchart TB
+  O["Organization<br/>Ámbito de personal"]
+  U["User<br/>Rol y organización opcional"]
+  CP["CandidateProfile<br/>Perfil global"]
+  JR["JobRequest<br/>Necesidad de personal"]
+  CD["CandidateDocument<br/>CV privado"]
+  V["Vacancy<br/>Convocatoria"]
+  A["Application<br/>Postulación"]
+  EV["Evaluation<br/>Sesión y notas"]
+  AU["AuditLog<br/>Actor / org opcionales"]
+  SD["SelectionDecision<br/>Decisión humana"]
+  I["Interview<br/>Sesión y notas"]
+  O --> U
+  U --> CP
+  CP --> CD
+  O --> JR
+  JR --> V
+  U --> |candidate_id| A
+  V --> A
+  A --> EV
+  A --> I
+  V --> SD
+  A --> SD
+  A --> |CV| CD
+  O --> AU
+%% Vista no exhaustiva. Historiales, criterios, perfiles de puesto y resultados se detallan en el documento.

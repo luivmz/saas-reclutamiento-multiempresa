@@ -1,0 +1,22 @@
+%% AS-IS · snapshot b8892af39a6492d8dd44a36290604efc602380cd
+flowchart TB
+  S["Personal autenticado<br/>Rol y organization_id"]
+  SP["Middleware y Policy<br/>Rol + misma organización"]
+  SQ["Scope / consulta explícita<br/>organization_id"]
+  C["Postulante global<br/>Sin organización propia"]
+  CP["Policy y propiedad<br/>Recurso del postulante"]
+  CQ["Consulta propia<br/>candidate_id / user_id"]
+  G["Visitante<br/>Portal público"]
+  GP["Consulta pública acotada<br/>Vacantes publicadas"]
+  GQ["Proyección pública<br/>Sin expedientes internos"]
+  DB["PostgreSQL compartido<br/>La frontera depende del código autorizado"]
+  S --> SP
+  SP --> SQ
+  C --> CP
+  CP --> CQ
+  G --> GP
+  GP --> GQ
+  SQ --> DB
+  CQ --> DB
+  GQ --> DB
+%% Base y esquema compartidos; sin RLS. Acceso ajeno: rechazo por Policy o ausencia por scope/consulta.
