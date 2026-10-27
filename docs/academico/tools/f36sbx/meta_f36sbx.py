@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Metapruebas de validate_f36sbx.py y de sus baterías (AF3): ablaciones y mutación exhaustiva de hojas.
+"""Metapruebas de validate_f36sbx.py y de sus baterías (AF4): ablaciones y mutación exhaustiva de hojas.
 
-1. Ablación. Anula, una por una, cada regla, cada función de evidencia y cada comprobación AF2 y AF3 del
+1. Ablación. Anula, una por una, cada regla, cada función de evidencia y cada comprobación AF2, AF3 y AF4 del
    validador (sobre su árbol sintáctico, en memoria) y ejecuta contra ese validador debilitado la batería en
-   memoria y, cuando la pieza depende de Git, también la batería con Git real (test_f36sbx_git.py). Cada ablación
+   memoria y, cuando la pieza depende de Git, también la batería con Git real (test_f36sbx_git.py); las piezas
+   de la vista de Git de AF4, que la batería en memoria no ejercita, solo con la de Git real. Cada ablación
    tiene que ser detectada por al menos un caso concreto que falle por su motivo: una excepción global, o un caso
-   que solo falla porque su mutación ya no se puede montar, no cuenta como detección pertinente.
+   que solo falla porque su mutación ya no se puede montar, no cuenta como detección pertinente. Con un filtro,
+   solo se ejecutan las ablaciones cuya etiqueta contiene alguna de sus subcadenas (ejecución focal).
 2. Mutación de hojas. Cambia, de una en una, cada hoja y cada lista u objeto del ejemplo de conformidad y de la
    evidencia de equipo en memoria:
    - familia de forma (sufijo en textos, +1 en enteros, booleano invertido, clave adicional, elemento quitado o
@@ -19,7 +21,7 @@
      campos libres cerrados (propósito, licencia admitida y revisor de una dependencia).
 
 No escribe archivos fuera de los directorios temporales de test_f36sbx_git.py y no usa red.
-Uso: python -I -B docs/academico/tools/f36sbx/meta_f36sbx.py [ablaciones|hojas]
+Uso: python -I -B docs/academico/tools/f36sbx/meta_f36sbx.py [ablaciones|hojas] [subcadena,subcadena…]
 """
 import ast
 import contextlib
@@ -45,7 +47,9 @@ def git_suite():
 
 VALIDATOR = HERE / 'validate_f36sbx.py'
 SRC = VALIDATOR.read_text(encoding='utf-8')
-MEM, GIT = ('mem',), ('mem', 'git')
+MEM, GIT, GIT_ONLY = ('mem',), ('mem', 'git'), ('git',)
+# Partes de test_f36sbx_git.py: si una entera no se puede ejecutar, es una excepción, no una detección pertinente.
+GIT_PARTS = {'UNIT', 'WORKTREE', 'REPLACEMENT', 'E2E', 'E2E_M01', 'E2E_M02'}
 
 # Ablaciones sobre el código del validador: (etiqueta, tipo, aguja[, baterías]). 'if' anula la condición de la
 # única sentencia if/elif cuya condición contiene la aguja o, si la aguja contiene «=>», cuyo «condición => primera
@@ -139,6 +143,33 @@ SOURCE_ABLATIONS = [
     ('contrato: contexto canónico', 'need', "c.get('canonical_context') == EXPECTED_CANONICAL"),
     # AF3-L01: identidad genérica.
     ('identidad: genérica, sin nombre propio', 'if', 'set(key.split()) <= GENERIC_IDENTITY_WORDS'),
+    # AF4-M01: índice y árbol de trabajo vistos sin marcas ni caché de stat.
+    ('AF4-M01 · índice: marca assume-unchanged', 'if', 'tag.islower()', GIT_ONLY),
+    ('AF4-M01 · índice: marca skip-worktree', 'if', "tag in 'Ss'", GIT_ONLY),
+    ('AF4-M01 · índice: entradas sin fusionar', 'if', "stage != '0'", GIT_ONLY),
+    ('AF4-M01 · índice: submódulos y modos no verificables', 'if', 'mode not in WORKTREE_MODES', GIT_ONLY),
+    ('AF4-M01 · índice: objetos ausentes', 'if', 'out is None or unresolved', GIT_ONLY),
+    ('AF4-M01 · árbol de trabajo: bytes distintos del índice', 'if', 'data is None or not same_blob(', GIT_ONLY),
+    ('AF4-M01 · árbol de trabajo: bit de ejecución', 'if', "filemode and mode != '120000'", GIT_ONLY),
+    ('AF4-M01 · árbol de trabajo: archivos ilegibles', 'if', 'unreadable => problems.append', GIT_ONLY),
+    ('AF4-M01 · sin versionar: archivos que Git no ignora', 'assign', "st['untracked'] = ", GIT_ONLY),
+    ('AF4-M01 · cambios: índice frente al commit', 'assign', 'staged = {p for p in', GIT_ONLY),
+    ('AF4-M01 · FRZ: entradas normativas versionables', 'assign', 'unversioned = '),
+    ('AF4 · FRZ: estado Git fiable', 'assign', "problems = s['git_state']"),
+    ('AF4 · vínculo: estado Git no fiable', 'if', 'not isinstance(gs, list) or gs'),
+    # AF4-M02: objetos reales, sin refs/replace ni injertos.
+    ('AF4-M02 · estado: refs/replace presentes', 'if', 'out.strip() => refs = sorted(', GIT_ONLY),
+    ('AF4-M02 · estado: injertos y operaciones en curso', 'if', 'os.path.lexists(Path(root) / rel)', GIT_ONLY),
+    ('AF4-M02 · commit: SHA-1 de sus bytes', 'if', 'hexdigest() != sha', GIT_ONLY),
+    # AF4-L01: identidades genéricas compuestas.
+    ('AF4-L01 · identidad: compuesta sin nombre propio', 'if', 'all(nondistinctive(t)'),
+    ('AF4-L01 · identidad: homógrafos', 'if', 'any(mixed_script(t)'),
+    ('AF4-L01 · palabra: número o inicial', 'if', 'len(letters) < 2'),
+    ('AF4-L01 · palabra: rol, conector o marcador', 'if', 'form in IDENTITY_NOISE'),
+    ('AF4-L01 · palabra: relleno', 'if', 'IDENTITY_FILLER.fullmatch(form)'),
+    ('AF4-L01 · palabra: concatenación', 'if', 'concatenated(form)'),
+    ('AF4-L01 · palabra: dígitos en lugar de letras', 'assign', 'LEET = str.maketrans'),
+    ('AF4-L01 · palabra: camelCase', 'if', 'value[i - 1].islower() and c.isupper()'),
 ]
 
 
@@ -151,7 +182,42 @@ def fs_git_blob(m):
     return f
 
 
-# Ablaciones de función: (nombre, fábrica del reemplazo a partir del módulo, baterías).
+def replace_view(m):
+    """Mutante de git_run sin protección frente a refs/replace: ni --no-replace-objects ni GIT_NO_REPLACE_OBJECTS."""
+    def run(root, *args, stdin=None):
+        env = {k: x for k, x in m.git_env().items() if k != 'GIT_NO_REPLACE_OBJECTS'}
+        try:
+            r = m.subprocess.run(['git', *(o for o in m.GIT_GLOBAL if o != '--no-replace-objects'), *args], cwd=root,
+                                 input=stdin, capture_output=True, env=env)
+        except (OSError, ValueError):
+            return None, b''
+        return r.returncode, r.stdout
+    return run
+
+
+def legacy_commit(m):
+    """Mutante de git_commit anterior a AF4: tipo con cat-file -t, padres con rev-list y fecha con git show, con la
+    vista habitual de Git (refs/replace incluidas) y sin verificar el SHA-1 de los bytes."""
+    def f(root, sha):
+        def plain(*args):
+            r = m.subprocess.run(['git', *args], cwd=root, capture_output=True)
+            return r.returncode, r.stdout.decode('utf-8', 'replace').strip()
+        if plain('cat-file', '-t', sha) != (0, 'commit'):
+            return None
+        (c1, date), (c2, tree), (c3, line) = (plain('show', '-s', '--format=%cs', sha),
+                                              plain('rev-parse', f'{sha}^{{tree}}'),
+                                              plain('rev-list', '--parents', '-n', '1', sha))
+        return None if c1 or c2 or c3 else {'tree': tree, 'parents': line.split()[1:], 'date': date}
+    return f
+
+
+def lenient_eol(m):
+    """Mutante de same_blob que tolera cualquier cambio de fin de línea (CRLF parcial o CR sueltos)."""
+    return lambda data, obj, eol=True: m.git_blob_id(data) == obj or (
+        eol and m.git_blob_id(data.replace(b'\r\n', b'\n').replace(b'\r', b'\n')) == obj)
+
+
+# Ablaciones de función: (nombre, fábrica del reemplazo a partir del módulo, baterías[, etiqueta]).
 FUNCTION_ABLATIONS = [
     ('fg02_errors', lambda m: lambda *a: [], MEM), ('fg03_errors', lambda m: lambda *a: [], MEM),
     ('fg10_errors', lambda m: lambda *a: [], MEM), ('fg12_errors', lambda m: lambda *a: [], MEM),
@@ -164,6 +230,20 @@ FUNCTION_ABLATIONS = [
     ('git_blob', fs_git_blob, GIT), ('git_ignored', lambda m: lambda *a: [], GIT),
     ('blob_problem', lambda m: lambda b: None, GIT),
     ('placeholder_key', lambda m: lambda value: re.sub(r'[\W_]+', ' ', value.casefold()).strip(), MEM),
+    # AF4-M02 y AF4-M01: vista normativa de Git.
+    ('git_run', replace_view, GIT_ONLY, 'AF4-M02 · función git_run sin --no-replace-objects ni GIT_NO_REPLACE_OBJECTS'),
+    ('git_env', lambda m: lambda: {**m.os.environ, **m.GIT_ENV}, GIT_ONLY,
+     'AF4-M02 · función git_env que conserva las variables GIT_* heredadas'),
+    ('git_commit', legacy_commit, GIT_ONLY, 'AF4-M02 · función git_commit anterior a AF4'),
+    ('git_state_problems', lambda m: lambda root: [], GIT_ONLY, 'AF4-M02 · función git_state_problems anulada'),
+    ('changed_since', lambda m: lambda root, sha, wt: [], GIT_ONLY, 'AF4-M01 · función changed_since anulada'),
+    ('same_blob', lenient_eol, GIT, 'AF4-M01 · función same_blob que tolera cualquier fin de línea'),
+    ('same_blob', lambda m: lambda data, obj, eol=True: m.git_blob_id(data) == obj, GIT,
+     'AF4-M01 · función same_blob sin la conversión LF→CRLF de un checkout'),
+    # AF4-L01.
+    ('nondistinctive', lambda m: lambda token: False, MEM, 'AF4-L01 · función nondistinctive anulada'),
+    ('identity_tokens', lambda m: lambda value: value.split(), MEM, 'AF4-L01 · función identity_tokens sin normalizar'),
+    ('concatenated', lambda m: lambda word: False, MEM, 'AF4-L01 · función concatenated anulada'),
 ]
 EXCEPTION_MARKS = ('mutación no aplicable', 'escenario no ejecutable', 'excepción')
 
@@ -221,7 +301,7 @@ def battery(mod, suites=MEM, resealed=False):
             ex = mod.strict_json(saved)
             mod.seal_bundle(ex, t.CONTRACT)
             t.BASE['texts'][v.EXAMPLE] = json.dumps(ex, ensure_ascii=False, indent=2)
-        fails = run_suite(t, mod)
+        fails = run_suite(t, mod) if 'mem' in suites else []
         if 'git' in suites:
             fails += [(f'git:{cid}', d) for cid, d in run_suite(git_suite(), mod)]
     finally:
@@ -232,33 +312,46 @@ def battery(mod, suites=MEM, resealed=False):
 def classify(fails, base):
     """Separa las detecciones pertinentes (un caso concreto falla por su motivo) de las debidas a excepciones."""
     new = [(cid, d) for cid, d in fails if cid not in base]
-    exc = sorted(cid for cid, d in new if d.startswith(EXCEPTION_MARKS) or cid in ('UNIT', 'E2E'))
+    exc = sorted(cid for cid, d in new if d.startswith(EXCEPTION_MARKS) or cid.split(':')[-1] in GIT_PARTS)
     return sorted(cid for cid, _ in new if cid not in exc), exc
 
 
-def ablations():
+def ablations(only=None):
+    """Ejecuta las ablaciones (con only, solo aquellas cuya etiqueta contiene alguna de sus subcadenas)."""
+    def wanted(label):
+        return not only or any(x.casefold() in label.casefold() for x in only)
     base_fails = battery(load(ast.parse(SRC)), GIT)
     base = {cid for cid, _ in base_fails}
     print(f'línea base (memoria y Git real): {len(base)} casos fallan {sorted(base)}')
+    if only:
+        print(f'ejecución focal: ablaciones cuya etiqueta contiene {only}')
     rows = []
 
     def record(label, mod, suites, resealed=False):
         rows.append((label, *classify(battery(mod, suites, resealed), base)))
     for name, _ in v.RULES:
+        if not wanted(f'regla {name} anulada'):
+            continue
         mod = load(ast.parse(SRC))
         mod.RULES = [(n, (lambda s: []) if n == name else fn) for n, fn in mod.RULES]
         record(f'regla {name} anulada', mod, MEM)
-    for name, factory, suites in FUNCTION_ABLATIONS:
+    for entry in FUNCTION_ABLATIONS:
+        name, factory, suites = entry[:3]
+        label = entry[3] if len(entry) > 3 else f'función {name} anulada'
+        if not wanted(label):
+            continue
         mod = load(ast.parse(SRC))
         repl = factory(mod)
         setattr(mod, name, repl)
         if name in ('fg02_errors', 'fg03_errors', 'fg10_errors', 'fg12_errors'):
             mod.SPECIFIC[f'FG-{name[2:4]}'] = repl
-        record(f'función {name} anulada', mod, suites)
+        record(label, mod, suites)
         if name == 'test_seal':
-            record(f'función {name} anulada, con el ejemplo resellado', mod, suites, True)
+            record(f'{label}, con el ejemplo resellado', mod, suites, True)
     for entry in SOURCE_ABLATIONS:
         label, kind, needle = entry[:3]
+        if not wanted(label):
+            continue
         suites = entry[3] if len(entry) > 3 else MEM
         tree, hits = ablated_tree(kind, needle)
         if hits != 1:
@@ -515,6 +608,7 @@ def main():
     if hasattr(sys.stdout, 'reconfigure'):
         sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     what = sys.argv[1] if len(sys.argv) > 1 else 'todo'
+    only = [x for x in sys.argv[2].split(',') if x] if len(sys.argv) > 2 else None
     ok = True
     if what in ('todo', 'hojas'):
         problems = example_leaves() + evidence_leaves()
@@ -523,7 +617,7 @@ def main():
         print(f'mutación de hojas: {len(problems)} falsos PASS')
         ok = ok and not problems
     if what in ('todo', 'ablaciones'):
-        ok = ablations() and ok
+        ok = ablations(only) and ok
     print(f'meta_f36sbx: {"sin supervivientes ni falsos PASS" if ok else "HAY SUPERVIVIENTES O FALSOS PASS"}')
     return 0 if ok else 1
 
