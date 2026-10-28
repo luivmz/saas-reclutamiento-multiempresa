@@ -142,3 +142,12 @@ Ninguno es evidencia, ninguno está firmado y ninguno está en `gate/evidencia/`
 
 - [Acta de revisión técnica y registro de decisiones](BORRADOR_Acta_Revision_y_Decisiones.md): acta, matriz de EI propuesta y registro de decisiones y abstenciones.
 - [Lista de comprobación de evidencias y procedimiento de verificación](BORRADOR_Checklist_Evidencias_y_Verificacion.md): lista por criterio, procedimiento de verificación de identidad, votos y procedencia, y condiciones de bloqueo.
+
+## 9. Validación de esta rama
+
+El validador solo admite las ramas `feature/f36-sbx-authorization-design`, `develop` y `main`. En `docs/f36-sbx-gate-preparacion-af6` da **57/2**: FRZ falla por la rama, y GATE falla porque FG-01 y FG-05 se recalculan en NO CUMPLE. Es el anclaje por diseño, no un defecto del contenido:
+
+- la base `55f758e`, sin ningún cambio, da el mismo 57/2 con el nombre de esta rama;
+- el contenido de esta rama, validado en un clon desechable con la rama local llamada `develop`, da 59/0, y la batería en memoria, 545/0.
+
+Los documentos nuevos (este, sus borradores y los registros AF6) no están en `PKG_DOCS`, así que las reglas SEM y LNK del validador no los leen. Se comprobaron aparte con las mismas funciones del validador (afirmaciones prohibidas, estados admitidos, enlaces y anclas, caracteres invisibles y NFC). Incluirlos en `PKG_DOCS` cambiaría el código del validador y queda para un incremento auditado.
