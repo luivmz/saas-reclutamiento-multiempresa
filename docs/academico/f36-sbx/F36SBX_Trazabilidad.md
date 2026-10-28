@@ -58,6 +58,7 @@ G0 real = NO APROBADA; G0-02, G0-03 y G0-12 = PENDIENTE EXTERNO; G0-09 y G0-14 =
 | AF4 | `57efbfc` | No aprobado: 0 BLOCKER, 0 HIGH, 2 MEDIUM y 1 LOW | [Corrección AF4](F36SBX_Correccion_AF4.md). AF4-M01, AF4-M02 y AF4-L01 corregidos por implementación, junto con los defectos propios AF4-PR01..PR05. La quinta auditoría no encontró BLOCKER ni HIGH y señaló AF5-M01 y AF5-L01 |
 | AF5 | `8ae203c` | No aprobado: 0 BLOCKER, 0 HIGH, 1 MEDIUM y 1 LOW | [Corrección AF5](F36SBX_Correccion_AF5.md). AF5-M01 y AF5-L01 corregidos por implementación, junto con los defectos propios AF5-PR01..PR05. La sexta auditoría los dio por corregidos (AF5-L01, solo en sus tres reproducciones) y señaló AF6-L01 y AF6-L02 |
 | AF6 | `4a2b2d7` | Aprobado técnicamente para integración: 0 BLOCKER, 0 HIGH, 0 MEDIUM, 2 LOW y 1 INFO | [Registro AF6](F36SBX_Auditoria_AF6.md). Integrado en `develop` (`5545694`) y `main` (`55f758e`), con CI en verde. AF6-L01 y AF6-L02 abiertos en la [deuda técnica AF6](F36SBX_Deuda_Tecnica_AF6.md). No registra FG-02 |
+| AF6 documental | `88fd3d2` (preparación del gate) | Aprobada para integración como preparación documental: 0 BLOCKER, 0 HIGH, 0 MEDIUM, 2 LOW y 1 INFO; no integrarla manteniendo `4a2b2d7` como candidato de FG-02 | [Matriz de preparación §10](preparacion-gate/F36SBX_Matriz_Preparacion_Gate.md#10-auditoría-documental-de-esta-preparación). DOC-AF6-L01, DOC-AF6-L02 y DOC-AF6-I01 tratados en `feature/f36-sbx-gate-transition-h`, sin integrar. No examinó ningún candidato del gate |
 
 | Hallazgo AF2 | Control | Dónde se documenta | Pruebas |
 |---|---|---|---|
@@ -84,5 +85,11 @@ G0 real = NO APROBADA; G0-02, G0-03 y G0-12 = PENDIENTE EXTERNO; G0-09 y G0-14 =
 | AF5-M01 | Toda entrada normativa es un archivo regular, sin enlaces ni redirecciones en su ruta, leído una sola vez; esos bytes se comparan con Git y cada entrada es un blob `100644` del candidato | [Gate §9](F36SBX_Gate_Sucesor.md#9-vínculo-con-el-candidato-auditado) | AF5-M01-01..09; con Git real, AF5-M01-G01..G26 |
 | AF5-L01 | Composiciones genéricas sin separadores rechazadas por una gramática explícita | [Gate §8.6](F36SBX_Gate_Sucesor.md#86-informe-y-adr-fuente-estructurada-canónica) | AF5-L01-01..24, AF5-L01-P1 y AF5-L01-P2 |
 | AF5-PR01..PR05 | Rutas con `:`, vista normativa nula, gramática incompleta, piezas colapsadas y puntos de reparse | [Corrección AF5 §11](F36SBX_Correccion_AF5.md#11-hallazgos-propios) | AF5-M01-03 y 09, AF5-L01-03 y P1, G04, G05, G14 y G16 |
+
+| Hallazgo o bloqueo | Estado | Dónde se documenta | Pruebas |
+|---|---|---|---|
+| AF6-L01, AF6-L02 | Abiertos, LOW, no bloqueantes para la integración técnica de AF5 | [Deuda técnica AF6](F36SBX_Deuda_Tecnica_AF6.md) | Reproducidos en memoria; sin corrección (decisión D-05) |
+| DOC-AF6-L01, DOC-AF6-L02, DOC-AF6-I01 | Tratados en la documentación, sin integrar | [Matriz §10](preparacion-gate/F36SBX_Matriz_Preparacion_Gate.md#10-auditoría-documental-de-esta-preparación) | No aplica: solo documentación |
+| B-01 | Pendiente: especificado, sin implementar; espera la autorización D-02 | [Especificación del sucesor B-01](preparacion-gate/F36SBX_Especificacion_Sucesor_B01.md) | [Plan de pruebas](preparacion-gate/F36SBX_Plan_Pruebas_Sucesor_B01.md), sin ejecutar |
 
 Las amenazas afectadas son TEI-05, TEI-06, TEI-08, TEI-12 y TEI-22 del [threat model](F36SBX_Threat_Model.md), sin renumerar; AF4 y AF5 solo afectan a TEI-22. Las pruebas están en [`test_f36sbx.py`](../tools/f36sbx/test_f36sbx.py) y en [`test_f36sbx_git.py`](../tools/f36sbx/test_f36sbx_git.py), y las metapruebas, en [`meta_f36sbx.py`](../tools/f36sbx/meta_f36sbx.py).

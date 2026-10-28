@@ -28,7 +28,10 @@
 13. [Corrección AF5](F36SBX_Correccion_AF5.md): toda entrada normativa es un archivo regular, sin enlaces simbólicos, uniones de directorios ni puntos de reparse en su ruta, y un blob `100644` del commit candidato; lo que se valida son sus bytes, nunca los de un destino externo. Y las composiciones genéricas sin separadores («tbdplaceholder», «placeholderxx») se rechazan sin rechazar nombres como «Lola» o «Donna».
 14. [Registro de la sexta auditoría](F36SBX_Auditoria_AF6.md): identidad, método, resultados y veredicto técnico de AF6, como antecedente técnico, no como evidencia de equipo.
 15. [Deuda técnica AF6](F36SBX_Deuda_Tecnica_AF6.md): AF6-L01 y AF6-L02, abiertos y no bloqueantes para la integración técnica de AF5.
-16. [Matriz de preparación del gate](preparacion-gate/F36SBX_Matriz_Preparacion_Gate.md): qué exigen FG-02, FG-03, FG-10 y FG-12, qué falta y qué decisiones son del equipo, con dos borradores no firmados para recopilar autorizaciones auténticas. No registra evidencia.
+16. [Matriz de preparación del gate](preparacion-gate/F36SBX_Matriz_Preparacion_Gate.md): qué exigen FG-02, FG-03, FG-10 y FG-12, qué falta, la secuencia hacia un candidato final H y qué decisiones son del equipo, con borradores no firmados para recopilar autorizaciones auténticas. No registra evidencia.
+17. [Especificación del sucesor B-01](preparacion-gate/F36SBX_Especificacion_Sucesor_B01.md): diseño, sin implementar, del incremento que permitiría al validador reconocer un gate superado solo con evidencia válida y espejos coherentes. Su implementación espera la autorización D-02.
+18. [Plan de pruebas del sucesor B-01](preparacion-gate/F36SBX_Plan_Pruebas_Sucesor_B01.md): pruebas negativas, positivas con fixtures sintéticos, metapruebas y regresión exigidas a esa implementación.
+19. [Borrador de autorización D-02](preparacion-gate/BORRADOR_Autorizacion_D02.md): qué autorizaría el equipo y qué no. No está firmado ni emitido.
 
 La evidencia de los criterios de equipo (FG-02, FG-03, FG-10 y FG-12) se archivará en `gate/evidencia/`, con el formato de la [sección 8 del gate](F36SBX_Gate_Sucesor.md#8-formato-de-la-evidencia-de-equipo), cuando exista. Hoy esa carpeta no existe.
 
