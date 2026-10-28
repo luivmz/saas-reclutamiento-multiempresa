@@ -27,7 +27,7 @@ class ApplicationController extends Controller
 {
     public function __invoke(Request $request, Application $application, AssessmentSessionPresenter $sessions): Response
     {
-        Gate::authorize('view', $application);
+        Gate::authorize('viewFile', $application);
 
         $application->load([
             'vacancy:id,organization_id,code,title,status',
