@@ -1,5 +1,11 @@
 # SEG-02 — Carrera entre la decisión final y los cambios manuales de etapa (A-28)
 
+> Mantenimiento de seguridad del sistema existente, del 28/10/2026, en la rama `fix/seg-02-decision-stage-concurrency`. **Diagnóstico: REPRODUCIDO** (Parte I). **Corrección: implementada en la rama y pendiente de auditoría de Codex** (Parte II). Registrado como DEF-15 en el [registro de defectos](../../defects.md). No inicia F37-SBX, no supera ningún gate y no cambia estados formales de gobierno.
+
+## Parte I — Diagnóstico (RED)
+
+Texto entregado con el diagnóstico en el commit `e3c6647`, sin cambios. Lo que dice sobre «este incremento», el código «no corregido» o el número DEF «diferido» describe ese momento; la Parte II registra la corrección. Estado con el que se entregó:
+
 > Investigación y reproducción del 28/10/2026 en la rama `fix/seg-02-decision-stage-concurrency`. **Resultado: REPRODUCIDO.** **No corregido:** este incremento no cambia el código funcional. Las cuatro pruebas concurrentes que reproducen el defecto quedan en RED intencionado, así que el commit es un **candidato diagnóstico no integrable**. No inicia F37-SBX, no supera ningún gate y no cambia estados formales de gobierno. Todavía sin número DEF (ver §15).
 
 ## 1. Base y entorno
@@ -263,3 +269,202 @@ Trazabilidad: A-28 (RF-13, RF-14 y RF-23), con A-27, A-29, A-30 y A-31 → `Appl
 - **SEG-03 y SEG-04** quedan fuera de este incremento.
 - **Validador de F36-SBX.** Si este cambio se integrara en `develop` o `main`, ese validador fallaría por diseño en la regla FRZ, que detecta cambios ajenos a F36-SBX desde su base: se valida anclado en su rama, como documenta su README. No es un defecto de este incremento.
 - **Entorno Docker.** Para ejecutar las pruebas, `app` y `queue` se recrearon montando el worktree de esta rama; los volúmenes con nombre no se tocaron. Al terminar se ejecutó `docker compose down`, sin `-v`, y se recrearon los contenedores desde el checkout principal. Estado final verificado, igual al encontrado: los cuatro contenedores (`app`, `queue`, `postgres` y `redis`) creados y detenidos; `app`, `queue` y los scripts de inicio de `postgres` montan el checkout principal; una sola red `reclutamiento_default`; y los volúmenes `reclutamiento_pgdata`, `reclutamiento_redisdata`, `reclutamiento_vendor` y `reclutamiento_node_modules`, conservados.
+
+## Parte II — Corrección (GREEN)
+
+## 16. Estado recuperado y commits
+
+| Dato | Valor |
+|---|---|
+| Rama | `fix/seg-02-decision-stage-concurrency`, retomada en un worktree aislado. `develop` sigue en `55456943059efaa7b34fd7550de97986f0d13061`: la rama no está por detrás |
+| Evidencia RED conservada | `cde288b7a33909f0e478a18fc062cfd92aa3e83a` (pruebas, árbol `b2278c7fe59ee69d23c0fe7ad223d85424f8b605`) y `e3c6647c1c9b52fd6b8b221a7eb6f91e707481b3` (Parte I, árbol `71fe24c02bda57a677c76c7f3754ab2725177914`), sin amend ni reescritura |
+| Diagnóstico revalidado | Sobre `e3c6647`, `php artisan test --group seg02`: 4 fallidas por invariante (S3 y S3b, I1; S4 y S4b, I2) y 5 aprobadas (80 aserciones), como en la Parte I |
+| Instrumentación adaptada | `2b8f5df3f21d9e8539aebdbca0bf3c508aff75bf` (árbol `c37976a5deafc18d2e7ebd3c40da264ebabaf15f`), todavía en RED |
+| Corrección | `4c89a958bc6f4c95e423b227e2a1957c7cf662b0` (árbol `c7b97cfebb75da2d39c734fc8c39640527ec3cf9`) |
+| Este documento y DEF-15 | Commit siguiente, que se consulta en Git |
+| Relación con SEG-01 | Sigue sin integrar y sin cambios. Solo comparte `docs/defects.md` con esta rama (§24) |
+
+## 17. Corrección
+
+`ApplicationStageService::moveTo()` es el único cambio funcional:
+
+| Antes | Después |
+|---|---|
+| Comprobaba A-28 con `exists()`, fuera de toda transacción, y después llamaba a `transition()`, que solo bloquea la postulación | Abre una transacción, bloquea la fila de la vacante con `FOR SHARE`, comprueba A-28 bajo ese lock y llama a `transition()` dentro de la misma transacción, como punto de guardado |
+
+```php
+return DB::transaction(function () use ($application, $target, $hr, $comment): Application {
+    Vacancy::query()->withoutGlobalScopes()->whereKey($application->vacancy_id)->sharedLock()->firstOrFail();
+
+    if (SelectionDecision::query()->withoutGlobalScopes()->where('vacancy_id', $application->vacancy_id)->exists()) {
+        throw new BusinessRuleException('La decisión final ya fue registrada; no se permiten cambios manuales de etapa en esta convocatoria.');
+    }
+
+    return $this->transition($application, $target, $hr, $comment);
+});
+```
+
+- **La comprobación y la escritura confirman juntas.** El lock de la vacante dura desde la comprobación hasta el `COMMIT` del cambio de etapa: no queda ninguna ventana entre ambas.
+- **`FOR SHARE`.** Choca con el `FOR UPDATE` que toman primero la decisión, la selección y el cierre. No choca con otro `FOR SHARE`, así que dos cambios manuales compatibles de la misma vacante avanzan a la vez (S8), ni con el `FOR KEY SHARE` de las claves foráneas.
+- **Sin cambios:** `transition()`, `FinalDecisionService`, `SelectionRegistrationService`, `VacancyClosureService`, `AssessmentScheduler`, controladores, Form Requests, Policies, enums, migraciones y frontend. RF-24 y RF-25 siguen llamando directamente a `transition()`, sin la comprobación de A-28: sus transiciones legítimas no quedan bloqueadas.
+- **Se conservan** la autorización por rol y organización, las transiciones válidas (`canTransitionTo` en `transition()`), la decisión humana con confirmación y justificación, el historial y la auditoría en la misma transacción que el cambio, y las notificaciones con `afterCommit()`. Estas se despachan ahora al confirmar la transacción externa, o se descartan si se revierte.
+- **El mensaje** que recibe RR. HH. cuando ya existe la decisión no cambia.
+
+## 18. Mapa de transacciones y orden de locks, antes y después
+
+| Operación | Antes | Después |
+|---|---|---|
+| Cambio manual, `moveTo()` | A-28 sin lock; luego, en la transacción, postulación `FOR UPDATE` | En una transacción: **vacante `FOR SHARE`**, A-28 y postulación `FOR UPDATE` |
+| Decisión, RF-23 | Vacante `FOR UPDATE`; lecturas sin lock; al insertar, `FOR KEY SHARE` de organización, vacante, postulación elegida y aprobador | Sin cambios |
+| Selección, RF-24 | Vacante, decisión y postulación, en ese orden y `FOR UPDATE` | Sin cambios |
+| Cierre, RF-25 | Vacante `FOR UPDATE` y postulaciones pendientes `FOR UPDATE`, por id | Sin cambios |
+| Programación, RF-16/RF-17 | Postulación `FOR UPDATE` y `transition()` sobre la misma fila. Nunca la vacante: las sesiones no tienen clave foránea a `vacancies` | Sin cambios |
+| Registro de resultados | Solo la sesión `FOR UPDATE` | Sin cambios |
+| Postulación de candidatos y publicación | Solo la vacante `FOR UPDATE` | Sin cambios; ahora esperan a los cambios manuales en curso de esa vacante |
+
+En la fila de la vacante, el `FOR SHARE` del cambio manual choca con el `FOR UPDATE` de la decisión, la selección, el cierre, la postulación y la publicación, y es compatible con otro `FOR SHARE` y con `FOR KEY SHARE`.
+
+## 19. Ausencia de ciclos de espera nuevos
+
+1. El único lock nuevo es el `FOR SHARE` de la vacante, y es lo primero que pide la transacción del cambio manual.
+2. Después, el cambio manual solo pide la fila de su postulación y los `FOR KEY SHARE` de las claves foráneas del historial y la auditoría. Nunca pide un lock más fuerte sobre la vacante: no la modifica, y no hay `$touches` ni observadores que lo hagan. Por eso dos cambios manuales no pueden interbloquearse al intentar ampliar su lock.
+3. Toda ruta que bloquea la vacante y una postulación lo hace en el orden vacante → postulación: el cambio manual, la decisión (por sus claves foráneas), la selección y el cierre.
+4. La programación bloquea la postulación y nunca la vacante. Puede hacer esperar a un cambio manual (S7) o esperarlo (S7b), pero nunca espera el lock de vacante que el cambio manual tiene: no hay ciclo.
+5. La postulación de candidatos y la publicación bloquean la vacante y ninguna postulación existente: pueden esperar a un cambio manual, nunca al revés.
+
+Las pruebas lo respaldan: en S3, S3b, S4, S4b, S4c, S6, S7 y S7b los procesos se esperaron y ninguno abortó con `40P01`. Un interbloqueo llegaría al proceso como `QueryException`, que la prueba trata como error inesperado.
+
+## 20. Cambios de instrumentación
+
+**La coordinación de S3 a S4b no necesitó cambios.** No presuponía el orden vulnerable: ya distinguía «la segunda operación terminó mientras la primera esperaba» de «la segunda espera un lock de la primera», rama que S6 validó en la Parte I. Con la corrección solo cambia el punto de espera:
+
+- el primer proceso sigue retenido en el `FOR UPDATE` de la postulación, pero ahora ya tiene la vacante;
+- el segundo espera la vacante: la decisión, en `select * from "vacancies" … for update` (S3, S4 y S4b), y el descarte, en `… for share` (S3b y S4c).
+
+**Añadido en `2b8f5df`:**
+
+- S4c: la decisión está retenida en el ranking cuando llega el descarte de otra postulación de la vacante;
+- S7 y S7b: la programación contra un cambio manual de la misma postulación, en ambos órdenes. Usan una barrera nueva, `lock table evaluation_criteria in access exclusive mode`, que detiene la programación cuando ya tiene la postulación, y la operación `schedule` del proceso auxiliar, con datos ficticios;
+- S8: dos cambios manuales compatibles de la misma vacante no se esperan;
+- S5 exige además que vacantes distintas no se esperen;
+- liberación de recursos. Tras cada carrera y tras RF-24 y RF-25, la prueba exige que no quede abierta ninguna conexión de los procesos ni de la barrera: con ellas terminan sus transacciones y sus locks. Ante cualquier fallo, `tearDown()` mata los procesos, revierte la barrera y termina los backends que sigan vivos a los 5 s.
+
+**Se mantienen** todos los escenarios e invariantes, los procesos y conexiones reales, las barreras deterministas, el reloj monotónico y los límites de espera: 30 s para ver el bloqueo, 60 s para el segundo proceso y 120 s por proceso. Ningún timeout cuenta como éxito y no hay pruebas omitidas.
+
+**RED de la instrumentación nueva, antes de corregir.** Con `2b8f5df` sobre el runtime sin corregir: 4 fallidas por invariante (S3 y S3b, I1; S4 y S4b, I2) y 9 aprobadas (144 aserciones), sin fallos de orquestación, entorno ni recursos. Los escenarios nuevos ya pasaban: son controles, no la evidencia del defecto.
+
+## 21. Resultados con la corrección
+
+Seis ejecuciones de `php artisan test --group seg02` con la corrección: la primera, sobre el árbol de trabajo justo antes de registrar `4c89a95` con el mismo contenido, y una serie de 5 consecutivas sobre ese commit. **13 aprobadas (149 aserciones) en todas**, sin fallos de orquestación, entorno, recursos ni invariante. Cada escenario se comportó igual en la serie de 5:
+
+| Escenario | ¿Serializado? | Resultado | Orden serial equivalente |
+|---|---|---|---|
+| S3 | Sí | Se confirma el descarte; la decisión se rechaza: «Solo se puede elegir a un candidato en la etapa «Finalista».» RF-24 y RF-25 se rechazan porque no hay decisión | Descarte → decisión |
+| S3b | Sí | Se confirma la decisión; el descarte se rechaza: «La decisión final ya fue registrada…». RF-24 y RF-25 completan | Decisión → descarte |
+| S4 | Sí | Descarte de la #2 y después la decisión; RF-24 y RF-25 completan | Descarte → decisión |
+| S4b | Sí | Cambio de etapa de la #3 y después la decisión; RF-24 y RF-25 completan | Cambio → decisión |
+| S4c | Sí | Se confirma la decisión; el descarte de la #2 se rechaza | Decisión → descarte |
+| S5 | No | Ambas operaciones, en vacantes distintas | Independientes |
+| S6 | Sí | Una sola decisión; la segunda se rechaza | Decisión → decisión |
+| S7 | Sí | Programación y después descarte de la misma postulación | Programación → descarte |
+| S7b | Sí | Descarte; la programación posterior se rechaza por regla de negocio | Descarte → programación |
+| S8 | No | Los dos descartes | Independientes |
+| S1, S1b y S2 | Secuenciales, por HTTP | Los rechazos esperados | — |
+
+Invariantes pedidas:
+
+- **Si la decisión gana, el cambio manual posterior se rechaza:** S3b y S4c, y en secuencia S1 y S1b.
+- **Si un descarte gana, la decisión posterior no acepta esa postulación:** S3, y en secuencia S2.
+- **Nunca quedan a la vez una decisión válida y su candidato descartado:** I1 en S3, S3b, S4, S4b y S4c.
+- **La decisión bloquea los cambios manuales posteriores de toda su vacante:** S4c y S1b.
+- **Vacantes distintas siguen independientes:** S5, sin espera.
+
+Ninguna aserción exige que gane un proceso concreto: aceptan cualquier orden serial y rechazan los estados que ninguno produce.
+
+Cronología de la ejecución 5 de la serie, en milisegundos (reloj monotónico). A = RR. HH. descarta la #1; B = el Aprobador decide sobre la #1.
+
+**S3**
+
+| ms | Proceso | Evento |
+|---|---|---|
+| 0,0 | Barrera (pid 1553) | `FOR SHARE` sobre la postulación #1 |
+| 3,1 | Orquestador | Lanza A |
+| 315,0 | A (pid 1554) | Llama a `discard`: en su transacción toma la vacante y comprueba A-28, todavía sin decisión |
+| 380,3 | Orquestador | Ve a A esperando `Lock/transactionid`, bloqueado por 1553, en `select * from "applications" where "applications"."id" = $1 limit 1 for update` |
+| 382,7 | Orquestador | Lanza B |
+| 707,4 | B (pid 1555) | Llama a `decide` |
+| 758,9 | Orquestador | Ve a B esperando `Lock/transactionid`, **bloqueado por A** (1554), en `select * from "vacancies" where "vacancies"."id" = $1 limit 1 for update`: serializado |
+| 760,6 | Orquestador | Libera la barrera |
+| 820,8 | B | Rechazado, porque A ya confirmó el descarte: «Solo se puede elegir a un candidato en la etapa «Finalista».» |
+| 974,0 | A | Resultado «descartado», emitido después de sus notificaciones posteriores al commit |
+
+**S3b**
+
+| ms | Proceso | Evento |
+|---|---|---|
+| 0,0 | Barrera (pid 1561) | `ACCESS EXCLUSIVE` sobre `interview_results` |
+| 0,8 | Orquestador | Lanza B |
+| 317,7 | B (pid 1562) | Llama a `decide`: bloquea la vacante, comprueba «Finalista» y empieza el ranking |
+| 416,3 | Orquestador | Ve a B esperando `Lock/relation`, bloqueado por 1561, en la lectura de `interview_results` |
+| 417,1 | Orquestador | Lanza A |
+| 729,9 | A (pid 1563) | Llama a `discard` |
+| 786,3 | Orquestador | Ve a A esperando `Lock/transactionid`, **bloqueado por B** (1562), en `select * from "vacancies" where "vacancies"."id" = $1 limit 1 for share`: serializado |
+| 814,1 | Orquestador | Libera la barrera |
+| 861,1 | B | Decisión #1 confirmada |
+| 872,5 | A | Rechazado: «La decisión final ya fue registrada; no se permiten cambios manuales de etapa en esta convocatoria.» |
+| 1229,5 y 1950,2 | C y D | RF-24 («seleccionado») y RF-25 («cerrada») completan |
+
+## 22. Regresiones
+
+Todas en Docker, sobre PostgreSQL 17.11. Las de PHPUnit, sobre la base aislada `reclutamiento_testing`.
+
+| Orden | Resultado real |
+|---|---|
+| `php artisan test --group seg02` sobre `e3c6647` | 4 fallidas por invariante y 5 aprobadas (80 aserciones): el RED recuperado |
+| Igual, sobre `2b8f5df` | 4 fallidas por invariante y 9 aprobadas (144 aserciones): el RED de la instrumentación nueva |
+| Igual, con la corrección de `4c89a95`, 6 ejecuciones | 13 aprobadas (149 aserciones) en cada una |
+| `php artisan test` de `Applications`, `Selection`, `Assessments`, `Notifications`, `Tenancy`, `Audit` y `Candidates`, con la corrección | 16, 30, 19, 8, 11, 16 y 6 aprobadas (84, 206, 97, 64, 32, 208 y 27 aserciones), 0 fallos |
+| `docker compose exec app php artisan test` | **424 aprobadas y 8 omitidas** (1647 aserciones), 0 fallos, en 89,42 s. Son las 411 de la base más las 13 de SEG-02; las 8 omitidas son las preexistentes de verificación de correo de Fortify, una función desactivada |
+| `docker compose exec app npm run build` | Correcto: 2375 módulos, salida 0 |
+| `docker compose exec app npx tsc --noEmit` | 0 errores, salida 0 |
+| Cypress, entorno E2E aislado (`reclutamiento_e2e`): `init-e2e-env.sh` y `docker compose --profile e2e run --rm cypress`, el equivalente sin npm en el host de `npm run cy:run` | **«All specs passed!»: 20 specs y 85 de 85 pruebas**, 0 fallidas, en 06:19 (Cypress 15.3.0, Electron 136 headless). Incluye los flujos afectados: e2e-06 (preselección), e2e-09 (decisión final humana), e2e-10 (selección y cierre), e2e-12 (reglas negativas) y e2e-13 (flujo completo) |
+| `vendor/bin/pint --test` sobre los archivos tocados | Correcto |
+| Ruta de error de la instrumentación, con una sonda temporal no versionada | Una copia de la prueba exigía en S3 un fragmento de sentencia imposible y falló, a propósito, con A retenido y la transacción de la barrera abierta. `tearDown()` mató el proceso, revirtió la barrera y no tuvo que terminar ningún backend a la fuerza. Después, en `reclutamiento_testing`: 0 conexiones de la prueba, 0 conexiones ajenas, 0 locks, base migrada (18 migraciones) y vacía. La sonda se borró |
+
+## 23. Archivos
+
+| Archivo | Cambio | Commit |
+|---|---|---|
+| `app/Services/Applications/ApplicationStageService.php` | `moveTo()`: lock `FOR SHARE` de la vacante y A-28 en la misma transacción que el cambio | `4c89a95` |
+| `tests/Feature/Concurrency/DecisionStageConcurrencyTest.php` | Escenarios S4c, S7, S7b y S8, independencia en S5 y liberación de recursos | `2b8f5df` |
+| `tests/Feature/Concurrency/Support/seg02-worker.php` | Operación `schedule` | `2b8f5df` |
+| `docs/defects.md` | Fila DEF-15 | Commit de este documento |
+| `docs/v1.1/security/SEG-02-concurrencia-decision-cambio-etapa.md` | Esta Parte II | Commit de este documento |
+
+`DecisionStageSequentialTest` y las pruebas existentes no cambian. Trazabilidad: A-28 (RF-13, RF-14 y RF-23), con A-27, A-29, A-30 y A-31 → `ApplicationStageService::moveTo` → `DecisionStageConcurrencyTest` (S3 a S8) y `DecisionStageSequentialTest` (S1, S1b y S2).
+
+## 24. Riesgos y límites
+
+- **Espera de la decisión tras cambios manuales.** PostgreSQL deja pasar un nuevo `FOR SHARE` aunque haya un `FOR UPDATE` esperando, si los locks presentes son todos compartidos. En teoría, una sucesión continua de cambios manuales sobre la misma vacante podría retrasar la decisión. Son acciones humanas de milisegundos y no se observó.
+- **Esperas sin límite configurado.** No hay `lock_timeout`. Un cambio manual espera, como mucho, lo que dure la decisión, la selección o el cierre en curso de su vacante; una postulación nueva o una publicación esperan a los cambios manuales en curso. Fueron milisegundos en estas pruebas.
+- **Ventanas alargadas.** Las barreras fuerzan cada entrelazado a voluntad. Prueban qué ocurre en cada orden, no la probabilidad natural; no se hizo una prueba de estrés sin coordinación.
+- **Servicios, no HTTP.** Los procesos llaman a los servicios. Los controladores no añaden comprobaciones ni locks, y los controles secuenciales y la suite completa sí recorren HTTP.
+- **Cola.** En pruebas es `sync`; en producción las notificaciones van a Redis, con el mismo `afterCommit`.
+- **Cypress** comprueba que los flujos siguen funcionando, no la concurrencia.
+- **Integración con SEG-01.** Ambas ramas añaden una fila después de DEF-13 en `docs/defects.md`. Al integrarlas habrá un conflicto textual trivial, que se resuelve conservando DEF-14 y después DEF-15.
+- **Validador de F36-SBX.** Como con SEG-01, si esta rama se integra, ese validador fallará por diseño en la regla FRZ; se valida anclado en su rama.
+
+## 25. Estado y pendientes
+
+- **SEG-02 corregido en la rama y pendiente de auditoría de Codex.** No está integrado, publicado ni cerrado.
+- **Gobierno.** No cambia ningún estado formal ni inicia F37-SBX.
+- **Fuera de alcance, sin cambios:**
+  - la programación sin comprobación de A-28 (§12), que sigue sin verificar;
+  - SEG-03 y SEG-04;
+  - la observación LOW SEG01-AUD-L01;
+  - el ML, el frontend, las skills, los permisos y la configuración global.
+- **Recursos aislados creados y estado final.**
+  - **Worktree** temporal en `.claude/worktrees/seg02`, sobre esta rama. Contenía archivos ignorados por Git: un `.env` generado por el entrypoint desde `.env.example`, con clave propia (el `.env` real no se copió), un `.env.e2e` generado por `init-e2e-env.sh`, `public/build` y cachés. Se elimina al terminar; la rama se conserva.
+  - **Contenedores.** `app` y `queue` se recrearon montando el worktree, y el perfil E2E levantó `app-e2e` y `queue-e2e`. Al terminar se ejecutó `docker compose --profile e2e down`, sin `-v`, y se recrearon los contenedores desde el checkout principal. Estado final verificado, igual al encontrado: los cuatro contenedores (`app`, `queue`, `postgres` y `redis`) creados y detenidos; `app`, `queue` y los scripts de inicio de `postgres` montan el checkout principal; una sola red `reclutamiento_default`; sin contenedores E2E.
+  - **Volúmenes** `reclutamiento_pgdata`, `reclutamiento_redisdata`, `reclutamiento_vendor` y `reclutamiento_node_modules`: conservados, ninguno se borró ni recreó.
+  - **Bases de datos.** `reclutamiento_testing` quedó migrada y vacía. `reclutamiento_e2e` la reinició Cypress, como está previsto. La base de desarrollo `reclutamiento` solo recibió el `php artisan migrate --force` del entrypoint, sin migraciones pendientes porque esta rama no añade ninguna; no se ejecutó ninguna migración destructiva sobre ella.
