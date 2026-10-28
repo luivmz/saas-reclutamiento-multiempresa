@@ -75,6 +75,10 @@ Su existencia **no satisface FG-02** ni ningún otro criterio EQUIPO. FG-02 exig
 
 El informe AF6 no tiene ese formato, vive fuera del repositorio y no lo ha registrado nadie. Cómo y si se usa para FG-02 es una decisión del equipo, que se analiza en la [matriz de preparación del gate](preparacion-gate/F36SBX_Matriz_Preparacion_Gate.md).
 
+**No sirve como auditoría de otro candidato.** AF6 examinó `4a2b2d7`. Si el gate se cierra sobre un candidato final nuevo H (decisión D-01, opción b), FG-02 exige una auditoría independiente de H. Ni cambiar el SHA de este informe ni el hecho de que dos árboles coincidan la convierten en una auditoría de H ([secuencia hacia H](preparacion-gate/F36SBX_Matriz_Preparacion_Gate.md#21-secuencia-hacia-el-candidato-h)).
+
+**Qué tipo de auditor fue.** Una sesión automatizada de auditoría independiente, distinta de la sesión que implementó AF5. El esquema admite ese tipo de auditor (`sesion_de_auditoria_independiente`). La comprobación de su procedencia, alcance e independencia, y cualquier registro, corresponden a personas del equipo.
+
 Tampoco es una autorización institucional externa ni una autorización para ejecutar capacidades experimentales.
 
 ## 7. Ubicación y trazabilidad de la evidencia

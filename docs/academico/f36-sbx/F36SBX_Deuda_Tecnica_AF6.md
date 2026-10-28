@@ -4,7 +4,7 @@
 
 ## 1. Por qué este registro vive en el paquete
 
-El registro general de deuda técnica es [`TECHNICAL_DEBT.md`](../TECHNICAL_DEBT.md). Este incremento no lo modifica, porque la regla FRZ del validador F36-SBX solo admite cambios dentro del paquete, de sus herramientas y de cuatro archivos de gobierno: un cambio en ese registro haría fallar el validador en esta rama y, tras integrarla, en `develop` y `main`. Replicar AF6-L01 y AF6-L02 en el registro general es la decisión pendiente D-03 de la [matriz de preparación del gate](preparacion-gate/F36SBX_Matriz_Preparacion_Gate.md#7-decisiones-que-requieren-intervención-humana). Hasta entonces, este documento es la fuente de los dos hallazgos; no se duplican en otro lugar.
+El registro general de deuda técnica es [`TECHNICAL_DEBT.md`](../TECHNICAL_DEBT.md). Este incremento no lo modifica, porque la regla FRZ del validador F36-SBX solo admite cambios dentro del paquete, de sus herramientas y de cuatro archivos de gobierno. Además, el validador declara ese archivo **antecedente congelado** (`F35_FROZEN`, junto a F35-SBX y G0). Un cambio en ese registro haría fallar el validador en esta rama y, tras integrarla, en `develop` y `main`. Replicar AF6-L01 y AF6-L02 en el registro general es la decisión pendiente D-03 de la [matriz de preparación del gate](preparacion-gate/F36SBX_Matriz_Preparacion_Gate.md#7-decisiones-que-requieren-intervención-humana). Hasta entonces, este documento es la fuente de los dos hallazgos; no se duplican en otro lugar.
 
 ## 2. Resumen
 
