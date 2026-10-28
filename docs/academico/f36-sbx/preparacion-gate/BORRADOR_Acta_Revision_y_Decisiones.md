@@ -58,12 +58,16 @@ Lista cerrada resultante (`authorized_ei` de FG-03 e idéntica a `f37_authorized
 | Numeración F36-M01 | `CONFIRMADA` o `NO_CONFIRMADA` | NO EMITIDA |
 | Frontera de EI-09 (F36-M02) | `CABE_EN_ALCANCE_B`, `NO_CABE_EN_ALCANCE_B` o `SIN_DECISION` | NO EMITIDA |
 | Dependencias nuevas (FG-10) | Sí, con cada dependencia revisada, o no | NO EMITIDA |
-| ADR sucesor (FG-12, F36-M03) | Solo si se autoriza alguna EI CONDITIONAL de alcance C | NO EMITIDA |
-| Candidato del gate (D-01) | Ver matriz §7 | NO EMITIDA |
+| ADR sucesor (FG-12, F36-M03) | Solo si se autoriza alguna EI CONDITIONAL de alcance C, y aprobado e incorporado **antes de fijar H** | NO EMITIDA |
+| Estado de FG-12 | CUMPLE (con registro y 3 votos) o NO APLICA (sin registro ni votos propios, solo si no hay ninguna EI CONDITIONAL) | NO EMITIDA |
+| Candidato del gate (D-01) | Ver matriz §7. Consta la instrucción operativa del solicitante de seguir la opción (b), un candidato final nuevo H | NO EMITIDA |
+| Incremento sucesor B-01 (D-02) | Ver el [borrador de autorización D-02](BORRADOR_Autorizacion_D02.md) y las decisiones de diseño T-01 a T-07 | NO EMITIDA |
+| Deuda AF6-L01 y AF6-L02 (D-05) | Corregirla en el incremento de H, o registrarla como LOW abiertos | NO EMITIDA |
+| Sincronización del gobierno (D-07) | Antes de fijar H, o después | NO EMITIDA |
 
 ## 5. Registro de votos y abstenciones
 
-Uno por integrante y por decisión votada. El contrato solo admite `APRUEBA`, `RECHAZA` o `SE_ABSTIENE`; cualquier voto distinto de `APRUEBA` impide que FG-03, FG-10 o FG-12 pasen a CUMPLE. Una abstención o un rechazo también se registran: no se omiten.
+Uno por integrante y por decisión votada. El contrato solo admite `APRUEBA`, `RECHAZA` o `SE_ABSTIENE`; cualquier voto distinto de `APRUEBA` impide que FG-03, FG-10 o FG-12 pasen a CUMPLE. Una abstención o un rechazo también se registran: no se omiten. Si FG-12 queda en NO APLICA, no hay votación de FG-12 que registrar: no se inventa una para completar la tabla.
 
 | Decisión votada | Integrante | Voto | Fecha del voto | Canal de verificación del voto |
 |---|---|---|---|---|

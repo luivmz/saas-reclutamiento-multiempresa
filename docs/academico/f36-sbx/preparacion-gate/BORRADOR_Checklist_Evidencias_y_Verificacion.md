@@ -40,10 +40,13 @@ Cada casilla se marca solo cuando el hecho existe y se ha verificado. El validad
 
 ### FG-12
 
-- [ ] Si no hay ninguna EI CONDITIONAL autorizada: FG-12 en NO APLICA, con FG-03 en CUMPLE.
-- [ ] Si se autoriza EI-09: `ei09_decision` vale `CABE_EN_ALCANCE_B`.
-- [ ] Si se autoriza alguna EI CONDITIONAL de alcance C: el ADR sucesor está APROBADO, versionado **dentro del candidato** y con su bloque canónico.
-- [ ] Tres votos verificados.
+Primero se decide el estado de FG-12; las casillas que no correspondan a ese estado se marcan como no pertinentes, nunca se rellenan con un archivo o una votación.
+
+- [ ] **Si no hay ninguna EI CONDITIONAL autorizada:** FG-12 en NO APLICA, con FG-03 en CUMPLE, `evidence` nulo y **sin** `gate/evidencia/FG-12.json` (un archivo sin citar hace fallar la regla GATE). No hay votos propios de FG-12: su condición la fija FG-03, que sí los lleva.
+- [ ] **Si hay alguna EI CONDITIONAL autorizada:** FG-12 en CUMPLE, con su registro.
+  - [ ] Si se autoriza EI-09: `ei09_decision` vale `CABE_EN_ALCANCE_B`.
+  - [ ] Si se autoriza alguna EI CONDITIONAL de alcance C: el ADR sucesor está APROBADO, versionado **dentro del candidato** y con su bloque canónico.
+  - [ ] Tres votos verificados (solo en CUMPLE).
 
 ### Después de registrar
 
@@ -54,13 +57,23 @@ Cada casilla se marca solo cuando el hecho existe y se ha verificado. El validad
 
 ### 2.1 Identidad del auditor (FG-02)
 
+El informe técnico lo emite el auditor; la verificación y el registro los hacen personas del equipo. El auditor puede ser una persona o una sesión automatizada de tipo `sesion_de_auditoria_independiente`.
+
 1. Confirmar con el auditor, por un canal distinto del propio informe, que es el autor del informe y de su veredicto.
-2. Si el auditor es una sesión automatizada (`sesion_de_auditoria_independiente`), dejar constancia de la sesión que lo produjo y conservar su evidencia completa con un manifiesto de hashes (registro AF6 §7).
-3. No aceptar como nombre un rol, un marcador ni una composición genérica, aunque el validador lo admita: los residuos AF6-L01 y AF6-L02 muestran que la guardia es estructural.
+2. Si el auditor es una sesión automatizada:
+   - dejar constancia de la sesión que lo produjo;
+   - comprobar que no es la sesión que implementó o preparó el candidato y que examinó exactamente H;
+   - conservar su evidencia completa con un manifiesto de hashes, como en el registro AF6 §7.
+
+   Ni el nombre de la herramienta ni `independent_of_candidate = true` prueban por sí solos la independencia. Una sesión automatizada no es un integrante, un docente ni un revisor externo humano.
+3. Si el auditor es una persona, comprobar que no es autora del candidato cuando se declara `integrante_no_autor`.
+4. No aceptar como nombre un rol, un marcador ni una composición genérica, aunque el validador lo admita: los residuos AF6-L01 y AF6-L02 muestran que la guardia es estructural.
 
 ### 2.2 Votos de los integrantes (FG-03, FG-10 y FG-12)
 
-1. Cada integrante emite su voto en persona o por un canal propio y verificable, no por medio de otro integrante.
+FG-03 y FG-10 siempre llevan sus tres votos. FG-12 los lleva solo en CUMPLE.
+
+1. Cada integrante emite su voto en persona o por un canal propio y verificable, no por medio de otro integrante. Ninguna sesión automatizada vota ni registra un voto que no ha ocurrido.
 2. Quien registra el JSON no puede ser la única fuente de los votos de los demás: cada integrante confirma su voto y su fecha por escrito.
 3. El acta firmada o confirmada se conserva fuera de `gate/evidencia/` (que solo admite los archivos del esquema), con su hash citado en el acta o en el commit de registro.
 4. Un voto que no se pueda verificar no se registra como `APRUEBA`.
