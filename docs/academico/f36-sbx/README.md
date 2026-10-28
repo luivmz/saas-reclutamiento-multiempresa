@@ -1,6 +1,6 @@
 # F36-SBX — Autorización, investigación y diseño de la inteligencia sobre evidencia
 
-> Fase F36-SBX, versión 6 (27/10/2026), en la rama `feature/f36-sbx-authorization-design`, desde `main` = `b8892af39a6492d8dd44a36290604efc602380cd`. **No fueron aprobadas para integración** la versión 1 (`06e933e`), por la auditoría independiente AF1; la versión 2 (`2a4e68c`), por AF2; la versión 3 (`ecb22cc`), por la tercera auditoría; la versión 4 (`57efbfc`), por la cuarta; ni la versión 5 (`8ae203c`), por la quinta. Esta versión es la corrección focal de esa quinta auditoría (AF5) y es **candidata a una sexta auditoría independiente**. Solo documentación, gobierno y validadores documentales: sin ML, sin NLP, sin dependencias nuevas, sin runtime y sin datos reales.
+> Fase F36-SBX, versión 6 (27/10/2026), en la rama `feature/f36-sbx-authorization-design`, desde `main` = `b8892af39a6492d8dd44a36290604efc602380cd`. **No fueron aprobadas para integración** la versión 1 (`06e933e`), por la auditoría independiente AF1; la versión 2 (`2a4e68c`), por AF2; la versión 3 (`ecb22cc`), por la tercera auditoría; la versión 4 (`57efbfc`), por la cuarta; ni la versión 5 (`8ae203c`), por la quinta. Esta versión es la corrección focal de esa quinta auditoría (AF5). La **sexta auditoría independiente la aprobó técnicamente para integración** sobre `4a2b2d7`, con dos LOW abiertos, y está integrada en `develop` (`5545694`) y `main` (`55f758e`). Esa aprobación técnica no supera el gate ni es una aprobación del equipo. Solo documentación, gobierno y validadores documentales: sin ML, sin NLP, sin dependencias nuevas, sin runtime y sin datos reales.
 
 ## Estado
 
@@ -26,6 +26,9 @@
 11. [Corrección AF3](F36SBX_Correccion_AF3.md): el ADR de FG-12 se lee del blob Git del commit candidato, todo output hereda el contexto canónico de su postulación (contrato v4, REL-15) y los marcadores de identidad se comparan normalizados.
 12. [Corrección AF4](F36SBX_Correccion_AF4.md): Git se consulta sobre objetos reales, sin `refs/replace` ni injertos; el árbol de trabajo se compara con el índice por sus bytes, sin confiar en `assume-unchanged` ni en `skip-worktree`; y una identidad tiene que contener al menos una palabra distintiva.
 13. [Corrección AF5](F36SBX_Correccion_AF5.md): toda entrada normativa es un archivo regular, sin enlaces simbólicos, uniones de directorios ni puntos de reparse en su ruta, y un blob `100644` del commit candidato; lo que se valida son sus bytes, nunca los de un destino externo. Y las composiciones genéricas sin separadores («tbdplaceholder», «placeholderxx») se rechazan sin rechazar nombres como «Lola» o «Donna».
+14. [Registro de la sexta auditoría](F36SBX_Auditoria_AF6.md): identidad, método, resultados y veredicto técnico de AF6, como antecedente técnico, no como evidencia de equipo.
+15. [Deuda técnica AF6](F36SBX_Deuda_Tecnica_AF6.md): AF6-L01 y AF6-L02, abiertos y no bloqueantes para la integración técnica de AF5.
+16. [Matriz de preparación del gate](preparacion-gate/F36SBX_Matriz_Preparacion_Gate.md): qué exigen FG-02, FG-03, FG-10 y FG-12, qué falta y qué decisiones son del equipo, con dos borradores no firmados para recopilar autorizaciones auténticas. No registra evidencia.
 
 La evidencia de los criterios de equipo (FG-02, FG-03, FG-10 y FG-12) se archivará en `gate/evidencia/`, con el formato de la [sección 8 del gate](F36SBX_Gate_Sucesor.md#8-formato-de-la-evidencia-de-equipo), cuando exista. Hoy esa carpeta no existe.
 

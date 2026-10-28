@@ -1,6 +1,6 @@
 # F36-SBX — Gate sucesor (F36-SBX-GATE) y plan de entrada a F37-SBX
 
-> Fase F36-SBX, versión 6 (27/10/2026), con `gate_version = 3` y el esquema de evidencia `f36sbx-team-evidence/v2`, sin cambios de formato. Corrige AF1-M01 ([corrección AF1](F36SBX_Correccion_AF1.md)), AF2-M01 ([corrección AF2](F36SBX_Correccion_AF2.md)), AF3-M01 y AF3-L01 ([corrección AF3](F36SBX_Correccion_AF3.md)), AF4-M01, AF4-M02 y AF4-L01 ([corrección AF4](F36SBX_Correccion_AF4.md)), y AF5-M01 y AF5-L01 ([corrección AF5](F36SBX_Correccion_AF5.md)): el ADR se lee del blob Git real del commit candidato, sin `refs/replace`; el vínculo exige un estado de Git fiable, compara el árbol de trabajo por sus bytes y exige que toda entrada normativa sea un archivo regular sin enlaces y un blob `100644` del candidato; y una identidad tiene que contener al menos una palabra distintiva, también sin separadores. Candidata a una sexta auditoría independiente. **Resultado vigente: F36-SBX-GATE = NO SUPERADO. F37-SBX = BLOQUEADA.**
+> Fase F36-SBX, versión 6 (27/10/2026), con `gate_version = 3` y el esquema de evidencia `f36sbx-team-evidence/v2`, sin cambios de formato. Corrige AF1-M01 ([corrección AF1](F36SBX_Correccion_AF1.md)), AF2-M01 ([corrección AF2](F36SBX_Correccion_AF2.md)), AF3-M01 y AF3-L01 ([corrección AF3](F36SBX_Correccion_AF3.md)), AF4-M01, AF4-M02 y AF4-L01 ([corrección AF4](F36SBX_Correccion_AF4.md)), y AF5-M01 y AF5-L01 ([corrección AF5](F36SBX_Correccion_AF5.md)): el ADR se lee del blob Git real del commit candidato, sin `refs/replace`; el vínculo exige un estado de Git fiable, compara el árbol de trabajo por sus bytes y exige que toda entrada normativa sea un archivo regular sin enlaces y un blob `100644` del candidato; y una identidad tiene que contener al menos una palabra distintiva, también sin separadores. La sexta auditoría independiente la aprobó técnicamente para integración, con dos LOW abiertos, y está integrada en `develop` y `main` ([registro AF6](F36SBX_Auditoria_AF6.md)). **Resultado vigente: F36-SBX-GATE = NO SUPERADO. F37-SBX = BLOQUEADA.**
 
 ## 1. Nombre y propósito
 
@@ -83,6 +83,8 @@ F37-SBX se divide en dos etapas. La B no puede empezar antes de que la A esté c
 |---|---|---|---|
 | **F37-SBX-A** (alcance B) | Generador sintético v1 según el contrato, guardia de entrada, EI-01 a EI-07 y EI-09 si se confirma F36-M02, arnés de evaluación (M-01 a M-08, M-11, M-12 y R-01 a R-05) | F36-SBX-GATE SUPERADO. Las EI pedidas están en la autorización de FG-03. Sin dependencias nuevas | Preregistro, `test` sellado, RED y GREEN, resultados reproducibles con manifiesto y un gate sucesor propio |
 | **F37-SBX-B** (subconjunto de C, solo sintético) | EI-08, EI-10, EI-11, EI-12 y EI-24 | F37-SBX-A cerrada. ADR sucesor APROBADO (FG-12). Dependencias registradas y aprobadas (FG-10) | Lo mismo que A, más la auditoría contrafactual y la comparación con BM25 |
+
+La [matriz de preparación del gate](preparacion-gate/F36SBX_Matriz_Preparacion_Gate.md) analiza qué exige cada criterio EQUIPO, qué falta y qué decisiones son del equipo; no registra evidencia.
 
 **Primer paso concreto, cuando el equipo lo decida:** auditar este paquete (FG-02) y, si la auditoría pasa, registrar la autorización de FG-03 con la lista de EI de F37-SBX-A. Nada de F37-SBX se implementa antes.
 

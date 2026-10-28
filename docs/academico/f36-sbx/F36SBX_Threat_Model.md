@@ -1,6 +1,6 @@
 # F36-SBX — Threat model de la inteligencia sobre evidencia
 
-> Fase F36-SBX, versión 5 (27/10/2026). La [corrección AF2](F36SBX_Correccion_AF2.md) actualiza los controles de TEI-05, TEI-06, TEI-08, TEI-12 y TEI-22; la [corrección AF3](F36SBX_Correccion_AF3.md), los de TEI-05, TEI-08 y TEI-22; y las correcciones [AF4](F36SBX_Correccion_AF4.md) y [AF5](F36SBX_Correccion_AF5.md), los de TEI-22, sin renumerar ninguna amenaza. Candidata a una sexta auditoría independiente. Extiende el [modelo de F34A](../g0-readiness/F34A_Modelo_de_Amenazas.md), aceptado por el equipo (G0-09), y el de [F35-SBX](../evidencia-sbx/F35SBX_Threat_Model.md). **No reemplaza ninguna de sus amenazas** y solo vale para el sandbox sintético.
+> Fase F36-SBX, versión 5 (27/10/2026). La [corrección AF2](F36SBX_Correccion_AF2.md) actualiza los controles de TEI-05, TEI-06, TEI-08, TEI-12 y TEI-22; la [corrección AF3](F36SBX_Correccion_AF3.md), los de TEI-05, TEI-08 y TEI-22; y las correcciones [AF4](F36SBX_Correccion_AF4.md) y [AF5](F36SBX_Correccion_AF5.md), los de TEI-22, sin renumerar ninguna amenaza. La sexta auditoría independiente la aprobó técnicamente para integración, con dos LOW abiertos, y está integrada en `develop` y `main` ([registro AF6](F36SBX_Auditoria_AF6.md)). Extiende el [modelo de F34A](../g0-readiness/F34A_Modelo_de_Amenazas.md), aceptado por el equipo (G0-09), y el de [F35-SBX](../evidencia-sbx/F35SBX_Threat_Model.md). **No reemplaza ninguna de sus amenazas** y solo vale para el sandbox sintético.
 
 ## Alcance
 

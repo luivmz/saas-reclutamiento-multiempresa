@@ -1,6 +1,6 @@
 # F36-SBX — Trazabilidad
 
-> Fase F36-SBX, versión 5 (27/10/2026): añade la trazabilidad de las auditorías AF1, AF2, AF3, AF4 y AF5 (sección 5). Candidata a una sexta auditoría independiente. F36-SBX no modifica ningún RF, CU ni RNF, ni los RF candidatos. No promueve nada al baseline.
+> Fase F36-SBX, versión 5 (27/10/2026): añade la trazabilidad de las auditorías AF1, AF2, AF3, AF4 y AF5 (sección 5). La sexta auditoría independiente la aprobó técnicamente para integración, con dos LOW abiertos, y está integrada en `develop` y `main` ([registro AF6](F36SBX_Auditoria_AF6.md)). F36-SBX no modifica ningún RF, CU ni RNF, ni los RF candidatos. No promueve nada al baseline.
 
 ## 1. Requisitos relacionados (sin cambios)
 
@@ -56,7 +56,8 @@ G0 real = NO APROBADA; G0-02, G0-03 y G0-12 = PENDIENTE EXTERNO; G0-09 y G0-14 =
 | AF2 | `2a4e68c` | No aprobado: 0 BLOCKER, 0 HIGH, 3 MEDIUM y 1 LOW | [Corrección AF2](F36SBX_Correccion_AF2.md). La tercera auditoría dio por corregidos AF2-M02, AF2-M03 y AF2-L01, y no corregido de forma integral AF2-M01: su parte pendiente, la pertenencia del ADR al candidato, es AF3-M01 |
 | AF3 | `ecb22cc` | No aprobado: 0 BLOCKER, 0 HIGH, 2 MEDIUM y 1 LOW | [Corrección AF3](F36SBX_Correccion_AF3.md). La cuarta auditoría reprodujo sus pruebas sin falsos PASS en esas familias y señaló AF4-M01, AF4-M02 y AF4-L01 |
 | AF4 | `57efbfc` | No aprobado: 0 BLOCKER, 0 HIGH, 2 MEDIUM y 1 LOW | [Corrección AF4](F36SBX_Correccion_AF4.md). AF4-M01, AF4-M02 y AF4-L01 corregidos por implementación, junto con los defectos propios AF4-PR01..PR05. La quinta auditoría no encontró BLOCKER ni HIGH y señaló AF5-M01 y AF5-L01 |
-| AF5 | `8ae203c` | No aprobado: 0 BLOCKER, 0 HIGH, 1 MEDIUM y 1 LOW | [Corrección AF5](F36SBX_Correccion_AF5.md). AF5-M01 y AF5-L01 corregidos por implementación, junto con los defectos propios AF5-PR01..PR05, pendientes de sexta auditoría independiente |
+| AF5 | `8ae203c` | No aprobado: 0 BLOCKER, 0 HIGH, 1 MEDIUM y 1 LOW | [Corrección AF5](F36SBX_Correccion_AF5.md). AF5-M01 y AF5-L01 corregidos por implementación, junto con los defectos propios AF5-PR01..PR05. La sexta auditoría los dio por corregidos (AF5-L01, solo en sus tres reproducciones) y señaló AF6-L01 y AF6-L02 |
+| AF6 | `4a2b2d7` | Aprobado técnicamente para integración: 0 BLOCKER, 0 HIGH, 0 MEDIUM, 2 LOW y 1 INFO | [Registro AF6](F36SBX_Auditoria_AF6.md). Integrado en `develop` (`5545694`) y `main` (`55f758e`), con CI en verde. AF6-L01 y AF6-L02 abiertos en la [deuda técnica AF6](F36SBX_Deuda_Tecnica_AF6.md). No registra FG-02 |
 
 | Hallazgo AF2 | Control | Dónde se documenta | Pruebas |
 |---|---|---|---|
