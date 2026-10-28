@@ -32,6 +32,8 @@
 17. [Especificación del sucesor B-01](preparacion-gate/F36SBX_Especificacion_Sucesor_B01.md): diseño, sin implementar, del incremento que permitiría al validador reconocer un gate superado solo con evidencia válida y espejos coherentes. Su implementación espera la autorización D-02.
 18. [Plan de pruebas del sucesor B-01](preparacion-gate/F36SBX_Plan_Pruebas_Sucesor_B01.md): pruebas negativas, positivas con fixtures sintéticos, metapruebas y regresión exigidas a esa implementación.
 19. [Borrador de autorización D-02](preparacion-gate/BORRADOR_Autorizacion_D02.md): qué autorizaría el equipo y qué no. No está firmado ni emitido.
+20. [Propuesta de gobierno unipersonal](preparacion-gate/F36SBX_Propuesta_Gobierno_Unipersonal.md): **PROPUESTA — NO VIGENTE — PENDIENTE DE AUTORIZACIÓN**. Diagnóstico del requisito 3/3 frente a un proyecto desarrollado por una sola persona, autoridad para enmendarlo, roles, adaptación de FG-02, FG-03, FG-10 y FG-12, auditoría independiente, riesgos y autorizaciones pendientes. Rige el contrato vigente.
+21. [Expediente de consulta al docente](preparacion-gate/BORRADOR_Expediente_Adecuacion_Unipersonal.md): no enviado y sin firma.
 
 La evidencia de los criterios de equipo (FG-02, FG-03, FG-10 y FG-12) se archivará en `gate/evidencia/`, con el formato de la [sección 8 del gate](F36SBX_Gate_Sucesor.md#8-formato-de-la-evidencia-de-equipo), cuando exista. Hoy esa carpeta no existe.
 
