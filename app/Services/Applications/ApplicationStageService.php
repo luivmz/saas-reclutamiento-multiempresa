@@ -32,17 +32,27 @@ class ApplicationStageService
         return $this->moveTo($application, ApplicationStatus::Discarded, $hr, $comment);
     }
 
+    /**
+     * A-28: the final decision, the selection and the closure lock the vacancy row before anything else. Holding it
+     * (FOR SHARE) from the decision check until the stage change commits serializes manual changes with them, but not
+     * with each other. It is taken here and not in transition(), whose scheduling caller locks the application first
+     * (docs/v1.1/security/SEG-02-concurrencia-decision-cambio-etapa.md).
+     */
     public function moveTo(Application $application, ApplicationStatus $target, User $hr, ?string $comment = null): Application
     {
         if (! $target->isManualTarget()) {
             throw new BusinessRuleException('Esta etapa solo se asigna al registrar la selección o al cerrar el proceso.', 'status');
         }
 
-        if (SelectionDecision::query()->withoutGlobalScopes()->where('vacancy_id', $application->vacancy_id)->exists()) {
-            throw new BusinessRuleException('La decisión final ya fue registrada; no se permiten cambios manuales de etapa en esta convocatoria.');
-        }
+        return DB::transaction(function () use ($application, $target, $hr, $comment): Application {
+            Vacancy::query()->withoutGlobalScopes()->whereKey($application->vacancy_id)->sharedLock()->firstOrFail();
 
-        return $this->transition($application, $target, $hr, $comment);
+            if (SelectionDecision::query()->withoutGlobalScopes()->where('vacancy_id', $application->vacancy_id)->exists()) {
+                throw new BusinessRuleException('La decisión final ya fue registrada; no se permiten cambios manuales de etapa en esta convocatoria.');
+            }
+
+            return $this->transition($application, $target, $hr, $comment);
+        });
     }
 
     /**
