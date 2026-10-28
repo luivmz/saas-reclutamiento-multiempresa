@@ -7,7 +7,7 @@
  * race like two HTTP requests would. It prints one JSON line per event to STDOUT for the orchestrating test.
  *
  * Usage: php seg02-worker.php <label> <operation> <json payload>
- *   operations: discard, move, decide, register, close
+ *   operations: discard, move, decide, register, close, schedule
  *
  * It refuses to run unless the effective database is the isolated test database.
  */
@@ -17,6 +17,7 @@ use App\Models\Application;
 use App\Models\User;
 use App\Models\Vacancy;
 use App\Services\Applications\ApplicationStageService;
+use App\Services\Assessments\AssessmentScheduler;
 use App\Services\Selection\FinalDecisionService;
 use App\Services\Selection\SelectionRegistrationService;
 use App\Services\Selection\VacancyClosureService;
@@ -84,6 +85,17 @@ try {
             ->status->value,
         'close' => app(VacancyClosureService::class)
             ->close(Vacancy::query()->withoutGlobalScopes()->findOrFail($payload['vacancy']), $actor, 'SEG02 cierre ficticio')
+            ->status->value,
+        'schedule' => app(AssessmentScheduler::class)
+            ->scheduleEvaluation(Application::query()->withoutGlobalScopes()->findOrFail($payload['application']), $actor, [
+                'type' => 'conocimientos',
+                'evaluator_id' => $payload['evaluator'],
+                'modality' => 'presencial',
+                'location' => 'SEG02 aula ficticia',
+                'scheduled_at' => now()->addWeek()->setTime(10, 0)->toDateTimeString(),
+                'duration_minutes' => 60,
+                'instructions' => 'SEG02 convocatoria ficticia',
+            ])
             ->status->value,
         default => throw new InvalidArgumentException("Unknown operation {$operation}"),
     };

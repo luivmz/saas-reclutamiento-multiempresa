@@ -6,6 +6,7 @@ use App\Enums\ApplicationStatus;
 use App\Exceptions\BusinessRuleException;
 use App\Exceptions\InvalidStateTransition;
 use App\Models\Application;
+use App\Models\Evaluation;
 use App\Models\Organization;
 use App\Models\SelectionDecision;
 use App\Models\User;
@@ -37,6 +38,12 @@ use Tests\TestCase;
  *    runs after the A-28 check of moveTo(). It does not conflict with the FOR KEY SHARE of foreign-key checks.
  *  - LOCK_RANKING_INPUT (ACCESS EXCLUSIVE on interview_results) stops FinalDecisionService inside the ranking, which
  *    only runs after its «Finalista» check. The stage-change path never reads that table.
+ *  - LOCK_SCHEDULING_INPUT (ACCESS EXCLUSIVE on evaluation_criteria) stops AssessmentScheduler once it has locked the
+ *    application row. The stage-change path never reads that table either.
+ *
+ * Once a test has its results, the workers and the barrier must have closed their connections, which ends their
+ * transactions and releases their locks. On any failure, tearDown() kills the workers, rolls back the barrier and
+ * terminates the backends they leave behind.
  *
  * Fixtures are committed so the workers can see them: this class does not use RefreshDatabase. It works only on
  * the isolated test database and leaves it freshly migrated.
@@ -56,10 +63,14 @@ class DecisionStageConcurrencyTest extends TestCase
 
     private const LOCK_RANKING_INPUT = 'lock table interview_results in access exclusive mode';
 
+    private const LOCK_SCHEDULING_INPUT = 'lock table evaluation_criteria in access exclusive mode';
+
     /** Fragments of the statement on which the first worker must be found waiting. */
     private const WAITS_IN_TRANSITION = ['from "applications"', 'for update'];
 
     private const WAITS_IN_RANKING = ['from "interview_results"'];
+
+    private const WAITS_IN_SCHEDULING = ['from "evaluation_criteria"'];
 
     private Organization $organization;
 
@@ -73,10 +84,10 @@ class DecisionStageConcurrencyTest extends TestCase
 
     private Application $other;
 
-    private string $run;
+    private string $run = '';
 
     /** @var array{database: string, server: string, server_started: string, isolation: string} */
-    private array $server;
+    private array $server = [];
 
     private ?Connection $barrier = null;
 
@@ -121,6 +132,8 @@ class DecisionStageConcurrencyTest extends TestCase
             }
             DB::purge('seg02_barrier');
         }
+
+        $this->terminateLeftoverBackends();
 
         if (! $this->reported && $this->timeline !== []) {
             $this->report('ejecución interrumpida');
@@ -194,6 +207,22 @@ class DecisionStageConcurrencyTest extends TestCase
     }
 
     /**
+     * S4c: the decision passes its «Finalista» check and stops in the ranking; meanwhile a discard of another
+     * application of the same vacancy arrives. A decision blocks the later manual changes of its whole vacancy.
+     */
+    public function test_seg02_s4c_discard_of_another_application_during_the_decision_keeps_a_valid_order(): void
+    {
+        $race = $this->race(self::LOCK_RANKING_INPUT, [], self::WAITS_IN_RANKING,
+            first: ['B', 'decide', $this->decisionFor($this->chosen)],
+            second: ['A', 'discard', $this->manualChange($this->other)],
+        );
+        $effects = $this->downstreamEffects();
+        $this->report('S4c: la decisión está en curso cuando llega el descarte de otra postulación de la vacante', $race, $effects);
+
+        $this->assertInvariants($race, manualFirst: false, effects: $effects);
+    }
+
+    /**
      * S5 (control): a decision in one vacancy does not block legitimate manual changes in another one.
      */
     public function test_seg02_s5_a_decision_in_another_vacancy_does_not_block_manual_changes(): void
@@ -209,6 +238,7 @@ class DecisionStageConcurrencyTest extends TestCase
 
         $this->assertSame(['ok', 'ok'], [$race['second']['outcome'], $race['first']['outcome']],
             'CONTROL: la decisión de la vacante 1 y el descarte de la vacante 2 son legítimos.');
+        $this->assertFalse($race['serialized'], 'INDEPENDENCIA: la decisión de una vacante no debe esperar a un cambio manual de otra.');
         $this->assertSame(ApplicationStatus::Discarded, $elsewhere->fresh()->status);
         $this->assertSame(ApplicationStatus::Finalist, $this->chosen->fresh()->status);
         $this->assertSame(0, SelectionDecision::query()->withoutGlobalScopes()->where('vacancy_id', $vacancyB->id)->count());
@@ -229,6 +259,69 @@ class DecisionStageConcurrencyTest extends TestCase
         $this->assertTrue($race['serialized'], 'CONTROL: la segunda decisión debía esperar el lock de la vacante que tiene la primera.');
         $this->assertSame(['ok', 'rejected'], [$race['first']['outcome'], $race['second']['outcome']]);
         $this->assertSame($this->chosen->id, SelectionDecision::query()->withoutGlobalScopes()->sole()->selected_application_id);
+    }
+
+    /**
+     * S7 (lock order): the scheduler locks the application first and stops before changing its stage; a manual change
+     * of the same application arrives meanwhile. That application-first path must not deadlock with manual changes.
+     */
+    public function test_seg02_s7_scheduling_that_holds_the_application_and_a_manual_change_do_not_deadlock(): void
+    {
+        $evaluator = User::factory()->evaluator($this->organization)->create();
+        $shortlisted = $this->candidateWithScores($this->vacancy, null, null, null, ApplicationStatus::Shortlisted);
+
+        $race = $this->race(self::LOCK_SCHEDULING_INPUT, [], self::WAITS_IN_SCHEDULING,
+            first: ['S', 'schedule', ['actor' => $this->hr->id, 'application' => $shortlisted->id, 'evaluator' => $evaluator->id]],
+            second: ['A', 'discard', $this->manualChange($shortlisted)],
+        );
+        $this->report('S7: la programación retiene la postulación y llega el descarte de esa misma postulación', $race);
+
+        $this->assertTrue($race['serialized'], 'ORDEN DE LOCKS: el descarte debía esperar el lock de la postulación que tiene la programación.');
+        $this->assertSame(['ok', 'ok'], [$race['first']['outcome'], $race['second']['outcome']],
+            'ORDEN DE LOCKS: en serie, programar y luego descartar es válido; ninguna operación debe abortar.');
+        $this->assertSame(ApplicationStatus::Discarded, $shortlisted->fresh()->status);
+        $this->assertSame(1, Evaluation::query()->withoutGlobalScopes()->where('application_id', $shortlisted->id)->count());
+    }
+
+    /**
+     * S7b (lock order): the manual change stops at the application row; the scheduler of the same application arrives
+     * meanwhile and must wait for it, not deadlock, and then reject the discarded application.
+     */
+    public function test_seg02_s7b_manual_change_that_waits_on_the_application_and_its_scheduling_do_not_deadlock(): void
+    {
+        $evaluator = User::factory()->evaluator($this->organization)->create();
+        $shortlisted = $this->candidateWithScores($this->vacancy, null, null, null, ApplicationStatus::Shortlisted);
+
+        $race = $this->race(self::LOCK_APPLICATION_ROW, [$shortlisted->id], self::WAITS_IN_TRANSITION,
+            first: ['A', 'discard', $this->manualChange($shortlisted)],
+            second: ['S', 'schedule', ['actor' => $this->hr->id, 'application' => $shortlisted->id, 'evaluator' => $evaluator->id]],
+        );
+        $this->report('S7b: el descarte espera la fila de la postulación y llega la programación de esa misma postulación', $race);
+
+        $this->assertTrue($race['serialized'], 'ORDEN DE LOCKS: la programación debía esperar el lock de la postulación que pidió antes el descarte.');
+        $this->assertSame('ok', $race['first']['outcome']);
+        $this->assertSame(BusinessRuleException::class, $race['second']['class'],
+            'ORDEN DE LOCKS: la programación de una postulación ya descartada se rechaza por regla de negocio, no por interbloqueo.');
+        $this->assertSame(ApplicationStatus::Discarded, $shortlisted->fresh()->status);
+        $this->assertSame(0, Evaluation::query()->withoutGlobalScopes()->where('application_id', $shortlisted->id)->count());
+    }
+
+    /**
+     * S8: discards of two different applications of the same vacancy are compatible, so whatever lock of the vacancy
+     * they share must not serialize them.
+     */
+    public function test_seg02_s8_manual_changes_of_different_applications_of_a_vacancy_are_not_serialized(): void
+    {
+        $race = $this->race(self::LOCK_APPLICATION_ROW, [$this->other->id], self::WAITS_IN_TRANSITION,
+            first: ['A', 'discard', $this->manualChange($this->other)],
+            second: ['F', 'discard', $this->manualChange($this->chosen)],
+        );
+        $this->report('S8: descartes simultáneos de dos postulaciones de la misma vacante', $race);
+
+        $this->assertFalse($race['serialized'], 'Dos cambios manuales compatibles de una vacante no deben esperarse entre sí.');
+        $this->assertSame(['ok', 'ok'], [$race['first']['outcome'], $race['second']['outcome']]);
+        $this->assertSame(ApplicationStatus::Discarded, $this->other->fresh()->status);
+        $this->assertSame(ApplicationStatus::Discarded, $this->chosen->fresh()->status);
     }
 
     /**
@@ -274,6 +367,7 @@ class DecisionStageConcurrencyTest extends TestCase
     {
         $registration = $this->runWorker('C', 'register', ['actor' => $this->hr->id, 'vacancy' => $this->vacancy->id]);
         $closure = $this->runWorker('D', 'close', ['actor' => $this->hr->id, 'vacancy' => $this->vacancy->id]);
+        $this->assertBackendsReleased();
         $decision = SelectionDecision::query()->withoutGlobalScopes()->where('vacancy_id', $this->vacancy->id)->first();
 
         return [
@@ -332,11 +426,17 @@ class DecisionStageConcurrencyTest extends TestCase
         $firstProcess->wait();
         $secondProcess->wait();
 
-        return [
+        $race = [
             'first' => $this->collect($first[0], $firstProcess),
             'second' => $this->collect($second[0], $secondProcess),
             'serialized' => $serialized,
         ];
+
+        DB::purge('seg02_barrier');
+        $this->barrier = null;
+        $this->assertBackendsReleased();
+
+        return $race;
     }
 
     /**
@@ -497,6 +597,47 @@ class DecisionStageConcurrencyTest extends TestCase
         );
 
         return ['database' => $row->name, 'server' => $row->address, 'server_started' => $row->started, 'isolation' => $row->isolation];
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function backendsOfThisRun(): array
+    {
+        return array_map('intval', DB::table('pg_stat_activity')->where('application_name', 'like', "seg02-{$this->run}-%")->pluck('pid')->all());
+    }
+
+    /**
+     * Success path: the workers and the barrier must have closed their connections, which also ends their
+     * transactions and releases their locks.
+     */
+    private function assertBackendsReleased(): void
+    {
+        $deadline = hrtime(true) + 5 * 1_000_000_000;
+
+        while (($left = $this->backendsOfThisRun()) !== [] && hrtime(true) < $deadline) {
+            usleep(20_000);
+        }
+
+        $this->assertSame([], $left, 'RECURSOS: siguen abiertas conexiones de la prueba (pid '.implode(', ', $left).').');
+    }
+
+    /**
+     * Error path: once the workers are killed and the barrier rolled back, the backends they leave finish the
+     * statement they were waiting on and exit; any one still alive after 5 s is terminated.
+     */
+    private function terminateLeftoverBackends(): void
+    {
+        $deadline = hrtime(true) + 5 * 1_000_000_000;
+
+        while (($left = $this->backendsOfThisRun()) !== [] && hrtime(true) < $deadline) {
+            usleep(50_000);
+        }
+
+        foreach ($left as $pid) {
+            DB::select('select pg_terminate_backend(?)', [$pid]);
+            fwrite(STDERR, "\nSEG-02: se terminó el backend {$pid}, que seguía abierto al limpiar la prueba.\n");
+        }
     }
 
     private function activityOf(string $label): ?object
