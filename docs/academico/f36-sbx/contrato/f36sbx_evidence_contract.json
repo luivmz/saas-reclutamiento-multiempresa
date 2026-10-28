@@ -1,0 +1,239 @@
+{
+  "contract_id": "f36sbx-evidence-contract",
+  "contract_version": "4",
+  "status": "DISENO",
+  "environment": "sandbox",
+  "source_type_allowed": ["synthetic"],
+  "generator_policy": {
+    "llm_allowed": false,
+    "template_based": true,
+    "seed_required": true,
+    "byte_reproducible": true
+  },
+  "allowed_upstream_sources": [
+    "docs/academico/datos-sinteticos/dataset",
+    "docs/academico/evidencia-sbx/fixtures"
+  ],
+  "upstream_files": {
+    "docs/academico/datos-sinteticos/dataset/applications.csv": {
+      "key": "application_token",
+      "scope": "tenant",
+      "context": {"organization": "organization_token", "vacancy": "vacancy_token", "application": "application_token"},
+      "cardinality": "exactly_one_own"
+    },
+    "docs/academico/datos-sinteticos/dataset/criteria.csv": {
+      "key": "criterion_id",
+      "scope": "tenant",
+      "context": {"vacancy": "vacancy_token"},
+      "cardinality": "any_same_vacancy"
+    },
+    "docs/academico/datos-sinteticos/dataset/vacancies.csv": {
+      "key": "vacancy_token",
+      "scope": "tenant",
+      "context": {"organization": "organization_token", "vacancy": "vacancy_token"},
+      "cardinality": "exactly_one_own"
+    }
+  },
+  "global_upstream_sources": [],
+  "global_upstream_policy": "Ninguna fuente global está admitida en la versión 3. Una fuente global futura exige un tipo explícito, ser no personal, una semántica documentada y una versión nueva del contrato",
+  "upstream_manifest": "docs/academico/datos-sinteticos/dataset/manifest.json",
+  "content_upstream_bindings": {
+    "criterion_id": "docs/academico/datos-sinteticos/dataset/criteria.csv"
+  },
+  "tenant_bound_tokens": ["author_token", "annotator_token"],
+  "internal_references": {"fragment_id": "fragments", "variant_of": "artifacts", "rendered_from": "artifacts"},
+  "global_identifiers": {
+    "question_id": {"scope": "global", "personal": false, "resolved_upstream": false, "semantics": "Identificador de pregunta de un catálogo sintético que F34 comparte entre organizaciones (evidence.csv, source_reference pregunta:PRG-nnn). Se valida solo por patrón y no aporta contexto de tenant"}
+  },
+  "forbidden_upstream_sources": [
+    "docs/academico/g0-evidence",
+    "storage",
+    "database",
+    "http://",
+    "https://"
+  ],
+  "synthetic_markers": {
+    "synthetic_id_prefix": "SBX36-",
+    "text_prefix": "[SINTÉTICO]",
+    "source_type": "synthetic",
+    "environment": "sandbox",
+    "hash_algorithm": "f36sbx-content-sha256-v1",
+    "synthetic_organization_ids": ["ORG-S1", "ORG-S2", "ORG-S3"]
+  },
+  "identifier_patterns": {
+    "artifact_id": "^SBX36-(ORG-S[1-3])-ART-[0-9]{4}$",
+    "fragment_id": "^SBX36-(ORG-S[1-3])-FRG-[0-9]{4}$",
+    "output_id": "^SBX36-(ORG-S[1-3])-OUT-[0-9]{4}$",
+    "scenario_id": "^SC36-[0-9]{2}$",
+    "vacancy_token": "^VAC-[0-9]{4}$",
+    "application_token": "^APP-[0-9]{5}$",
+    "criterion_id": "^CRI-[0-9]{4}$",
+    "question_id": "^PRG-[0-9]{3}$",
+    "author_token": "^EV-(S[1-3])-[0-9]{2}$",
+    "annotator_token": "^ANT36-(S[1-3])-[0-9]{2}$",
+    "template_family": "^TF36-([A-Z]{2})$",
+    "template_id": "^TPL36-([A-Z]{2})-[0-9]{2}$",
+    "generator_id": "^GEN36-[a-z0-9-]{3,40}$",
+    "method_id": "^MTH36-[a-z0-9-]{3,40}$",
+    "semver": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+    "sha256": "^[0-9a-f]{64}$"
+  },
+  "enums": {
+    "artifact_type": ["cv_document", "certificate", "interview_transcript", "human_observation", "relevance_annotation", "adversarial_case", "counterfactual_pair", "rendered_document"],
+    "stage": ["A", "B"],
+    "partition": ["dev", "test"],
+    "section_kind": ["formacion", "experiencia", "capacitacion"],
+    "transcript_kind": ["texto_sintetico_revisado"],
+    "review_status": ["revisada_sintetica"],
+    "speaker_role": ["entrevistador_sintetico", "postulante_sintetico"],
+    "author_kind": ["human_synthetic"],
+    "observation_kind": ["conducta_observada", "aclaracion"],
+    "relevance": ["relevante", "no_relevante"],
+    "overlap_stratum": ["alto", "medio", "nulo"],
+    "attack_kind": ["instruccion_incrustada", "caracteres_de_control", "pii_ficticia_evidente", "tamano_extremo", "unicode_enganoso"],
+    "expected_outcome": ["rechazo", "abstencion"],
+    "perturbation": ["marcador_de_grupo"],
+    "grupo_sintetico": ["GS-A", "GS-B"],
+    "format": ["pdf", "docx"],
+    "normalization": ["nfkc_casefold"]
+  },
+  "content_field_types": {
+    "sections": "list",
+    "section_kind": "enum:section_kind",
+    "text_synthetic": "text",
+    "issuer_synthetic": "text",
+    "title_synthetic": "text",
+    "question_id": "pattern:question_id",
+    "transcript_kind": "enum:transcript_kind",
+    "review_status": "enum:review_status",
+    "turns": "list",
+    "speaker_role": "enum:speaker_role",
+    "author_kind": "enum:author_kind",
+    "author_token": "pattern:author_token",
+    "observation_kind": "enum:observation_kind",
+    "fragment_id": "pattern:fragment_id",
+    "criterion_id": "pattern:criterion_id",
+    "relevance": "enum:relevance",
+    "annotator_token": "pattern:annotator_token",
+    "overlap_stratum": "enum:overlap_stratum",
+    "attack_kind": "enum:attack_kind",
+    "expected_outcome": "enum:expected_outcome",
+    "variant_of": "pattern:artifact_id",
+    "perturbation": "enum:perturbation",
+    "grupo_sintetico": "enum:grupo_sintetico",
+    "rendered_from": "pattern:artifact_id",
+    "format": "enum:format"
+  },
+  "artifact_envelope_fields": [
+    "synthetic_id", "artifact_type", "stage", "synthetic_organization_id", "scenario_id", "vacancy_token",
+    "application_token", "partition", "template_family", "source_type", "environment", "hash_algorithm",
+    "content", "content_hash", "provenance", "record_hash"
+  ],
+  "artifact_types": {
+    "cv_document": {"stage": "A", "content_fields": ["sections"], "list_items": {"sections": ["section_kind", "text_synthetic"]}, "text_paths": ["sections/*/text_synthetic"], "fragmentable": true},
+    "certificate": {"stage": "A", "content_fields": ["issuer_synthetic", "title_synthetic"], "list_items": {}, "text_paths": ["issuer_synthetic", "title_synthetic"], "fragmentable": true},
+    "interview_transcript": {"stage": "A", "content_fields": ["question_id", "transcript_kind", "review_status", "turns"], "list_items": {"turns": ["speaker_role", "text_synthetic"]}, "text_paths": ["turns/*/text_synthetic"], "fragmentable": true},
+    "human_observation": {"stage": "A", "content_fields": ["author_kind", "author_token", "observation_kind", "text_synthetic"], "list_items": {}, "text_paths": ["text_synthetic"], "fragmentable": true},
+    "relevance_annotation": {"stage": "A", "content_fields": ["fragment_id", "criterion_id", "relevance", "annotator_token", "overlap_stratum"], "list_items": {}, "text_paths": [], "fragmentable": false},
+    "adversarial_case": {"stage": "A", "content_fields": ["attack_kind", "text_synthetic", "expected_outcome"], "list_items": {}, "text_paths": ["text_synthetic"], "fragmentable": true},
+    "counterfactual_pair": {"stage": "B", "content_fields": ["variant_of", "perturbation", "grupo_sintetico"], "list_items": {}, "text_paths": [], "fragmentable": false},
+    "rendered_document": {"stage": "B", "content_fields": ["rendered_from", "format"], "list_items": {}, "text_paths": [], "fragmentable": false}
+  },
+  "fragment_fields": [
+    "fragment_id", "artifact_id", "artifact_record_hash", "synthetic_organization_id", "scenario_id", "vacancy_token",
+    "application_token", "partition", "text_path", "char_start", "char_end", "text_hash", "fragment_hash"
+  ],
+  "output_fields": [
+    "output_id", "ei", "method_id", "method_version", "method_config", "synthetic_organization_id", "scenario_id",
+    "vacancy_token", "application_token", "partition", "query_criterion_id", "fragment_refs", "fragment_ref_hashes",
+    "abstained", "input_manifest_hash", "output_hash"
+  ],
+  "method_config_fields": ["normalization", "top_k"],
+  "top_k_range": [1, 20],
+  "output_ei": ["EI-07", "EI-09", "EI-10"],
+  "context_fields": ["synthetic_organization_id", "scenario_id", "vacancy_token", "application_token", "partition"],
+  "canonical_context": {
+    "key": "application_token",
+    "source": "artifacts",
+    "fields": ["synthetic_organization_id", "scenario_id", "vacancy_token", "application_token", "partition"],
+    "applies_to": ["outputs", "tuning_outputs"]
+  },
+  "provenance_fields": {
+    "artifact": ["generator_id", "generator_version", "template_id", "template_family", "seed", "upstream_refs", "content_hash"],
+    "upstream_ref": ["source", "ref", "sha256"]
+  },
+  "example_fields": ["example_id", "contract_version", "example_only", "note", "artifacts", "fragments", "outputs", "partition_manifest"],
+  "example_id_value": "f36sbx-contract-example",
+  "example_coverage": {
+    "artifact_types": ["cv_document", "certificate", "interview_transcript", "human_observation", "relevance_annotation", "adversarial_case", "counterfactual_pair", "rendered_document"],
+    "min_fragments": 1,
+    "min_outputs_with_fragments": 1,
+    "min_abstained_outputs": 1,
+    "min_test_artifacts": 1,
+    "min_test_gold_annotations": 1,
+    "min_test_outputs": 1,
+    "min_tuning_outputs": 1,
+    "min_scenarios": 2
+  },
+  "partition_manifest_fields": ["partitions", "thresholds", "test_used_for_tuning"],
+  "partition_fields": {
+    "dev": ["artifacts"],
+    "test": ["artifacts", "sealed", "seal_algorithm", "seal_sha256"]
+  },
+  "threshold_fields": ["tuning_partition", "tuning_outputs"],
+  "hash_scheme": {
+    "canonical_json": "json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(',', ':')) codificado en UTF-8",
+    "tagged_hash": "sha256(etiqueta en UTF-8 + salto de línea + JSON canónico)",
+    "content_hash": "sha256 del JSON canónico de content, sin etiqueta",
+    "record_hash": {"tag": "f36sbx-artifact-record-v1", "preimage": "el artefacto completo sin record_hash"},
+    "text_hash": "sha256 del UTF-8 del texto de text_path entre char_start y char_end",
+    "fragment_hash": {"tag": "f36sbx-fragment-v1", "preimage": "el fragmento completo sin fragment_hash"},
+    "input_manifest_hash": {"tag": "f36sbx-input-manifest-v1", "preimage": "{application_token, partition, fragments}: lista ordenada de pares [fragment_id, fragment_hash] de la misma postulación y partición"},
+    "output_hash": {"tag": "f36sbx-output-v1", "preimage": "el output completo sin output_hash"},
+    "seal_sha256": {"tag": "f36sbx-test-seal-v2", "preimage": "{seal_algorithm, contract_version, test_artifacts, test_fragments, test_outputs, tuning_outputs, tuning_gold, thresholds, test_used_for_tuning}: pares ordenados [id, hash de registro]; tuning_gold son las anotaciones de relevancia de dev"}
+  },
+  "relations": {
+    "REL-01": "Cada artefacto tiene el sobre cerrado, un tipo conocido con su etapa, los seis marcadores, un contenido cerrado con valores enumerados o con patrón, su content_hash y su record_hash",
+    "REL-02": "Cada artefacto tiene provenance cerrada: generador, plantilla de su familia, semilla, referencias upstream verificables contra el manifiesto F34 y el mismo content_hash",
+    "REL-03": "Los identificadores son únicos y su segmento de organización coincide con synthetic_organization_id",
+    "REL-04": "La vacante y la postulación existen en F34, con la misma organización y la misma vacante",
+    "REL-05": "Cada vacante pertenece a una sola organización y a un solo escenario; cada postulación, a una sola vacante; cada familia de plantilla y cada vacante, a una sola partición",
+    "REL-06": "Cada fragmento referencia un artefacto fragmentable existente y su record_hash, con text_path válido, offsets dentro del texto, text_hash y fragment_hash correctos y el mismo contexto",
+    "REL-07": "Cada output usa una EI de localización y una configuración cerrada, referencia fragmentos existentes de su misma postulación y contexto con sus fragment_hash, se abstiene solo sin fragmentos y trae input_manifest_hash y output_hash correctos",
+    "REL-08": "Cada anotación referencia un fragmento existente de su contexto y un criterio F34 de su vacante",
+    "REL-09": "Cada par contrafactual referencia un artefacto fragmentable de la misma organización, escenario, vacante, partición y familia",
+    "REL-10": "Cada documento renderizado referencia un cv_document de la misma postulación, partición y familia",
+    "REL-11": "El manifiesto de particiones es cerrado: solo dev y test, cada artefacto una vez y en su partición, test sellado con el sello v2 (que fija también los outputs de ajuste, el oro de dev y los umbrales) y umbrales ajustados solo con outputs de dev",
+    "REL-12": "Todo texto es NFC, empieza por [SINTÉTICO], no tiene caracteres invisibles ni de control y no contiene correo, teléfono ni DNI",
+    "REL-13": "Aislamiento entre tenants: autores y anotadores son de la organización del artefacto; cada referencia upstream se resuelve y es compatible con su organización, escenario, vacante y postulación; no hay fuentes globales admitidas y todo identificador con patrón del contenido está clasificado como de tenant, upstream, interno o global documentado",
+    "REL-14": "El ejemplo tiene el identificador cerrado y la cobertura mínima: los ocho tipos, fragmentos, outputs con fragmentos y con abstención, test con artefactos, oro y outputs, ajuste en dev y al menos dos escenarios",
+    "REL-15": "Contexto canónico: cada output, también una abstención sin fragmentos y un output de ajuste, tiene la organización, el escenario, la vacante, la postulación y la partición de su postulación, derivados de los artefactos del conjunto; un output de una postulación sin artefactos en el conjunto o con contexto ambiguo no es válido"
+  },
+  "group_marker_only_in": ["counterfactual_pair"],
+  "forbidden_fields": [
+    "name", "full_name", "first_name", "last_name", "dni", "document_number", "email", "phone", "address",
+    "photo", "image", "age", "birth_date", "gender", "sex", "nationality", "ethnicity", "religion", "health",
+    "disability", "marital_status", "score", "rank", "ranking", "recommendation", "recommended", "fit",
+    "suitability", "best_candidate", "suggested_level", "verdict", "emotion", "personality", "honesty",
+    "intelligence", "stress", "nervousness", "voice", "face", "prosody", "accent", "audio", "video", "biometric"
+  ],
+  "forbidden_field_tokens": [
+    "name", "dni", "email", "phone", "address", "photo", "image", "age", "birth", "gender", "sex", "nationality",
+    "ethnicity", "religion", "health", "disability", "marital", "score", "rank", "ranking", "recommendation",
+    "recommended", "fit", "suitability", "best", "verdict", "emotion", "personality", "honesty", "intelligence",
+    "stress", "nervousness", "voice", "face", "prosody", "accent", "audio", "video", "biometric", "level", "hire",
+    "hired", "select", "selected", "discard", "discarded"
+  ],
+  "splits": {
+    "partitions": ["dev", "test"],
+    "forbidden_partitions": ["train"],
+    "train_allowed": false,
+    "group_by": ["template_family", "vacancy_token"],
+    "test_sealed_before_any_run": true,
+    "seal_algorithm": "f36sbx-test-seal-sha256-v2",
+    "thresholds_fit_on": "dev",
+    "test_used_for_tuning": false,
+    "temporal_embargo": "process_splits_f34",
+    "counterfactual_pairs_same_partition": true
+  }
+}

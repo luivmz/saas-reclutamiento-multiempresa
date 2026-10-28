@@ -1,0 +1,104 @@
+{
+  "schema_id": "f36sbx-team-evidence",
+  "schema_version": "2",
+  "schema_tag": "f36sbx-team-evidence/v2",
+  "gate_id": "F36-SBX-GATE",
+  "gate_version": "3",
+  "evidence_paths": {
+    "FG-02": "docs/academico/f36-sbx/gate/evidencia/FG-02.json",
+    "FG-03": "docs/academico/f36-sbx/gate/evidencia/FG-03.json",
+    "FG-10": "docs/academico/f36-sbx/gate/evidencia/FG-10.json",
+    "FG-12": "docs/academico/f36-sbx/gate/evidencia/FG-12.json"
+  },
+  "candidate_binding": {
+    "pattern": "^[0-9a-f]{40}$",
+    "equals": "candidate_commit del estado del gate",
+    "descends_from": "b8892af39a6492d8dd44a36290604efc602380cd",
+    "ancestor_of_head": true,
+    "allowed_changes_after_candidate": [
+      "docs/academico/f36-sbx/gate/evidencia/",
+      "docs/academico/f36-sbx/gate/f36sbx_gate_state.json",
+      "docs/academico/f36-sbx/F36SBX_Gate_Sucesor.md: solo la columna Estado de la tabla FG"
+    ]
+  },
+  "team_members": ["Coronacion Meza Fredy", "Peña Arroyo Anthony", "Vila Meza Luis Antonio"],
+  "common_fields": ["schema", "criterion_id", "gate_id", "gate_version", "candidate_commit", "record_id", "recorded_at"],
+  "record_id_pattern": "^F36SBX-(FG-02|FG-03|FG-10|FG-12)-[0-9]{3}$",
+  "date_format": "YYYY-MM-DD, fecha válida, no anterior a la fecha del commit candidato",
+  "visible_identity": {
+    "rule": "texto NFC sin espacios al inicio ni al final, sin caracteres de control, de formato, privados, no asignados ni separadores de línea, con al menos tres letras y distinto de un marcador de posición",
+    "limit": "una identidad declarada estructuralmente válida no es una identidad externa autenticada; esa verificación sigue siendo revisión humana",
+    "min_letters": 3,
+    "max_length": 120
+  },
+  "human_document": {
+    "encoding": "UTF-8 en NFC, sin caracteres de control (salvo salto de línea y tabulador), de formato, privados ni no asignados",
+    "canonical_block": "exactamente un bloque de código cercado cuya etiqueta es la del documento; ningún otro bloque cuya etiqueta contenga f36sbx",
+    "outside_block_rule": "fuera del bloque no pueden aparecer los tokens canónicos ni aserciones clave = valor o clave: valor de los campos normativos",
+    "min_letters_outside_block": 200
+  },
+  "approvals": {
+    "fields": ["member", "vote", "date"],
+    "votes": ["APRUEBA", "RECHAZA", "SE_ABSTIENE"],
+    "required_vote": "APRUEBA",
+    "quorum": "3/3"
+  },
+  "criteria": {
+    "FG-02": {
+      "fields": ["auditor", "audit_report", "verdict", "findings_open"],
+      "auditor_fields": ["name", "kind", "independent_of_candidate"],
+      "auditor_kinds": ["docente", "integrante_no_autor", "sesion_de_auditoria_independiente", "revisor_academico_externo"],
+      "audit_report_fields": ["path", "sha256"],
+      "audit_report_rule": "archivo .md dentro de gate/evidencia/, con el SHA-256 declarado, el título de nivel 1, las secciones requeridas y un único bloque canónico de metadatos",
+      "report_block": "f36sbx-audit-metadata",
+      "report_metadata_schema": "f36sbx-audit-report/v1",
+      "report_metadata_fields": ["metadata_schema", "gate_id", "gate_version", "criterion_id", "candidate_commit", "auditor", "verdict", "findings_open", "report_date"],
+      "report_headings": ["## Alcance", "## Hallazgos", "## Conclusión"],
+      "coherence": ["candidate_commit", "auditor", "verdict", "findings_open"],
+      "verdicts": ["APROBADO_PARA_INTEGRACION", "APROBADO_CON_OBSERVACIONES", "NO_APROBADO_PARA_INTEGRACION"],
+      "passing_verdicts": ["APROBADO_PARA_INTEGRACION", "APROBADO_CON_OBSERVACIONES"],
+      "findings_fields": ["blocker", "high", "medium_requiring_fix", "medium_accepted", "low"],
+      "must_be_zero": ["blocker", "high", "medium_requiring_fix"]
+    },
+    "FG-03": {
+      "fields": ["decision", "authorized_ei", "numbering_f36_m01", "approvals", "quorum"],
+      "decisions": ["AUTORIZA_INICIO_F37_SBX", "NO_AUTORIZA"],
+      "passing_decision": "AUTORIZA_INICIO_F37_SBX",
+      "numbering_values": ["CONFIRMADA", "NO_CONFIRMADA"],
+      "passing_numbering": "CONFIRMADA",
+      "authorizable_classes": ["ALLOWED", "CONDITIONAL"],
+      "authorized_ei_rule": "lista no vacía y sin repetidos de EI de la matriz, igual a f37_authorized_ei del estado del gate"
+    },
+    "FG-10": {
+      "fields": ["new_dependencies", "dependencies", "approvals", "quorum"],
+      "dependency_fields": ["name", "version", "purpose", "license", "source", "source_url", "supply_chain_review", "related_ei", "approval_status"],
+      "name_pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+      "version_pattern": "^==[0-9]+(\\.[0-9]+){1,3}$",
+      "licenses": ["Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "MIT", "MPL-2.0", "PSF-2.0"],
+      "sources": ["pypi"],
+      "source_url_template": "https://pypi.org/project/{name}/",
+      "supply_chain_fields": ["osv_checked_on", "open_vulnerabilities", "artifact_sha256", "reviewed_by"],
+      "approval_statuses": ["APROBADA", "PROPUESTA", "RECHAZADA"],
+      "passing_approval_status": "APROBADA",
+      "dependency_ei": ["EI-10", "EI-11", "EI-12"]
+    },
+    "FG-12": {
+      "fields": ["successor_adr", "covered_ei", "ei09_decision", "approvals", "quorum"],
+      "adr_fields": ["id", "path", "sha256", "status", "relation_to_adr005", "scope"],
+      "adr_id_pattern": "^ADR-0(0[6-9]|[1-9][0-9])$",
+      "adr_rule": "archivo .md bajo docs/ que forma parte del commit candidato auditado y no cambia después, con el SHA-256 declarado, el título de nivel 1 con su id, las secciones requeridas, F36-SBX y ADR-005 en el texto y un único bloque canónico de metadatos. Su bloque no cita el commit candidato, que lo contiene (sería autorreferente): fija el gate, su versión y la base, y su vínculo con el candidato lo aporta Git",
+      "adr_block": "f36sbx-adr-metadata",
+      "adr_metadata_schema": "f36sbx-adr/v1",
+      "adr_metadata_fields": ["metadata_schema", "gate_id", "gate_version", "base_commit", "adr_id", "status", "relation_to_adr005", "scope", "covered_ei", "ei09_decision", "decided_on"],
+      "adr_headings": ["## Contexto", "## Decisión", "## Consecuencias"],
+      "coherence": ["id = adr_id", "status", "relation_to_adr005", "scope", "covered_ei", "ei09_decision", "gate_id, gate_version y base_commit = los del gate", "decided_on no posterior al commit candidato"],
+      "adr_statuses": ["PROPUESTO", "APROBADO", "RECHAZADO", "REVOCADO"],
+      "passing_adr_status": "APROBADO",
+      "relations_to_adr005": ["EXCEPCION_SANDBOX_SINTETICA_ADR005_6_4"],
+      "scopes": ["ALCANCE_C_SOLO_SINTETICO"],
+      "coverable_ei": ["EI-08", "EI-10", "EI-11", "EI-12", "EI-24"],
+      "ei09_decisions": ["CABE_EN_ALCANCE_B", "NO_CABE_EN_ALCANCE_B", "SIN_DECISION"],
+      "ei09_passing_decision": "CABE_EN_ALCANCE_B"
+    }
+  }
+}

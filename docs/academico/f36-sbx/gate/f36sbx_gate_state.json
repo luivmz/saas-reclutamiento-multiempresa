@@ -1,0 +1,40 @@
+{
+  "gate_id": "F36-SBX-GATE",
+  "gate_version": "3",
+  "authorizes": ["F37-SBX"],
+  "cannot_authorize": [
+    "produccion",
+    "datos_reales",
+    "pii_real",
+    "audio_video_real",
+    "seleccion_automatica",
+    "scoring_ranking_recomendacion",
+    "cambio_rf23_rf21_rf29",
+    "g0_real",
+    "alcance_c_producto",
+    "endpoints_migraciones_ui",
+    "ei_blocked"
+  ],
+  "base_commit": "b8892af39a6492d8dd44a36290604efc602380cd",
+  "candidate_commit": null,
+  "team_evidence_schema": "f36sbx-team-evidence/v2",
+  "criteria": [
+    {"id": "FG-01", "kind": "auto", "status": "CUMPLE"},
+    {"id": "FG-02", "kind": "team", "status": "PENDIENTE", "evidence": null},
+    {"id": "FG-03", "kind": "team", "status": "PENDIENTE", "evidence": null},
+    {"id": "FG-04", "kind": "auto", "status": "CUMPLE"},
+    {"id": "FG-05", "kind": "auto", "status": "CUMPLE"},
+    {"id": "FG-06", "kind": "auto", "status": "CUMPLE"},
+    {"id": "FG-07", "kind": "auto", "status": "CUMPLE"},
+    {"id": "FG-08", "kind": "auto", "status": "CUMPLE"},
+    {"id": "FG-09", "kind": "auto", "status": "CUMPLE"},
+    {"id": "FG-10", "kind": "team", "status": "PENDIENTE", "evidence": null},
+    {"id": "FG-11", "kind": "auto", "status": "CUMPLE"},
+    {"id": "FG-12", "kind": "team", "status": "PENDIENTE", "evidence": null},
+    {"id": "FG-13", "kind": "auto", "status": "CUMPLE"},
+    {"id": "FG-14", "kind": "auto", "status": "CUMPLE"}
+  ],
+  "f37_authorized_ei": null,
+  "revocation": null,
+  "declared_result": "NO SUPERADO"
+}

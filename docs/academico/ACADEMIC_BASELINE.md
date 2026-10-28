@@ -16,6 +16,9 @@ F34E CERRADA (05/10/2026), tras auditoría final PASS y adaptación explícita d
 - G0-SBX = APROBADA CON RESTRICCIONES
 - F35 productiva = BLOQUEADA
 - F35-SBX = CERRADA Y CONGELADA
+- F36-SBX = EN DISEÑO
+- F36-SBX-GATE = NO SUPERADO
+- F37-SBX = BLOQUEADA
 - F36–F40 = BLOQUEADAS
 - Alcance C = BLOQUEADO
 - Datos reales = PROHIBIDOS
@@ -25,6 +28,8 @@ SBX-01..SBX-18 CUMPLE. Aprobación interna del equipo REGISTRADA; no constituye 
 Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa11cd9185423e2866b0fc936`. El commit C y los merges se consultan en Git, sin hashes futuros/autorreferenciales. Publicación autorizada únicamente tras regresión y CI GREEN de develop/main. Sin tag ni release. El handoff macOS está publicado; F35-SBX-A está CERRADA E INTEGRADA en `develop` y `main`, con su commit E `61f94e23fc30b00a848a4558830b6d65f81dff87`. F35-SBX-B está CERRADA, CONGELADA E INTEGRADA, con su cierre terminal registrado en [`evidencia-sbx-b-cierre-terminal`](evidencia-sbx-b-cierre-terminal/F35SBXB_Cierre_Terminal.md). F35-SBX está CERRADA Y CONGELADA, con su cierre global registrado en [`evidencia-sbx-cierre-global`](evidencia-sbx-cierre-global/F35SBX_Cierre_Global.md). F36–F40 siguen BLOQUEADAS: ninguna F36-SBX empieza sin una autorización sucesora nueva, con su propia gobernanza.
 
 **Continuidad tras el cierre de F35-SBX (25/10/2026).** F35-SBX quedó CERRADA, CONGELADA E INTEGRADA, solo en su alcance académico y sintético. El candidato auditado `858b5fa71c01bf794715f78068ea0557fd56a16b` se integró con merges `--no-ff` en `develop` (`e366cbf81f7c6e158ddd848268cf66f1247b4ed8`, CI `tests` run 40221309615 en verde) y en `main` (`06b789f9e9e99268eccfb72a15df2dd30fe47360`, CI `tests` run 40221523362 en verde). Su gate se valida anclado en su rama, `chore/f35-sbx-global-closure`; sobre un HEAD posterior falla por diseño (DG-02). Queda abierta y diferida la deuda LOW GC-AF-L01, no bloqueante, en el [registro de deuda técnica](TECHNICAL_DEBT.md). Para continuar desde otro equipo se usa la [guía de handoff posterior a F35-SBX](handoff/F35SBX_SECONDARY_PC_HANDOFF.md). F36-SBX no está iniciada: ninguna F36-SBX empieza sin una autorización sucesora nueva, con su propia gobernanza.
+
+**F36-SBX en diseño (26/10/2026).** Por instrucción del equipo, F36-SBX se abrió en la rama `feature/f36-sbx-authorization-design`, desde `main` = `b8892af39a6492d8dd44a36290604efc602380cd`, como incremento **separado y solo documental** de autorización, investigación y diseño de la inteligencia sobre evidencia, exclusivamente sintética. Contiene el charter, la matriz ALLOWED/CONDITIONAL/BLOCKED, el contrato de evidencia, el threat model, el plan de evaluación y el gate sucesor F36-SBX-GATE, en [`f36-sbx`](f36-sbx/README.md). No implementa ML, NLP, embeddings, OCR, parsing ni LLM, no añade dependencias y no toca el runtime ni F35-SBX. F36-SBX-GATE = NO SUPERADO y F37-SBX = BLOQUEADA hasta la auditoría independiente y la autorización explícita del equipo. F36-SBX no es la F36 «ML baseline» del mapa F33, que sigue BLOQUEADA junto con F37–F40. Este párrafo sustituye la frase «F36-SBX no está iniciada» del párrafo anterior. El alcance C sigue BLOQUEADO y los datos reales, PROHIBIDOS. Es candidata a auditoría independiente, sin push, merge, tag ni release.
 
 ## Proyecto
 
