@@ -132,7 +132,7 @@ El proceso del gate combina tres tipos de acto que no se sustituyen entre sí:
 |---|---|---|
 | Informe técnico de auditoría | Un auditor elegible: una persona (`docente`, `integrante_no_autor` o `revisor_academico_externo`) o una sesión automatizada de tipo `sesion_de_auditoria_independiente`, distinta de la sesión que implementó o preparó lo auditado | El informe canónico de FG-02 sobre H, con su veredicto y sus recuentos |
 | Verificación humana | Las personas del equipo | Comprobar la procedencia, el alcance y la independencia del informe y de la sesión; verificar identidades; revisar la cadena de suministro de una dependencia; registrar los criterios |
-| Decisiones, votos y firmas | Solo las personas autorizadas: los tres integrantes, según el criterio | Las decisiones de FG-03, FG-10 y FG-12 en CUMPLE, y las autorizaciones D-01 a D-08 y T-01 a T-07 |
+| Decisiones, votos y firmas | Solo las personas autorizadas. Con el contrato vigente, los tres integrantes declarados, según el criterio. El solicitante declaró el 27/10/2026 que el proyecto lo desarrolla una sola persona: la [propuesta de gobierno unipersonal](F36SBX_Propuesta_Gobierno_Unipersonal.md), no vigente, analiza qué cambiaría (D-09) | Las decisiones de FG-03, FG-10 y FG-12 en CUMPLE, y las autorizaciones D-01 a D-09 y T-01 a T-07 |
 
 **Una sesión automatizada puede emitir un informe técnico de auditoría** si es independiente de lo auditado: el esquema contempla ese tipo de auditor. Su elegibilidad no se presume por el nombre de la herramienta ni por declarar `independent_of_candidate = true`. La comprueban personas.
 
@@ -163,6 +163,7 @@ También son actos humanos, que nadie puede automatizar:
 | D-06 | Alcance de F37-SBX | Lista cerrada de EI, inclusión de EI-09 (F36-M02), numeración (F36-M01), dependencias y si F37-SBX-B entra ahora | Determina FG-03, FG-10 y FG-12. **Orden:** si se autorizará alguna EI CONDITIONAL de alcance C, su ADR sucesor tiene que aprobarse e incorporarse **antes de fijar H**. La lista concreta de EI ALLOWED, EI-09, la numeración y las dependencias se votan en FG-03, FG-10 y FG-12, después de auditar H. Nadie elige EI en nombre del equipo | NO EMITIDA |
 | D-07 | Sincronizar `CLAUDE.md`, `docs/PROGRESS.md`, `README.md` y `ACADEMIC_BASELINE.md` | Actualizar el estado vigente antes de fijar H; o dejarlo para después | `CLAUDE.md` aún describe F36-SBX como «candidata a auditoría independiente, sin push, merge, tag ni release», aunque AF5 ya está integrada. Los cuatro documentos repiten el resultado del gate y el estado de F37-SBX en un párrafo de su bloque de estado vigente, además de en las viñetas, y el sucesor necesita una sola afirmación por sujeto (especificación, §5.2). Como son normativos y están protegidos por la regla GOV, la sincronización debe entrar en H, distinguiendo el estado vigente de las fotografías históricas, y necesita autorización | NO EMITIDA |
 | D-08 | Integración de la preparación AF6 | Integrarla como parte de H, tras auditar H; o integrarla antes, con su propia autorización | La instrucción operativa es no integrar todavía. Integrarla exige una autorización explícita del equipo (`CLAUDE.md`, contrato 10) | NO EMITIDA |
+| D-09 | Modelo de gobierno: mantener el contrato vigente (tres integrantes, 3/3) o adoptar una enmienda unipersonal prospectiva | (a) Mantener el contrato vigente; (b) adoptar la [propuesta unipersonal](F36SBX_Propuesta_Gobierno_Unipersonal.md) tras cumplir U-01 a U-04 | Con una sola persona real, el contrato vigente no puede cumplirse con autenticidad y el gate original no puede superarse. La enmienda está **condicionada**: necesita la declaración de la composición real (U-01) y la autoridad para adoptarla, sea la conformidad de los otros dos integrantes o el reconocimiento del docente (U-02). Ninguna enmienda sustituye una exigencia del curso ni corrige registros históricos | NO EMITIDA. Contrato vigente en vigor |
 
 Las decisiones de diseño del sucesor, T-01 a T-07, están en la [especificación](F36SBX_Especificacion_Sucesor_B01.md#9-decisiones-de-diseño-pendientes-del-equipo).
 
@@ -174,10 +175,12 @@ Ninguno es evidencia, ninguno está firmado y ninguno está en `gate/evidencia/`
 - [Lista de comprobación de evidencias y procedimiento de verificación](BORRADOR_Checklist_Evidencias_y_Verificacion.md): lista por criterio, procedimiento de verificación de identidad, votos y procedencia, y condiciones de bloqueo.
 - [Autorización D-02](BORRADOR_Autorizacion_D02.md): qué autorizaría el equipo, qué no y en qué condiciones.
 - [Especificación del sucesor B-01](F36SBX_Especificacion_Sucesor_B01.md) y su [plan de pruebas](F36SBX_Plan_Pruebas_Sucesor_B01.md): diseño sin implementar.
+- [Propuesta de gobierno unipersonal](F36SBX_Propuesta_Gobierno_Unipersonal.md): PROPUESTA — NO VIGENTE — PENDIENTE DE AUTORIZACIÓN.
+- [Expediente de consulta al docente](BORRADOR_Expediente_Adecuacion_Unipersonal.md): no enviado y sin firma.
 
 ## 9. Validación de las ramas de preparación
 
-El validador solo admite las ramas `feature/f36-sbx-authorization-design`, `develop` y `main`. En `docs/f36-sbx-gate-preparacion-af6` y en `feature/f36-sbx-gate-transition-h` da **57/2**: FRZ falla por la rama, y GATE falla porque FG-01 y FG-05 se recalculan en NO CUMPLE. Es el anclaje por diseño, no un defecto del contenido:
+El validador solo admite las ramas `feature/f36-sbx-authorization-design`, `develop` y `main`. En `docs/f36-sbx-gate-preparacion-af6`, en `feature/f36-sbx-gate-transition-h` y en `docs/f36-sbx-unipersonal-governance-proposal` da **57/2**: FRZ falla por la rama, y GATE falla porque FG-01 y FG-05 se recalculan en NO CUMPLE. Es el anclaje por diseño, no un defecto del contenido:
 
 - la base `55f758e`, sin ningún cambio, da el mismo 57/2 con el nombre de una rama no admitida;
 - el contenido de cada rama, validado en un clon desechable con la rama local llamada `develop`, da 59/0, y la batería en memoria, 545/0.

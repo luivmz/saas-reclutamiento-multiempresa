@@ -14,6 +14,8 @@
 
 Una instrucción operativa de una sola persona no sustituye los votos de las demás. Tampoco una sesión automatizada puede emitir esta autorización.
 
+**Actualización del 27/10/2026.** El solicitante declaró que el proyecto lo desarrolla una sola persona real. Si es así, la autorización de tres integrantes no puede obtenerse con autenticidad. La vía legítima para D-02 depende de la [propuesta de gobierno unipersonal](F36SBX_Propuesta_Gobierno_Unipersonal.md), que no está vigente, y de sus condiciones U-01 a U-04 (sección 6).
+
 ## 2. Qué se autorizaría
 
 | Elemento | Alcance propuesto |
@@ -58,3 +60,17 @@ Una instrucción operativa de una sola persona no sustituye los votos de las dem
 | Vila Meza Luis Antonio | PENDIENTE | PENDIENTE | PENDIENTE |
 
 Sin firmas. La autorización real se emite y se conserva por el procedimiento de la [lista de comprobación](BORRADOR_Checklist_Evidencias_y_Verificacion.md#22-votos-de-los-integrantes-fg-03-fg-10-y-fg-12), adaptado a esta decisión.
+
+Esta tabla corresponde al contrato vigente. Si se adoptara el modelo unipersonal, la sustituiría un único registro de decisión del responsable ([propuesta, §5.3](F36SBX_Propuesta_Gobierno_Unipersonal.md#53-registro-de-decisión-del-responsable)), nunca tres votos emitidos por una sola persona.
+
+## 6. Tres decisiones distintas y variantes por modelo de gobierno
+
+D-02 agrupa tres decisiones que no se confunden ni se infieren unas de otras:
+
+| Decisión | Qué autoriza | Con el contrato vigente | Con el modelo unipersonal, si se adopta | Estado |
+|---|---|---|---|---|
+| D-02a | Preparar y diseñar el sucesor | Dentro del alcance del charter (investigar y diseñar), solo como documentación. Así se hizo la [especificación](F36SBX_Especificacion_Sucesor_B01.md) y el [plan de pruebas](F36SBX_Plan_Pruebas_Sucesor_B01.md), sin tocar código | Igual | Realizada como documentación; no autoriza código |
+| D-02b | Implementar el sucesor en el validador y en el gobierno | Autorización explícita del equipo: los tres integrantes declarados | Un registro de decisión del responsable, posterior a la adopción de la enmienda (U-04) y a una auditoría técnica independiente de la especificación | NO EMITIDA |
+| D-02c | Iniciar F37-SBX | No es D-02: es FG-03, después de superar el gate aplicable con un candidato H auditado | Igual: FG-03 con un registro de decisión del responsable, tras una FG-02 favorable sobre H | NO EMITIDA. F37-SBX = BLOQUEADA |
+
+Ninguna de las tres se puede retrofechar. Ninguna la emite una sesión de IA ni el validador.

@@ -187,4 +187,5 @@ B-01 no cambia `BRANCHES` para esconder el 57/2. Si H y los registros posteriore
 | T-04 | Rama en la que se fija H y se registran las evidencias | Validar en `develop` tras integrar H con autorización explícita, o admitir de forma explícita una sola rama nueva | NO EMITIDA |
 | T-05 | Formato cerrado del evento de revocación | Cerrarlo en B-01 (fecha, motivo y ruta de evidencia) | NO EMITIDA |
 | T-06 | Refuerzo de independencia para `integrante_no_autor` | Opcional; no sustituye la verificación humana | NO EMITIDA |
-| T-07 | Versión del gate y del esquema de evidencia | Conservar `gate_version = 3` y el esquema v2: B-01 no cambia el formato de la evidencia | NO EMITIDA |
+| T-07 | Versión del gate y del esquema de evidencia | Conservar `gate_version = 3` y el esquema v2: B-01 no cambia el formato de la evidencia. **Salvo T-08 (b)**, que exige versiones nuevas | NO EMITIDA |
+| T-08 | Modelo de gobierno sobre el que se implementa B-01 | Implementar sobre el modelo vigente cuando se autorice D-02b. Con el contrato vigente (3/3), esta especificación sirve tal cual. Con la [propuesta unipersonal](F36SBX_Propuesta_Gobierno_Unipersonal.md), si se adopta (D-09), el registro de decisión del responsable sustituye a `approvals` y obliga a versiones nuevas del gate y del esquema. Sin cambiar ningún control de esta especificación | NO EMITIDA |
