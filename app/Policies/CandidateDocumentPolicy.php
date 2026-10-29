@@ -12,6 +12,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class CandidateDocumentPolicy
 {
+    /**
+     * A-04, A-11 and A-12 (SEG-03): staff reach a CV only through an application of their organization that presented
+     * exactly that document, and an evaluator only through a session assigned to them on such an application. Neither
+     * another application of the candidate nor their latest CV stands in for it.
+     */
     public function download(User $user, CandidateDocument $document): bool
     {
         $ownerId = $document->profile->user_id;
@@ -24,17 +29,19 @@ class CandidateDocumentPolicy
             return false;
         }
 
+        $presented = Application::query()
+            ->withoutGlobalScopes()
+            ->where('candidate_id', $ownerId)
+            ->where('organization_id', $user->organization_id)
+            ->where('candidate_document_id', $document->id);
+
         if ($user->hasRole(UserRole::HumanResources, UserRole::Approver)) {
-            return Application::query()
-                ->withoutGlobalScopes()
-                ->where('candidate_id', $ownerId)
-                ->where('organization_id', $user->organization_id)
-                ->exists();
+            return $presented->exists();
         }
 
         if ($user->hasRole(UserRole::Evaluator)) {
-            return $this->isAssignedToCandidate(Evaluation::query(), $user, $ownerId)
-                || $this->isAssignedToCandidate(Interview::query(), $user, $ownerId);
+            return $this->isAssignedTo(Evaluation::query(), $user, $presented)
+                || $this->isAssignedTo(Interview::query(), $user, $presented);
         }
 
         return false;
@@ -42,14 +49,15 @@ class CandidateDocumentPolicy
 
     /**
      * @param  Builder<Evaluation>|Builder<Interview>  $sessions
+     * @param  Builder<Application>  $applications
      */
-    private function isAssignedToCandidate(Builder $sessions, User $evaluator, int $candidateId): bool
+    private function isAssignedTo(Builder $sessions, User $evaluator, Builder $applications): bool
     {
         return $sessions
             ->withoutGlobalScopes()
             ->where('evaluator_id', $evaluator->id)
             ->where('organization_id', $evaluator->organization_id)
-            ->whereIn('application_id', Application::query()->withoutGlobalScopes()->where('candidate_id', $candidateId)->select('id'))
+            ->whereIn('application_id', (clone $applications)->select('id'))
             ->exists();
     }
 }
