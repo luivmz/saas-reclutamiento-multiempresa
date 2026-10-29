@@ -3,6 +3,8 @@
 > **Informe del 29/10/2026**, en la rama `docs/f36-sbx-team-governance-proposal`, creada desde `develop` = `9dd76c4ce69e6686eaae22d9eb3eceb1e347caf9`, árbol `82f27c9daf4305cafce6fb23a3b7b9277906b783`. **Solo documenta.** No cambia ningún estado, contrato, validador, evidencia congelada ni documento de gobierno.
 >
 > Estados vigentes, sin cambios: G0 real = NO APROBADA; G0-SBX = APROBADA CON RESTRICCIONES; ADR-005 = PROPUESTA; F35-SBX = CERRADA Y CONGELADA; F36-SBX = EN DISEÑO; F36-SBX-GATE = NO SUPERADO; F37-SBX = BLOQUEADA; alcance C = BLOQUEADO; datos reales = PROHIBIDOS.
+>
+> **Versión corregida** el 29/10/2026, tras la auditoría documental de Codex sobre `729babb4a5584a4bc119fe61e59c101147e7acd5`, con veredicto CORRECCIONES REQUERIDAS (5 MEDIUM y 2 LOW). Recoge las correcciones de Q2-M01, Q2-M03, Q2-M04, Q2-M05 y Q2-L01. La matriz completa está en la respuesta a la auditoría de esta misma carpeta.
 
 Cada afirmación lleva su naturaleza:
 
@@ -69,20 +71,37 @@ El contenido de AF6, H y Q se cita aquí por commit y ruta, por ejemplo `061ba68
 
 ### 3.1 Mediciones del validador [H]
 
-[`validate_f36sbx.py`](../../tools/f36sbx/validate_f36sbx.py) se ejecutó en solo lectura, con `python -I -B`:
+[`validate_f36sbx.py`](../../tools/f36sbx/validate_f36sbx.py) se ejecutó en solo lectura, con `python -I -B`, sobre cada rama real, sin cambiar su nombre, su base ni sus reglas:
 
-| Árbol validado | Rama | Resultado | Fallas |
+| Árbol validado | Rama | Correctas/fallas | Gate calculado |
 |---|---|---|---|
-| AF5 `4a2b2d7` (checkout principal) | `feature/f36-sbx-authorization-design` | 59 correctas, 0 fallas; gate NO SUPERADO | — |
-| Q `061ba68` (worktree temporal) | `docs/f36-sbx-unipersonal-governance-proposal` | 57 correctas, 2 fallas; gate NO SUPERADO | FRZ, porque la rama no está admitida; GATE, porque FG-01 y FG-05 se recalculan distintos de lo declarado |
-| `develop` `9dd76c4` (worktree temporal) | `develop` | 56 correctas, 3 fallas; gate NO SUPERADO | Dos de FRZ: 18 archivos fuera del paquete y 5 de runtime. Una de GATE: FG-01 y FG-05, declarados CUMPLE, se recalculan NO CUMPLE |
+| AF5 `4a2b2d7` | `feature/f36-sbx-authorization-design` | 59/0 | NO SUPERADO |
+| Q `061ba68` | `docs/f36-sbx-unipersonal-governance-proposal` | 57/2 | NO SUPERADO |
+| `develop` `9dd76c4` | `develop` | 56/3 | NO SUPERADO |
+| Q2 original `729babb` | `docs/f36-sbx-team-governance-proposal` | 55/4 | NO SUPERADO |
 
-Los 18 archivos son los de SEG-01 a SEG-04:
+La auditoría de Codex sobre `729babb` reprodujo las cuatro cifras en clones aislados, con los nombres de rama reales. El resultado del candidato corregido figura en el README.
 
-- 5 de runtime: `ApplicationController`, `ApplicationPolicy`, `CandidateDocumentPolicy`, `ApplicationStageService` y `JobRequestWorkflow`;
-- `docs/assumptions.md` y `docs/defects.md`;
-- 5 documentos de `docs/v1.1/security/`;
-- 6 archivos de pruebas.
+| Comprobación | AF5 | Q | `develop` | Q2 original |
+|---|---|---|---|---|
+| FRZ — rama admitida | Pasa | Falla | Pasa | Falla |
+| FRZ — cambios solo en el paquete, sus herramientas y el gobierno | Pasa | Pasa | Falla: 18 rutas externas | Falla: las mismas 18 |
+| FRZ — 0 cambios de runtime, producto o dependencias | Pasa | Pasa | Falla: 11 entradas | Falla: las mismas 11 |
+| GATE — los AUTO declarados coinciden con los recalculados | Pasa | Falla: FG-01 y FG-05 | Falla: FG-01 y FG-05 | Falla: FG-01 y FG-05 |
+
+- **Las 18 rutas externas al paquete** son las de SEG-01 a SEG-04:
+  - 5 archivos de `app/`: `ApplicationController`, `ApplicationPolicy`, `CandidateDocumentPolicy`, `ApplicationStageService` y `JobRequestWorkflow`;
+  - `docs/assumptions.md` y `docs/defects.md`;
+  - 5 documentos de `docs/v1.1/security/`;
+  - 6 archivos de pruebas.
+- **Las 11 entradas del chequeo de runtime** son los 5 archivos de `app/` y los 6 de pruebas, porque `RUNTIME_PREFIXES` incluye `tests/`. No son 11 cambios funcionales: los funcionales son los 5 de `app/`.
+- **De `develop` a Q2 original solo cambia una comprobación de las 59:** «FRZ — rama admitida». Las cuatro rutas nuevas de Q2 caen dentro del paquete, así que ni la lista externa ni la de runtime crecen. Hay, por tanto, una comprobación adicional fallida por el anclaje de rama, sin rutas externas ni fallas de contenido nuevas.
+- **FG-01 y FG-05.** El validador deriva FG-05 de FRZ y FG-01 de todas las reglas AUTO. El estado del gate los declara CUMPLE; cuando FRZ falla, los dos se recalculan NO CUMPLE y la regla GATE falla por la divergencia. La causa de que FRZ falle depende de la rama:
+  - en Q, solo la rama;
+  - en `develop`, las dos comprobaciones de contenido de FRZ;
+  - en Q2 original, las tres.
+
+  FG-14 solo comprueba que no haya un evento de revocación registrado; no interpreta el supuesto material del charter (§3.3).
 
 La matriz de H (§9) registra el mismo 57/2 para AF6 y H por el anclaje de rama [R]; esta sesión no lo repitió sobre esas dos ramas.
 
@@ -91,49 +110,63 @@ La matriz de H (§9) registra el mismo 57/2 para AF6 y H por el anclaje de rama 
 | Sujeto | Estado declarado | Fuente | Comprobación [H] |
 |---|---|---|---|
 | F36-SBX | En diseño. AF5 integrada en `develop` y `main` | [`CLAUDE.md`](../../../../CLAUDE.md), [charter](../F36SBX_Charter.md) y el merge `5545694` | Consistente. `CLAUDE.md` todavía la describe como «candidata a auditoría independiente, sin push, merge, tag ni release» (§7) |
-| F36-SBX-GATE | No superado. `candidate_commit`, `f37_authorized_ei` y `revocation` nulos. FG-02, FG-03, FG-10 y FG-12 pendientes; los AUTO, declarados CUMPLE | [`f36sbx_gate_state.json`](../gate/f36sbx_gate_state.json) y [gate](../F36SBX_Gate_Sucesor.md) | En `develop`, FG-01 y FG-05 se recalculan NO CUMPLE (§3.3). El resultado sigue NO SUPERADO porque el validador falla cerrado |
+| F36-SBX-GATE | No superado. `candidate_commit`, `f37_authorized_ei` y `revocation` nulos. FG-02, FG-03, FG-10 y FG-12 pendientes; los AUTO, declarados CUMPLE | [`f36sbx_gate_state.json`](../gate/f36sbx_gate_state.json) y [gate](../F36SBX_Gate_Sucesor.md) | El resultado registrado sigue NO SUPERADO. En `develop`, FG-01 y FG-05 se recalculan NO CUMPLE (§3.1). La vigencia material de la autorización de F36-SBX frente a §7 del charter está pendiente de determinarse (D-10, §3.3) |
 | F37-SBX | Bloqueada | Gate y charter | Consistente |
 | B-01 | El validador vigente exige que el gobierno declare NO SUPERADO | Gate §9; especificación en `1d5d6aa` | Presente en el código: `rule_gate()` exige NO SUPERADO y `allowed_states()` solo admite ese resultado. El sucesor está especificado, no implementado. D-02b no está emitida |
 | H | El candidato final H no existe. `1d5d6aa` es una rama de preparación | Matriz de H §2.1 | No consta ninguna auditoría de H. Ninguna auditoría de AF5 ni de AF6 vale para H |
-| Q | Propuesta no vigente, clase B; U-01 a U-05 pendientes | `061ba68` | Veredicto recibido [R]: «APROBADA CON CORRECCIONES DOCUMENTALES PENDIENTES», con 0 BLOCKER, 0 HIGH, 5 MEDIUM, 2 LOW y 2 INFO. El informe no está disponible (§4.1) |
+| Q | Propuesta no vigente, clase B; U-01 a U-05 pendientes | `061ba68` | Veredicto de su auditoría: «APROBADA CON CORRECCIONES DOCUMENTALES PENDIENTES», con 0 BLOCKER, 0 HIGH, 5 MEDIUM, 2 LOW y 2 INFO. El informe íntegro está disponible fuera del repositorio (§4.1) |
 | D-01 a D-09 | Todas no emitidas. D-01 tiene una instrucción operativa (b), sin decisión formal | Matriz de H §7 y Q §10 | Sin cambios. Ninguna consta emitida en Git |
 | ADR-005, G0 real y G0-SBX | Propuesta; no aprobada; aprobada con restricciones, solo para F35-SBX | `CLAUDE.md` y `docs/academico/g0-evidence/` | Sin cambios |
 
-### 3.3 Hallazgo: la regla FRZ en `develop` y la revocación del charter
+### 3.3 D-10: la cláusula de revocación del charter y la regla FRZ
 
-- **Hechos [H].** La regla FRZ (`validate_f36sbx.py`, `rule_frz`) calcula los cambios desde la base `b8892af` y exige que sean solo del paquete, sus herramientas y el gobierno, con «0 cambios de runtime». SEG-01 a SEG-04 cambiaron runtime en `develop` con autorización expresa de Luis y CI en verde. Por eso FG-01 y FG-05 se recalculan NO CUMPLE en `develop`, y no en la rama de AF5. Ningún documento registra una revocación: `revocation` sigue nulo.
-- **Texto en conflicto.** El [charter §7](../F36SBX_Charter.md) revoca F36-SBX si «se modifica una superficie congelada de F35-SBX, el runtime o las dependencias», y exige registrar la revocación «en un incremento nuevo». Los documentos de SEG-01 a SEG-04 ya anticipaban la falla de FRZ «por diseño» y proponían validar anclado en su rama.
-- **Dos lecturas posibles.**
-  1. La cláusula se refiere a cambios hechos por F36-SBX, que es un incremento documental.
-  2. La cláusula se aplica a cualquier cambio de runtime en las ramas admitidas.
+Hay cinco cosas distintas que no deben confundirse:
 
-  Ningún documento decide entre ellas.
-- **Consecuencia.** La situación no habilita nada, porque el gate ya estaba NO SUPERADO. Pero el estado AUTO declarado del paquete y su recálculo en `develop` divergen, y la interpretación de §7 queda abierta.
-- **[P] Decisión pendiente D-10.** Elegir, en un incremento sucesor auditado, entre:
-  - (a) declarar la lectura 1 y anclar la validación de F36-SBX a su rama, o reajustar la base de FRZ para excluir el mantenimiento de seguridad auditado;
-  - (b) registrar la revocación y reabrir F36-SBX con una autorización nueva.
+1. **Ámbito y periodo de la autorización [H].**
+   - **Qué autoriza.** El [charter §1](../F36SBX_Charter.md) autoriza investigar y diseñar F36-SBX, con sus validadores documentales y sus pruebas. Su gate decide una sola cosa: si F37-SBX puede comenzar.
+   - **Cuándo.** Se abrió por una instrucción del equipo del 26/10/2026. AF5 quedó fijado el 27/10/2026 (`4a2b2d7`) y ese mismo día se integró en `develop` (`5545694`).
+   - **Hasta dónde llega.** La cláusula afecta a esa autorización y a su puerta a F37-SBX. No rige el mantenimiento del SaaS ni la validez técnica de SEG.
+2. **Hecho que podría activar la cláusula [H].** El charter §7 revoca F36-SBX, entre otros supuestos, si «se modifica una superficie congelada de F35-SBX, el runtime o las dependencias».
+   - **Qué ocurrió.** SEG-01 a SEG-04 modificaron cinco archivos de runtime en `develop` después de abrirse el charter. Los commits son `e1f1f1a`, `4c89a95` y `afa6282`, del 28/10/2026, y `74bcdf5`, del 29/10/2026; se integraron con `2e53786` (28/10/2026), `2546297` y `9dd76c4` (los dos del 29/10/2026).
+   - **No hay excepción escrita** para el mantenimiento de seguridad auditado.
+   - **Dos lecturas.** En la lectura literal amplia, esos cambios encajan en el tipo de hecho descrito. En una lectura restringida al trabajo hecho bajo F36-SBX quedarían fuera, pero esa restricción habría que documentarla con sus razones.
+   - **Lo que FRZ no decide.** La falla de FRZ no resuelve por sí sola esta interpretación: FRZ mide un perímetro técnico desde `b8892af` en la rama que se valida.
+3. **Efecto condicional previsto [H].** La cláusula dice: «si ocurre cualquiera de estos hechos, F36-SBX queda REVOCADA y su gate pasa a REVOCADO». Es un efecto condicional: si el supuesto se acredita, no hace falta otra votación para que se produzca.
+4. **Registro declarativo [H].** El gate §5 exige registrar la revocación en `revocation`, con fecha, motivo y evidencia, en un incremento nuevo. El registro documenta el hecho; no lo crea ni lo elimina. `revocation = null` solo muestra que no hay ningún evento registrado, no que el supuesto material nunca ocurriera.
+5. **Autorización nueva o enmienda, solo hacia adelante [P].**
+   - Si se acredita el supuesto, corresponde registrar el hecho y, si el equipo quiere continuar, una autorización nueva con su fecha.
+   - Si se documenta una aclaración de ámbito, solo puede regir hacia adelante, y se conservan las mediciones y las anclas históricas (AF5 59/0; `develop` 56/3).
 
-  Mientras tanto, nada se corrige ni se reinterpreta.
+**[P] D-10, reformulada.** Hay que determinar documentalmente el ámbito y el periodo aplicables, y acreditar o descartar el supuesto con sus fundamentos. Según el resultado, se registra el hecho y, si procede, una autorización nueva, o se documenta la aclaración de ámbito con efecto solo prospectivo. D-10 no es una elección sobre qué ocurrió en el pasado, y un anclaje o una base nuevos no regularizan hechos anteriores.
+
+**Lo que este documento no hace:** no revierte SEG, no modifica `f36sbx_gate_state.json`, no registra una revocación y no emite una autorización nueva. El resultado registrado sigue NO SUPERADO y F37-SBX sigue BLOQUEADA.
 
 ## 4. Matriz de observaciones anteriores
 
-### 4.1 Auditoría de Q [R]
+### 4.1 Auditoría de Q
 
-Solo están disponibles el veredicto y los conteos, recibidos en la petición del 29/10/2026. El informe completo no está en ninguna rama del repositorio (búsqueda en todas las referencias locales y remotas). Tampoco está en las carpetas del proyecto ni en el directorio personal de WSL, donde se buscó en solo lectura.
+**Actualización [H].** El informe íntegro está disponible fuera del repositorio, donde Codex lo conserva:
 
-| Hallazgo | Severidad | Documento afectado | Corrección propuesta | Evidencia necesaria | Estado |
-|---|---|---|---|---|---|
-| 5 hallazgos | MEDIUM | No disponible | No se propone sin conocer el hallazgo | El informe de Codex sobre `061ba68`, con su manifiesto SHA-256 | **DESCONOCIDO** |
-| 2 hallazgos | LOW | No disponible | Ídem | Ídem | **DESCONOCIDO** |
-| 2 hallazgos | INFO | No disponible | Ídem | Ídem | **DESCONOCIDO** |
+`C:/Users/Vila/.codex/visualizations/2026/10/27/01a17ebf-75df-7883-a55e-3ede1b24ee18/F36-Unipersonal-Audit-061ba68/Informe_Auditoria_Unipersonal_061ba68.md`
 
-Ninguno se da por resuelto. La propuesta Q2 sustituye la premisa de Q, que era una persona real, pero eso no demuestra que los hallazgos queden sin objeto: hay que contrastarlos uno a uno cuando el informe esté disponible (E-01, §8).
+Su SHA-256, `a1dbc1d2b3951fbeb83284925ee961987dcafcab2c93c3d8af5cfad1b350a0ab`, coincide con el comunicado y figura en el manifiesto `SHA256SUMS.txt` de esa carpeta.
+
+**Hecho histórico.** La versión `729babb` de este informe decía que solo se conocían los conteos. Era el resultado de una búsqueda acotada:
+
+- en todas las referencias Git;
+- en varias carpetas locales, incluida `C:\Users\Vila\.codex`, pero solo hasta cuatro niveles de profundidad;
+- en el directorio personal de WSL.
+
+La carpeta de Codex está a seis niveles, así que la búsqueda no la alcanzó. No era imposible recuperar el informe.
+
+**Los nueve hallazgos** (UNI-M01 a UNI-M05, UNI-L01, UNI-L02, UNI-I01 e UNI-I02) y su correspondencia con este candidato están en la respuesta a la auditoría de esta carpeta. **Ninguno se cierra formalmente por sustituir Q**: Q no se modifica, y las correcciones que les corresponden están implementadas en el nuevo candidato, pendientes de la revisión de Codex.
 
 ### 4.2 Otras observaciones disponibles [H]
 
 | ID | Severidad | Estado | Dónde consta | Relación con esta reconciliación |
 |---|---|---|---|---|
-| AF6-L01 y AF6-L02 | LOW | Abiertos: residuos de la guardia de identidad (vocabulario de relleno y homógrafos latinos y armenios) | Mensaje del merge `5545694`; `88fd3d2:docs/academico/f36-sbx/F36SBX_Deuda_Tecnica_AF6.md` | Su corrección es D-05 y toca el validador (D-02b) |
+| Q2-M01 a Q2-M05, Q2-L01 y Q2-L02 | MEDIUM y LOW | Corregidos en este candidato, pendientes de revisión | Auditoría de Codex sobre `729babb`, fuera del repositorio | Matriz en la respuesta a la auditoría |
+| AF6-L01 y AF6-L02 | LOW | Abiertos: residuos de la guardia de identidad (vocabulario de relleno y homógrafos latinos y armenios) | Mensaje del merge `5545694`; `88fd3d2:docs/academico/f36-sbx/F36SBX_Deuda_Tecnica_AF6.md` | Pueden corregirse en un incremento propio de mantenimiento, con su alcance, autorización, RED/GREEN y revisión (§6). D-05 solo decide su tratamiento si se incluyen en H. No exigen D-02b por ser código Python |
 | DOC-AF6-L01, DOC-AF6-L02 y DOC-AF6-I01 | LOW, LOW e INFO | Tratados en la matriz de H §10, sin auditoría posterior | `1d5d6aa` | El tratamiento no está auditado porque H no se auditó |
 | GC-AF-L01 | LOW | Abierto y diferido | [`TECHNICAL_DEBT.md`](../../TECHNICAL_DEBT.md) | Ajena a Q2 |
 | SEG01-AUD-L01 y SEG02-AUD-I01 | LOW e INFO | Abiertas | Documentos SEG en `docs/v1.1/security/` | Ajenas a Q2 |
@@ -149,8 +182,48 @@ Ninguno se da por resuelto. La propuesta Q2 sustituye la premisa de Q, que era u
 | Curso Pruebas y Calidad de Software, NRC 28607, con el docente Dr. Maglioni Arana Caparachin | [`ACADEMIC_BASELINE.md`](../../ACADEMIC_BASELINE.md) y [`CLAUDE.md`](../../../../CLAUDE.md) | Identificación del proyecto ante el curso |
 | Equipo declarado ante el curso: Coronacion Meza Fredy, Peña Arroyo Anthony y Vila Meza Luis Antonio | Informe final v1.0, prácticas F2 a F11 y F29H | Autoría académica de los entregables. Ninguna regla interna la cambia |
 | Guías y formatos oficiales de las prácticas 02 a 09 y 11, y plantilla del informe final | [Inventario de fuentes oficiales](../../00-fuentes-oficiales/inventory.md), con tipo OFICIAL | Contenido y formato de los entregables académicos |
+| **Formar equipos de tres estudiantes para el proyecto grupal** | Las nueve guías oficiales (§5.1.1): «Para el desarrollo de la práctica los estudiantes deberán seguir las siguientes indicaciones, formando equipos de 3 estudiantes para la entrega del proyecto grupal al final de la asignatura» | La composición del equipo académico del proyecto grupal |
 
-**No acreditadas.** No hay en el repositorio ningún sílabo, rúbrica ni norma del curso sobre la composición del equipo, el trabajo individual, el uso de IA, la aprobación de decisiones técnicas o la autorización docente de commits. Que no se encontraran no prueba que no existan: quedan **no acreditadas**.
+#### 5.1.1 La instrucción de las nueve guías [H]
+
+La frase citada aparece, con texto idéntico, en el mismo párrafo de `word/document.xml` de las nueve guías de `docs/academico/00-fuentes-oficiales/guias/`. La numeración del párrafo depende del método de extracción: Codex lo cuenta como el 12 del cuerpo. Se comprobó leyendo los blobs de `9dd76c4`, sin abrir Office.
+
+| Guía | SHA-256 |
+|---|---|
+| `GUIA_PRACTICA_02.docx` | `a089eea421ab4589bdefdd2a68ef8bf3d3ab20cd88a73b18a095fbdb213eb854` |
+| `GUIA_PRACTICA_03.docx` | `2651dc652b64e7f3aa9f6849e4af05e6ba37027086b40491cf5ad88685611f13` |
+| `GUIA_PRACTICA_04.docx` | `2626f3994c35356495aaa80a9f978324406e90fba628fecb73dc5243f6e21fd7` |
+| `GUIA_PRACTICA_05.docx` | `bc22e93eaa98804b36f88b08b4918f46d6fc7d0567346c98837fae1627e5f81a` |
+| `GUIA_PRACTICA_06.docx` | `fe458ad4fa41e5517f9584b5b773dcbadebce5a130c35a4c4b7550ec71dba54d` |
+| `GUIA_PRACTICA_07.docx` | `5ccbfc5444c377735678b1c8a701131ac99ab98b7720a601becc9bb8ba2b0e4f` |
+| `GUIA_PRACTICA_08.docx` | `43013822ad4ab2e108b40cbe2e732d62001fa289d259f148515c281ccd0793a0` |
+| `GUIA_PRACTICA_09.docx` | `89d3f2783941b11aa7be0ccba7450cec5b6a821c480e528ac23d20e7e6c37c6d` |
+| `GUIA_PRACTICA_11.docx` | `c70f913787f81e250eee843eff197c8efb3ecda32896deb40afaabbfdb9689e7` |
+
+Los nueve hashes coinciden con el [inventario](../../00-fuentes-oficiales/inventory.md) y con las auditorías de Q y de Q2. La copia histórica `docs/academico/phase-24/GUÍA PRÁCTICA 09.docx` tiene el mismo hash que la guía 09. La versión `729babb` de este informe negaba esta instrucción; era un error (Q2-M01, y antes UNI-M02).
+
+**Qué demuestra y qué no.** La instrucción exige que el proyecto grupal lo entreguen equipos de tres estudiantes. El equipo de Luis Vila Meza, Fredy Coronacion y Anthony Peña responde a ella, y Q2 conserva a los tres, así que no hace falta una excepción individual. La instrucción **no** demuestra:
+
+- tres votos por commit;
+- una contribución técnica igual de los tres;
+- una autorización docente universal;
+- el mecanismo 3/3 de FG-03, FG-10 y FG-12.
+
+**Tres cosas distintas:**
+
+1. **La composición académica de tres integrantes** es una obligación externa acreditada por las guías.
+2. **El quórum interno para actos concretos** es una regla del proyecto: la aprobación de ADR-005 (F34A) y FG-03, FG-10 y FG-12 de F36-SBX (§5.2).
+3. **Las decisiones técnicas ordinarias** se rigen por las reglas vigentes del repositorio (§5.2), y Luis es el único desarrollador técnico [R]. No se encontró ninguna regla externa sobre ellas.
+
+**No acreditadas.** No hay en el repositorio sílabo, rúbrica ni norma del curso sobre:
+
+- el reparto de la contribución técnica;
+- el uso de IA;
+- la aprobación de decisiones técnicas;
+- la autorización docente de commits;
+- la aplicabilidad actual de las guías, o eventuales excepciones.
+
+Quedan **no acreditadas**: que no se encontraran no prueba que no existan, y si aparece una fuente aplicable se conserva y se cumple.
 
 ### 5.2 (b) Reglas internas creadas por el proyecto [H]
 
@@ -163,7 +236,7 @@ Ninguno se da por resuelto. La propuesta Q2 sustituye la premisa de Q, que era u
 | G0, G0-SBX, SBX-01 a SBX-18 y los gates de F35-SBX | `docs/academico/g0-*` y `evidencia-sbx-*` | Puertas del ciclo inteligente |
 | Charter y gate de F36-SBX, con el quórum 3/3 de §8.1 para FG-03, FG-10 y FG-12 | [Charter](../F36SBX_Charter.md) y [gate](../F36SBX_Gate_Sucesor.md) | Solo el paso de F36-SBX a F37-SBX |
 
-El quórum 3/3 reproduce el patrón de F34A y F34C. Es interno: ninguna fuente del curso lo impone.
+El quórum 3/3 reproduce el patrón de F34A y F34C. Es interno: la instrucción del curso exige equipos de tres estudiantes (§5.1), no tres votos para actos técnicos.
 
 ### 5.3 (c) Controles técnicos de seguridad e integridad [H]
 
@@ -188,7 +261,8 @@ Se conservan sin cambios:
 | Fila consultiva del docente en el acta de ADR-005 | Pendiente ([acta](../../g0-evidence/F34B_Acta_Aprobacion_ADR005.md)) |
 | Validación institucional de RF-29 | No validada; RF-29 sigue siendo experimental ([F17](../../../v1.1/phase-17-ml-validation.md)) |
 | Revisión jurídica y de privacidad para datos reales | No solicitada. Los datos reales siguen prohibidos |
-| Reconocimiento docente de un cambio de gobierno | Q lo recomendaba en su lectura (a) y lo exigía en la (b). **Ninguna fuente lo exige** para la lectura (a) |
+| Reconocimiento docente de un cambio de gobierno interno | **Ninguna fuente lo exige.** Las guías piden equipos de tres estudiantes, y Q2 mantiene a los tres integrantes, así que no hace falta una excepción individual. Q lo recomendaba en su lectura (a) y lo exigía en la (b) |
+| Aclarar la discrepancia entre las declaraciones del 27/10/2026 y las del 28 y 29/10/2026 sobre la composición del equipo | Pendiente. Corresponde a la declaración R-01 de Luis (Q2 §2), sin reinterpretar la historia |
 
 ### 5.5 Cómo se modifican las reglas internas, de forma prospectiva
 
@@ -196,27 +270,40 @@ Se conservan sin cambios:
 - **El gobierno**, según la práctica de F35-SBX-B y Q §3, necesita además la autorización explícita del equipo; el equipo son los tres integrantes declarados.
 - **Lo que no cambia:** ninguna enmienda recalifica lo anterior a su adopción, y los registros congelados (F34C, F35-SBX y AF1 a AF6) no se editan; una aclaración solo puede añadirse como anexo fechado.
 
-### 5.6 Brecha: qué significa «equipo» en el contrato 10 [H]
+### 5.6 D-11: autorización operativa y representación del equipo en el contrato 10 [H]
 
-El contrato 10 exige una «autorización explícita del equipo» y no fija quórum. Las integraciones y publicaciones de SEG-01 a SEG-04 se hicieron con la autorización expresa de Luis, registrada en sus mensajes de commit y documentos. Así quedan: **como autorizaciones de Luis, no como aprobaciones 3/3.**
+- **Lo que dice el contrato.** El contrato 10 exige «autorización explícita del equipo» para `push`, `merge`, release o tag. No fija quórum ni un formato numérico por operación.
+- **Lo que está acreditado.** Las integraciones y publicaciones de SEG-01 a SEG-04 se hicieron con autorizaciones explícitas de Luis, una por operación, registradas en los mensajes de commit, en los documentos SEG y en la sesión. Son **autorizaciones operativas de Luis**, y así quedan.
+- **Lo que no está documentado.** Que esas autorizaciones fueran además una representación del equipo conforme al contrato 10. No hay votos de Fredy ni de Anthony, ni una delegación documentada.
+- **Lo que no se deduce.** La brecha no invalida las correcciones SEG, que se auditaron e integraron con la CI en verde. Tampoco obliga a tres votos por commit ni exige revertir nada. No se fabrican delegaciones ni votos con fecha anterior.
 
-**[P] Decisión pendiente D-11:** definir quién autoriza `push`, `merge`, tags y releases. La propuesta Q2 plantea formalizar esa autoridad en el responsable técnico, con la conformidad expresa de los otros dos integrantes.
+**[P] D-11, prospectiva.** Definir quién autoriza cada operación del contrato 10, con qué límites y con qué evidencia. Hay dos opciones legítimas:
+
+- **(a)** un mecanismo colegiado, sin inventar un quórum que el texto no fija;
+- **(b)** una delegación en Luis, mediante actos auténticos de Fredy y de Anthony, con fecha real y alcance futuro, como prevé Q2 (§7 y §9).
+
+Lo anterior a esa decisión se reconoce tal como está registrado.
 
 ## 6. H, B-01 y actividades permitidas
 
-| Actividad | Requisito aplicable | Evidencia disponible | Bloqueo específico | Trabajo permitido mientras tanto | Condición objetiva para continuar |
+La columna «Fuente vigente» cita las reglas en vigor hoy. Los niveles N1 a N5 de Q2 son una clasificación propuesta: no crean ni amplían permisos y solo regirían después de su adopción (Q2 §9).
+
+| Actividad | Fuente vigente | Evidencia disponible | Bloqueo específico | Trabajo permitido mientras tanto | Condición objetiva para continuar |
 |---|---|---|---|---|---|
-| Desarrollo técnico ordinario del SaaS: defectos, seguridad, refactors y pruebas | Contratos 1 a 10, `project-guardian` y `laravel-saas-quality` | SEG-01 a SEG-04, con RED/GREEN, auditoría y CI | **Ninguno del gate**, que solo decide F37-SBX. Cada cambio de runtime mantiene la falla de FRZ en `develop` (§3.3) | Todo, en ramas `fix/*` o `feature/*` | El flujo normal. La integración y la publicación necesitan una autorización explícita por operación (D-11) |
-| Integrar y publicar `develop`, `main`, tags y releases | Contrato 10 | Práctica de SEG: autorización de Luis | La autoridad no está definida (D-11) | Preparar candidatos y auditorías | Autorización explícita por operación; D-11 si se adopta Q2 |
-| Mantener la documentación del paquete F36-SBX | Charter: investigar y diseñar | AF6, H y Q en local | Integrarlos exige D-08 | Preparar documentos en ramas propias, sin integrar | D-08 |
-| Implementar el sucesor B-01 | Gate §9 y D-02b | Especificación y plan de pruebas (`1d5d6aa`) | D-02b no está emitida; con el contrato vigente, la autoriza el equipo | Afinar la especificación y auditarla como documentación (D-02a) | D-02b auténtica, bajo el modelo vigente en ese momento |
-| Corregir AF6-L01 y AF6-L02 | D-05 y D-02b (es código del validador) | Registro de deuda AF6 | D-05 no está emitida | Analizar | D-05 y D-02b |
-| Sincronizar `CLAUDE.md`, `PROGRESS.md`, `README.md` y `ACADEMIC_BASELINE.md` | D-07; regla GOV | Deuda inventariada (§7) | D-07 no está emitida, y los documentos están protegidos por GOV | Proponer deltas, como hace este paquete | D-07 dentro de H |
-| Resolver FRZ en `develop` y §7 del charter | Charter §7 y FG-05 | Medición 56/3 | D-10 | Validar sobre la rama ancla | D-10 en un sucesor auditado |
-| Fijar el candidato H | Matriz de H §2.1 | — | Faltan D-01 formal, D-02b, D-05, D-06 y D-07, y cerrar los cambios materiales | No | Todos los cambios materiales hechos |
+| Desarrollo técnico ordinario del SaaS: defectos, seguridad, refactors y pruebas | Contratos 1 a 10 (`CLAUDE.md`), `AGENTS.md`, `project-guardian`, `laravel-saas-quality` y el alcance autorizado de cada incremento | SEG-01 a SEG-04, con RED/GREEN, auditoría y CI | **Ninguno del gate**, que solo decide F37-SBX | Todo, en ramas `fix/*`, `feature/*`, `docs/*` o `chore/*` | Las reglas vigentes |
+| Integrar y publicar `develop`, `main`, tags y releases | Contrato 10: autorización explícita del equipo | Las autorizaciones operativas de Luis en SEG (§5.6) | La representación documentada del equipo no está definida (D-11) | Preparar candidatos y auditorías | Autorización explícita por operación conforme al contrato 10. D-11 la precisará hacia adelante |
+| Mantener el ML operacional existente (ML-01) sin cambiar su contrato | Skill `ml-risk-service` y documentación de F15 a F17 | Servicio experimental integrado | Ninguno del gate | Correcciones, QA y reconstrucción reproducible del artefacto desde el *freeze* aprobado | Conservar el *freeze*, el umbral y el contrato de variables |
+| QA visual, accesibilidad y rendimiento | Skills `frontend-design`, `animate` y `reviewing-a11y`, ADR-003, `data-cy` y Cypress | Fases 18 a 21 | Ninguno del gate | Las pruebas pendientes con lector de pantalla y con un equipo modesto | Las reglas vigentes; ampliar el 3D exige una decisión nueva |
+| Mantener la documentación del paquete F36-SBX | Charter §1 | AF6, H y Q en local | Integrarlos exige D-08 | Preparar documentos en ramas propias, sin integrar | D-08 |
+| Diseñar el sucesor B-01 y su plan de pruebas | Charter §1, como D-02a | Especificación y plan (`1d5d6aa`) | — | Afinar el diseño y auditarlo como documentación | Implementarlo exige D-02b |
+| Implementar el sucesor B-01, que habilita la transición a SUPERADO | Gate §9 | Ídem | D-02b no está emitida | Ninguna implementación | D-02b auténtica y las decisiones de diseño; después, un H nuevo auditado |
+| Corregir defectos independientes del validador, como AF6-L01 y AF6-L02 | Charter §1: validadores documentales y sus pruebas | Registro de deuda AF6 | Ninguno de B-01: no exigen D-02b por ser código Python | Un incremento propio de mantenimiento | El alcance y la autorización aplicables, RED/GREEN, un candidato nuevo y su revisión. Si se incluyen en H, D-05 decide su tratamiento |
+| Sincronizar hechos documentales sin cambiar estados ni contratos (`CLAUDE.md`, `PROGRESS.md`, `README.md` y `ACADEMIC_BASELINE.md`) | `AGENTS.md` y `academic-traceability` admiten la evolución documental autorizada. La regla GOV comprueba invariantes (las líneas de estado y la de integrantes); no prohíbe toda edición | Deuda inventariada (§7) | Ninguno general | Proponer deltas, como hace este paquete, o hacer un incremento documental autorizado que conserve los invariantes | La autorización del incremento. Dentro de H, D-07 organiza la sincronización. Cambiar estados, contratos o el mecanismo de autorización exige su propio procedimiento |
+| Determinar el supuesto de §7 del charter (D-10) | Charter §7 y gate §5 | Mediciones de §3.1 | D-10 sin resolver | Documentar hechos, periodo y ámbito | D-10, con efecto solo prospectivo para cualquier aclaración (§3.3) |
+| Fijar el candidato H | Gate §9 y la estrategia H, si se elige | — | Faltan D-01 formal, D-02b y los cambios materiales que se elijan (D-05, D-06 y D-07) | No | Todos los cambios materiales hechos |
 | FG-02, auditoría de H | Gate §8.2 y §8.6 | Ninguna: AF6 no sirve para H | H no existe | No | H fijado |
-| FG-03, FG-10 y FG-12 | Gate §8.1, 3/3 | Ninguna | Hacen falta los votos reales de los tres integrantes, o una enmienda adoptada, y una FG-02 favorable | Solo borradores de formato | Actos auténticos de cada integrante |
-| Iniciar F37-SBX (A o B) | Gate superado | — | F36-SBX-GATE = NO SUPERADO | Nada de EI | El gate superado con el sucesor B-01 |
+| FG-03, FG-10 y FG-12 | Gate §8.1: 3/3 cuando se registra CUMPLE | Ninguna | Faltan actos auténticos de los tres integrantes, o un contrato sucesor adoptado, y una FG-02 favorable | Solo borradores de formato | Actos auténticos de cada integrante. FG-12 puede quedar en NO APLICA solo según el contrato, sin archivo ni votos propios |
+| Ejecutar EI o iniciar F37-SBX (A o B) | Gate y matriz de capacidades | — | F36-SBX-GATE = NO SUPERADO | Nada de EI | El gate superado con el sucesor B-01, la lista de EI y las demás condiciones |
 
 ## 7. Deuda documental inventariada [H]
 
@@ -235,15 +322,16 @@ Se inventaría sin corregir; su actualización queda fuera de este incremento:
 
 | ID | Tipo | Qué | De quién | Estado |
 |---|---|---|---|---|
-| E-01 | Evidencia | Informe completo de la auditoría de Q, con su manifiesto SHA-256 | Quien lo conserve | No disponible |
-| E-02 | Evidencia | Declaración fechada de Luis sobre la composición y los roles reales (R-01 de Q2) | Luis | Pendiente; hay declaraciones recibidas del 28/10/2026 y del 29/10/2026 [R] |
-| E-03 | Evidencia | Conformidad expresa y fechada de Fredy y de Anthony, cada uno por su cuenta, o su negativa | Fredy y Anthony | Pendiente |
-| E-04 | Evidencia | Auditoría técnica independiente de este paquete | Una sesión de Codex separada | Pendiente |
+| E-01 | Evidencia | Informe completo de la auditoría de Q | Codex | **Disponible** fuera del repositorio (SHA-256 `a1dbc1d2…`); su correspondencia, en la respuesta a la auditoría |
+| E-02 | Evidencia | Declaración fechada de Luis sobre la composición y los roles reales (R-01 de Q2), que aclare también la discrepancia con las declaraciones del 27/10/2026 | Luis | Pendiente. Hay declaraciones recibidas del 28/10/2026 y del 29/10/2026 [R] |
+| E-03 | Evidencia | Los actos de conformidad de los tres integrantes con una misma versión fijada de Q2 (CM-01 a CM-03) y, por separado, las delegaciones de Fredy y de Anthony (DF-02 y DF-03), o su negativa | Cada integrante, por su cuenta | Pendiente |
+| E-04 | Evidencia | Revisión técnica diferenciada del paquete | Una sesión de Codex separada | Entregada sobre `729babb`, con CORRECCIONES REQUERIDAS; pendiente sobre el candidato corregido |
+| RR | Registro | Registro raíz de adopción de una versión fijada de Q2 (Q2 §9) | Se crearía en un incremento posterior, tras los actos de E-03 | No existe |
 | E-05 | Evidencia | Autoría de los 6 commits con la identidad «Coronacion Meza Fredy» | Las personas implicadas | Pendiente |
 | D-01 a D-09 | Decisión | Las de la matriz de H y Q: candidato, D-02, deuda, uso de AF6, alcance de F37-SBX, sincronización, integración y modelo de gobierno | El equipo, según el modelo vigente | No emitidas |
 | T-01 a T-07 | Decisión | Diseño del sucesor B-01 | Ídem | No emitidas |
 | F36-M01 a F36-M03 | Decisión | Numeración, EI-09 y ADR sucesor | Ídem | Abiertas |
-| D-10 [P] | Decisión | Interpretación de la regla FRZ y de §7 del charter tras SEG (§3.3) | Ídem | Nueva |
-| D-11 [P] | Decisión | Quién autoriza `push`, `merge`, tags y releases (§5.6) | Los tres integrantes, al adoptar Q2 | Nueva |
+| D-10 [P] | Decisión | Determinación documental del supuesto de §7 del charter tras SEG, con efecto solo prospectivo para cualquier aclaración (§3.3) | El equipo | Nueva |
+| D-11 [P] | Decisión | Autoridad y representación para las operaciones del contrato 10, hacia adelante (§5.6) | Los tres integrantes | Nueva |
 | Q2 | Decisión | Adopción de la propuesta sucesora de Q, por su procedimiento | Ídem | No emitida |
 | Decisiones 12 y 13 | Decisión | Promover RF-28, RF-29 y RNF-C al baseline ([scope](../../../v1.1/scope-preliminary.md)) | El equipo | Pendientes |
