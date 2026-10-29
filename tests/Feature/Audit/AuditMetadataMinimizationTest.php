@@ -199,6 +199,33 @@ class AuditMetadataMinimizationTest extends TestCase
             ->assertDontSee(self::MARKER, false);
     }
 
+    public function test_rf16_rf27_seg04_scheduling_keeps_its_texts_out_of_audit_metadata(): void
+    {
+        $application = Application::factory()->for($this->vacancy)->shortlisted()->create();
+        $evaluator = User::factory()->evaluator($this->organization)->create();
+
+        $this->actingAs($this->hr)->post(route('applications.evaluations.store', $application), [
+            'evaluator_id' => $evaluator->id,
+            'type' => 'conocimientos',
+            'modality' => 'presencial',
+            'location' => self::MARKER.'-LUGAR: aula ficticia',
+            'scheduled_at' => now()->addDays(3)->setTime(9, 0)->format('Y-m-d H:i'),
+            'duration_minutes' => 60,
+            'instructions' => $this->comment('INDICACIONES'),
+        ])->assertSessionHasNoErrors();
+
+        // A-16: the automatic step keeps its fixed text in the stage history, like any other stage change.
+        $this->assertSame('Evaluación programada.', $application->stageHistories()->latest('id')->value('comment'));
+        $this->assertStateOnlyEvents(AuditAction::ApplicationStageChanged, $application, $this->hr, [
+            [ApplicationStatus::Shortlisted, ApplicationStatus::Evaluation],
+        ]);
+
+        // The scheduling event already stored only type, date and evaluator: location and instructions stay in the session.
+        $scheduled = AuditLog::query()->withoutGlobalScopes()->where('action', AuditAction::EvaluationScheduled)->sole();
+        $this->assertEqualsCanonicalizing(['type', 'scheduled_at', 'evaluator_id'], array_keys($scheduled->metadata));
+        $this->assertMarkerNeverStoredInAuditMetadata();
+    }
+
     private function comment(string $tag): string
     {
         return self::MARKER."-{$tag}: motivo ficticio con un DNI inventado 00000000 y un dato de salud inventado.";
