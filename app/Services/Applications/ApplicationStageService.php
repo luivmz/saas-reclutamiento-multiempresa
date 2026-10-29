@@ -88,11 +88,12 @@ class ApplicationStageService
                 'comment' => $comment,
             ])->save();
 
-            $this->audit->record(AuditAction::ApplicationStageChanged, $locked, array_filter([
+            // SEG-04 (A-38): the comment stays in the stage history above; the audit event keeps only the states
+            // (docs/v1.1/security/SEG-04-minimizacion-metadatos-auditoria.md).
+            $this->audit->record(AuditAction::ApplicationStageChanged, $locked, [
                 'from' => $from->value,
                 'to' => $target->value,
-                'comment' => $comment,
-            ]), $actor);
+            ], $actor);
 
             return [$locked, $vacancy->title];
         });
