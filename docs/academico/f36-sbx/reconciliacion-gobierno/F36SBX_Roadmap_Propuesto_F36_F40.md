@@ -85,7 +85,7 @@ La columna «Clasificación en Q2» no crea permisos: solo dice cómo se clasifi
 
 | Etapa | Módulo | Contenido | Fuente vigente o condición actual | Clasificación en Q2 | Estado |
 |---|---|---|---|---|---|
-| R0 | Gobierno | Adoptar una versión fijada de Q2 o mantener el mecanismo colegiado con actos reales; D-10, una determinación documental con efecto solo prospectivo; D-11, la autoridad del contrato 10 hacia adelante | Q2 §9 y [reconciliación §3.3 y §5.6](F36SBX_Reconciliacion_Estado_Gobierno.md) | N4 | Pendiente |
+| R0 | Gobierno | Adoptar una versión fijada de Q2 o mantener el mecanismo colegiado con actos reales; D-10, pendiente: determinación fundada de hechos, ámbito, periodo y posibles efectos históricos conforme al contrato aplicable, con registro declarativo, mientras que cualquier autorización nueva o enmienda normativa regirá únicamente hacia adelante; D-11, la autoridad del contrato 10 hacia adelante | Q2 §9 y [reconciliación §3.3 y §5.6](F36SBX_Reconciliacion_Estado_Gobierno.md) | N4 | Pendiente |
 | R1 | ML-01 | Mantenimiento correctivo y documental dentro del contrato congelado, incluido el *model card* definitivo | La skill `ml-risk-service` y las reglas vigentes | N1 o N2 | Se puede hacer ya |
 | R1b | ML-01 | Reconstruir el artefacto del experimento congelado | `ml-service/README.md` (15C) | N1 | Se puede hacer cuando haga falta |
 | R2 | ML-01 | Un experimento nuevo con cambios científicos, solo con datos sintéticos | Decisión expresa del equipo, protocolo y evaluación nuevos, y auditoría | N2, con la decisión expresa | No emitida |

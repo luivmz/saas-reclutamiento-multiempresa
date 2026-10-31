@@ -2,7 +2,7 @@
 
 > **PROPUESTA DOCUMENTAL — NO VIGENTE — SIN ADOPCIÓN FORMAL.** Paquete del 29/10/2026, en la rama `docs/f36-sbx-team-governance-proposal`, creada desde `develop` = `9dd76c4ce69e6686eaae22d9eb3eceb1e347caf9` (árbol `82f27c9daf4305cafce6fb23a3b7b9277906b783`). No está publicado ni integrado.
 >
-> **Candidato corregido.** La revisión diferenciada de Codex sobre `729babb4a5584a4bc119fe61e59c101147e7acd5` pidió correcciones: 5 MEDIUM y 2 LOW. Este candidato las implementa en commits nuevos sobre aquel, sin reescribirlo, y queda pendiente de una revisión nueva.
+> **Candidato corregido.** La revisión diferenciada de Codex sobre `729babb4a5584a4bc119fe61e59c101147e7acd5` pidió correcciones: 5 MEDIUM y 2 LOW. Este candidato las implementa en commits nuevos sobre aquel, sin reescribirlo. La reauditoría de `e5a750ba4a9d9969fe6ee5f1029365f8845ec842` dio por resueltos seis hallazgos y dejó Q2-M05 parcial, por un residuo en la fila R0 del roadmap; el último commit lo corrige, y el candidato queda pendiente de una revisión nueva.
 >
 > Estados vigentes, sin cambios: G0 real = NO APROBADA; G0-SBX = APROBADA CON RESTRICCIONES; ADR-005 = PROPUESTA; F35-SBX = CERRADA Y CONGELADA; F36-SBX = EN DISEÑO; F36-SBX-GATE = NO SUPERADO; F37-SBX = BLOQUEADA; alcance C = BLOQUEADO; datos reales = PROHIBIDOS.
 
@@ -13,7 +13,7 @@
 | [Reconciliación de referencias, estados y controles](F36SBX_Reconciliacion_Estado_Gobierno.md) | AF5, AF6, H y Q con sus hashes completos; el estado real de Q, H, B-01 y los gates, medido con el validador; D-10 y D-11; las observaciones; el origen de cada control; las actividades permitidas y bloqueadas con su fuente vigente; la deuda documental; las decisiones y evidencias pendientes | Hechos comprobados [H] y afirmaciones recibidas [R] |
 | [Propuesta Q2, sucesora de Q](PROPUESTA_Q2_Gobierno_Equipo.md) | El gobierno de tres integrantes académicos con Luis como responsable técnico: roles, niveles propuestos, revisión diferenciada, registros, adopción de una versión fijada, transición y deltas propuestos | Propuesta [P] |
 | [Roadmap propuesto F36–F40](F36SBX_Roadmap_Propuesto_F36_F40.md) | ML-01 (RF-29), ML-02 (inteligencia sobre evidencia) y la línea visual, con las condiciones para reconstruir, entrenar, experimentar e integrar | Propuesta [P] sobre hechos [H] |
-| [Respuesta a la auditoría de Q2](F36SBX_Respuesta_Auditoria_Q2.md) | La matriz de Q2-M01 a Q2-L02, la correspondencia de los nueve hallazgos de Q, los escenarios de adopción y las cifras corregidas | Hechos [H] y propuesta [P] |
+| [Respuesta a la auditoría de Q2](F36SBX_Respuesta_Auditoria_Q2.md) | La matriz de Q2-M01 a Q2-L02, la correspondencia de los nueve hallazgos de Q, los escenarios de adopción, las cifras corregidas y el residuo de Q2-M05 señalado por la reauditoría | Hechos [H] y propuesta [P] |
 
 ## Historia del paquete
 
@@ -25,7 +25,8 @@
 | `af843eb77b6df5584125e7ab59388205006d7c6d` | Correcciones de la reconciliación |
 | `6544f849307b4803d1190f92eea1dec4c2b035dc` | Correcciones de Q2 |
 | `695c39076d453152d385734633c259d12cc85cec` | Correcciones del roadmap |
-| El commit de esta versión del README | Respuesta a la auditoría y validación; su hash se consulta en Git |
+| `e5a750ba4a9d9969fe6ee5f1029365f8845ec842` | Respuesta a la auditoría y validación. Reauditado con CORRECCIONES REQUERIDAS solo por el residuo de Q2-M05 |
+| El commit de esta versión del README | Corrección del residuo de Q2-M05 en la fila R0 del roadmap; su hash se consulta en Git |
 
 ## Lo que este paquete no hace
 
@@ -38,17 +39,18 @@
 
 ## Validación del candidato corregido
 
-Ejecutada el 29/10/2026 sobre esta rama:
+Ejecutada el 31/10/2026 sobre esta rama, tras corregir el residuo de Q2-M05:
 
 | Comprobación | Resultado |
 |---|---|
 | Funciones de prosa del propio validador (`forbidden_claims`, `state_claims` con `allowed_states` e `invisible_chars`) y NFC, en los cinco documentos | 0 problemas. Estos documentos no están en `PKG_DOCS`, así que las reglas SEM y LNK del validador no los leen; por eso se comprobaron aparte |
 | Enlaces relativos y anclas | 46 enlaces y 2 anclas, ninguno roto |
-| Hashes Git citados | 54 tokens hexadecimales: 42 commits y 8 árboles que resuelven en Git. Los 4 restantes no son objetos Git: dos segmentos del UUID de la carpeta de Codex y dos prefijos de SHA-256, el del *freeze* de RF-29 y el del informe de Q |
-| [`validate_f36sbx.py`](../../tools/f36sbx/validate_f36sbx.py) sobre esta rama, sin cambiar su nombre, su base ni sus reglas | 55 correctas y 4 fallas, con el mismo patrón en las 59 comprobaciones que Q2 original: «FRZ — rama admitida», por el anclaje de rama; las dos de contenido de FRZ, por las 18 rutas externas y las 11 entradas de runtime de SEG, idénticas a las de `develop`; y GATE, por FG-01 y FG-05. No se agregan rutas externas ni fallas de contenido nuevas |
-| Resultados de referencia | AF5 59/0; Q 57/2; `develop` 56/3; Q2 original (`729babb`) 55/4 ([reconciliación §3.1](F36SBX_Reconciliacion_Estado_Gobierno.md#31-mediciones-del-validador-h)) |
-| Alcance del diff frente a `729babb` | 5 archivos: los 4 corregidos y la respuesta a la auditoría, que es nueva; 456 inserciones y 168 eliminaciones. Nada fuera de esta carpeta |
-| Alcance del diff frente a `develop` | 5 archivos nuevos en esta carpeta, con 890 inserciones; `git diff --check`, sin errores |
+| Hashes Git citados | 56 tokens hexadecimales: 44 commits y 8 árboles que resuelven en Git. Los 4 restantes no son objetos Git: dos segmentos del UUID de la carpeta de Codex y dos prefijos de SHA-256, el del *freeze* de RF-29 y el del informe de Q |
+| [`validate_f36sbx.py`](../../tools/f36sbx/validate_f36sbx.py) sobre esta rama, sin cambiar su nombre, su base ni sus reglas | 55 correctas y 4 fallas, con el mismo patrón en las 59 comprobaciones que Q2 original y una salida idéntica a la de `e5a750b`: «FRZ — rama admitida», por el anclaje de rama; las dos de contenido de FRZ, por las 18 rutas externas y las 11 entradas de runtime de SEG, idénticas a las de `develop`; y GATE, por FG-01 y FG-05. No se agregan rutas externas ni fallas de contenido nuevas |
+| Resultados de referencia | AF5 59/0; Q 57/2; `develop` 56/3; Q2 original (`729babb`) 55/4; `e5a750b` 55/4 ([reconciliación §3.1](F36SBX_Reconciliacion_Estado_Gobierno.md#31-mediciones-del-validador-h)) |
+| Alcance del diff frente a `729babb` | 5 archivos: los 4 corregidos y la respuesta a la auditoría, que es nueva; 488 inserciones y 169 eliminaciones. Nada fuera de esta carpeta |
+| Alcance del diff frente a `develop` | 5 archivos nuevos en esta carpeta, con 921 inserciones; `git diff --check`, sin errores |
+| Alcance del diff frente a `e5a750b` | 3 archivos: el roadmap, solo en la fila R0; la respuesta a la auditoría, y este README. 44 inserciones y 13 eliminaciones; la reconciliación y Q2 no cambian |
 | Pruebas funcionales | No se ejecutaron: el incremento es solo documental y no cambia código |
 
 ## Siguiente paso
