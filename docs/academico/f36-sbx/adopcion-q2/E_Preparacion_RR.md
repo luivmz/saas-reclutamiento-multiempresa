@@ -62,10 +62,10 @@ Ejemplo inventado para ilustrar la regla; no refleja ninguna decisión:
 
 | Facultad | DF-02 del ejemplo | DF-03 del ejemplo | Pasa a Luis |
 |---|---|---|---|
-| GIT-1 | Sí | No | No |
 | GIT-2 | Sí, hasta el 31/12/2026 | Sí, sin fecha de fin | Sí, hasta el 31/12/2026 |
+| GIT-4 | Sí | No | No |
 | B01-1 | Sí, con aviso previo | Sí | Sí, con aviso previo |
-| GATE-3 | No | Sí | No |
+| GATE-2 | No | Sí | No |
 
 ## 6. Lo que el RR no hará
 

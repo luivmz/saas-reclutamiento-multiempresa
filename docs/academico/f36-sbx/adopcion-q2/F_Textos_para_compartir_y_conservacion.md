@@ -37,7 +37,7 @@ Cómo obtener la copia exacta de Q2 en V y comprobar su SHA-256: [README, «Cóm
 > **Qué puedes decidir.**
 >
 > 1. Tu conformidad con el modelo: conforme, conforme con condiciones o no conforme. Si alguien no está conforme o no responde, Q2 no se adopta.
-> 2. Si quieres, una delegación en mí de algunas operaciones concretas, como publicar o integrar en GitHub. Es opcional, independiente de la conformidad y revocable cuando quieras, y solo vale lo que deleguen los dos.
+> 2. Si quieres, una delegación en mí de algunas operaciones concretas, de una lista cerrada, como integrar cambios en develop. Es opcional, independiente de la conformidad y revocable cuando quieras, y solo vale lo que deleguen los dos.
 >
 > **Qué no cambia.** Seguimos siendo tres integrantes y yo sigo siendo el único que programa. Nada te atribuye trabajo, firmas ni aprobaciones que no hiciste. Q2 no da permiso para usar datos reales, pasar a producción, superar gates ni decidir sobre el alcance C o un ADR.
 >

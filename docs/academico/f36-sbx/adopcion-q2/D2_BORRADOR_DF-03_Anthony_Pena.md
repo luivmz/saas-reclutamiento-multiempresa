@@ -21,17 +21,21 @@ Marca solo las que delegues. La lista es cerrada: nada que no esté en ella se d
 
 ### 2.1 Operaciones Git (contrato 10; nivel N3 de Q2)
 
-Hoy, el contrato 10 de [`CLAUDE.md`](../../../../CLAUDE.md) exige una autorización explícita del equipo para `push`, `merge`, release o tag. Con Q2 adoptada, Luis podría decidir estas operaciones en representación del equipo solo dentro de las delegaciones vigentes de los dos (Q2 §4 y §10).
+Hoy, el contrato 10 de [`CLAUDE.md`](../../../../CLAUDE.md) exige una autorización explícita del equipo para `push`, `merge`, release o tag. Que una operación necesite esa autorización no significa que V permita delegarla. Con Q2 adoptada, Luis solo podría decidir en representación del equipo las operaciones que enumera el nivel N3 de V (merge a `develop`, push de `develop`, merge a `main`, tags y releases), y solo dentro de las delegaciones vigentes de los dos (Q2 §4 y §10).
 
 | Marca | ID | Facultad | Alcance |
 |---|---|---|---|
-| ☐ | GIT-1 | Publicar ramas de trabajo | `push` de ramas `feature/*`, `fix/*`, `docs/*` y `chore/*`, sin integrarlas en `develop` ni en `main` |
 | ☐ | GIT-2 | Integrar en `develop` | `merge` en `develop` y `push` de `develop` |
-| ☐ | GIT-3 | Integrar en `main` | `merge` en `main` y `push` de `main` |
+| ☐ | GIT-3 | Integrar en `main` | Solo el `merge` en `main`. No incluye el `push` de `main`, que V no enumera |
 | ☐ | GIT-4 | Crear y publicar etiquetas | Solo etiquetas nuevas. Nunca mover, borrar ni reutilizar una existente |
 | ☐ | GIT-5 | Crear y publicar releases | Solo releases nuevas. Sin modificar ni borrar las existentes |
 
-Borrar ramas o etiquetas remotas no está en la lista y sigue necesitando al equipo. El force push y la reescritura de historia publicada no se hacen nunca (§3.1).
+**Fuera de la lista, sin casilla.** La corrección del 01/11/2026 retiró dos operaciones que V no enumera en N3 (hallazgo Q2AD-M01 de la revisión de Codex):
+
+- GIT-1, publicar ramas de trabajo (`push` de ramas `feature/*`, `fix/*`, `docs/*` y `chore/*`);
+- el `push` de `main`, que GIT-3 incluía junto con su `merge`.
+
+Retirarlas no las prohíbe. Como borrar ramas o etiquetas remotas, siguen necesitando la autorización explícita del equipo que exige el contrato 10, por el procedimiento que corresponda. El force push y la reescritura de historia publicada no se hacen nunca (§3.1).
 
 ### 2.2 B-01, el sucesor del gate (Q2 §8 y §10)
 
@@ -40,7 +44,7 @@ Borrar ramas o etiquetas remotas no está en la lista y sigue necesitando al equ
 | ☐ | B01-1 | Emitir D-02b: autorizar la implementación del sucesor B-01 | Mediante un RD anclado al commit de la especificación S del sucesor ya auditada, a su informe de auditoría y al RR. La implementación se limita a lo que S describe, con las opciones de diseño T-01 a T-07 elegidas entre las que S plantea |
 
 - **S todavía no existe.** La especificación de `1d5d6aa` no está auditada, y Q2 §12 prevé completarla (la variante de Q2 y T-08) antes de auditarla. Sin una S auditada, B01-1 no se puede usar.
-- **B01-1 no incluye:** iniciar F37-SBX, que es FG-03; registrar evidencia de FG-02, FG-03, FG-10 o FG-12; aprobar un ADR; integrar o publicar, que son GIT-2 a GIT-5; ni declarar superado el gate, que exige además H, una FG-02 favorable sobre H y el resto de los requisitos del gate.
+- **B01-1 no incluye:** iniciar F37-SBX, que es FG-03; registrar evidencia de FG-02, FG-03, FG-10 o FG-12; aprobar un ADR; ninguna operación Git de integración o publicación (las delegables son las de §2.1); ni declarar superado el gate, que exige además H, una FG-02 favorable sobre H y el resto de los requisitos del gate.
 
 ### 2.3 Criterios de equipo del gate (Q2 §8)
 
@@ -48,9 +52,10 @@ Borrar ramas o etiquetas remotas no está en la lista y sigue necesitando al equ
 
 | Marca | ID | Facultad | Alcance |
 |---|---|---|---|
-| ☐ | GATE-1 | FG-03: decidir y registrar la autorización de inicio de F37-SBX-A | Con una FG-02 favorable sobre H. Una lista cerrada de EI de alcance B en ALLOWED (EI-01 a EI-07) y la confirmación de la numeración (F36-M01). EI-09, solo si existe una decisión válida sobre ella: GATE-3 o los actos de los tres |
+| ☐ | GATE-1 | FG-03: decidir y registrar la autorización de inicio de F37-SBX-A | Con una FG-02 favorable sobre H. Una lista cerrada de EI de alcance B en ALLOWED (EI-01 a EI-07) y la confirmación de la numeración (F36-M01). EI-09, solo si su encaje en el alcance B (F36-M02) está confirmado por escrito mediante actos auténticos, por el procedimiento vigente aplicable, y con las condiciones que fija la [matriz](../F36SBX_Matriz_Capacidades.md#matriz): ordena fragmentos y no personas, sin puntaje visible, solo después de la calificación humana y sin agregados por persona. Este registro no inicia por sí solo F37-SBX-A, que exige además que el gate dé SUPERADO y el resto de sus requisitos |
 | ☐ | GATE-2 | FG-10: aprobar el registro de dependencias que declara que no hay ninguna nueva | Solo esa declaración. No aprueba ninguna dependencia: solo las justificarían EI-10, EI-11 o EI-12, del alcance C |
-| ☐ | GATE-3 | FG-12, solo la decisión sobre EI-09 (F36-M02): si la recuperación léxica de fragmentos cabe en el alcance B | Sin ADR sucesor. Delegarla permite a Luis decidir por sí solo esta frontera entre los alcances B y C. Si EI-09 no cabe en B, pasa a necesitar un ADR y queda fuera de la delegación |
+
+**Fuera de la lista, sin casilla.** La misma corrección retiró GATE-3, que permitía a Luis decidir por sí solo si EI-09 cabe en el alcance B (hallazgo Q2AD-M02). Esa confirmación (F36-M02) queda sujeta a actos auténticos y al procedimiento vigente aplicable, sin redefinir la frontera entre los alcances B y C, reclasificar EI, aprobar un ADR, exceptuar contratos ni decidir nada del alcance C. Retirarla no prohíbe EI-09 ni hace indelegable todo FG-12: solo deja fuera de estos borradores esa facultad amplia.
 
 ### 2.4 Lo que no se puede delegar
 
