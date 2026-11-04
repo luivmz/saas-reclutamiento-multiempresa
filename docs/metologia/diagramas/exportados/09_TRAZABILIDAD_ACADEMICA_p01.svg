@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="1200" viewBox="0 0 1560 1200" role="img">
+  <title>09_TRAZABILIDAD_ACADEMICA · Cadena conceptual</title>
+  <desc>AS-IS preliminar; los artículos sustentan controles, no prueban el problema institucional Fuente: MATRIZ_TRAZABILIDAD_ACADEMICA.xlsx; F2–F9; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="365,260.0 425,260.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="740,260.0 800,260.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1115,260.0 1175,260.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1332.5,310 1332.5,410" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1175,460.0 1115,460.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="800,460.0 740,460.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="425,460.0 365,460.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="207.5,510 207.5,610" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="365,660.0 425,660.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="740,660.0 800,660.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1115,660.0 1175,660.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1332.5,710 1332.5,810" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Trazabilidad académica de extremo a extremo</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">AS-IS preliminar; los artículos sustentan controles, no prueban el problema institucional</tspan>
+  </text>
+  <text x="40" y="1138" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: MATRIZ_TRAZABILIDAD_ACADEMICA.xlsx; F2–F9</tspan>
+    <tspan x="40" dy="19.52">Original editable: 09_TRAZABILIDAD_ACADEMICA · Página: Cadena conceptual</tspan>
+  </text>
+  <rect x="50" y="210" width="315" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="207.5" y="267.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="207.5" dy="0">[PROC] Problema</tspan>
+  </text>
+  <rect x="425" y="210" width="315" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="582.5" y="267.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="582.5" dy="0">[PROC] Objetivo</tspan>
+  </text>
+  <rect x="800" y="210" width="315" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="957.5" y="267.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="957.5" dy="0">[PROC] AS-IS</tspan>
+  </text>
+  <rect x="1175" y="210" width="315" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1332.5" y="267.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1332.5" dy="0">[PROC] TO-BE</tspan>
+  </text>
+  <rect x="1175" y="410" width="315" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1332.5" y="467.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1332.5" dy="0">[PROC] Requisito</tspan>
+  </text>
+  <rect x="800" y="410" width="315" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="957.5" y="467.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="957.5" dy="0">[PROC] Caso de uso</tspan>
+  </text>
+  <rect x="425" y="410" width="315" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="582.5" y="467.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="582.5" dy="0">[PROC] Módulo</tspan>
+  </text>
+  <rect x="50" y="410" width="315" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="207.5" y="467.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="207.5" dy="0">[PROC] Función</tspan>
+  </text>
+  <rect x="50" y="610" width="315" height="100" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="207.5" y="667.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="207.5" dy="0">[SIS] Código</tspan>
+  </text>
+  <rect x="425" y="610" width="315" height="100" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="582.5" y="667.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="582.5" dy="0">[QA] Prueba</tspan>
+  </text>
+  <rect x="800" y="610" width="315" height="100" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="957.5" y="667.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="957.5" dy="0">[QA] Métrica</tspan>
+  </text>
+  <rect x="1175" y="610" width="315" height="100" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="1332.5" y="667.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1332.5" dy="0">[DOC] Evidencia</tspan>
+  </text>
+  <rect x="1175" y="810" width="315" height="100" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="1332.5" y="867.8" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1332.5" dy="0">[DOC] Artículo científico</tspan>
+  </text>
+  <text x="50" y="1068" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="50" dy="0">La matriz completa contiene 30 cadenas académicas. La literatura justifica la verificación; no valida causalmente el caso.</tspan>
+  </text>
+</svg>

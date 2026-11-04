@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="1230" viewBox="0 0 1560 1230" role="img">
+  <title>09_TRAZABILIDAD_ACADEMICA · Ejemplo RF-01</title>
+  <desc>AS-IS preliminar; los artículos sustentan controles, no prueban el problema institucional Fuente: MATRIZ_TRAZABILIDAD_ACADEMICA.xlsx; F2–F9; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="365,272.5 425,272.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="740,272.5 800,272.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1115,272.5 1175,272.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1332.5,335 1332.5,410" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1175,472.5 1115,472.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="800,472.5 740,472.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="425,472.5 365,472.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="207.5,535 207.5,610" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="365,672.5 425,672.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="740,672.5 800,672.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1115,672.5 1175,672.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1332.5,735 1332.5,810" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Trazabilidad académica de extremo a extremo</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">AS-IS preliminar; los artículos sustentan controles, no prueban el problema institucional</tspan>
+  </text>
+  <text x="40" y="1168" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: MATRIZ_TRAZABILIDAD_ACADEMICA.xlsx; F2–F9</tspan>
+    <tspan x="40" dy="19.52">Original editable: 09_TRAZABILIDAD_ACADEMICA · Página: Ejemplo RF-01</tspan>
+  </text>
+  <rect x="50" y="210" width="315" height="125" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="207.5" y="268.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="207.5" dy="0">[PROC] P1 / P2</tspan>
+    <tspan x="207.5" dy="24.4">Problemas preliminares</tspan>
+  </text>
+  <rect x="425" y="210" width="315" height="125" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="582.5" y="268.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="582.5" dy="0">[PROC] OM-01</tspan>
+    <tspan x="582.5" dy="24.4">Centralizar información</tspan>
+  </text>
+  <rect x="800" y="210" width="315" height="125" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="957.5" y="268.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="957.5" dy="0">[PROC] AS-01 / AS-02</tspan>
+    <tspan x="957.5" dy="24.4">Necesidad y comunicación</tspan>
+  </text>
+  <rect x="1175" y="210" width="315" height="125" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1332.5" y="268.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1332.5" dy="0">[PROC] TB-01</tspan>
+    <tspan x="1332.5" dy="24.4">Registrar requerimiento</tspan>
+  </text>
+  <rect x="1175" y="410" width="315" height="125" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1332.5" y="468.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1332.5" dy="0">[PROC] RF-01</tspan>
+    <tspan x="1332.5" dy="24.4">Registro de necesidad</tspan>
+  </text>
+  <rect x="800" y="410" width="315" height="125" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="957.5" y="468.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="957.5" dy="0">[PROC] CU-01</tspan>
+    <tspan x="957.5" dy="24.4">Registrar requerimiento</tspan>
+  </text>
+  <rect x="425" y="410" width="315" height="125" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="582.5" y="468.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="582.5" dy="0">[PROC] PR-01</tspan>
+    <tspan x="582.5" dy="24.4">Requerimiento y aprobación</tspan>
+  </text>
+  <rect x="50" y="410" width="315" height="125" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="207.5" y="468.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="207.5" dy="0">[PROC] FUN-001</tspan>
+    <tspan x="207.5" dy="24.4">JobRequestWorkflow::register</tspan>
+  </text>
+  <rect x="50" y="610" width="315" height="125" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="207.5" y="655.9" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="207.5" dy="0">[SIS] Código</tspan>
+    <tspan x="207.5" dy="24.4">app/Services/JobRequests/Job</tspan>
+    <tspan x="207.5" dy="24.4">RequestWorkflow.php</tspan>
+  </text>
+  <rect x="425" y="610" width="315" height="125" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="582.5" y="655.9" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="582.5" dy="0">[QA] Prueba</tspan>
+    <tspan x="582.5" dy="24.4">JobRequestWorkflowTest::test_</tspan>
+    <tspan x="582.5" dy="24.4">rf01_*</tspan>
+  </text>
+  <rect x="800" y="610" width="315" height="125" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="957.5" y="655.9" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="957.5" dy="0">[QA] Métrica</tspan>
+    <tspan x="957.5" dy="24.4">Assertions / resultado histórico;</tspan>
+    <tspan x="957.5" dy="24.4">sin coverage individual</tspan>
+  </text>
+  <rect x="1175" y="610" width="315" height="125" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="1332.5" y="668.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1332.5" dy="0">[DOC] Evidencia</tspan>
+    <tspan x="1332.5" dy="24.4">F2–F9 + matriz académica</tspan>
+  </text>
+  <rect x="1175" y="810" width="315" height="125" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="1332.5" y="855.9" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1332.5" dy="0">[DOC] ART-01 / ART-10</tspan>
+    <tspan x="1332.5" dy="24.4">Marco SE/testing; no confirma</tspan>
+    <tspan x="1332.5" dy="24.4">hechos del colegio</tspan>
+  </text>
+</svg>

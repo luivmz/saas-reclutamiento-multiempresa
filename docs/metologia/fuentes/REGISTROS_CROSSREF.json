@@ -1,0 +1,3067 @@
+[
+  {
+    "requested_doi": "10.1145/3695988",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1145%2F3695988",
+    "message": {
+      "publisher": "Association for Computing Machinery (ACM)",
+      "issue": "8",
+      "published-print": {
+        "date-parts": [
+          [
+            2024,
+            11,
+            30
+          ]
+        ]
+      },
+      "DOI": "10.1145/3695988",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [
+          [
+            2024,
+            9,
+            20
+          ]
+        ],
+        "date-time": "2024-09-20T11:30:17Z",
+        "timestamp": 1726831817000
+      },
+      "page": "1-79",
+      "title": [
+        "Large Language Models for Software Engineering: A Systematic Literature Review"
+      ],
+      "volume": "33",
+      "author": [
+        {
+          "given": "Xinyi",
+          "family": "Hou",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Huazhong University of Science and Technology, Wuhan, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Yanjie",
+          "family": "Zhao",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Huazhong University of Science and Technology, Wuhan, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Yue",
+          "family": "Liu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Monash University, Melbourne, Australia"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Zhou",
+          "family": "Yang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Singapore Management University, Singapore"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Kailong",
+          "family": "Wang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Huazhong University of Science and Technology, Wuhan, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Li",
+          "family": "Li",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Beihang University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Xiapu",
+          "family": "Luo",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "The Hong Kong Polytechnic University, Hong Kong, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "David",
+          "family": "Lo",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Singapore Management University, Singapore"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "John",
+          "family": "Grundy",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Monash University, Melbourne, Australia"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Haoyu",
+          "family": "Wang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Huazhong University of Science and Technology, Wuhan, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2024,
+            12,
+            3
+          ]
+        ]
+      },
+      "container-title": [
+        "ACM Transactions on Software Engineering and Methodology"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            6,
+            18
+          ]
+        ],
+        "date-time": "2025-06-18T20:04:30Z",
+        "timestamp": 1750277070000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://dl.acm.org/doi/10.1145/3695988"
+        }
+      },
+      "URL": "https://doi.org/10.1145/3695988",
+      "published": {
+        "date-parts": [
+          [
+            2024,
+            11,
+            30
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1109/ICSE-FoSE59343.2023.00008",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1109%2FICSE-FoSE59343.2023.00008",
+    "message": {
+      "publisher": "IEEE",
+      "published-print": {
+        "date-parts": [
+          [
+            2023,
+            5,
+            14
+          ]
+        ]
+      },
+      "DOI": "10.1109/icse-fose59343.2023.00008",
+      "type": "proceedings-article",
+      "created": {
+        "date-parts": [
+          [
+            2024,
+            3,
+            4
+          ]
+        ],
+        "date-time": "2024-03-04T14:00:05Z",
+        "timestamp": 1709560805000
+      },
+      "page": "31-53",
+      "title": [
+        "Large Language Models for Software Engineering: Survey and Open Problems"
+      ],
+      "author": [
+        {
+          "given": "Angela",
+          "family": "Fan",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Generative AI Team Meta Platforms Inc.,New York,NY,USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Beliz",
+          "family": "Gokkaya",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "PyTorch Team Meta Platforms Inc.,Menlo Park,CA,USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Mark",
+          "family": "Harman",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Instagram Product Foundation Meta Platforms Inc.,London,UK"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Mitya",
+          "family": "Lyubarskiy",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Developer Infrastructure Meta Platforms Inc.,London,UK"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Shubho",
+          "family": "Sengupta",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "FAIR Meta Platforms Inc.,Menlo Park,CA,USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Shin",
+          "family": "Yoo",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "School of Computing KAIST,Daejeon,Korea"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jie M.",
+          "family": "Zhang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "King&#x0027;s College London,Department of Informatics,London,UK"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "container-title": [
+        "2023 IEEE/ACM International Conference on Software Engineering: Future of Software Engineering (ICSE-FoSE)"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2024,
+            3,
+            14
+          ]
+        ],
+        "date-time": "2024-03-14T11:41:40Z",
+        "timestamp": 1710416500000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://ieeexplore.ieee.org/document/10449667/"
+        }
+      },
+      "URL": "https://doi.org/10.1109/icse-fose59343.2023.00008",
+      "published": {
+        "date-parts": [
+          [
+            2023,
+            5,
+            14
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1145/3576915.3623157",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1145%2F3576915.3623157",
+    "message": {
+      "publisher": "ACM",
+      "published-print": {
+        "date-parts": [
+          [
+            2023,
+            11,
+            15
+          ]
+        ]
+      },
+      "DOI": "10.1145/3576915.3623157",
+      "type": "proceedings-article",
+      "created": {
+        "date-parts": [
+          [
+            2023,
+            11,
+            21
+          ]
+        ],
+        "date-time": "2023-11-21T12:35:13Z",
+        "timestamp": 1700570113000
+      },
+      "page": "2785-2799",
+      "title": [
+        "Do Users Write More Insecure Code with AI Assistants?"
+      ],
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0009-0009-4254-4712",
+          "authenticated-orcid": false,
+          "given": "Neil",
+          "family": "Perry",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Stanford University, Stanford, CA, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0009-0002-7816-8391",
+          "authenticated-orcid": false,
+          "given": "Megha",
+          "family": "Srivastava",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Stanford University, Stanford, CA, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-0224-5031",
+          "authenticated-orcid": false,
+          "given": "Deepak",
+          "family": "Kumar",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Stanford University &amp; UC San Diego, Stanford &amp; La Jolla, CA, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-0820-0421",
+          "authenticated-orcid": false,
+          "given": "Dan",
+          "family": "Boneh",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Stanford University, Stanford, CA, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2023,
+            11,
+            21
+          ]
+        ]
+      },
+      "container-title": [
+        "Proceedings of the 2023 ACM SIGSAC Conference on Computer and Communications Security"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            8,
+            21
+          ]
+        ],
+        "date-time": "2025-08-21T01:44:24Z",
+        "timestamp": 1755740664000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://dl.acm.org/doi/10.1145/3576915.3623157"
+        }
+      },
+      "URL": "https://doi.org/10.1145/3576915.3623157",
+      "published": {
+        "date-parts": [
+          [
+            2023,
+            11,
+            15
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1109/SP46214.2022.9833571",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1109%2FSP46214.2022.9833571",
+    "message": {
+      "publisher": "IEEE",
+      "published-print": {
+        "date-parts": [
+          [
+            2022,
+            5
+          ]
+        ]
+      },
+      "DOI": "10.1109/sp46214.2022.9833571",
+      "type": "proceedings-article",
+      "created": {
+        "date-parts": [
+          [
+            2022,
+            7,
+            27
+          ]
+        ],
+        "date-time": "2022-07-27T15:28:05Z",
+        "timestamp": 1658935685000
+      },
+      "page": "754-768",
+      "title": [
+        "Asleep at the Keyboard? Assessing the Security of GitHub Copilot’s Code Contributions"
+      ],
+      "author": [
+        {
+          "given": "Hammond",
+          "family": "Pearce",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "New York University,Department of ECE,Brooklyn,NY,USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Baleegh",
+          "family": "Ahmad",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "New York University,Department of ECE,Brooklyn,NY,USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Benjamin",
+          "family": "Tan",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "University of Calgary,Department of ESE,Calgary,CA,Alberta"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Brendan",
+          "family": "Dolan-Gavitt",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "New York University,Department of CSE,Brooklyn,NY,USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Ramesh",
+          "family": "Karri",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "New York University,Department of ECE,Brooklyn,NY,USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "container-title": [
+        "2022 IEEE Symposium on Security and Privacy (SP)"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2023,
+            11,
+            8
+          ]
+        ],
+        "date-time": "2023-11-08T18:16:11Z",
+        "timestamp": 1699467371000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://ieeexplore.ieee.org/document/9833571/"
+        }
+      },
+      "URL": "https://doi.org/10.1109/sp46214.2022.9833571",
+      "published": {
+        "date-parts": [
+          [
+            2022,
+            5
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1145/3491101.3519665",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1145%2F3491101.3519665",
+    "message": {
+      "publisher": "ACM",
+      "published-print": {
+        "date-parts": [
+          [
+            2022,
+            4,
+            27
+          ]
+        ]
+      },
+      "DOI": "10.1145/3491101.3519665",
+      "type": "proceedings-article",
+      "created": {
+        "date-parts": [
+          [
+            2022,
+            4,
+            29
+          ]
+        ],
+        "date-time": "2022-04-29T12:49:48Z",
+        "timestamp": 1651236588000
+      },
+      "page": "1-7",
+      "title": [
+        "Expectation vs. Experience: Evaluating the Usability of Code Generation Tools Powered by Large Language Models"
+      ],
+      "author": [
+        {
+          "given": "Priyan",
+          "family": "Vaithilingam",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Harvard University, United States"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Tianyi",
+          "family": "Zhang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Computer Science, Purdue University, United States"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Elena L.",
+          "family": "Glassman",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "SEAS, Harvard University, United States"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2022,
+            4,
+            28
+          ]
+        ]
+      },
+      "container-title": [
+        "CHI Conference on Human Factors in Computing Systems Extended Abstracts"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            6,
+            17
+          ]
+        ],
+        "date-time": "2025-06-17T15:31:02Z",
+        "timestamp": 1750174262000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://dl.acm.org/doi/10.1145/3491101.3519665"
+        }
+      },
+      "URL": "https://doi.org/10.1145/3491101.3519665",
+      "published": {
+        "date-parts": [
+          [
+            2022,
+            4,
+            27
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1145/3586030",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1145%2F3586030",
+    "message": {
+      "publisher": "Association for Computing Machinery (ACM)",
+      "issue": "OOPSLA1",
+      "published-print": {
+        "date-parts": [
+          [
+            2023,
+            4,
+            6
+          ]
+        ]
+      },
+      "DOI": "10.1145/3586030",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [
+          [
+            2023,
+            4,
+            6
+          ]
+        ],
+        "date-time": "2023-04-06T17:06:02Z",
+        "timestamp": 1680800762000
+      },
+      "page": "85-111",
+      "title": [
+        "Grounded Copilot: How Programmers Interact with Code-Generating Models"
+      ],
+      "volume": "7",
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0002-8663-5175",
+          "authenticated-orcid": false,
+          "given": "Shraddha",
+          "family": "Barke",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "University of California at San Diego, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0009-0007-2219-9355",
+          "authenticated-orcid": false,
+          "given": "Michael B.",
+          "family": "James",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "University of California at San Diego, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0001-5571-173X",
+          "authenticated-orcid": false,
+          "given": "Nadia",
+          "family": "Polikarpova",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "University of California at San Diego, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2023,
+            4,
+            6
+          ]
+        ]
+      },
+      "container-title": [
+        "Proceedings of the ACM on Programming Languages"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            6,
+            17
+          ]
+        ],
+        "date-time": "2025-06-17T12:46:10Z",
+        "timestamp": 1750164370000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://dl.acm.org/doi/10.1145/3586030"
+        }
+      },
+      "URL": "https://doi.org/10.1145/3586030",
+      "published": {
+        "date-parts": [
+          [
+            2023,
+            4,
+            6
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1016/j.jss.2023.111734",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1016%2Fj.jss.2023.111734",
+    "message": {
+      "publisher": "Elsevier BV",
+      "published-print": {
+        "date-parts": [
+          [
+            2023,
+            9
+          ]
+        ]
+      },
+      "DOI": "10.1016/j.jss.2023.111734",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [
+          [
+            2023,
+            5,
+            2
+          ]
+        ],
+        "date-time": "2023-05-02T15:22:26Z",
+        "timestamp": 1683040946000
+      },
+      "page": "111734",
+      "title": [
+        "GitHub Copilot AI pair programmer: Asset or Liability?"
+      ],
+      "volume": "203",
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0003-1900-2850",
+          "authenticated-orcid": false,
+          "given": "Arghavan",
+          "family": "Moradi Dakhel",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-4411-0810",
+          "authenticated-orcid": false,
+          "given": "Vahid",
+          "family": "Majdinasab",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Amin",
+          "family": "Nikanjam",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-5704-4173",
+          "authenticated-orcid": false,
+          "given": "Foutse",
+          "family": "Khomh",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-2990-1078",
+          "authenticated-orcid": false,
+          "given": "Michel C.",
+          "family": "Desmarais",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Zhen Ming (Jack)",
+          "family": "Jiang",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "container-title": [
+        "Journal of Systems and Software"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            9,
+            27
+          ]
+        ],
+        "date-time": "2025-09-27T23:33:34Z",
+        "timestamp": 1759016014000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://linkinghub.elsevier.com/retrieve/pii/S0164121223001292"
+        }
+      },
+      "URL": "https://doi.org/10.1016/j.jss.2023.111734",
+      "published": {
+        "date-parts": [
+          [
+            2023,
+            9
+          ]
+        ]
+      },
+      "article-number": "111734"
+    }
+  },
+  {
+    "requested_doi": "10.1145/3524842.3528470",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1145%2F3524842.3528470",
+    "message": {
+      "publisher": "ACM",
+      "published-print": {
+        "date-parts": [
+          [
+            2022,
+            5,
+            23
+          ]
+        ]
+      },
+      "DOI": "10.1145/3524842.3528470",
+      "type": "proceedings-article",
+      "created": {
+        "date-parts": [
+          [
+            2022,
+            10,
+            17
+          ]
+        ],
+        "date-time": "2022-10-17T20:08:36Z",
+        "timestamp": 1666037316000
+      },
+      "page": "1-5",
+      "title": [
+        "An empirical evaluation of GitHub copilot's code suggestions"
+      ],
+      "author": [
+        {
+          "given": "Nhan",
+          "family": "Nguyen",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "University of Alberta, Edmonton, AB, Canada"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Sarah",
+          "family": "Nadi",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "University of Alberta, Edmonton, AB, Canada"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2022,
+            10,
+            17
+          ]
+        ]
+      },
+      "container-title": [
+        "Proceedings of the 19th International Conference on Mining Software Repositories"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            6,
+            17
+          ]
+        ],
+        "date-time": "2025-06-17T14:09:35Z",
+        "timestamp": 1750169375000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://dl.acm.org/doi/10.1145/3524842.3528470"
+        }
+      },
+      "URL": "https://doi.org/10.1145/3524842.3528470",
+      "published": {
+        "date-parts": [
+          [
+            2022,
+            5,
+            23
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1145/3663529.3663801",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1145%2F3663529.3663801",
+    "message": {
+      "publisher": "ACM",
+      "published-print": {
+        "date-parts": [
+          [
+            2024,
+            7,
+            10
+          ]
+        ]
+      },
+      "DOI": "10.1145/3663529.3663801",
+      "type": "proceedings-article",
+      "created": {
+        "date-parts": [
+          [
+            2024,
+            7,
+            10
+          ]
+        ],
+        "date-time": "2024-07-10T15:43:13Z",
+        "timestamp": 1720626193000
+      },
+      "page": "572-576",
+      "title": [
+        "ChatUniTest: A Framework for LLM-Based Test Generation"
+      ],
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0009-0007-6805-9104",
+          "authenticated-orcid": false,
+          "given": "Yinghao",
+          "family": "Chen",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Zhejiang University, Ningbo, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0009-0003-9884-9685",
+          "authenticated-orcid": false,
+          "given": "Zehao",
+          "family": "Hu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Zhejiang University, Ningbo, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-1273-2992",
+          "authenticated-orcid": false,
+          "given": "Chen",
+          "family": "Zhi",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Zhejiang University, Ningbo, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0001-7630-8667",
+          "authenticated-orcid": false,
+          "given": "Junxiao",
+          "family": "Han",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Hangzhou City University, Hangzhou, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0001-5015-6095",
+          "authenticated-orcid": false,
+          "given": "Shuiguang",
+          "family": "Deng",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Zhejiang University, Hangzhou, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-1441-1412",
+          "authenticated-orcid": false,
+          "given": "Jianwei",
+          "family": "Yin",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Zhejiang University, Hangzhou, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2024,
+            7,
+            10
+          ]
+        ]
+      },
+      "container-title": [
+        "Companion Proceedings of the 32nd ACM International Conference on the Foundations of Software Engineering"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            6,
+            18
+          ]
+        ],
+        "date-time": "2025-06-18T19:44:21Z",
+        "timestamp": 1750275861000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://dl.acm.org/doi/10.1145/3663529.3663801"
+        }
+      },
+      "URL": "https://doi.org/10.1145/3663529.3663801",
+      "published": {
+        "date-parts": [
+          [
+            2024,
+            7,
+            10
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1145/3597503.3629127",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "requested_doi": "10.1109/TSE.2024.3368208",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1109%2FTSE.2024.3368208",
+    "message": {
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "issue": "4",
+      "published-print": {
+        "date-parts": [
+          [
+            2024,
+            4
+          ]
+        ]
+      },
+      "DOI": "10.1109/tse.2024.3368208",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [
+          [
+            2024,
+            2,
+            20
+          ]
+        ],
+        "date-time": "2024-02-20T13:49:58Z",
+        "timestamp": 1708436998000
+      },
+      "page": "911-936",
+      "title": [
+        "Software Testing With Large Language Models: Survey, Landscape, and Vision"
+      ],
+      "volume": "50",
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0002-9941-6713",
+          "authenticated-orcid": false,
+          "given": "Junjie",
+          "family": "Wang",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "State Key Laboratory of Intelligent Game, Institute of Software Chinese Academy of Sciences, University of Chinese Academy of Sciences, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-1026-9516",
+          "authenticated-orcid": false,
+          "given": "Yuchao",
+          "family": "Huang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "State Key Laboratory of Intelligent Game, Institute of Software Chinese Academy of Sciences, University of Chinese Academy of Sciences, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-2011-9618",
+          "authenticated-orcid": false,
+          "given": "Chunyang",
+          "family": "Chen",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Technical University of Munich, Munich, Germany"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0001-9709-8275",
+          "authenticated-orcid": false,
+          "given": "Zhe",
+          "family": "Liu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "State Key Laboratory of Intelligent Game, Institute of Software Chinese Academy of Sciences, University of Chinese Academy of Sciences, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-0531-5717",
+          "authenticated-orcid": false,
+          "given": "Song",
+          "family": "Wang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "York University, Toronto, ON, Canada"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-2618-5694",
+          "authenticated-orcid": false,
+          "given": "Qing",
+          "family": "Wang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "State Key Laboratory of Intelligent Game, Institute of Software Chinese Academy of Sciences, University of Chinese Academy of Sciences, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "container-title": [
+        "IEEE Transactions on Software Engineering"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2026,
+            6,
+            11
+          ]
+        ],
+        "date-time": "2026-06-11T05:02:31Z",
+        "timestamp": 1781154151000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://ieeexplore.ieee.org/document/10440574/"
+        }
+      },
+      "URL": "https://doi.org/10.1109/tse.2024.3368208",
+      "published": {
+        "date-parts": [
+          [
+            2024,
+            4
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1145/3520312.3534864",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1145%2F3520312.3534864",
+    "message": {
+      "publisher": "ACM",
+      "published-print": {
+        "date-parts": [
+          [
+            2022,
+            6,
+            13
+          ]
+        ]
+      },
+      "DOI": "10.1145/3520312.3534864",
+      "type": "proceedings-article",
+      "created": {
+        "date-parts": [
+          [
+            2022,
+            6,
+            10
+          ]
+        ],
+        "date-time": "2022-06-10T11:14:19Z",
+        "timestamp": 1654859659000
+      },
+      "page": "21-29",
+      "title": [
+        "Productivity assessment of neural code completion"
+      ],
+      "author": [
+        {
+          "given": "Albert",
+          "family": "Ziegler",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "GitHub, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Eirini",
+          "family": "Kalliamvakou",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "GitHub, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "X. Alice",
+          "family": "Li",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "GitHub, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Andrew",
+          "family": "Rice",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "GitHub, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Devon",
+          "family": "Rifkin",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "GitHub, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Shawn",
+          "family": "Simister",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "GitHub, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Ganesh",
+          "family": "Sittampalam",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "GitHub, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Edward",
+          "family": "Aftandilian",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "GitHub, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2022,
+            6,
+            13
+          ]
+        ]
+      },
+      "container-title": [
+        "Proceedings of the 6th ACM SIGPLAN International Symposium on Machine Programming"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            6,
+            17
+          ]
+        ],
+        "date-time": "2025-06-17T14:09:31Z",
+        "timestamp": 1750169371000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://dl.acm.org/doi/10.1145/3520312.3534864"
+        }
+      },
+      "URL": "https://doi.org/10.1145/3520312.3534864",
+      "published": {
+        "date-parts": [
+          [
+            2022,
+            6,
+            13
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1145/3551349.3556903",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1145%2F3551349.3556903",
+    "message": {
+      "publisher": "ACM",
+      "published-print": {
+        "date-parts": [
+          [
+            2022,
+            10,
+            10
+          ]
+        ]
+      },
+      "DOI": "10.1145/3551349.3556903",
+      "type": "proceedings-article",
+      "created": {
+        "date-parts": [
+          [
+            2023,
+            1,
+            5
+          ]
+        ],
+        "date-time": "2023-01-05T20:43:54Z",
+        "timestamp": 1672951434000
+      },
+      "page": "1-12",
+      "title": [
+        "CrystalBLEU: Precisely and Efficiently Measuring the Similarity of Code"
+      ],
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0001-9763-8147",
+          "authenticated-orcid": false,
+          "given": "Aryaz",
+          "family": "Eghbali",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "University of Stuttgart, Germany"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-1623-498X",
+          "authenticated-orcid": false,
+          "given": "Michael",
+          "family": "Pradel",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "University of Stuttgart, Germany"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2023,
+            1,
+            5
+          ]
+        ]
+      },
+      "container-title": [
+        "Proceedings of the 37th IEEE/ACM International Conference on Automated Software Engineering"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            8,
+            22
+          ]
+        ],
+        "date-time": "2025-08-22T08:26:21Z",
+        "timestamp": 1755851181000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://dl.acm.org/doi/10.1145/3551349.3556903"
+        }
+      },
+      "URL": "https://doi.org/10.1145/3551349.3556903",
+      "published": {
+        "date-parts": [
+          [
+            2022,
+            10,
+            10
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1016/j.infsof.2024.107583",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1016%2Fj.infsof.2024.107583",
+    "message": {
+      "publisher": "Elsevier BV",
+      "published-print": {
+        "date-parts": [
+          [
+            2025,
+            1
+          ]
+        ]
+      },
+      "DOI": "10.1016/j.infsof.2024.107583",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [
+          [
+            2024,
+            9,
+            19
+          ]
+        ],
+        "date-time": "2024-09-19T16:29:26Z",
+        "timestamp": 1726763366000
+      },
+      "page": "107583",
+      "title": [
+        "Mapping DevOps capabilities to the software life cycle: A systematic literature review"
+      ],
+      "volume": "177",
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0003-2649-8102",
+          "authenticated-orcid": false,
+          "given": "Ricardo",
+          "family": "Amaro",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-3001-5911",
+          "authenticated-orcid": false,
+          "given": "Rúben",
+          "family": "Pereira",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-0489-4465",
+          "authenticated-orcid": false,
+          "given": "Miguel Mira",
+          "family": "da Silva",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "container-title": [
+        "Information and Software Technology"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            1,
+            28
+          ]
+        ],
+        "date-time": "2025-01-28T20:40:58Z",
+        "timestamp": 1738096858000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://linkinghub.elsevier.com/retrieve/pii/S0950584924001885"
+        }
+      },
+      "URL": "https://doi.org/10.1016/j.infsof.2024.107583",
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            1
+          ]
+        ]
+      },
+      "article-number": "107583"
+    }
+  },
+  {
+    "requested_doi": "10.3390/ai6090206",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.3390%2Fai6090206",
+    "message": {
+      "publisher": "MDPI AG",
+      "issue": "9",
+      "DOI": "10.3390/ai6090206",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [
+          [
+            2025,
+            8,
+            28
+          ]
+        ],
+        "date-time": "2025-08-28T15:03:14Z",
+        "timestamp": 1756393394000
+      },
+      "page": "206",
+      "title": [
+        "Unlocking the Potential of the Prompt Engineering Paradigm in Software Engineering: A Systematic Literature Review"
+      ],
+      "volume": "6",
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0003-1839-1081",
+          "authenticated-orcid": false,
+          "given": "Irdina Wanda",
+          "family": "Syahputri",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Faculty of Computer Science, Universitas Indonesia, Depok 16424, Indonesia"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Eko K.",
+          "family": "Budiardjo",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Faculty of Computer Science, Universitas Indonesia, Depok 16424, Indonesia"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-4281-3731",
+          "authenticated-orcid": false,
+          "given": "Panca O. Hadi",
+          "family": "Putra",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Faculty of Computer Science, Universitas Indonesia, Depok 16424, Indonesia"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2025,
+            8,
+            28
+          ]
+        ]
+      },
+      "container-title": [
+        "AI"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            10,
+            9
+          ]
+        ],
+        "date-time": "2025-10-09T18:34:41Z",
+        "timestamp": 1760034881000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://www.mdpi.com/2673-2688/6/9/206"
+        }
+      },
+      "URL": "https://doi.org/10.3390/ai6090206",
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            8,
+            28
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1109/JAS.2024.124971",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1109%2FJAS.2024.124971",
+    "message": {
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "issue": "2",
+      "published-print": {
+        "date-parts": [
+          [
+            2025,
+            2
+          ]
+        ]
+      },
+      "DOI": "10.1109/jas.2024.124971",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [
+          [
+            2025,
+            1,
+            20
+          ]
+        ],
+        "date-time": "2025-01-20T13:59:57Z",
+        "timestamp": 1737381597000
+      },
+      "page": "317-334",
+      "title": [
+        "When Software Security Meets Large Language Models: A Survey"
+      ],
+      "volume": "12",
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0002-0647-4747",
+          "authenticated-orcid": false,
+          "given": "Xiaogang",
+          "family": "Zhu",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "School of Computer and Mathematical Sciences, University of Adelaide,Adelaide,South Australia,Australia,5005"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-2548-6348",
+          "authenticated-orcid": false,
+          "given": "Wei",
+          "family": "Zhou",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "School of Science, Computing and Engineering Technologies, Swinburne University of Technology,Hawthorn,VIC,Australia,3122"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-7207-0716",
+          "authenticated-orcid": false,
+          "given": "Qing-Long",
+          "family": "Han",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "School of Science, Computing and Engineering Technologies, Swinburne University of Technology,Hawthorn,VIC,Australia,3122"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-6305-1740",
+          "authenticated-orcid": false,
+          "given": "Wanlun",
+          "family": "Ma",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "School of Science, Computing and Engineering Technologies, Swinburne University of Technology,Hawthorn,VIC,Australia,3122"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-0655-666X",
+          "authenticated-orcid": false,
+          "given": "Sheng",
+          "family": "Wen",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "School of Science, Computing and Engineering Technologies, Swinburne University of Technology,Hawthorn,VIC,Australia,3122"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0001-5252-0831",
+          "authenticated-orcid": false,
+          "given": "Yang",
+          "family": "Xiang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "School of Science, Computing and Engineering Technologies, Swinburne University of Technology,Hawthorn,VIC,Australia,3122"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "container-title": [
+        "IEEE/CAA Journal of Automatica Sinica"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            1,
+            21
+          ]
+        ],
+        "date-time": "2025-01-21T01:52:14Z",
+        "timestamp": 1737424334000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://ieeexplore.ieee.org/document/10846956/"
+        }
+      },
+      "URL": "https://doi.org/10.1109/jas.2024.124971",
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            2
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1145/3712005",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1145%2F3712005",
+    "message": {
+      "publisher": "Association for Computing Machinery (ACM)",
+      "issue": "5",
+      "published-print": {
+        "date-parts": [
+          [
+            2025,
+            6,
+            30
+          ]
+        ]
+      },
+      "DOI": "10.1145/3712005",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [
+          [
+            2025,
+            1,
+            13
+          ]
+        ],
+        "date-time": "2025-01-13T11:03:31Z",
+        "timestamp": 1736766211000
+      },
+      "page": "1-30",
+      "title": [
+        "The Current Challenges of Software Engineering in the Era of Large Language Models"
+      ],
+      "volume": "34",
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0003-4774-2434",
+          "authenticated-orcid": false,
+          "given": "Cuiyun",
+          "family": "Gao",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Harbin Institute of Technology Shenzhen, Shenzhen, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-0093-3292",
+          "authenticated-orcid": false,
+          "given": "Xing",
+          "family": "Hu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Zhejiang University, Hangzhou, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0009-0006-2695-2968",
+          "authenticated-orcid": false,
+          "given": "Shan",
+          "family": "Gao",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Huawei Technologies Co Ltd China, Hangzhou, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-6302-3256",
+          "authenticated-orcid": false,
+          "given": "Xin",
+          "family": "Xia",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Software Engineering Application Lab, Huawei Technologies Co Ltd, Hangzhou, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-1087-226X",
+          "authenticated-orcid": false,
+          "given": "Zhi",
+          "family": "Jin",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Peking University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2025,
+            5,
+            27
+          ]
+        ]
+      },
+      "container-title": [
+        "ACM Transactions on Software Engineering and Methodology"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            6,
+            18
+          ]
+        ],
+        "date-time": "2025-06-18T21:18:10Z",
+        "timestamp": 1750281490000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://dl.acm.org/doi/10.1145/3712005"
+        }
+      },
+      "URL": "https://doi.org/10.1145/3712005",
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            5,
+            27
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1145/3771933",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1145%2F3771933",
+    "message": {
+      "publisher": "Association for Computing Machinery (ACM)",
+      "issue": "8",
+      "published-print": {
+        "date-parts": [
+          [
+            2026,
+            8,
+            31
+          ]
+        ]
+      },
+      "DOI": "10.1145/3771933",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [
+          [
+            2025,
+            10,
+            16
+          ]
+        ],
+        "date-time": "2025-10-16T14:45:01Z",
+        "timestamp": 1760625901000
+      },
+      "page": "1-33",
+      "title": [
+        "Do Advanced Language Models Eliminate the Need for Prompt Engineering in Software Engineering?"
+      ],
+      "volume": "35",
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0009-0000-5208-4750",
+          "authenticated-orcid": false,
+          "given": "Guoqing",
+          "family": "Wang",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Key Laboratory of High Confidence Software Technologies (Peking University), Ministry of Education, School of Computer Science, Peking University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-9990-9120",
+          "authenticated-orcid": false,
+          "given": "Zeyu",
+          "family": "Sun",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "National Key Laboratory of Space Integrated Information System, Institute of Software, Chinese Academy of Sciences, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0009-0008-1322-5328",
+          "authenticated-orcid": false,
+          "given": "Sixiang",
+          "family": "Ye",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Beijing University of Chemical Technology, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0009-0003-5318-8473",
+          "authenticated-orcid": false,
+          "given": "Zhihao",
+          "family": "Gong",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Key Laboratory of High Confidence Software Technologies (Peking University), Ministry of Education, School of Computer Science, Peking University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-1821-3170",
+          "authenticated-orcid": false,
+          "given": "Yizhou",
+          "family": "Chen",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Key Laboratory of High Confidence Software Technologies (Peking University), Ministry of Education, School of Computer Science, Peking University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-2035-0791",
+          "authenticated-orcid": false,
+          "given": "Yifan",
+          "family": "Zhao",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Key Laboratory of High Confidence Software Technologies (Peking University), Ministry of Education, School of Computer Science, Peking University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-1697-3451",
+          "authenticated-orcid": false,
+          "given": "Qingyuan",
+          "family": "Liang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Key Laboratory of High Confidence Software Technologies (Peking University), Ministry of Education, School of Computer Science, Peking University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0001-8295-303X",
+          "authenticated-orcid": false,
+          "given": "Dan",
+          "family": "Hao",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Key Laboratory of High Confidence Software Technologies (Peking University), Ministry of Education, School of Computer Science, Peking University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2026,
+            7,
+            17
+          ]
+        ]
+      },
+      "container-title": [
+        "ACM Transactions on Software Engineering and Methodology"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2026,
+            7,
+            17
+          ]
+        ],
+        "date-time": "2026-07-17T16:05:27Z",
+        "timestamp": 1784304327000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://dl.acm.org/doi/10.1145/3771933"
+        }
+      },
+      "URL": "https://doi.org/10.1145/3771933",
+      "published": {
+        "date-parts": [
+          [
+            2026,
+            7,
+            17
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.1016/j.infsof.2025.107697",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1016%2Fj.infsof.2025.107697",
+    "message": {
+      "publisher": "Elsevier BV",
+      "published-print": {
+        "date-parts": [
+          [
+            2025,
+            5
+          ]
+        ]
+      },
+      "DOI": "10.1016/j.infsof.2025.107697",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [
+          [
+            2025,
+            2,
+            18
+          ]
+        ],
+        "date-time": "2025-02-18T12:54:13Z",
+        "timestamp": 1739883253000
+      },
+      "page": "107697",
+      "title": [
+        "Formal requirements engineering and large language models: A two-way roadmap"
+      ],
+      "volume": "181",
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0002-0636-5663",
+          "authenticated-orcid": false,
+          "given": "Alessio",
+          "family": "Ferrari",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0001-7922-4936",
+          "authenticated-orcid": false,
+          "given": "Paola",
+          "family": "Spoletini",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "container-title": [
+        "Information and Software Technology"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2025,
+            3,
+            8
+          ]
+        ],
+        "date-time": "2025-03-08T13:19:53Z",
+        "timestamp": 1741439993000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://linkinghub.elsevier.com/retrieve/pii/S0950584925000369"
+        }
+      },
+      "URL": "https://doi.org/10.1016/j.infsof.2025.107697",
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            5
+          ]
+        ]
+      },
+      "article-number": "107697"
+    }
+  },
+  {
+    "requested_doi": "10.1145/3747588",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.1145%2F3747588",
+    "message": {
+      "publisher": "Association for Computing Machinery (ACM)",
+      "issue": "2",
+      "published-print": {
+        "date-parts": [
+          [
+            2026,
+            2,
+            28
+          ]
+        ]
+      },
+      "DOI": "10.1145/3747588",
+      "type": "journal-article",
+      "created": {
+        "date-parts": [
+          [
+            2025,
+            7,
+            8
+          ]
+        ],
+        "date-time": "2025-07-08T09:25:42Z",
+        "timestamp": 1751966742000
+      },
+      "page": "1-72",
+      "title": [
+        "A Survey on Large Language Models for Code Generation"
+      ],
+      "volume": "35",
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0003-0835-9686",
+          "authenticated-orcid": false,
+          "given": "Juyong",
+          "family": "Jiang",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "The Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0009-0003-9447-9496",
+          "authenticated-orcid": false,
+          "given": "Fan",
+          "family": "Wang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "The Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-5904-3641",
+          "authenticated-orcid": false,
+          "given": "Jiasi",
+          "family": "Shen",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "The Hong Kong University of Science and Technology, Hong Kong, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0009-0000-2123-2925",
+          "authenticated-orcid": false,
+          "given": "Sungju",
+          "family": "Kim",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "NAVER Cloud, Seoul, South Korea"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-4478-9720",
+          "authenticated-orcid": false,
+          "given": "Sunghun",
+          "family": "Kim",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "The Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published-online": {
+        "date-parts": [
+          [
+            2026,
+            1,
+            21
+          ]
+        ]
+      },
+      "container-title": [
+        "ACM Transactions on Software Engineering and Methodology"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2026,
+            1,
+            21
+          ]
+        ],
+        "date-time": "2026-01-21T16:33:12Z",
+        "timestamp": 1769013192000
+      },
+      "resource": {
+        "primary": {
+          "URL": "https://dl.acm.org/doi/10.1145/3747588"
+        }
+      },
+      "URL": "https://doi.org/10.1145/3747588",
+      "published": {
+        "date-parts": [
+          [
+            2026,
+            1,
+            21
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "requested_doi": "10.52202/079017-1601",
+    "retrieved": "2026-11-03",
+    "source": "https://api.crossref.org/works/10.52202%2F079017-1601",
+    "message": {
+      "publisher": "Neural Information Processing Systems Foundation, Inc. (NeurIPS)",
+      "published-print": {
+        "date-parts": [
+          [
+            2024
+          ]
+        ]
+      },
+      "DOI": "10.52202/079017-1601",
+      "type": "proceedings-article",
+      "created": {
+        "date-parts": [
+          [
+            2025,
+            11,
+            3
+          ]
+        ],
+        "date-time": "2025-11-03T11:20:56Z",
+        "timestamp": 1762168856000
+      },
+      "page": "50528-50652",
+      "title": [
+        "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering"
+      ],
+      "author": [
+        {
+          "given": "John",
+          "family": "Yang",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Carlos",
+          "family": "Jimenez",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Alexander",
+          "family": "Wettig",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Kilian",
+          "family": "Lieret",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Shunyu",
+          "family": "Yao",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Karthik",
+          "family": "Narasimhan",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Ofir",
+          "family": "Press",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "container-title": [
+        "Advances in Neural Information Processing Systems 37"
+      ],
+      "deposited": {
+        "date-parts": [
+          [
+            2026,
+            6,
+            19
+          ]
+        ],
+        "date-time": "2026-06-19T15:38:24Z",
+        "timestamp": 1781883504000
+      },
+      "resource": {
+        "primary": {
+          "URL": "http://www.proceedings.com/079017-1601.html"
+        }
+      },
+      "URL": "https://doi.org/10.52202/079017-1601",
+      "published": {
+        "date-parts": [
+          [
+            2024
+          ]
+        ]
+      }
+    }
+  }
+]

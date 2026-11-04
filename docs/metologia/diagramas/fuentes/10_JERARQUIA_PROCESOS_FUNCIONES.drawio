@@ -1,0 +1,701 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mxfile host="app.diagrams.net" agent="Codex · documentación derivada" type="device" compressed="false" pages="8">
+  <diagram id="10-p01" name="Vista general">
+    <mxGraphModel dx="1600" dy="1140" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1140" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Jerarquía de procesos adoptada para la trazabilidad" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1520" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1520" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx&#10;Original editable: 10_JERARQUIA_PROCESOS_FUNCIONES · Página: Vista general" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="1062" width="1520" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="MP-01 · Gestión del reclutamiento en el sistema" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="MP-01" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=swimlane;horizontal=1;startSize=45;container=1;collapsible=0;recursiveResize=0;align=left;verticalAlign=top;fillColor=#F8FAFC;" vertex="1" parent="1">
+            <mxGeometry x="45" y="210" width="990" height="740" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="MP-02 · Soporte transversal de interfaz" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="MP-02" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=swimlane;horizontal=1;startSize=45;container=1;collapsible=0;recursiveResize=0;align=left;verticalAlign=top;fillColor=#F8FAFC;" vertex="1" parent="1">
+            <mxGeometry x="1090" y="210" width="465" height="740" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[PROC] PR-01&#10;Requerimiento y aprobación" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="PR-01" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="n4">
+            <mxGeometry x="30" y="135" width="440" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n7" label="[PROC] PR-02&#10;Configuración y publicación de vacantes" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="PR-02" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="n4">
+            <mxGeometry x="510" y="135" width="440" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n8" label="[PROC] PR-03&#10;Cuenta y postulación" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="PR-03" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="n4">
+            <mxGeometry x="30" y="315" width="440" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[PROC] PR-04&#10;Evaluaciones y seguimiento" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="PR-04" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="n4">
+            <mxGeometry x="510" y="315" width="440" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n10" label="[PROC] PR-05&#10;Comparación, decisión humana y cierre" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="PR-05" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="n4">
+            <mxGeometry x="30" y="495" width="440" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n11" label="[PROC] PR-07&#10;Consulta operacional experimental" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="PR-07" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="n4">
+            <mxGeometry x="510" y="495" width="440" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[PROC] PR-06&#10;Componentes transversales de interfaz" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="PR-06" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="n5">
+            <mxGeometry x="25" y="230" width="415" height="150" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n13" label="Siete procedimientos → 33 actividades → 33 funciones. Detalle en las siete páginas siguientes.&#10;RF-29 conserva carácter experimental fuera de la línea base RF-01–27." sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="60" y="995" width="1470" height="68" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="10-p02" name="PR-01 · detalle">
+    <mxGraphModel dx="1760" dy="1130" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="1130" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="PR-01 · Requerimiento y aprobación" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1680" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1680" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx&#10;Original editable: 10_JERARQUIA_PROCESOS_FUNCIONES · Página: PR-01 · detalle" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="1052" width="1680" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="MP-01 → PR-01 · 6 actividades / 6 funciones" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="1640" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="[PROC] ACT-001&#10;TB-01 Registrar el requerimiento de personal" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-001" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="265" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[SIS] FUN-001 · JobRequestWorkflow::register&#10;RF-01" sourceRef="app/Services/JobRequests/JobRequestWorkflow.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-001" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="265" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e7" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n8" label="[PROC] ACT-002&#10;TB-02 Enviar el requerimiento a RR. HH." sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-002" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="385" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[SIS] FUN-002 · JobRequestWorkflow::submit&#10;RF-02" sourceRef="app/Services/JobRequests/JobRequestWorkflow.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-002" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="385" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e10" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n8" target="n9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n11" label="[PROC] ACT-003&#10;TB-03 Revisar el requerimiento y validarlo u observarlo" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-003" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="505" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[SIS] FUN-003 · JobRequestWorkflow::validate&#10;RF-02" sourceRef="app/Services/JobRequests/JobRequestWorkflow.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-003" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="505" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e13" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n11" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n14" label="[PROC] ACT-004&#10;TB-04 Corregir y reenviar el requerimiento observado" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-004" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="625" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n15" label="[SIS] FUN-004 · JobRequestWorkflow::correct&#10;RF-02" sourceRef="app/Services/JobRequests/JobRequestWorkflow.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-004" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="625" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e16" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n14" target="n15">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n17" label="[PROC] ACT-005&#10;TB-05 Aprobar o rechazar el requerimiento" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-005" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="745" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n18" label="[SIS] FUN-005 · JobRequestWorkflow::approve&#10;RF-03" sourceRef="app/Services/JobRequests/JobRequestWorkflow.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-005" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="745" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e19" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n17" target="n18">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n20" label="[PROC] ACT-006&#10;TB-06 Notificar el rechazo al área solicitante" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-006" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="865" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n21" label="[SIS] FUN-006 · JobRequestRejectedNotification::message&#10;RF-04" sourceRef="app/Notifications/JobRequestRejectedNotification.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-006" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="865" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e22" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n20" target="n21">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="10-p03" name="PR-02 · detalle">
+    <mxGraphModel dx="1760" dy="960" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="960" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="PR-02 · Configuración y publicación de vacantes" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1680" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1680" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx&#10;Original editable: 10_JERARQUIA_PROCESOS_FUNCIONES · Página: PR-02 · detalle" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="882" width="1680" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="MP-01 → PR-02 · 4 actividades / 4 funciones" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="1640" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="[PROC] ACT-007&#10;TB-07 Crear la vacante y registrar el perfil y los criterios ponderados" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-007" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="265" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[SIS] FUN-007 · VacancyService::create&#10;RF-05" sourceRef="app/Services/Vacancies/VacancyService.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-007" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="265" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e7" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n8" label="[PROC] ACT-008&#10;TB-08 Configurar la vacante" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-008" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="385" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[SIS] FUN-008 · VacancyService::update&#10;RF-06" sourceRef="app/Services/Vacancies/VacancyService.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-008" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="385" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e10" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n8" target="n9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n11" label="[PROC] ACT-009&#10;TB-09 Validar la configuración, las ponderaciones y los rangos" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-009" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="505" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[SIS] FUN-009 · VacancyValidator::issues&#10;RF-06,RF-20" sourceRef="app/Services/Vacancies/VacancyValidator.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-009" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="505" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e13" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n11" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n14" label="[PROC] ACT-010&#10;TB-10 Publicar la vacante en el portal de empleos" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-010" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="625" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n15" label="[SIS] FUN-010 · VacancyService::publish&#10;RF-07" sourceRef="app/Services/Vacancies/VacancyService.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-010" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="625" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e16" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n14" target="n15">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="10-p04" name="PR-03 · detalle">
+    <mxGraphModel dx="1760" dy="960" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="960" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="PR-03 · Cuenta y postulación" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1680" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1680" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx&#10;Original editable: 10_JERARQUIA_PROCESOS_FUNCIONES · Página: PR-03 · detalle" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="882" width="1680" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="MP-01 → PR-03 · 4 actividades / 4 funciones" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="1640" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="[PROC] ACT-011&#10;TB-11 Crear la cuenta e iniciar sesión" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-011" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="265" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[SIS] FUN-011 · CreateNewUser::create&#10;RF-08" sourceRef="app/Actions/Fortify/CreateNewUser.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-011" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="265" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e7" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n8" label="[PROC] ACT-012&#10;TB-12 Completar el perfil y cargar el CV" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-012" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="385" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[SIS] FUN-012 · CandidateCvRequest::rules&#10;RF-09" sourceRef="app/Http/Requests/Candidates/CandidateCvRequest.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-012" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="385" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e10" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n8" target="n9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n11" label="[PROC] ACT-013&#10;TB-13 Registrar la postulación" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-013" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="505" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[SIS] FUN-013 · ApplicationService::apply&#10;RF-10" sourceRef="app/Services/Applications/ApplicationService.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-013" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="505" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e13" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n11" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n14" label="[PROC] ACT-014&#10;TB-14 Confirmar la postulación" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-014" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="625" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n15" label="[SIS] FUN-014 · ApplicationReceivedNotification::message&#10;RF-11" sourceRef="app/Notifications/ApplicationReceivedNotification.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-014" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="625" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e16" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n14" target="n15">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="10-p05" name="PR-04 · detalle">
+    <mxGraphModel dx="1760" dy="1490" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="1490" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="PR-04 · Evaluaciones y seguimiento" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1680" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1680" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx&#10;Original editable: 10_JERARQUIA_PROCESOS_FUNCIONES · Página: PR-04 · detalle" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="1412" width="1680" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="MP-01 → PR-04 · 9 actividades / 9 funciones" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="1640" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="[PROC] ACT-015&#10;TB-15 Revisar las postulaciones y el expediente" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-015" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="265" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[SIS] FUN-015 · VacancyApplicationController::__invoke&#10;RF-12" sourceRef="app/Http/Controllers/Applications/VacancyApplicationController.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-015" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="265" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e7" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n8" label="[PROC] ACT-016&#10;TB-16 Preseleccionar o descartar" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-016" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="385" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[SIS] FUN-016 · ApplicationStageService::shortlist&#10;RF-13" sourceRef="app/Services/Applications/ApplicationStageService.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-016" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="385" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e10" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n8" target="n9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n11" label="[PROC] ACT-017&#10;TB-17 Notificar el cambio de etapa al postulante" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-017" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="505" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[SIS] FUN-017 · ApplicationStageChangedNotification::message&#10;RF-15" sourceRef="app/Notifications/ApplicationStageChangedNotification.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-017" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="505" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e13" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n11" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n14" label="[PROC] ACT-018&#10;TB-18 Programar la evaluación" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-018" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="625" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n15" label="[SIS] FUN-018 · AssessmentScheduler::scheduleEvaluation&#10;RF-16" sourceRef="app/Services/Assessments/AssessmentScheduler.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-018" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="625" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e16" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n14" target="n15">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n17" label="[PROC] ACT-019&#10;TB-19 Enviar la convocatoria al postulante y el aviso al evaluador" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-019" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="745" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n18" label="[SIS] FUN-019 · AssessmentConvocationNotification::message&#10;RF-17" sourceRef="app/Notifications/AssessmentConvocationNotification.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-019" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="745" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e19" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n17" target="n18">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n20" label="[PROC] ACT-020&#10;TB-20 Programar la entrevista" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-020" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="865" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n21" label="[SIS] FUN-020 · AssessmentScheduler::scheduleInterview&#10;RF-18" sourceRef="app/Services/Assessments/AssessmentScheduler.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-020" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="865" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e22" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n20" target="n21">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n23" label="[PROC] ACT-021&#10;TB-21 Registrar puntajes, resultado y observaciones" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-021" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="985" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n24" label="[SIS] FUN-021 · AssessmentResultRecorder::recordEvaluation&#10;RF-19" sourceRef="app/Services/Assessments/AssessmentResultRecorder.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-021" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="985" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e25" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n23" target="n24">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n26" label="[PROC] ACT-022&#10;TB-22 Validar los puntajes dentro del rango de cada criterio" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-022" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="1105" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n27" label="[SIS] FUN-022 · ScoreSheetValidator::validate&#10;RF-20" sourceRef="app/Services/Assessments/ScoreSheetValidator.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-022" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="1105" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e28" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n26" target="n27">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n29" label="[PROC] ACT-023&#10;TB-23 Actualizar la etapa de la postulación (finalista o descarte)" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-023" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="1225" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n30" label="[SIS] FUN-023 · ApplicationStageService::moveTo&#10;RF-14" sourceRef="app/Services/Applications/ApplicationStageService.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-023" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="1225" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e31" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n29" target="n30">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="10-p06" name="PR-05 · detalle">
+    <mxGraphModel dx="1760" dy="1250" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="1250" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="PR-05 · Comparación, decisión humana y cierre" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1680" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1680" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx&#10;Original editable: 10_JERARQUIA_PROCESOS_FUNCIONES · Página: PR-05 · detalle" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="1172" width="1680" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="MP-01 → PR-05 · 7 actividades / 7 funciones" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="1640" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="[PROC] ACT-024&#10;TB-24 Calcular el ranking ponderado explicable" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-024" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="265" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[SIS] FUN-024 · RankingService::rank&#10;RF-21" sourceRef="app/Services/Ranking/RankingService.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-024" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="265" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e7" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n8" label="[PROC] ACT-025&#10;TB-25 Presentar la comparación de candidatos" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-025" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="385" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[SIS] FUN-025 · VacancyComparisonController::__invoke&#10;RF-22" sourceRef="app/Http/Controllers/Selection/VacancyComparisonController.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-025" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="385" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e10" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n8" target="n9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n11" label="[PROC] ACT-026&#10;TB-26 Registrar la decisión final humana" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-026" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="505" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[SIS] FUN-026 · FinalDecisionService::decide&#10;RF-23" sourceRef="app/Services/Selection/FinalDecisionService.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-026" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="505" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e13" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n11" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n14" label="[PROC] ACT-027&#10;TB-27 Registrar la selección del candidato decidido" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-027" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="625" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n15" label="[SIS] FUN-027 · SelectionRegistrationService::register&#10;RF-24" sourceRef="app/Services/Selection/SelectionRegistrationService.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-027" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="625" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e16" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n14" target="n15">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n17" label="[PROC] ACT-028&#10;TB-28 Cerrar la convocatoria (con selección)" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-028" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="745" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n18" label="[SIS] FUN-028 · VacancyClosureService::close&#10;RF-25" sourceRef="app/Services/Selection/VacancyClosureService.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-028" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="745" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e19" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n17" target="n18">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n20" label="[PROC] ACT-029&#10;TB-29 Notificar el resultado a cada postulante" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-029" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="865" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n21" label="[SIS] FUN-029 · ProcessResultNotification::message&#10;RF-26" sourceRef="app/Notifications/ProcessResultNotification.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-029" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="865" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e22" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n20" target="n21">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n23" label="[PROC] ACT-030&#10;TB-30 Registrar la auditoría de las acciones críticas" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-030" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="985" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n24" label="[SIS] FUN-030 · AuditLogger::record&#10;RF-27" sourceRef="app/Services/Audit/AuditLogger.php" evidenceState="VERIFICADO documentalmente" semanticId="FUN-030" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="985" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e25" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n23" target="n24">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="10-p07" name="PR-06 · detalle">
+    <mxGraphModel dx="1760" dy="960" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="960" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="PR-06 · Componentes transversales de interfaz" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1680" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1680" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx&#10;Original editable: 10_JERARQUIA_PROCESOS_FUNCIONES · Página: PR-06 · detalle" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="882" width="1680" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="MP-02 → PR-06 · 2 actividades / 2 funciones" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="1640" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="[PROC] ACT-031&#10;DataTable" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-031" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="265" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[SIS] FUN-031 · DataTable&#10;Transversal UI" sourceRef="resources/js/components/data-table.tsx" evidenceState="VERIFICADO documentalmente" semanticId="FUN-031" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="265" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e7" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n8" label="[PROC] ACT-032&#10;SidebarMenuSkeleton" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-032" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="385" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[SIS] FUN-032 · SidebarMenuSkeleton&#10;Transversal UI" sourceRef="resources/js/components/ui/sidebar.tsx" evidenceState="VERIFICADO documentalmente" semanticId="FUN-032" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="385" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e10" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n8" target="n9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="10-p08" name="PR-07 · detalle">
+    <mxGraphModel dx="1760" dy="960" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="960" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="PR-07 · Consulta operacional experimental" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1680" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1680" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx&#10;Original editable: 10_JERARQUIA_PROCESOS_FUNCIONES · Página: PR-07 · detalle" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="882" width="1680" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="MP-01 → PR-07 · 1 actividades / 1 funciones" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="1640" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="[PROC] ACT-033&#10;OperationalRiskCard" sourceRef="MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx" evidenceState="VERIFICADO documentalmente" semanticId="ACT-033" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="55" y="265" width="650" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[SIS] FUN-033 · OperationalRiskCard&#10;RF-29 EXPERIMENTAL, fuera de baseline" sourceRef="resources/js/components/vacancies/operational-risk-card.tsx" evidenceState="VERIFICADO documentalmente" semanticId="FUN-033" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="860" y="265" width="830" height="100" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e7" value="se implementa en" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

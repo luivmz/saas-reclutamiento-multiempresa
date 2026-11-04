@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1100" viewBox="0 0 1440 1100" role="img">
+  <title>02_DESPLIEGUE_DOCKER · Perfil E2E opcional</title>
+  <desc>CONFIGURACIÓN ESTÁTICA · Puertos son valores por defecto; variables pueden cambiarlos Fuente: docker-compose.yml; docker/php/; docs/sonarqube/README.md; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="430,265.0 430,490.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="430.0" y="369.5" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">app healthy</text>
+  <polyline points="430,490.0 540,490.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="485.0" y="482.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">healthy</text>
+  <polyline points="890,490.0 1000,490.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="945.0" y="482.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">healthy</text>
+  <polyline points="255.0,565 255,650 1175,650 1175.0,415" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="715.0" y="642.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">healthy</text>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Despliegue Docker local</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">CONFIGURACIÓN ESTÁTICA · Puertos son valores por defecto; variables pueden cambiarlos</tspan>
+  </text>
+  <text x="40" y="1038" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: docker-compose.yml; docker/php/; docs/sonarqube/README.md</tspan>
+    <tspan x="40" dy="19.52">Original editable: 02_DESPLIEGUE_DOCKER · Página: Perfil E2E opcional</tspan>
+  </text>
+  <rect x="430" y="210" width="550" height="110" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 962 210 L 962 228 L 980 228" fill="none" stroke="#414F60"/>
+  <text x="705.0" y="260.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="705.0" dy="0">[DOC] Perfil e2e desactivado por defecto</tspan>
+    <tspan x="705.0" dy="24.4">app base prepara volúmenes compartidos</tspan>
+  </text>
+  <rect x="80" y="415" width="350" height="150" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="255.0" y="473.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="255.0" dy="0">[SIS] app-e2e</tspan>
+    <tspan x="255.0" dy="24.4">APP_ENV=e2e</tspan>
+    <tspan x="255.0" dy="24.4">127.0.0.1:8001 → 8000</tspan>
+  </text>
+  <rect x="540" y="415" width="350" height="150" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="715.0" y="473.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="715.0" dy="0">[SIS] queue-e2e</tspan>
+    <tspan x="715.0" dy="24.4">APP_ENV=e2e</tspan>
+    <tspan x="715.0" dy="24.4">Sin puerto publicado</tspan>
+  </text>
+  <rect x="1000" y="415" width="350" height="150" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="1175.0" y="473.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1175.0" dy="0">[QA] cypress/included:15.3.0</tspan>
+    <tspan x="1175.0" dy="24.4">Electron</tspan>
+    <tspan x="1175.0" dy="24.4">baseUrl http://app-e2e:8000</tspan>
+  </text>
+  <rect x="90" y="780" width="1260" height="150" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1332 780 L 1332 798 L 1350 798" fill="none" stroke="#414F60"/>
+  <text x="720.0" y="838.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="720.0" dy="0">[DOC] Montajes Cypress: ./cypress y cypress.config.cjs (ro).</tspan>
+    <tspan x="720.0" dy="24.4">E2E documentado: reclutamiento_e2e y Redis DB 2/3 mediante .env.e2e; no se leyó ni creó ese archivo.</tspan>
+    <tspan x="720.0" dy="24.4">No se ejecutan tests, setup ni operaciones destructivas. ML local queda fuera de este Compose.</tspan>
+  </text>
+</svg>

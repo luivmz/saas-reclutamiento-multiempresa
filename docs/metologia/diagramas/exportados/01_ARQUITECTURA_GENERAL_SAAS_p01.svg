@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1160" viewBox="0 0 1440 1160" role="img">
+  <title>01_ARQUITECTURA_GENERAL_SAAS · Arquitectura y multitenencia</title>
+  <desc>ARQUITECTURA VERIFICADA EN ARCHIVOS · Runtime no consultado en esta tarea Fuente: README.md; Compose; app/Policies; BelongsToOrganization; MlRiskClient; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <rect x="40" y="185" width="1320" height="170" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="40" y1="230" x2="1360" y2="230" stroke="#34576E"/>
+  <text x="52" y="214" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="52" dy="0">CLIENTE · cinco roles humanos; sin selección automática</tspan>
+  </text>
+  <rect x="40" y="410" width="1320" height="330" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="40" y1="455" x2="1360" y2="455" stroke="#34576E"/>
+  <text x="52" y="439" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="52" dy="0">APLICACIÓN · monolito modular Laravel; frontend compilado, no microservicio</tspan>
+  </text>
+  <polyline points="580,287.5 760,287.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="670.0" y="279.5" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">interactúa</text>
+  <polyline points="1035.0,330 1035,385 1380,385 1380,465 255,465 255.0,475" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="817.5" y="457.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">petición / respuesta</text>
+  <polyline points="430,525.0 520,525.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="870,525.0 960,525.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="695.0,575 695.0,600.0 705.0,600.0 705.0,625" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+  <text x="695.0" y="579.5" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">control</text>
+  <polyline points="1135.0,575 1135,600 1390,600 1390,775 240,775 240.0,815" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="815.0" y="767.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">persistencia</text>
+  <polyline points="695.0,575 695,600 25,600 25,795 710,795 710.0,815" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="367.5" y="787.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">soporte</text>
+  <polyline points="1010,885.0 945.0,885.0 945.0,875.0 880,875.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+  <text x="977.5" y="877.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">cola</text>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Arquitectura general del SaaS</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">ARQUITECTURA VERIFICADA EN ARCHIVOS · Runtime no consultado en esta tarea</tspan>
+  </text>
+  <text x="40" y="1098" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: README.md; Compose; app/Policies; BelongsToOrganization; MlRiskClient</tspan>
+    <tspan x="40" dy="19.52">Original editable: 01_ARQUITECTURA_GENERAL_SAAS · Página: Arquitectura y multitenencia</tspan>
+  </text>
+  <rect x="70" y="245" width="510" height="85" fill="#FFF1D6" stroke="#684900" stroke-width="2"/>
+  <text x="325.0" y="283.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="325.0" dy="0">[H] Solicitante · RR. HH. · Dirección</tspan>
+    <tspan x="325.0" dy="24.4">Evaluador · Postulante</tspan>
+  </text>
+  <rect x="760" y="245" width="550" height="85" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1035.0" y="283.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1035.0" dy="0">[SIS] React + TypeScript</tspan>
+    <tspan x="1035.0" dy="24.4">Páginas en el navegador</tspan>
+  </text>
+  <rect x="80" y="475" width="350" height="100" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="255.0" y="520.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="255.0" dy="0">[SIS] Inertia</tspan>
+    <tspan x="255.0" dy="24.4">Contrato servidor–cliente</tspan>
+  </text>
+  <rect x="520" y="475" width="350" height="100" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="695.0" y="520.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="695.0" dy="0">[SIS] Laravel</tspan>
+    <tspan x="695.0" dy="24.4">Rutas / middleware / Policies</tspan>
+  </text>
+  <rect x="960" y="475" width="350" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1135.0" y="520.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1135.0" dy="0">[PROC] Servicios del dominio</tspan>
+    <tspan x="1135.0" dy="24.4">Requerimiento → cierre</tspan>
+  </text>
+  <rect x="180" y="625" width="1050" height="85" fill="#E7EEF3" stroke="#304E63" stroke-width="2"/>
+  <text x="705.0" y="663.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="705.0" dy="0">[DAT] organization_id + scope global + Policy (rol y organización)</tspan>
+    <tspan x="705.0" dy="24.4">Aislamiento lógico compartiendo BD; cuenta postulante sin organización</tspan>
+  </text>
+  <rect x="70" y="815" width="340" height="140" fill="#E7EEF3" stroke="#304E63" stroke-width="2"/>
+  <ellipse cx="240.0" cy="829" rx="170.0" ry="14" fill="#E7EEF3" stroke="#304E63" stroke-width="2"/>
+  <text x="240.0" y="868.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="240.0" dy="0">[DAT] PostgreSQL</tspan>
+    <tspan x="240.0" dy="24.4">Registro de negocio</tspan>
+    <tspan x="240.0" dy="24.4">Auditoría append-only</tspan>
+  </text>
+  <rect x="540" y="815" width="340" height="120" fill="#E7EEF3" stroke="#304E63" stroke-width="2"/>
+  <ellipse cx="710.0" cy="829" rx="170.0" ry="14" fill="#E7EEF3" stroke="#304E63" stroke-width="2"/>
+  <text x="710.0" y="870.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="710.0" dy="0">[DAT] Redis</tspan>
+    <tspan x="710.0" dy="24.4">Sesión / caché / cola</tspan>
+  </text>
+  <rect x="1010" y="815" width="340" height="140" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1180.0" y="868.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1180.0" dy="0">[SIS] queue</tspan>
+    <tspan x="1180.0" dy="24.4">Worker Laravel</tspan>
+    <tspan x="1180.0" dy="24.4">Notificaciones</tspan>
+  </text>
+  <rect x="70" y="985" width="1280" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1332 985 L 1332 1003 L 1350 1003" fill="none" stroke="#414F60"/>
+  <text x="710.0" y="1023.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="710.0" dy="0">[DOC] Extensión opcional RF-29: FastAPI local fuera de Compose; HTTP desde Laravel, con fallback.</tspan>
+    <tspan x="710.0" dy="24.4">Riesgo de demora del proceso, nunca puntuación o selección de personas.</tspan>
+  </text>
+</svg>

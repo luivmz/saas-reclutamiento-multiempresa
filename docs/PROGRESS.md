@@ -1,8 +1,28 @@
 # Progreso del proyecto
 
-Última actualización: 2026-10-20 (práctica local SonarQube V1/V2 documentada, pendiente de capturas/revisión; F34E CERRADA; G0 real NO APROBADA; G0-SBX APROBADA CON RESTRICCIONES; F35-SBX sintética HABILITADA, AÚN NO INICIADA; publicación sujeta a CI).
+Última actualización: 2026-11-03 (preparación académica documental para revisión; se preserva el estado técnico F34E y la práctica Sonar V1/V2; F35-SBX AÚN NO INICIADA; sin publicación).
 
 > El 24/09/2026 la cabecera pasó de «2026-09-23 (hotfix documental de la Fase 21)» a la Fase 23, y ese mismo día, de la Fase 23 a la Fase 24; el 25/09/2026, de la Fase 24 a la Fase 25, y ese mismo día, de la Fase 25 a la Fase 26. Hasta el 23/09/2026 decía «Última actualización: 2026-09-13 · Rama actual: `release/qa-final`», que era el estado al cerrar la Fase 12. Las secciones de v1.0 que siguen a la tabla de v1.1 se conservan tal como se escribieron.
+
+## Preparación académica integral — revisión documental (03/11/2026)
+
+- Rama `chore/sonarqube-macos-setup`, commit base `b345d9c97077d1589a06d98ddfa9c6879ded58d1`. Alcance: documentación y artefactos académicos; no implementación ni inicio de F35-SBX.
+- Cinco fuentes originales preservadas en `docs/metologia/platillas/`. Nuevos Word, PPT, matrices, guion, referencias, requisitos y brechas en [entregables-finales](metologia/entregables-finales/REPORTE_MAESTRO_ENTREGA.md).
+- Investigación dirigida de 20 publicaciones identificadas (19 DOI cotejados y actas oficiales ICLR); revisión por pares clasificada a nivel del venue para 13. Métodos/muestras no accesibles se declaran pendientes; sin indexaciones o resultados inventados. [Matriz científica](metologia/investigacion-ia/MATRIZ_ARTICULOS_IA.md).
+- Dos macroprocesos y siete procedimientos **PROPUESTOS** organizan 33 funciones presentes. Se preservan RF-01–27, 10 RNF académicos y 20 CU; no se mezclan con otros catálogos técnicos. AS-IS pendiente de validación institucional.
+- Metodología humano IA y variables para estudiar calidad del producto **PROPUESTAS**; no sustituyen la operacionalización histórica ni demuestran causalidad o ahorro de esfuerzo.
+- Sonar se utiliza como evidencia **HISTÓRICA**: cinco hallazgos FIXED; Gate OK con Small Changes y New Code Coverage 50 %, no 80 %. El aumento global por reclasificar tests no equivale a cobertura frontend real.
+- No se ejecutaron suites, scanner, migraciones o instalaciones. No cambios funcionales, dependencias, configuración o evidencias V1/V2. Sin staging, commit, push ni merge. Validación técnica de archivos completada y revisión humana pendiente registradas en el reporte maestro y las brechas.
+
+Ampliación documental: analizadas las cinco fuentes (incluidos PDF AI-DLC de ocho páginas y registro de 177 ejemplos ajenos). Añadida MATRIZ_DOBLE_ENTRADA_METODOLOGIA_IA con siete cruces requeridos, catálogo de veinte artículos y veintisiete criterios del registro. AI-DLC se contrasta sin atribuir adopción formal ni inventar Intents/Units/Bolts. Originales y evidencia histórica preservados.
+
+### Diagramas editables académicos — continuación (03/11/2026)
+
+- Misma rama y commit base; al recuperar el estado no había `.drawio` persistidos. Se reutilizaron fuentes y extracciones previas, sin reiniciar investigación ni reconstruir entregables.
+- [16 diagramas editables](metologia/diagramas/README.md), 50 páginas internas: arquitectura, Docker, procesos preliminar/propuesto, 20 CU, módulos, metodología humano IA, contraste AI-DLC, trazabilidad, jerarquía 2/7/33/33, QA, Sonar V1/V2, 20 artículos, variables, ejemplos RF y Git.
+- XML y esquema oficial válidos en 16/16; geometrías, referencias, conteos y vistas locales revisados. Se entregan 50 SVG y 50 PNG **auxiliares**, derivados de las mismas geometrías; no son exportaciones nativas. Apertura y exportación en diagrams.net pendientes de revisión humana: sin draw.io Desktop utilizable y modo embed web sin inicialización fiable.
+- Se conservan AS-IS pendiente de validación institucional, agrupaciones propuestas, AI-DLC como contraste y Sonar histórico con Small Changes/New Code 50 %, no 80 %. [Reporte y límites](metologia/diagramas/REPORTE_DIAGRAMAS_DRAWIO.md).
+- Sin cambios funcionales, dependencias, configuración, matrices, Word/PPT, plantillas o evidencias V1/V2; sin suites ni scanner por alcance exclusivamente documental. Sin staging, commit, push, merge o cambio de rama.
 
 ## Práctica local SonarQube — V1 congelada / V2 analizada (20/10/2026)
 
