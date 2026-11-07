@@ -94,3 +94,13 @@ Pruebas nuevas de la fase: **3**.
 | Regresión | — | `php artisan test` | **233 pruebas: 225 passed, 8 skipped, 0 failed (1045 assertions)** |
 | Build | — | `npm run build`, `npx tsc --noEmit` | OK, 0 errores |
 | Navegador | — | Recorrido visual por rol / flujo integral | **10/10 (49 capturas) / 12/12** |
+
+## Entrega académica (07/11/2026) — datos demo de ML-01 (DEF-18)
+
+Rama local `feature/entrega-academica-demo`, desde `2f6d0e0`. Solo cambia los datos de demostración; el contrato de RF-29 no cambia.
+
+| Defecto | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| DEF-18 | RED | `tests/Feature/Ml/DemoSeederOperationalRiskScenarioTest.php`, antes de cambiar `DemoSeeder` | **2 failed, 1 passed (9 assertions)**: `ModelNotFoundException`, porque no existía ninguna vacante del escenario. La guardia de identificadores de Cypress ya pasaba |
+| DEF-18 | GREEN | Ídem, con el escenario al final de `DemoSeeder` | **3 passed (19 assertions)** |
+| Regresión | — | `php artisan test`, `npm run build`, `npx tsc --noEmit`, Cypress y `pytest` de `ml-service` | Resultados en [`docs/entrega-final/informe-final.md`](entrega-final/informe-final.md) |

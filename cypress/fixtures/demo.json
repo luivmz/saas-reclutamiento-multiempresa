@@ -10,7 +10,8 @@
         "published": { "id": 2, "title": "Docente de Comunicación - Secundaria" },
         "ranking": { "id": 3, "title": "Auxiliar de Educación Inicial" },
         "closed": { "id": 4, "title": "Coordinador(a) de Tutoría" },
-        "orgB": { "id": 5, "title": "Asistente Administrativo (Demo B)" }
+        "orgB": { "id": 5, "title": "Asistente Administrativo (Demo B)" },
+        "riskScenario": { "id": 6, "title": "Docente de Ciencia y Tecnología - Secundaria" }
     },
     "applications": {
         "submitted": { "id": 1, "candidate": "Andrea Poma (ficticia)" },
