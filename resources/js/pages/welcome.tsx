@@ -1,5 +1,5 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import { ShieldCheck } from 'lucide-react';
+import { Activity, ShieldCheck } from 'lucide-react';
 import { RecruitmentDepth } from '@/components/experience-3d/recruitment-depth';
 import { Button } from '@/components/ui/button';
 import { dashboard, login } from '@/routes';
@@ -57,6 +57,41 @@ const steps = [
         title: 'Decisión',
         text: 'Una persona autorizada elige, justifica y registra. El sistema no selecciona por nadie.',
     },
+];
+
+/**
+ * Quién interviene. Son los roles reales del producto (RF-01 a RF-27), no
+ * personas: así se presenta el recorrido sin exponer cuentas ni contraseñas.
+ */
+const roles = [
+    {
+        role: 'Área solicitante',
+        does: 'Registra la necesidad de personal y responde a las observaciones.',
+    },
+    {
+        role: 'Recursos Humanos',
+        does: 'Valida el requerimiento, configura la vacante y sus criterios, y gestiona postulaciones y evaluaciones.',
+    },
+    {
+        role: 'Evaluación',
+        does: 'Registra puntajes y observaciones de las evaluaciones y entrevistas que tiene asignadas.',
+    },
+    {
+        role: 'Dirección',
+        does: 'Aprueba el requerimiento y toma la decisión final, con confirmación y justificación.',
+    },
+    {
+        role: 'Postulante',
+        does: 'Completa su perfil, postula y consulta el estado de su postulación.',
+    },
+];
+
+/** Lo que el producto se niega a hacer, dicho sin letra pequeña. */
+const limits = [
+    'No selecciona, descarta ni contrata a nadie automáticamente.',
+    'No puntúa ni ordena a las personas con inteligencia artificial.',
+    'No mezcla datos entre organizaciones: cada una ve solo los suyos.',
+    'No permite borrar ni reescribir el registro de auditoría.',
 ];
 
 export default function Welcome() {
@@ -168,30 +203,106 @@ export default function Welcome() {
                 </ol>
             </section>
 
-            <section className="border-t">
-                <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-10 sm:flex-row sm:items-start sm:px-6">
-                    <ShieldCheck
-                        className="text-primary size-6 shrink-0"
-                        aria-hidden="true"
-                    />
-                    <div className="space-y-2">
-                        <h2 className="font-serif text-lg font-semibold">
-                            Apoyo a la decisión, no reemplazo
-                        </h2>
-                        <p className="text-muted-foreground max-w-3xl text-sm leading-relaxed">
-                            El sistema calcula puntajes ponderados y ordena a
-                            los candidatos mostrando cómo obtuvo cada resultado.
-                            La selección final la registra siempre una persona
-                            autorizada, con su justificación, y queda auditada.
-                        </p>
-                        <p>
-                            <Link
-                                href={jobsIndex()}
-                                className="text-primary text-sm font-medium underline underline-offset-4"
+            <section
+                className="bg-surface border-t"
+                aria-labelledby="landing-roles-title"
+                data-cy="landing-roles"
+            >
+                <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+                    <h2
+                        id="landing-roles-title"
+                        className="font-serif text-2xl font-semibold tracking-tight"
+                    >
+                        Quién interviene
+                    </h2>
+                    <p className="text-muted-foreground mt-2 max-w-2xl text-sm leading-relaxed">
+                        Cada rol ve y hace solo lo que le corresponde, dentro de
+                        su organización.
+                    </p>
+                    <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                        {roles.map((item) => (
+                            <li
+                                key={item.role}
+                                className="bg-card rounded-xl border p-5"
                             >
-                                Ver las convocatorias vigentes
-                            </Link>
-                        </p>
+                                <h3 className="font-serif text-base font-semibold">
+                                    {item.role}
+                                </h3>
+                                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                                    {item.does}
+                                </p>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </section>
+
+            <section className="border-t">
+                <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2">
+                    <div
+                        className="flex flex-col gap-4 sm:flex-row sm:items-start"
+                        data-cy="landing-limits"
+                    >
+                        <ShieldCheck
+                            className="text-primary size-6 shrink-0"
+                            aria-hidden="true"
+                        />
+                        <div className="space-y-3">
+                            <h2 className="font-serif text-lg font-semibold">
+                                Apoyo a la decisión, no reemplazo
+                            </h2>
+                            <p className="text-muted-foreground max-w-3xl text-sm leading-relaxed">
+                                El sistema calcula puntajes ponderados y ordena
+                                a los candidatos mostrando cómo obtuvo cada
+                                resultado. La selección final la registra
+                                siempre una persona autorizada, con su
+                                justificación, y queda auditada.
+                            </p>
+                            <ul className="text-muted-foreground list-disc space-y-1 pl-5 text-sm leading-relaxed">
+                                {limits.map((limit) => (
+                                    <li key={limit}>{limit}</li>
+                                ))}
+                            </ul>
+                            <p>
+                                <Link
+                                    href={jobsIndex()}
+                                    className="text-primary text-sm font-medium underline underline-offset-4"
+                                >
+                                    Ver las convocatorias vigentes
+                                </Link>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        className="flex flex-col gap-4 sm:flex-row sm:items-start"
+                        data-cy="landing-ml-note"
+                    >
+                        <Activity
+                            className="text-primary size-6 shrink-0"
+                            aria-hidden="true"
+                        />
+                        <div className="space-y-3">
+                            <h2 className="font-serif text-lg font-semibold">
+                                Riesgo operacional del proceso{' '}
+                                <span className="text-muted-foreground font-sans text-sm font-normal">
+                                    (experimental)
+                                </span>
+                            </h2>
+                            <p className="text-muted-foreground max-w-3xl text-sm leading-relaxed">
+                                Un modelo experimental, entrenado solo con datos
+                                sintéticos, estima si un proceso de selección
+                                corre riesgo de no cerrar a tiempo. Mide el
+                                proceso, nunca a las personas postulantes, y no
+                                interviene en el ranking ni en la decisión.
+                            </p>
+                            <p className="text-muted-foreground max-w-3xl text-sm leading-relaxed">
+                                Es opcional: si el servicio no está disponible,
+                                la plataforma funciona igual. No está validado
+                                institucionalmente ni autorizado para
+                                producción.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>

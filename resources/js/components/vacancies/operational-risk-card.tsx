@@ -170,6 +170,31 @@ export function OperationalRiskCard({ vacancyId }: Props) {
                             {risk.message}
                         </p>
 
+                        {/* Transparencia del experimento: qué modelo
+                            respondió y desde qué umbral marca la señal. Sin
+                            ese contexto, un porcentaje se lee como más
+                            preciso de lo que es. */}
+                        {predictive &&
+                            risk.model_version !== null &&
+                            risk.threshold !== null && (
+                                <p
+                                    className="text-muted-foreground font-mono text-xs leading-relaxed break-all"
+                                    data-cy="operational-risk-model"
+                                >
+                                    Modelo {risk.model_version} · señal desde{' '}
+                                    {(risk.threshold * 100).toLocaleString(
+                                        'es-PE',
+                                        {
+                                            minimumFractionDigits: 1,
+                                            maximumFractionDigits: 1,
+                                        },
+                                    )}
+                                    %
+                                    {risk.freeze_fingerprint &&
+                                        ` · freeze ${risk.freeze_fingerprint.slice(0, 7)}`}
+                                </p>
+                            )}
+
                         <p className="text-muted-foreground flex items-start gap-2 border-t pt-4 text-xs leading-relaxed">
                             <Info
                                 className="mt-0.5 size-4 shrink-0"
