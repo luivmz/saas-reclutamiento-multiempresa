@@ -104,3 +104,19 @@ Rama local `feature/entrega-academica-demo`, desde `2f6d0e0`. Solo cambia los da
 | DEF-18 | RED | `tests/Feature/Ml/DemoSeederOperationalRiskScenarioTest.php`, antes de cambiar `DemoSeeder` | **2 failed, 1 passed (9 assertions)**: `ModelNotFoundException`, porque no existía ninguna vacante del escenario. La guardia de identificadores de Cypress ya pasaba |
 | DEF-18 | GREEN | Ídem, con el escenario al final de `DemoSeeder` | **3 passed (19 assertions)** |
 | Regresión | — | `php artisan test`, `npm run build`, `npx tsc --noEmit`, Cypress y `pytest` de `ml-service` | Resultados en [`docs/entrega-final/informe-final.md`](entrega-final/informe-final.md) |
+
+## Continuación (08/11/2026) — cronograma del proceso y prototipos de F37 y F38
+
+Rama local `feature/continuacion-f36-f40`, desde `f5003c9`. El cambio de producto es solo de interfaz: no toca el backend, las migraciones ni los contratos de RF-21, RF-23 y RF-29.
+
+| Cambio | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| Cronograma del proceso (`ProcessSchedule`) | RED | `resources/js/components/vacancies/process-schedule.test.tsx`, escrita antes del componente | **1 archivo fallido, 0 pruebas**: `Failed to resolve import "@/components/vacancies/process-schedule"` |
+| Ídem | GREEN | Ídem, con el componente y `toCalendarDate`/`calendarToday` en `lib/format.ts` | **11 passed** |
+| Plazo sin fecha en un proceso cerrado | RED | Dos pruebas nuevas en el mismo archivo, antes del arreglo | **2 failed, 10 passed**: el plazo sin fecha quedaba marcado como hito en curso, también con la vacante cerrada |
+| Ídem | GREEN | Ídem, sin considerar en curso un plazo sin fecha | **12 passed** |
+| Regresión de componentes | — | `npx vp test --run` | **7 archivos, 54 passed** |
+| Tipos y build | — | `npx tsc --noEmit`, `npm run build` | 0 errores; build correcto |
+| Cypress dirigido | — | E2E-20 (12 tests, 5 nuevos del cronograma) y los specs que visitan el detalle de la vacante | Resultados en [`entrega-final/informe-continuacion.md`](entrega-final/informe-continuacion.md) |
+| Prototipo de F37 (fuera del SaaS) | — | `docs/academico/preparacion-f37-evidencias/prototipo/test_f37_flujo_evidencias.py` | **19 passed**. No fue TDD: las pruebas se escribieron junto al prototipo. Se verificaron con 6 ablaciones; las 6 fallan. La sexta sobrevivía al principio y obligó a añadir una prueba |
+| Arnés de F38 (fuera del SaaS) | — | `docs/academico/preparacion-f38-ml02/evaluacion/test_f38_evaluar.py` | **17 passed**, con los valores de la salida degradada calculados a mano antes de ejecutar. 5 ablaciones; las 5 fallan |

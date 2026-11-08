@@ -156,6 +156,69 @@ describe('E2E-20 · Recorrido del guion de demostración', () => {
             });
     });
 
+    it('paso 2c: el cronograma del proceso dibuja las fechas registradas y marca un solo hito en curso', function () {
+        cy.loginAs('hr');
+        cy.visit(`/vacantes/${this.demo.vacancies.riskScenario.id}`);
+        cy.dataCy('process-schedule').within(() => {
+            cy.get('h2').should('contain', 'Cronograma del proceso');
+            cy.dataCy('process-milestone').should('have.length', 4);
+            cy.get('[data-milestone=publicacion]').should('have.attr', 'data-state', 'completado');
+            cy.get('[data-milestone=postulaciones]').should('have.attr', 'data-state', 'completado');
+            cy.get('[data-milestone=plazo]')
+                .should('have.attr', 'data-state', 'actual')
+                .and('have.attr', 'aria-current', 'step')
+                .invoke('text')
+                .should('match', /Faltan \d+ días/);
+            cy.get('[aria-current=step]').should('have.length', 1);
+            cy.dataCy('process-schedule-summary')
+                .invoke('text')
+                .should('match', /^Día \d+ de \d+ del plazo objetivo\.$/);
+        });
+        // El cronograma no estima nada: la estimación es la tarjeta de ML-01, aparte.
+        cy.dataCy('process-schedule').should('not.contain', '%').and('not.contain', 'riesgo');
+    });
+
+    it('paso 2c: en una vacante cerrada no queda ningún hito en curso, y en borrador las fechas son previstas', function () {
+        cy.loginAs('hr');
+        cy.visit(`/vacantes/${this.demo.vacancies.closed.id}`);
+        cy.get('[data-cy=process-milestone][data-milestone=cierre]').should('have.attr', 'data-state', 'completado');
+        cy.get('[data-cy=process-schedule] [aria-current=step]').should('not.exist');
+
+        cy.visit(`/vacantes/${this.demo.vacancies.draft.id}`);
+        cy.get('[data-cy=process-milestone][data-milestone=publicacion]')
+            .should('have.attr', 'aria-current', 'step')
+            .and('contain', 'Prevista');
+        cy.dataCy('process-schedule-summary').should('contain', 'todavía no está publicada');
+    });
+
+    ['light', 'dark'].forEach((tema) => {
+        it(`paso 2c: el cronograma es legible en tema ${tema} (WCAG 1.4.3)`, function () {
+            cy.loginAs('hr');
+            cy.visit(`/vacantes/${this.demo.vacancies.riskScenario.id}`, {
+                onBeforeLoad: (win) => win.localStorage.setItem('appearance', tema),
+            });
+            sinAnimaciones();
+            // El tema se aplicó de verdad: sin esto, el modo oscuro se mediría en claro sin avisar.
+            cy.get('html').should(tema === 'dark' ? 'have.class' : 'not.have.class', 'dark');
+            cy.get('[data-cy=process-milestone] p, [data-cy=process-schedule-summary]').each(($el) => {
+                expect(contraste($el[0]), $el.text().slice(0, 40)).to.be.at.least(4.5);
+            });
+        });
+    });
+
+    it('paso 2c: a 320 px el cronograma pasa a vertical sin desbordarse', function () {
+        cy.viewport(320, 640);
+        cy.loginAs('hr');
+        cy.visit(`/vacantes/${this.demo.vacancies.riskScenario.id}`);
+        cy.dataCy('process-schedule').then(($s) => {
+            expect($s[0].scrollWidth - $s[0].clientWidth).to.be.lessThan(2);
+        });
+        cy.get('[data-cy=process-milestone]').then(($m) => {
+            // En móvil los hitos se apilan: cada uno empieza debajo del anterior.
+            expect($m[1].getBoundingClientRect().top).to.be.greaterThan($m[0].getBoundingClientRect().bottom - 1);
+        });
+    });
+
     it('paso 3: el ranking muestra su cálculo y la decisión sigue pendiente', function () {
         cy.loginAs('hr');
         cy.visit(`/vacantes/${this.demo.vacancies.ranking.id}/comparacion`);

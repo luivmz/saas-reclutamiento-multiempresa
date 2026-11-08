@@ -6,6 +6,7 @@
 |---|---|
 | Informe final: estado real, pruebas y clasificación de cada parte | [`informe-final.md`](informe-final.md) |
 | Guion de exposición, paso a paso | [`guion-demo.md`](guion-demo.md) |
+| Continuación F36–F40 (rama `feature/continuacion-f36-f40`): estado por fase, pruebas y puntos de auditoría | [`informe-continuacion.md`](informe-continuacion.md) |
 | Usuarios y escenarios ficticios | [`../demo-users.md`](../demo-users.md) |
 | Expediente técnico de F36-SBX | [`../academico/f36-sbx/expediente-final/README.md`](../academico/f36-sbx/expediente-final/README.md) |
 | Prototipo de ML-02, estático | [`../academico/f36-sbx/prototipo-ml02/index.html`](../academico/f36-sbx/prototipo-ml02/index.html) |
