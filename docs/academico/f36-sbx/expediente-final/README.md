@@ -10,7 +10,7 @@
 |---|---|---|
 | D-10 · Vigencia del charter tras SEG | [`../decisiones-d10-d11/D-10_BORRADOR_Vigencia_Charter_F36SBX.md`](../decisiones-d10-d11/D-10_BORRADOR_Vigencia_Charter_F36SBX.md) | BORRADOR — PENDIENTE DE DECISIÓN (incorporado en `2f6d0e0`) |
 | D-11 · Autorizaciones operativas del contrato 10 | [`../decisiones-d10-d11/D-11_BORRADOR_Autorizaciones_Operativas_Contrato10.md`](../decisiones-d10-d11/D-11_BORRADOR_Autorizaciones_Operativas_Contrato10.md) | BORRADOR — PENDIENTE DE DECISIÓN (incorporado en `2f6d0e0`) |
-| Especificación S del sucesor B-01 | [`F36SBX_B01_Especificacion_S.md`](F36SBX_B01_Especificacion_S.md) | CANDIDATA A AUDITORÍA — NO IMPLEMENTADA |
+| Especificación S del sucesor B-01, versión 2 (T-09 medido, criterios de aceptación, pruebas y dependencias) | [`F36SBX_B01_Especificacion_S.md`](F36SBX_B01_Especificacion_S.md) | CANDIDATA A AUDITORÍA — NO IMPLEMENTADA |
 | Conclusiones que respaldan las evidencias | [`F36SBX_Conclusiones_Evidencias.md`](F36SBX_Conclusiones_Evidencias.md) | Documental |
 | Decisiones propuestas y su orden | [`F36SBX_Decisiones_Propuestas.md`](F36SBX_Decisiones_Propuestas.md) | BORRADOR — PENDIENTE DE DECISIÓN |
 | Preparación de F37-SBX y F38-SBX (ML-02) | [`../prototipo-ml02/README.md`](../prototipo-ml02/README.md) | PROTOTIPO DE DISEÑO, estático, y PROPUESTA de plan |
@@ -36,6 +36,6 @@ Los archivos de producto de esta entrega (`app/`, `database/`, `resources/`, `te
 
 ## 4. Para Codex (auditoría única final)
 
-- **Revisar:** D-10, D-11, S, las conclusiones (C-01 a C-19), las decisiones propuestas y el prototipo de ML-02.
+- **Revisar:** D-10, D-11, S, las conclusiones (C-01 a C-19), las decisiones propuestas y el prototipo de ML-02. En la rama de continuación, los puntos de S v2 están en su §12.
 - **Comprobar:** que nada de lo anterior afirme un acto, un voto, una delegación o un gate superado, y que el prototipo no implemente ninguna EI.
 - **Producto:** los cambios están descritos en el [informe de la entrega](../../../entrega-final/informe-final.md).

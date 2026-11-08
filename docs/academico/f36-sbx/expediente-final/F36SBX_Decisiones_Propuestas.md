@@ -14,7 +14,7 @@ Las decisiones del gate (FG-03, FG-10 y FG-12) siguen el gate v3: votos 3/3 de l
 |---|---|---|---|---|---|
 | 1 | **D-11**: procedimiento colegiado del contrato 10 | [`D-11_BORRADOR_…`](../decisiones-d10-d11/D-11_BORRADOR_Autorizaciones_Operativas_Contrato10.md) | P-01 a P-06 | P-01 (i) 3/3; P-02 (ii); P-03 (i) hasta una aclaración; P-04 (ii) con fecha de fin; P-05 (i); P-06 correo institucional | — |
 | 2 | **D-10**: vigencia del charter tras SEG | [`D-10_BORRADOR_…`](../decisiones-d10-d11/D-10_BORRADOR_Vigencia_Charter_F36SBX.md) | D10-1, D10-2 o D10-3, y la enmienda del Anexo 3 | D10-1 con la enmienda | Se puede decidir con tres actos aunque D-11 no esté adoptada |
-| 3 | **T-09**: base y anclaje después de SEG | [S §5.9](F36SBX_B01_Especificacion_S.md#59-base-anclaje-y-frz-después-de-seg-t-09-nuevo) | (a), (b) o (c) | (a), una rama de H desde `55f758e` | D-10 |
+| 3 | **T-09**: base y anclaje después de SEG | [S §5.9](F36SBX_B01_Especificacion_S.md#59-base-anclaje-y-frz-después-de-seg-t-09-nuevo) | (a-i), (a-ii), (b), (c) o (d) | (a-ii): una rama de H nueva desde el commit `55f758e`, con el paquete trasplantado (S §5.9.3; sondas V-1 a V-7) | D-10 solo para (b); las demás, D-02b |
 | 4 | **T-01 a T-08** | [S §9](F36SBX_B01_Especificacion_S.md#9-decisiones-de-diseño) | Las de S | Las recomendaciones de S | Auditoría de S |
 | 5 | **D-02b**: autorizar la implementación de B-01 | S §2 y §7 | Autorizar o no, con el alcance de S | Solo tras la auditoría favorable de S y con D-10 determinada | 2, 3 y 4 |
 | 6 | **D-08**: integrar la preparación AF6, H y Q, o sustituirla por S | `88fd3d2`, `1d5d6aa`, `061ba68` | Integrar, sustituir o archivar | Sustituir H por S como base de diseño y conservar AF6, H y Q como historia | — |
