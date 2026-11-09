@@ -152,6 +152,29 @@ class Flujo(unittest.TestCase):
             self.assertLessEqual(set(row), set(f37.AUDIT_FIELDS))
             self.assertNotIn('[SINTÉTICO]', json.dumps(row, ensure_ascii=False))
 
+    def test_un_campo_prohibido_se_rechaza_en_cualquier_escritura_y_con_cualquier_grafia(self):
+        s = store()
+        writes = [('registrar', params_for('registrar', 'APP-S1-002')),
+                  ('enlazar', {'evidence': 'EVD-S1-0001', 'criterion': 'CRI-S1-01-PLAN'}),
+                  ('retirar', {'evidence': 'EVD-S1-0001', 'reason': REASON})]
+        for (action, params), field in itertools.product(writes, ('candidate_score', 'candidateScore', 'CandidateName')):
+            ok, reason = s.decide('USR-S1-RRHH', action, {**params, field: 'x'})
+            self.assertFalse(ok, (action, field))
+            self.assertIn('campo prohibido', reason)
+
+    def test_el_tipo_fija_la_fuente_declarada(self):
+        s = store()
+        base = {'application': 'APP-S1-002', 'description': '[SINTÉTICO] Prueba.'}
+        for kind, source, expected in (('cv', 'documento_presentado', True), ('cv', 'sesion_asignada', False),
+                                       ('certificado', 'sesion_asignada', False),
+                                       ('transcripcion_revisada', 'sesion_asignada', True),
+                                       ('transcripcion_revisada', 'documento_presentado', False)):
+            self.assertEqual(s.decide('USR-S1-RRHH', 'registrar', {**base, 'type': kind, 'source': source})[0],
+                             expected, (kind, source))
+        self.assertFalse(s.decide('USR-S1-EVA-A', 'registrar', {'application': 'APP-S1-001', 'type': 'observacion',
+                                                                'source': 'documento_presentado',
+                                                                'description': '[SINTÉTICO] Prueba.'})[0])
+
     def test_una_denegacion_no_escribe_nada(self):
         s = store()
         before = (copy.deepcopy(s.evidence), copy.deepcopy(s.events))
@@ -178,7 +201,7 @@ class CoherenciaConElSaaS(unittest.TestCase):
     def test_el_prototipo_solo_importa_la_biblioteca_estandar(self):
         source = pathlib.Path(f37.__file__).read_text(encoding='utf-8')
         imports = set(re.findall(r'^(?:from|import) (\w+)', source, re.M))
-        self.assertLessEqual(imports, {'__future__', 'copy', 'json', 'pathlib', 'sys'})
+        self.assertLessEqual(imports, {'__future__', 'copy', 'json', 'pathlib', 're', 'sys'})
 
 
 class DatosFicticios(unittest.TestCase):

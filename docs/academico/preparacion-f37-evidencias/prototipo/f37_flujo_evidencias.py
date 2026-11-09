@@ -16,6 +16,7 @@ from __future__ import annotations
 import copy
 import json
 import pathlib
+import re
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -41,7 +42,9 @@ ROLE_ACTIONS = {
 EVIDENCE_TYPES = ('cv', 'certificado', 'transcripcion_revisada', 'observacion')
 TYPES_BY_ROLE = {'rrhh': frozenset({'cv', 'certificado', 'transcripcion_revisada'}),
                  'evaluador': frozenset({'observacion'})}
-SOURCES = ('documento_presentado', 'sesion_asignada')
+# R-09: cada tipo tiene una sola fuente declarada posible.
+SOURCE_BY_TYPE = {'cv': 'documento_presentado', 'certificado': 'documento_presentado',
+                  'transcripcion_revisada': 'sesion_asignada', 'observacion': 'sesion_asignada'}
 
 AUDIT_ACTION = {
     'registrar': 'evidencia.registrada',
@@ -58,6 +61,12 @@ def forbidden_tokens() -> frozenset[str]:
     """Los tokens prohibidos en nombres de campo son los del contrato v4: una sola fuente."""
     contract = json.loads(CONTRACT.read_text(encoding='utf-8'))
     return frozenset(contract['forbidden_field_tokens'])
+
+
+def field_tokens(field: str) -> list[str]:
+    """Palabras de un nombre de campo, con camelCase separado: `candidateScore` da candidate y score."""
+    spaced = re.sub(r'(?<=[a-z0-9])(?=[A-Z])', '_', field)
+    return [t for t in re.split(r'[_\W]+', spaced.lower()) if t]
 
 
 class Store:
@@ -144,6 +153,11 @@ class Store:
         # R-08: con la vacante cerrada, la evidencia queda congelada.
         if action in WRITES and vacancy['status'] == 'cerrada':
             return False, 'vacante cerrada: evidencia congelada'
+        # R-05: en ninguna escritura, un campo sobre la persona ni de juicio, con cualquier grafía.
+        if action in WRITES:
+            bad = sorted(k for k in params if any(t in self._tokens for t in field_tokens(k)))
+            if bad:
+                return False, f'campo prohibido: {bad}'
 
         current = self.state(evidence['id']) if evidence is not None else None
         if action == 'registrar':
@@ -184,15 +198,13 @@ class Store:
         return True, 'permitido'  # consultar e historial, ya filtrados por rol, organización y asignación
 
     def _check_new_item(self, actor: dict, params: dict) -> tuple[bool, str]:
-        bad = sorted(k for k in params if any(t in self._tokens for t in k.lower().split('_')))
-        if bad:  # R-05: ningún campo sobre la persona ni de juicio
-            return False, f'campo prohibido: {bad}'
-        if params.get('type') not in TYPES_BY_ROLE.get(actor['role'], frozenset()):
+        kind = params.get('type')
+        if kind not in TYPES_BY_ROLE.get(actor['role'], frozenset()):
             return False, 'tipo de evidencia no admitido para este rol'
         if not str(params.get('description', '')).startswith(SYNTHETIC_PREFIX):
             return False, 'el texto debe empezar por [SINTÉTICO]'
-        if params.get('source') not in SOURCES:
-            return False, 'fuente no admitida'
+        if params.get('source') != SOURCE_BY_TYPE[kind]:
+            return False, 'fuente no admitida para este tipo'
         return True, 'permitido'
 
     # ------------------------------------------------------------------ efecto

@@ -70,6 +70,11 @@
     {"id": "ESC-30", "rule": "cierre", "actor": "USR-S1-RRHH", "action": "consultar", "params": {"application": "APP-S9-999"}, "expected": "denegado"},
     {"id": "ESC-31", "rule": "R-03", "actor": "USR-S1-RRHH", "action": "desenlazar", "params": {"evidence": "EVD-S1-0001", "criterion": "CRI-S1-01-PLAN"}, "expected": "denegado"},
     {"id": "ESC-32", "rule": "R-02", "actor": "USR-S1-EVA-A", "action": "enlazar", "params": {"evidence": "EVD-S1-0003", "criterion": "CRI-S1-01-PLAN"}, "expected": "denegado"},
-    {"id": "ESC-33", "rule": "R-01", "actor": "USR-S2-EVA", "action": "enlazar", "params": {"evidence": "EVD-S2-0004", "criterion": "CRI-S2-01-ADM"}, "expected": "permitido"}
+    {"id": "ESC-33", "rule": "R-01", "actor": "USR-S2-EVA", "action": "enlazar", "params": {"evidence": "EVD-S2-0004", "criterion": "CRI-S2-01-ADM"}, "expected": "permitido"},
+    {"id": "ESC-34", "rule": "R-05", "actor": "USR-S1-RRHH", "action": "registrar", "params": {"application": "APP-S1-002", "type": "certificado", "source": "documento_presentado", "description": "[SINTÉTICO] Con un campo de juicio en camelCase.", "candidateScore": "x"}, "expected": "denegado"},
+    {"id": "ESC-35", "rule": "R-09", "actor": "USR-S1-EVA-A", "action": "registrar", "params": {"application": "APP-S1-001", "type": "observacion", "source": "documento_presentado", "description": "[SINTÉTICO] Observación con una fuente que no le corresponde."}, "expected": "denegado"},
+    {"id": "ESC-36", "rule": "R-09", "actor": "USR-S1-RRHH", "action": "registrar", "params": {"application": "APP-S1-002", "type": "cv", "source": "sesion_asignada", "description": "[SINTÉTICO] CV ficticio con una fuente que no le corresponde."}, "expected": "denegado"},
+    {"id": "ESC-37", "rule": "R-09", "actor": "USR-S1-RRHH", "action": "registrar", "params": {"application": "APP-S1-002", "type": "transcripcion_revisada", "source": "sesion_asignada", "description": "[SINTÉTICO] Transcripción ficticia revisada de una sesión."}, "expected": "permitido"},
+    {"id": "ESC-38", "rule": "matriz", "actor": "USR-S1-RRHH", "action": "corregir", "params": {"evidence": "EVD-S1-0002", "source": "sesion_asignada", "description": "[SINTÉTICO] RR. HH. intenta reescribir la observación de un evaluador."}, "expected": "denegado"}
   ]
 }

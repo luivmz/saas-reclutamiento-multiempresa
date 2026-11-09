@@ -60,7 +60,7 @@ Lo que no figura está denegado. Toda acción exige además R-01 y, para el eval
 
 | Rol (`UserRole`) | registrar | enlazar / desenlazar | revisar | corregir | retirar | consultar | historial |
 |---|---|---|---|---|---|---|---|
-| RR. HH. (`rrhh`) | Sí: `cv`, `certificado` y `transcripcion_revisada` | Sí | Sí | Sí | Sí | Sí | Sí |
+| RR. HH. (`rrhh`) | Sí: `cv`, `certificado` y `transcripcion_revisada` | Sí | Sí | Sí, salvo una `observacion`: solo la corrige su autor, y RR. HH. puede retirarla con motivo | Sí | Sí | Sí |
 | Dirección (`aprobador`) | No | No | No | No | No | Sí | Sí |
 | Evaluador (`evaluador`) | Solo `observacion`, en postulaciones asignadas | Sí, en postulaciones asignadas | No | Solo sus observaciones | No | Sí, en postulaciones asignadas | No |
 | Área solicitante (`solicitante`) | No | No | No | No | No | No | No |
@@ -76,11 +76,11 @@ Lo que no figura está denegado. Toda acción exige además R-01 y, para el eval
 | R-02 | **Asignación.** El evaluador solo actúa sobre postulaciones en las que tiene una sesión asignada | ESC-02, ESC-16 y ESC-32 |
 | R-03 | **Criterio de la misma vacante.** Un enlace solo apunta a un criterio de la vacante de la postulación; nunca a otra vacante ni a otra organización | ESC-14, ESC-15 y ESC-31 |
 | R-04 | **Solo inserción.** Ningún registro se modifica ni se borra. Corregir crea una versión nueva; retirar y desenlazar son eventos nuevos | ESC-06, ESC-09, ESC-18, ESC-26 a ESC-28 |
-| R-05 | **Sin campos sobre la persona ni de juicio.** Ningún nombre de campo contiene un token de `forbidden_field_tokens` del contrato v4 (`score`, `rank`, `select`, `name`, `level`…) | ESC-23 |
+| R-05 | **Sin campos sobre la persona ni de juicio.** En ninguna escritura, un nombre de campo contiene un token de `forbidden_field_tokens` del contrato v4 (`score`, `rank`, `select`, `name`, `level`…), tampoco en camelCase | ESC-23 y ESC-34 |
 | R-06 | **Sin salidas hacia RF-21, RF-23 ni RF-29.** La evidencia no entra en el cálculo del ranking ni en la decisión | Por construcción: el prototipo no tiene esa salida |
 | R-07 | **Auditoría sin texto.** Cada escritura deja una fila con acción, actor, evidencia, postulación y criterio, nunca con la descripción | Prueba `test_la_auditoria_no_lleva_texto_de_la_evidencia` |
 | R-08 | **Vacante cerrada, evidencia congelada.** Con la vacante `cerrada` se puede leer, pero no escribir | ESC-10 y ESC-22 |
-| R-09 | **Entrada cerrada.** Texto con el marcador `[SINTÉTICO]` y fuente `documento_presentado` o `sesion_asignada`; sin URL ni fuentes externas | ESC-24 y ESC-25 |
+| R-09 | **Entrada cerrada.** Texto con el marcador `[SINTÉTICO]` y una sola fuente por tipo: `documento_presentado` para `cv` y `certificado`; `sesion_asignada` para `transcripcion_revisada` y `observacion`. Sin URL ni fuentes externas | ESC-24, ESC-25 y ESC-35 a ESC-37 |
 | — | **Falla cerrado.** Un actor, una postulación o una evidencia desconocidos se deniegan | ESC-29 y ESC-30 |
 
 Las acciones de auditoría candidatas son `evidencia.registrada`, `evidencia.enlazada`, `evidencia.enlace_retirado`, `evidencia.revisada`, `evidencia.corregida` y `evidencia.retirada`. Una prueba comprueba que **todavía no existen** en `AuditAction`.
@@ -94,7 +94,7 @@ Las acciones de auditoría candidatas son `evidencia.registrada`, `evidencia.enl
 - tres vacantes, una de ellas cerrada, con sus criterios;
 - cuatro postulaciones y tres asignaciones de evaluador;
 - cuatro evidencias iniciales;
-- **33 escenarios** con su resultado esperado: 11 permitidos y 22 denegados.
+- **38 escenarios** con su resultado esperado: 12 permitidos y 26 denegados.
 
 Los textos empiezan por `[SINTÉTICO]`. No hay correos, teléfonos, números de documento ni nombres de personas.
 
@@ -103,7 +103,7 @@ Los textos empiezan por `[SINTÉTICO]`. No hay correos, teléfonos, números de 
 | Archivo | Qué es |
 |---|---|
 | [`prototipo/f37_flujo_evidencias.py`](prototipo/f37_flujo_evidencias.py) | Modelo en memoria del flujo, la matriz y las reglas R-01 a R-09. Solo biblioteca estándar |
-| [`prototipo/test_f37_flujo_evidencias.py`](prototipo/test_f37_flujo_evidencias.py) | 19 pruebas: escenarios, aislamiento exhaustivo, flujo completo, solo inserción, auditoría sin texto y coherencia con el SaaS (`UserRole` y `AuditAction`) |
+| [`prototipo/test_f37_flujo_evidencias.py`](prototipo/test_f37_flujo_evidencias.py) | 21 pruebas: escenarios, aislamiento exhaustivo, flujo completo, solo inserción, auditoría sin texto y coherencia con el SaaS (`UserRole` y `AuditAction`) |
 
 ```
 python -I -B docs/academico/preparacion-f37-evidencias/prototipo/f37_flujo_evidencias.py
