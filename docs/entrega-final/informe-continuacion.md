@@ -16,6 +16,8 @@
 
 ## 2. Estado por fase
 
+> Corresponde al 08/11/2026. Las correcciones y los recuentos del 09/11/2026 están en §3.1.
+
 ### F36 · B-01: especificación S v2
 
 | | Contenido |
@@ -71,7 +73,38 @@ Todas se ejecutaron el 08/11/2026 en el proyecto `continuacion`, salvo las de Py
 | Revisión visual | Capturas de Electron sin ventana sobre la app de desarrollo (8020), fuera del repositorio | Claro, oscuro, vacante cerrada, borrador y 320 px: correctos |
 | Espacios | `git diff --check` | Limpio |
 
+### 3.1 Revisión del candidato `a9fa344` (09/11/2026)
+
+La tabla anterior es la fotografía del 08/11/2026. El 09/11/2026 se revisó ese candidato, sin auditar todavía, y se corrigió sobre la misma rama. Los hechos actualizan §2: S pasa a la versión 2.1, F37 tiene 38 escenarios (12 permitidos y 26 denegados) y 21 pruebas, y F38 tiene 25 pruebas y un sello nuevo.
+
+| Frente | Defecto encontrado | Corrección |
+|---|---|---|
+| F36 · S | AC-02 admitía registrar el RED en `docs/tdd-evidence.md`, que AC-05 y FRZ rechazan | AC-02 lo deja dentro del paquete |
+| F36 · S | S-T11 a S-T17 solo estaban descritas | [`sondas_t09.py`](../academico/preparacion-f36-b01/sondas_t09.py), en un clon desechable (S §5.9.4) |
+| F37 | R-05 no veía camelCase y no se aplicaba a enlazar ni a retirar. Una observación podía declararse con fuente `documento_presentado` | R-05 en toda escritura; una sola fuente por tipo; 5 escenarios nuevos |
+| F38 | La semilla era 5945 en el código y 2381 en la especificación | Literal 2381, fijado por una prueba |
+| F38 | Una tarea fuera del catálogo, una clave camelCase o un valor numérico pasaban. Una salida mal formada rompía el arnés. La partición `train` salía válida. El sello no cubría `k` | Catálogo y forma cerrados; particiones `dev` y `test`; `k` sellado. Sello nuevo: `fb7e7e13f664f93ca9e6fb7cf824a097469034d6096659e980e928d4df3eee72` |
+| F39 | Con un plazo no posterior a la publicación decía «Sin plazo objetivo». Un proceso cerrado sin fecha de cierre mostraba un plazo vencido y un hito en curso | Resumen veraz; sin hito en curso en un proceso cerrado |
+
+| Prueba | Comando | Resultado del 09/11/2026 |
+|---|---|---|
+| Sondas de T-09 | `python -I -B docs/academico/preparacion-f36-b01/sondas_t09.py` | **18 conformes, 0 discrepancias**. S-T11 con la rama admitida en memoria: 59/0, R = NO SUPERADO. Una ablación de lo esperado sale con código 1 |
+| F37 | `python -I -B -m unittest discover -s …/prototipo` | RED 2 failed; GREEN **21 passed**; 38/38 escenarios |
+| F38 | `python -I -B -m unittest discover -s …/evaluacion` | RED 6 failed y 1 error; GREEN **25 passed** |
+| Componente | `npx vp test --run …/process-schedule.test.tsx` | RED 2 failed, 12 passed; GREEN **14 passed** |
+| Componentes, regresión | `npx vp test --run` | **56 passed** |
+| Tipos | `npx tsc --noEmit` | 0 errores |
+| Lint y formato | `npx vp check` sobre el componente y su prueba | Sin avisos |
+| Build | `npm run build` | Correcto: el texto nuevo del cronograma está en `show-*.js` |
+| **PHPUnit completo** | `php artisan test`, en `continuacion` (base `reclutamiento_testing`) | **447 passed, 8 skipped** (2233 aserciones), 121 s |
+| **Cypress** | E2E-20 y los specs que visitan el detalle de la vacante | **NO EJECUTADO en esta revisión.** El sistema detuvo la tarea por falta de memoria (403 MB libres de 16 GB), justo al arrancar Cypress. Los últimos resultados, 12/12 y 41/41, son del 08/11/2026 sobre `a9fa344`. Después solo cambiaron ramas de cálculo del componente, sin tocar `data-cy` ni el marcado; aun así, hay que repetirlo |
+| Validador F36 | `python -I -B docs/academico/tools/f36sbx/validate_f36sbx.py` | **55/4**, las mismas cuatro fallas |
+
+Para repetir Cypress, con memoria libre: `docker compose -p continuacion --profile e2e run --rm cypress --spec <E2E-20 y E2E-04, 10, 11, 14, 15, 16, 17 y 19>`, desde este worktree.
+
 ## 4. Puntos que Codex debe auditar
+
+0. **Revisión del 09/11/2026:** los defectos y correcciones de §3.1; S §12, puntos 7 y 8; que el cambio de sello de F38 se deba solo a `k`; que R-09 (una fuente por tipo) sea una regla razonable del prototipo y no contradiga el contrato v4; y **Cypress, no ejecutado sobre este candidato**.
 
 1. **S v2, §12:**
    - que las sondas de §5.9.1 se puedan reproducir y que §5.9.2 no afirme más de lo medido;
