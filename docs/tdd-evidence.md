@@ -120,3 +120,14 @@ Rama local `feature/continuacion-f36-f40`, desde `f5003c9`. El cambio de product
 | Cypress dirigido | — | E2E-20 (12 tests, 5 nuevos del cronograma) y los specs que visitan el detalle de la vacante | Resultados en [`entrega-final/informe-continuacion.md`](entrega-final/informe-continuacion.md) |
 | Prototipo de F37 (fuera del SaaS) | — | `docs/academico/preparacion-f37-evidencias/prototipo/test_f37_flujo_evidencias.py` | **19 passed**. No fue TDD: las pruebas se escribieron junto al prototipo. Se verificaron con 6 ablaciones; las 6 fallan. La sexta sobrevivía al principio y obligó a añadir una prueba |
 | Arnés de F38 (fuera del SaaS) | — | `docs/academico/preparacion-f38-ml02/evaluacion/test_f38_evaluar.py` | **17 passed**, con los valores de la salida degradada calculados a mano antes de ejecutar. 5 ablaciones; las 5 fallan |
+
+### Revisión del candidato `a9fa344` (09/11/2026)
+
+| Cambio | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| Cronograma: plazo no posterior a la publicación y proceso cerrado sin fecha de cierre | RED | Dos pruebas nuevas en `process-schedule.test.tsx`, contra el componente de `a9fa344` | **2 failed, 12 passed**: decía «Sin plazo objetivo» con un plazo registrado y marcaba vencido un proceso cerrado. El arreglo se escribió antes de ejecutarlas; el RED se observó restaurando temporalmente el componente de `a9fa344` |
+| Ídem | GREEN | Ídem, con el arreglo | **14 passed**; regresión de componentes **56 passed** |
+| Prototipo de F37: R-05 en toda escritura y con camelCase; una sola fuente por tipo | RED | Dos pruebas nuevas | **2 failed** de 21 |
+| Ídem | GREEN | Ídem, y 5 escenarios nuevos | **21 passed**; 38/38 escenarios |
+| Arnés de F38: semilla, catálogo de tareas, camelCase, valores numéricos, forma de la salida, particiones y `k` en el sello | RED | Ocho pruebas nuevas | **6 failed, 1 error** de 25. La octava, que fija el sello publicado, pasaba: es una guarda |
+| Ídem | GREEN | Ídem, con el sello nuevo `fb7e7e13…` | **25 passed** |

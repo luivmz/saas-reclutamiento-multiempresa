@@ -92,6 +92,8 @@ export function buildProcessSchedule(
                 late > 0
                     ? `Cerrado ${days(late)} después del plazo`
                     : 'Cumplido';
+        } else if (isClosed) {
+            targetDetail = 'Sin fecha de cierre para comparar';
         } else if (today > target) {
             targetState = 'vencido';
             targetDetail = `Vencido hace ${days(daysBetween(target, today))}`;
@@ -149,10 +151,13 @@ export function buildProcessSchedule(
     ];
 
     // El hito actual es el primero que no está hecho. Un plazo vencido sigue siéndolo;
-    // un plazo sin fecha registrada no puede estar en curso, así que se salta.
-    const currentIndex = milestones.findIndex(
-        (m) => !DONE.includes(m.state) && !(m.key === 'plazo' && !target),
-    );
+    // un plazo sin fecha registrada no puede estar en curso, así que se salta. En un
+    // proceso cerrado ya no hay hito en curso, aunque falte alguna fecha.
+    const currentIndex = isClosed
+        ? -1
+        : milestones.findIndex(
+              (m) => !DONE.includes(m.state) && !(m.key === 'plazo' && !target),
+          );
 
     if (currentIndex >= 0) {
         const current = milestones[currentIndex];
@@ -173,20 +178,24 @@ export function buildProcessSchedule(
         summary = closed
             ? `Proceso cerrado el ${formatDate(closed)}.`
             : 'Proceso cerrado.';
-    } else if (
-        published &&
-        target &&
-        dayNumber(target) > dayNumber(published)
-    ) {
-        const total = daysBetween(published, target);
-        const day = Math.min(Math.max(daysBetween(published, today), 0), total);
-        progress = { day, total, percent: Math.round((day / total) * 100) };
+    } else if (!target) {
+        summary = 'Sin plazo objetivo registrado para medir el avance.';
+    } else {
+        if (published && dayNumber(target) > dayNumber(published)) {
+            const total = daysBetween(published, target);
+            const day = Math.min(
+                Math.max(daysBetween(published, today), 0),
+                total,
+            );
+            progress = { day, total, percent: Math.round((day / total) * 100) };
+        }
+
         summary =
             targetState === 'vencido'
                 ? `El plazo objetivo venció hace ${days(daysBetween(target, today))} y el proceso sigue abierto.`
-                : `Día ${day} de ${total} del plazo objetivo.`;
-    } else {
-        summary = 'Sin plazo objetivo registrado para medir el avance.';
+                : progress
+                  ? `Día ${progress.day} de ${progress.total} del plazo objetivo.`
+                  : 'No se puede medir el avance con las fechas registradas.';
     }
 
     return { milestones, progress, summary };

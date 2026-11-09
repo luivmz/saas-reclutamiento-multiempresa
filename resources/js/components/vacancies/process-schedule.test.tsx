@@ -26,6 +26,39 @@ const states = (input: ScheduleInput, today: string) =>
     buildProcessSchedule(input, today).milestones.map((m) => [m.key, m.state]);
 
 describe('buildProcessSchedule', () => {
+    test('con un plazo no posterior a la publicación no dice que falte el plazo', () => {
+        const input: ScheduleInput = {
+            ...published,
+            target_completion_at: '2026-10-08T15:00:00Z',
+        };
+        const pending = buildProcessSchedule(input, '2026-10-08');
+
+        expect(pending.progress).toBeNull();
+        expect(pending.summary).not.toContain('Sin plazo objetivo');
+        expect(pending.summary).toContain('No se puede medir el avance');
+
+        const overdue = buildProcessSchedule(input, '2026-10-12');
+
+        expect(overdue.summary).toBe(
+            'El plazo objetivo venció hace 4 días y el proceso sigue abierto.',
+        );
+    });
+
+    test('un proceso cerrado sin fecha de cierre no muestra un plazo vencido ni un hito en curso', () => {
+        const input: ScheduleInput = {
+            ...published,
+            status: { value: 'cerrada', label: 'Cerrada', tone: 'neutral' },
+            closed_at: null,
+        };
+        const schedule = buildProcessSchedule(input, '2026-12-20');
+        const target = schedule.milestones[2];
+
+        expect(target.state).not.toBe('vencido');
+        expect(target.detail).toBe('Sin fecha de cierre para comparar');
+        expect(schedule.milestones.some((m) => m.current)).toBe(false);
+        expect(schedule.summary).toBe('Proceso cerrado.');
+    });
+
     test('en borrador, todo está previsto y el primer hito es el actual', () => {
         const draft: ScheduleInput = {
             ...published,
