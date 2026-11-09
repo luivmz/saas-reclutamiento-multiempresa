@@ -1,6 +1,6 @@
 # F36-SBX — Especificación S del sucesor B-01
 
-> **CANDIDATA A AUDITORÍA — NO IMPLEMENTADA. Versión 2** (08/11/2026), en la rama local `feature/continuacion-f36-f40`, desde `f5003c9`. La versión 1 (07/11/2026, `feature/entrega-academica-demo`) se conserva en la historia. La v2 aterriza T-09 con mediciones reales del validador (§5.9), añade criterios de aceptación (§10), pruebas de implementación (§8, S-T11 a S-T17), dependencias de D-10, D-11 y D-02b (§11) y los puntos de auditoría (§12). Revisa la especificación de `1d5d6aa:docs/academico/f36-sbx/preparacion-gate/F36SBX_Especificacion_Sucesor_B01.md` (en adelante, «la especificación de H») según Q2 §8, §10 y §12, adoptada por RR-001 (`5036393`).
+> **CANDIDATA A AUDITORÍA — NO IMPLEMENTADA. Versión 2.1** (09/11/2026), en la rama local `feature/continuacion-f36-f40`, desde `f5003c9`. La 2.1 añade las sondas ejecutables de §5.9.4 y corrige AC-02, que contradecía AC-05. La versión 1 (07/11/2026, `feature/entrega-academica-demo`) se conserva en la historia. La v2 aterriza T-09 con mediciones reales del validador (§5.9), añade criterios de aceptación (§10), pruebas de implementación (§8, S-T11 a S-T17), dependencias de D-10, D-11 y D-02b (§11) y los puntos de auditoría (§12). Revisa la especificación de `1d5d6aa:docs/academico/f36-sbx/preparacion-gate/F36SBX_Especificacion_Sucesor_B01.md` (en adelante, «la especificación de H») según Q2 §8, §10 y §12, adoptada por RR-001 (`5036393`).
 >
 > **No modifica** `validate_f36sbx.py`, sus pruebas, el estado del gate ni el gobierno. Implementarla exige D-02b, que **no está emitida**: sin facultades delegadas utilizables (RR-001 §4), D-02b solo puede emitirse por el mecanismo colegiado. Estado vigente: F36-SBX = EN DISEÑO, F36-SBX-GATE = NO SUPERADO, F37-SBX = BLOQUEADA.
 >
@@ -137,6 +137,24 @@ El validador de referencia (SHA-256 `87ad2f6f…`) se ejecutó con `python -I -B
 
 **Recomendación técnica, no vinculante:** (a), en la variante (a-ii). Es reversible, no exige determinar antes D-10 para elegir la base y no toca ninguna rama existente.
 
+#### 5.9.4 Sondas ejecutables (09/11/2026)
+
+[`sondas_t09.py`](../../preparacion-f36-b01/sondas_t09.py) repite V-1 a V-7 y observa hoy lo que FRZ haría en S-T04 y S-T11 a S-T17. Clona en un directorio temporal, no mueve ninguna ref y borra el clon. No modifica el validador: las sondas con la rama «admitida» añaden el nombre a `BRANCHES` solo en memoria, en el proceso de la sonda, sobre el código del clon. El nombre `feature/f36-sbx-h-sonda` es de prueba: la rama real de H es T-04, NO EMITIDA.
+
+| Sonda | Montaje | Resultado | Fallas |
+|---|---|---|---|
+| V-1 a V-7, S-T04 | Las de §5.9.1 | Iguales a §5.9.1; S-T04 = V-2 | — |
+| S-T15 | `BASE` | `b8892af` | — |
+| S-T17 | `BRANCHES` hoy | Las tres ramas vigentes | — |
+| S-T11, RED | Rama de H desde `55f758e`, con `docs/academico/f36-sbx/` de `f5003c9`, **sin** admitir | 57/2 | Rama no admitida; GATE (FG-01 y FG-05) |
+| **S-T11** | Lo mismo, con la rama admitida | **59/0**, R = NO SUPERADO | — |
+| S-T12 | S-T11 más un archivo en `app/`, en `tests/` o `composer.json` (tres sondas) | 56/3 cada una | FRZ por alcance, FRZ por runtime y GATE |
+| S-T13 | El árbol de S-T11, con otra rama no admitida | 57/2 | Rama; GATE |
+| S-T14 | Rama con el nombre admitido, cortada desde `develop` | 56/3 | FRZ por alcance, FRZ por runtime y GATE |
+| S-T16 | `main` con `BASE = 9dd76c4` | 53/6 | «La base es ancestro de HEAD», FRZ por alcance y por runtime, GATE, identidad de la base y la invariante de evidencia «el candidato desciende de la base» |
+
+**Qué prueba y qué no.** S-T11 muestra que, con T-09 (a-ii), admitir la rama es el único cambio que FRZ necesita para aceptar el expediente completo. **No** muestra que H vaya a superar el gate: R sigue en NO SUPERADO, porque falta la evidencia de FG-02, FG-03, FG-10 y FG-12, y el v3 ni siquiera puede representar SUPERADO. S-T16 confirma por qué T-09 (b) no sirve en la línea de `main`. S-T01 a S-T03 y S-T05 a S-T10 dependen de la lógica nueva de B-01 y no se pueden observar hasta implementarla.
+
 ## 6. Criterios EQUIPO: dos variantes (T-08 según Q2)
 
 | | Variante 3/3 (vigente) | Variante RD (Q2 con delegación) |
@@ -187,7 +205,7 @@ FG-03 es una entrada del gate: no puede exigir un gate ya superado.
 | S-T16 | Con T-09 (b), si se elige: H en la línea de `main` y `BASE = 9dd76c4` | Falla la comprobación «la base es ancestro de HEAD» |
 | S-T17 | `BRANCHES` | Contiene exactamente las tres ramas vigentes más la de H; ninguna otra pasa |
 
-Los controles positivos (S-T01, S-T05 y S-T11 con evidencia) solo se crean en memoria o en clones desechables, nunca sobre H (H §8). S-T11 a S-T14 necesitan Git real en un repositorio temporal, como la batería AF5 con Git real.
+Los controles positivos (S-T01, S-T05 y S-T11 con evidencia) solo se crean en memoria o en clones desechables, nunca sobre H (H §8). S-T11 a S-T14 necesitan Git real en un repositorio temporal, como la batería AF5 con Git real. Su montaje y su resultado con el validador v3 ya están en §5.9.4; al implementar B-01 se trasladan a la batería, con la rama admitida en `BRANCHES` y no en memoria.
 
 ## 9. Decisiones de diseño
 
@@ -210,7 +228,7 @@ B-01 solo se da por implementado si se cumplen todos los criterios. Cada uno se 
 | ID | Criterio | Cómo se verifica |
 |---|---|---|
 | AC-01 | D-02b emitida por el mecanismo de P-S4, citada en el mensaje del primer commit de la implementación, y P-S1 a P-S3 cumplidas | Las rutas o los SHA-256 de los actos, y la determinación de D-10 |
-| AC-02 | RED observado antes de cambiar el validador: S-T01 a S-T17 y las pruebas de H fallan donde deben | Salida registrada en `docs/tdd-evidence.md` o en el informe de la implementación |
+| AC-02 | RED observado antes de cambiar el validador: S-T01 a S-T17 y las pruebas de H fallan donde deben | Salida registrada en el informe de la implementación, dentro del paquete. `docs/tdd-evidence.md` queda fuera del perímetro de AC-05 y haría fallar FRZ: se sincroniza después, en un incremento propio |
 | AC-03 | GREEN: la batería y las metapruebas (`meta_f36sbx.py`) pasan, con ablaciones del código nuevo que las hagan fallar | Ejecución completa y su recuento |
 | AC-04 | Sin evidencia de criterios EQUIPO, el validador da 0 fallas con R = NO SUPERADO declarado y recalculado | S-T11 |
 | AC-05 | `git diff --name-only 55f758e <H>` ⊆ `docs/academico/f36-sbx/` ∪ `docs/academico/tools/f36sbx/` ∪ `GOV_FILES` | Comando y su salida en el informe |
@@ -240,7 +258,7 @@ B-01 solo se da por implementado si se cumplen todos los criterios. Cada uno se 
 | FG-03, FG-10 y FG-12 | No | No | No | Votos 3/3 (gate v3), referidos a H |
 | Inicio de F37-SBX | Sí | No | Sí | R = SUPERADO anclado en H |
 
-**Lo que se puede hacer sin ninguna de las tres:** auditar S, preparar la batería de pruebas RED como borrador fuera del validador y repetir las sondas de §5.9.1.
+**Lo que se puede hacer sin ninguna de las tres:** auditar S, preparar la batería de pruebas RED como borrador fuera del validador y repetir las sondas de §5.9.1 y §5.9.4. Las sondas ya están preparadas en [`preparacion-f36-b01/`](../../preparacion-f36-b01/README.md).
 
 ## 12. Qué debe auditar Codex en esta versión
 
@@ -250,3 +268,5 @@ B-01 solo se da por implementado si se cumplen todos los criterios. Cada uno se 
 4. Que S-T11 a S-T17 y AC-01 a AC-14 sean verificables, y que ningún control positivo quede en el repositorio.
 5. Que §11 no atribuya a D-11 lo que es de D-02b o del gate, ni a la inversa.
 6. Que ningún pasaje emita un acto, un voto, una delegación o un estado del gate.
+7. Que `sondas_t09.py` no modifique el validador ni ninguna ref, que el parche en memoria se limite a `BRANCHES` y `BASE`, y que §5.9.4 no presente S-T11 como prueba de que H superaría el gate.
+8. Que AC-02 y AC-05 ya no se contradigan: todo lo que exige la implementación cabe en el perímetro de FRZ.
