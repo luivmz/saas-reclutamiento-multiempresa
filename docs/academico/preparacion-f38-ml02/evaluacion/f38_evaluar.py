@@ -23,8 +23,14 @@ HERE = pathlib.Path(__file__).resolve().parent
 GOLD = HERE.parent / 'conjunto' / 'ml02_casos_sinteticos.json'
 CONTRACT = HERE.parents[1] / 'f36-sbx' / 'contrato' / 'f36sbx_evidence_contract.json'
 SEAL_TAG = 'f38-ml02-test-seal-v1'
-BOOTSTRAP_SEED = 20261108 % 9973  # semilla declarada (2381), fija para que el intervalo sea reproducible
+BOOTSTRAP_SEED = 2381  # semilla declarada en la especificación, fija para que el intervalo sea reproducible
 BOOTSTRAP_ROUNDS = 2000
+PARTITIONS = ('dev', 'test')  # el contrato v4 prohíbe train (train_allowed = false)
+
+# Catálogo cerrado de tareas y forma de cada salida. Una tarea fuera del catálogo invalida el resultado.
+OUTPUT_SHAPES = {'EI-01': list, 'EI-02': list, 'EI-03': list, 'EI-04': dict, 'EI-05': list, 'EI-07': list,
+                 'EI-09': list}
+LIST_FIELDS = {'fragments', 'fragment_refs'}
 
 # M-12: claves y valores admitidos en cada salida. Cualquier otra clave o texto es una violación.
 OUTPUT_KEYS = {
@@ -85,6 +91,7 @@ class Gold:
             'EI-07': [q for q in t['EI-07']['queries'] if q['application'] in apps],
             'EI-09': {'annotations': [a for a in t['EI-09']['annotations'] if a['application'] in apps],
                       'no_evidence_cases': [c for c in t['EI-09']['no_evidence_cases'] if c['application'] in apps]},
+            'EI-09-k': t['EI-09']['k'],  # parámetro compartido: cambiarlo altera las métricas de test
         }
 
     def seal(self) -> str:
@@ -96,6 +103,38 @@ def forbidden_tokens() -> frozenset[str]:
 
 
 # ------------------------------------------------------------------------------- comprobaciones
+def key_tokens(key) -> list[str]:
+    """Palabras de un nombre de campo, con camelCase separado: `candidateScore` da candidate y score."""
+    spaced = re.sub(r'(?<=[a-z0-9])(?=[A-Z])', '_', str(key))
+    return [t for t in re.split(r'[_\W]+', spaced.lower()) if t]
+
+
+def malformed(outputs) -> list[str]:
+    """Problemas de forma que impiden evaluar: se rechazan antes de calcular ninguna métrica."""
+    if not isinstance(outputs, dict):
+        return ['outputs no es un objeto']
+    problems = []
+    for task, rows in outputs.items():
+        shape = OUTPUT_SHAPES.get(task)
+        if shape is None:
+            problems.append(f'tarea no admitida: {task}')
+        elif not isinstance(rows, shape):
+            problems.append(f'{task}: forma no admitida')
+        elif task in OUTPUT_KEYS:
+            for i, row in enumerate(rows):
+                if not isinstance(row, dict):
+                    problems.append(f'{task}[{i}]: no es un objeto')
+                    continue
+                for key, value in row.items():
+                    well_formed = (isinstance(value, list) and all(isinstance(x, str) for x in value)
+                                   if key in LIST_FIELDS else not isinstance(value, (dict, list)))
+                    if not well_formed:
+                        problems.append(f'{task}[{i}].{key}: forma no admitida')
+        elif task == 'EI-03' and any(isinstance(x, (dict, list)) for x in rows):
+            problems.append('EI-03: elemento que no es un identificador')
+    return problems
+
+
 def output_violations(outputs: dict) -> tuple[list[str], list[str]]:
     """Devuelve (texto_libre, campos_prohibidos). Recorre toda la salida, a cualquier profundidad."""
     free, forbidden, tokens = [], [], forbidden_tokens()
@@ -103,7 +142,7 @@ def output_violations(outputs: dict) -> tuple[list[str], list[str]]:
     def walk(value, where):
         if isinstance(value, dict):
             for key, item in value.items():
-                if any(t in tokens for t in re.split(r'[_\W]+', str(key).lower()) if t):
+                if any(t in tokens for t in key_tokens(key)):
                     forbidden.append(f'{where}.{key}')
                 walk(item, f'{where}.{key}')
         elif isinstance(value, list):
@@ -112,6 +151,8 @@ def output_violations(outputs: dict) -> tuple[list[str], list[str]]:
         elif isinstance(value, str):
             if not (ID_VALUE.match(value) or GROUP_VALUE.match(value) or value in ENUM_VALUES):
                 free.append(where)
+        elif not (isinstance(value, bool) and where.endswith('.abstained')):
+            free.append(where)  # un número, un nulo o un booleano fuera de `abstained` no es una salida admitida
 
     for task, rows in outputs.items():
         walk(rows, task)
@@ -175,9 +216,14 @@ def bootstrap_ci(per_unit: dict, rounds: int = BOOTSTRAP_ROUNDS, seed: int = BOO
 
 
 def evaluate(gold: Gold, submission: dict, partition: str) -> dict:
-    proj, outputs = gold.projection(partition), submission.get('outputs', {})
+    outputs = submission.get('outputs', {})
     result = {'set_id': gold.data['set_id'], 'method_id': submission.get('method_id'), 'partition': partition,
               'metrics': {}, 'violations': []}
+    refused = ([f'partición no admitida: {partition}'] if partition not in PARTITIONS else []) + malformed(outputs)
+    if refused:
+        result.update(violations=refused, valid=False, acceptance={})
+        return result
+    proj = gold.projection(partition)
     if submission.get('set_id') != gold.data['set_id']:
         result['violations'].append('la salida es de otro conjunto')
     if partition == 'test' and gold.seal() != gold.data['test_seal_sha256']:
@@ -291,7 +337,7 @@ def main(argv: list[str]) -> int:
     if not argv:
         print(__doc__)
         return 2
-    partition = argv[argv.index('--particion') + 1] if '--particion' in argv else 'dev'
+    partition = (argv[argv.index('--particion') + 1:] or [''])[0] if '--particion' in argv else 'dev'
     result = evaluate(gold, load(pathlib.Path(argv[0])), partition)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result['valid'] else 1

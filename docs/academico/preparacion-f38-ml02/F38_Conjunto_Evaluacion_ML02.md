@@ -25,7 +25,7 @@ Fuera de la evaluación, porque están BLOCKED: resúmenes, veredictos o niveles
 
 - **2 vacantes**: `VAC-ML-01` en `dev` y `VAC-ML-02` en `test`. La unidad de partición es la vacante. No hay `train` (contrato v4: `train_allowed = false`).
 - **4 postulaciones** y **12 fragmentos**. Todo texto empieza por `[SINTÉTICO]`.
-- **Sello de `test`:** `3343f59fa6172eabe60731d1d52431da0c84bf49fd53a353afc6ac78e3ea3f52`. Es el SHA-256 de la etiqueta `f38-ml02-test-seal-v1` y de la proyección canónica de `test`: vacantes, postulaciones, fragmentos y casos. El arnés se niega a evaluar `test` si el sello no coincide. Cambiar `dev` no altera el sello.
+- **Sello de `test`:** `fb7e7e13f664f93ca9e6fb7cf824a097469034d6096659e980e928d4df3eee72`. Es el SHA-256 de la etiqueta `f38-ml02-test-seal-v1` y de la proyección canónica de `test`: vacantes, postulaciones, fragmentos, casos y el parámetro `k` de EI-09, que es compartido y cambia las métricas de `test`. El arnés se niega a evaluar `test` si el sello no coincide. Cambiar los casos de `dev` no altera el sello.
 
 | Tarea | Casos en `dev` | Casos en `test` | Qué se sembró |
 |---|---|---|---|
@@ -58,7 +58,7 @@ El oro de cada tarea está en el JSON: `expected_group`, `expected_alerts`, `exp
 | M-11 | Citas cuyo fragmento existe y es de la misma postulación ÷ citas | 1,0; un fallo invalida el resultado |
 | M-12 | Valores de texto libre o claves no admitidas en la salida | 0; uno solo invalida el resultado |
 
-**Invalidan el resultado entero:** una clave con un token prohibido del contrato v4 (`score`, `rank`, `select`…), texto libre, una cita sin atribución válida, una salida de otro conjunto o un sello de `test` que no coincide.
+**Invalidan el resultado entero:** una clave con un token prohibido del contrato v4 (`score`, `rank`, `select`…), también en camelCase; texto libre o un valor numérico; una cita sin atribución válida; una salida de otro conjunto; un sello de `test` que no coincide. **Se rechazan sin calcular métricas:** una tarea fuera del catálogo (EI-01 a EI-05, EI-07 y EI-09), una salida mal formada y cualquier partición distinta de `dev` y `test`, incluida `train`.
 
 ## 5. Salidas de referencia y valores calculados a mano
 
@@ -132,7 +132,7 @@ Hoy no hay una vía para hacerlo dentro de F37-SBX.
 | Pieza | Estado | Requisito de lo pendiente |
 |---|---|---|
 | Conjunto sintético, oro y sello | **Preparado** y probado | — |
-| Arnés de métricas (M-01 a M-08, M-11 y M-12), con sus invalidaciones | **Implementado** fuera del SaaS. 17 pruebas y 5 ablaciones detectadas | — |
+| Arnés de métricas (M-01 a M-08, M-11 y M-12), con sus invalidaciones | **Implementado** fuera del SaaS. 25 pruebas; 5 ablaciones detectadas el 08/11/2026 | — |
 | Salidas de referencia escritas a mano | **Preparadas** | — |
 | Métodos de EI-01 a EI-07 | **Pendientes** | F36-SBX-GATE SUPERADO anclado en H, con FG-03 que liste esas EI (S §7) |
 | EI-09 y su umbral de M-07 | **Pendientes** | F36-M02 confirmada por actos auténticos, FG-12 y el preregistro |

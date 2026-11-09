@@ -8,6 +8,6 @@
 | Conjunto sintético con `dev` y `test` sellado | [`conjunto/ml02_casos_sinteticos.json`](conjunto/ml02_casos_sinteticos.json) | PREPARADO |
 | Salidas de referencia escritas a mano (perfecta y degradada) | [`conjunto/salidas_de_referencia/`](conjunto/salidas_de_referencia/) | PREPARADAS |
 | Arnés de evaluación, sin método | [`evaluacion/f38_evaluar.py`](evaluacion/f38_evaluar.py) | IMPLEMENTADO fuera del SaaS |
-| Pruebas del arnés (17) | [`evaluacion/test_f38_evaluar.py`](evaluacion/test_f38_evaluar.py) | Ejecutadas: 17/17 |
+| Pruebas del arnés (25) | [`evaluacion/test_f38_evaluar.py`](evaluacion/test_f38_evaluar.py) | Ejecutadas: 25/25 |
 
 Prototipo navegable y plan previos: [`../f36-sbx/prototipo-ml02/`](../f36-sbx/prototipo-ml02/README.md).

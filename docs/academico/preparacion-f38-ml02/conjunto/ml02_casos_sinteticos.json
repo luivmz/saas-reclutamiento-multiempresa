@@ -3,7 +3,7 @@
   "status": "PREPARACION - SIN METODO, SIN ENTRENAMIENTO, SIN EJECUCION SOBRE EVIDENCIA",
   "note": "[SINTÉTICO] Conjunto pequeño, escrito a mano, para fijar el formato, los resultados esperados y las métricas de las ayudas documentales. No es un corpus y no sirve para estimar el rendimiento de un método.",
   "partitions": {"dev": ["VAC-ML-01"], "test": ["VAC-ML-02"]},
-  "test_seal_sha256": "3343f59fa6172eabe60731d1d52431da0c84bf49fd53a353afc6ac78e3ea3f52",
+  "test_seal_sha256": "fb7e7e13f664f93ca9e6fb7cf824a097469034d6096659e980e928d4df3eee72",
   "vacancies": [
     {"token": "VAC-ML-01", "requirements": ["REQ-01-TIT", "REQ-01-EXP", "REQ-01-CERT"],
      "criteria": [{"id": "CRI-01-PLAN", "version": 2, "text": "[SINTÉTICO] Planificación de la enseñanza"},

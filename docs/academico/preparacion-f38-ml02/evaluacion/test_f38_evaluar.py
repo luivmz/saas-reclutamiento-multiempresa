@@ -121,8 +121,60 @@ class Invalidaciones(unittest.TestCase):
         s['set_id'] = 'otro'
         self.assertFalse(f38.evaluate(gold(), s, 'dev')['valid'])
 
+    def test_una_clave_camelcase_sobre_personas_invalida(self):
+        s = submission('salida_perfecta.json')
+        s['outputs']['EI-04']['candidateScore'] = s['outputs']['EI-04']['P-1']
+        r = f38.evaluate(gold(), s, 'dev')
+        self.assertFalse(r['valid'])
+        self.assertTrue(any('personas o de juicio' in v for v in r['violations']))
+
+    def test_una_tarea_fuera_del_catalogo_invalida_aunque_sus_valores_parezcan_validos(self):
+        for task in ('ranking', 'EI-99'):
+            s = submission('salida_perfecta.json')
+            s['outputs'][task] = ['APP-ML-001', 'APP-ML-002']
+            r = f38.evaluate(gold(), s, 'dev')
+            self.assertFalse(r['valid'], task)
+
+    def test_un_valor_numerico_no_cuela_como_salida(self):
+        s = submission('salida_perfecta.json')
+        s['outputs']['EI-03'].append(0.93)
+        r = f38.evaluate(gold(), s, 'dev')
+        self.assertFalse(r['valid'])
+        self.assertGreaterEqual(r['metrics']['M-12'], 1)
+
+    def test_una_salida_mal_formada_se_rechaza_sin_romper_el_arnes(self):
+        for bad in ('texto', {'EI-01': 'FRG-001'}, {'EI-01': ['FRG-001']}, {'EI-04': []},
+                    {'EI-07': [{'query': 'Q-01', 'fragments': 'FRG-001'}]}):
+            s = submission('salida_perfecta.json')
+            s['outputs'] = bad
+            r = f38.evaluate(gold(), s, 'dev')
+            self.assertFalse(r['valid'], bad)
+
+    def test_una_particion_no_admitida_nunca_es_valida(self):
+        for partition in ('train', 'otra'):
+            r = f38.evaluate(gold(), submission('salida_perfecta.json'), partition)
+            self.assertFalse(r['valid'], partition)
+            self.assertEqual(r['metrics'], {})
+
+    def test_cambiar_k_rompe_el_sello(self):
+        data = copy.deepcopy(GOLD_DATA)
+        data['tasks']['EI-09']['k'] = 5
+        r = f38.evaluate(f38.Gold(data), submission('salida_perfecta.json'), 'test')
+        self.assertFalse(r['valid'])
+        self.assertTrue(any('sello' in v for v in r['violations']))
+
 
 class Intervalos(unittest.TestCase):
+    def test_la_semilla_es_la_declarada_en_la_especificacion(self):
+        self.assertEqual(f38.BOOTSTRAP_SEED, 2381)
+        spec = (f38.HERE.parent / 'F38_Conjunto_Evaluacion_ML02.md').read_text(encoding='utf-8')
+        self.assertIn(f'semilla {f38.BOOTSTRAP_SEED}', spec)
+
+    def test_el_sello_publicado_coincide_con_el_conjunto_y_la_especificacion(self):
+        self.assertEqual(gold().seal(), GOLD_DATA['test_seal_sha256'])
+        spec = (f38.HERE.parent / 'F38_Conjunto_Evaluacion_ML02.md').read_text(encoding='utf-8')
+        self.assertIn(GOLD_DATA['test_seal_sha256'], spec)
+
     def test_bootstrap_reproducible_por_vacante(self):
         per_unit = {'VAC-A': (1, 2), 'VAC-B': (2, 2), 'VAC-C': (0, 1)}
         a, b = f38.bootstrap_ci(per_unit), f38.bootstrap_ci(per_unit)
