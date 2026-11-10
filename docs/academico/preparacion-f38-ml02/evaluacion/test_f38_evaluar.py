@@ -7,12 +7,15 @@ Los valores esperados de la salida degradada están calculados a mano en
 F38_Conjunto_Evaluacion_ML02.md, §5, antes de ejecutar el arnés.
 """
 
+import contextlib
 import copy
+import io
 import json
 import math
 import pathlib
 import re
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
@@ -155,6 +158,50 @@ class Invalidaciones(unittest.TestCase):
             r = f38.evaluate(gold(), submission('salida_perfecta.json'), partition)
             self.assertFalse(r['valid'], partition)
             self.assertEqual(r['metrics'], {})
+
+    def test_una_raiz_que_no_es_objeto_se_rechaza_por_el_punto_de_entrada(self):
+        # CONT-M02: [], null, una cadena o un número no deben romper el arnés antes de devolver el resultado.
+        with tempfile.TemporaryDirectory() as tmp:
+            for i, root in enumerate(([], None, 'texto', 3, 0.5)):
+                path = pathlib.Path(tmp) / f'raiz_{i}.json'
+                path.write_bytes(json.dumps(root).encode('utf-8'))
+                out = io.StringIO()
+                with contextlib.redirect_stdout(out):
+                    code = f38.main([str(path)])
+                r = json.loads(out.getvalue())
+                self.assertEqual(code, 1, root)
+                self.assertFalse(r['valid'], root)
+                self.assertEqual(r['metrics'], {}, root)
+                self.assertTrue(any('raíz' in v for v in r['violations']), r['violations'])
+            path = pathlib.Path(tmp) / 'valida.json'
+            path.write_bytes((REFS / 'salida_perfecta.json').read_bytes())
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = f38.main([str(path)])
+            self.assertEqual(code, 0)
+            self.assertTrue(json.loads(out.getvalue())['valid'])
+
+    def test_ids_repetidos_en_una_lista_de_recuperacion_invalidan(self):
+        # CONT-M03: ['FRG-004'] ×3 inflaba Recall@3 y nDCG@3 por encima de 1.
+        s = submission('salida_perfecta.json')
+        row = next(r for r in s['outputs']['EI-09']
+                   if (r['application'], r['criterion']) == ('APP-ML-001', 'CRI-01-CLASE'))
+        row['fragment_refs'] = ['FRG-004', 'FRG-004', 'FRG-004']
+        r = f38.evaluate(gold(), s, 'dev')
+        self.assertFalse(r['valid'])
+        self.assertEqual(r['metrics'], {})
+        self.assertTrue(any('repetidos' in v for v in r['violations']), r['violations'])
+        s = submission('salida_perfecta.json')
+        s['outputs']['EI-07'][0]['fragments'] *= 2
+        self.assertFalse(f38.evaluate(gold(), s, 'dev')['valid'])
+
+    def test_las_metricas_de_recuperacion_validas_quedan_en_cero_uno(self):
+        for name in ('salida_perfecta.json', 'salida_degradada.json'):
+            for partition in ('dev', 'test'):
+                m7 = f38.evaluate(gold(), submission(name), partition)['metrics'].get('M-07', {})
+                for key in ('recall_at_k', 'precision_at_k', 'mrr', 'ndcg_at_k'):
+                    if key in m7:
+                        self.assertTrue(0.0 <= m7[key] <= 1.0, (name, partition, key, m7[key]))
 
     def test_cambiar_k_rompe_el_sello(self):
         data = copy.deepcopy(GOLD_DATA)

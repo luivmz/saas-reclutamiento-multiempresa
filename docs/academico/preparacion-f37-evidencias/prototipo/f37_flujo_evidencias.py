@@ -187,6 +187,9 @@ class Store:
                 return False, 'solo se corrige evidencia vigente'
             if actor['role'] == 'evaluador' and evidence['registered_by'] != actor_token:
                 return False, 'el evaluador solo corrige sus propias observaciones'
+            # Se autoriza por la evidencia original, antes de mirar los datos de reemplazo.
+            if evidence['type'] == 'observacion' and evidence['registered_by'] != actor_token:
+                return False, 'una observación solo la corrige su autor'
             fields = {k: v for k, v in params.items() if k != 'evidence'}
             return self._check_new_item(actor, {**fields, 'type': params.get('type', evidence['type'])})
         if action == 'retirar':

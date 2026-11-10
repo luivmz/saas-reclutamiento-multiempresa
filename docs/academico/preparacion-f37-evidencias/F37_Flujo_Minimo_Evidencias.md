@@ -103,7 +103,7 @@ Los textos empiezan por `[SINTÉTICO]`. No hay correos, teléfonos, números de 
 | Archivo | Qué es |
 |---|---|
 | [`prototipo/f37_flujo_evidencias.py`](prototipo/f37_flujo_evidencias.py) | Modelo en memoria del flujo, la matriz y las reglas R-01 a R-09. Solo biblioteca estándar |
-| [`prototipo/test_f37_flujo_evidencias.py`](prototipo/test_f37_flujo_evidencias.py) | 21 pruebas: escenarios, aislamiento exhaustivo, flujo completo, solo inserción, auditoría sin texto y coherencia con el SaaS (`UserRole` y `AuditAction`) |
+| [`prototipo/test_f37_flujo_evidencias.py`](prototipo/test_f37_flujo_evidencias.py) | 23 pruebas: escenarios, aislamiento exhaustivo, flujo completo, corrección autorizada por la evidencia original, solo inserción, auditoría sin texto y coherencia con el SaaS (`UserRole` y `AuditAction`) |
 
 ```
 python -I -B docs/academico/preparacion-f37-evidencias/prototipo/f37_flujo_evidencias.py

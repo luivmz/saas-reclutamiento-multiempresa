@@ -102,9 +102,30 @@ La tabla anterior es la fotografía del 08/11/2026. El 09/11/2026 se revisó ese
 
 Para repetir Cypress, con memoria libre: `docker compose -p continuacion --profile e2e run --rm cypress --spec <E2E-20 y E2E-04, 10, 11, 14, 15, 16, 17 y 19>`, desde este worktree.
 
+### 3.2 Hallazgos MEDIUM de la auditoría de Codex sobre `138ce29` (09/11/2026)
+
+Codex auditó `138ce29` (árbol `cf98578a…`) y dejó tres hallazgos MEDIUM. Se corrigieron en un solo commit, con las pruebas de regresión escritas y ejecutadas primero contra el código auditado. El RED y el GREEN están en [`tdd-evidence.md`](../tdd-evidence.md).
+
+| Hallazgo | Defecto | Corrección |
+|---|---|---|
+| CONT-M01 · F37 | RR. HH. podía corregir la observación ajena `EVD-S1-0002` declarando `type='cv'` y `source='documento_presentado'`: se creaba un registro nuevo y la observación quedaba sustituida | La corrección se autoriza por el tipo y el autor de la evidencia original antes de mirar los datos de reemplazo: una `observacion` solo la corrige su autor. Las validaciones de la evidencia nueva se conservan |
+| CONT-M02 · F38 | Una raíz JSON `[]`, `null`, cadena o número lanzaba `AttributeError` antes de devolver el resultado | `evaluate` valida la raíz antes de `.get()`: `valid = false`, sin métricas y con la causa «la raíz de la salida no es un objeto JSON» |
+| CONT-M03 · F38 | En APP-ML-001 / CRI-01-CLASE, `['FRG-004', 'FRG-004', 'FRG-004']` pasaba como válida, con Recall@3 = 1,667 y nDCG@3 = 1,377 | Una lista de recuperación (`fragment_refs` o `fragments`) con IDs repetidos se rechaza antes de calcular métricas, con la causa «identificadores repetidos». El conjunto, la semilla, `k` y el sello no cambian |
+
+| Prueba | Antes de corregir (código de `138ce29`) | Después |
+|---|---|---|
+| F37, `unittest` | **1 failed** de 23 | **23 passed** |
+| F37, escenarios | 38/38 | **38/38** |
+| F38, `unittest` | **1 failed y 1 error** de 28 | **28 passed** |
+| Sello de `test` | `fb7e7e13…` | `fb7e7e13…`, sin cambios |
+| `git diff --check` | — | Limpio |
+
+Cypress se ejecuta sobre el commit de estas correcciones, en `continuacion`. Un commit no puede contener los resultados de sus propias pruebas, así que se informan en la entrega junto con su SHA exacto. Los resultados de `a9fa344` no valen como evidencia de este candidato.
+
 ## 4. Puntos que Codex debe auditar
 
 0. **Revisión del 09/11/2026:** los defectos y correcciones de §3.1; S §12, puntos 7 y 8; que el cambio de sello de F38 se deba solo a `k`; que R-09 (una fuente por tipo) sea una regla razonable del prototipo y no contradiga el contrato v4; y **Cypress, no ejecutado sobre este candidato**.
+   - **Corrección de CONT-M01 a CONT-M03 (§3.2):** que la corrección de F37 se autorice por la evidencia original; que ninguna raíz JSON rompa el arnés; que ninguna lista con IDs repetidos llegue a las métricas; y que el sello siga siendo `fb7e7e13…`.
 
 1. **S v2, §12:**
    - que las sondas de §5.9.1 se puedan reproducir y que §5.9.2 no afirme más de lo medido;

@@ -130,6 +130,8 @@ def malformed(outputs) -> list[str]:
                                    if key in LIST_FIELDS else not isinstance(value, (dict, list)))
                     if not well_formed:
                         problems.append(f'{task}[{i}].{key}: forma no admitida')
+                    elif key in LIST_FIELDS and len(set(value)) != len(value):
+                        problems.append(f'{task}[{i}].{key}: identificadores repetidos')
         elif task == 'EI-03' and any(isinstance(x, (dict, list)) for x in rows):
             problems.append('EI-03: elemento que no es un identificador')
     return problems
@@ -216,6 +218,10 @@ def bootstrap_ci(per_unit: dict, rounds: int = BOOTSTRAP_ROUNDS, seed: int = BOO
 
 
 def evaluate(gold: Gold, submission: dict, partition: str) -> dict:
+    if not isinstance(submission, dict):
+        return {'set_id': gold.data['set_id'], 'method_id': None, 'partition': partition, 'metrics': {},
+                'violations': [f'la raíz de la salida no es un objeto JSON: {type(submission).__name__}'],
+                'valid': False, 'acceptance': {}}
     outputs = submission.get('outputs', {})
     result = {'set_id': gold.data['set_id'], 'method_id': submission.get('method_id'), 'partition': partition,
               'metrics': {}, 'violations': []}

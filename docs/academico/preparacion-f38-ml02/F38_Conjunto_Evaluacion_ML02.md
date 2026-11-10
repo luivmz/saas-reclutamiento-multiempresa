@@ -58,7 +58,7 @@ El oro de cada tarea está en el JSON: `expected_group`, `expected_alerts`, `exp
 | M-11 | Citas cuyo fragmento existe y es de la misma postulación ÷ citas | 1,0; un fallo invalida el resultado |
 | M-12 | Valores de texto libre o claves no admitidas en la salida | 0; uno solo invalida el resultado |
 
-**Invalidan el resultado entero:** una clave con un token prohibido del contrato v4 (`score`, `rank`, `select`…), también en camelCase; texto libre o un valor numérico; una cita sin atribución válida; una salida de otro conjunto; un sello de `test` que no coincide. **Se rechazan sin calcular métricas:** una tarea fuera del catálogo (EI-01 a EI-05, EI-07 y EI-09), una salida mal formada y cualquier partición distinta de `dev` y `test`, incluida `train`.
+**Invalidan el resultado entero:** una clave con un token prohibido del contrato v4 (`score`, `rank`, `select`…), también en camelCase; texto libre o un valor numérico; una cita sin atribución válida; una salida de otro conjunto; un sello de `test` que no coincide. **Se rechazan sin calcular métricas:** una tarea fuera del catálogo (EI-01 a EI-05, EI-07 y EI-09), una salida mal formada (también una raíz JSON que no sea un objeto), una lista de recuperación con identificadores repetidos y cualquier partición distinta de `dev` y `test`, incluida `train`.
 
 ## 5. Salidas de referencia y valores calculados a mano
 
@@ -132,7 +132,7 @@ Hoy no hay una vía para hacerlo dentro de F37-SBX.
 | Pieza | Estado | Requisito de lo pendiente |
 |---|---|---|
 | Conjunto sintético, oro y sello | **Preparado** y probado | — |
-| Arnés de métricas (M-01 a M-08, M-11 y M-12), con sus invalidaciones | **Implementado** fuera del SaaS. 25 pruebas; 5 ablaciones detectadas el 08/11/2026 | — |
+| Arnés de métricas (M-01 a M-08, M-11 y M-12), con sus invalidaciones | **Implementado** fuera del SaaS. 28 pruebas; 5 ablaciones detectadas el 08/11/2026 | — |
 | Salidas de referencia escritas a mano | **Preparadas** | — |
 | Métodos de EI-01 a EI-07 | **Pendientes** | F36-SBX-GATE SUPERADO anclado en H, con FG-03 que liste esas EI (S §7) |
 | EI-09 y su umbral de M-07 | **Pendientes** | F36-M02 confirmada por actos auténticos, FG-12 y el preregistro |

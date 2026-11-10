@@ -131,3 +131,15 @@ Rama local `feature/continuacion-f36-f40`, desde `f5003c9`. El cambio de product
 | Ídem | GREEN | Ídem, y 5 escenarios nuevos | **21 passed**; 38/38 escenarios |
 | Arnés de F38: semilla, catálogo de tareas, camelCase, valores numéricos, forma de la salida, particiones y `k` en el sello | RED | Ocho pruebas nuevas | **6 failed, 1 error** de 25. La octava, que fija el sello publicado, pasaba: es una guarda |
 | Ídem | GREEN | Ídem, con el sello nuevo `fb7e7e13…` | **25 passed** |
+
+### Hallazgos MEDIUM de la auditoría de Codex sobre `138ce29` (09/11/2026)
+
+Las pruebas de regresión se escribieron primero y se ejecutaron contra el código de `138ce29` antes de corregirlo.
+
+| Hallazgo | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| CONT-M01 · F37: RR. HH. corregía la observación ajena `EVD-S1-0002` declarando `type='cv'` y `source='documento_presentado'` | RED | `test_rrhh_no_corrige_una_observacion_ajena_aunque_declare_otro_tipo` y `test_el_autor_sigue_corrigiendo_su_observacion` | **1 failed** de 23 (`True is not false : permitido`); la corrección del autor ya pasaba |
+| Ídem | GREEN | Ídem: la corrección se autoriza por el tipo y el autor de la evidencia original, antes de los datos de reemplazo | **23 passed**; 38/38 escenarios. La solicitud se deniega, no se crea ningún registro y `EVD-S1-0002` sigue `registrada` |
+| CONT-M02 · F38: una raíz JSON `[]`, `null`, cadena o número lanzaba `AttributeError` | RED | `test_una_raiz_que_no_es_objeto_se_rechaza_por_el_punto_de_entrada`, por `main` | **1 error**: `AttributeError: 'list' object has no attribute 'get'` |
+| CONT-M03 · F38: `['FRG-004', 'FRG-004', 'FRG-004']` en APP-ML-001 / CRI-01-CLASE pasaba como válida | RED | `test_ids_repetidos_en_una_lista_de_recuperacion_invalidan` y `test_las_metricas_de_recuperacion_validas_quedan_en_cero_uno` | **1 failed** (`True is not false`). Medido antes de corregir: `valid = true`, Recall@3 = 1,667 y nDCG@3 = 1,377 en `dev` |
+| CONT-M02 y CONT-M03 | GREEN | Ídem: la raíz se valida antes de `.get()` y una lista de recuperación con IDs repetidos se rechaza antes de calcular métricas | **28 passed**. Sello, semilla, `k` y conjunto sin cambios (`fb7e7e13…`) |

@@ -175,6 +175,33 @@ class Flujo(unittest.TestCase):
                                                                 'source': 'documento_presentado',
                                                                 'description': '[SINTÉTICO] Prueba.'})[0])
 
+    def test_rrhh_no_corrige_una_observacion_ajena_aunque_declare_otro_tipo(self):
+        # CONT-M01: la autorización depende de la evidencia original, no de los datos de reemplazo.
+        s = store()
+        before = (copy.deepcopy(s.evidence), copy.deepcopy(s.events))
+        ok, reason = s.execute('USR-S1-RRHH', 'corregir', {
+            'evidence': 'EVD-S1-0002', 'type': 'cv', 'source': 'documento_presentado',
+            'description': '[SINTÉTICO] RR. HH. intenta reescribir la observación como CV.'})
+        self.assertFalse(ok, reason)
+        self.assertIn('solo la corrige su autor', reason)
+        self.assertEqual((s.evidence, s.events), before)
+        self.assertEqual(s.state('EVD-S1-0002'), 'registrada')
+
+    def test_el_autor_sigue_corrigiendo_su_observacion(self):
+        s = store()
+        ok, reason = s.execute('USR-S1-EVA-A', 'corregir', {
+            'evidence': 'EVD-S1-0002', 'source': 'sesion_asignada',
+            'description': '[SINTÉTICO] Observación corregida por su autor.'})
+        self.assertTrue(ok, reason)
+        self.assertEqual(s.state('EVD-S1-0002'), 'sustituida')
+        new = next(e for e in s.evidence.values() if e['supersedes'] == 'EVD-S1-0002')
+        self.assertEqual((new['type'], new['registered_by']), ('observacion', 'USR-S1-EVA-A'))
+        # Las validaciones de la evidencia nueva siguen aplicándose a la corrección legítima.
+        self.assertFalse(s.decide('USR-S1-EVA-A', 'corregir', {
+            'evidence': new['id'], 'source': 'documento_presentado', 'description': '[SINTÉTICO] Fuente ajena.'})[0])
+        self.assertFalse(s.decide('USR-S1-EVA-A', 'corregir', {
+            'evidence': new['id'], 'source': 'sesion_asignada', 'description': 'Sin marcador.'})[0])
+
     def test_una_denegacion_no_escribe_nada(self):
         s = store()
         before = (copy.deepcopy(s.evidence), copy.deepcopy(s.events))
