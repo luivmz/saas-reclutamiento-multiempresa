@@ -151,7 +151,7 @@ Codex cerró CONT-M01, CONT-M02 y CONT-M03 en el commit de estas correcciones, `
 
 ## 4. Puntos que Codex debe auditar
 
-0. **Revisión del 09/11/2026:** los defectos y correcciones de §3.1; S §12, puntos 7 y 8; que el cambio de sello de F38 se deba solo a `k`; que R-09 (una fuente por tipo) sea una regla razonable del prototipo y no contradiga el contrato v4; y **Cypress, no ejecutado sobre este candidato**.
+0. **Revisión del 09/11/2026:** los defectos y correcciones de §3.1; S §12, puntos 7 y 8; que el cambio de sello de F38 se deba solo a `k`; que R-09 (una fuente por tipo) sea una regla razonable del prototipo y no contradiga el contrato v4; y que Cypress **no se ejecutó sobre el candidato `138ce29`**, revisado entonces. La regresión posterior se completó sobre `f42259016921e67eea2f1be2d766d1a581cb2f6a`, con **53/53 pruebas aprobadas en nueve specs** (§3.2).
    - **Corrección de CONT-M01 a CONT-M03 (§3.2):** que la corrección de F37 se autorice por la evidencia original; que ninguna raíz JSON rompa el arnés; que ninguna lista con IDs repetidos llegue a las métricas; y que el sello siga siendo `fb7e7e13…`.
 
 1. **S v2, §12:**
