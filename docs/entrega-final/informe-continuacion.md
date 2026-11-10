@@ -120,7 +120,34 @@ Codex auditó `138ce29` (árbol `cf98578a…`) y dejó tres hallazgos MEDIUM. Se
 | Sello de `test` | `fb7e7e13…` | `fb7e7e13…`, sin cambios |
 | `git diff --check` | — | Limpio |
 
-Cypress se ejecuta sobre el commit de estas correcciones, en `continuacion`. Un commit no puede contener los resultados de sus propias pruebas, así que se informan en la entrega junto con su SHA exacto. Los resultados de `a9fa344` no valen como evidencia de este candidato.
+Codex cerró CONT-M01, CONT-M02 y CONT-M03 en el commit de estas correcciones, `f42259016921e67eea2f1be2d766d1a581cb2f6a` (árbol `1ce27ba7e33cb7a2c8f9c149956b019313d990a5`). Ese commit es la referencia exacta del código auditado y probado. Este informe se actualiza en un commit posterior que solo cambia la documentación: un commit no puede contener los resultados de sus propias pruebas. Los resultados de `a9fa344` no valen como evidencia de este candidato.
+
+**Regresión Cypress sobre `f422590`, 09/11/2026**
+
+| Corrida | Qué se ejecutó | Resultado | Validez como evidencia |
+|---|---|---|---|
+| Primera, parcial | E2E-20, con `docker compose run --rm` | El sistema detuvo el proceso cliente por falta de memoria (unos 1,8 GB libres). El contenedor terminó con código 0, pero `--rm` lo eliminó antes de guardar su log: solo se observaron 5 de 12 pruebas | **No cuenta.** No hay log completo |
+| Segunda, completa | Los 9 specs, uno por vez, cada uno en un contenedor con nombre único (`cy-f422590-<spec>`), en segundo plano y sin `--rm` | **53/53 pruebas aprobadas en 9 specs, todos con código 0**, sin OOM y sin fallos de aserción ni de infraestructura. Memoria libre antes de cada spec: de 1232 a 1754 MB | **Cuenta.** Log, resumen y código de salida se guardaron antes de eliminar cada contenedor |
+
+| Spec | Pruebas | Código de salida | Duración |
+|---|---|---|---|
+| E2E-20 `e2e-20-recorrido-demo` (repetido) | 12/12 | 0 | 23 s |
+| E2E-04 `e2e-04-configure-publish-vacancy` | 2/2 | 0 | 24 s |
+| E2E-10 `e2e-10-selection-and-closure` | 1/1 | 0 | 18 s |
+| E2E-11 `e2e-11-multitenancy` | 4/4 | 0 | 17 s |
+| E2E-14 `e2e-14-target-completion-form` | 4/4 | 0 | 34 s |
+| E2E-15 `e2e-15-operational-risk-panel` | 8/8 | 0 | 1 min 4 s |
+| E2E-16 `e2e-16-tabla-accesible-movil` | 7/7 | 0 | 17 s |
+| E2E-17 `e2e-17-motion-accesible` | 8/8 | 0 | 15 s |
+| E2E-19 `e2e-19-qa-visual-accesible` | 7/7 | 0 | 16 s |
+| **Total** | **53/53** | **9 de 9 con código 0** | — |
+
+**El entorno `continuacion` servía el código de `f422590`:**
+- **Worktree y montaje:** el worktree estaba limpio en ese commit, y `app`, `app-e2e` y `queue-e2e` lo montan en `/var/www/html`.
+- **Archivos servidos:** `process-schedule.tsx`, `show.tsx` y el spec E2E-20 tienen el mismo SHA-256 dentro del contenedor y en el anfitrión, y su contenido es idéntico al de `HEAD`.
+- **Recursos compilados:** ningún archivo de `resources/` es más reciente que el build. El `manifest.json` servido en el puerto 8021 es idéntico al del anfitrión, y el bundle servido contiene el texto del cronograma.
+
+**Evidencias:** fuera de Git, en `D:/Universidad/PruebasCalidadSoftware/Project/continuacion-f36-f40-20261107/evidencias/cypress-f422590/`. Por cada spec hay tres archivos: `<spec>.log`, `<spec>.summary.txt` y `<spec>.exit`. Además, `manifest.txt` registra el SHA, la memoria y las horas de cada spec, y `verificacion-entorno.txt`, la verificación del entorno. En `SHA256SUMS.txt` están los hashes de esos 29 archivos, comprobados contra los originales.
 
 ## 4. Puntos que Codex debe auditar
 
