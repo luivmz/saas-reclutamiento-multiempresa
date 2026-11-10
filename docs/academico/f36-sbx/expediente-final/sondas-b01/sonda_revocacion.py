@@ -6,7 +6,8 @@ Clona en un directorio temporal, crea allí commits sintéticos (un H y sus suce
 
 Comprueba que la definición de §5.8.2 basta para separar el delta permitido (documento de determinación en su ruta
 fija, `revocation` de nulo a un evento válido, FG-14 de CUMPLE a NO CUMPLE, `declared_result` a REVOCADO y la celda
-Estado de FG-14 en el documento del gate) de cualquier otro con una ruta o un campo adicional. `delta_errors()` es
+Estado de FG-14 en el documento del gate) de cualquier otro con una ruta o un campo adicional, o al que le falte una
+de las tres transiciones de X2-R, que C-R.4 exige juntas. `delta_errors()` es
 la definición de referencia escrita a partir de S; la comprobación real será la de B-01, con su RED y su GREEN.
 
 Fuera de esta sonda: las líneas canónicas E2 a E7 (X3 a X5), cuyo texto depende de T-01 y D-07, y el caso de una
@@ -96,8 +97,15 @@ def delta_errors(repo: pathlib.Path, h: str, x: str) -> list[str]:
     paths = set(run(['git', 'diff', '--no-renames', '--name-only', h, x], repo).splitlines())
     h_state = json.loads(run(['git', 'show', f'{h}:{GATE_STATE}'], repo))
     x_state = json.loads(run(['git', 'show', f'{x}:{GATE_STATE}'], repo))
-    revoked = h_state.get('revocation') is None and x_state.get('revocation') is not None
-    errors = []
+    a, b = flatten(h_state), flatten(x_state)
+    x2r = {'criteria[FG-14].status': ('CUMPLE', 'NO CUMPLE'), 'declared_result': ('NO SUPERADO', 'REVOCADO'),
+           'revocation': (None, 'evento')}
+    # C-R.1 y C-R.4: X1-R y X2-R se habilitan solo si las tres transiciones de X2-R se dan juntas. El evento (C-R.2)
+    # lo comprueba revocation_errors() y el documento (C-R.3), la comprobación de la determinación.
+    attempted = h_state.get('revocation') is None and x_state.get('revocation') is not None
+    missing = [f for f in sorted(x2r) if f != 'revocation' and (a.get(f), b.get(f)) != x2r[f]]
+    revoked = attempted and not missing
+    errors = [f'C-R.4: faltan transiciones de X2-R: {missing}'] if attempted and missing else []
 
     allowed = {GATE_STATE, GATE_DOC} | ({DETERMINATION} if revoked else set())
     outside = sorted(paths - allowed)
@@ -114,9 +122,7 @@ def delta_errors(repo: pathlib.Path, h: str, x: str) -> list[str]:
         elif not run(['git', 'show', f'{x}:{DETERMINATION}'], repo).startswith('[SINTÉTICO]'):
             errors.append('determinación: en esta sonda debe ser sintética')
 
-    transitions = {'criteria[FG-14].status': ('CUMPLE', 'NO CUMPLE'), 'declared_result': ('NO SUPERADO', 'REVOCADO'),
-                   'revocation': (None, 'evento')} if revoked else {}
-    a, b = flatten(h_state), flatten(x_state)
+    transitions = x2r if revoked else {}
     for field in sorted(set(a) | set(b)):
         if a.get(field, '∅') == b.get(field, '∅'):
             continue
@@ -214,6 +220,16 @@ SCENARIOS = [
     ('S-T21 ruta citada', 'revocación que cita y añade otra ruta de determinación',
      lambda r: (determination(r, GATE_EVIDENCE + 'OTRA.md'), set_revocation(r, revocation_event(GATE_EVIDENCE + 'OTRA.md')),
                 set_fg14(r), set_declared(r)), 'revocation.determination'),
+    # C-R.4: con la determinación y el evento, falta una de las tres transiciones de X2-R o faltan ambas.
+    ('S-T21 sin FG-14', 'determinación y evento; FG-14 sigue en CUMPLE',
+     lambda r: (determination(r), set_revocation(r, revocation_event()), set_declared(r)),
+     "C-R.4: faltan transiciones de X2-R: ['criteria[FG-14].status']"),
+    ('S-T21 sin declared_result', 'determinación y evento; declared_result sigue en NO SUPERADO',
+     lambda r: (determination(r), set_revocation(r, revocation_event()), set_fg14(r)),
+     "C-R.4: faltan transiciones de X2-R: ['declared_result']"),
+    ('S-T21 sin ambas', 'determinación y evento; FG-14 y declared_result conservan su valor de H',
+     lambda r: (determination(r), set_revocation(r, revocation_event())),
+     "C-R.4: faltan transiciones de X2-R: ['criteria[FG-14].status', 'declared_result']"),
 ]
 
 
