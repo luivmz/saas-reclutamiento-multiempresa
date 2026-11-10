@@ -1,6 +1,13 @@
 # F36-SBX — Especificación S del sucesor B-01
 
-> **CANDIDATA A AUDITORÍA — NO IMPLEMENTADA. Versión 2.1** (09/11/2026), en la rama local `feature/continuacion-f36-f40`, desde `f5003c9`. La 2.1 añade las sondas ejecutables de §5.9.4 y corrige AC-02, que contradecía AC-05. La versión 1 (07/11/2026, `feature/entrega-academica-demo`) se conserva en la historia. La v2 aterriza T-09 con mediciones reales del validador (§5.9), añade criterios de aceptación (§10), pruebas de implementación (§8, S-T11 a S-T17), dependencias de D-10, D-11 y D-02b (§11) y los puntos de auditoría (§12). Revisa la especificación de `1d5d6aa:docs/academico/f36-sbx/preparacion-gate/F36SBX_Especificacion_Sucesor_B01.md` (en adelante, «la especificación de H») según Q2 §8, §10 y §12, adoptada por RR-001 (`5036393`).
+> **CANDIDATA A AUDITORÍA — NO IMPLEMENTADA. Versión 2.2** (09/11/2026), en la rama local `feature/continuacion-f36-f40`, desde `f5003c9`. La 2.2 corrige los cuatro hallazgos del dictamen de Codex sobre la 2.1 (blob `8ae8b5bc…`):
+>
+> - **S-M01:** limita T-09 a la variante (a-ii), como propuesta para decisión (§5.9.3).
+> - **S-M02:** cierra el delta de revocación después de H (§5.8.2).
+> - **S-M03:** mueve las sondas al paquete (§5.9.5).
+> - **S-L01:** separa en §11 el contrato 10, D-11, D-10 y D-02b.
+>
+> La 2.1 añadió las sondas ejecutables de §5.9.4 y corrigió AC-02, que contradecía AC-05. La versión 1 (07/11/2026, `feature/entrega-academica-demo`) se conserva en la historia. La v2 aterriza T-09 con mediciones reales del validador (§5.9), añade criterios de aceptación (§10), pruebas de implementación (§8, S-T11 a S-T17), dependencias de D-10, D-11 y D-02b (§11) y los puntos de auditoría (§12). Revisa la especificación de `1d5d6aa:docs/academico/f36-sbx/preparacion-gate/F36SBX_Especificacion_Sucesor_B01.md` (en adelante, «la especificación de H») según Q2 §8, §10 y §12, adoptada por RR-001 (`5036393`).
 >
 > **No modifica** `validate_f36sbx.py`, sus pruebas, el estado del gate ni el gobierno. Implementarla exige D-02b, que **no está emitida**: sin facultades delegadas utilizables (RR-001 §4), D-02b solo puede emitirse por el mecanismo colegiado. Estado vigente: F36-SBX = EN DISEÑO, F36-SBX-GATE = NO SUPERADO, F37-SBX = BLOQUEADA.
 >
@@ -19,8 +26,12 @@
 | S-7 | **T-09 medido** (v2): siete sondas del validador fijan qué base y qué rama admiten un H válido (§5.9.1) | La v1 argumentaba T-09 sin medirlo. Las sondas muestran que todo el expediente posterior a SEG cabe en FRZ sobre `55f758e` |
 | S-8 | Invariante **I-14**: el resultado del gate se lee anclado en la rama de H (§4) | Integrar H en `develop` hará fallar FRZ allí por diseño, como en F35-SBX (DG-02); no es una regresión del gate |
 | S-9 | Criterios de aceptación, pruebas y dependencias explícitos (§8, §10 y §11) | Para que la implementación tenga un «terminado» auditable y quede claro qué espera a D-10, D-11 o D-02b |
+| S-10 | **Una sola variante de T-09 en esta versión:** (a-ii), como propuesta para decisión. (a-i) y (b) quedan como alternativas fuera de alcance, con su matriz (§5.9.3) | S-M01: T-04, AC-05, AC-07 y las pruebas solo eran coherentes con (a-ii) |
+| S-11 | **X1 y X2 ampliadas para la revocación:** el delta exacto que se admite después de H (§5.8.2) y su sonda con commits sintéticos (§5.8.3) | S-M02: X1 y X2 de H no admitían el documento de determinación ni el cambio de FG-14, de modo que §5.8 y AC-10 eran inalcanzables después de H |
+| S-12 | **Sondas dentro del paquete** (`expediente-final/sondas-b01/`), con una sonda del trasplante (§5.9.5) | S-M03: en `docs/academico/preparacion-f36-b01/` quedaban fuera de AC-05 y un H trasplantado no podía llevarlas |
+| S-13 | **§11 separa cuatro requisitos:** la autorización del contrato 10, el procedimiento de D-11, la determinación D-10 y la autorización D-02b | S-L01: la 2.1 hacía depender de D-11 una obligación que el contrato 10 ya impone hoy |
 
-Lo que no cambia de la especificación de H se mantiene en su redacción. Esto incluye el comportamiento verificado (§2 de H), las superficies protegidas (§3 de H), las invariantes I-1 a I-10 (§4 de H), los espejos E1–E7 y su requisito previo (§5.2 de H), el vocabulario cerrado (§5.3), `REQUIRED_STATE(R)` (§5.4), las excepciones X1–X5 (§5.5), la identidad de H (§5.6), la sustitución de `:2877` (§5.7) y los riesgos (§8 de H). Aquí se resumen solo para que S se audite sin abrir otro commit.
+Lo que no cambia de la especificación de H se mantiene en su redacción. Esto incluye el comportamiento verificado (§2 de H), las superficies protegidas (§3 de H), las invariantes I-1 a I-10 (§4 de H), los espejos E1–E7 y su requisito previo (§5.2 de H), el vocabulario cerrado (§5.3), `REQUIRED_STATE(R)` (§5.4), las excepciones X3–X5 (§5.5), la identidad de H (§5.6), la sustitución de `:2877` (§5.7) y los riesgos (§8 de H). X1 y X2 se conservan y §5.8.2 las amplía solo para la revocación. Aquí se resumen solo para que S se audite sin abrir otro commit.
 
 ## 1. Propósito y límites
 
@@ -51,7 +62,7 @@ B-01 **no** registra evidencia, no decide EI ni dependencias, no aprueba ADR, no
   Fuera de ellos, solo se admiten los estados históricos.
 - **Antes de H**, cada espejo debe tener una sola afirmación por sujeto. Hoy los cuatro documentos de gobierno repiten el estado en el párrafo de F36 (D-07).
 - **`:2877` se sustituye** por «E1–E7 declaran exactamente R». Cualquier diferencia, en cualquier sentido, es una falla.
-- **Después de H** solo cambian X1–X5, comprobadas línea a línea. X2 se compara campo a campo con el blob de H.
+- **Después de H** solo cambian X1–X5, comprobadas línea a línea. X2 se compara campo a campo con el blob de H. Con una revocación, X1 y X2 admiten además el delta cerrado de §5.8.2, y nada más.
 
 ## 4. Invariantes que S añade
 
@@ -66,6 +77,8 @@ B-01 **no** registra evidencia, no decide EI ni dependencias, no aprueba ADR, no
 
 ### 5.8 Revocación (T-05, cerrado)
 
+#### 5.8.1 Formato
+
 `revocation` pasa de «nulo o cualquier objeto» a un formato cerrado:
 
 ```json
@@ -74,11 +87,18 @@ B-01 **no** registra evidencia, no decide EI ni dependencias, no aprueba ADR, no
     "date": "AAAA-MM-DD",
     "effective_from": "AAAA-MM-DDThh:mm:ss-05:00",
     "ground": "charter_7_1 | charter_7_2 | charter_7_3 | charter_7_4 | gate_5_tei21 | gate_5_retirada",
-    "determination": "ruta versionada del documento de determinación",
-    "evidence": ["rutas o SHA-256 de la evidencia citada"]
+    "determination": "docs/academico/f36-sbx/gate/evidencia/REVOCACION_DETERMINACION.md",
+    "evidence": ["SHA-256 o rutas que ya existen en H"]
   }
 }
 ```
+
+Las claves son exactamente esas cinco:
+
+- `date` es la fecha del registro, con formato `AAAA-MM-DD`, y no puede ser anterior a la fecha del commit H.
+- `effective_from` es un instante con desfase horario. Puede ser anterior a la fecha del registro, porque el registro es declarativo (D-10 §5.4); el validador no lo juzga.
+- `determination` es exactamente la ruta fija de §5.8.2.
+- `evidence` es una lista no vacía. Cada entrada es un SHA-256 en minúsculas o una ruta que ya existe en el árbol de H, sin añadir otra.
 
 Con `revocation` válido:
 
@@ -86,7 +106,48 @@ Con `revocation` válido:
 - F37-SBX = BLOQUEADA en todos los espejos;
 - `allowed_states()` admite REVOCADO **solo** en los espejos.
 
-Con `revocation` mal formado, falla cerrado: NO SUPERADO y una falla. `effective_from` puede ser anterior a la fecha del registro, porque el registro es declarativo (D-10 §5.4). El validador no lo juzga; solo exige que la determinación citada exista y esté versionada.
+Con `revocation` mal formado, falla cerrado: NO SUPERADO y una falla.
+
+#### 5.8.2 Delta permitido después de H
+
+Las excepciones X1 y X2 de H (§5.5 de H) no admitían ni el documento de determinación ni el cambio de FG-14, que la regla GATE recalcula NO CUMPLE en cuanto `revocation` deja de ser nulo (`:2805`). Sin esta ampliación, una revocación registrada después de H fallaría el vínculo (`binding_errors()`, `:2293`) y AC-10 sería inalcanzable. S amplía X1 y X2 así, y solo así:
+
+| ID | Ruta | Qué puede cambiar | Comprobación |
+|---|---|---|---|
+| X1 | `gate/evidencia/` | Lo de H: `FG-02.json`, `FG-03.json`, `FG-10.json` y `FG-12.json`, más el informe que cita FG-02 | Vigente (regla GATE y AF5) |
+| **X1-R** | `docs/academico/f36-sbx/gate/evidencia/REVOCACION_DETERMINACION.md` | Se **añade** el documento de determinación. Es un blob regular `100644`, versionado en el commit validado, ausente en H y citado exactamente por `revocation.determination` | **Nueva**. Solo con la condición C-R |
+| X2 | `gate/f36sbx_gate_state.json` | Lo de H: `candidate_commit`, el `status` y la `evidence` de FG-02, FG-03, FG-10 y FG-12, `f37_authorized_ei`, `declared_result` y `revocation` | Campo a campo con el blob de H |
+| **X2-R** | `gate/f36sbx_gate_state.json` | Tres campos, con estas transiciones exactas: `revocation` de nulo a un evento válido (§5.8.1); `criteria[FG-14].status` de CUMPLE a NO CUMPLE; `declared_result` a REVOCADO | **Nueva**, campo a campo. Solo con la condición C-R |
+| X3 | `F36SBX_Gate_Sucesor.md` | Sin cambios de regla: la celda Estado de FG-14 pasa de CUMPLE a NO CUMPLE dentro de la columna Estado, y la línea E2 declara REVOCADO | `doc_status_only()` generalizada (H §5.5) |
+| X4 y X5 | README del paquete y los cuatro documentos de gobierno | Sin cambios de regla: sus líneas canónicas declaran REVOCADO y F37-SBX = BLOQUEADA | Ídem |
+
+**Condición C-R.** X1-R y X2-R se habilitan solo si se cumplen las cuatro condiciones:
+
+1. `revocation` es nulo en el blob de H.
+2. `revocation` es un evento válido según §5.8.1 en el árbol validado.
+3. El documento existe en la ruta fija y es exactamente el que cita `determination`.
+4. Las tres transiciones de X2-R se dan juntas.
+
+Si falta cualquiera de ellas, la ruta de X1-R y los tres campos de X2-R son cambios materiales posteriores a H y fallan como cualquier otro.
+
+**Lo que no se relaja.** Ningún otro campo, criterio ni ruta del paquete o de las herramientas puede cambiar. Tampoco un segundo archivo en `gate/evidencia/`, una clave adicional en `revocation`, el FG-14 sin revocación, ni una determinación sin evento o en otra ruta. Se mantienen la identidad de H (H §5.6), el vínculo con su commit y las herramientas iguales a H. REVOCADO prevalece y no se deshace (I-11).
+
+**Revocación después de SUPERADO.** El delta admitido es la unión de lo que X1 y X2 ya admiten para SUPERADO con X1-R y X2-R. Ninguno de los dos deltas amplía al otro: para pasar de SUPERADO a REVOCADO cambian exactamente los mismos tres campos y la misma ruta.
+
+#### 5.8.3 Sonda de la especificación
+
+[`sonda_revocacion.py`](sondas-b01/sonda_revocacion.py) prueba que esta definición separa el delta permitido de los demás. La prueba se hace en un clon desechable, con un H sintético desde `55f758e` y un commit sucesor por caso. La sonda codifica §5.8.2 como definición de referencia; no ejecuta ni modifica el validador.
+
+| Caso | Delta frente al H sintético | Resultado del 09/11/2026 |
+|---|---|---|
+| S-T18 | Exactamente el de §5.8.2: determinación, los tres campos y la celda de FG-14 | Admitido |
+| S-T19 | S-T18 más un archivo en `gate/evidencia/`, o más un archivo del paquete | Rechazado: «ruta fuera del delta» (2 casos) |
+| S-T20 | S-T18 más `f37_authorized_ei` cambiado, FG-13 en NO CUMPLE o una clave adicional en `revocation` | Rechazado: «campo fuera del delta» o «claves distintas» (3 casos) |
+| S-T21 | FG-14 en NO CUMPLE sin revocación; la determinación sin evento; o un evento que cita otra ruta | Rechazado (3 casos) |
+
+La sonda dio 9 conformes y 0 discrepancias. Dos ablaciones de la definición de referencia, hechas sobre copias fuera del repositorio, la hacen fallar con código 1:
+- **Sin la comprobación de rutas:** 3 discrepancias (S-T19 ×2 y S-T21 con la determinación).
+- **Con cualquier campo admitido:** 3 discrepancias (S-T20 ×2 y S-T21 con FG-14). **No es la validación funcional de AC-10**: esa corresponde a la implementación de B-01, con su RED y su GREEN (S-T01 a S-T03 y S-T18 a S-T21 sobre el validador nuevo). Las líneas canónicas E2 a E7 quedan fuera de la sonda, porque su texto depende de T-01 y D-07. Tampoco cubre la revocación posterior a SUPERADO.
 
 ### 5.9 Base, anclaje y FRZ después de SEG (T-09, nuevo)
 
@@ -104,7 +165,7 @@ El validador de referencia (SHA-256 `87ad2f6f…`) se ejecutó con `python -I -B
 | V-4 | V-2 más el paquete de `1d5d6aa` | `develop` | 56/3 | Las mismas tres de V-2 (52 cambios) |
 | V-5 | V-1 más **todo** `docs/academico/f36-sbx/` de `f5003c9`: Q2, RR-001, D-10, D-11, S v1, conclusiones y prototipo de ML-02 | `main` | **59/0** | — |
 | V-6 | `55f758e` y `1d5d6aa` en HEAD desacoplado | `HEAD` | 57/2 | FRZ, por rama no admitida; GATE, por FG-01 y FG-05 |
-| V-7 | Esta rama, `feature/continuacion-f36-f40` | la rama | 55/4 | Rama no admitida, FRZ por alcance, FRZ por runtime y GATE (FG-01 y FG-05) |
+| V-7 | `f5003c9`, base de esta rama, con el nombre `feature/continuacion-f36-f40`. Desde la 2.2 se mide sobre ese commit fijo, para que la sonda no dependa del árbol desde el que se ejecuta | la rama | 55/4 | Rama no admitida, FRZ por alcance, FRZ por runtime y GATE (FG-01 y FG-05) |
 
 **Hechos estructurales:**
 
@@ -118,28 +179,37 @@ El validador de referencia (SHA-256 `87ad2f6f…`) se ejecutó con `python -I -B
 
 1. **Mientras `BASE = b8892af` y FRZ no cambie, H no puede descender de `develop`.** V-2 y V-4 muestran que FRZ falla por SEG, sea cual sea el contenido de H, y R queda NO SUPERADO aun con evidencia auténtica (S-T04).
 2. **H puede construirse sobre `55f758e` como trasplante del paquete.** V-5 muestra que el expediente completo posterior a SEG cabe en FRZ, y que no hay conflicto: el subárbol de partida es el mismo en las dos ramas. El trasplante consiste en llevar `docs/academico/f36-sbx/` del candidato de diseño auditado y los cambios del validador (`tools/f36sbx`), nada más. **No se llevan** los cambios de producto, como los de esta rama o los de SEG.
-3. **La rama de H tiene que estar admitida.** Hay tres maneras:
-   - **(a-i)** Fijar H en `feature/f36-sbx-authorization-design`, sobre `4a2b2d7`. Ya está admitida y no exige T-04. A cambio, mueve la rama de diseño que ancla AF5 y la que usa el checkout principal.
-   - **(a-ii)** Crear una rama nueva desde el commit `55f758e` y admitirla en `BRANCHES` dentro de B-01 (T-04). Es reversible, no mueve ninguna rama existente y aísla H.
-   - **(a-iii)** Validar H en `main`. Exigiría integrar H en `main` **antes** de validarlo, es decir, una operación del contrato 10 (D-11). Desaconsejada.
+3. **La rama de H tiene que estar admitida.** Esta versión especifica una sola manera: **(a-ii)**, crear una rama nueva desde el commit `55f758e` y admitirla en `BRANCHES` dentro de B-01 (T-04). Es reversible, no mueve ninguna rama existente y aísla H. Las demás maneras medidas o consideradas quedan fuera de esta versión (§5.9.3):
+   - **(a-i)** fijaría H en `feature/f36-sbx-authorization-design`, moviendo la rama que ancla AF5 y que usa el checkout principal;
+   - **(a-iii)** exigiría integrar H en `main` antes de validarlo, que es una operación del contrato 10.
 4. **Ventana temporal.** Si SEG llega a `main` antes de fijar H, `main` deja de servir como base, porque daría lo mismo que V-2. Por eso (a-ii) parte del **commit** `55f758e` y no de la ref móvil `main`.
 5. **Después de H.** Integrar H en `develop` hará fallar FRZ allí por diseño (I-14), como hoy en `develop` y como en F35-SBX (DG-02).
 
-#### 5.9.3 Opciones
+#### 5.9.3 Variante admitida en esta versión y alternativas
 
-| Opción | Qué es | Consecuencia | Depende de |
-|---|---|---|---|
-| **T-09 (a)**, variante (a-ii) | H en una rama nueva desde `55f758e`, admitida por T-04; trasplante del paquete y del validador; `BASE` sin cambios | FRZ pasa sin mover la base (V-1, V-3 y V-5). Coherente con la regla «Anclaje» del README del paquete (`06e933e`, 26/10/2026) y con I-12 | D-02b, que incluye T-04 |
-| T-09 (a), variante (a-i) | H en `feature/f36-sbx-authorization-design` | Sin T-04, pero mueve la rama ancla de AF5 | D-02b |
-| **T-09 (b)** | Mover `BASE` a un commit posterior a SEG, por ejemplo `9dd76c4` | Cambia el significado de FG-05 hacia adelante. H tendría que descender de esa base: `main` no desciende de `9dd76c4` y fallaría la comprobación de la base. Solo es admisible con D10-1 determinada y como decisión expresa. No regulariza nada anterior (I-12) | D-10 (D10-1) y D-02b |
-| T-09 (c) | Excluir de FRZ el mantenimiento auditado fuera del paquete | **Desaconsejada:** debilita TEI-22 y convierte una cuestión de D-10 en una excepción de código | — |
-| T-09 (d) | H desde `develop`, sin cambiar FRZ ni la base | **Inviable:** R nunca llega a SUPERADO (V-2 y V-4) | — |
+**S v2.2 especifica una sola variante: T-09 (a-ii), como propuesta para decisión.** No está aprobada ni emitida: T-09 y T-04 siguen NO EMITIDAS (§9) y las decide D-02b por el mecanismo de P-S4. T-04, AC-05, AC-06, AC-07 y las pruebas de §8 están escritos solo para (a-ii).
 
-**Recomendación técnica, no vinculante:** (a), en la variante (a-ii). Es reversible, no exige determinar antes D-10 para elegir la base y no toca ninguna rama existente.
+(a-i) y (b) son alternativas **fuera del alcance** de esta versión. Si el equipo prefiriera una de ellas, haría falta una versión nueva de S con su propia base, sus ramas, sus criterios y sus pruebas, y una auditoría nueva. Esta versión no las prepara ni las descarta como decisión.
+
+| Variante | `BASE` | Punto de partida de H | `BRANCHES` | Criterios y pruebas aplicables | Estado en S v2.2 |
+|---|---|---|---|---|---|
+| **(a-ii)** | `b8892af`, sin cambios | Commit `55f758e`, con el paquete y el validador trasplantados | Las tres vigentes y **una** rama nueva de H (T-04) | AC-01 a AC-14; S-T01 a S-T15 y S-T17 a S-T22 | **Única variante especificada.** Propuesta para decisión, NO EMITIDA |
+| (a-i) | `b8892af` | `4a2b2d7`, en `feature/f36-sbx-authorization-design`, que ya está admitida | Las tres vigentes, sin T-04 | No aplican AC-07, S-T13, S-T14 ni S-T17 en su forma actual. AC-05 se mediría sobre otro punto de partida | Fuera del alcance. Mueve la rama que ancla AF5 |
+| (b) | Un commit posterior a SEG, por ejemplo `9dd76c4` | Un descendiente de esa base | Sin determinar | Cambiarían AC-05, AC-06 y S-T15. S-T16 muestra que en la línea de `main` falla «la base es ancestro de HEAD». Exigiría D10-1 | Fuera del alcance. Cambia FG-05 hacia adelante |
+
+Las variantes medidas que no se proponen se mantienen como **descartadas**, con su motivo:
+
+| Variante | Motivo |
+|---|---|
+| (a-iii): validar H en `main` | Exige una operación del contrato 10 (integrar H) antes de validarlo |
+| (c): excluir de FRZ el mantenimiento fuera del paquete | Debilita TEI-22 y convierte una cuestión de D-10 en una excepción de código |
+| (d): H desde `develop` sin cambiar FRZ ni la base | Inviable: R nunca llega a SUPERADO (V-2 y V-4) |
+
+**Por qué (a-ii).** FRZ pasa sin mover la base (V-1, V-3 y V-5, y S-T11). Es coherente con la regla «Anclaje» del README del paquete (`06e933e`, 26/10/2026) y con I-12. Es reversible, no exige determinar D-10 para elegir la base y no toca ninguna rama existente. Es una justificación técnica, no una decisión del equipo.
 
 #### 5.9.4 Sondas ejecutables (09/11/2026)
 
-[`sondas_t09.py`](../../preparacion-f36-b01/sondas_t09.py) repite V-1 a V-7 y observa hoy lo que FRZ haría en S-T04 y S-T11 a S-T17. Clona en un directorio temporal, no mueve ninguna ref y borra el clon. No modifica el validador: las sondas con la rama «admitida» añaden el nombre a `BRANCHES` solo en memoria, en el proceso de la sonda, sobre el código del clon. El nombre `feature/f36-sbx-h-sonda` es de prueba: la rama real de H es T-04, NO EMITIDA.
+[`sondas_t09.py`](sondas-b01/sondas_t09.py) repite V-1 a V-7 y observa hoy lo que FRZ haría en S-T04 y S-T11 a S-T17. Clona en un directorio temporal, no mueve ninguna ref y borra el clon. No modifica el validador: las sondas con la rama «admitida» añaden el nombre a `BRANCHES` solo en memoria, en el proceso de la sonda, sobre el código del clon. El nombre `feature/f36-sbx-h-sonda` es de prueba: la rama real de H es T-04, NO EMITIDA.
 
 | Sonda | Montaje | Resultado | Fallas |
 |---|---|---|---|
@@ -153,7 +223,42 @@ El validador de referencia (SHA-256 `87ad2f6f…`) se ejecutó con `python -I -B
 | S-T14 | Rama con el nombre admitido, cortada desde `develop` | 56/3 | FRZ por alcance, FRZ por runtime y GATE |
 | S-T16 | `main` con `BASE = 9dd76c4` | 53/6 | «La base es ancestro de HEAD», FRZ por alcance y por runtime, GATE, identidad de la base y la invariante de evidencia «el candidato desciende de la base» |
 
-**Qué prueba y qué no.** S-T11 muestra que, con T-09 (a-ii), admitir la rama es el único cambio que FRZ necesita para aceptar el expediente completo. **No** muestra que H vaya a superar el gate: R sigue en NO SUPERADO, porque falta la evidencia de FG-02, FG-03, FG-10 y FG-12, y el v3 ni siquiera puede representar SUPERADO. S-T16 confirma por qué T-09 (b) no sirve en la línea de `main`. S-T01 a S-T03 y S-T05 a S-T10 dependen de la lógica nueva de B-01 y no se pueden observar hasta implementarla.
+**Qué acredita la sonda de T-09:**
+- Con el validador v3 y la rama admitida solo en memoria, FRZ acepta un árbol que parte de `55f758e` y lleva el paquete completo (S-T11). Admitir la rama es el único cambio que FRZ necesita para ese árbol.
+- FRZ rechaza ese mismo árbol con una ruta de producto o de dependencias (S-T12), con otra rama (S-T13) o si parte de `develop` (S-T14).
+- S-T16 es evidencia de por qué (b) queda fuera de alcance; no es una prueba de la implementación.
+
+**Qué no acredita:**
+- Que H vaya a superar el gate. R sigue en NO SUPERADO, porque falta la evidencia de FG-02, FG-03, FG-10 y FG-12, y el v3 ni siquiera puede representar SUPERADO.
+- Nada de la lógica nueva de B-01. S-T01 a S-T03, S-T05 a S-T10 y S-T18 a S-T21 sobre el validador nuevo no se pueden observar hasta implementarla.
+
+**Queda por verificar sobre el futuro H**, una vez fijado:
+- **Árbol y rama:** S-T11 a S-T14, con la rama real de T-04 en `BRANCHES` del validador nuevo y no en memoria, y con el árbol real de H y no con el paquete de `f5003c9`.
+- **Constantes:** que `BASE` sigue igual (AC-06) y que `BRANCHES` admite exactamente esa rama (AC-07).
+- **Inventario y ejecución:** que el inventario de H cabe en AC-05 y que las sondas se ejecutan desde el árbol de H (S-T22).
+- **Validación anclada:** la validación anclada en la rama de H (I-14).
+
+#### 5.9.5 Ubicación de las sondas y trasplante (09/11/2026)
+
+Las sondas están en [`sondas-b01/`](sondas-b01/README.md), dentro de `docs/academico/f36-sbx/`, es decir, dentro del perímetro de AC-05. Hasta la 2.1 estaban en `docs/academico/preparacion-f36-b01/`, fuera del paquete: un H trasplantado según (a-ii) no podía llevarlas sin salir de AC-05. Ninguna sonda depende ya de la rama desde la que se ejecuta: V-7 se mide sobre el commit fijo `f5003c9`.
+
+[`sonda_trasplante.py`](sondas-b01/sonda_trasplante.py) comprueba esa ubicación en un árbol aislado. En un clon temporal crea un H de prueba desde `55f758e`, con `docs/academico/f36-sbx/` de la revisión indicada, y hace un commit sintético. Sobre ese árbol comprueba cuatro cosas:
+
+| ID | Comprobación |
+|---|---|
+| T-1 | `git diff --name-only 55f758e <H de prueba>` cabe en AC-05 e incluye los cuatro archivos de `sondas-b01/` |
+| T-2 | Los enlaces relativos de S y del README de las sondas resuelven en ese árbol y no salen del paquete |
+| T-3 | El validador del clon, con la rama de prueba admitida solo en memoria, da 0 fallas y R = NO SUPERADO |
+| T-4 | `sondas_t09.py` y `sonda_revocacion.py`, lanzados desde ese árbol, salen con código 0 |
+
+Es la sonda de S-T22. El H de prueba es sintético y desaparece con el clon; no fija H.
+
+| Paquete trasplantado (09/11/2026) | T-1 | T-2 | T-3 | T-4 |
+|---|---|---|---|---|
+| El de esta versión (`--paquete ARBOL`, mismo contenido que el commit de la 2.2) | Conforme: 30 rutas, todas en AC-05, con los 4 archivos de `sondas-b01/` | Conforme | 59/0, R = NO SUPERADO | Las dos sondas, código 0 |
+| Contraprueba con el de `5719ebc` (S v2.1, sondas fuera del paquete) | Falla: faltan los 4 archivos | Falla: S enlaza `../../preparacion-f36-b01/`, que no existe en H | 59/0 | Falla: código 2, no hay sondas que ejecutar |
+
+T-3 da 0 fallas en los dos casos: FRZ no detecta que falten las sondas. Por eso AC-05 exige además S-T22.
 
 ## 6. Criterios EQUIPO: dos variantes (T-08 según Q2)
 
@@ -187,7 +292,7 @@ FG-03 es una entrada del gate: no puede exigir un gate ya superado.
 
 | ID | Caso | Esperado |
 |---|---|---|
-| S-T01 | `revocation` con el formato de §5.8 y la determinación versionada | R = REVOCADO; espejos en REVOCADO y BLOQUEADA; 0 fallas |
+| S-T01 | `revocation` con el formato de §5.8.1 y la determinación versionada en su ruta fija | R = REVOCADO; espejos en REVOCADO y BLOQUEADA; 0 fallas |
 | S-T02 | `revocation` sin `determination`, con `ground` desconocido o con un tipo distinto | NO SUPERADO y una falla |
 | S-T03 | `revocation` válido y espejos en NO SUPERADO | Falla (I-2) |
 | S-T04 | H descendiente de `develop` con SEG, base `b8892af` | FRZ falla; R = NO SUPERADO aun con evidencia válida |
@@ -201,72 +306,101 @@ FG-03 es una entrada del gate: no puede exigir un gate ya superado.
 | S-T12 | S-T11 más una ruta bajo `app/`, `tests/` o un archivo de dependencias | FRZ falla por alcance y por runtime; R = NO SUPERADO |
 | S-T13 | El mismo árbol que S-T11, con un nombre de rama no admitido o en HEAD desacoplado | FRZ falla por la rama (V-6) |
 | S-T14 | Rama con el nombre admitido de H, pero cortada desde `develop` | FRZ falla por alcance y por runtime. El nombre solo no basta |
-| S-T15 | Con T-09 (a): `BASE` sigue siendo `b8892af…` | Prueba que fija la constante. Cambiarla exige T-09 (b) y su RED propio |
-| S-T16 | Con T-09 (b), si se elige: H en la línea de `main` y `BASE = 9dd76c4` | Falla la comprobación «la base es ancestro de HEAD» |
+| S-T15 | Con T-09 (a-ii): `BASE` sigue siendo `b8892af…` | Prueba que fija la constante. Cambiarla queda fuera de esta versión |
+| S-T16 | **Sonda de la especificación, no prueba de la implementación:** H en la línea de `main` y `BASE = 9dd76c4` | Falla «la base es ancestro de HEAD». Documenta por qué (b) queda fuera de alcance (§5.9.3) |
 | S-T17 | `BRANCHES` | Contiene exactamente las tres ramas vigentes más la de H; ninguna otra pasa |
+| S-T18 | Revocación después de H con exactamente el delta de §5.8.2 y la condición C-R | R = REVOCADO; espejos en REVOCADO y BLOQUEADA; 0 fallas |
+| S-T19 | S-T18 más una ruta adicional, en `gate/evidencia/` o en cualquier otro lugar del paquete | Falla el vínculo: cambio material posterior a H |
+| S-T20 | S-T18 más un campo adicional: otro campo del estado, otro criterio o una clave adicional en `revocation` | Falla el vínculo o el formato de `revocation` |
+| S-T21 | FG-14 en NO CUMPLE o el documento de determinación sin un evento válido, o un evento que cita otra ruta | Falla: X1-R y X2-R no se habilitan sin C-R |
+| S-T22 | Inventario de H: `git diff --name-only 55f758e <H>` incluye `sondas-b01/`, sus enlaces resuelven y las sondas se ejecutan desde el árbol de H | Cabe en AC-05; las sondas salen con código 0 |
 
-Los controles positivos (S-T01, S-T05 y S-T11 con evidencia) solo se crean en memoria o en clones desechables, nunca sobre H (H §8). S-T11 a S-T14 necesitan Git real en un repositorio temporal, como la batería AF5 con Git real. Su montaje y su resultado con el validador v3 ya están en §5.9.4; al implementar B-01 se trasladan a la batería, con la rama admitida en `BRANCHES` y no en memoria.
+Los controles positivos (S-T01, S-T05, S-T11 con evidencia y S-T18) solo se crean en memoria o en clones desechables, nunca sobre H (H §8). S-T11 a S-T14 y S-T18 a S-T22 necesitan Git real en un repositorio temporal, como la batería AF5 con Git real.
+
+Su montaje y su resultado de hoy están en las sondas: §5.8.3 para S-T18 a S-T21, §5.9.4 para S-T11 a S-T17 y §5.9.5 para S-T22. Las sondas de S-T18 a S-T21 usan la definición de referencia de la sonda, no el validador. Al implementar B-01 se trasladan a la batería, sobre el validador nuevo y con la rama admitida en `BRANCHES`, no en memoria.
 
 ## 9. Decisiones de diseño
 
-| ID | Decisión | Recomendación técnica, no vinculante | Estado |
+| ID | Decisión | Propuesta de S para decisión, no vinculante | Estado |
 |---|---|---|---|
 | T-01 | Lista de espejos E1–E7 y reescritura previa | Aceptar la de H §5.2 | NO EMITIDA |
 | T-02 | Estado de F37-SBX con R = SUPERADO | Un único estado de habilitación, por ejemplo «AUTORIZADA PARA INICIAR», sin enumerar EI en el gobierno | NO EMITIDA |
 | T-03 | ¿Cambia el estado de F36-SBX en la transición? | No; su cierre sería un incremento propio | NO EMITIDA |
-| T-04 | Rama de H y de los registros | Admitir de forma explícita una sola rama de H, creada desde el commit `55f758e`, con S-T13, S-T14 y S-T17 (ligada a T-09 (a-ii)) | NO EMITIDA |
-| T-05 | Formato de la revocación | §5.8 | **Cerrado en S**, pendiente de auditoría |
+| T-04 | Rama de H y de los registros | Admitir de forma explícita una sola rama de H, creada desde el commit `55f758e`, con S-T13, S-T14 y S-T17. Solo se especifica para T-09 (a-ii) | NO EMITIDA |
+| T-05 | Formato de la revocación y su delta después de H | §5.8.1 y §5.8.2 | **Cerrado en S**, pendiente de auditoría |
 | T-06 | Refuerzo de independencia de `integrante_no_autor` | Opcional | NO EMITIDA |
 | T-07 | Versión del gate y del esquema | `gate_version = 3` y esquema v2 si se elige solo la variante 3/3; 4 y v3 si se implementa también la variante RD | NO EMITIDA |
 | T-08 | Variante de registro | Implementar la 3/3 ahora y dejar la RD especificada. Con las DF actuales, la RD no se puede usar | NO EMITIDA |
-| T-09 | Base, anclaje y FRZ después de SEG | (a-ii): una rama de H nueva desde el commit `55f758e`, con el paquete trasplantado y `BASE` sin cambios (§5.9.3) | NO EMITIDA |
+| T-09 | Base, anclaje y FRZ después de SEG | (a-ii), la única variante de esta versión: una rama de H nueva desde el commit `55f758e`, con el paquete trasplantado y `BASE` sin cambios. (a-i) y (b) quedan fuera de alcance (§5.9.3) | NO EMITIDA |
 
 ## 10. Criterios de aceptación de la implementación
 
-B-01 solo se da por implementado si se cumplen todos los criterios. Cada uno se verifica sobre el commit candidato, anclado en la rama de H.
+B-01 solo se da por implementado si se cumplen todos los criterios. Cada uno se verifica sobre el commit candidato, anclado en la rama de H. Están escritos para T-09 (a-ii), la única variante de esta versión (§5.9.3).
 
 | ID | Criterio | Cómo se verifica |
 |---|---|---|
 | AC-01 | D-02b emitida por el mecanismo de P-S4, citada en el mensaje del primer commit de la implementación, y P-S1 a P-S3 cumplidas | Las rutas o los SHA-256 de los actos, y la determinación de D-10 |
-| AC-02 | RED observado antes de cambiar el validador: S-T01 a S-T17 y las pruebas de H fallan donde deben | Salida registrada en el informe de la implementación, dentro del paquete. `docs/tdd-evidence.md` queda fuera del perímetro de AC-05 y haría fallar FRZ: se sincroniza después, en un incremento propio |
+| AC-02 | RED observado antes de cambiar el validador: S-T01 a S-T15, S-T17 a S-T22 y las pruebas de H fallan donde deben. S-T16 es una sonda de la especificación y no forma parte de la batería | Salida registrada en el informe de la implementación, dentro del paquete. `docs/tdd-evidence.md` queda fuera del perímetro de AC-05 y haría fallar FRZ: se sincroniza después, en un incremento propio |
 | AC-03 | GREEN: la batería y las metapruebas (`meta_f36sbx.py`) pasan, con ablaciones del código nuevo que las hagan fallar | Ejecución completa y su recuento |
 | AC-04 | Sin evidencia de criterios EQUIPO, el validador da 0 fallas con R = NO SUPERADO declarado y recalculado | S-T11 |
-| AC-05 | `git diff --name-only 55f758e <H>` ⊆ `docs/academico/f36-sbx/` ∪ `docs/academico/tools/f36sbx/` ∪ `GOV_FILES` | Comando y su salida en el informe |
-| AC-06 | `BASE` sin cambios con T-09 (a) | S-T15 |
-| AC-07 | `BRANCHES` admite exactamente una rama nueva, la de H | S-T13, S-T14 y S-T17 |
+| AC-05 | `git diff --name-only 55f758e <H>` ⊆ `docs/academico/f36-sbx/` ∪ `docs/academico/tools/f36sbx/` ∪ `GOV_FILES`, con H creado desde el commit `55f758e` (T-09 (a-ii)). El inventario incluye `expediente-final/sondas-b01/`, y las sondas se ejecutan desde el árbol de H | Comando y su salida en el informe; S-T22 |
+| AC-06 | `BASE` sin cambios (`b8892af…`), como exige (a-ii) | S-T15 |
+| AC-07 | `BRANCHES` admite exactamente una rama nueva, la de H, creada desde el commit `55f758e` (T-04 con (a-ii)) | S-T13, S-T14 y S-T17 |
 | AC-08 | El SHA-256 nuevo del validador consta en todos los documentos que lo citan, y el de v3 (`87ad2f6f…`) se conserva como histórico | Búsqueda de ambos valores |
 | AC-09 | Los espejos E1–E7 tienen una sola afirmación por sujeto antes de H (D-07), y cualquier divergencia con R, en cualquier sentido, falla | Batería de H y S-T03 |
-| AC-10 | REVOCADO representable y prevalente | S-T01 a S-T03 (I-11) |
-| AC-11 | Ningún control positivo (SUPERADO o REVOCADO) persiste en el repositorio | Búsqueda en el árbol de H: 0 archivos bajo `gate/evidencia/` |
+| AC-10 | REVOCADO representable y prevalente. Después de H, el vínculo admite exactamente el delta de §5.8.2 con la condición C-R, y rechaza cualquier ruta o campo adicional | S-T01 a S-T03 (I-11) y S-T18 a S-T21, sobre el validador nuevo |
+| AC-11 | Ningún control positivo (SUPERADO o REVOCADO) persiste en el repositorio | Búsqueda en el árbol de H: 0 archivos bajo `gate/evidencia/`, tampoco `REVOCACION_DETERMINACION.md` |
 | AC-12 | FG-12 en NO APLICA se conserva | S-T09 y S-T10 |
 | AC-13 | El informe registra que, al integrar H en `develop`, FRZ fallará allí por diseño (I-14), con la salida esperada | Sección del informe |
 | AC-14 | Sin dependencias nuevas; el validador sigue usando solo la biblioteca estándar | Regla DEP |
 
 ## 11. Qué depende de D-10, D-11 y D-02b
 
-| Elemento | D-10 | D-11 | D-02b | Otros requisitos |
-|---|---|---|---|---|
-| B-01 en conjunto | **Sí** (P-S1). Con D10-2, B-01 no tiene objeto y haría falta un gate nuevo | No | **Sí**: la autoriza | Auditoría de S (P-S2) |
-| T-09 (a), elegir la base | No: la base no se mueve | No | Sí, como decisión | — |
-| T-09 (b), mover la base | **Sí**: solo con D10-1 | No | Sí, como decisión expresa | — |
-| T-04, admitir la rama de H | No | No | Sí | — |
-| Crear la rama local de H e implementar | Sí, a través de B-01 | No: es trabajo local | Sí | — |
-| Merge de H en `develop` o `main`, y push de H para la auditoría | No | **Sí**: lo exige el contrato 10. Hasta adoptar D-11, con autorización explícita del equipo (P-03 y P-04) | Sí | — |
-| T-05 (REVOCADO) | Solo se usa con D10-2 o con una revocación posterior; el formato no depende de D-10 | No | Sí | — |
-| T-08, variante RD | No | No | Sí | DF-03 con su texto íntegro (hoy pendiente) |
-| FG-02 sobre H | No | No | No | El informe del auditor elegible sobre H |
-| FG-03, FG-10 y FG-12 | No | No | No | Votos 3/3 (gate v3), referidos a H |
-| Inicio de F37-SBX | Sí | No | Sí | R = SUPERADO anclado en H |
+Son cuatro requisitos distintos, y ninguno sustituye a otro (borrador D-11, §4):
 
-**Lo que se puede hacer sin ninguna de las tres:** auditar S, preparar la batería de pruebas RED como borrador fuera del validador y repetir las sondas de §5.9.1 y §5.9.4. Las sondas ya están preparadas en [`preparacion-f36-b01/`](../../preparacion-f36-b01/README.md).
+- **Contrato 10** (`CLAUDE.md`). Exige **hoy** autorización explícita del equipo para cada `push`, `merge`, release o tag. La obligación existe con D-11 o sin ella.
+- **D-11.** Si se adopta, define el procedimiento y el formato de esa autorización. No la crea, no la sustituye y no autoriza ninguna operación. Mientras no se adopte, la autorización se acredita con actos del equipo según el texto vigente del contrato 10.
+- **D-10.** Es una determinación sobre la vigencia del charter. No autoriza ni implementar ni publicar.
+- **D-02b.** Autoriza implementar B-01 en local. No autoriza ningún `push` ni ningún `merge`, y una autorización del contrato 10 tampoco equivale a D-02b.
+
+| Elemento | D-10 | D-02b | Contrato 10 (hoy) | D-11 (si se adopta) | Otros requisitos |
+|---|---|---|---|---|---|
+| B-01 en conjunto | **Sí** (P-S1). Con D10-2, B-01 no tiene objeto y haría falta un gate nuevo | **Sí**: la autoriza | No: implementar en local no es una operación del contrato 10 | No | Auditoría de S (P-S2) |
+| T-09 (a-ii), elegir la base | No: la base no se mueve | Sí, como decisión | No | No | — |
+| T-04, admitir la rama de H | No | Sí | No | No | — |
+| Crear la rama local de H e implementar | Sí, a través de B-01 | Sí | No: es trabajo local | No | — |
+| Push de H para la auditoría | No | No la sustituye | **Sí**: autorización explícita del equipo para esa operación | Fija el procedimiento y el formato del acto | — |
+| Merge de H en `develop` o `main` | No | No la sustituye | **Sí**: autorización explícita del equipo para esa operación | Fija el procedimiento y el formato del acto | Validación anclada antes del merge (I-14) |
+| T-05 (REVOCADO) y su delta (§5.8.2) | Solo se usa con D10-2 o con una revocación posterior; el formato no depende de D-10 | Sí | No | No | El documento de determinación (X1-R) |
+| T-08, variante RD | No | Sí | No | No | DF-03 con su texto íntegro (hoy pendiente) |
+| FG-02 sobre H | No | No | No | No | El informe del auditor elegible sobre H |
+| FG-03, FG-10 y FG-12 | No | No | No: un acto del contrato 10 no es un voto del gate | No | Votos 3/3 (gate v3), referidos a H |
+| Inicio de F37-SBX | Sí | Sí | No | No | R = SUPERADO anclado en H |
+
+(a-i) y (b) no figuran: quedan fuera del alcance de esta versión (§5.9.3).
+
+**Lo que se puede hacer sin D-10, D-02b ni autorizaciones del contrato 10:**
+- auditar S;
+- preparar la batería de pruebas RED como borrador fuera del validador;
+- repetir las sondas de §5.8.3, §5.9.1, §5.9.4 y §5.9.5, que están en [`sondas-b01/`](sondas-b01/README.md).
 
 ## 12. Qué debe auditar Codex en esta versión
 
 1. Que §5.9.1 se pueda reproducir: las siete sondas, con sus resultados y su método (sin mover refs).
 2. Que §5.9.2 no afirme más de lo medido. Por ejemplo, V-5 no prueba que H vaya a superar el gate: solo que FRZ admite el trasplante.
-3. Que las opciones de §5.9.3 sean exhaustivas, y que la recomendación (a-ii) no anticipe D-10, D-02b ni T-04.
-4. Que S-T11 a S-T17 y AC-01 a AC-14 sean verificables, y que ningún control positivo quede en el repositorio.
-5. Que §11 no atribuya a D-11 lo que es de D-02b o del gate, ni a la inversa.
+3. Que §5.9.3 especifique solo (a-ii), como propuesta para decisión, sin anticipar D-10, D-02b ni T-04, y que (a-i) y (b) consten como alternativas fuera de alcance, no como decisiones.
+4. Que S-T11 a S-T22 y AC-01 a AC-14 sean verificables, y que ningún control positivo quede en el repositorio.
+5. Que §11 no atribuya a D-11 lo que es de D-02b, del gate o del contrato 10, ni a la inversa.
 6. Que ningún pasaje emita un acto, un voto, una delegación o un estado del gate.
-7. Que `sondas_t09.py` no modifique el validador ni ninguna ref, que el parche en memoria se limite a `BRANCHES` y `BASE`, y que §5.9.4 no presente S-T11 como prueba de que H superaría el gate.
+7. Que las sondas de `sondas-b01/` no modifiquen el validador ni ninguna ref, que el parche en memoria se limite a `BRANCHES` y `BASE`, y que §5.9.4 no presente S-T11 como prueba de que H superaría el gate.
 8. Que AC-02 y AC-05 ya no se contradigan: todo lo que exige la implementación cabe en el perímetro de FRZ.
+
+**Correcciones de la 2.2**, con su evidencia del 09/11/2026:
+
+9. **S-M01.** Que T-04, AC-05, AC-06, AC-07, S-T15, S-T16 y la matriz de §5.9.3 solo se refieran a (a-ii), y que ninguna variante figure como aprobada.
+10. **S-M02.**
+    - Que X1-R, X2-R y la condición C-R (§5.8.2) sean compatibles con §5.8.1 y AC-10, y que no relajen ninguna otra restricción.
+    - Que `sonda_revocacion.py` diera 9 conformes y 0 discrepancias, y que dos ablaciones de su definición de referencia la hicieran fallar.
+    - Que la sonda no se presente como validación funcional de AC-10.
+11. **S-M03.** Que `sondas-b01/` quede dentro de AC-05 y que `sonda_trasplante.py` diera T-1 a T-4 conformes (§5.9.5). También que `sondas_t09.py` siga dando sus 18 sondas conformes, con V-7 sobre `f5003c9`.
+12. **S-L01.** Que §11 distinga la obligación vigente del contrato 10, el procedimiento de D-11, la determinación D-10 y la autorización D-02b.

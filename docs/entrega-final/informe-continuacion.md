@@ -80,7 +80,7 @@ La tabla anterior es la fotografía del 08/11/2026. El 09/11/2026 se revisó ese
 | Frente | Defecto encontrado | Corrección |
 |---|---|---|
 | F36 · S | AC-02 admitía registrar el RED en `docs/tdd-evidence.md`, que AC-05 y FRZ rechazan | AC-02 lo deja dentro del paquete |
-| F36 · S | S-T11 a S-T17 solo estaban descritas | [`sondas_t09.py`](../academico/preparacion-f36-b01/sondas_t09.py), en un clon desechable (S §5.9.4) |
+| F36 · S | S-T11 a S-T17 solo estaban descritas | [`sondas_t09.py`](../academico/f36-sbx/expediente-final/sondas-b01/sondas_t09.py), en un clon desechable (S §5.9.4). Desde S v2.2 está dentro del paquete (S §5.9.5) |
 | F37 | R-05 no veía camelCase y no se aplicaba a enlazar ni a retirar. Una observación podía declararse con fuente `documento_presentado` | R-05 en toda escritura; una sola fuente por tipo; 5 escenarios nuevos |
 | F38 | La semilla era 5945 en el código y 2381 en la especificación | Literal 2381, fijado por una prueba |
 | F38 | Una tarea fuera del catálogo, una clave camelCase o un valor numérico pasaban. Una salida mal formada rompía el arnés. La partición `train` salía válida. El sello no cubría `k` | Catálogo y forma cerrados; particiones `dev` y `test`; `k` sellado. Sello nuevo: `fb7e7e13f664f93ca9e6fb7cf824a097469034d6096659e980e928d4df3eee72` |
@@ -88,7 +88,7 @@ La tabla anterior es la fotografía del 08/11/2026. El 09/11/2026 se revisó ese
 
 | Prueba | Comando | Resultado del 09/11/2026 |
 |---|---|---|
-| Sondas de T-09 | `python -I -B docs/academico/preparacion-f36-b01/sondas_t09.py` | **18 conformes, 0 discrepancias**. S-T11 con la rama admitida en memoria: 59/0, R = NO SUPERADO. Una ablación de lo esperado sale con código 1 |
+| Sondas de T-09 | `python -I -B docs/academico/f36-sbx/expediente-final/sondas-b01/sondas_t09.py` (ruta desde S v2.2) | **18 conformes, 0 discrepancias**. S-T11 con la rama admitida en memoria: 59/0, R = NO SUPERADO. Una ablación de lo esperado sale con código 1 |
 | F37 | `python -I -B -m unittest discover -s …/prototipo` | RED 2 failed; GREEN **21 passed**; 38/38 escenarios |
 | F38 | `python -I -B -m unittest discover -s …/evaluacion` | RED 6 failed y 1 error; GREEN **25 passed** |
 | Componente | `npx vp test --run …/process-schedule.test.tsx` | RED 2 failed, 12 passed; GREEN **14 passed** |

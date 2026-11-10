@@ -8,8 +8,12 @@ clon y, solo en memoria y solo en ese proceso, añaden la rama de H a `BRANCHES`
 (T-09 (b)). Así se observa hoy qué haría FRZ con cada elección, sin escribir B-01. Lo que depende de la lógica nueva
 de B-01 (S-T01 a S-T03 y S-T05 a S-T10) no se puede observar aquí.
 
+Vive dentro del paquete (`docs/academico/f36-sbx/expediente-final/sondas-b01/`), en el perímetro de AC-05, para que
+un H trasplantado lo lleve consigo. Ninguna sonda depende de la rama desde la que se ejecuta: V-7 se mide sobre el
+commit fijo `f5003c9`, base de la rama de continuación.
+
 Uso, desde cualquier directorio:
-    python -I -B docs/academico/preparacion-f36-b01/sondas_t09.py [--solo ID] [--raiz RUTA_DEL_REPOSITORIO]
+    python -I -B docs/academico/f36-sbx/expediente-final/sondas-b01/sondas_t09.py [--solo ID] [--raiz RUTA]
 """
 
 from __future__ import annotations
@@ -23,7 +27,7 @@ import subprocess
 import sys
 import tempfile
 
-ROOT = pathlib.Path(__file__).resolve().parents[3]
+HERE = pathlib.Path(__file__).resolve().parent
 VALIDATOR = 'docs/academico/tools/f36sbx/validate_f36sbx.py'
 PACKAGE = 'docs/academico/f36-sbx'
 
@@ -65,7 +69,7 @@ def probe(pid, start, branch, fails, total=None, overlay=None, extra=None, admit
             'extra': extra, 'admit': admit, 'base': base, 'at_least': at_least}
 
 
-def probes(head: str) -> list[dict]:
+def probes() -> list[dict]:
     h = {'start': MAIN_AF5, 'branch': H_BRANCH, 'overlay': EXPEDIENTE}
     return [
         probe('V-1', MAIN_AF5, 'main', [], 59),
@@ -74,7 +78,7 @@ def probes(head: str) -> list[dict]:
         probe('V-4', DEVELOP_SEG, 'develop', [ALCANCE, RUNTIME, AUTO], 59, overlay=H_PRELIMINAR),
         probe('V-5', MAIN_AF5, 'main', [], 59, overlay=EXPEDIENTE),
         probe('V-6', MAIN_AF5, None, [RAMA, AUTO], 59, overlay=H_PRELIMINAR),
-        probe('V-7', head, 'feature/continuacion-f36-f40', [RAMA, ALCANCE, RUNTIME, AUTO], 59),
+        probe('V-7', EXPEDIENTE, 'feature/continuacion-f36-f40', [RAMA, ALCANCE, RUNTIME, AUTO], 59),
         probe('S-T04', DEVELOP_SEG, 'develop', [ALCANCE, RUNTIME, AUTO], 59),
         probe('S-T11 RED', fails=[RAMA, AUTO], total=59, **h),
         probe('S-T11', fails=[], total=59, admit=True, **h),
@@ -142,9 +146,9 @@ def remove(path: pathlib.Path) -> None:
 
 def main(argv: list[str]) -> int:
     only = argv[argv.index('--solo') + 1] if '--solo' in argv else None
-    root = pathlib.Path(argv[argv.index('--raiz') + 1]) if '--raiz' in argv else ROOT
+    root = pathlib.Path(argv[argv.index('--raiz') + 1]) if '--raiz' in argv else \
+        pathlib.Path(run(['git', 'rev-parse', '--show-toplevel'], HERE))
     common = pathlib.Path(run(['git', 'rev-parse', '--path-format=absolute', '--git-common-dir'], root))
-    head = run(['git', 'rev-parse', 'HEAD'], root)
     workspace = pathlib.Path(tempfile.mkdtemp(prefix='sondas-t09-'))
     clone = workspace / 'clon'
     bad = 0
@@ -158,7 +162,7 @@ def main(argv: list[str]) -> int:
             if only in (None, pid):
                 print(f'{"OK   " if ok else "FALLA"} {pid}: {detail}')
                 bad += 0 if ok else 1
-        for p in probes(head):
+        for p in probes():
             if only not in (None, p['id']):
                 continue
             result = execute(clone, p)
