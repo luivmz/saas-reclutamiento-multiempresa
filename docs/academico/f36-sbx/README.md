@@ -41,7 +41,7 @@ python -I -B docs/academico/tools/f36sbx/meta_f36sbx.py ablaciones   # lento
 python -I -B docs/academico/tools/f36sbx/meta_f36sbx.py ablaciones "AF5,identidad"   # ejecución focal
 ```
 
-Solo usan la biblioteca estándar de Python 3.12. El validador admite las ramas `feature/f36-sbx-authorization-design`, `develop` y `main`, y compara contra la base `b8892af`.
+Solo usan la biblioteca estándar de Python 3.12. El validador admite las ramas `feature/f36-sbx-authorization-design`, `develop` y `main`, y compara contra la base `b8892af`. En la rama local `exp/b01-candidato`, el validador es el del candidato experimental del sucesor B-01: admite además esa rama, con un nombre provisional porque T-04 sigue NO EMITIDA. Su SHA-256 y el inventario de las citas del validador constan en el [informe del candidato](expediente-final/F36SBX_B01_Informe_Candidato_Experimental.md).
 
 - **Vista de Git.** El validador consulta Git por una única vía, sobre los objetos reales: sin `refs/replace` y sin variables `GIT_*` heredadas. Compara el árbol de trabajo con el índice por sus bytes, sin confiar en `assume-unchanged`, en `skip-worktree` ni en el stat guardado, y no escribe en el repositorio. Falla cerrado ante marcas del índice, conflictos, operaciones en curso, `refs/replace` o injertos. No los corrige: retirarlos es una decisión de quien valida.
 - **Entradas normativas.** Cada documento, herramienta y fuente que se valida se lee una sola vez como archivo regular, sin seguir enlaces simbólicos, uniones de directorios ni puntos de reparse en ningún componente de su ruta. Esos mismos bytes se comparan con Git, y en el commit candidato cada uno tiene que ser un blob `100644` (AF5-M01).

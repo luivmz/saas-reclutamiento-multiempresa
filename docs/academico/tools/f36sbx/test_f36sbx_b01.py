@@ -13,6 +13,7 @@ Uso: python -I -B docs/academico/tools/f36sbx/test_f36sbx_b01.py
 """
 import copy
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -196,11 +197,12 @@ def revoke(clone, h, *, fg14=True, declared=True, determination=True, rev=None, 
 
 
 def mirrors_to(clone, gate, f37):
+    """Lleva las líneas canónicas de los espejos E2–E7 al valor indicado, desde cualquier valor previo."""
     for rel in [v.GATE_DOC, f'{v.PKG}/README.md', *v.GOV_FILES]:
         p = clone / rel
         text = p.read_text(encoding='utf-8')
-        text = text.replace('- F36-SBX-GATE = NO SUPERADO\n', f'- F36-SBX-GATE = {gate}\n')
-        text = text.replace('- F37-SBX = BLOQUEADA\n', f'- F37-SBX = {f37}\n')
+        text = re.sub(r'^- F36-SBX-GATE = [A-ZÁÉÍÓÚÑ ]+$', f'- F36-SBX-GATE = {gate}', text, flags=re.M)
+        text = re.sub(r'^- F37-SBX = [A-ZÁÉÍÓÚÑ ]+$', f'- F37-SBX = {f37}', text, flags=re.M)
         tg.write(clone, rel, text)
 
 
@@ -256,13 +258,15 @@ def git_cases(tmp):
 
     c, hh = fresh('st18')
     revoke(c, hh)
-    fails, gate = validate(c)
-    check('S-T18', 'revocación después de H con exactamente el delta de §5.8.2 y C-R: R = REVOCADO, 0 fallas',
-          fails, gate, want_gate='REVOCADO')
+    check('B01-M04a', 'determinación sin seguimiento en el árbol de trabajo: no vale como registro (S:118)',
+          *validate(c), [('GATE', 'no está versionada')])
     tg.git(c, 'add', '-A')
+    check('B01-M04b', 'determinación solo preparada en el índice, sin commit: tampoco vale', *validate(c),
+          [('GATE', 'no está versionada')])
     tg.commit(c, 'registro sintético de la revocación')
     fails, gate = validate(c)
-    check('S-T18c', 'el mismo registro, ya versionado en un commit sucesor de H', fails, gate, want_gate='REVOCADO')
+    check('S-T18', 'revocación después de H con exactamente el delta de §5.8.2 y C-R, versionada en un commit '
+          'sucesor de H: R = REVOCADO, 0 fallas', fails, gate, want_gate='REVOCADO')
 
     c, hh = fresh('st02b')
     revoke(c, hh, rev=event(date='2026-10-01'))
@@ -279,8 +283,12 @@ def git_cases(tmp):
 
     c, hh = fresh('st19a')
     revoke(c, hh)
+    commit_all(c, 'registro sintético de la revocación')
     tg.write(c, v.GATE_EVIDENCE + 'OTRO.md', '[SINTÉTICO] extra\n')
-    check('S-T19a', 'S-T18 más un archivo en gate/evidencia/: falla', *validate(c), [('GATE', 'gate/evidencia')])
+    fails, gate = validate(c)
+    check('S-T19a', 'S-T18 más un archivo en gate/evidencia/: falla', fails, gate, [('GATE', 'gate/evidencia')])
+    ok(gate == 'REVOCADO', 'DS-B01-2', 'interpretación vigente del candidato: con una revocación válida y vinculada, una '
+       'falla ajena hace fallar el validador pero R sigue REVOCADO (I-11); S §3 diría NO SUPERADO', f'gate {gate}')
     c, hh = fresh('st19b')
     revoke(c, hh)
     charter = c / f'{v.PKG}/F36SBX_Charter.md'
@@ -316,6 +324,203 @@ def git_cases(tmp):
     check('S-T21d', 'revocación sin la transición de FG-14 (C-R.4): falla', *validate(c), [('GATE', 'C-R.4')])
 
 
+def commit_all(clone, msg):
+    tg.git(clone, 'add', '-A')
+    return tg.commit(clone, msg)
+
+
+def restore_to(clone, h, keep_candidate):
+    """Vuelve el estado, el documento del gate y los espejos a los de H y borra la determinación."""
+    tg.git(clone, 'checkout', h, '--', v.GATE_STATE, v.GATE_DOC, v.PKG_README, *v.GOV_FILES)
+    if (clone / DETERMINATION).exists():
+        (clone / DETERMINATION).unlink()
+    if keep_candidate:
+        state = json.loads((clone / v.GATE_STATE).read_text(encoding='utf-8'))
+        state['candidate_commit'] = h
+        tg.write(clone, v.GATE_STATE, json.dumps(state, ensure_ascii=False, indent=2) + '\n')
+
+
+def git_audit(tmp):
+    """Hallazgos del informe de Codex con Git real: permanencia de la revocación (B01-H01) y formato (M01, M02)."""
+    def revoked(name):
+        c = sandbox(tmp, name)
+        hh = tg.git(c, 'rev-parse', 'HEAD')
+        revoke(c, hh)
+        commit_all(c, 'registro sintético de la revocación')
+        return c, hh
+
+    c, hh = revoked('h01a')
+    restore_to(c, hh, keep_candidate=True)
+    commit_all(c, 'retirada sintética de la revocación, con el mismo H')
+    check('B01-H01a', 'revocación válida retirada en un commit posterior con el mismo candidate_commit = H: falla '
+          '(I-11, REVOCADO no se deshace)', *validate(c), [('GATE', 'I-11')])
+
+    c, hh = revoked('h01b')
+    restore_to(c, hh, keep_candidate=False)
+    commit_all(c, 'restauración sintética completa del estado de H')
+    check('B01-H01b', 'la misma retirada devolviendo también candidate_commit a nulo: falla', *validate(c),
+          [('GATE', 'I-11')])
+
+    c, hh = revoked('h01c')
+    restore_to(c, hh, keep_candidate=True)
+    check('B01-H01c', 'retirada solo en el árbol de trabajo, sin commit: falla', *validate(c), [('GATE', 'I-11')])
+
+    c, hh = revoked('h01d')
+    state = json.loads((c / v.GATE_STATE).read_text(encoding='utf-8'))
+    state['revocation'] = event(ground='gate_5_retirada')
+    tg.write(c, v.GATE_STATE, json.dumps(state, ensure_ascii=False, indent=2) + '\n')
+    commit_all(c, 'sustitución sintética de la revocación por otra')
+    check('B01-H01d', 'una revocación registrada sustituida por otra distinta: falla', *validate(c),
+          [('GATE', 'I-11')])
+
+    for cid, value in (('B01-M01g', '2026-99-99T99:99:99+99:99'),):
+        c = sandbox(tmp, 'm01')
+        hh = tg.git(c, 'rev-parse', 'HEAD')
+        revoke(c, hh, rev=event(effective_from=value))
+        commit_all(c, 'registro sintético con un instante imposible')
+        fails, gate = validate(c)
+        ok(gate == 'NO SUPERADO' and any('effective_from' in m for _, m in fails), cid,
+           f'instante imposible {value} versionado: NO SUPERADO y una falla', f'gate {gate}; {[m[:100] for _, m in fails][:3]}')
+
+    for cid, ground in (('B01-M02g', []), ('B01-M02h', {})):
+        c = sandbox(tmp, f'm02-{cid[-1]}')
+        hh = tg.git(c, 'rev-parse', 'HEAD')
+        revoke(c, hh, rev=event(ground=ground))
+        commit_all(c, 'registro sintético con ground mal tipado')
+        try:
+            fails, gate = validate(c)
+            ok(gate == 'NO SUPERADO' and any('revocation.ground' in m for _, m in fails), cid,
+               f'ground = {ground!r} en el validador completo: resultado estructurado, NO SUPERADO y una falla',
+               f'gate {gate}; {[m[:100] for _, m in fails][:3]}')
+        except Exception as e:  # noqa: BLE001
+            ok(False, cid, f'ground = {ground!r} en el validador completo', f'excepción {e.__class__.__name__}: {e}')
+
+
+def superado(clone, h):
+    """Registro SINTÉTICO completo de SUPERADO: FG-02 con su informe, FG-03 (solo EI ALLOWED), FG-10 sin dependencias y
+    FG-12 en NO APLICA; espejos en SUPERADO y F37-SBX derivada. No son actos del equipo: solo existen en el clon."""
+    import test_f36sbx as tm
+    docs = tm.evidence_docs(['EI-01'])
+    for fg in ('FG-02', 'FG-03', 'FG-10'):
+        docs[fg]['candidate_commit'] = h
+    report = tm.doc_bytes(tm.REPORT_PROSE, 'f36sbx-audit-metadata', tm.report_meta(docs['FG-02']))
+    docs['FG-02']['audit_report']['sha256'] = v.sha256(report)
+    tg.write(clone, tm.REPORT, report)
+    for fg in ('FG-02', 'FG-03', 'FG-10'):
+        tg.write(clone, f'{v.GATE_EVIDENCE}{fg}.json', json.dumps(docs[fg], ensure_ascii=False, indent=2) + '\n')
+    state = json.loads((clone / v.GATE_STATE).read_text(encoding='utf-8'))
+    state['candidate_commit'] = h
+    state['f37_authorized_ei'] = ['EI-01']
+    state['declared_result'] = 'SUPERADO'
+    for c in state['criteria']:
+        if c['id'] in ('FG-02', 'FG-03', 'FG-10'):
+            c['status'], c['evidence'] = 'CUMPLE', f'{v.GATE_EVIDENCE}{c["id"]}.json'
+        elif c['id'] == 'FG-12':
+            c['status'], c['evidence'] = 'NO APLICA', None
+    tg.write(clone, v.GATE_STATE, json.dumps(state, ensure_ascii=False, indent=2) + '\n')
+    doc = (clone / v.GATE_DOC).read_text(encoding='utf-8').split('\n')
+    rows = {'FG-02': 'CUMPLE', 'FG-03': 'CUMPLE', 'FG-10': 'CUMPLE', 'FG-12': 'NO APLICA'}
+    doc = [ln.rsplit('| PENDIENTE |', 1)[0] + f'| {rows[ln[2:7]]} |' if ln[2:7] in rows and ln.startswith('| FG-')
+           else ln for ln in doc]
+    tg.write(clone, v.GATE_DOC, '\n'.join(doc))
+    mirrors_to(clone, 'SUPERADO', v.F37_ENABLED)
+
+
+def superado_integral(tmp):
+    """DS-B01-3: control positivo SUPERADO con Git real, divergencias de espejo en los dos sentidos y después
+    SUPERADO → REVOCADO → intento de retirada."""
+    c = sandbox(tmp, 'superado')
+    h = tg.git(c, 'rev-parse', 'HEAD')
+    superado(c, h)
+    commit_all(c, 'registro sintético completo de SUPERADO')
+    check('DS-B01-3a', 'SUPERADO integral con Git real: FG-02, FG-03, FG-10 y FG-12 (NO APLICA) coherentes, espejos '
+          'en SUPERADO y F37-SBX = AUTORIZADA PARA INICIAR: 0 fallas', *validate(c), want_gate='SUPERADO')
+
+    gov = c / v.GOV_FILES[0]
+    tg.write(c, v.GOV_FILES[0], gov.read_text(encoding='utf-8').replace('- F36-SBX-GATE = SUPERADO\n',
+                                                                        '- F36-SBX-GATE = NO SUPERADO\n'))
+    fails, gate = validate(c)
+    ok(any('espejos E1–E7' in m for _, m in fails), 'DS-B01-3b',
+       'evidencia de SUPERADO con un espejo de gobierno en NO SUPERADO: falla', f'gate {gate}')
+    tg.git(c, 'checkout', '--', v.GOV_FILES[0])
+
+    (c / f'{v.GATE_EVIDENCE}FG-03.json').unlink()
+    fails, gate = validate(c)
+    ok(gate == 'NO SUPERADO' and any('espejos E1–E7' in m for _, m in fails), 'DS-B01-3c',
+       'espejos en SUPERADO sin la evidencia de FG-03: NO SUPERADO y falla de espejos', f'gate {gate}')
+    tg.git(c, 'checkout', '--', f'{v.GATE_EVIDENCE}FG-03.json')
+
+    revoke(c, h)
+    commit_all(c, 'revocación sintética posterior a SUPERADO')
+    check('DS-B01-3d', 'SUPERADO → REVOCADO con la unión de deltas: R = REVOCADO, 0 fallas', *validate(c),
+          want_gate='REVOCADO')
+
+    state = json.loads((c / v.GATE_STATE).read_text(encoding='utf-8'))
+    state['revocation'], state['declared_result'] = None, 'SUPERADO'
+    next(x for x in state['criteria'] if x['id'] == 'FG-14')['status'] = 'CUMPLE'
+    tg.write(c, v.GATE_STATE, json.dumps(state, ensure_ascii=False, indent=2) + '\n')
+    doc = (c / v.GATE_DOC).read_text(encoding='utf-8')
+    tg.write(c, v.GATE_DOC, '\n'.join(ln.rsplit('| NO CUMPLE |', 1)[0] + '| CUMPLE |' if ln.startswith('| FG-14 |')
+                                      else ln for ln in doc.split('\n')))
+    (c / DETERMINATION).unlink()
+    for rel in [v.GATE_DOC, v.PKG_README, *v.GOV_FILES]:
+        p = c / rel
+        txt = p.read_text(encoding='utf-8').replace('- F36-SBX-GATE = REVOCADO\n', '- F36-SBX-GATE = SUPERADO\n')
+        tg.write(c, rel, txt.replace('- F37-SBX = BLOQUEADA\n', f'- F37-SBX = {v.F37_ENABLED}\n'))
+    commit_all(c, 'intento sintético de retirar la revocación y volver a SUPERADO')
+    fails, gate = validate(c)
+    ok(gate != 'SUPERADO' and any('I-11' in m for _, m in fails), 'DS-B01-3e',
+       'SUPERADO → REVOCADO → retirada para volver a SUPERADO: falla y no habilita F37-SBX', f'gate {gate}; '
+       f'{[m[:100] for _, m in fails][:3]}')
+
+
+def memory_audit():
+    """Hallazgos B01-M01, B01-M02 y B01-M03 en memoria."""
+    def m01():
+        bad = ['2026-99-99T99:99:99+99:99', '2026-13-01T00:00:00-05:00', '2026-02-30T10:00:00-05:00',
+               '2026-11-11T25:00:00-05:00', '2026-11-11T10:61:00-05:00', '2026-11-11T10:00:00+24:00']
+        admitted = [x for x in bad if not any('effective_from' in e for e in v.revocation_errors(event(effective_from=x)))]
+        ok(not admitted, 'B01-M01', 'effective_from con mes, día, hora, minuto u desfase imposibles: formato inválido',
+           f'admitidos: {admitted}')
+        ok(v.revocation_errors(event(effective_from='2020-01-01T00:00:00-05:00')) == [], 'B01-M01b',
+           'un instante válido anterior al registro y a H se admite: el validador no juzga el efecto histórico')
+    attempt('B01-M01', 'instantes imposibles', m01)
+
+    def m02():
+        broken = []
+        for key, value in (('ground', []), ('ground', {}), ('ground', 3), ('ground', None), ('determination', []),
+                           ('date', ['2026-11-11']), ('effective_from', {}), ('evidence', {'a': 1}),
+                           ('evidence', [['x']])):
+            try:
+                errs = v.revocation_errors(event(**{key: value}))
+                st = gate_state()
+                st['revocation'] = event(**{key: value})
+                if not any(key in e for e in errs) or v.evaluate_gate(st, v.EXPECTED_CLASSES, lambda fg: []) != 'NO SUPERADO':
+                    broken.append(f'{key}={value!r}: admitido')
+            except Exception as e:  # noqa: BLE001
+                broken.append(f'{key}={value!r}: {e.__class__.__name__}')
+        ok(not broken, 'B01-M02', 'claves de revocation con tipos compuestos, número o nulo: diagnóstico y NO SUPERADO, '
+           'sin excepción', str(broken))
+    attempt('B01-M02', 'tipos de revocation', m02)
+
+    def m03():
+        s = v.collect(v.ROOT)
+        for state in ('SUPERADO', 'REVOCADO'):
+            f37 = v.F37_ENABLED if state == 'SUPERADO' else 'BLOQUEADA'
+            for rel, label in ((v.PKG_README, 'README'), (v.GATE_DOC, 'gate')):
+                s2 = copy.deepcopy(s)
+                for r in [v.GATE_DOC, v.PKG_README, *v.GOV_FILES]:
+                    s2['texts'][r] = s2['texts'][r].replace('- F36-SBX-GATE = NO SUPERADO\n', f'- F36-SBX-GATE = {state}\n') \
+                        .replace('- F37-SBX = BLOQUEADA\n', f'- F37-SBX = {f37}\n')
+                inside = [m for ok_, m in v.rule_sem(s2) if not ok_]
+                s2['texts'][rel] = s2['texts'][rel] + f'\n## Nota ajena al espejo\n\nF36-SBX-GATE = {state}\n'
+                outside = [m for ok_, m in v.rule_sem(s2) if not ok_]
+                ok(not inside and any(f'F36-SBX-GATE = {state}' in m for m in outside), f'B01-M03-{label}-{state}',
+                   f'«F36-SBX-GATE = {state}»: admitida en la línea canónica del espejo y rechazada fuera de su ámbito '
+                   f'({label})', f'dentro: {inside}; fuera: {outside}')
+    attempt('B01-M03', 'excepción SEM por ubicación', m03)
+
+
 def inventory():
     """S-T22 y AC-05 sobre el árbol real de la rama: inventario frente a 55f758e y sondas ejecutables desde H."""
     allowed = (v.PKG + '/', v.TOOLS + '/')
@@ -335,9 +540,12 @@ def main():
         sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     before = tuple(v.git(v.ROOT, *a)[1] for a in (('rev-parse', 'HEAD'), ('status', '--porcelain', '--ignored')))
     memory()
+    memory_audit()
     tmp = Path(tempfile.mkdtemp(prefix='f36sbx-b01-'))
     try:
         attempt('GIT', 'casos con Git real', lambda: git_cases(tmp))
+        attempt('GIT-AUD', 'hallazgos de la auditoría con Git real', lambda: git_audit(tmp))
+        attempt('DS-B01-3', 'SUPERADO integral con Git real', lambda: superado_integral(tmp))
     finally:
         tg.remove_tree(tmp)
     attempt('S-T22', 'inventario de la rama', inventory)

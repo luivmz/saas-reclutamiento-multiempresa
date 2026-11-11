@@ -69,6 +69,9 @@ SOURCE_ABLATIONS = [
     # B-01: una revocación que no se puede vincular a H falla cerrado; C-R exige el documento en su ruta fija.
     ('B-01 · revocación no vinculada que no fuerza NO SUPERADO', 'if', "result == 'REVOCADO' and (rev_err", B01),
     ('B-01 · BRANCHES sin la rama de H', 'assign', "BRANCHES = frozenset({'feature/f36-sbx-authorization-design', 'develop', 'main', 'exp/b01-candidato'})", B01),
+    # B-01, correcciones de la auditoría del 10/11/2026.
+    ('B-01 · B01-M02 ground sin comprobar su tipo', 'if', "not isinstance(rev['ground'], str) or", B01_MEM),
+    ('B-01 · B01-H01 una revocación retirada no fuerza REVOCADO ni falla', 'if', 'if not kept:', B01),
     ('identidad: caracteres invisibles', 'assign', 'bad = invisible_chars(value)'),
     ('identidad: mínimo de letras', 'if', "startswith('L')) < min_letters"),
     ('identidad: marcadores de posición', 'if', 'key in PLACEHOLDERS'),
@@ -302,6 +305,12 @@ FUNCTION_ABLATIONS = [
     ('required_state', lambda m: lambda r: list(m.REQUIRED_STATE), B01_MEM, 'B-01 · REQUIRED_STATE fijo, sin depender de R'),
     ('derived_states', lambda m: lambda r: (r, 'BLOQUEADA'), B01_MEM, 'B-01 · F37-SBX nunca derivada de R (T-02)'),
     ('identity_errors_h', lambda m: lambda f: [], B01, 'B-01 · función identity_errors_h anulada (H §5.6)'),
+    ('real_instant', lambda m: lambda value: True, B01_MEM, 'B-01 · B01-M01 real_instant siempre verdadero'),
+    ('without_mirror_lines', lambda m: lambda rel, text: '\n'.join(
+        ln for ln in text.split('\n') if not m.MIRROR_RX.fullmatch(ln)), B01_MEM,
+     'B-01 · B01-M03 líneas canónicas quitadas en cualquier lugar, no solo en su ámbito'),
+    ('revocation_history', lambda m: lambda root: [], B01, 'B-01 · B01-H01 sin historia de revocaciones'),
+    ('determination_committed', lambda m: lambda root, wt: True, B01, 'B-01 · B01-M04 determinación siempre versionada'),
     ('delta_errors_h', lambda m: lambda *a: [], B01, 'B-01 · función delta_errors_h anulada (X2, C-R)'),
     ('canonical_only', lambda m: lambda *a: True, B01, 'B-01 · función canonical_only anulada (X3–X5)'),
 ]

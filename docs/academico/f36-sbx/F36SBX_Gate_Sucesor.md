@@ -51,7 +51,7 @@ Ningún validador «aprueba» por sí solo. SUPERADO exige FG-02 y FG-03, que so
 | FG-13 | El gate solo autoriza F37-SBX y declara todo lo que no puede autorizar | AUTO | Regla GATE | CUMPLE |
 | FG-14 | No hay ningún evento de revocación registrado | AUTO | Regla GATE | CUMPLE |
 
-**Resultado vigente: NO SUPERADO,** porque FG-02, FG-03, FG-10 y FG-12 están PENDIENTES y no hay evidencia registrada. Se registra en [`f36sbx_gate_state.json`](gate/f36sbx_gate_state.json), y el validador recalcula el resultado y exige que coincida con el declarado aquí y en el JSON.
+El resultado vigente es el de la línea de la sección «Resultado canónico». Se registra en [`f36sbx_gate_state.json`](gate/f36sbx_gate_state.json): el validador lo recalcula desde la evidencia y exige que coincida con esa línea y con el JSON. Mientras FG-02, FG-03, FG-10 y FG-12 estén PENDIENTES y sin evidencia, el recálculo no puede dar SUPERADO.
 
 ## 4. Regla de decisión
 

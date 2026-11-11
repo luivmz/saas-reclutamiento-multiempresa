@@ -1137,6 +1137,41 @@ def git_facts(root, sha, wt, problems, normative=(), required=(), wt_normative=(
     return f
 
 
+def revocation_history(root):
+    """B01-H01 (I-11): revocaciones registradas en la historia de la rama posterior a la base, en orden.
+
+    Un registro es un commit cuyo estado del gate tiene una `revocation` con el formato cerrado y la determinación como
+    blob en ese mismo commit. None si la historia no se puede leer entera (falla cerrado)."""
+    code, out = git(root, 'rev-list', '--full-history', '--reverse', f'{BASE}..HEAD', '--', GATE_STATE)
+    if code != 0:
+        return None
+    history = []
+    for commit in out.split():
+        blob = git_blob(root, commit, GATE_STATE)
+        state = strict_json(blob_text(blob) or '') if isinstance(blob, dict) and 'data' in blob else None
+        if not isinstance(state, dict):
+            return None
+        rev = state.get('revocation')
+        if rev is None or revocation_errors(rev):
+            continue
+        det = git_blob(root, commit, DETERMINATION)
+        if isinstance(det, dict) and 'object' in det:
+            history.append({'commit': commit, 'revocation': rev, 'determination': det['object']})
+    return history
+
+
+def determination_committed(root, wt):
+    """B01-M04: la determinación es un blob 100644 de HEAD y el árbol de trabajo no la cambia. None si no se puede
+    evaluar."""
+    code, head = git(root, 'rev-parse', '--verify', 'HEAD^{commit}')
+    tree = git_tree(root, head.strip()) if code == 0 else None
+    dirty = changed_since(root, head.strip(), wt, tree) if tree is not None else None
+    if tree is None or dirty is None:
+        return None
+    entry = tree.get(DETERMINATION)
+    return entry is not None and entry[0] == GIT_REGULAR_MODE and DETERMINATION not in dirty
+
+
 def collect(root=ROOT):
     """Fotografía de todo lo que evalúan las reglas. Las pruebas la mutan en memoria."""
     # Entradas normativas (AF5-M01): cada una se lee una sola vez, como archivo regular y sin seguir enlaces; esos
@@ -1195,7 +1230,10 @@ def collect(root=ROOT):
     # normativa leída del árbol de trabajo (AF4): paquete, gobierno, herramientas y fuentes F34.
     inputs = [p for src in (texts, upstream, tools, evidence) for p in src if p != GATE_EVIDENCE]
     ignored = git_ignored(root, inputs)
+    revocations = revocation_history(root)
+    committed = determination_committed(root, wt)
     return {'root': str(root), 'texts': texts, 'upstream': upstream, 'tools': tools, 'evidence': evidence,
+            'revocation_history': revocations, 'determination_committed': committed,
             'branch': branch, 'base_ok': base_ok, 'changed': changed, 'base_gov': base_gov,
             'changed_py': changed_py, 'facts': facts, 'adr_blobs': adr_blobs, 'ignored': ignored,
             'git_state': git_state, 'normative': normative}
@@ -1316,7 +1354,7 @@ def required_state(result):
             else f'F37-SBX = {f37}' if r.startswith('F37-SBX = ') else r for r in REQUIRED_STATE]
 
 
-MIRROR_RX = re.compile(r'^- (F36-SBX-GATE|F37-SBX) = ([A-ZÁÉÍÓÚÑ ]+?)\s*$', re.M)
+MIRROR_RX = re.compile(r'^- (F36-SBX-GATE|F37-SBX) = ([A-ZÁÉÍÓÚÑ]+(?: [A-ZÁÉÍÓÚÑ]+)*)[ \t]*$', re.M)
 
 
 def mirror_scope(rel, text):
@@ -1331,6 +1369,31 @@ def mirror_scope(rel, text):
     if rel in GOV_FILES:
         return state_block(text)
     return None
+
+
+def mirror_span(rel, text):
+    """Intervalo [inicio, fin) del ámbito del espejo dentro de text (B01-M03); None si no lo tiene."""
+    if text is None:
+        return None
+    if rel == GATE_DOC:
+        rx = rf'^## {re.escape(CANONICAL_SECTION)}[^\n]*\n(.*?)(?=^## |\Z)'
+    elif rel == PKG_README:
+        rx = r'^## Estado[^\n]*\n(.*?)(?=^## |\Z)'
+    elif rel in GOV_FILES:
+        rx = r'^## Estado vigente[^\n]*\n(.*?)(?=^## )'
+    else:
+        return None
+    m = re.search(rx, text, re.M | re.S)
+    return m.span(1) if m else None
+
+
+def without_mirror_lines(rel, text):
+    """text sin las líneas canónicas que están DENTRO del ámbito de su espejo; fuera de él no se quita nada."""
+    span = mirror_span(rel, text)
+    if span is None:
+        return text
+    inner = '\n'.join(ln for ln in text[span[0]:span[1]].split('\n') if not MIRROR_RX.fullmatch(ln))
+    return text[:span[0]] + inner + text[span[1]:]
 
 
 def mirror_lines(rel, text):
@@ -1370,6 +1433,14 @@ INSTANT_RX = re.compile(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$')
 SHA256_RX = re.compile(r'^[0-9a-f]{64}$')
 
 
+def real_instant(value):
+    """B01-M01: el instante existe (mes, día, hora, minuto y segundo válidos) y su desfase es real (menor de 24 h)."""
+    try:
+        return datetime.datetime.fromisoformat(value).tzinfo is not None
+    except ValueError:
+        return False
+
+
 def revocation_errors(rev, h_date=None, h_paths=None):
     """Formato cerrado de `revocation` (S v2.2 §5.8.1). Sin H, solo la estructura; con H, también la fecha del
     registro (no anterior a H) y que cada ruta de `evidence` ya exista en el árbol de H."""
@@ -1379,11 +1450,12 @@ def revocation_errors(rev, h_date=None, h_paths=None):
     if not (isinstance(rev['date'], str) and DATE_RX.match(rev['date']) and parse_date(rev['date'])
             and (h_date is None or rev['date'] >= h_date)):
         e.append('revocation.date: fecha inválida o anterior a H')
-    if not (isinstance(rev['effective_from'], str) and INSTANT_RX.match(rev['effective_from'])):
-        e.append('revocation.effective_from: instante inválido (con desfase horario)')
-    if rev['ground'] not in REVOCATION_GROUNDS:
-        e.append('revocation.ground: motivo no admitido')
-    if rev['determination'] != DETERMINATION:
+    if not (isinstance(rev['effective_from'], str) and INSTANT_RX.match(rev['effective_from'])
+            and real_instant(rev['effective_from'])):
+        e.append('revocation.effective_from: instante inválido (fecha, hora y desfase horario reales)')
+    if not isinstance(rev['ground'], str) or rev['ground'] not in REVOCATION_GROUNDS:
+        e.append('revocation.ground: motivo no admitido (texto de la lista cerrada)')
+    if not isinstance(rev['determination'], str) or rev['determination'] != DETERMINATION:
         e.append(f'revocation.determination: debe ser exactamente {DETERMINATION}')
     ev = rev['evidence']
     if not (isinstance(ev, list) and ev and all(isinstance(x, str) and (
@@ -1439,14 +1511,16 @@ def rule_sem(s):
     scopes = {p: s['texts'].get(p) for p in PKG_FILES if p.endswith('.md')}
     scopes.update({p: state_block(s['texts'].get(p)) for p in GOV_FILES})
     for rel, text in scopes.items():
-        lines = mirror_lines(rel, s['texts'].get(rel))
-        for subj, st in lines:
+        raw = norm(s['texts'].get(rel) or '')
+        for subj, st in mirror_lines(rel, raw):
             if st not in (GATE_RESULTS if subj == 'F36-SBX-GATE' else F37_STATES):
                 bad.append(f'{rel}: «{subj} = {st}» fuera del vocabulario cerrado del espejo')
-        canonical = {f'{subj} = {st}' for subj, st in lines}
-        for subj, st in memo('states', text or '', lambda: list(state_claims(text or ''))):
-            if f'{subj} = {st}' in canonical and subj in MIRROR_SUBJECTS:
-                continue  # línea canónica de un espejo: el valor exacto lo comprueba GATE frente a R
+        # B01-M03: solo se exceptúan las líneas canónicas DENTRO del ámbito del espejo (su valor exacto lo comprueba
+        # GATE frente a R); la misma afirmación en cualquier otro lugar solo admite los estados históricos.
+        body = without_mirror_lines(rel, raw) if rel in (GATE_DOC, PKG_README) else \
+            '\n'.join(ln for ln in norm(text or '').split('\n') if not MIRROR_RX.fullmatch(ln)) if rel in GOV_FILES \
+            else (text or '')
+        for subj, st in memo('states', body, lambda: list(state_claims(body))):
             if st not in allowed_states(subj):
                 bad.append(f'{rel}: «{subj} = {st}»')
     out.append((not bad, f'cada afirmación «sujeto = ESTADO» usa un estado admitido para su sujeto; '
@@ -2442,7 +2516,7 @@ def identity_errors_h(f):
     return e
 
 
-def delta_errors_h(f, texts, evidence):
+def delta_errors_h(f, texts, evidence, committed=None):
     """X1–X5 y, con la condición C-R, X1-R y X2-R (S v2.2 §5.8.2): lo único que cambia después de H."""
     h_texts = f.get('h_texts') or {}
     h_state, x_state = strict_json(h_texts.get(GATE_STATE) or ''), strict_json(texts.get(GATE_STATE) or '')
@@ -2459,12 +2533,13 @@ def delta_errors_h(f, texts, evidence):
         missing.append('declared_result')
     h_paths = set(f.get('h_paths') or ())
     rev_err = revocation_errors(x_state.get('revocation'), parse_date_str(f.get('date')), h_paths) if attempted else []
-    det_ok = isinstance(evidence.get(DETERMINATION), bytes) and DETERMINATION not in h_paths
+    det_ok = isinstance(evidence.get(DETERMINATION), bytes) and DETERMINATION not in h_paths and committed is True
     revoked = attempted and not missing and not rev_err and det_ok
     if attempted and missing:
         e.append(f'C-R.4: faltan transiciones de X2-R: {missing}')
     if attempted and not det_ok:
-        e.append(f'C-R.3: falta {DETERMINATION} como archivo añadido después de H')
+        e.append(f'C-R.3: {DETERMINATION} falta, ya estaba en H o no está versionada en el commit validado '
+                 f'(blob 100644 en HEAD, sin cambios en el árbol de trabajo; S:118)')
     e += rev_err
     allowed = X2_FIELDS | ({'criteria[FG-14].status'} if revoked else set())
     outside = sorted(k for k in set(a) | set(b) if a.get(k, '∅') != b.get(k, '∅') and k not in allowed)
@@ -2501,7 +2576,7 @@ def doc_status_only(old, new):
     return True
 
 
-def binding_errors(sha, facts, gate_doc, texts=None, evidence=None):
+def binding_errors(sha, facts, gate_doc, texts=None, evidence=None, delta=True, committed=None):
     """Vínculo reproducible con el candidato: commit de la rama, ancestro de HEAD y sin cambios materiales después.
 
     B-01: con `texts`, además la identidad de H (H §5.6) y el delta admitido después de H (X1–X5, X1-R, X2-R)."""
@@ -2536,8 +2611,8 @@ def binding_errors(sha, facts, gate_doc, texts=None, evidence=None):
         if GATE_DOC in changed and not (canonical_only(GATE_DOC, f.get('gate_doc'), gate_doc) if texts is not None
                                         else doc_status_only(f.get('gate_doc'), gate_doc)):
             e.append('el documento del gate cambió fuera de la columna Estado de la tabla FG y de su línea canónica')
-        if texts is not None:
-            e += identity_errors_h(f) + delta_errors_h(f, texts, evidence or {})
+        if texts is not None and delta:
+            e += identity_errors_h(f) + delta_errors_h(f, texts, evidence or {}, committed)
     if parse_date(f.get('date')) is None:
         e.append('fecha del commit candidato ilegible')
     return e
@@ -2924,7 +2999,8 @@ def team_evidence_errors(fg, ctx):
     cand = ev['candidate_commit']
     if cand != state.get('candidate_commit'):
         e.append(f'{fg}: candidate_commit distinto del candidato declarado en el estado del gate')
-    e += [f'{fg}: {x}' for x in binding_errors(cand, ctx['facts'], ctx['gate_doc'])]
+    e += [f'{fg}: {x}' for x in binding_errors(cand, ctx['facts'], ctx['gate_doc'], ctx.get('texts'),
+                                               ctx.get('evidence'), delta=False)]
     if not (isinstance(ev['record_id'], str) and re.fullmatch(sch['record_id_pattern'], ev['record_id'])
             and ev['record_id'].startswith(f'F36SBX-{fg}-')):
         e.append(f'{fg}: record_id inválido')
@@ -3030,10 +3106,12 @@ def rule_gate(s, auto):
     if cand is None:
         cand_err = [f'{cumple} en CUMPLE sin candidate_commit'] if cumple else []
     else:
-        cand_err = binding_errors(cand, s['facts'], s['texts'].get(GATE_DOC), s['texts'], s['evidence'])
+        cand_err = binding_errors(cand, s['facts'], s['texts'].get(GATE_DOC), s['texts'], s['evidence'],
+                                  committed=s.get('determination_committed'))
     out.append((not cand_err, f'vínculo con el commit candidato auditado (nulo mientras no haya evidencia); '
                               f'errores: {cand_err}'))
     ctx = {'state': state, 'schema': schema if schema_ok and not serr else None, 'evidence': s['evidence'],
+           'texts': s['texts'],
            'facts': s['facts'], 'adr_blobs': s['adr_blobs'], 'classes': EXPECTED_CLASSES,
            'gate_doc': s['texts'].get(GATE_DOC)}
 
@@ -3100,6 +3178,23 @@ def rule_gate(s, auto):
         elif r[2] != ('EQUIPO' if c.get('kind') == 'team' else 'AUTO') or r[4] != c.get('status'):
             doc_err.append(f'{c.get("id")}: tipo o estado distinto del JSON')
     out.append((not doc_err and sorted(rows) == FG_IDS, f'tabla FG del documento = JSON; diferencias: {doc_err}'))
+    # B01-H01 (I-11): REVOCADO no se deshace. Si la historia de la rama registró una revocación, el árbol validado
+    # tiene que conservarla tal cual (mismo evento y misma determinación); si no, falla y R sigue siendo REVOCADO.
+    history = s.get('revocation_history')
+    perm_err = []
+    if history is None:
+        perm_err.append('I-11: la historia del estado del gate posterior a la base no se pudo leer (falla cerrado)')
+        result = 'NO SUPERADO' if result == 'SUPERADO' else result
+    elif history:
+        first = history[0]
+        det_now = s['evidence'].get(DETERMINATION)
+        kept = state.get('revocation') == first['revocation'] and isinstance(det_now, bytes) \
+            and git_blob_id(det_now) == first['determination']
+        if not kept:
+            perm_err.append(f'I-11: la revocación registrada en {first["commit"][:12]} se retiró o se sustituyó; '
+                            f'REVOCADO no se deshace en el mismo gate')
+            result = 'REVOCADO'
+    out.append((not perm_err, f'una revocación registrada en la historia permanece (I-11); errores: {perm_err}'))
     # B-01 (H §5.7): sustituye la comprobación de `:2877`, que exigía NO SUPERADO.
     merr = mirror_errors(s['texts'], result)
     gate_value, f37_value = derived_states(result)
