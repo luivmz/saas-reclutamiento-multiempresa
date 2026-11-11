@@ -1,6 +1,12 @@
 # F36-SBX — Gate sucesor (F36-SBX-GATE) y plan de entrada a F37-SBX
 
-> Fase F36-SBX, versión 6 (27/10/2026), con `gate_version = 3` y el esquema de evidencia `f36sbx-team-evidence/v2`, sin cambios de formato. Corrige AF1-M01 ([corrección AF1](F36SBX_Correccion_AF1.md)), AF2-M01 ([corrección AF2](F36SBX_Correccion_AF2.md)), AF3-M01 y AF3-L01 ([corrección AF3](F36SBX_Correccion_AF3.md)), AF4-M01, AF4-M02 y AF4-L01 ([corrección AF4](F36SBX_Correccion_AF4.md)), y AF5-M01 y AF5-L01 ([corrección AF5](F36SBX_Correccion_AF5.md)): el ADR se lee del blob Git real del commit candidato, sin `refs/replace`; el vínculo exige un estado de Git fiable, compara el árbol de trabajo por sus bytes y exige que toda entrada normativa sea un archivo regular sin enlaces y un blob `100644` del candidato; y una identidad tiene que contener al menos una palabra distintiva, también sin separadores. Candidata a una sexta auditoría independiente. **Resultado vigente: F36-SBX-GATE = NO SUPERADO. F37-SBX = BLOQUEADA.**
+> Fase F36-SBX, versión 6 (27/10/2026), con `gate_version = 3` y el esquema de evidencia `f36sbx-team-evidence/v2`, sin cambios de formato. Corrige AF1-M01 ([corrección AF1](F36SBX_Correccion_AF1.md)), AF2-M01 ([corrección AF2](F36SBX_Correccion_AF2.md)), AF3-M01 y AF3-L01 ([corrección AF3](F36SBX_Correccion_AF3.md)), AF4-M01, AF4-M02 y AF4-L01 ([corrección AF4](F36SBX_Correccion_AF4.md)), y AF5-M01 y AF5-L01 ([corrección AF5](F36SBX_Correccion_AF5.md)): el ADR se lee del blob Git real del commit candidato, sin `refs/replace`; el vínculo exige un estado de Git fiable, compara el árbol de trabajo por sus bytes y exige que toda entrada normativa sea un archivo regular sin enlaces y un blob `100644` del candidato; y una identidad tiene que contener al menos una palabra distintiva, también sin separadores. Candidata a una sexta auditoría independiente. El resultado vigente es la única línea de la sección «Resultado canónico».
+
+## Resultado canónico
+
+- F36-SBX-GATE = NO SUPERADO
+
+Es la única afirmación del resultado en este documento (espejo E2 de la especificación del sucesor B-01). El validador recalcula el resultado desde la evidencia y exige que esta línea lo refleje; la línea nunca lo impone.
 
 ## 1. Nombre y propósito
 

@@ -45,9 +45,16 @@ def git_suite():
     import test_f36sbx_git
     return test_f36sbx_git
 
+def b01_suite():
+    """test_f36sbx_b01.py (candidato experimental del sucesor B-01), importado solo cuando se necesita."""
+    import test_f36sbx_b01
+    return test_f36sbx_b01
+
+
 VALIDATOR = HERE / 'validate_f36sbx.py'
 SRC = VALIDATOR.read_text(encoding='utf-8')
 MEM, GIT, GIT_ONLY = ('mem',), ('mem', 'git'), ('git',)
+B01, B01_MEM = ('b01',), ('mem', 'b01')
 # Partes de test_f36sbx_git.py: si una entera no se puede ejecutar, es una excepción, no una detección pertinente.
 GIT_PARTS = {'UNIT', 'WORKTREE', 'REPLACEMENT', 'E2E', 'E2E_M01', 'E2E_M02', 'E2E_AF5'}
 
@@ -59,6 +66,9 @@ GIT_PARTS = {'UNIT', 'WORKTREE', 'REPLACEMENT', 'E2E', 'E2E_M01', 'E2E_M02', 'E2
 # aplicable y cuenta como superviviente.
 SOURCE_ABLATIONS = [
     # AF2-M01: identidad visible, documento humano y coherencia con el registro.
+    # B-01: una revocación que no se puede vincular a H falla cerrado; C-R exige el documento en su ruta fija.
+    ('B-01 · revocación no vinculada que no fuerza NO SUPERADO', 'if', "result == 'REVOCADO' and (rev_err", B01),
+    ('B-01 · BRANCHES sin la rama de H', 'assign', "BRANCHES = frozenset({'feature/f36-sbx-authorization-design', 'develop', 'main', 'exp/b01-candidato'})", B01),
     ('identidad: caracteres invisibles', 'assign', 'bad = invisible_chars(value)'),
     ('identidad: mínimo de letras', 'if', "startswith('L')) < min_letters"),
     ('identidad: marcadores de posición', 'if', 'key in PLACEHOLDERS'),
@@ -285,6 +295,15 @@ FUNCTION_ABLATIONS = [
      MEM, 'AF5-M01 · función safe_repo_path sin «:», barras invertidas ni componentes vacíos'),
     # AF5-L01.
     ('filler_piece', lambda m: lambda word, j, i: False, MEM, 'AF5-L01 · función filler_piece anulada'),
+    # B-01 (candidato experimental, S v2.2): código nuevo del sucesor.
+    ('revocation_errors', lambda m: lambda *a, **k: [], B01_MEM, 'B-01 · función revocation_errors anulada'),
+    ('mirror_errors', lambda m: lambda *a: [], B01_MEM, 'B-01 · función mirror_errors anulada (vuelve a no comprobar E1–E7)'),
+    ('mirror_lines', lambda m: lambda rel, text: [], B01_MEM, 'B-01 · función mirror_lines anulada'),
+    ('required_state', lambda m: lambda r: list(m.REQUIRED_STATE), B01_MEM, 'B-01 · REQUIRED_STATE fijo, sin depender de R'),
+    ('derived_states', lambda m: lambda r: (r, 'BLOQUEADA'), B01_MEM, 'B-01 · F37-SBX nunca derivada de R (T-02)'),
+    ('identity_errors_h', lambda m: lambda f: [], B01, 'B-01 · función identity_errors_h anulada (H §5.6)'),
+    ('delta_errors_h', lambda m: lambda *a: [], B01, 'B-01 · función delta_errors_h anulada (X2, C-R)'),
+    ('canonical_only', lambda m: lambda *a: True, B01, 'B-01 · función canonical_only anulada (X3–X5)'),
 ]
 EXCEPTION_MARKS = ('mutación no aplicable', 'escenario no ejecutable', 'excepción')
 
@@ -345,6 +364,8 @@ def battery(mod, suites=MEM, resealed=False):
         fails = run_suite(t, mod) if 'mem' in suites else []
         if 'git' in suites:
             fails += [(f'git:{cid}', d) for cid, d in run_suite(git_suite(), mod)]
+        if 'b01' in suites:
+            fails += [(f'b01:{cid}', d) for cid, d in run_suite(b01_suite(), mod)]
     finally:
         t.BASE['texts'][v.EXAMPLE] = saved
     return fails
@@ -361,7 +382,7 @@ def ablations(only=None):
     """Ejecuta las ablaciones (con only, solo aquellas cuya etiqueta contiene alguna de sus subcadenas)."""
     def wanted(label):
         return not only or any(x.casefold() in label.casefold() for x in only)
-    base_fails = battery(load(ast.parse(SRC)), GIT)
+    base_fails = battery(load(ast.parse(SRC)), GIT + B01)
     base = {cid for cid, _ in base_fails}
     print(f'línea base (memoria y Git real): {len(base)} casos fallan {sorted(base)}')
     if only:

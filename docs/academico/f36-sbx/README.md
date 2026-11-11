@@ -5,8 +5,9 @@
 ## Estado
 
 - **F36-SBX = EN DISEÑO.** Solo autorización, investigación y diseño documental.
-- **F36-SBX-GATE = NO SUPERADO.** FG-02, FG-03, FG-10 y FG-12 están pendientes de actos del equipo. No hay evidencia registrada.
-- **F37-SBX = BLOQUEADA.**
+- F36-SBX-GATE = NO SUPERADO
+- F37-SBX = BLOQUEADA
+- Los criterios FG-02, FG-03, FG-10 y FG-12 dependen de actos del equipo; no hay evidencia registrada.
 - G0 real = NO APROBADA; G0-02, G0-03 y G0-12 = PENDIENTE EXTERNO; G0-09 y G0-14 = CUMPLIDO; G0-SBX = APROBADA CON RESTRICCIONES; ADR-005 = PROPUESTA.
 - F35-SBX = CERRADA Y CONGELADA, sin cambios. F36–F40 productivas = BLOQUEADAS. Alcance C = BLOQUEADO. Datos reales = PROHIBIDOS.
 - RF-23 sigue siendo la decisión final humana y RF-29 sigue experimental.

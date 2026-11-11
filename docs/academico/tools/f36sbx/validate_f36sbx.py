@@ -35,7 +35,9 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[3]
 
 BASE = 'b8892af39a6492d8dd44a36290604efc602380cd'
-BRANCHES = frozenset({'feature/f36-sbx-authorization-design', 'develop', 'main'})
+# B-01 (candidato experimental): T-04 con (a-ii) admite UNA rama nueva, creada desde el commit 55f758e. El nombre
+# `exp/b01-candidato` es provisional: T-04 sigue NO EMITIDA (S v2.2 §9).
+BRANCHES = frozenset({'feature/f36-sbx-authorization-design', 'develop', 'main', 'exp/b01-candidato'})
 PKG = 'docs/academico/f36-sbx'
 TOOLS = 'docs/academico/tools/f36sbx'
 GATE_EVIDENCE = PKG + '/gate/evidencia/'
@@ -48,6 +50,21 @@ CONTRACT = PKG + '/contrato/f36sbx_evidence_contract.json'
 EXAMPLE = PKG + '/contrato/f36sbx_contract_example.json'
 GATE_STATE = PKG + '/gate/f36sbx_gate_state.json'
 TEAM_SCHEMA = PKG + '/gate/f36sbx_team_evidence_schema.json'
+PKG_README = PKG + '/README.md'
+# B-01 (S v2.2): resultado derivado, espejos E1–E7 y revocación con formato cerrado (§5.8).
+GATE_RESULTS = ('NO SUPERADO', 'SUPERADO', 'REVOCADO')
+F37_ENABLED = 'AUTORIZADA PARA INICIAR'  # T-02: propuesta de S, NO EMITIDA
+F37_STATES = ('BLOQUEADA', F37_ENABLED)
+MIRROR_SUBJECTS = ('F36-SBX-GATE', 'F37-SBX')
+CANONICAL_SECTION = 'Resultado canónico'
+DETERMINATION = PKG + '/gate/evidencia/REVOCACION_DETERMINACION.md'
+REVOCATION_KEYS = frozenset({'date', 'effective_from', 'ground', 'determination', 'evidence'})
+REVOCATION_GROUNDS = frozenset({'charter_7_1', 'charter_7_2', 'charter_7_3', 'charter_7_4', 'gate_5_tei21',
+                                'gate_5_retirada'})
+# X2 (H §5.5): campos del estado que pueden cambiar después de H; X2-R añade FG-14 solo con la condición C-R.
+X2_FIELDS = frozenset({'candidate_commit', 'f37_authorized_ei', 'declared_result', 'revocation'}
+                      | {f'criteria[{fg}].{k}' for fg in ('FG-02', 'FG-03', 'FG-10', 'FG-12')
+                         for k in ('status', 'evidence')})
 F33_MATRIX = 'docs/academico/diseno-inteligente/F33_Matriz_Capacidades_y_Restricciones.md'
 PKG_DOCS = ['README.md', 'F36SBX_Charter.md', 'F36SBX_Matriz_Capacidades.md', 'F36SBX_Investigacion_Diseno.md',
             'F36SBX_Contrato_Evidencia.md', 'F36SBX_Threat_Model.md', 'F36SBX_Plan_Evaluacion.md',
@@ -346,7 +363,7 @@ ADR_STATUS_TOKENS = ('PROPUESTO', 'APROBADO', 'RECHAZADO', 'REVOCADO')
 STDLIB = frozenset({'ast', 'copy', 'csv', 'datetime', 'hashlib', 'importlib', 'io', 'json', 'os', 're', 'subprocess',
                     'sys', 'unicodedata', 'pathlib', 'unittest', 'tempfile', 'itertools', 'contextlib', 'types',
                     'shutil', 'stat'})
-LOCAL_MODULES = frozenset({'validate_f36sbx', 'test_f36sbx', 'test_f36sbx_git'})
+LOCAL_MODULES = frozenset({'validate_f36sbx', 'test_f36sbx', 'test_f36sbx_git', 'test_f36sbx_b01'})
 ML_IMPORT = re.compile(r'^\s*(?:import|from)\s+(torch|transformers|sentence_transformers|spacy|sklearn|pypdf|'
                        r'pdfplumber|docx|pytesseract|ollama|openai|anthropic|faiss|chromadb|whisper|numpy|'
                        r'pandas|requests|urllib3|httpx)\b', re.M)
@@ -1105,6 +1122,9 @@ def git_facts(root, sha, wt, problems, normative=(), required=(), wt_normative=(
     tree = git_tree(root, sha)
     f['changed'] = changed_since(root, sha, wt, tree)
     f['gate_doc'] = blob_text(git_blob(root, sha, GATE_DOC))
+    # B-01: blobs de H para comparar X2 campo a campo y X3–X5 línea a línea, y su árbol para la identidad de H.
+    f['h_texts'] = {rel: blob_text(git_blob(root, sha, rel)) for rel in (GATE_STATE, PKG_README, *GOV_FILES)}
+    f['h_paths'] = sorted(tree) if tree is not None else None
     if tree is not None:
         entries = list(wt_normative)
         for p in sorted(required):
@@ -1256,13 +1276,16 @@ def rule_lnk(s):
 
 def rule_gov(s):
     out = []
-    required = sorted(norm(r) for r in REQUIRED_STATE)
     for rel in GOV_FILES:
         block = state_block(s['texts'].get(rel))
         if block is None:
             out.append((False, f'{rel}: sin bloque «Estado vigente» (falla cerrado)'))
             continue
         bl = [norm(b) for b in bullets(block)]
+        # REQUIRED_STATE(R) (H §5.4): la línea del gate admite el vocabulario cerrado; que valga R lo exige GATE.
+        gate_line = next((b for b in bl if b.startswith('F36-SBX-GATE = ')), '')
+        value = gate_line.split(' = ', 1)[1] if ' = ' in gate_line else 'NO SUPERADO'
+        required = sorted(norm(r) for r in required_state(value if value in GATE_RESULTS else 'NO SUPERADO'))
         unknown = sorted(set(bl) - set(required))
         missing = sorted(set(required) - set(bl))
         dup = sorted({b for b in bl if bl.count(b) > 1})
@@ -1273,11 +1296,100 @@ def rule_gov(s):
         if base_block is None:
             out.append((False, f'{rel}: no se pudo leer el estado vigente de la base {BASE[:7]} (falla cerrado)'))
         else:
-            lost = [b for b in (norm(x) for x in bullets(base_block)) if b not in bl]
+            lost = [b for b in (norm(x) for x in bullets(base_block))
+                    if b not in bl and not b.startswith(tuple(f'{m} = ' for m in MIRROR_SUBJECTS))]
             out.append((not lost, f'{rel}: conserva todos los estados de la base; perdidos: {lost}'))
     out.append((CLAUDE_MEMBERS in (s['texts'].get('CLAUDE.md') or ''),
                 'CLAUDE.md declara exactamente a los tres integrantes que exige el quórum del gate'))
     return out
+
+
+def derived_states(result):
+    """Estado del gate y de F37-SBX derivados de R (H §5.1): F37-SBX solo se habilita con SUPERADO (T-02)."""
+    return result, (F37_ENABLED if result == 'SUPERADO' else 'BLOQUEADA')
+
+
+def required_state(result):
+    """REQUIRED_STATE(R) (H §5.4): las 14 líneas fijas, la del gate con R y la de F37-SBX derivada."""
+    gate, f37 = derived_states(result)
+    return [f'F36-SBX-GATE = {gate}' if r.startswith('F36-SBX-GATE = ')
+            else f'F37-SBX = {f37}' if r.startswith('F37-SBX = ') else r for r in REQUIRED_STATE]
+
+
+MIRROR_RX = re.compile(r'^- (F36-SBX-GATE|F37-SBX) = ([A-ZÁÉÍÓÚÑ ]+?)\s*$', re.M)
+
+
+def mirror_scope(rel, text):
+    """Ámbito de cada espejo (H §5.2): E2, la sección canónica del gate; E3, la sección «Estado» del README del
+    paquete; E4–E7, el bloque «Estado vigente» de cada documento de gobierno."""
+    if text is None:
+        return None
+    if rel == GATE_DOC:
+        return section(text, CANONICAL_SECTION)
+    if rel == PKG_README:
+        return section(text, 'Estado')
+    if rel in GOV_FILES:
+        return state_block(text)
+    return None
+
+
+def mirror_lines(rel, text):
+    """[(sujeto, valor)] de las líneas canónicas de un espejo, en su ámbito."""
+    scope = mirror_scope(rel, text)
+    return [(m.group(1), m.group(2)) for m in MIRROR_RX.finditer(norm(scope))] if scope else []
+
+
+def mirror_errors(texts, result):
+    """Sustituye la comprobación de `:2877` (H §5.7): E1–E7 declaran exactamente R y F37-SBX derivado, con una sola
+    afirmación por sujeto en su ámbito (D-07). Cualquier diferencia, en cualquier sentido, es una falla."""
+    gate, f37 = derived_states(result)
+    e = []
+    state = strict_json(texts.get(GATE_STATE) or '')
+    if not isinstance(state, dict) or state.get('declared_result') != gate:
+        e.append(f'E1 declared_result ≠ {gate}')
+    expected = {GATE_DOC: {'F36-SBX-GATE': gate}, PKG_README: {'F36-SBX-GATE': gate, 'F37-SBX': f37},
+                **{rel: {'F36-SBX-GATE': gate, 'F37-SBX': f37} for rel in GOV_FILES}}
+    for rel, want in expected.items():
+        scope = mirror_scope(rel, texts.get(rel))
+        if scope is None:
+            e.append(f'{rel}: sin el ámbito del espejo (falla cerrado)')
+            continue
+        lines = mirror_lines(rel, texts.get(rel))
+        claims = [subj for subj, _ in state_claims(scope) if subj in MIRROR_SUBJECTS]
+        for subj, value in want.items():
+            found = [x for s_, x in lines if s_ == subj]
+            if found != [value]:
+                e.append(f'{rel}: {subj} = {found or "ausente"} (se espera {value})')
+            if claims.count(subj) != 1:
+                e.append(f'{rel}: {claims.count(subj)} afirmaciones de {subj} en el ámbito del espejo (D-07 exige una)')
+    return e
+
+
+DATE_RX = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+INSTANT_RX = re.compile(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$')
+SHA256_RX = re.compile(r'^[0-9a-f]{64}$')
+
+
+def revocation_errors(rev, h_date=None, h_paths=None):
+    """Formato cerrado de `revocation` (S v2.2 §5.8.1). Sin H, solo la estructura; con H, también la fecha del
+    registro (no anterior a H) y que cada ruta de `evidence` ya exista en el árbol de H."""
+    if not isinstance(rev, dict) or set(rev) != REVOCATION_KEYS:
+        return [f'revocation: claves distintas de {sorted(REVOCATION_KEYS)}']
+    e = []
+    if not (isinstance(rev['date'], str) and DATE_RX.match(rev['date']) and parse_date(rev['date'])
+            and (h_date is None or rev['date'] >= h_date)):
+        e.append('revocation.date: fecha inválida o anterior a H')
+    if not (isinstance(rev['effective_from'], str) and INSTANT_RX.match(rev['effective_from'])):
+        e.append('revocation.effective_from: instante inválido (con desfase horario)')
+    if rev['ground'] not in REVOCATION_GROUNDS:
+        e.append('revocation.ground: motivo no admitido')
+    if rev['determination'] != DETERMINATION:
+        e.append(f'revocation.determination: debe ser exactamente {DETERMINATION}')
+    ev = rev['evidence']
+    if not (isinstance(ev, list) and ev and all(isinstance(x, str) and (
+            SHA256_RX.match(x) or (h_paths is not None and x in h_paths)) for x in ev)):
+        e.append('revocation.evidence: lista no vacía de SHA-256 o de rutas que ya existen en H')
+    return e
 
 
 def allowed_states(subj):
@@ -1327,7 +1439,14 @@ def rule_sem(s):
     scopes = {p: s['texts'].get(p) for p in PKG_FILES if p.endswith('.md')}
     scopes.update({p: state_block(s['texts'].get(p)) for p in GOV_FILES})
     for rel, text in scopes.items():
+        lines = mirror_lines(rel, s['texts'].get(rel))
+        for subj, st in lines:
+            if st not in (GATE_RESULTS if subj == 'F36-SBX-GATE' else F37_STATES):
+                bad.append(f'{rel}: «{subj} = {st}» fuera del vocabulario cerrado del espejo')
+        canonical = {f'{subj} = {st}' for subj, st in lines}
         for subj, st in memo('states', text or '', lambda: list(state_claims(text or ''))):
+            if f'{subj} = {st}' in canonical and subj in MIRROR_SUBJECTS:
+                continue  # línea canónica de un espejo: el valor exacto lo comprueba GATE frente a R
             if st not in allowed_states(subj):
                 bad.append(f'{rel}: «{subj} = {st}»')
     out.append((not bad, f'cada afirmación «sujeto = ESTADO» usa un estado admitido para su sujeto; '
@@ -2272,6 +2391,98 @@ def team_schema_errors(sch):
     return e
 
 
+def flatten_state(state):
+    """Campos del estado del gate: `criteria` por id y `revocation` como un valor atómico."""
+    out = {}
+    for key, value in (state.items() if isinstance(state, dict) else ()):
+        if key == 'criteria' and isinstance(value, list):
+            for c in value:
+                for ck, cv in (c.items() if isinstance(c, dict) else ()):
+                    out[f'criteria[{c.get("id")}].{ck}'] = cv
+        else:
+            out[key] = value
+    return out
+
+
+def canonical_only(rel, old, new):
+    """X3–X5 (H §5.5): mismo número de líneas; toda línea distinta es la línea canónica de un sujeto del espejo, con
+    el mismo sujeto antes y después; en el documento del gate vale además la columna Estado de la tabla FG."""
+    if old is None or new is None:
+        return False
+    a, b = old.split('\n'), new.split('\n')
+    if len(a) != len(b):
+        return False
+    for x, y in zip(a, b):
+        if x == y:
+            continue
+        mx, my = MIRROR_RX.match(norm(x)), MIRROR_RX.match(norm(y))
+        if mx and my and mx.group(1) == my.group(1):
+            continue
+        if rel == GATE_DOC and doc_status_only(x, y):
+            continue
+        return False
+    return True
+
+
+def identity_errors_h(f):
+    """H §5.6: en el blob de H, el estado no trae evidencia, candidato ni resultado adelantado, y no hay
+    gate/evidencia/ en su árbol."""
+    h = strict_json((f.get('h_texts') or {}).get(GATE_STATE) or '')
+    paths = f.get('h_paths')
+    if not isinstance(h, dict) or paths is None:
+        return ['identidad de H: no se pudo leer el estado o el árbol de H (falla cerrado)']
+    e = []
+    st = {c.get('id'): c.get('status') for c in h.get('criteria', []) if isinstance(c, dict)}
+    if h.get('candidate_commit') is not None or h.get('f37_authorized_ei') is not None \
+            or h.get('revocation') is not None or h.get('declared_result') != 'NO SUPERADO' \
+            or any(st.get(fg) != 'PENDIENTE' for fg in FG_TEAM):
+        e.append('identidad de H: el estado de H trae candidato, evidencia o un resultado adelantado')
+    if any(p.startswith(GATE_EVIDENCE) for p in paths):
+        e.append('identidad de H: H ya contiene gate/evidencia/')
+    return e
+
+
+def delta_errors_h(f, texts, evidence):
+    """X1–X5 y, con la condición C-R, X1-R y X2-R (S v2.2 §5.8.2): lo único que cambia después de H."""
+    h_texts = f.get('h_texts') or {}
+    h_state, x_state = strict_json(h_texts.get(GATE_STATE) or ''), strict_json(texts.get(GATE_STATE) or '')
+    if not isinstance(h_state, dict) or not isinstance(x_state, dict):
+        return ['estado del gate de H o del árbol validado ilegible (falla cerrado)']
+    e = []
+    a, b = flatten_state(h_state), flatten_state(x_state)
+    # C-R.1 y C-R.4: las tres transiciones de X2-R juntas; C-R.2, el evento; C-R.3, el documento en su ruta fija.
+    attempted = h_state.get('revocation') is None and x_state.get('revocation') is not None
+    missing = []
+    if (a.get('criteria[FG-14].status'), b.get('criteria[FG-14].status')) != ('CUMPLE', 'NO CUMPLE'):
+        missing.append('criteria[FG-14].status')
+    if b.get('declared_result') != 'REVOCADO':
+        missing.append('declared_result')
+    h_paths = set(f.get('h_paths') or ())
+    rev_err = revocation_errors(x_state.get('revocation'), parse_date_str(f.get('date')), h_paths) if attempted else []
+    det_ok = isinstance(evidence.get(DETERMINATION), bytes) and DETERMINATION not in h_paths
+    revoked = attempted and not missing and not rev_err and det_ok
+    if attempted and missing:
+        e.append(f'C-R.4: faltan transiciones de X2-R: {missing}')
+    if attempted and not det_ok:
+        e.append(f'C-R.3: falta {DETERMINATION} como archivo añadido después de H')
+    e += rev_err
+    allowed = X2_FIELDS | ({'criteria[FG-14].status'} if revoked else set())
+    outside = sorted(k for k in set(a) | set(b) if a.get(k, '∅') != b.get(k, '∅') and k not in allowed)
+    if outside:
+        e.append(f'campo del estado fuera del delta admitido después de H: {outside}')
+    if DETERMINATION in evidence and not revoked:
+        e.append(f'{DETERMINATION} sin la condición C-R: fuera del delta')
+    for rel in (PKG_README, *GOV_FILES):
+        if rel in (f.get('changed') or ()) and not canonical_only(rel, h_texts.get(rel), texts.get(rel)):
+            e.append(f'{rel} cambió después de H fuera de sus líneas canónicas')
+    return e
+
+
+def parse_date_str(value):
+    d = parse_date(value)
+    return d.isoformat()[:10] if d is not None else None
+
+
 def doc_status_only(old, new):
     """El documento del gate solo cambió en la columna Estado de la tabla FG."""
     if old is None or new is None:
@@ -2290,8 +2501,10 @@ def doc_status_only(old, new):
     return True
 
 
-def binding_errors(sha, facts, gate_doc):
-    """Vínculo reproducible con el candidato: commit de la rama, ancestro de HEAD y sin cambios materiales después."""
+def binding_errors(sha, facts, gate_doc, texts=None, evidence=None):
+    """Vínculo reproducible con el candidato: commit de la rama, ancestro de HEAD y sin cambios materiales después.
+
+    B-01: con `texts`, además la identidad de H (H §5.6) y el delta admitido después de H (X1–X5, X1-R, X2-R)."""
     if not isinstance(sha, str) or not HEX40.fullmatch(sha):
         return ['candidate_commit fuera de formato (40 hexadecimales en minúscula)']
     f = facts.get(sha)
@@ -2315,11 +2528,16 @@ def binding_errors(sha, facts, gate_doc):
     if changed is None:
         e.append('cambios posteriores al candidato no evaluables (falla cerrado)')
     else:
-        outside = sorted(p for p in changed if not (p.startswith(GATE_EVIDENCE) or p in (GATE_STATE, GATE_DOC)))
+        mirrors = (PKG_README, *GOV_FILES) if texts is not None else ()
+        outside = sorted(p for p in changed
+                         if not (p.startswith(GATE_EVIDENCE) or p in (GATE_STATE, GATE_DOC, *mirrors)))
         if outside:
             e.append(f'el paquete cambió después del commit auditado: {outside[:6]}')
-        if GATE_DOC in changed and not doc_status_only(f.get('gate_doc'), gate_doc):
-            e.append('el documento del gate cambió fuera de la columna Estado de la tabla FG')
+        if GATE_DOC in changed and not (canonical_only(GATE_DOC, f.get('gate_doc'), gate_doc) if texts is not None
+                                        else doc_status_only(f.get('gate_doc'), gate_doc)):
+            e.append('el documento del gate cambió fuera de la columna Estado de la tabla FG y de su línea canónica')
+        if texts is not None:
+            e += identity_errors_h(f) + delta_errors_h(f, texts, evidence or {})
     if parse_date(f.get('date')) is None:
         e.append('fecha del commit candidato ilegible')
     return e
@@ -2725,7 +2943,7 @@ def evaluate_gate(state, classes, team_errors):
     if not isinstance(state, dict):
         return no
     if state.get('revocation') is not None:
-        return 'REVOCADO'
+        return 'REVOCADO' if not revocation_errors(state['revocation']) else no
     if state.get('authorizes') != ['F37-SBX']:
         return no
     crit = state.get('criteria')
@@ -2812,7 +3030,7 @@ def rule_gate(s, auto):
     if cand is None:
         cand_err = [f'{cumple} en CUMPLE sin candidate_commit'] if cumple else []
     else:
-        cand_err = binding_errors(cand, s['facts'], s['texts'].get(GATE_DOC))
+        cand_err = binding_errors(cand, s['facts'], s['texts'].get(GATE_DOC), s['texts'], s['evidence'])
     out.append((not cand_err, f'vínculo con el commit candidato auditado (nulo mientras no haya evidencia); '
                               f'errores: {cand_err}'))
     ctx = {'state': state, 'schema': schema if schema_ok and not serr else None, 'evidence': s['evidence'],
@@ -2832,6 +3050,15 @@ def rule_gate(s, auto):
     out.append((not invalid, f'cada criterio EQUIPO en CUMPLE tiene evidencia semánticamente válida y coherente '
                              f'con su informe o ADR; inválidas: {invalid}'))
     referenced = {f'{GATE_EVIDENCE}{fg}.json' for fg in cumple}
+    rev = state.get('revocation')
+    h_paths = None if cand is None else set((s['facts'].get(cand) or {}).get('h_paths') or ())
+    rev_err = [] if rev is None else revocation_errors(rev, None, h_paths)
+    if rev is not None and cand is None:
+        rev_err.append('revocation sin candidate_commit: no se puede vincular a H (falla cerrado, DS-B01-1)')
+    out.append((not rev_err, f'revocation nula o con el formato cerrado de S v2.2 §5.8.1, vinculada a H; '
+                             f'errores: {rev_err}'))
+    if rev is not None and not rev_err:
+        referenced.add(DETERMINATION)
     fg02 = json_bytes(s['evidence'].get(f'{GATE_EVIDENCE}FG-02.json'))
     if 'FG-02' in cumple and isinstance(fg02, dict) and isinstance(fg02.get('audit_report'), dict):
         referenced.add(fg02['audit_report'].get('path'))
@@ -2857,6 +3084,8 @@ def rule_gate(s, auto):
     result = evaluate_gate(state, EXPECTED_CLASSES, team_errors)
     if result == 'SUPERADO' and (mismatch or struct or cand_err or invalid or not schema_ok or serr or ign_err):
         result = 'NO SUPERADO'
+    if result == 'REVOCADO' and (rev_err or cand_err):
+        result = 'NO SUPERADO'  # una revocación que no se puede vincular a H falla cerrado
     out.append((state.get('declared_result') == result,
                 f'resultado declarado {state.get("declared_result")!r} = recalculado {result!r}'))
     doc = norm(s['texts'].get(GATE_DOC) or '')
@@ -2871,11 +3100,11 @@ def rule_gate(s, auto):
         elif r[2] != ('EQUIPO' if c.get('kind') == 'team' else 'AUTO') or r[4] != c.get('status'):
             doc_err.append(f'{c.get("id")}: tipo o estado distinto del JSON')
     out.append((not doc_err and sorted(rows) == FG_IDS, f'tabla FG del documento = JSON; diferencias: {doc_err}'))
-    phrase = f'F36-SBX-GATE = {result}'
-    where = [rel for rel in [GATE_DOC, f'{PKG}/README.md'] if phrase not in norm(s['texts'].get(rel) or '')]
-    out.append((not where, f'«{phrase}» declarado en el gate y en el README; falta en: {where}'))
-    out.append((result == 'NO SUPERADO', f'el gobierno de esta versión exige F36-SBX-GATE = NO SUPERADO; '
-                                         f'el gate da {result}'))
+    # B-01 (H §5.7): sustituye la comprobación de `:2877`, que exigía NO SUPERADO.
+    merr = mirror_errors(s['texts'], result)
+    gate_value, f37_value = derived_states(result)
+    out.append((not merr, f'los espejos E1–E7 declaran exactamente F36-SBX-GATE = {gate_value} y '
+                          f'F37-SBX = {f37_value}, una vez por sujeto; diferencias: {merr}'))
     return out, result
 
 

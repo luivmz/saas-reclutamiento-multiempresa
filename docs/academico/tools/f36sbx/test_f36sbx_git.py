@@ -475,8 +475,14 @@ def sync_package(clone):
             if not (dst / rel).is_file() or (dst / rel).read_bytes() != data:
                 write(dst, rel, data)
                 changed = True
+    # B-01: los cuatro documentos de gobierno también son espejos (E4–E7) y forman parte de H (AC-05).
+    for rel in v.GOV_FILES:
+        data = (v.ROOT / rel).read_bytes()
+        if not (clone / rel).is_file() or (clone / rel).read_bytes() != data:
+            write(clone, rel, data)
+            changed = True
     if changed:
-        git(clone, 'add', '-A', v.PKG, v.TOOLS)
+        git(clone, 'add', '-A', v.PKG, v.TOOLS, *v.GOV_FILES)
         commit(clone, 'sincroniza el paquete F36-SBX del árbol de trabajo (clon de prueba)')
 
 

@@ -447,6 +447,9 @@ def build(auth=AUTH, mutate=None, team=('FG-02', 'FG-03', 'FG-10', 'FG-12')):
            'gate_doc': status_doc(BASE['texts'][G], {fg: 'CUMPLE' for fg in team}),
            'facts': {CAND: {'commit': True, 'from_base': True, 'ancestor': True, 'date': CDATE,
                             'gate_doc': BASE['texts'][G], 'git_state': [], 'normative': [],
+                            # B-01: blobs y árbol de H para la identidad (H §5.6) y el delta X2–X5.
+                            'h_texts': {p: BASE['texts'][p] for p in (S, v.PKG_README, *v.GOV_FILES)},
+                            'h_paths': sorted(p for p in BASE['texts'] if not p.startswith(v.GATE_EVIDENCE)),
                             'changed': sorted([S, G, REPORT, *(path(fg) for fg in team)])}}}
     set_report()(docs, ctx)
     if docs['FG-12']['successor_adr'] is not None:
@@ -563,12 +566,14 @@ def main():
     case('M07', 'G0-12 declarado dos veces con valores distintos',
          sub('docs/PROGRESS.md', '- G0-12 = PENDIENTE EXTERNO\n', '- G0-12 = PENDIENTE EXTERNO\n- G0-12 = CUMPLIDO\n'), 'GOV')
     case('M08', 'ADR-005 aprobado en el README del paquete', sub(PR, 'ADR-005 = PROPUESTA', 'ADR-005 = APROBADA'), 'SEM')
-    case('M09', 'gate declarado SUPERADO en su documento',
-         sub(G, 'F36-SBX-GATE = NO SUPERADO.', 'F36-SBX-GATE = SUPERADO.'), 'SEM')
+    case('M09', 'gate declarado SUPERADO en su línea canónica sin que lo dé la evidencia (B-01: espejo E2 ≠ R)',
+         sub(G, '- F36-SBX-GATE = NO SUPERADO\n', '- F36-SBX-GATE = SUPERADO\n'), 'GATE', 'espejos E1–E7')
+    case('M09b', 'gate declarado SUPERADO fuera de la línea canónica: solo cabe el estado histórico',
+         sub(G, '## 1. Nombre y propósito', 'F36-SBX-GATE = SUPERADO\n\n## 1. Nombre y propósito'), 'SEM')
     case('M10', 'F36-SBX cerrada con guion no separable',
          sub(CH, '**F36-SBX = EN DISEÑO**', f'**F36{nbh}SBX = CERRADA**'), 'SEM')
     case('M11', 'F37-SBX habilitada escondida con negritas', sub(CH, '**F37-SBX = BLOQUEADA**', '**F37-SBX** = HABILITADA'), 'SEM')
-    case('M12', 'F37-SBX habilitada con dos puntos', sub(PR, '**F37-SBX = BLOQUEADA.**', '**F37-SBX: HABILITADA.**'), 'SEM')
+    case('M12', 'F37-SBX habilitada con dos puntos', sub(PR, '- F37-SBX = BLOQUEADA\n', '- F37-SBX: HABILITADA\n'), 'SEM')
     case('M13', 'línea desconocida en el estado vigente (F37-SBX-A = HABILITADA)',
          sub('CLAUDE.md', '- F37-SBX = BLOQUEADA\n', '- F37-SBX = BLOQUEADA\n- F37-SBX-A = HABILITADA\n'), 'GOV', 'desconocidas')
     case('M14', 'afirmación «ADR-006 = APROBADO» en el paquete',
@@ -1612,7 +1617,12 @@ def main():
          'NO SUPERADO'),
         ('G04', 'FG-10 NO APLICA', lambda st: st['criteria'][9].update(status='NO APLICA'), 'NO SUPERADO'),
         ('G05', 'estado desconocido', lambda st: st['criteria'][2].update(status='APROBADO'), 'NO SUPERADO'),
-        ('G06', 'revocación con todo CUMPLE', lambda st: st.update(revocation={'motivo': 'prueba'}), 'REVOCADO'),
+        ('G06', 'revocación con el formato de S v2.2 §5.8.1 y todo CUMPLE (REVOCADO prevalece)',
+         lambda st: st.update(revocation={'date': '2026-11-11', 'effective_from': '2026-10-28T21:05:26-05:00',
+                                          'ground': 'charter_7_3', 'determination': v.DETERMINATION,
+                                          'evidence': ['a' * 64]}), 'REVOCADO'),
+        ('G06b', 'revocación con un objeto libre (formato de v3): falla cerrado',
+         lambda st: st.update(revocation={'motivo': 'prueba'}), 'NO SUPERADO'),
         ('G07', 'autoriza producción', lambda st: st['authorizes'].append('produccion'), 'NO SUPERADO'),
         ('G08', 'falta FG-14', lambda st: st['criteria'].pop(), 'NO SUPERADO'),
         ('G09', 'autorización con una EI BLOCKED', lambda st: st.update(f37_authorized_ei=['EI-01', 'EI-19']), 'NO SUPERADO'),
