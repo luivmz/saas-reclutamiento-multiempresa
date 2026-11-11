@@ -231,6 +231,50 @@ class EvidenceFlowTest extends TestCase
                 ->where('aid.query_terms', ['conduccion', 'clas']));
     }
 
+    /**
+     * CONT-M01 (Codex, 09/11/2026), on the real stack: HR cannot correct someone else's observation by declaring
+     * the replacement as a CV from a submitted document. Authorization looks at the original evidence first.
+     */
+    public function test_hr_cannot_rewrite_an_observation_by_declaring_another_type(): void
+    {
+        $this->actingAs($this->evaluator)->post(route('applications.evidence.store', $this->application), [
+            'type' => 'observacion', 'source' => 'sesion_asignada',
+            'description' => '[SINTÉTICO] Observación ficticia de la sesión asignada.',
+        ]);
+        $observation = EvidenceItem::query()->sole();
+
+        $this->actingAs($this->hr)->post(route('evidence.correct', $observation), [
+            'type' => 'cv', 'source' => 'documento_presentado',
+            'description' => '[SINTÉTICO] Reescritura como CV.',
+        ])->assertForbidden();
+
+        $this->assertSame(1, EvidenceItem::query()->count());
+        $this->assertSame(EvidenceState::Registered, EvidenceLedger::for($this->application)->state($observation));
+    }
+
+    /**
+     * R-01 in the policy itself, not only through the organization scope of route binding: a model of another
+     * organization handed straight to the gate is denied for every ability and role.
+     */
+    public function test_the_policy_alone_denies_another_organization(): void
+    {
+        $this->actingAs($this->hr)->post(route('applications.evidence.store', $this->application), $this->certificate());
+        $item = EvidenceItem::query()->sole();
+
+        $other = Organization::factory()->create();
+        foreach ([User::factory()->hr($other)->create(), User::factory()->approver($other)->create(), User::factory()->evaluator($other)->create()] as $outsider) {
+            $application = Application::query()->withoutGlobalScopes()->findOrFail($this->application->id);
+            $evidence = EvidenceItem::query()->withoutGlobalScopes()->findOrFail($item->id);
+
+            foreach (['viewAny', 'viewHistory', 'create'] as $ability) {
+                $this->assertFalse($outsider->can($ability, [EvidenceItem::class, $application]), "{$outsider->role->value} {$ability}");
+            }
+            foreach (['link', 'review', 'correct', 'withdraw'] as $ability) {
+                $this->assertFalse($outsider->can($ability, $evidence), "{$outsider->role->value} {$ability}");
+            }
+        }
+    }
+
     public function test_evaluator_sees_assigned_evidence_but_not_the_history(): void
     {
         $this->actingAs($this->evaluator)->get(route('applications.evidence.index', $this->application))->assertOk();
