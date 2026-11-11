@@ -216,10 +216,15 @@ class CoherenciaConElSaaS(unittest.TestCase):
         self.assertEqual(roles, set(f37.ROLE_ACTIONS))
 
     def test_las_acciones_de_auditoria_son_candidatas_y_no_existen_todavia(self):
+        """Fuera de la rama experimental no existen. En `exp/evidencias-ml02`, que tiene
+        `config/experimental.php`, existen las seis y con los mismos nombres que el prototipo."""
         source = (REPO / 'app/Enums/AuditAction.php').read_text(encoding='utf-8')
         existing = set(re.findall(r"= '([a-z_.]+)';", source))
         self.assertTrue(existing)
-        self.assertEqual(existing & set(f37.AUDIT_ACTION.values()), set())
+        if (REPO / 'config/experimental.php').exists():
+            self.assertLessEqual(set(f37.AUDIT_ACTION.values()), existing)
+        else:
+            self.assertEqual(existing & set(f37.AUDIT_ACTION.values()), set())
 
     def test_los_tokens_prohibidos_vienen_del_contrato_v4(self):
         tokens = f37.forbidden_tokens()

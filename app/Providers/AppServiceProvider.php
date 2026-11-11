@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\CandidateDocument;
 use App\Models\CandidateProfile;
 use App\Models\Evaluation;
+use App\Models\EvidenceItem;
 use App\Models\Interview;
 use App\Models\JobRequest;
 use App\Models\Organization;
@@ -63,6 +64,8 @@ class AppServiceProvider extends ServiceProvider
             'evaluation' => Evaluation::class,
             'interview' => Interview::class,
             'selection_decision' => SelectionDecision::class,
+            // EXPERIMENTAL (exp/evidencias-ml02): evidence versions are audited by identifier.
+            'evidence_item' => EvidenceItem::class,
         ]);
 
         Route::resourceVerbs(['create' => 'crear', 'edit' => 'editar']);

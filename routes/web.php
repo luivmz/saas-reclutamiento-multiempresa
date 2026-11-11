@@ -13,6 +13,8 @@ use App\Http\Controllers\Candidates\CandidateApplicationController;
 use App\Http\Controllers\Candidates\CandidateCvController;
 use App\Http\Controllers\Candidates\CandidateProfileController;
 use App\Http\Controllers\Documents\CandidateDocumentDownloadController;
+use App\Http\Controllers\Evidence\ApplicationEvidenceController;
+use App\Http\Controllers\Evidence\EvidenceItemController;
 use App\Http\Controllers\JobRequests\JobRequestController;
 use App\Http\Controllers\JobRequests\JobRequestTransitionController;
 use App\Http\Controllers\NotificationController;
@@ -111,6 +113,26 @@ Route::middleware(['auth'])->group(function () {
 
     // RF-27 (solo lectura)
     Route::get('auditoria', [AuditLogController::class, 'index'])->name('audit.index');
+
+    // EXPERIMENTAL (rama local exp/evidencias-ml02): flujo de evidencias ficticias y ayuda documental ML-02.
+    // Responde 404 salvo con EXPERIMENTAL_EVIDENCIAS=true (config/experimental.php). No es la integración formal
+    // en el SaaS, que sigue condicionada a la G0 real, un ADR y la decisión N5 (EI-23). F37-SBX sigue BLOQUEADA.
+    Route::middleware('experimental:evidencias')->group(function () {
+        Route::get('postulaciones/{application}/evidencias', [ApplicationEvidenceController::class, 'index'])->name('applications.evidence.index');
+        Route::get('postulaciones/{application}/evidencias/historial', [ApplicationEvidenceController::class, 'history'])->name('applications.evidence.history');
+        Route::post('postulaciones/{application}/evidencias', [ApplicationEvidenceController::class, 'store'])->name('applications.evidence.store');
+
+        Route::controller(EvidenceItemController::class)
+            ->prefix('evidencias/{evidence}')
+            ->name('evidence.')
+            ->group(function () {
+                Route::post('enlaces', 'link')->name('link');
+                Route::delete('enlaces/{criterion}', 'unlink')->whereNumber('criterion')->name('unlink');
+                Route::post('revision', 'review')->name('review');
+                Route::post('correccion', 'correct')->name('correct');
+                Route::post('retiro', 'withdraw')->name('withdraw');
+            });
+    });
 });
 
 require __DIR__.'/settings.php';
