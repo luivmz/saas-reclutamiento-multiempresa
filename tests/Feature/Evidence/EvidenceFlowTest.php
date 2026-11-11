@@ -14,8 +14,12 @@ use App\Models\EvidenceItem;
 use App\Models\Organization;
 use App\Models\User;
 use App\Models\Vacancy;
+use App\Services\Audit\AuditLogger;
 use App\Services\Evidence\EvidenceLedger;
+use App\Services\Evidence\EvidenceService;
 use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
+use RuntimeException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia;
@@ -108,6 +112,55 @@ class EvidenceFlowTest extends TestCase
 
         $this->post(route('evidence.correct', $second), ['source' => 'documento_presentado', 'description' => '[SINTÉTICO] Tarde.'])
             ->assertSessionHasErrors('evidence');
+    }
+
+    /**
+     * Codex plan, step 3: if the audit row of a correction fails, the new version and its inherited links roll back
+     * with it; nothing is left half-written.
+     */
+    public function test_a_failing_audit_rolls_back_the_correction_and_its_inherited_links(): void
+    {
+        $this->actingAs($this->hr)->post(route('applications.evidence.store', $this->application), $this->certificate());
+        $item = EvidenceItem::query()->sole();
+        $this->post(route('evidence.link', $item), ['criterion_id' => $this->planning->id]);
+        $rows = [EvidenceItem::query()->count(), EvidenceEvent::query()->count(), AuditLog::query()->count()];
+
+        $real = app(AuditLogger::class);
+        $this->mock(AuditLogger::class, function ($mock) use ($real) {
+            $mock->shouldReceive('record')->andReturnUsing(function (AuditAction $action, ...$rest) use ($real) {
+                if ($action === AuditAction::EvidenceCorrected) {
+                    throw new RuntimeException('fallo simulado de auditoría');
+                }
+
+                return $real->record($action, ...$rest);
+            });
+        });
+
+        try {
+            app(EvidenceService::class)->correct($this->hr, $item->fresh(), $item->type, $item->source, '[SINTÉTICO] Versión que no debe quedar.');
+            $this->fail('La corrección debía fallar con la auditoría.');
+        } catch (RuntimeException $e) {
+            $this->assertSame('fallo simulado de auditoría', $e->getMessage());
+        }
+
+        $this->assertSame($rows, [EvidenceItem::query()->count(), EvidenceEvent::query()->count(), AuditLog::query()->count()]);
+        $this->assertSame(EvidenceState::Registered, EvidenceLedger::for($this->application)->state($item->fresh()));
+    }
+
+    public function test_correcting_the_same_version_twice_is_rejected_without_a_second_successor(): void
+    {
+        $this->actingAs($this->hr)->post(route('applications.evidence.store', $this->application), $this->certificate());
+        $item = EvidenceItem::query()->sole();
+        $service = app(EvidenceService::class);
+        $service->correct($this->hr, $item->fresh(), $item->type, $item->source, '[SINTÉTICO] Primera corrección.');
+
+        $this->expectException(ValidationException::class);
+        try {
+            $service->correct($this->hr, $item->fresh(), $item->type, $item->source, '[SINTÉTICO] Segunda corrección de la misma versión.');
+        } finally {
+            $this->assertSame(1, EvidenceItem::query()->where('supersedes_id', $item->id)->count());
+            $this->assertSame(2, EvidenceItem::query()->count());
+        }
     }
 
     public function test_the_database_refuses_updates_and_deletes(): void

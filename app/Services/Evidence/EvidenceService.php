@@ -6,11 +6,13 @@ use App\Enums\AuditAction;
 use App\Enums\EvidenceSource;
 use App\Enums\EvidenceState;
 use App\Enums\EvidenceType;
+use App\Exceptions\BusinessRuleException;
 use App\Models\Application;
 use App\Models\EvaluationCriterion;
 use App\Models\EvidenceEvent;
 use App\Models\EvidenceItem;
 use App\Models\User;
+use App\Models\Vacancy;
 use App\Services\Audit\AuditLogger;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -19,6 +21,12 @@ use Illuminate\Validation\ValidationException;
  * EXPERIMENTAL (F37 flow, exp/evidencias-ml02). Append-only writes (R-04): every action inserts a row, nothing is
  * updated or deleted. Authorization (role matrix, R-01, R-02, R-08) is the policy's job; this service enforces the
  * state rules and R-03, and audits with identifiers only (R-07).
+ *
+ * APP-M01: the policy reads the vacancy before the write, so a closure committed in between would let the write
+ * through. Every write therefore re-checks R-08 inside its own transaction under a SHARED lock of the vacancy, taken
+ * before any application lock, the order of VacancyClosureService (vacancy, then applications) and of
+ * ApplicationStageService::moveTo(). The closure's FOR UPDATE waits for writes in progress; writes that arrive while
+ * the closure holds the vacancy wait for it and are then rejected. Two writes do not block each other on it.
  *
  * Nothing here feeds the ranking, the final decision or the ML-01 risk card (R-06).
  */
@@ -29,6 +37,7 @@ class EvidenceService
     public function register(User $actor, Application $application, EvidenceType $type, EvidenceSource $source, string $description): EvidenceItem
     {
         return DB::transaction(function () use ($actor, $application, $type, $source, $description): EvidenceItem {
+            $this->lockOpenVacancy($application);
             $item = $this->insertItem($actor, $application, $type, $source, $description, null);
             $this->audit->record(AuditAction::EvidenceRegistered, $item, $this->ids($item), $actor);
 
@@ -128,9 +137,22 @@ class EvidenceService
      */
     private function lockedLedger(EvidenceItem $evidence): EvidenceLedger
     {
+        $this->lockOpenVacancy($evidence->application);
         Application::query()->whereKey($evidence->application_id)->lockForUpdate()->first();
 
         return EvidenceLedger::for($evidence->application);
+    }
+
+    /**
+     * R-08 under lock (APP-M01): SHARED lock of the vacancy, then the closed check. Must run first in the transaction.
+     */
+    private function lockOpenVacancy(Application $application): void
+    {
+        $vacancy = Vacancy::query()->withoutGlobalScopes()->whereKey($application->vacancy_id)->sharedLock()->firstOrFail();
+
+        if ($vacancy->isClosed()) {
+            throw new BusinessRuleException('La convocatoria está cerrada: su evidencia queda congelada y ya no admite escrituras (R-08).');
+        }
     }
 
     private function assertCurrent(EvidenceLedger $ledger, EvidenceItem $evidence, string $message): void
