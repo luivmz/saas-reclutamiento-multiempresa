@@ -1,11 +1,14 @@
 import { Form } from '@inertiajs/react';
-import { Search, SearchX } from 'lucide-react';
+import { Search, SearchX, WifiOff } from 'lucide-react';
+import { useState } from 'react';
 import ApplicationEvidenceController from '@/actions/App/Http/Controllers/Evidence/ApplicationEvidenceController';
 import { EvidenceFragmentCard } from '@/components/evidence/evidence-fragment';
 import { FormField, NativeSelect } from '@/components/form-controls';
 import { Section } from '@/components/page';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
 import type {
     DocumentaryAidResult,
     EvidenceSearchResult,
@@ -32,12 +35,44 @@ export function DocumentaryAid({
     filters: { criterio: number | null; buscar: string | null };
 }) {
     const route = ApplicationEvidenceController.index(applicationId);
+    const [busy, setBusy] = useState<AidForm | null>(null);
+    const [failed, setFailed] = useState<AidForm | null>(null);
+
+    /**
+     * APP-M02. Las dos consultas son GET a esta misma página. Con la opción por defecto de Inertia para GET
+     * (preserveState: false), cada respuesta remontaba la página entera: el foco caía al cuerpo, el desplazamiento
+     * volvía arriba y, con dos envíos solapados (doble clic o Enter), la segunda respuesta sustituía el select
+     * mientras se elegía otro criterio, perdiendo la elección. Ahora la página se conserva montada y la sección
+     * indica la consulta en curso y el fallo de red o del servidor, con un aviso propio y el control usable.
+     */
+    const visit = (form: AidForm) => ({
+        onStart: () => {
+            setFailed(null);
+            setBusy(form);
+        },
+        onFinish: () => setBusy(null),
+        options: {
+            preserveState: true,
+            preserveScroll: true,
+            onNetworkError: () => {
+                setFailed(form);
+
+                return false;
+            },
+            onHttpException: () => {
+                setFailed(form);
+
+                return false;
+            },
+        },
+    });
 
     return (
         <Section
             title="Ayuda documental"
             description="ML-02 experimental. Muestra qué fragmentos de las evidencias vigentes comparten palabras con un criterio. No evalúa a nadie."
             className="h-fit"
+            aria-busy={busy !== null || undefined}
             data-cy="documentary-aid"
         >
             <div className="space-y-6">
@@ -45,6 +80,7 @@ export function DocumentaryAid({
                     action={route.url}
                     method="get"
                     className="space-y-3"
+                    {...visit('aid')}
                     data-cy="aid-form"
                 >
                     <FormField
@@ -70,10 +106,16 @@ export function DocumentaryAid({
                         disabled={criteria.length === 0}
                         data-cy="aid-submit"
                     >
-                        <Search aria-hidden="true" />
+                        {busy === 'aid' ? (
+                            <Spinner aria-label="Consultando la ayuda documental" />
+                        ) : (
+                            <Search aria-hidden="true" />
+                        )}
                         Ver fragmentos
                     </Button>
                 </Form>
+
+                {failed === 'aid' && <FailedQuery data-cy="aid-error" />}
 
                 {criteria.length === 0 && (
                     <p className="text-muted-foreground text-sm">
@@ -137,6 +179,7 @@ export function DocumentaryAid({
                     action={route.url}
                     method="get"
                     className="space-y-3 border-t pt-4"
+                    {...visit('search')}
                     data-cy="search-form"
                 >
                     <FormField
@@ -160,10 +203,16 @@ export function DocumentaryAid({
                         className="w-full"
                         data-cy="search-submit"
                     >
-                        <Search aria-hidden="true" />
+                        {busy === 'search' ? (
+                            <Spinner aria-label="Buscando en las evidencias" />
+                        ) : (
+                            <Search aria-hidden="true" />
+                        )}
                         Buscar
                     </Button>
                 </Form>
+
+                {failed === 'search' && <FailedQuery data-cy="search-error" />}
 
                 {search && (
                     <div
@@ -190,5 +239,19 @@ export function DocumentaryAid({
                 )}
             </div>
         </Section>
+    );
+}
+
+type AidForm = 'aid' | 'search';
+
+function FailedQuery({ 'data-cy': dataCy }: { 'data-cy': string }) {
+    return (
+        <Alert variant="destructive" data-cy={dataCy}>
+            <WifiOff aria-hidden="true" />
+            <AlertDescription>
+                No se pudo consultar la ayuda documental. Las evidencias
+                registradas no cambiaron; vuelva a intentarlo.
+            </AlertDescription>
+        </Alert>
     );
 }

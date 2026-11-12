@@ -10,6 +10,10 @@
  * validación, registro, enlace, revisión, corrección con versión nueva, la
  * ayuda documental con fuentes y su abstención, el evaluador asignado,
  * Dirección en solo lectura, otra organización, teclado y móvil.
+ *
+ * APP-M02: las consultas sucesivas de la ayuda se hacen en la misma página,
+ * sin recargarla, también con un envío doble; y se comprueban la consulta en
+ * curso, el fallo de red o del servidor y la recuperación.
  */
 const POSTULACION = 3;
 const EVIDENCIAS = `/postulaciones/${POSTULACION}/evidencias`;
@@ -111,6 +115,11 @@ describe('E2E-21 · Evidencias y ayuda documental ML-02 (experimental)', () => {
     it('la ayuda documental muestra fragmentos con su fuente, se usa con teclado y se abstiene sin palabras compartidas', () => {
         cy.loginAs('hr');
         cy.visit(EVIDENCIAS);
+        // APP-M02: cada consulta GET remontaba la página entera. Una marca en el nodo del select comprueba que las
+        // consultas sucesivas, sin recargar, conservan el mismo control, la elección y el foco.
+        cy.dataCy('aid-criterion').then(($select) => {
+            $select[0].dataset.marca = 'app-m02';
+        });
 
         cy.dataCy('aid-criterion').focus().select('Conocimientos pedagógicos');
         cy.press(Cypress.Keyboard.Keys.TAB);
@@ -125,7 +134,9 @@ describe('E2E-21 · Evidencias y ayuda documental ML-02 (experimental)', () => {
                     'el botón enfocado muestra el foco',
                 ).to.equal(true);
             });
-        cy.focused().click();
+        // Enter sobre el botón enfocado. En Cypress envía el formulario dos veces seguidas (clic e implícito): dos
+        // visitas solapadas, como un doble envío real, que es lo que reproducía el fallo.
+        cy.focused().type('{enter}');
 
         cy.location('search').should('contain', 'criterio=');
         cy.dataCy('aid-results').within(() => {
@@ -138,19 +149,95 @@ describe('E2E-21 · Evidencias y ayuda documental ML-02 (experimental)', () => {
             'contain',
             'No usa modelos entrenados',
         );
+        cy.dataCy('aid-criterion').should('have.attr', 'data-marca', 'app-m02');
+        cy.focused().should('have.attr', 'data-cy', 'aid-submit');
 
-        cy.visit(EVIDENCIAS);
+        // Segunda consulta en la misma página, sin recargar, reenviada con doble clic.
         cy.dataCy('aid-criterion').select('Entrevista personal');
-        cy.dataCy('aid-submit').click();
+        cy.dataCy('aid-submit').dblclick();
+        cy.dataCy('aid-results').should('contain', 'Entrevista personal');
         cy.dataCy('aid-abstained')
             .should('be.visible')
             .and('contain', 'no significa que el criterio no se cumpla');
+        cy.dataCy('aid-criterion')
+            .should('have.attr', 'data-marca', 'app-m02')
+            .find('option:selected')
+            .should('have.text', 'Entrevista personal');
 
         cy.dataCy('search-input').type('TALLER');
         cy.dataCy('search-submit').click();
         cy.dataCy('search-results')
             .find('[data-cy="aid-fragment"]')
             .should('have.length', 1);
+        cy.dataCy('aid-criterion').should('have.attr', 'data-marca', 'app-m02');
+    });
+
+    it('la ayuda documental indica la consulta en curso, informa un fallo de red y se recupera sin recargar', () => {
+        cy.loginAs('hr');
+        cy.visit(EVIDENCIAS);
+        cy.dataCy('aid-criterion').then(($select) => {
+            $select[0].dataset.marca = 'app-m02';
+        });
+
+        // Procesamiento: con la respuesta retrasada, la sección y el botón indican la consulta en curso.
+        cy.intercept(
+            { method: 'GET', pathname: EVIDENCIAS, query: { criterio: '4' } },
+            (req) => {
+                req.on('response', (res) => {
+                    res.setDelay(800);
+                });
+            },
+        ).as('consultaLenta');
+        cy.dataCy('aid-criterion').select('Conocimientos pedagógicos');
+        cy.dataCy('aid-submit').click();
+        cy.dataCy('documentary-aid').should('have.attr', 'aria-busy', 'true');
+        cy.dataCy('aid-submit').find('[role="status"]').should('exist');
+        cy.wait('@consultaLenta');
+        cy.dataCy('aid-results').should('contain', 'Conocimientos pedagógicos');
+        cy.dataCy('documentary-aid').should('not.have.attr', 'aria-busy');
+        cy.dataCy('aid-submit').find('[role="status"]').should('not.exist');
+
+        // Error de red: aviso propio, sin excepción ni diálogo, y el control sigue usable con la misma elección. El
+        // fallo es persistente porque Chromium reintenta por su cuenta un GET cuyo socket se corta.
+        cy.intercept(
+            { method: 'GET', pathname: EVIDENCIAS, query: { criterio: '6' } },
+            { forceNetworkError: true },
+        ).as('caidaDeRed');
+        cy.dataCy('aid-criterion').select('Entrevista personal');
+        cy.dataCy('aid-submit').click();
+        cy.wait('@caidaDeRed');
+        cy.dataCy('aid-error')
+            .should('be.visible')
+            .and('contain', 'No se pudo consultar la ayuda documental');
+        cy.dataCy('documentary-aid').should('not.have.attr', 'aria-busy');
+        cy.dataCy('aid-submit').should('not.be.disabled');
+        cy.dataCy('aid-criterion')
+            .should('have.attr', 'data-marca', 'app-m02')
+            .find('option:selected')
+            .should('have.text', 'Entrevista personal');
+
+        // Error del servidor (HTTP 500): el mismo aviso, sin el diálogo de error de Inertia.
+        cy.intercept(
+            { method: 'GET', pathname: EVIDENCIAS, query: { criterio: '6' } },
+            { statusCode: 500, body: 'Error ficticio de prueba' },
+        ).as('errorDelServidor');
+        cy.dataCy('aid-submit').click();
+        cy.wait('@errorDelServidor');
+        cy.dataCy('aid-error').should('be.visible');
+        cy.get('#inertia-error-dialog').should('not.exist');
+        cy.dataCy('documentary-aid').should('not.have.attr', 'aria-busy');
+
+        // Recuperación: con la red y el servidor de vuelta, el mismo envío funciona y retira el aviso. La última
+        // interceptación definida se aplica primero y deja pasar la petición al servidor real.
+        cy.intercept(
+            { method: 'GET', pathname: EVIDENCIAS, query: { criterio: '6' } },
+            (req) => req.continue(),
+        ).as('recuperada');
+        cy.dataCy('aid-submit').click();
+        cy.wait('@recuperada').its('response.statusCode').should('eq', 200);
+        cy.dataCy('aid-abstained').should('be.visible');
+        cy.dataCy('aid-error').should('not.exist');
+        cy.dataCy('aid-criterion').should('have.attr', 'data-marca', 'app-m02');
     });
 
     it('el evaluador asignado registra su observación desde su sesión y no ve el historial', () => {
