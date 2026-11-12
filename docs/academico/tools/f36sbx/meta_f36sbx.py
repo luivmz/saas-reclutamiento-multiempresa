@@ -71,7 +71,8 @@ SOURCE_ABLATIONS = [
     ('B-01 · BRANCHES sin la rama de H', 'assign', "BRANCHES = frozenset({'feature/f36-sbx-authorization-design', 'develop', 'main', 'exp/b01-candidato'})", B01),
     # B-01, correcciones de la auditoría del 10/11/2026.
     ('B-01 · B01-M02 ground sin comprobar su tipo', 'if', "not isinstance(rev['ground'], str) or", B01_MEM),
-    ('B-01 · B01-H01 una revocación retirada no fuerza REVOCADO ni falla', 'if', 'if not kept:', B01),
+    # La aguja es la condición del if, sin «if» ni «:» (ablated_tree compara node.test).
+    ('B-01 · B01-H01 una revocación retirada no fuerza REVOCADO ni falla', 'if', 'not kept', B01),
     # B-01, restos de esas correcciones encontrados el 12/11/2026.
     ('B-01 · B01-N03 desfase sin límites de horas y minutos', 'if', 'int(m.group(1)) > 23', B01_MEM),
     ('identidad: caracteres invisibles', 'assign', 'bad = invisible_chars(value)'),

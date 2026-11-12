@@ -569,19 +569,23 @@ def memory_audit():
 
     def m03():
         s = v.collect(v.ROOT)
-        for state in ('SUPERADO', 'REVOCADO'):
-            f37 = v.F37_ENABLED if state == 'SUPERADO' else 'BLOQUEADA'
-            for rel, label in ((v.PKG_README, 'README'), (v.GATE_DOC, 'gate')):
-                s2 = copy.deepcopy(s)
-                for r in [v.GATE_DOC, v.PKG_README, *v.GOV_FILES]:
-                    s2['texts'][r] = s2['texts'][r].replace('- F36-SBX-GATE = NO SUPERADO\n', f'- F36-SBX-GATE = {state}\n') \
-                        .replace('- F37-SBX = BLOQUEADA\n', f'- F37-SBX = {f37}\n')
-                inside = [m for ok_, m in v.rule_sem(s2) if not ok_]
-                s2['texts'][rel] = s2['texts'][rel] + f'\n## Nota ajena al espejo\n\nF36-SBX-GATE = {state}\n'
-                outside = [m for ok_, m in v.rule_sem(s2) if not ok_]
-                ok(not inside and any(f'F36-SBX-GATE = {state}' in m for m in outside), f'B01-M03-{label}-{state}',
-                   f'«F36-SBX-GATE = {state}»: admitida en la línea canónica del espejo y rechazada fuera de su ámbito '
-                   f'({label})', f'dentro: {inside}; fuera: {outside}')
+        # Fuera del espejo, la afirmación como texto y, en B01-M03b, con la forma exacta de la línea canónica (viñeta):
+        # esa es la que una excepción por forma, en vez de por ámbito, dejaría pasar.
+        for prefix, cid in (('', 'B01-M03'), ('- ', 'B01-M03b')):
+            for state in ('SUPERADO', 'REVOCADO'):
+                f37 = v.F37_ENABLED if state == 'SUPERADO' else 'BLOQUEADA'
+                for rel, label in ((v.PKG_README, 'README'), (v.GATE_DOC, 'gate')):
+                    s2 = copy.deepcopy(s)
+                    for r in [v.GATE_DOC, v.PKG_README, *v.GOV_FILES]:
+                        s2['texts'][r] = s2['texts'][r].replace('- F36-SBX-GATE = NO SUPERADO\n',
+                                                                f'- F36-SBX-GATE = {state}\n') \
+                            .replace('- F37-SBX = BLOQUEADA\n', f'- F37-SBX = {f37}\n')
+                    inside = [m for ok_, m in v.rule_sem(s2) if not ok_]
+                    s2['texts'][rel] = s2['texts'][rel] + f'\n## Nota ajena al espejo\n\n{prefix}F36-SBX-GATE = {state}\n'
+                    outside = [m for ok_, m in v.rule_sem(s2) if not ok_]
+                    ok(not inside and any(f'F36-SBX-GATE = {state}' in m for m in outside), f'{cid}-{label}-{state}',
+                       f'«{prefix}F36-SBX-GATE = {state}»: admitida en la línea canónica del espejo y rechazada fuera de '
+                       f'su ámbito ({label})', f'dentro: {inside}; fuera: {outside}')
     attempt('B01-M03', 'excepción SEM por ubicación', m03)
 
     def n03():
