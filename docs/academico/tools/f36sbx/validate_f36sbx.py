@@ -1137,12 +1137,31 @@ def git_facts(root, sha, wt, problems, normative=(), required=(), wt_normative=(
     return f
 
 
+# B01-N02: la historia se lee por las dos rutas del registro, porque un commit que solo añade la determinación puede ser
+# el que completa la revocación.
+REVOCATION_PATHS = (GATE_STATE, DETERMINATION)
+
+
+def revocation_h(root, cand):
+    """B01-N01: (fecha, rutas) del H que cita un estado histórico, para juzgar su `revocation` como el árbol validado
+    (S §5.8.1: la evidencia puede ser una ruta de H). False si el estado no cita un commit (DS-B01-1: no vinculable, no
+    es un registro válido); None si el commit existe pero su árbol no se puede leer (falla cerrado)."""
+    if not (isinstance(cand, str) and HEX40.fullmatch(cand)):
+        return False
+    info = git_commit(root, cand)
+    if info is None:
+        return False
+    tree = git_tree(root, cand)
+    return None if tree is None else (parse_date_str(info['date']), set(tree))
+
+
 def revocation_history(root):
     """B01-H01 (I-11): revocaciones registradas en la historia de la rama posterior a la base, en orden.
 
-    Un registro es un commit cuyo estado del gate tiene una `revocation` con el formato cerrado y la determinación como
-    blob en ese mismo commit. None si la historia no se puede leer entera (falla cerrado)."""
-    code, out = git(root, 'rev-list', '--full-history', '--reverse', f'{BASE}..HEAD', '--', GATE_STATE)
+    Un registro es un commit con una `revocation` válida según §5.8.1 frente al H que cita su `candidate_commit` y con la
+    determinación como blob en ese mismo commit. Se recorren los commits que tocan el estado o la determinación
+    (B01-N02). None si la historia no se puede leer entera (falla cerrado)."""
+    code, out = git(root, 'rev-list', '--full-history', '--reverse', f'{BASE}..HEAD', '--', *REVOCATION_PATHS)
     if code != 0:
         return None
     history = []
@@ -1152,11 +1171,17 @@ def revocation_history(root):
         if not isinstance(state, dict):
             return None
         rev = state.get('revocation')
-        if rev is None or revocation_errors(rev):
+        if rev is None:
             continue
         det = git_blob(root, commit, DETERMINATION)
-        if isinstance(det, dict) and 'object' in det:
-            history.append({'commit': commit, 'revocation': rev, 'determination': det['object']})
+        if not (isinstance(det, dict) and 'object' in det):
+            continue
+        h = revocation_h(root, state.get('candidate_commit'))
+        if h is None:
+            return None
+        if h is False or revocation_errors(rev, h[0], h[1]):
+            continue
+        history.append({'commit': commit, 'revocation': rev, 'determination': det['object']})
     return history
 
 
@@ -1387,6 +1412,19 @@ def mirror_span(rel, text):
     return m.span(1) if m else None
 
 
+def mirror_line_numbers(rel, text):
+    """Índices de las líneas de text (separadas por «\\n») que empiezan dentro del ámbito de su espejo (B01-N04)."""
+    span = mirror_span(rel, text)
+    if span is None:
+        return frozenset()
+    inside, offset = set(), 0
+    for i, ln in enumerate(text.split('\n')):
+        if span[0] <= offset < span[1]:
+            inside.add(i)
+        offset += len(ln) + 1
+    return frozenset(inside)
+
+
 def without_mirror_lines(rel, text):
     """text sin las líneas canónicas que están DENTRO del ámbito de su espejo; fuera de él no se quita nada."""
     span = mirror_span(rel, text)
@@ -1433,8 +1471,15 @@ INSTANT_RX = re.compile(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$')
 SHA256_RX = re.compile(r'^[0-9a-f]{64}$')
 
 
+OFFSET_RX = re.compile(r'[+-](\d{2}):(\d{2})$')
+
+
 def real_instant(value):
-    """B01-M01: el instante existe (mes, día, hora, minuto y segundo válidos) y su desfase es real (menor de 24 h)."""
+    """B01-M01: el instante existe (mes, día, hora, minuto y segundo válidos). B01-N03: su desfase es un desfase de
+    RFC 3339, con horas de 00 a 23 y minutos de 00 a 59 (fromisoformat admite, por ejemplo, +00:99)."""
+    m = OFFSET_RX.search(value) if isinstance(value, str) else None
+    if m is None or int(m.group(1)) > 23 or int(m.group(2)) > 59:
+        return False
     try:
         return datetime.datetime.fromisoformat(value).tzinfo is not None
     except ValueError:
@@ -2480,17 +2525,19 @@ def flatten_state(state):
 
 def canonical_only(rel, old, new):
     """X3–X5 (H §5.5): mismo número de líneas; toda línea distinta es la línea canónica de un sujeto del espejo, con
-    el mismo sujeto antes y después; en el documento del gate vale además la columna Estado de la tabla FG."""
+    el mismo sujeto antes y después y DENTRO del ámbito del espejo en los dos textos (B01-N04: la misma forma fuera de
+    él es un cambio material); en el documento del gate vale además la columna Estado de la tabla FG."""
     if old is None or new is None:
         return False
     a, b = old.split('\n'), new.split('\n')
     if len(a) != len(b):
         return False
-    for x, y in zip(a, b):
+    inside_a, inside_b = mirror_line_numbers(rel, old), mirror_line_numbers(rel, new)
+    for i, (x, y) in enumerate(zip(a, b)):
         if x == y:
             continue
         mx, my = MIRROR_RX.match(norm(x)), MIRROR_RX.match(norm(y))
-        if mx and my and mx.group(1) == my.group(1):
+        if mx and my and mx.group(1) == my.group(1) and i in inside_a and i in inside_b:
             continue
         if rel == GATE_DOC and doc_status_only(x, y):
             continue
@@ -3013,13 +3060,16 @@ def team_evidence_errors(fg, ctx):
     return e + SPECIFIC[fg](ev, ctx, cdate, rdate)
 
 
-def evaluate_gate(state, classes, team_errors):
-    """Regla de decisión del F36-SBX-GATE. Cualquier situación no prevista devuelve NO SUPERADO."""
+def evaluate_gate(state, classes, team_errors, h_paths=None):
+    """Regla de decisión del F36-SBX-GATE. Cualquier situación no prevista devuelve NO SUPERADO.
+
+    B01-N01: con h_paths (el árbol de H), una `revocation` cuya evidencia es una ruta de H vale como en §5.8.1; sin él,
+    solo se admiten SHA-256 (falla cerrado)."""
     no = 'NO SUPERADO'
     if not isinstance(state, dict):
         return no
     if state.get('revocation') is not None:
-        return 'REVOCADO' if not revocation_errors(state['revocation']) else no
+        return 'REVOCADO' if not revocation_errors(state['revocation'], None, h_paths) else no
     if state.get('authorizes') != ['F37-SBX']:
         return no
     crit = state.get('criteria')
@@ -3159,7 +3209,7 @@ def rule_gate(s, auto):
         if status.get('FG-03') != 'CUMPLE':
             auth_err.append('f37_authorized_ei declarada sin FG-03 en CUMPLE')
     out.append((not auth_err, f'autorización de F37-SBX coherente con la matriz y con FG-03; errores: {auth_err}'))
-    result = evaluate_gate(state, EXPECTED_CLASSES, team_errors)
+    result = evaluate_gate(state, EXPECTED_CLASSES, team_errors, h_paths)
     if result == 'SUPERADO' and (mismatch or struct or cand_err or invalid or not schema_ok or serr or ign_err):
         result = 'NO SUPERADO'
     if result == 'REVOCADO' and (rev_err or cand_err):

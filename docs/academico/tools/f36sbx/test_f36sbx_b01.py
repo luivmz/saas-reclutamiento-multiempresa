@@ -9,6 +9,9 @@ En memoria: S-T01 a S-T03, S-T09, S-T10, S-T15, S-T17, espejos E1–E7 (AC-09), 
 Con Git real, en un clon desechable: S-T11 a S-T14, identidad de H (H §5.6), S-T18 a S-T21 y S-T22 sobre el árbol
 real de la rama. Los controles positivos (S-T11 con evidencia nula y S-T18) solo existen en el clon (AC-11).
 
+Hallazgos de la auditoría de Codex del 10/11/2026 (B01-H01, B01-M01 a B01-M04, DS-B01-3) y restos encontrados al
+revisar sus correcciones el 12/11/2026 (B01-N01 a B01-N04): en memoria y con Git real, cada uno con su caso legítimo.
+
 Uso: python -I -B docs/academico/tools/f36sbx/test_f36sbx_b01.py
 """
 import copy
@@ -396,6 +399,67 @@ def git_audit(tmp):
             ok(False, cid, f'ground = {ground!r} en el validador completo', f'excepción {e.__class__.__name__}: {e}')
 
 
+def git_residual(tmp):
+    """Restos encontrados al revisar las correcciones de d83d924 (12/11/2026), con Git real: B01-N01 (revocación con
+    evidencia por ruta de H), B01-N02 (registro en dos commits), B01-N03 (desfase imposible versionado) y B01-N04
+    (línea con forma canónica cambiada fuera del ámbito de su espejo)."""
+    h_path = f'{v.PKG}/F36SBX_Charter.md'
+    c = sandbox(tmp, 'n01')
+    hh = tg.git(c, 'rev-parse', 'HEAD')
+    revoke(c, hh, rev=event(evidence=[h_path]))
+    commit_all(c, 'registro sintético de una revocación cuya evidencia es una ruta de H')
+    check('B01-N01a', 'revocación válida cuya evidencia es una ruta que ya existe en H (S §5.8.1): R = REVOCADO, '
+          '0 fallas (caso legítimo)', *validate(c), want_gate='REVOCADO')
+    restore_to(c, hh, keep_candidate=True)
+    commit_all(c, 'retirada sintética de esa revocación, con el mismo H')
+    check('B01-N01b', 'retirada de esa revocación con el mismo H: falla (I-11)', *validate(c), [('GATE', 'I-11')])
+
+    c = sandbox(tmp, 'n02')
+    hh = tg.git(c, 'rev-parse', 'HEAD')
+    revoke(c, hh, determination=False)
+    commit_all(c, 'evento sintético de revocación, todavía sin la determinación')
+    tg.write(c, DETERMINATION, '[SINTÉTICO] Determinación de prueba: no es un acto del equipo.\n')
+    commit_all(c, 'determinación sintética añadida en un commit posterior')
+    check('B01-N02a', 'revocación completada por un segundo commit que solo añade la determinación: R = REVOCADO, '
+          '0 fallas', *validate(c), want_gate='REVOCADO')
+    restore_to(c, hh, keep_candidate=True)
+    commit_all(c, 'retirada sintética de la revocación completada en dos commits')
+    check('B01-N02b', 'retirada de una revocación registrada en dos commits, con el mismo H: falla (I-11)',
+          *validate(c), [('GATE', 'I-11')])
+
+    c = sandbox(tmp, 'n03')
+    hh = tg.git(c, 'rev-parse', 'HEAD')
+    revoke(c, hh, rev=event(effective_from='2026-11-11T10:00:00+00:99'))
+    commit_all(c, 'registro sintético con un desfase horario imposible')
+    fails, gate = validate(c)
+    ok(gate == 'NO SUPERADO' and any('effective_from' in m for _, m in fails), 'B01-N03g',
+       'desfase con minutos imposibles (+00:99) versionado: NO SUPERADO y una falla',
+       f'gate {gate}; {[m[:100] for _, m in fails][:3]}')
+
+    for cid, keep_outside in (('B01-N04c', False), ('B01-N04d', True)):
+        c = tmp / f'n04-{cid[-1]}'
+        tg.git(tmp, 'clone', '-q', '--shared', '--branch', H_BRANCH, str(v.ROOT), str(c))
+        tg.sync_package(c)
+        gov = c / v.GOV_FILES[0]
+        tg.write(c, v.GOV_FILES[0], gov.read_text(encoding='utf-8') + OUTSIDE_NOTE.format('NO SUPERADO'))
+        hh = commit_all(c, 'H sintético con una afirmación histórica con forma canónica fuera del espejo')
+        revoke(c, hh)  # mirrors_to() lleva a REVOCADO toda línea con forma canónica, también la de fuera del espejo
+        if keep_outside:
+            text = gov.read_text(encoding='utf-8')
+            tg.write(c, v.GOV_FILES[0], text.replace(OUTSIDE_NOTE.format('REVOCADO'), OUTSIDE_NOTE.format('NO SUPERADO')))
+        commit_all(c, 'registro sintético de la revocación')
+        if keep_outside:
+            check(cid, 'control: la misma revocación sin tocar la línea de fuera del espejo: R = REVOCADO, 0 fallas',
+                  *validate(c), want_gate='REVOCADO')
+        else:
+            check(cid, f'{v.GOV_FILES[0]}: una línea con forma canónica FUERA del bloque de estado cambiada después de H '
+                  '(X5 solo admite las líneas canónicas de E4–E7): falla el vínculo', *validate(c),
+                  [('GATE', 'fuera de sus líneas canónicas')])
+
+
+OUTSIDE_NOTE = '\n## Nota histórica de prueba\n\n- F36-SBX-GATE = {}\n'
+
+
 def superado(clone, h):
     """Registro SINTÉTICO completo de SUPERADO: FG-02 con su informe, FG-03 (solo EI ALLOWED), FG-10 sin dependencias y
     FG-12 en NO APLICA; espejos en SUPERADO y F37-SBX derivada. No son actos del equipo: solo existen en el clon."""
@@ -520,6 +584,30 @@ def memory_audit():
                    f'({label})', f'dentro: {inside}; fuera: {outside}')
     attempt('B01-M03', 'excepción SEM por ubicación', m03)
 
+    def n03():
+        bad = ['2026-11-11T10:00:00+00:99', '2026-11-11T10:00:00-05:60', '2026-11-11T10:00:00+23:75']
+        admitted = [x for x in bad if not any('effective_from' in e for e in v.revocation_errors(event(effective_from=x)))]
+        ok(not admitted, 'B01-N03', 'desfase horario con minutos imposibles (RFC 3339: horas 00–23, minutos 00–59): '
+           'formato inválido', f'admitidos: {admitted}')
+        ok(v.revocation_errors(event(effective_from='2026-11-11T10:00:00+14:00')) == []
+           and v.revocation_errors(event(effective_from='2026-11-11T10:00:00-00:00')) == [], 'B01-N03b',
+           'desfases reales extremos (+14:00) y el desfase cero (-00:00) se admiten')
+    attempt('B01-N03', 'desfase con minutos imposibles', n03)
+
+    def n04():
+        texts = v.collect(v.ROOT)['texts']
+        gov = v.GOV_FILES[0]
+        old = texts[gov] + OUTSIDE_NOTE.format('NO SUPERADO')
+        outside = old.replace(OUTSIDE_NOTE.format('NO SUPERADO'), OUTSIDE_NOTE.format('REVOCADO'))
+        inside = old.replace('- F36-SBX-GATE = NO SUPERADO\n', '- F36-SBX-GATE = REVOCADO\n', 1)
+        ok(inside != old and v.canonical_only(gov, old, inside) and not v.canonical_only(gov, old, outside), 'B01-N04a',
+           f'{gov}: canonical_only admite la línea canónica del bloque de estado y rechaza la misma forma fuera de él')
+        doc = texts[v.GATE_DOC] + OUTSIDE_NOTE.format('NO SUPERADO')
+        out_doc = doc.replace(OUTSIDE_NOTE.format('NO SUPERADO'), OUTSIDE_NOTE.format('REVOCADO'))
+        ok(not v.canonical_only(v.GATE_DOC, doc, out_doc), 'B01-N04b',
+           'documento del gate: una línea con forma canónica fuera de «Resultado canónico» no es X3')
+    attempt('B01-N04', 'X3–X5 por ubicación', n04)
+
 
 def inventory():
     """S-T22 y AC-05 sobre el árbol real de la rama: inventario frente a 55f758e y sondas ejecutables desde H."""
@@ -545,6 +633,7 @@ def main():
     try:
         attempt('GIT', 'casos con Git real', lambda: git_cases(tmp))
         attempt('GIT-AUD', 'hallazgos de la auditoría con Git real', lambda: git_audit(tmp))
+        attempt('GIT-RES', 'restos de las correcciones con Git real', lambda: git_residual(tmp))
         attempt('DS-B01-3', 'SUPERADO integral con Git real', lambda: superado_integral(tmp))
     finally:
         tg.remove_tree(tmp)

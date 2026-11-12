@@ -72,6 +72,8 @@ SOURCE_ABLATIONS = [
     # B-01, correcciones de la auditoría del 10/11/2026.
     ('B-01 · B01-M02 ground sin comprobar su tipo', 'if', "not isinstance(rev['ground'], str) or", B01_MEM),
     ('B-01 · B01-H01 una revocación retirada no fuerza REVOCADO ni falla', 'if', 'if not kept:', B01),
+    # B-01, restos de esas correcciones encontrados el 12/11/2026.
+    ('B-01 · B01-N03 desfase sin límites de horas y minutos', 'if', 'int(m.group(1)) > 23', B01_MEM),
     ('identidad: caracteres invisibles', 'assign', 'bad = invisible_chars(value)'),
     ('identidad: mínimo de letras', 'if', "startswith('L')) < min_letters"),
     ('identidad: marcadores de posición', 'if', 'key in PLACEHOLDERS'),
@@ -313,6 +315,14 @@ FUNCTION_ABLATIONS = [
     ('determination_committed', lambda m: lambda root, wt: True, B01, 'B-01 · B01-M04 determinación siempre versionada'),
     ('delta_errors_h', lambda m: lambda *a: [], B01, 'B-01 · función delta_errors_h anulada (X2, C-R)'),
     ('canonical_only', lambda m: lambda *a: True, B01, 'B-01 · función canonical_only anulada (X3–X5)'),
+    # B-01, restos de las correcciones (12/11/2026).
+    ('evaluate_gate', lambda m: (lambda orig: lambda state, classes, team_errors, h_paths=None: orig(
+        state, classes, team_errors))(m.evaluate_gate), B01, 'B-01 · B01-N01 regla de decisión sin el árbol de H'),
+    ('revocation_h', lambda m: (lambda orig: lambda root, cand: (lambda h: (h[0], set()) if h else h)(
+        orig(root, cand)))(m.revocation_h), B01, 'B-01 · B01-N01 historia sin las rutas de H'),
+    ('REVOCATION_PATHS', lambda m: (m.GATE_STATE,), B01, 'B-01 · B01-N02 historia leída solo por el estado del gate'),
+    ('mirror_line_numbers', lambda m: lambda rel, text: frozenset(range(len((text or '').split('\n')))), B01_MEM,
+     'B-01 · B01-N04 canonical_only sin el ámbito del espejo'),
 ]
 EXCEPTION_MARKS = ('mutación no aplicable', 'escenario no ejecutable', 'excepción')
 
