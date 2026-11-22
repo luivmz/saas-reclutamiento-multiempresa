@@ -8,6 +8,10 @@
  * - el acceso principal se alcanza con el teclado y muestra el foco;
  * - las entradas al desplazarse no ocultan nada con movimiento reducido ni a quien ya lo está viendo;
  * - a 320 px no hay desplazamiento horizontal.
+ *
+ * Desde el incremento visual de la presentación, el expediente y su escena
+ * están en «Cómo avanza un proceso», debajo de la portada: las pruebas que
+ * necesitan la escena desplazan antes la página hasta la carpeta.
  */
 function reducido(activo) {
     return Cypress.automation('remote:debugger:protocol', {
@@ -56,7 +60,19 @@ function moverCursor(clientX, clientY) {
     );
 }
 
-/** Transform en línea de una hoja de la escena. */
+/** La carpeta del proceso a la vista, y dos cuadros para que la escena asiente su posición. */
+function irALaCarpeta() {
+    cy.dataCy('landing-folder').scrollIntoView();
+    cy.window().then(
+        (win) =>
+            new Cypress.Promise((listo) =>
+                win.requestAnimationFrame(() =>
+                    win.requestAnimationFrame(listo),
+                ),
+            ),
+    );
+}
+
 /** Una hoja de la escena; sus aserciones con callback se reintentan. */
 function hoja(etapa) {
     return cy.get(`[data-sheet="${etapa}"]`);
@@ -83,6 +99,7 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
                 cy.contains('Decisión humana').should('be.visible');
             });
         cy.dataCy('landing-pillars').find('li').should('have.length', 3);
+        irALaCarpeta();
         cy.dataCy('recruitment-scene').should(
             'have.attr',
             'data-ready',
@@ -102,6 +119,7 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
         cy.viewport(1280, 800);
         // Electron sin pantalla no tiene ratón: se declara un puntero fino, como en un escritorio.
         cy.visit('/', { onBeforeLoad: (win) => punteroFino(win, true) });
+        irALaCarpeta();
         cy.dataCy('recruitment-scene').should(
             'have.attr',
             'data-ready',
@@ -113,6 +131,7 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
             'data-pointer',
             'listening',
         );
+        irALaCarpeta();
         transformDe('vacancy').then((reposo) => {
             moverCursor(1240, 120);
             hoja('vacancy').should(($h) =>
@@ -141,6 +160,7 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
     it('en pantallas táctiles (sin puntero fino) la escena queda quieta', () => {
         cy.viewport(1280, 800);
         cy.visit('/', { onBeforeLoad: (win) => punteroFino(win, false) });
+        irALaCarpeta();
         cy.dataCy('recruitment-scene').should(
             'have.attr',
             'data-ready',

@@ -354,6 +354,26 @@
                 transparent 70%
             );
     }
+
+    /* Panel del vídeo de la carpeta: el mismo petróleo oscuro del clip, con
+       la luz que entra desde arriba a la izquierda. Es lo que se ve antes de
+       decidir, y lo que queda si no llegan ni el vídeo ni la imagen fija.
+       Es igual en los dos temas, como una fotografía: el texto de la portada
+       no se apoya en él. */
+    .hero-folder {
+        background-color: oklch(0.2 0.03 220);
+        background-image:
+            radial-gradient(
+                70% 80% at 12% 8%,
+                oklch(0.42 0.07 210 / 0.75),
+                transparent 70%
+            ),
+            radial-gradient(
+                50% 45% at 72% 62%,
+                oklch(0.32 0.05 205 / 0.6),
+                transparent 75%
+            );
+    }
 }
 
 /*

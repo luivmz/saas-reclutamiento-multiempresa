@@ -11,6 +11,11 @@
  * Para saber si el fragmento se descargó se usa la API de Resource Timing, que
  * registra también lo servido desde caché: una interceptación de red no lo
  * vería.
+ *
+ * Desde el incremento visual de la presentación, la escena acompaña al
+ * expediente de «Cómo avanza un proceso», debajo de la portada: las pruebas que
+ * necesitan la escena montada desplazan antes la página hasta la carpeta. Lo
+ * que se comprueba no cambia.
  */
 const ESCENA = 'recruitment-scene';
 
@@ -39,6 +44,11 @@ function portadaUtilizable() {
     cy.dataCy('cta-login').should('be.visible');
 }
 
+/** La carpeta del proceso, donde vive la escena, a la vista. */
+function irALaCarpeta() {
+    cy.dataCy('landing-folder').scrollIntoView();
+}
+
 function sinDesborde() {
     cy.document().then((doc) => {
         const raiz = doc.documentElement;
@@ -60,6 +70,7 @@ describe('E2E-18 · La profundidad de la portada es opcional y nunca estorba', (
 
         cy.viewport(1280, 800);
         cy.visit('/');
+        irALaCarpeta();
 
         cy.wait('@fragmento');
         cy.dataCy('recruitment-poster').should('exist');
@@ -76,6 +87,7 @@ describe('E2E-18 · La profundidad de la portada es opcional y nunca estorba', (
             'data-mode',
             'scene',
         );
+        irALaCarpeta();
         cy.dataCy('recruitment-scene').should(
             'have.attr',
             'data-ready',
@@ -171,6 +183,7 @@ describe('E2E-18 · La profundidad de la portada es opcional y nunca estorba', (
                 };
             },
         });
+        irALaCarpeta();
 
         cy.dataCy('recruitment-scene').should(
             'have.attr',

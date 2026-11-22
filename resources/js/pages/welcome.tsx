@@ -11,6 +11,7 @@ import {
     Signature,
     type LucideIcon,
 } from 'lucide-react';
+import { HeroFolderVideo } from '@/components/experience-3d/hero-folder-video';
 import { RecruitmentDepth } from '@/components/experience-3d/recruitment-depth';
 import { Reveal } from '@/components/reveal';
 import { Button } from '@/components/ui/button';
@@ -20,11 +21,13 @@ import { index as jobsIndex } from '@/routes/jobs';
 /**
  * Portada pública.
  *
- * Lo primero que se ve no es una promesa, es un expediente: una vacante del
- * caso de estudio con sus evidencias versionadas y la decisión que firma una
- * persona. Detrás, en profundidad y sin texto, las tres hojas del mismo
- * recorrido (ADR-003, decorativas). Todo lo que la portada dice está en el DOM
- * de delante, plano y sobre fondo sólido.
+ * Arriba, la promesa en texto y, al lado, una carpeta que se abre al bajar
+ * (vídeo decorativo, sin texto). Más abajo, en «Cómo avanza un proceso», la
+ * misma idea con contenido: un expediente del caso de estudio —la vacante, sus
+ * evidencias versionadas y la decisión que firma una persona— y, detrás, las
+ * tres hojas del recorrido, que se separan en profundidad al bajar y vuelven a
+ * apilarse al subir (ADR-003, decorativas). Todo lo que la portada dice está en
+ * el DOM de delante, plano y sobre fondo sólido.
  */
 type RecordEntry = {
     icon: LucideIcon;
@@ -212,13 +215,73 @@ export default function Welcome() {
                         </ul>
                     </div>
 
-                    {/* El expediente queda delante, plano y sólido: su texto
-                        nunca depende del fondo para leerse. Detrás, la capa de
-                        profundidad —decorativa y opcional (ADR-003)—. En
-                        escritorio, el margen deja sitio para que asomen las
-                        hojas de la escena. */}
+                    {/* Una carpeta que se abre al bajar y se cierra al subir:
+                        vídeo decorativo, sin texto y fuera del orden de
+                        tabulación. El expediente con contenido está más abajo,
+                        en «Cómo avanza un proceso». */}
+                    <div className="lg:pl-6">
+                        <HeroFolderVideo />
+                    </div>
+                </div>
+            </section>
+
+            <section
+                className="mx-auto max-w-6xl px-4 py-16 sm:px-6"
+                aria-labelledby="landing-process-title"
+                data-cy="landing-process"
+            >
+                <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-6">
+                    <div>
+                        <Reveal>
+                            <h2
+                                id="landing-process-title"
+                                className="font-serif text-2xl font-semibold tracking-tight md:text-3xl"
+                            >
+                                Cómo avanza un proceso
+                            </h2>
+                            <p className="text-muted-foreground mt-2 max-w-2xl text-sm leading-relaxed">
+                                Cuatro etapas, cada una con su responsable. Lo
+                                que se hace queda registrado con nombre y fecha.
+                            </p>
+                        </Reveal>
+                        <ol className="mt-8 grid gap-4 sm:grid-cols-2">
+                            {steps.map((step, index) => (
+                                <li key={step.title}>
+                                    <Reveal
+                                        delay={index * 80}
+                                        className="bg-card h-full rounded-xl border p-5 shadow-xs"
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="bg-tone-primary text-tone-primary-foreground flex size-9 items-center justify-center rounded-lg">
+                                                <step.icon
+                                                    className="size-4"
+                                                    aria-hidden="true"
+                                                />
+                                            </span>
+                                            <p className="text-muted-foreground font-mono text-xs">
+                                                Paso {index + 1} de{' '}
+                                                {steps.length}
+                                            </p>
+                                        </div>
+                                        <h3 className="mt-4 font-serif text-lg font-semibold">
+                                            {step.title}
+                                        </h3>
+                                        <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                                            {step.text}
+                                        </p>
+                                    </Reveal>
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
+
+                    {/* La carpeta del proceso: el expediente queda delante, plano
+                        y sólido, y su texto nunca depende del fondo para leerse.
+                        Detrás, las hojas del recorrido se separan al bajar y se
+                        apilan al subir —decorativas y opcionales (ADR-003)—. En
+                        escritorio, el margen deja sitio para que asomen. */}
                     <div className="lg:px-14 lg:py-24">
-                        <div className="relative">
+                        <div className="relative" data-cy="landing-folder">
                             <RecruitmentDepth />
                             <div className="bg-card relative z-10 rounded-xl border shadow-[0_24px_48px_-24px_oklch(0.25_0.04_220/0.35)]">
                                 <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b px-5 py-4">
@@ -272,46 +335,6 @@ export default function Welcome() {
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-                <Reveal>
-                    <h2 className="font-serif text-2xl font-semibold tracking-tight md:text-3xl">
-                        Cómo avanza un proceso
-                    </h2>
-                    <p className="text-muted-foreground mt-2 max-w-2xl text-sm leading-relaxed">
-                        Cuatro etapas, cada una con su responsable. Lo que se
-                        hace queda registrado con nombre y fecha.
-                    </p>
-                </Reveal>
-                <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    {steps.map((step, index) => (
-                        <li key={step.title}>
-                            <Reveal
-                                delay={index * 80}
-                                className="bg-card h-full rounded-xl border p-5 shadow-xs"
-                            >
-                                <div className="flex items-center justify-between">
-                                    <span className="bg-tone-primary text-tone-primary-foreground flex size-9 items-center justify-center rounded-lg">
-                                        <step.icon
-                                            className="size-4"
-                                            aria-hidden="true"
-                                        />
-                                    </span>
-                                    <p className="text-muted-foreground font-mono text-xs">
-                                        Paso {index + 1} de {steps.length}
-                                    </p>
-                                </div>
-                                <h3 className="mt-4 font-serif text-lg font-semibold">
-                                    {step.title}
-                                </h3>
-                                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                                    {step.text}
-                                </p>
-                            </Reveal>
-                        </li>
-                    ))}
-                </ol>
             </section>
 
             <section
