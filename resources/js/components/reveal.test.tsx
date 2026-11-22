@@ -5,14 +5,14 @@ import {
     sheetTransform,
 } from '@/components/experience-3d/recruitment-scene';
 import { STAGE_SHEETS } from '@/components/experience-3d/recruitment-scene-poster';
-import { Reveal } from '@/components/reveal';
+import { Reveal, watchReveal, type RevealState } from '@/components/reveal';
 
 /**
  * Incremento visual de la portada. Lo que no depende del navegador: el
- * contenido se ve antes de montar (y sin JavaScript), y la escena dibuja las
- * tres etapas que cuenta el expediente, y la carpeta del proceso se abre según
- * el desplazamiento. El ocultamiento al desplazarse y el paralaje se prueban
- * en `e2e-22` y `e2e-23`.
+ * contenido se ve antes de montar (y sin JavaScript), el movimiento reducido
+ * nunca deja nada oculto (VIS-L01) y la carpeta del proceso se abre según el
+ * desplazamiento. La apariencia real con la página montada se prueba en
+ * `e2e-22` y `e2e-23`.
  */
 describe('Reveal', () => {
     test('antes de montar el contenido es visible: estado estático, sin retardo', () => {
@@ -26,6 +26,135 @@ describe('Reveal', () => {
         expect(markup).not.toContain('transition-delay');
         expect(markup).toContain('data-cy="bloque"');
         expect(markup).toContain('Contenido');
+    });
+});
+
+/** Ventana simulada: movimiento reducido conmutable y un observador que se puede disparar. */
+function fakeWindow({ reduced = false, top = 2000 } = {}) {
+    const listeners = new Set<() => void>();
+    const observers: {
+        fire: (isIntersecting: boolean) => void;
+        disconnected: boolean;
+        observed: number;
+    }[] = [];
+    const motion = {
+        matches: reduced,
+        addEventListener: (_: string, listener: () => void) =>
+            listeners.add(listener),
+        removeEventListener: (_: string, listener: () => void) =>
+            listeners.delete(listener),
+    };
+
+    class Observer {
+        record: (typeof observers)[number];
+
+        constructor(
+            callback: (entries: { isIntersecting: boolean }[]) => void,
+        ) {
+            this.record = {
+                fire: (isIntersecting) => callback([{ isIntersecting }]),
+                disconnected: false,
+                observed: 0,
+            };
+            observers.push(this.record);
+        }
+
+        observe() {
+            this.record.observed++;
+        }
+
+        disconnect() {
+            this.record.disconnected = true;
+        }
+    }
+
+    const win = {
+        innerHeight: 800,
+        matchMedia: () => motion as unknown as MediaQueryList,
+        IntersectionObserver:
+            Observer as unknown as typeof IntersectionObserver,
+    };
+    const element = {
+        getBoundingClientRect: () => ({ top }) as DOMRect,
+    } as Element;
+
+    return {
+        win,
+        element,
+        listeners,
+        observers,
+        setReduced(value: boolean) {
+            motion.matches = value;
+            [...listeners].forEach((listener) => listener());
+        },
+    };
+}
+
+describe('Reveal con movimiento reducido dinámico (VIS-L01)', () => {
+    test('lo de abajo se oculta y espera a verse', () => {
+        const fake = fakeWindow();
+        const states: RevealState[] = [];
+
+        watchReveal(fake.element, fake.win, (state) => states.push(state));
+        expect(states).toEqual(['hidden']);
+        expect(fake.observers[0].observed).toBe(1);
+        expect(fake.listeners.size).toBe(1);
+    });
+
+    test('si el movimiento reducido se activa con la página abierta, lo oculto pasa a estático y se retiran las escuchas', () => {
+        const fake = fakeWindow();
+        const states: RevealState[] = [];
+
+        watchReveal(fake.element, fake.win, (state) => states.push(state));
+        fake.setReduced(true);
+
+        expect(states).toEqual(['hidden', 'static']);
+        expect(fake.observers[0].disconnected).toBe(true);
+        expect(fake.listeners.size).toBe(0);
+
+        // Ningún aviso posterior lo vuelve a tocar: ni el observador ni un
+        // nuevo cambio de preferencia.
+        fake.observers[0].fire(true);
+        fake.setReduced(false);
+        fake.setReduced(true);
+        expect(states).toEqual(['hidden', 'static']);
+    });
+
+    test('al verse entra una vez y se retiran las escuchas', () => {
+        const fake = fakeWindow();
+        const states: RevealState[] = [];
+
+        watchReveal(fake.element, fake.win, (state) => states.push(state));
+        fake.observers[0].fire(false);
+        fake.observers[0].fire(true);
+        fake.setReduced(true);
+
+        expect(states).toEqual(['hidden', 'shown']);
+        expect(fake.observers[0].disconnected).toBe(true);
+        expect(fake.listeners.size).toBe(0);
+    });
+
+    test('con movimiento reducido al montar, o si ya se ve, no se oculta ni observa', () => {
+        for (const fake of [
+            fakeWindow({ reduced: true }),
+            fakeWindow({ top: 100 }),
+        ]) {
+            const states: RevealState[] = [];
+
+            watchReveal(fake.element, fake.win, (state) => states.push(state));
+            expect(states).toEqual([]);
+            expect(fake.observers).toHaveLength(0);
+            expect(fake.listeners.size).toBe(0);
+        }
+    });
+
+    test('al desmontar se desconecta el observador y se retira la escucha', () => {
+        const fake = fakeWindow();
+        const stop = watchReveal(fake.element, fake.win, () => {});
+
+        stop();
+        expect(fake.observers[0].disconnected).toBe(true);
+        expect(fake.listeners.size).toBe(0);
     });
 });
 

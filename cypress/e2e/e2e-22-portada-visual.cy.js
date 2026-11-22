@@ -7,7 +7,9 @@
  * - con un puntero fino, las hojas se desplazan según su profundidad (paralaje); sin él, quedan quietas;
  * - el acceso principal se alcanza con el teclado y muestra el foco;
  * - las entradas al desplazarse no ocultan nada con movimiento reducido ni a quien ya lo está viendo;
- * - a 320 px no hay desplazamiento horizontal.
+ * - a 320 px no hay desplazamiento horizontal;
+ * - VIS-L01: si el movimiento reducido se activa con la portada abierta, lo
+ *   pendiente aparece en su sitio y no vuelve a ocultarse.
  *
  * Desde el incremento visual de la presentación, el expediente y su escena
  * están en «Cómo avanza un proceso», debajo de la portada: las pruebas que
@@ -208,6 +210,48 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
         cy.get('[data-reveal]').should('have.length.at.least', 5);
         cy.get('[data-reveal="hidden"]').should('not.exist');
         cy.dataCy('landing-ml-note').should('have.css', 'opacity', '1');
+    });
+
+    it('VIS-L01: si el movimiento reducido se activa con la portada abierta, lo pendiente aparece sin desplazarse y no vuelve a ocultarse', () => {
+        cy.viewport(1280, 800);
+        cy.visit('/');
+
+        // Antes: lo de abajo espera oculto y desplazado.
+        cy.dataCy('landing-ml-note').should('have.css', 'opacity', '0');
+        cy.get('[data-reveal="hidden"]')
+            .should('have.length.at.least', 3)
+            .then(($pendientes) => {
+                const pendientes = $pendientes.toArray();
+                const aLaVista = () =>
+                    cy.wrap(pendientes).each((bloque) =>
+                        cy.wrap(bloque).should(($b) => {
+                            const estilo = getComputedStyle($b[0]);
+
+                            expect(estilo.opacity, 'opacidad').to.eq('1');
+                            expect(
+                                estilo.transform,
+                                'sin desplazamiento',
+                            ).to.eq('none');
+                        }),
+                    );
+
+                // Se activa con la página abierta y sin desplazarla: la
+                // apariencia real de cada bloque pendiente cambia en su sitio.
+                // Va en la cola de Cypress, en orden con las aserciones.
+                cy.then(() => reducido(true));
+                aLaVista();
+                cy.window().its('scrollY').should('eq', 0);
+                cy.get('[data-reveal="hidden"]').should('not.exist');
+
+                // Ni al recorrer la página ni al desactivar la preferencia
+                // vuelve a ocultarse nada: ya no hay observadores pendientes.
+                cy.scrollTo('bottom');
+                cy.scrollTo('top');
+                cy.then(() => reducido(false));
+                cy.scrollTo('bottom');
+                aLaVista();
+                cy.get('[data-reveal="hidden"]').should('not.exist');
+            });
     });
 
     it('sin movimiento reducido, lo de abajo entra al desplazarse y queda visible', () => {

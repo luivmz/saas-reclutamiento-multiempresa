@@ -399,6 +399,14 @@
         scroll-behavior: auto !important;
     }
 
+    /* VIS-L01: si el movimiento reducido se activa con la página abierta, lo
+       que esperaba a verse aparece en su sitio, sin desplazarse, aunque el
+       script todavía no haya reaccionado (Reveal lo deja después en estático). */
+    [data-reveal='hidden'] {
+        opacity: 1;
+        transform: none;
+    }
+
     /* El giro del spinner es información, no adorno: sin él una espera larga
        parece una pantalla colgada. Se conserva, más lento. */
     .animate-spin {
