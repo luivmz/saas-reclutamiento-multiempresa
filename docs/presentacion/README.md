@@ -29,7 +29,7 @@ No entra en `main`:
 
 - G0 real = NO APROBADA. G0-02, G0-03 y G0-12 = PENDIENTE EXTERNO. G0-09 y G0-14 = CUMPLIDO. G0-SBX = APROBADA CON RESTRICCIONES. ADR-005 = PROPUESTA.
 - F35-SBX = CERRADA Y CONGELADA. F36-SBX = EN DISEÑO. F36-SBX-GATE = NO SUPERADO. F37-SBX = BLOQUEADA. F36–F40 productivas = BLOQUEADAS.
-- EI-23 (integración formal de estas capacidades en el SaaS) = BLOCKED. Alcance C = BLOQUEADO. Datos reales = PROHIBIDOS.
+- La integración formal de estas capacidades en el SaaS (EI-23) sigue BLOCKED. Alcance C = BLOQUEADO. Datos reales = PROHIBIDOS.
 - RF-23 sigue siendo la decisión final humana de Dirección. RF-29 (ML-01) sigue experimental e informativo. RF-01 a RF-27 no cambian.
 
 **Experimental disponible no es fase habilitada.** Que el código esté en `main` detrás de una bandera desactivada por omisión permite presentarlo, pero F37-SBX sigue BLOQUEADA. Para que deje de ser experimental hacen falta la G0 real, un ADR de alcance y la decisión N5 (EI-23), con F36-SBX-GATE SUPERADO ([`docs/experimental/README.md` §5](../experimental/README.md#5-lo-que-falta-para-que-deje-de-ser-experimental)).
