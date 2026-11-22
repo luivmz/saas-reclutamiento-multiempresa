@@ -140,3 +140,23 @@ Fuera de Git, en `experimental-20261110/evidencias/`:
 - `SHA256SUMS_20261112.txt`: manifiesto de todo lo anterior;
 - `correcciones-20261112/GUIA_REAUDITORIA_20261112.md`: guía para la reauditoría del delta.
 - `f37-cierre-20261122/`: el RED y el GREEN de la §6.1, la verificación y Cypress sobre `cc315f6`, y la guía de entrega a Codex (`GUIA_REAUDITORIA_20261122.md`), con su manifiesto `SHA256SUMS_20261122.txt`.
+- `visual-20261122/`: el incremento visual de la §8, con las capturas de referencia y las finales, la verificación, Cypress, el diagnóstico de E2E-10 y su manifiesto `SHA256SUMS_visual_20261122.txt`.
+
+## 8. Incremento visual (rama `design/f37-visual`, 22/11/2026)
+
+Sale de `53d8e22`, el candidato que Codex dio por apto para la demostración experimental. Solo cambia la presentación: portada con profundidad (CSS 3D, ADR-003) y pulido de las pantallas del recorrido F37. No cambia PHP, rutas, permisos, BM25, ML-01, el ranking ni la decisión humana. Los recursos visuales y el vídeo pendiente de Higgsfield están en [`portada-recursos-visuales.md`](portada-recursos-visuales.md).
+
+**Resultados sobre `0d91bcb`.** Bundle `2d7f7c95…`; logs en `evidencias/visual-20261122/`.
+
+| Prueba | Resultado |
+|---|---|
+| Build · tsc · Vitest · `vp check` de lo cambiado | Correcto · 0 errores · 65 passed · sin errores |
+| PHPUnit | No se repite: el backend es idéntico a `cc315f6` (525 passed, 8 skipped) |
+| Cypress E2E-00 a E2E-22, una spec por contenedor y en serie, con control de memoria antes de cada una | **22 de 23 specs en verde a la primera**, incluidas E2E-18 (8/8), E2E-20 (12/12), E2E-21 (10/10) y la nueva E2E-22 (7/7). E2E-10 falló una vez con la misma aserción que en `cc315f6` y pasó al repetirla sola (1/1) |
+
+**E2E-10, con datos (F37-RA-L01).**
+- Tras la repetición se exportaron las notificaciones del segundo candidato con su fecha (`13-diag-e2e10/`).
+- **Los datos:** la notificación sembrada «Coordinador(a) de Tutoría» tiene las 13:20:38 y la del cierre de E2E-10, las 13:20:46. El margen es de 8 s y `created_at` solo distingue segundos. En ese momento, la VM iba 11 s por detrás del host.
+- **Mecanismo plausible:** un salto de reloj de ese tamaño entre la siembra y el cierre invertiría el orden. Es exactamente la aserción que falla.
+- **Lo que no se demostró:** no se capturó la corrida fallida misma.
+- **Antigüedad:** la fragilidad es anterior a este incremento, porque E2E-10 no toca nada de lo cambiado. No se cambia el orden de las notificaciones.

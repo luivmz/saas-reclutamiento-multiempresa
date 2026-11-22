@@ -16,6 +16,14 @@
 ## 2. Recurso pendiente: bucle ambiental para la portada
 
 - **Ubicación prevista.** Detrás de la columna derecha de la portada, debajo de la escena CSS, entre el 20 y el 30 % de opacidad.
+- **Punto exacto en el código** (`design/f37-visual`, `0d91bcb`):
+  - **Archivo:** `resources/js/components/experience-3d/recruitment-depth.tsx`, componente `RecruitmentDepth`.
+  - **Lugar:** dentro del `<div data-cy="recruitment-depth">`, que ya es `aria-hidden`, `inert` y `pointer-events-none`, como **primer hijo**, delante de `SceneBoundary`. Solo se renderiza cuando `showScene` es verdadero, así que hereda la misma condición y la misma carga al entrar en el viewport.
+  - **Elemento:** `<video muted loop playsInline autoPlay preload="none" poster="/media/portada/portada-bucle-poster.webp">`, con dos `<source>`, primero el WebM y después el MP4.
+  - **Caja:** `absolute -inset-x-16 -inset-y-24 -z-10 rounded-2xl object-cover opacity-25`, para que cubra también las hojas que asoman alrededor del expediente.
+  - **Fallo:** con `onError`, el vídeo se retira y queda la escena CSS.
+  - **Página:** en `welcome.tsx` no hay que tocar nada. La tarjeta `.z-10` sigue delante, plana y sobre fondo sólido.
+- **Nombres de archivo:** `public/media/portada/portada-bucle.webm`, `portada-bucle.mp4` y `portada-bucle-poster.webp`.
 - **Carga y respaldo.** Se carga solo cuando hoy se carga la escena (`useSceneCapability`: escritorio de 1024 px o más, sin movimiento reducido, sin ahorro de datos ni equipo modesto). En cualquier otro caso, o si el vídeo falla, queda la composición CSS actual, que ya es el respaldo.
 - **Formato.**
   - 16:9, 1920 × 1080, **8 s** en bucle perfecto, 24 fps, sin audio.
