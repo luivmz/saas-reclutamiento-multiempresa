@@ -10,6 +10,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { formatDateTime } from '@/lib/format';
 import type { EvidenceRecord, Presented, RegistrableType } from '@/types';
 
+/** Ancla de la tarjeta de una evidencia; la ayuda documental enlaza a ella. */
+export function evidenceAnchor(id: number): string {
+    return `evidence-${id}`;
+}
+
 /**
  * Una evidencia con su versión vigente, sus enlaces, sus versiones
  * anteriores y las acciones que el usuario puede hacer. Nada se borra:
@@ -36,7 +41,9 @@ export function EvidenceRecordCard({
 
     return (
         <article
-            className="bg-card space-y-4 rounded-xl border p-4"
+            id={evidenceAnchor(record.id)}
+            tabIndex={-1}
+            className="bg-card target:ring-ring/60 focus-visible:ring-ring/60 data-[destacada=true]:ring-ring/60 scroll-mt-24 space-y-4 rounded-xl border p-4 outline-none target:ring-[3px] focus-visible:ring-[3px] data-[destacada=true]:ring-[3px]"
             data-cy="evidence-record"
             aria-labelledby={`evidence-${record.id}-title`}
         >
@@ -319,6 +326,15 @@ export function EvidenceRecordCard({
                                         {formatDateTime(version.created_at)}
                                     </span>
                                     <StatusBadge status={version.state} />
+                                </p>
+                                <p
+                                    className="text-muted-foreground text-xs"
+                                    data-cy="evidence-version-provenance"
+                                >
+                                    {version.author
+                                        ? `${version.author.name} (${version.author.role})`
+                                        : 'Autor no disponible'}{' '}
+                                    · Fuente: {version.source.label}
                                 </p>
                                 <p className="text-muted-foreground leading-relaxed">
                                     {version.description}

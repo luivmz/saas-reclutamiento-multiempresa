@@ -92,6 +92,16 @@ class EvidenceItemPolicy
             && $user->hasRole(UserRole::HumanResources);
     }
 
+    /**
+     * F37-UX-01: whether the user writes evidence on this application while its process is open (HR of the
+     * organization or the assigned evaluator). Only used to explain a refusal after the closure; it grants nothing.
+     */
+    public function writesWhileOpen(User $user, Application $application): bool
+    {
+        return $this->sameOrganization($user, $application)
+            && ($user->hasRole(UserRole::HumanResources) || $this->isAssignedEvaluator($user, $application));
+    }
+
     private function canWrite(User $user, Application $application): bool
     {
         return $this->sameOrganization($user, $application) && ! $application->vacancy->isClosed();

@@ -12,6 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
+import { WorkflowAlert } from '@/components/workflow-alert';
 import { dashboard } from '@/routes';
 import type {
     DocumentaryAidResult,
@@ -117,6 +118,8 @@ export default function EvidenceIndex({
                         corresponde a Dirección.
                     </AlertDescription>
                 </Alert>
+
+                <WorkflowAlert />
 
                 {application.vacancy.closed && (
                     <Alert data-cy="evidence-frozen">

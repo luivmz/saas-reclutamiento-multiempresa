@@ -152,6 +152,29 @@ describe('E2E-21 · Evidencias y ayuda documental ML-02 (experimental)', () => {
         cy.dataCy('aid-criterion').should('have.attr', 'data-marca', 'app-m02');
         cy.focused().should('have.attr', 'data-cy', 'aid-submit');
 
+        // F37-UX-02: la fuente recuperada se abre en su tarjeta completa, con la versión vigente, su procedencia y
+        // la versión anterior conservada, sin otra visita (la URL no cambia y la página sigue montada).
+        cy.location('href').then((antes) => {
+            cy.dataCy('aid-results')
+                .find('[data-cy="aid-open-source"]')
+                .first()
+                .click();
+            cy.location('href').should('eq', antes);
+        });
+        cy.focused()
+            .should('have.attr', 'data-cy', 'evidence-record')
+            .and('have.attr', 'data-destacada', 'true')
+            .and('contain', 'evaluación formativa')
+            .and('contain', 'Fuente: Documento presentado')
+            .within(() => {
+                cy.contains('summary', 'Versiones anteriores (1)').click();
+                cy.dataCy('evidence-version-provenance').should(
+                    'contain',
+                    'Fuente: Documento presentado',
+                );
+            });
+        cy.dataCy('aid-criterion').should('have.attr', 'data-marca', 'app-m02');
+
         // Segunda consulta en la misma página, sin recargar, reenviada con doble clic.
         cy.dataCy('aid-criterion').select('Entrevista personal');
         cy.dataCy('aid-submit').dblclick();
@@ -280,6 +303,77 @@ describe('E2E-21 · Evidencias y ayuda documental ML-02 (experimental)', () => {
 
         cy.loginAs('hrOrgB');
         cy.appRequest('GET', EVIDENCIAS).its('status').should('eq', 404);
+    });
+
+    it('un proceso cerrado congela sus evidencias: solo lectura y escritura directa rechazada', () => {
+        // «Coordinador(a) de Tutoría» ya está cerrada en los datos demo; su postulación 7 fue seleccionada.
+        cy.loginAs('hr');
+        cy.visit('/postulaciones/7/evidencias');
+        cy.dataCy('evidence-frozen').should('be.visible');
+        cy.dataCy('evidence-create').should('not.exist');
+        cy.dataCy('documentary-aid').should('be.visible');
+
+        cy.appRequest('POST', '/postulaciones/7/evidencias', {
+            type: 'certificado',
+            source: 'documento_presentado',
+            description: '[SINTÉTICO] Intento directo tras el cierre.',
+        }).then((response) => {
+            expect(response.status).to.eq(422);
+            expect(response.body.errors.workflow[0]).to.contain('congelada');
+        });
+
+        // Dirección no escribe ni con el proceso abierto: sigue recibiendo 403, sin el mensaje del cierre.
+        cy.loginAs('approver');
+        cy.appRequest('POST', '/postulaciones/7/evidencias', {
+            type: 'certificado',
+            source: 'documento_presentado',
+            description: '[SINTÉTICO] Intento de Dirección.',
+        })
+            .its('status')
+            .should('eq', 403);
+        cy.loginAs('hrOrgB');
+        cy.appRequest('GET', '/postulaciones/7/evidencias')
+            .its('status')
+            .should('eq', 404);
+    });
+
+    it('si el proceso se cierra con la página abierta, el envío muestra el motivo y no registra nada (F37-UX-01)', () => {
+        // «Auxiliar de Educación Inicial»: Dirección decide (RF-23, decisión humana de la prueba) y RR. HH. registra la
+        // selección; RR. HH. abre las evidencias de una finalista y, sin recargar, cierra el proceso por otra vía.
+        cy.loginAs('approver');
+        cy.appRequest('POST', '/vacantes/3/decision', {
+            application_id: 4,
+            justification:
+                'Decisión humana ficticia registrada por la prueba E2E-21.',
+            human_confirmation: true,
+        })
+            .its('status')
+            .should('eq', 302);
+        cy.loginAs('hr');
+        cy.appRequest('POST', '/vacantes/3/seleccion')
+            .its('status')
+            .should('eq', 302);
+
+        cy.visit('/postulaciones/5/evidencias');
+        cy.dataCy('evidence-create').should('be.visible');
+        cy.dataCy('evidence-type').select('certificado');
+        cy.dataCy('evidence-description-input')
+            .clear()
+            .type('[SINTÉTICO] Constancia ficticia enviada tras el cierre.');
+
+        cy.appRequest('POST', '/vacantes/3/cerrar', {
+            closure_notes: 'Cierre ficticio de la prueba E2E-21.',
+        })
+            .its('status')
+            .should('eq', 302);
+
+        cy.dataCy('evidence-submit').click();
+        cy.dataCy('workflow-error')
+            .should('be.visible')
+            .and('contain', 'La convocatoria está cerrada');
+        cy.dataCy('evidence-frozen').should('be.visible');
+        cy.dataCy('evidence-create').should('not.exist');
+        cy.dataCy('evidence-record').should('not.exist');
     });
 
     it('en móvil no hay desplazamiento horizontal y las acciones siguen visibles', () => {

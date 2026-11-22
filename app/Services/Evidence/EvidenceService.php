@@ -32,6 +32,8 @@ use Illuminate\Validation\ValidationException;
  */
 class EvidenceService
 {
+    public const CLOSED_MESSAGE = 'La convocatoria está cerrada: su evidencia queda congelada y ya no admite escrituras (R-08).';
+
     public function __construct(private readonly AuditLogger $audit) {}
 
     public function register(User $actor, Application $application, EvidenceType $type, EvidenceSource $source, string $description): EvidenceItem
@@ -151,7 +153,7 @@ class EvidenceService
         $vacancy = Vacancy::query()->withoutGlobalScopes()->whereKey($application->vacancy_id)->sharedLock()->firstOrFail();
 
         if ($vacancy->isClosed()) {
-            throw new BusinessRuleException('La convocatoria está cerrada: su evidencia queda congelada y ya no admite escrituras (R-08).');
+            throw new BusinessRuleException(self::CLOSED_MESSAGE);
         }
     }
 

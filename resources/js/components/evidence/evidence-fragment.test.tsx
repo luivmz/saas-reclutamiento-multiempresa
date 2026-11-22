@@ -73,6 +73,16 @@ describe('EvidenceFragmentCard', () => {
         expect(html).not.toContain('Coincide en');
     });
 
+    test('enlaza a la tarjeta de la evidencia de la que sale el fragmento', () => {
+        const html = renderToStaticMarkup(
+            <EvidenceFragmentCard fragment={fragment} rank={1} />,
+        );
+
+        expect(html).toMatch(
+            /<a href="#evidence-7"[^>]*data-cy="aid-open-source"[^>]*>.*Abrir la evidencia EVD-00007<\/a>/,
+        );
+    });
+
     test('nunca muestra un puntaje', () => {
         const html = renderToStaticMarkup(
             <EvidenceFragmentCard fragment={fragment} rank={1} />,

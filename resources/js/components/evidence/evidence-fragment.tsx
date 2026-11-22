@@ -1,5 +1,36 @@
+import { ExternalLink } from 'lucide-react';
+import type { MouseEvent } from 'react';
+import { evidenceAnchor } from '@/components/evidence/evidence-record';
 import { StatusBadge } from '@/components/status-badge';
 import type { EvidenceFragment } from '@/types';
+
+/**
+ * Lleva a la tarjeta completa de la evidencia de la que sale el fragmento:
+ * la desplaza a la vista, le da el foco y la destaca hasta que lo pierde. No
+ * cambia la URL, para no disparar una visita de Inertia. Sin JavaScript, el
+ * enlace sigue funcionando como ancla.
+ */
+function openSource(event: MouseEvent<HTMLAnchorElement>, id: number) {
+    const card = document.getElementById(evidenceAnchor(id));
+
+    if (!card) {
+        return;
+    }
+
+    event.preventDefault();
+    const reduced = window.matchMedia?.(
+        '(prefers-reduced-motion: reduce)',
+    ).matches;
+    card.dataset.destacada = 'true';
+    card.addEventListener('blur', () => delete card.dataset.destacada, {
+        once: true,
+    });
+    card.scrollIntoView({
+        behavior: reduced ? 'auto' : 'smooth',
+        block: 'start',
+    });
+    card.focus({ preventScroll: true });
+}
 
 export type TextPiece = { text: string; match: boolean };
 
@@ -95,6 +126,15 @@ export function EvidenceFragmentCard({
                     </>
                 )}
             </p>
+            <a
+                href={`#${evidenceAnchor(fragment.id)}`}
+                onClick={(event) => openSource(event, fragment.id)}
+                className="text-primary focus-visible:ring-ring/50 inline-flex items-center gap-1 rounded text-xs font-medium underline-offset-4 outline-none hover:underline focus-visible:ring-[3px]"
+                data-cy="aid-open-source"
+            >
+                <ExternalLink className="size-3" aria-hidden="true" />
+                Abrir la evidencia {fragment.code}
+            </a>
         </article>
     );
 }

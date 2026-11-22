@@ -2,6 +2,10 @@
 
 namespace App\Http\Requests\Evidence;
 
+use App\Exceptions\BusinessRuleException;
+use App\Models\Application;
+use App\Models\EvidenceItem;
+use App\Services\Evidence\EvidenceService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -26,6 +30,25 @@ abstract class EvidenceWriteRequest extends FormRequest
 
     /** R-09: closed input, no URL nor external source in the text. */
     protected const NO_URL = 'not_regex:/(https?:\/\/|www\.)/i';
+
+    /**
+     * F37-UX-01. A writer whose page was loaded before the closure posts afterwards: the policy refuses the write
+     * (R-08) and, instead of a bare 403, the writer goes back to the page with the closure message. Anyone who could
+     * not write with the process open still gets the 403 (cross-organization requests never get here: 404 on binding).
+     */
+    protected function failedAuthorization(): void
+    {
+        $evidence = $this->route('evidence');
+        $application = $evidence instanceof EvidenceItem ? $evidence->application : $this->route('application');
+
+        if ($application instanceof Application
+            && $application->vacancy?->isClosed() === true
+            && $this->user()?->can('writesWhileOpen', [EvidenceItem::class, $application]) === true) {
+            throw new BusinessRuleException(EvidenceService::CLOSED_MESSAGE);
+        }
+
+        parent::failedAuthorization();
+    }
 
     /**
      * @return list<string>
