@@ -99,7 +99,7 @@ export default function ApplicationShow({
                     actions={
                         <div className="flex flex-wrap gap-2">
                             {can.viewEvidence && (
-                                <Button variant="outline" asChild>
+                                <Button asChild>
                                     <Link
                                         href={ApplicationEvidenceController.index(
                                             application.id,

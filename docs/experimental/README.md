@@ -69,7 +69,7 @@ Código de `cc315f6`, con las correcciones del recorrido de la §6.1. El commit 
 | PHPUnit completo | 525 passed, 8 skipped |
 | Componentes · tipos · build · `vp check` de lo cambiado | 63 passed · 0 errores · correcto · sin errores |
 | Arnés F38 y prototipo F37 | 28 OK · 23 OK |
-| Cypress E2E-00 a E2E-21, una spec por contenedor, en serie | **21 de 22 specs en verde a la primera.** E2E-21 pasa 10/10. E2E-10 falló una vez y pasó al repetirla sola (1/1). Su aserción (el orden de las notificaciones por `created_at`) depende del reloj de la VM, que oscilaba unos 11 s porque el reloj de Windows iba adelantado y sin sincronizar. Las esperas se ampliaron a 30 s solo en la ejecución (`CY_TIMEOUT_MS`), sin cambiar la configuración ni las specs |
+| Cypress E2E-00 a E2E-21, una spec por contenedor, en serie | **21 de 22 specs en verde a la primera.** E2E-21 pasa 10/10. E2E-10 falló una vez y pasó al repetirla sola (1/1). El fallo esperaba el título de la vacante en la **primera** notificación del candidato. Es **compatible** con la anomalía de reloj observada (el reloj de Windows iba adelantado y sin sincronizar, y la VM oscilaba unos 11 s), pero **su causa no está demostrada**: el log no conserva las notificaciones ni sus fechas. Si reaparece con el reloj estable, hay que capturar todas las notificaciones con su fecha e identidad antes de atribuirlo al entorno o de cambiar el orden (F37-RA-L01). Las esperas se ampliaron a 30 s solo en la ejecución (`CY_TIMEOUT_MS`), sin cambiar la configuración ni las specs |
 
 **Qué es simulado.** En E2E-21, el retraso, el fallo de red y el HTTP 500 de la ayuda se producen con `cy.intercept`; todo lo demás va contra el backend real.
 

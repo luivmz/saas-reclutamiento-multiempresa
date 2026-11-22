@@ -391,8 +391,15 @@ describe('E2E-21 · Evidencias y ayuda documental ML-02 (experimental)', () => {
         });
         cy.screenshot('e2e-21-movil', { capture: 'fullPage' });
 
+        // En una columna la ayuda queda al final: el atajo de la cabecera la trae a la vista con el foco.
+        cy.scrollTo('top');
+        cy.dataCy('jump-to-aid').should('be.visible').click();
+        cy.focused().should('have.attr', 'data-cy', 'documentary-aid');
+        cy.dataCy('aid-criterion').should('be.visible');
+
         cy.viewport(1280, 800);
         cy.visit(`${EVIDENCIAS}?criterio=4`);
+        cy.dataCy('jump-to-aid').should('not.be.visible');
         cy.screenshot('e2e-21-escritorio', { capture: 'fullPage' });
     });
 });

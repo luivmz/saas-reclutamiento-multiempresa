@@ -295,6 +295,68 @@
 }
 
 /*
+ * Portada (incremento visual F37). Solo decoración: nada de esto lleva
+ * información ni recibe eventos.
+ *
+ * `[data-reveal]`: entrada discreta al desplazarse (componente Reveal). Solo
+ * opacidad y 16 px; con movimiento reducido el componente ni siquiera oculta.
+ */
+@layer components {
+    [data-reveal] {
+        transition:
+            opacity 600ms var(--ease-out),
+            transform 600ms var(--ease-out);
+    }
+
+    [data-reveal='hidden'] {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    /* Mesa de trabajo de la portada: una luz petróleo que cae desde arriba a la
+       derecha, otra cálida más tenue abajo, y una retícula de papel milimetrado
+       que se desvanece hacia los bordes. Todo en el fondo opaco de la sección,
+       así que el contraste del texto no depende de ello. */
+    .hero-backdrop {
+        background-color: var(--background);
+        background-image:
+            radial-gradient(
+                60% 70% at 78% 18%,
+                oklch(0.452 0.077 213 / 0.14),
+                transparent 70%
+            ),
+            radial-gradient(
+                40% 50% at 12% 95%,
+                oklch(0.672 0.132 72 / 0.1),
+                transparent 70%
+            );
+    }
+
+    .hero-grid {
+        background-image:
+            linear-gradient(to right, var(--border) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+        background-size: 32px 32px;
+        mask-image: radial-gradient(70% 60% at 60% 40%, black, transparent 75%);
+        opacity: 0.55;
+    }
+
+    .dark .hero-backdrop {
+        background-image:
+            radial-gradient(
+                60% 70% at 78% 18%,
+                oklch(0.731 0.083 201 / 0.12),
+                transparent 70%
+            ),
+            radial-gradient(
+                40% 50% at 12% 95%,
+                oklch(0.782 0.132 75 / 0.06),
+                transparent 70%
+            );
+    }
+}
+
+/*
  * Movimiento reducido.
  *
  * No significa «sin animación»: significa menos y más suave. Lo que molesta

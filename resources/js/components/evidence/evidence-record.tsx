@@ -1,5 +1,14 @@
 import { Form } from '@inertiajs/react';
-import { History, Link2, Link2Off } from 'lucide-react';
+import {
+    Archive,
+    CalendarClock,
+    FileInput,
+    History,
+    Link2,
+    Link2Off,
+    PencilLine,
+    UserRound,
+} from 'lucide-react';
 import EvidenceItemController from '@/actions/App/Http/Controllers/Evidence/EvidenceItemController';
 import { FormField, NativeSelect } from '@/components/form-controls';
 import InputError from '@/components/input-error';
@@ -48,23 +57,23 @@ export function EvidenceRecordCard({
             aria-labelledby={`evidence-${record.id}-title`}
         >
             <header className="flex flex-wrap items-start justify-between gap-2">
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                     <h3
                         id={`evidence-${record.id}-title`}
                         className="flex flex-wrap items-center gap-2 text-sm font-semibold"
                     >
-                        <span className="font-mono">{record.code}</span>
-                        <span className="text-muted-foreground font-normal">
+                        <span className="font-mono text-base">
+                            {record.code}
+                        </span>
+                        <span className="bg-tone-primary text-tone-primary-foreground ring-tone-primary-edge rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset">
                             versión {record.version}
                         </span>
                     </h3>
-                    <p className="text-muted-foreground text-xs">
-                        {record.author
-                            ? `${record.author.name} (${record.author.role})`
-                            : 'Autor no disponible'}{' '}
-                        · {formatDateTime(record.created_at)} · Fuente:{' '}
-                        {record.source.label}
-                    </p>
+                    <Provenance
+                        author={record.author}
+                        createdAt={record.created_at}
+                        source={record.source.label}
+                    />
                 </div>
                 <div className="flex flex-wrap gap-2">
                     <StatusBadge status={record.type} />
@@ -75,7 +84,7 @@ export function EvidenceRecordCard({
             </header>
 
             <p
-                className="text-sm leading-relaxed"
+                className="border-primary/40 border-l-2 pl-3 text-sm leading-relaxed"
                 data-cy="evidence-description"
             >
                 {record.description}
@@ -137,7 +146,7 @@ export function EvidenceRecordCard({
             </div>
 
             {(record.can.link || record.can.review) && (
-                <div className="flex flex-wrap items-end gap-3">
+                <div className="flex flex-wrap items-end gap-3 border-t pt-4">
                     {record.can.link && linkable.length > 0 && (
                         <Form
                             {...EvidenceItemController.link.form(record.id)}
@@ -198,7 +207,11 @@ export function EvidenceRecordCard({
 
             {record.can.correct && (
                 <details className="group rounded-lg border p-3">
-                    <summary className="cursor-pointer text-sm font-medium">
+                    <summary className="flex cursor-pointer items-center gap-2 text-sm font-medium">
+                        <PencilLine
+                            className="text-primary size-4"
+                            aria-hidden="true"
+                        />
                         Corregir con una versión nueva
                     </summary>
                     <Form
@@ -260,7 +273,11 @@ export function EvidenceRecordCard({
 
             {record.can.withdraw && (
                 <details className="rounded-lg border p-3">
-                    <summary className="cursor-pointer text-sm font-medium">
+                    <summary className="flex cursor-pointer items-center gap-2 text-sm font-medium">
+                        <Archive
+                            className="text-tone-danger-foreground size-4"
+                            aria-hidden="true"
+                        />
                         Retirar evidencia
                     </summary>
                     <Form
@@ -311,31 +328,35 @@ export function EvidenceRecordCard({
                         <History className="size-4" aria-hidden="true" />
                         Versiones anteriores ({previous.length})
                     </summary>
-                    <ol className="mt-3 space-y-3">
+                    <p className="text-muted-foreground mt-2 text-xs">
+                        Se conservan sin cambios: cada corrección añadió una
+                        versión nueva encima.
+                    </p>
+                    <ol className="border-border mt-3 ml-1.5 space-y-4 border-l-2">
                         {previous.map((version) => (
                             <li
                                 key={version.id}
-                                className="space-y-1 border-l-2 pl-3 text-sm"
+                                className="relative space-y-1.5 pl-4 text-sm"
                             >
+                                <span
+                                    aria-hidden="true"
+                                    className="bg-card border-muted-foreground/50 absolute top-1 -left-[7px] size-3 rounded-full border-2"
+                                />
                                 <p className="flex flex-wrap items-center gap-2 text-xs">
-                                    <span className="font-mono">
+                                    <span className="font-mono font-medium">
                                         {version.code}
                                     </span>
                                     <span className="text-muted-foreground">
-                                        versión {version.version} ·{' '}
-                                        {formatDateTime(version.created_at)}
+                                        versión {version.version}
                                     </span>
                                     <StatusBadge status={version.state} />
                                 </p>
-                                <p
-                                    className="text-muted-foreground text-xs"
+                                <Provenance
+                                    author={version.author}
+                                    createdAt={version.created_at}
+                                    source={version.source.label}
                                     data-cy="evidence-version-provenance"
-                                >
-                                    {version.author
-                                        ? `${version.author.name} (${version.author.role})`
-                                        : 'Autor no disponible'}{' '}
-                                    · Fuente: {version.source.label}
-                                </p>
+                                />
                                 <p className="text-muted-foreground leading-relaxed">
                                     {version.description}
                                 </p>
@@ -345,5 +366,44 @@ export function EvidenceRecordCard({
                 </details>
             )}
         </article>
+    );
+}
+
+/**
+ * Procedencia de una versión: quién la registró, cuándo y de qué fuente dice
+ * venir. Es la misma línea en la versión vigente y en las anteriores, para que
+ * se reconozca de un vistazo.
+ */
+function Provenance({
+    author,
+    createdAt,
+    source,
+    'data-cy': dataCy,
+}: {
+    author: { name: string; role: string } | null;
+    createdAt: string;
+    source: string;
+    'data-cy'?: string;
+}) {
+    return (
+        <p
+            className="text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 text-xs"
+            data-cy={dataCy}
+        >
+            <span className="inline-flex items-center gap-1">
+                <UserRound className="size-3.5" aria-hidden="true" />
+                {author
+                    ? `${author.name} (${author.role})`
+                    : 'Autor no disponible'}
+            </span>
+            <span className="inline-flex items-center gap-1">
+                <CalendarClock className="size-3.5" aria-hidden="true" />
+                {formatDateTime(createdAt)}
+            </span>
+            <span className="inline-flex items-center gap-1">
+                <FileInput className="size-3.5" aria-hidden="true" />
+                Fuente: {source}
+            </span>
+        </p>
     );
 }

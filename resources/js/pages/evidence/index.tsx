@@ -1,10 +1,13 @@
 import { Form, Head, Link } from '@inertiajs/react';
-import { FileStack, FlaskConical, History, Lock } from 'lucide-react';
+import { FileStack, FlaskConical, History, Lock, Search } from 'lucide-react';
 import { useState } from 'react';
 import ApplicationController from '@/actions/App/Http/Controllers/Applications/ApplicationController';
 import ApplicationEvidenceController from '@/actions/App/Http/Controllers/Evidence/ApplicationEvidenceController';
 import { EmptyState } from '@/components/empty-state';
-import { DocumentaryAid } from '@/components/evidence/documentary-aid';
+import {
+    DOCUMENTARY_AID_ID,
+    DocumentaryAid,
+} from '@/components/evidence/documentary-aid';
 import { EvidenceRecordCard } from '@/components/evidence/evidence-record';
 import { FormField, NativeSelect } from '@/components/form-controls';
 import { PageContainer, PageHeader, Section } from '@/components/page';
@@ -53,6 +56,13 @@ export default function EvidenceIndex({
     const selectedType = registrableTypes.find(
         (type) => type.value === typeValue,
     );
+    const current = records.filter(
+        (record) => record.state.value !== 'retirada',
+    ).length;
+    const versions = records.reduce(
+        (total, record) => total + record.versions.length,
+        0,
+    );
 
     return (
         <>
@@ -77,6 +87,25 @@ export default function EvidenceIndex({
                     description={`${application.vacancy.title} (${application.vacancy.code})`}
                     actions={
                         <div className="flex flex-wrap gap-2">
+                            {/* En una columna la ayuda queda al final: un
+                                atajo la trae a la vista y le da el foco. */}
+                            <Button
+                                variant="outline"
+                                className="lg:hidden"
+                                onClick={() => {
+                                    const aid =
+                                        document.getElementById(
+                                            DOCUMENTARY_AID_ID,
+                                        );
+
+                                    aid?.scrollIntoView({ block: 'start' });
+                                    aid?.focus({ preventScroll: true });
+                                }}
+                                data-cy="jump-to-aid"
+                            >
+                                <Search aria-hidden="true" />
+                                Ayuda documental
+                            </Button>
                             {can.viewHistory && (
                                 <Button variant="outline" asChild>
                                     <Link
@@ -137,6 +166,27 @@ export default function EvidenceIndex({
                         <Section
                             title="Evidencias registradas"
                             description="Cada corrección crea una versión nueva y la anterior se conserva. Nada se borra."
+                            actions={
+                                records.length > 0 && (
+                                    <p
+                                        className="text-muted-foreground flex flex-wrap gap-2 text-xs"
+                                        data-cy="evidence-summary"
+                                    >
+                                        <span className="bg-surface rounded-full border px-2.5 py-1">
+                                            {current}{' '}
+                                            {current === 1
+                                                ? 'vigente'
+                                                : 'vigentes'}
+                                        </span>
+                                        <span className="bg-surface rounded-full border px-2.5 py-1">
+                                            {versions}{' '}
+                                            {versions === 1
+                                                ? 'versión conservada'
+                                                : 'versiones conservadas'}
+                                        </span>
+                                    </p>
+                                )
+                            }
                             data-cy="evidence-list"
                         >
                             {records.length === 0 ? (

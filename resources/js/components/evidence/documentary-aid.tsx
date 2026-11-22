@@ -1,5 +1,5 @@
 import { Form } from '@inertiajs/react';
-import { Search, SearchX, WifiOff } from 'lucide-react';
+import { Info, Search, SearchX, WifiOff } from 'lucide-react';
 import { useState } from 'react';
 import ApplicationEvidenceController from '@/actions/App/Http/Controllers/Evidence/ApplicationEvidenceController';
 import { EvidenceFragmentCard } from '@/components/evidence/evidence-fragment';
@@ -14,6 +14,9 @@ import type {
     EvidenceSearchResult,
     Presented,
 } from '@/types';
+
+/** Ancla de la sección; en pantallas angostas la cabecera lleva un atajo hasta ella. */
+export const DOCUMENTARY_AID_ID = 'ayuda-documental';
 
 /**
  * Ayuda documental ML-02 (experimental): fragmentos de las evidencias
@@ -71,7 +74,9 @@ export function DocumentaryAid({
         <Section
             title="Ayuda documental"
             description="ML-02 experimental. Muestra qué fragmentos de las evidencias vigentes comparten palabras con un criterio. No evalúa a nadie."
-            className="h-fit"
+            id={DOCUMENTARY_AID_ID}
+            tabIndex={-1}
+            className="h-fit scroll-mt-20 outline-none"
             aria-busy={busy !== null || undefined}
             data-cy="documentary-aid"
         >
@@ -134,19 +139,24 @@ export function DocumentaryAid({
                         </h3>
                         {aid.abstained ? (
                             <div
-                                className="text-muted-foreground flex gap-3 rounded-lg border border-dashed p-3 text-sm"
+                                className="bg-tone-warning text-tone-warning-foreground ring-tone-warning-edge flex gap-3 rounded-lg p-3 text-sm ring-1 ring-inset"
                                 data-cy="aid-abstained"
                             >
                                 <SearchX
                                     className="mt-0.5 size-4 shrink-0"
                                     aria-hidden="true"
                                 />
-                                <p>
-                                    Ninguna evidencia vigente comparte palabras
-                                    con este criterio. Eso no significa que el
-                                    criterio no se cumpla: la ayuda solo compara
-                                    palabras.
-                                </p>
+                                <div className="space-y-1">
+                                    <p className="font-medium">
+                                        La ayuda se abstiene
+                                    </p>
+                                    <p>
+                                        Ninguna evidencia vigente comparte
+                                        palabras con este criterio. Eso no
+                                        significa que el criterio no se cumpla:
+                                        la ayuda solo compara palabras.
+                                    </p>
+                                </div>
                             </div>
                         ) : (
                             <ol className="space-y-2">
@@ -172,6 +182,35 @@ export function DocumentaryAid({
                             postulantes, y no alimenta el ranking ni la
                             decisión, que corresponde a Dirección (RF-23).
                         </p>
+                        <details
+                            className="bg-surface rounded-lg border p-3 text-xs"
+                            data-cy="aid-limits"
+                        >
+                            <summary className="flex cursor-pointer items-center gap-2 font-medium">
+                                <Info
+                                    className="text-primary size-3.5"
+                                    aria-hidden="true"
+                                />
+                                Límites conocidos de esta ayuda
+                            </summary>
+                            <ul className="text-muted-foreground mt-2 list-disc space-y-1 pl-4 leading-relaxed">
+                                <li>
+                                    Solo encuentra fragmentos que comparten
+                                    palabras: no reconoce paráfrasis ni
+                                    sinónimos.
+                                </li>
+                                <li>
+                                    Evaluación experimental sobre 12 fragmentos
+                                    ficticios: Recall@3 de 0,5 en desarrollo y
+                                    de 0 en prueba. La hipótesis de eficacia
+                                    (H2) se rechazó.
+                                </li>
+                                <li>
+                                    Sin entrenamiento ni ajuste nuevo. Es una
+                                    ayuda de lectura, no una evaluación.
+                                </li>
+                            </ul>
+                        </details>
                     </div>
                 )}
 

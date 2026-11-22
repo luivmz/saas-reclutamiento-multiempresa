@@ -93,8 +93,9 @@ export function EvidenceFragmentCard({
         >
             <header className="flex flex-wrap items-center gap-2 text-xs">
                 {rank !== undefined && (
-                    <span className="text-muted-foreground font-mono">
-                        {rank}.
+                    <span className="bg-tone-primary text-tone-primary-foreground flex size-5 items-center justify-center rounded-full font-mono text-[11px] font-semibold">
+                        {rank}
+                        <span className="sr-only">.</span>
                     </span>
                 )}
                 <span className="font-mono font-medium">{fragment.code}</span>
@@ -129,7 +130,7 @@ export function EvidenceFragmentCard({
             <a
                 href={`#${evidenceAnchor(fragment.id)}`}
                 onClick={(event) => openSource(event, fragment.id)}
-                className="text-primary focus-visible:ring-ring/50 inline-flex items-center gap-1 rounded text-xs font-medium underline-offset-4 outline-none hover:underline focus-visible:ring-[3px]"
+                className="text-primary hover:bg-accent focus-visible:ring-ring/50 border-primary/30 inline-flex min-h-8 items-center gap-1.5 rounded-md border px-2.5 text-xs font-medium outline-none focus-visible:ring-[3px]"
                 data-cy="aid-open-source"
             >
                 <ExternalLink className="size-3" aria-hidden="true" />
