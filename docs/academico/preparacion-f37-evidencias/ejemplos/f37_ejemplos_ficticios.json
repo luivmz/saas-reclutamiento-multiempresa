@@ -1,0 +1,80 @@
+{
+  "example_id": "f37-ejemplos-ficticios-v1",
+  "status": "PREPARACION - NO IMPLEMENTADO EN EL SAAS",
+  "synthetic": true,
+  "note": "[SINTÉTICO] Catálogo ficticio para el prototipo del flujo de evidencias. No hay personas reales, correos, documentos ni identificadores reales.",
+  "organizations": ["ORG-S1", "ORG-S2"],
+  "users": [
+    {"token": "USR-S1-RRHH", "role": "rrhh", "org": "ORG-S1"},
+    {"token": "USR-S1-DIR", "role": "aprobador", "org": "ORG-S1"},
+    {"token": "USR-S1-EVA-A", "role": "evaluador", "org": "ORG-S1"},
+    {"token": "USR-S1-EVA-B", "role": "evaluador", "org": "ORG-S1"},
+    {"token": "USR-S1-SOL", "role": "solicitante", "org": "ORG-S1"},
+    {"token": "USR-PST-01", "role": "postulante", "org": null},
+    {"token": "USR-S2-RRHH", "role": "rrhh", "org": "ORG-S2"},
+    {"token": "USR-S2-DIR", "role": "aprobador", "org": "ORG-S2"},
+    {"token": "USR-S2-EVA", "role": "evaluador", "org": "ORG-S2"}
+  ],
+  "vacancies": [
+    {"token": "VAC-S1-01", "org": "ORG-S1", "status": "publicada", "criteria": ["CRI-S1-01-PLAN", "CRI-S1-01-CLASE"]},
+    {"token": "VAC-S1-02", "org": "ORG-S1", "status": "cerrada", "criteria": ["CRI-S1-02-TUT"]},
+    {"token": "VAC-S2-01", "org": "ORG-S2", "status": "publicada", "criteria": ["CRI-S2-01-ADM"]}
+  ],
+  "applications": [
+    {"token": "APP-S1-001", "vacancy": "VAC-S1-01", "org": "ORG-S1", "candidate": "USR-PST-01"},
+    {"token": "APP-S1-002", "vacancy": "VAC-S1-01", "org": "ORG-S1", "candidate": "USR-PST-02"},
+    {"token": "APP-S1-003", "vacancy": "VAC-S1-02", "org": "ORG-S1", "candidate": "USR-PST-03"},
+    {"token": "APP-S2-001", "vacancy": "VAC-S2-01", "org": "ORG-S2", "candidate": "USR-PST-04"}
+  ],
+  "assignments": [
+    {"evaluator": "USR-S1-EVA-A", "application": "APP-S1-001", "session": "evaluacion"},
+    {"evaluator": "USR-S1-EVA-B", "application": "APP-S1-002", "session": "entrevista"},
+    {"evaluator": "USR-S2-EVA", "application": "APP-S2-001", "session": "evaluacion"}
+  ],
+  "initial_evidence": [
+    {"registered_by": "USR-S1-RRHH", "application": "APP-S1-001", "type": "certificado", "source": "documento_presentado", "description": "[SINTÉTICO] Certificado ficticio de un curso de planificación curricular."},
+    {"registered_by": "USR-S1-EVA-A", "application": "APP-S1-001", "type": "observacion", "source": "sesion_asignada", "description": "[SINTÉTICO] En la clase modelo ficticia se presentaron objetivos al inicio de la sesión."},
+    {"registered_by": "USR-S1-RRHH", "application": "APP-S1-002", "type": "cv", "source": "documento_presentado", "description": "[SINTÉTICO] CV ficticio presentado con la postulación."},
+    {"registered_by": "USR-S2-RRHH", "application": "APP-S2-001", "type": "certificado", "source": "documento_presentado", "description": "[SINTÉTICO] Constancia ficticia de un curso de gestión documental."}
+  ],
+  "scenarios": [
+    {"id": "ESC-01", "rule": "matriz", "actor": "USR-S1-RRHH", "action": "registrar", "params": {"application": "APP-S1-002", "type": "certificado", "source": "documento_presentado", "description": "[SINTÉTICO] Certificado ficticio adicional."}, "expected": "permitido"},
+    {"id": "ESC-02", "rule": "R-02", "actor": "USR-S1-EVA-A", "action": "registrar", "params": {"application": "APP-S1-001", "type": "observacion", "source": "sesion_asignada", "description": "[SINTÉTICO] Observación ficticia de la sesión asignada."}, "expected": "permitido"},
+    {"id": "ESC-03", "rule": "R-03", "actor": "USR-S1-EVA-A", "action": "enlazar", "params": {"evidence": "EVD-S1-0002", "criterion": "CRI-S1-01-CLASE"}, "expected": "permitido"},
+    {"id": "ESC-04", "rule": "R-03", "actor": "USR-S1-RRHH", "action": "enlazar", "params": {"evidence": "EVD-S1-0001", "criterion": "CRI-S1-01-PLAN"}, "expected": "permitido"},
+    {"id": "ESC-05", "rule": "matriz", "actor": "USR-S1-RRHH", "action": "revisar", "params": {"evidence": "EVD-S1-0001"}, "expected": "permitido"},
+    {"id": "ESC-06", "rule": "R-04", "actor": "USR-S1-RRHH", "action": "retirar", "params": {"evidence": "EVD-S1-0003", "reason": "[SINTÉTICO] Documento duplicado por error de carga."}, "expected": "permitido"},
+    {"id": "ESC-07", "rule": "matriz", "actor": "USR-S1-DIR", "action": "consultar", "params": {"application": "APP-S1-001"}, "expected": "permitido"},
+    {"id": "ESC-08", "rule": "matriz", "actor": "USR-S1-DIR", "action": "historial", "params": {"application": "APP-S1-002"}, "expected": "permitido"},
+    {"id": "ESC-09", "rule": "R-04", "actor": "USR-S1-EVA-A", "action": "corregir", "params": {"evidence": "EVD-S1-0002", "source": "sesion_asignada", "description": "[SINTÉTICO] Observación ficticia corregida: objetivos y criterios de logro."}, "expected": "permitido"},
+    {"id": "ESC-10", "rule": "R-08", "actor": "USR-S1-RRHH", "action": "consultar", "params": {"application": "APP-S1-003"}, "expected": "permitido"},
+    {"id": "ESC-11", "rule": "R-01", "actor": "USR-S2-RRHH", "action": "consultar", "params": {"application": "APP-S1-001"}, "expected": "denegado"},
+    {"id": "ESC-12", "rule": "R-01", "actor": "USR-S2-RRHH", "action": "enlazar", "params": {"evidence": "EVD-S1-0001", "criterion": "CRI-S2-01-ADM"}, "expected": "denegado"},
+    {"id": "ESC-13", "rule": "R-01", "actor": "USR-S1-RRHH", "action": "consultar", "params": {"application": "APP-S2-001"}, "expected": "denegado"},
+    {"id": "ESC-14", "rule": "R-03", "actor": "USR-S1-RRHH", "action": "enlazar", "params": {"evidence": "EVD-S1-0001", "criterion": "CRI-S2-01-ADM"}, "expected": "denegado"},
+    {"id": "ESC-15", "rule": "R-03", "actor": "USR-S1-RRHH", "action": "enlazar", "params": {"evidence": "EVD-S1-0001", "criterion": "CRI-S1-02-TUT"}, "expected": "denegado"},
+    {"id": "ESC-16", "rule": "R-02", "actor": "USR-S1-EVA-B", "action": "consultar", "params": {"application": "APP-S1-001"}, "expected": "denegado"},
+    {"id": "ESC-17", "rule": "matriz", "actor": "USR-S1-EVA-A", "action": "registrar", "params": {"application": "APP-S1-001", "type": "certificado", "source": "documento_presentado", "description": "[SINTÉTICO] Intento de registrar un certificado."}, "expected": "denegado"},
+    {"id": "ESC-18", "rule": "R-04", "actor": "USR-S1-EVA-A", "action": "corregir", "params": {"evidence": "EVD-S1-0001", "source": "documento_presentado", "description": "[SINTÉTICO] Intento de corregir evidencia ajena."}, "expected": "denegado"},
+    {"id": "ESC-19", "rule": "matriz", "actor": "USR-S1-DIR", "action": "registrar", "params": {"application": "APP-S1-001", "type": "certificado", "source": "documento_presentado", "description": "[SINTÉTICO] Dirección no registra evidencia."}, "expected": "denegado"},
+    {"id": "ESC-20", "rule": "matriz", "actor": "USR-S1-SOL", "action": "consultar", "params": {"application": "APP-S1-001"}, "expected": "denegado"},
+    {"id": "ESC-21", "rule": "DEF-14", "actor": "USR-PST-01", "action": "consultar", "params": {"application": "APP-S1-001"}, "expected": "denegado"},
+    {"id": "ESC-22", "rule": "R-08", "actor": "USR-S1-RRHH", "action": "registrar", "params": {"application": "APP-S1-003", "type": "certificado", "source": "documento_presentado", "description": "[SINTÉTICO] Registro tardío."}, "expected": "denegado"},
+    {"id": "ESC-23", "rule": "R-05", "actor": "USR-S1-RRHH", "action": "registrar", "params": {"application": "APP-S1-002", "type": "certificado", "source": "documento_presentado", "description": "[SINTÉTICO] Con un campo de juicio.", "candidate_score": 18}, "expected": "denegado"},
+    {"id": "ESC-24", "rule": "R-09", "actor": "USR-S1-RRHH", "action": "registrar", "params": {"application": "APP-S1-002", "type": "certificado", "source": "documento_presentado", "description": "Texto sin marcador sintético."}, "expected": "denegado"},
+    {"id": "ESC-25", "rule": "R-09", "actor": "USR-S1-RRHH", "action": "registrar", "params": {"application": "APP-S1-002", "type": "certificado", "source": "url_externa", "description": "[SINTÉTICO] Fuente no admitida."}, "expected": "denegado"},
+    {"id": "ESC-26", "rule": "R-04", "setup": [{"actor": "USR-S1-RRHH", "action": "revisar", "params": {"evidence": "EVD-S1-0001"}}], "actor": "USR-S1-RRHH", "action": "revisar", "params": {"evidence": "EVD-S1-0001"}, "expected": "denegado"},
+    {"id": "ESC-27", "rule": "R-04", "setup": [{"actor": "USR-S1-EVA-A", "action": "corregir", "params": {"evidence": "EVD-S1-0002", "source": "sesion_asignada", "description": "[SINTÉTICO] Versión corregida."}}], "actor": "USR-S1-RRHH", "action": "enlazar", "params": {"evidence": "EVD-S1-0002", "criterion": "CRI-S1-01-PLAN"}, "expected": "denegado"},
+    {"id": "ESC-28", "rule": "R-04", "actor": "USR-S1-RRHH", "action": "retirar", "params": {"evidence": "EVD-S1-0001"}, "expected": "denegado"},
+    {"id": "ESC-29", "rule": "cierre", "actor": "USR-DESCONOCIDO", "action": "consultar", "params": {"application": "APP-S1-001"}, "expected": "denegado"},
+    {"id": "ESC-30", "rule": "cierre", "actor": "USR-S1-RRHH", "action": "consultar", "params": {"application": "APP-S9-999"}, "expected": "denegado"},
+    {"id": "ESC-31", "rule": "R-03", "actor": "USR-S1-RRHH", "action": "desenlazar", "params": {"evidence": "EVD-S1-0001", "criterion": "CRI-S1-01-PLAN"}, "expected": "denegado"},
+    {"id": "ESC-32", "rule": "R-02", "actor": "USR-S1-EVA-A", "action": "enlazar", "params": {"evidence": "EVD-S1-0003", "criterion": "CRI-S1-01-PLAN"}, "expected": "denegado"},
+    {"id": "ESC-33", "rule": "R-01", "actor": "USR-S2-EVA", "action": "enlazar", "params": {"evidence": "EVD-S2-0004", "criterion": "CRI-S2-01-ADM"}, "expected": "permitido"},
+    {"id": "ESC-34", "rule": "R-05", "actor": "USR-S1-RRHH", "action": "registrar", "params": {"application": "APP-S1-002", "type": "certificado", "source": "documento_presentado", "description": "[SINTÉTICO] Con un campo de juicio en camelCase.", "candidateScore": "x"}, "expected": "denegado"},
+    {"id": "ESC-35", "rule": "R-09", "actor": "USR-S1-EVA-A", "action": "registrar", "params": {"application": "APP-S1-001", "type": "observacion", "source": "documento_presentado", "description": "[SINTÉTICO] Observación con una fuente que no le corresponde."}, "expected": "denegado"},
+    {"id": "ESC-36", "rule": "R-09", "actor": "USR-S1-RRHH", "action": "registrar", "params": {"application": "APP-S1-002", "type": "cv", "source": "sesion_asignada", "description": "[SINTÉTICO] CV ficticio con una fuente que no le corresponde."}, "expected": "denegado"},
+    {"id": "ESC-37", "rule": "R-09", "actor": "USR-S1-RRHH", "action": "registrar", "params": {"application": "APP-S1-002", "type": "transcripcion_revisada", "source": "sesion_asignada", "description": "[SINTÉTICO] Transcripción ficticia revisada de una sesión."}, "expected": "permitido"},
+    {"id": "ESC-38", "rule": "matriz", "actor": "USR-S1-RRHH", "action": "corregir", "params": {"evidence": "EVD-S1-0002", "source": "sesion_asignada", "description": "[SINTÉTICO] RR. HH. intenta reescribir la observación de un evaluador."}, "expected": "denegado"}
+  ]
+}

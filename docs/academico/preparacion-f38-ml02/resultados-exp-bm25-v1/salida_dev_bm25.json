@@ -1,0 +1,54 @@
+{
+    "set_id": "ml02-conjunto-sintetico-v1",
+    "method_id": "EXP-BM25-LEXICO-v1",
+    "outputs": {
+        "EI-07": [
+            {
+                "query": "Q-01",
+                "fragments": [
+                    "FRG-002"
+                ]
+            },
+            {
+                "query": "Q-02",
+                "fragments": [
+                    "FRG-004"
+                ]
+            },
+            {
+                "query": "Q-03",
+                "fragments": []
+            }
+        ],
+        "EI-09": [
+            {
+                "application": "APP-ML-001",
+                "criterion": "CRI-01-CLASE",
+                "fragment_refs": [
+                    "FRG-004"
+                ],
+                "abstained": false
+            },
+            {
+                "application": "APP-ML-001",
+                "criterion": "CRI-01-PLAN",
+                "fragment_refs": [
+                    "FRG-002"
+                ],
+                "abstained": false
+            },
+            {
+                "application": "APP-ML-002",
+                "criterion": "CRI-01-CLASE",
+                "fragment_refs": [],
+                "abstained": true
+            },
+            {
+                "application": "APP-ML-002",
+                "criterion": "CRI-01-PLAN",
+                "fragment_refs": [],
+                "abstained": true
+            }
+        ]
+    }
+}

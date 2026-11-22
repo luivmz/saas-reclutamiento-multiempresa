@@ -37,6 +37,14 @@ enum AuditAction: string
     case CandidateSelected = 'seleccion.candidato_registrado';
     case ProcessResultNotified = 'proceso.resultado_notificado';
 
+    // EXPERIMENTAL (exp/evidencias-ml02, F37 flow). Metadata carry identifiers only, never the text (R-07).
+    case EvidenceRegistered = 'evidencia.registrada';
+    case EvidenceLinked = 'evidencia.enlazada';
+    case EvidenceUnlinked = 'evidencia.enlace_retirado';
+    case EvidenceReviewed = 'evidencia.revisada';
+    case EvidenceCorrected = 'evidencia.corregida';
+    case EvidenceWithdrawn = 'evidencia.retirada';
+
     public function label(): string
     {
         return match ($this) {
@@ -63,6 +71,12 @@ enum AuditAction: string
             self::SelectionDecisionRecorded => 'Decisión final registrada',
             self::CandidateSelected => 'Selección de candidato registrada',
             self::ProcessResultNotified => 'Resultado final notificado a postulantes',
+            self::EvidenceRegistered => 'Evidencia registrada (experimental)',
+            self::EvidenceLinked => 'Evidencia enlazada a un criterio (experimental)',
+            self::EvidenceUnlinked => 'Enlace de evidencia retirado (experimental)',
+            self::EvidenceReviewed => 'Evidencia revisada (experimental)',
+            self::EvidenceCorrected => 'Evidencia corregida con una versión nueva (experimental)',
+            self::EvidenceWithdrawn => 'Evidencia retirada (experimental)',
         };
     }
 

@@ -23,6 +23,7 @@ import {
 import { StatusBadge } from '@/components/status-badge';
 import { CriteriaTable } from '@/components/vacancies/criteria-table';
 import { OperationalRiskCard } from '@/components/vacancies/operational-risk-card';
+import { ProcessSchedule } from '@/components/vacancies/process-schedule';
 import { WorkflowAlert } from '@/components/workflow-alert';
 import { Button } from '@/components/ui/button';
 import { formatDate, formatDateTime } from '@/lib/format';
@@ -135,6 +136,8 @@ export default function ShowVacancy({ vacancy, validation, can }: Props) {
 
                 <div className="grid min-w-0 gap-6 lg:grid-cols-3">
                     <div className="min-w-0 space-y-6 lg:col-span-2">
+                        <ProcessSchedule vacancy={vacancy} />
+
                         <Section title="Convocatoria">
                             <div className="space-y-6">
                                 <p className="text-sm leading-relaxed whitespace-pre-line">

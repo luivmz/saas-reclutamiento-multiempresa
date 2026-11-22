@@ -1,0 +1,57 @@
+{
+  "set_id": "ml02-conjunto-sintetico-v1",
+  "method_id": "EXP-LINEA-BASE-EXACTA-v1",
+  "partition": "test",
+  "metrics": {
+    "M-01": 0.0,
+    "M-02": {
+      "precision": 0.0,
+      "recall": 0.0
+    },
+    "M-03": {
+      "detection": 0.0,
+      "false_positives": 0
+    },
+    "M-05": {
+      "recall": 0.0,
+      "false_rejections": 0
+    },
+    "M-06": 1.0,
+    "M-07": {
+      "k": 3,
+      "queries": 2,
+      "recall_at_k": 0.0,
+      "precision_at_k": 0.0,
+      "mrr": 0.0,
+      "ndcg_at_k": 0.0,
+      "recall_by_stratum": {
+        "medio": 0.0,
+        "nulo": 0.0
+      },
+      "recall_ci95": {
+        "status": "no informativo",
+        "units": 1
+      }
+    },
+    "M-08": {
+      "correct_abstention": 1.0,
+      "false_abstentions": 2
+    },
+    "M-11": 1.0,
+    "M-12": 0
+  },
+  "violations": [],
+  "valid": true,
+  "acceptance": {
+    "M-01": false,
+    "M-02": false,
+    "M-03": false,
+    "M-04": null,
+    "M-05": false,
+    "M-06": true,
+    "M-08": true,
+    "M-11": true,
+    "M-12": true,
+    "M-07": "sin umbral: se fija en el preregistro (EI-09 es CONDITIONAL)"
+  }
+}

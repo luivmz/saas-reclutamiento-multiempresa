@@ -94,3 +94,52 @@ Pruebas nuevas de la fase: **3**.
 | Regresión | — | `php artisan test` | **233 pruebas: 225 passed, 8 skipped, 0 failed (1045 assertions)** |
 | Build | — | `npm run build`, `npx tsc --noEmit` | OK, 0 errores |
 | Navegador | — | Recorrido visual por rol / flujo integral | **10/10 (49 capturas) / 12/12** |
+
+## Entrega académica (07/11/2026) — datos demo de ML-01 (DEF-18)
+
+Rama local `feature/entrega-academica-demo`, desde `2f6d0e0`. Solo cambia los datos de demostración; el contrato de RF-29 no cambia.
+
+| Defecto | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| DEF-18 | RED | `tests/Feature/Ml/DemoSeederOperationalRiskScenarioTest.php`, antes de cambiar `DemoSeeder` | **2 failed, 1 passed (9 assertions)**: `ModelNotFoundException`, porque no existía ninguna vacante del escenario. La guardia de identificadores de Cypress ya pasaba |
+| DEF-18 | GREEN | Ídem, con el escenario al final de `DemoSeeder` | **3 passed (19 assertions)** |
+| Regresión | — | `php artisan test`, `npm run build`, `npx tsc --noEmit`, Cypress y `pytest` de `ml-service` | Resultados en [`docs/entrega-final/informe-final.md`](entrega-final/informe-final.md) |
+
+## Continuación (08/11/2026) — cronograma del proceso y prototipos de F37 y F38
+
+Rama local `feature/continuacion-f36-f40`, desde `f5003c9`. El cambio de producto es solo de interfaz: no toca el backend, las migraciones ni los contratos de RF-21, RF-23 y RF-29.
+
+| Cambio | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| Cronograma del proceso (`ProcessSchedule`) | RED | `resources/js/components/vacancies/process-schedule.test.tsx`, escrita antes del componente | **1 archivo fallido, 0 pruebas**: `Failed to resolve import "@/components/vacancies/process-schedule"` |
+| Ídem | GREEN | Ídem, con el componente y `toCalendarDate`/`calendarToday` en `lib/format.ts` | **11 passed** |
+| Plazo sin fecha en un proceso cerrado | RED | Dos pruebas nuevas en el mismo archivo, antes del arreglo | **2 failed, 10 passed**: el plazo sin fecha quedaba marcado como hito en curso, también con la vacante cerrada |
+| Ídem | GREEN | Ídem, sin considerar en curso un plazo sin fecha | **12 passed** |
+| Regresión de componentes | — | `npx vp test --run` | **7 archivos, 54 passed** |
+| Tipos y build | — | `npx tsc --noEmit`, `npm run build` | 0 errores; build correcto |
+| Cypress dirigido | — | E2E-20 (12 tests, 5 nuevos del cronograma) y los specs que visitan el detalle de la vacante | Resultados en [`entrega-final/informe-continuacion.md`](entrega-final/informe-continuacion.md) |
+| Prototipo de F37 (fuera del SaaS) | — | `docs/academico/preparacion-f37-evidencias/prototipo/test_f37_flujo_evidencias.py` | **19 passed**. No fue TDD: las pruebas se escribieron junto al prototipo. Se verificaron con 6 ablaciones; las 6 fallan. La sexta sobrevivía al principio y obligó a añadir una prueba |
+| Arnés de F38 (fuera del SaaS) | — | `docs/academico/preparacion-f38-ml02/evaluacion/test_f38_evaluar.py` | **17 passed**, con los valores de la salida degradada calculados a mano antes de ejecutar. 5 ablaciones; las 5 fallan |
+
+### Revisión del candidato `a9fa344` (09/11/2026)
+
+| Cambio | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| Cronograma: plazo no posterior a la publicación y proceso cerrado sin fecha de cierre | RED | Dos pruebas nuevas en `process-schedule.test.tsx`, contra el componente de `a9fa344` | **2 failed, 12 passed**: decía «Sin plazo objetivo» con un plazo registrado y marcaba vencido un proceso cerrado. El arreglo se escribió antes de ejecutarlas; el RED se observó restaurando temporalmente el componente de `a9fa344` |
+| Ídem | GREEN | Ídem, con el arreglo | **14 passed**; regresión de componentes **56 passed** |
+| Prototipo de F37: R-05 en toda escritura y con camelCase; una sola fuente por tipo | RED | Dos pruebas nuevas | **2 failed** de 21 |
+| Ídem | GREEN | Ídem, y 5 escenarios nuevos | **21 passed**; 38/38 escenarios |
+| Arnés de F38: semilla, catálogo de tareas, camelCase, valores numéricos, forma de la salida, particiones y `k` en el sello | RED | Ocho pruebas nuevas | **6 failed, 1 error** de 25. La octava, que fija el sello publicado, pasaba: es una guarda |
+| Ídem | GREEN | Ídem, con el sello nuevo `fb7e7e13…` | **25 passed** |
+
+### Hallazgos MEDIUM de la auditoría de Codex sobre `138ce29` (09/11/2026)
+
+Las pruebas de regresión se escribieron primero y se ejecutaron contra el código de `138ce29` antes de corregirlo.
+
+| Hallazgo | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| CONT-M01 · F37: RR. HH. corregía la observación ajena `EVD-S1-0002` declarando `type='cv'` y `source='documento_presentado'` | RED | `test_rrhh_no_corrige_una_observacion_ajena_aunque_declare_otro_tipo` y `test_el_autor_sigue_corrigiendo_su_observacion` | **1 failed** de 23 (`True is not false : permitido`); la corrección del autor ya pasaba |
+| Ídem | GREEN | Ídem: la corrección se autoriza por el tipo y el autor de la evidencia original, antes de los datos de reemplazo | **23 passed**; 38/38 escenarios. La solicitud se deniega, no se crea ningún registro y `EVD-S1-0002` sigue `registrada` |
+| CONT-M02 · F38: una raíz JSON `[]`, `null`, cadena o número lanzaba `AttributeError` | RED | `test_una_raiz_que_no_es_objeto_se_rechaza_por_el_punto_de_entrada`, por `main` | **1 error**: `AttributeError: 'list' object has no attribute 'get'` |
+| CONT-M03 · F38: `['FRG-004', 'FRG-004', 'FRG-004']` en APP-ML-001 / CRI-01-CLASE pasaba como válida | RED | `test_ids_repetidos_en_una_lista_de_recuperacion_invalidan` y `test_las_metricas_de_recuperacion_validas_quedan_en_cero_uno` | **1 failed** (`True is not false`). Medido antes de corregir: `valid = true`, Recall@3 = 1,667 y nDCG@3 = 1,377 en `dev` |
+| CONT-M02 y CONT-M03 | GREEN | Ídem: la raíz se valida antes de `.get()` y una lista de recuperación con IDs repetidos se rechaza antes de calcular métricas | **28 passed**. Sello, semilla, `k` y conjunto sin cambios (`fb7e7e13…`) |

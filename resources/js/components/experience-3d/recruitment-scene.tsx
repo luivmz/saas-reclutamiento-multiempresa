@@ -2,35 +2,66 @@ import { useEffect, useRef, useState } from 'react';
 import { SheetFace, STAGE_SHEETS } from './recruitment-scene-poster';
 
 /**
- * El archivo detrás del expediente, en profundidad.
+ * Vacante, evidencias y decisión humana, en profundidad.
  *
- * La portada muestra un expediente. Detrás, las hojas de otros expedientes se
- * alejan en perspectiva, cada una con el tono de su etapa: el que se ve es uno
- * entre muchos, guardado y trazable. Es lo único que el diseño plano sugería
- * sin poder hacerlo espacial.
+ * Detrás del expediente de la portada, las tres hojas del recorrido flotan a
+ * distintas distancias: la ficha de la vacante al fondo, el legajo de
+ * evidencias en medio y la hoja de firma cerca del expediente. Al mover el
+ * cursor, la escena gira apenas y cada hoja se desplaza según su profundidad
+ * (paralaje), como si se mirara una mesa de trabajo desde otro ángulo.
  *
- * Tres decisiones sostienen el presupuesto:
+ * Tres decisiones sostienen el presupuesto (ADR-003):
  *
  * - **CSS 3D, no WebGL.** Perspectiva y capas de DOM compuestas por la GPU:
  *   sin dependencia, sin contexto que perder y sin bucle de render. Un
  *   navegador sin WebGL la muestra igual.
  * - **Movimiento por evento, no por bucle.** Nada se redibuja mientras nadie
- *   mueve el puntero, así que no hay nada que pausar al ocultar la pestaña o
- *   salir del viewport. La escucha del puntero, además, solo existe mientras
- *   la escena está a la vista y solo con punteros finos.
- * - **Transforms directos sobre el elemento.** Nada de variables CSS en el
- *   padre ni estado de React por cada movimiento: un solo `transform` en el
- *   grupo, a lo sumo una vez por cuadro.
+ *   mueve el puntero. La escucha solo existe mientras la escena está a la vista
+ *   y solo con punteros finos: en pantallas táctiles queda en reposo.
+ * - **Transforms directos sobre los elementos**, a lo sumo una vez por cuadro:
+ *   ni estado de React ni variables CSS por cada movimiento.
  *
- * Todo el archivo es decorativo: vive dentro de una capa `aria-hidden` e
- * `inert`, sin foco ni eventos, y ninguna información existe solo aquí.
+ * Todo es decorativo: vive dentro de una capa `aria-hidden` e `inert`, sin
+ * foco ni eventos, y ninguna información existe solo aquí.
  */
 
-const REST = { x: 8, y: -6 };
-const TILT = { x: 3, y: 5 };
+const REST = { x: 6, y: -9 };
+const TILT = { x: 4, y: 7 };
+
+/** Dónde reposa cada hoja respecto del expediente, y cuánto la mueve el cursor. */
+const PLACEMENT = {
+    vacancy: {
+        x: -44,
+        y: -128,
+        z: -170,
+        rotate: -3,
+        parallax: 18,
+        shade: 0.85,
+    },
+    evidence: {
+        x: 80,
+        y: -60,
+        z: -100,
+        rotate: 2.5,
+        parallax: 12,
+        shade: 0.92,
+    },
+    decision: { x: 52, y: 70, z: -40, rotate: -1.5, parallax: 7, shade: 0.97 },
+} as const;
 
 function groupTransform(pointerX = 0, pointerY = 0): string {
     return `rotateX(${REST.x - pointerY * TILT.x}deg) rotateY(${REST.y + pointerX * TILT.y}deg)`;
+}
+
+function sheetTransform(
+    stage: keyof typeof PLACEMENT,
+    pointerX = 0,
+    pointerY = 0,
+): string {
+    const p = PLACEMENT[stage];
+
+    // Las hojas lejanas se desplazan más en sentido contrario al cursor.
+    return `translate3d(${p.x - pointerX * p.parallax}px, ${p.y - pointerY * p.parallax}px, ${p.z}px) rotateZ(${p.rotate}deg)`;
 }
 
 function clamp(value: number): number {
@@ -40,10 +71,11 @@ function clamp(value: number): number {
 export default function RecruitmentScene() {
     const rootRef = useRef<HTMLDivElement>(null);
     const groupRef = useRef<HTMLDivElement>(null);
+    const sheetRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [ready, setReady] = useState(false);
 
-    // La única entrada: al primer cuadro tras montar, las hojas se abren en
-    // abanico desde detrás del expediente. Son transiciones, no keyframes, de
+    // La única entrada: al primer cuadro tras montar, las hojas se abren desde
+    // detrás del expediente hacia su sitio. Son transiciones, no keyframes, de
     // modo que se pueden interrumpir.
     useEffect(() => {
         const frame = requestAnimationFrame(() => setReady(true));
@@ -55,12 +87,10 @@ export default function RecruitmentScene() {
         const root = rootRef.current;
         const group = groupRef.current;
 
-        if (!root || !group) {
+        if (!root || !group || !ready) {
             return;
         }
 
-        // En pantallas táctiles el «hover» es un toque en falso: sin punteros
-        // finos, la escena queda quieta en su orientación de reposo.
         if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
             return;
         }
@@ -72,6 +102,21 @@ export default function RecruitmentScene() {
         const apply = () => {
             frame = 0;
             group.style.transform = groupTransform(pointer?.x, pointer?.y);
+            STAGE_SHEETS.forEach((sheet, index) => {
+                const element = sheetRefs.current[index];
+
+                if (element) {
+                    // Tras la entrada, el cursor responde sin el retardo
+                    // escalonado de la apertura.
+                    element.style.transition =
+                        'transform 400ms var(--ease-out), opacity 450ms var(--ease-out)';
+                    element.style.transform = sheetTransform(
+                        sheet.stage,
+                        pointer?.x,
+                        pointer?.y,
+                    );
+                }
+            });
         };
 
         const schedule = () => {
@@ -105,6 +150,8 @@ export default function RecruitmentScene() {
             }
 
             listening = on;
+            // Observable para las pruebas: si la escena escucha el puntero.
+            root.dataset.pointer = on ? 'listening' : 'idle';
 
             if (on) {
                 window.addEventListener('pointermove', onMove, {
@@ -135,13 +182,13 @@ export default function RecruitmentScene() {
             listen(false);
             cancelAnimationFrame(frame);
         };
-    }, []);
+    }, [ready]);
 
     return (
         <div
             ref={rootRef}
             className="absolute inset-0"
-            style={{ perspective: '1400px', perspectiveOrigin: '50% 0%' }}
+            style={{ perspective: '1200px', perspectiveOrigin: '50% 30%' }}
             data-cy="recruitment-scene"
             data-ready={ready}
         >
@@ -151,31 +198,35 @@ export default function RecruitmentScene() {
                 style={{
                     transformStyle: 'preserve-3d',
                     transform: groupTransform(),
-                    transition: 'transform 300ms var(--ease-out)',
+                    transition: 'transform 400ms var(--ease-out)',
                     willChange: 'transform',
                 }}
             >
                 {STAGE_SHEETS.map((sheet, index) => {
-                    // Del fondo (4) al más cercano al expediente (1).
-                    const depth = STAGE_SHEETS.length - index;
-                    // Se abre primero la hoja más cercana: el abanico nace
-                    // del expediente hacia el fondo.
-                    const delay = (depth - 1) * 40;
+                    const placement = PLACEMENT[sheet.stage];
+                    // Se abre primero la hoja más cercana al expediente.
+                    const delay = (STAGE_SHEETS.length - 1 - index) * 70;
 
                     return (
                         <div
                             key={sheet.stage}
-                            className="bg-card absolute inset-0 rounded-xl border"
+                            data-sheet={sheet.stage}
+                            ref={(element) => {
+                                sheetRefs.current[index] = element;
+                            }}
+                            className="bg-card absolute inset-0 overflow-hidden rounded-xl border shadow-[0_32px_64px_-28px_oklch(0.25_0.04_220/0.45)]"
                             style={{
                                 backfaceVisibility: 'hidden',
-                                opacity: ready ? 1 - depth * 0.14 : 0,
+                                opacity: ready ? placement.shade : 0,
                                 transform: ready
-                                    ? `translate3d(0, ${-depth * 15}px, ${-depth * 48}px)`
-                                    : 'translate3d(0, 0, 0)',
-                                transition: `transform 480ms var(--ease-out) ${delay}ms, opacity 320ms var(--ease-out) ${delay}ms`,
+                                    ? sheetTransform(sheet.stage)
+                                    : 'translate3d(0, 0, -20px)',
+                                transition: ready
+                                    ? `transform 700ms var(--ease-out) ${delay}ms, opacity 450ms var(--ease-out) ${delay}ms`
+                                    : undefined,
                             }}
                         >
-                            <SheetFace edge={sheet.edge} />
+                            <SheetFace edge={sheet.edge} kind={sheet.stage} />
                         </div>
                     );
                 })}

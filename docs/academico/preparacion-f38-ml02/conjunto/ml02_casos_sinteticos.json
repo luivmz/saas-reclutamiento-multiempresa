@@ -1,0 +1,101 @@
+{
+  "set_id": "ml02-conjunto-sintetico-v1",
+  "status": "PREPARACION - SIN METODO, SIN ENTRENAMIENTO, SIN EJECUCION SOBRE EVIDENCIA",
+  "note": "[SINTÉTICO] Conjunto pequeño, escrito a mano, para fijar el formato, los resultados esperados y las métricas de las ayudas documentales. No es un corpus y no sirve para estimar el rendimiento de un método.",
+  "partitions": {"dev": ["VAC-ML-01"], "test": ["VAC-ML-02"]},
+  "test_seal_sha256": "fb7e7e13f664f93ca9e6fb7cf824a097469034d6096659e980e928d4df3eee72",
+  "vacancies": [
+    {"token": "VAC-ML-01", "requirements": ["REQ-01-TIT", "REQ-01-EXP", "REQ-01-CERT"],
+     "criteria": [{"id": "CRI-01-PLAN", "version": 2, "text": "[SINTÉTICO] Planificación de la enseñanza"},
+                  {"id": "CRI-01-CLASE", "version": 1, "text": "[SINTÉTICO] Conducción de la clase"}]},
+    {"token": "VAC-ML-02", "requirements": ["REQ-02-TIT", "REQ-02-EXP"],
+     "criteria": [{"id": "CRI-02-DOC", "version": 1, "text": "[SINTÉTICO] Gestión documental"},
+                  {"id": "CRI-02-ATN", "version": 1, "text": "[SINTÉTICO] Atención a familias"}]}
+  ],
+  "applications": [
+    {"token": "APP-ML-001", "vacancy": "VAC-ML-01"},
+    {"token": "APP-ML-002", "vacancy": "VAC-ML-01"},
+    {"token": "APP-ML-003", "vacancy": "VAC-ML-02"},
+    {"token": "APP-ML-004", "vacancy": "VAC-ML-02"}
+  ],
+  "fragments": [
+    {"id": "FRG-001", "application": "APP-ML-001", "type": "cv", "text": "[SINTÉTICO] Licenciatura ficticia en Educación Secundaria."},
+    {"id": "FRG-002", "application": "APP-ML-001", "type": "cv", "text": "[SINTÉTICO] Elaboró la planificación anual y las unidades didácticas del área."},
+    {"id": "FRG-003", "application": "APP-ML-001", "type": "observacion", "text": "[SINTÉTICO] Organizó la secuencia de actividades con metas por sesión."},
+    {"id": "FRG-004", "application": "APP-ML-001", "type": "observacion", "text": "[SINTÉTICO] Inició la clase modelo presentando los objetivos."},
+    {"id": "FRG-005", "application": "APP-ML-002", "type": "cv", "text": "[SINTÉTICO] Tres años ficticios de experiencia docente en secundaria."},
+    {"id": "FRG-006", "application": "APP-ML-002", "type": "certificado", "text": "[SINTÉTICO] Constancia ficticia de un taller de evaluación formativa."},
+    {"id": "FRG-007", "application": "APP-ML-002", "type": "observacion", "text": "[SINTÉTICO] Respondió las preguntas del grupo con ejemplos cotidianos."},
+    {"id": "FRG-008", "application": "APP-ML-003", "type": "cv", "text": "[SINTÉTICO] Técnico ficticio en secretariado ejecutivo."},
+    {"id": "FRG-009", "application": "APP-ML-003", "type": "cv", "text": "[SINTÉTICO] Ordenó y digitalizó el archivo de matrículas del colegio."},
+    {"id": "FRG-010", "application": "APP-ML-003", "type": "observacion", "text": "[SINTÉTICO] Explicó con calma un trámite a un apoderado ficticio."},
+    {"id": "FRG-011", "application": "APP-ML-004", "type": "cv", "text": "[SINTÉTICO] Dos años ficticios como auxiliar administrativo."},
+    {"id": "FRG-012", "application": "APP-ML-004", "type": "certificado", "text": "[SINTÉTICO] Constancia ficticia de un curso de ofimática."}
+  ],
+  "tasks": {
+    "EI-01": {"metric": "M-01", "cases": [
+      {"fragment": "FRG-002", "declared": {"type": "cv", "criterion": "CRI-01-PLAN", "source": "documento_presentado"}, "expected_group": "cv|CRI-01-PLAN|documento_presentado"},
+      {"fragment": "FRG-004", "declared": {"type": "observacion", "criterion": "CRI-01-CLASE", "source": "sesion_asignada"}, "expected_group": "observacion|CRI-01-CLASE|sesion_asignada"},
+      {"fragment": "FRG-006", "declared": {"type": "certificado", "criterion": "CRI-01-PLAN", "source": "documento_presentado"}, "expected_group": "certificado|CRI-01-PLAN|documento_presentado"},
+      {"fragment": "FRG-009", "declared": {"type": "cv", "criterion": "CRI-02-DOC", "source": "documento_presentado"}, "expected_group": "cv|CRI-02-DOC|documento_presentado"},
+      {"fragment": "FRG-010", "declared": {"type": "observacion", "criterion": "CRI-02-ATN", "source": "sesion_asignada"}, "expected_group": "observacion|CRI-02-ATN|sesion_asignada"}
+    ]},
+    "EI-02": {"metric": "M-02",
+      "declared_evidence": [
+        {"application": "APP-ML-001", "requirement": "REQ-01-TIT"},
+        {"application": "APP-ML-001", "requirement": "REQ-01-EXP"},
+        {"application": "APP-ML-002", "requirement": "REQ-01-EXP"},
+        {"application": "APP-ML-002", "requirement": "REQ-01-CERT"},
+        {"application": "APP-ML-003", "requirement": "REQ-02-TIT"},
+        {"application": "APP-ML-004", "requirement": "REQ-02-EXP"}
+      ],
+      "expected_alerts": [
+        {"application": "APP-ML-001", "requirement": "REQ-01-CERT"},
+        {"application": "APP-ML-002", "requirement": "REQ-01-TIT"},
+        {"application": "APP-ML-003", "requirement": "REQ-02-EXP"},
+        {"application": "APP-ML-004", "requirement": "REQ-02-TIT"}
+      ]},
+    "EI-03": {"metric": "M-03",
+      "links": [
+        {"id": "LNK-01", "application": "APP-ML-001", "fragment": "FRG-002", "criterion": "CRI-01-PLAN", "criteria_version": 2},
+        {"id": "LNK-02", "application": "APP-ML-001", "fragment": "FRG-004", "criterion": "CRI-01-CLASE", "criteria_version": 1},
+        {"id": "LNK-03", "application": "APP-ML-002", "fragment": "FRG-099", "criterion": "CRI-01-PLAN", "criteria_version": 2},
+        {"id": "LNK-04", "application": "APP-ML-002", "fragment": "FRG-006", "criterion": "CRI-01-PLAN", "criteria_version": 1},
+        {"id": "LNK-05", "application": "APP-ML-003", "fragment": "FRG-009", "criterion": "CRI-02-DOC", "criteria_version": 1},
+        {"id": "LNK-06", "application": "APP-ML-004", "fragment": "FRG-010", "criterion": "CRI-02-ATN", "criteria_version": 1}
+      ],
+      "expected_broken": ["LNK-03", "LNK-04", "LNK-06"],
+      "seeded_faults": {"LNK-03": "la cita no existe", "LNK-04": "versión del criterio cambiada", "LNK-06": "fragmento de otra postulación"}},
+    "EI-04": {"metric": "M-04", "vacancy": "VAC-ML-01",
+      "permutations": {"P-1": ["APP-ML-001", "APP-ML-002"], "P-2": ["APP-ML-002", "APP-ML-001"]},
+      "expected_order": ["APP-ML-001", "APP-ML-002"]},
+    "EI-05": {"metric": "M-05", "cases": [
+      {"id": "PII-01", "vacancy": "VAC-ML-01", "kind": "correo", "text": "[SINTÉTICO] Contacto: persona.ficticia@ejemplo.test", "expected": "rechazo"},
+      {"id": "PII-02", "vacancy": "VAC-ML-01", "kind": "telefono", "text": "[SINTÉTICO] Teléfono 900000000 de prueba.", "expected": "rechazo"},
+      {"id": "PII-03", "vacancy": "VAC-ML-02", "kind": "dni", "text": "[SINTÉTICO] Documento 00000000 de prueba.", "expected": "rechazo"},
+      {"id": "PII-04", "vacancy": "VAC-ML-02", "kind": "url", "text": "[SINTÉTICO] Perfil en https://ejemplo.test/perfil-ficticio", "expected": "rechazo"},
+      {"id": "PII-05", "vacancy": "VAC-ML-01", "kind": "ninguno", "text": "[SINTÉTICO] Experiencia en planificación por unidades.", "expected": "admision"},
+      {"id": "PII-06", "vacancy": "VAC-ML-02", "kind": "ninguno", "text": "[SINTÉTICO] Curso de ofimática de 40 horas.", "expected": "admision"}
+    ]},
+    "EI-07": {"metric": "M-06", "queries": [
+      {"id": "Q-01", "application": "APP-ML-001", "mode": "token_normalizado", "query": "PLANIFICACIÓN", "expected_fragments": ["FRG-002"]},
+      {"id": "Q-02", "application": "APP-ML-001", "mode": "subcadena", "query": "clase modelo", "expected_fragments": ["FRG-004"]},
+      {"id": "Q-03", "application": "APP-ML-002", "mode": "token_normalizado", "query": "planificación", "expected_fragments": []},
+      {"id": "Q-04", "application": "APP-ML-003", "mode": "subcadena", "query": "archivo", "expected_fragments": ["FRG-009"]}
+    ]},
+    "EI-09": {"metric": "M-07 y M-08", "status": "CONDITIONAL: solo especificado; F36-M02 pendiente", "k": 3,
+      "annotations": [
+        {"application": "APP-ML-001", "criterion": "CRI-01-PLAN", "fragment": "FRG-002", "relevance": "relevante", "stratum": "alto"},
+        {"application": "APP-ML-001", "criterion": "CRI-01-PLAN", "fragment": "FRG-003", "relevance": "relevante", "stratum": "nulo"},
+        {"application": "APP-ML-001", "criterion": "CRI-01-PLAN", "fragment": "FRG-004", "relevance": "no_relevante", "stratum": "medio"},
+        {"application": "APP-ML-001", "criterion": "CRI-01-CLASE", "fragment": "FRG-004", "relevance": "relevante", "stratum": "alto"},
+        {"application": "APP-ML-002", "criterion": "CRI-01-CLASE", "fragment": "FRG-007", "relevance": "relevante", "stratum": "medio"},
+        {"application": "APP-ML-003", "criterion": "CRI-02-DOC", "fragment": "FRG-009", "relevance": "relevante", "stratum": "nulo"},
+        {"application": "APP-ML-003", "criterion": "CRI-02-ATN", "fragment": "FRG-010", "relevance": "relevante", "stratum": "medio"}
+      ],
+      "no_evidence_cases": [
+        {"application": "APP-ML-002", "criterion": "CRI-01-PLAN"},
+        {"application": "APP-ML-004", "criterion": "CRI-02-ATN"}
+      ]}
+  }
+}
