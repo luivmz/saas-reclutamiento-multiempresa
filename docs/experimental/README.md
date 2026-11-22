@@ -7,6 +7,8 @@
 > - **Bandera.** Todo responde 404 salvo con `EXPERIMENTAL_EVIDENCIAS=true` (`config/experimental.php`).
 > - **Publicación.** Sin push, merge, tag ni release.
 
+> **Nota del 22/11/2026.** El candidato `bb86991` de `design/f37-visual`, que contiene esta rama, se integró en `main` como base de presentación. La integración fue técnica, autorizada por el responsable del repositorio. La bandera sigue desactivada por omisión y ningún estado formal cambia. El arranque desde `main` está en [`docs/presentacion/README.md`](../presentacion/README.md). Lo que esta guía dice de «rama local» y de «sin push ni merge» describe el estado anterior a esa integración, y se conserva tal cual.
+
 ## 1. Qué hace
 
 | Capacidad | Dónde | Avance técnico | Estado formal |

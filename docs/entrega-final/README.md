@@ -2,6 +2,8 @@
 
 > Rama local `feature/entrega-academica-demo`, del 07/11/2026, creada desde `2f6d0e0`. Contiene `develop` `9dd76c4` con SEG-01 a SEG-04, el RR-001 y los borradores de D-10 y D-11. **Entrega local:** sin push, merge, tag ni release.
 
+> **Nota del 22/11/2026.** Esta entrega se integró en `main`, junto con el flujo experimental F37 y el incremento visual, como base de presentación. El arranque vigente está en [`docs/presentacion/README.md`](../presentacion/README.md). La ruta `entregaacad` de este documento sigue siendo válida como proyecto Docker aislado. Ningún estado formal cambia.
+
 | Material | Archivo |
 |---|---|
 | Informe final: estado real, pruebas y clasificación de cada parte | [`informe-final.md`](informe-final.md) |
