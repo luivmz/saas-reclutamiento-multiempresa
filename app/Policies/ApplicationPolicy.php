@@ -23,6 +23,15 @@ class ApplicationPolicy
         return $user->hasRole(UserRole::HumanResources, UserRole::Approver) && $user->sharesOrganizationWith($application);
     }
 
+    /**
+     * RF-12 internal file (stage history, scores, observations and interview outcomes): HR and Direction of the
+     * vacancy's organization only. The candidate follows their own application through `view` (A-21, SEG-01).
+     */
+    public function viewFile(User $user, Application $application): bool
+    {
+        return $user->hasRole(UserRole::HumanResources, UserRole::Approver) && $user->sharesOrganizationWith($application);
+    }
+
     public function apply(User $user): bool
     {
         return $user->isCandidate();

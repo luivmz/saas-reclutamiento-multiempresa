@@ -23,6 +23,7 @@ use App\Services\Selection\SelectionRegistrationService;
 use App\Services\Selection\VacancyClosureService;
 use App\Services\Vacancies\VacancyService;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 /**
  * Fictitious demo data built through the real domain services (states, history, audit and notifications
@@ -118,6 +119,51 @@ class DemoSeeder extends Seeder
         // Organización Demo B (aislamiento multiempresa).
         $assistant = $this->vacancy($hrB, $this->approvedRequest($requesterB, $hrB, $approverB, 'Asistente Administrativo', 'Administración'), 'Asistente Administrativo (Demo B)');
         $this->applications->apply($p2, $assistant);
+
+        // RF-29 (experimental, ML-01): it must stay last so that the identifiers above, pinned by
+        // cypress/fixtures/demo.json, do not change.
+        $this->operationalRiskScenario($requester, $hr, $approver, [$p1, $p3, $p6]);
+    }
+
+    /**
+     * RF-29 (ML-01, experimental): a fictitious process replayed in the past so the operational risk card
+     * has something to estimate. Without it every demo vacancy was still receiving applications and none
+     * had a target date, so with ML_SERVICE_ENABLED=true the card could only show its descriptive mode.
+     *
+     * The clock is moved back only while the process is built, through the same domain services, so its
+     * history (publication, applications, stage changes, audit and notifications) is internally consistent:
+     * published 30 days ago, applications closed 10 days ago, still open, with a target 30 days ahead. The
+     * estimate is about the process, never about the applicants, and no evaluation is assigned to anyone.
+     *
+     * @param  list<User>  $candidates
+     */
+    private function operationalRiskScenario(User $requester, User $hr, User $approver, array $candidates): Vacancy
+    {
+        $realNow = Carbon::now();
+        $start = $realNow->copy()->subDays(30);
+
+        try {
+            Carbon::setTestNow($start);
+            $vacancy = $this->vacancy(
+                $hr,
+                $this->approvedRequest($requester, $hr, $approver, 'Docente de Ciencia y Tecnología', 'Coordinación Académica'),
+                'Docente de Ciencia y Tecnología - Secundaria',
+                targetCompletionAt: $start->copy()->addDays(60)->toDateString(),
+            );
+
+            foreach ($candidates as $offset => $candidate) {
+                Carbon::setTestNow($start->copy()->addDays(3 + 4 * $offset));
+                $application = $this->applications->apply($candidate, $vacancy);
+                if ($offset === 0) {
+                    Carbon::setTestNow($start->copy()->addDays(16));
+                    $this->stages->shortlist($application, $hr, 'Revisión documental conforme (demo).');
+                }
+            }
+        } finally {
+            Carbon::setTestNow();
+        }
+
+        return $vacancy;
     }
 
     private function staff(Organization $organization, UserRole $role, string $name, string $email): User
@@ -171,7 +217,7 @@ class DemoSeeder extends Seeder
         return $this->requests->approve($jobRequest, $approver, 'Conforme (demo).');
     }
 
-    private function vacancy(User $hr, JobRequest $jobRequest, string $title, bool $publish = true): Vacancy
+    private function vacancy(User $hr, JobRequest $jobRequest, string $title, bool $publish = true, ?string $targetCompletionAt = null): Vacancy
     {
         $vacancy = $this->vacancies->create(
             $hr,
@@ -184,6 +230,7 @@ class DemoSeeder extends Seeder
                 'positions' => 1,
                 'opens_at' => now()->toDateString(),
                 'closes_at' => now()->addDays(20)->toDateString(),
+                'target_completion_at' => $targetCompletionAt,
             ],
             [
                 'education' => 'Título profesional en Educación o afín',

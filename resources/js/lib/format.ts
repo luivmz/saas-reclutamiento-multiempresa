@@ -58,6 +58,28 @@ export function formatDateTime(value?: string | null): string {
     return value ? dateTimeFormatter.format(new Date(isCalendarDate(value) ? `${value}T00:00:00Z` : value)) : '—';
 }
 
+// ISO calendar date (YYYY-MM-DD) in the application timezone; `en-CA` formats exactly that way.
+const isoCalendarFormatter = new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    timeZone,
+});
+
+/**
+ * The calendar day of a date or a timestamp, as the application timezone sees it. Calendar dates pass through
+ * unchanged, so a deadline stored as a date never moves a day.
+ */
+export function toCalendarDate(value: string): string {
+    return isCalendarDate(value)
+        ? value
+        : isoCalendarFormatter.format(new Date(value));
+}
+
+export function calendarToday(now: Date = new Date()): string {
+    return isoCalendarFormatter.format(now);
+}
+
 export function formatFileSize(bytes: number): string {
     if (bytes < 1024) {
         return `${bytes} B`;

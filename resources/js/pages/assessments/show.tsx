@@ -1,8 +1,9 @@
-import { Form, Head } from '@inertiajs/react';
-import { FileText, Lock } from 'lucide-react';
+import { Form, Head, Link } from '@inertiajs/react';
+import { FileStack, FileText, Lock } from 'lucide-react';
 import AssessmentAssignmentController from '@/actions/App/Http/Controllers/Assessments/AssessmentAssignmentController';
 import EvaluationController from '@/actions/App/Http/Controllers/Assessments/EvaluationController';
 import InterviewController from '@/actions/App/Http/Controllers/Assessments/InterviewController';
+import ApplicationEvidenceController from '@/actions/App/Http/Controllers/Evidence/ApplicationEvidenceController';
 import { FormField, NativeSelect } from '@/components/form-controls';
 import InputError from '@/components/input-error';
 import {
@@ -43,7 +44,7 @@ type Props = {
     }[];
     results: { criterion_id: number; score: number; comment: string | null }[];
     outcomes: Presented[];
-    can: { record: boolean };
+    can: { record: boolean; viewEvidence: boolean };
 };
 
 export default function AssessmentSession({
@@ -74,6 +75,21 @@ export default function AssessmentSession({
                     }
                     title={`${session.title}: ${application.candidate.name}`}
                     description={`Vacante ${application.vacancy.title} (${application.vacancy.code}). Postulación ${application.code}.`}
+                    actions={
+                        can.viewEvidence && (
+                            <Button variant="outline" asChild>
+                                <Link
+                                    href={ApplicationEvidenceController.index(
+                                        application.id,
+                                    )}
+                                    data-cy="open-evidence"
+                                >
+                                    <FileStack aria-hidden="true" />
+                                    Evidencias (experimental)
+                                </Link>
+                            </Button>
+                        )
+                    }
                 />
 
                 <WorkflowAlert />

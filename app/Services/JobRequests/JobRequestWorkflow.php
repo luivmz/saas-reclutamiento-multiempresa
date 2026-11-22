@@ -137,11 +137,12 @@ class JobRequestWorkflow
             $locked->save();
 
             $this->recordHistory($locked, $from, $target, $actor, $comment);
-            $this->audit->record($action, $locked, array_filter([
+            // SEG-04 (A-38): the comment stays in the request and its status history; the audit event keeps only the
+            // states (docs/v1.1/security/SEG-04-minimizacion-metadatos-auditoria.md).
+            $this->audit->record($action, $locked, [
                 'from' => $from->value,
                 'to' => $target->value,
-                'comment' => $comment,
-            ]), $actor);
+            ], $actor);
 
             return $locked;
         });

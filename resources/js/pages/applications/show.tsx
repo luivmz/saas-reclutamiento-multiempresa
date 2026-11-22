@@ -1,7 +1,8 @@
 import { Form, Head, Link } from '@inertiajs/react';
-import { CheckCircle2, FileText, Lock, UserX } from 'lucide-react';
+import { CheckCircle2, FileStack, FileText, Lock, UserX } from 'lucide-react';
 import ApplicationStageController from '@/actions/App/Http/Controllers/Applications/ApplicationStageController';
 import VacancyApplicationController from '@/actions/App/Http/Controllers/Applications/VacancyApplicationController';
+import ApplicationEvidenceController from '@/actions/App/Http/Controllers/Evidence/ApplicationEvidenceController';
 import VacancyController from '@/actions/App/Http/Controllers/Vacancies/VacancyController';
 import { FormField, NativeSelect } from '@/components/form-controls';
 import {
@@ -39,6 +40,7 @@ type Props = {
         changeStage: boolean;
         scheduleEvaluation: boolean;
         scheduleInterview: boolean;
+        viewEvidence: boolean;
     };
 };
 
@@ -95,17 +97,32 @@ export default function ApplicationShow({
                         ) : undefined
                     }
                     actions={
-                        application.vacancy && (
-                            <Button variant="outline" asChild>
-                                <Link
-                                    href={VacancyApplicationController(
-                                        application.vacancy.id,
-                                    )}
-                                >
-                                    Volver a postulaciones
-                                </Link>
-                            </Button>
-                        )
+                        <div className="flex flex-wrap gap-2">
+                            {can.viewEvidence && (
+                                <Button asChild>
+                                    <Link
+                                        href={ApplicationEvidenceController.index(
+                                            application.id,
+                                        )}
+                                        data-cy="open-evidence"
+                                    >
+                                        <FileStack aria-hidden="true" />
+                                        Evidencias (experimental)
+                                    </Link>
+                                </Button>
+                            )}
+                            {application.vacancy && (
+                                <Button variant="outline" asChild>
+                                    <Link
+                                        href={VacancyApplicationController(
+                                            application.vacancy.id,
+                                        )}
+                                    >
+                                        Volver a postulaciones
+                                    </Link>
+                                </Button>
+                            )}
+                        </div>
                     }
                 />
 

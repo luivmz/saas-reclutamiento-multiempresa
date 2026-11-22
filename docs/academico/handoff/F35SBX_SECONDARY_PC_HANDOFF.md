@@ -5,6 +5,11 @@
 > - No inicia F36-SBX ni cambia ningún estado de gobierno: ninguna F36-SBX empieza sin una autorización sucesora nueva, con su propia gobernanza.
 > - Todo lo que hace falta está en el repositorio. Ninguna ruta, carpeta temporal ni memoria de sesión de la PC principal forma parte de esta receta.
 
+> **Nota del 22/11/2026.** Esta guía es la fotografía del 25/10/2026 y su comprobación de `HANDOFF_ANCHOR` sigue valiendo para cualquier `main` posterior. Hay dos cosas que ya no describen el estado actual:
+>
+> - **F36-SBX.** La fila «NO iniciada» quedó sustituida el 26/10/2026 por F36-SBX EN DISEÑO, con F36-SBX-GATE NO SUPERADO y F37-SBX BLOQUEADA (ver `CLAUDE.md`).
+> - **Arranque.** El de la base de presentación, con la bandera experimental y los resultados actuales, está en [`docs/presentacion/README.md`](../../presentacion/README.md).
+
 ## 1. Checkpoint de transferencia
 
 | Referencia | Valor |

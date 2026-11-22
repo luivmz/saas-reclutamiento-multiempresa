@@ -222,3 +222,15 @@ Ambas corridas usaron Cypress 15.3.0 y Electron 136 headless, sin reintentos.
 | `e2e-19-qa-visual-accesible.cy.js` | 21 | Regresiones visuales y de accesibilidad de la Fase 21 | 7 |
 
 **Total vigente: 20 specs y 85 tests.** Resultado de la Fase 25 (`npm run cy:run`, Cypress 15.3.0, Electron 136 headless): **85/85, 0 failed, 0 pending, 0 skipped, 5:24**. Antes de ampliar `e2e-16` eran 84 tests (84/84, 5:13). Detalle: [`../v1.1/phase-25-final-qa.md`](../v1.1/phase-25-final-qa.md).
+
+## 10. Entrega académica: E2E-20
+
+*Sección añadida el 07/11/2026, en la rama local `feature/entrega-academica-demo`.*
+
+| Spec | Qué verifica | Tests |
+|---|---|---|
+| `e2e-20-recorrido-demo.cy.js` | El recorrido del [guion de exposición](../entrega-final/guion-demo.md) sobre los datos demo: la portada con roles, límites y la nota de ML-01, con contraste de al menos 4.5:1 en tema claro y oscuro, reflujo a 320 px y un solo `h1`; el panel de riesgo de la vacante del escenario, sin estimación inventada; el ranking con su cálculo; la decisión humana de Dirección con justificación y confirmación; y su registro en la auditoría. Con una respuesta predictiva simulada en el navegador (`cy.intercept`, copiada de la verificación en vivo), comprueba la cifra, la línea del modelo, el umbral y el *freeze*, sin lenguaje sobre personas. Desde la rama de continuación (08/11/2026) comprueba también el **cronograma del proceso** del detalle de la vacante: los cuatro hitos con su estado, un solo hito en curso (`aria-current="step"`), ninguno en una vacante cerrada, las fechas previstas en borrador, contraste de al menos 4.5:1 con el tema claro y el oscuro aplicados de verdad, y el apilado vertical a 320 px sin desbordarse | 12 |
+
+**Total: 21 specs y 92 tests.** Los resultados de la ejecución completa están en el [informe de la entrega](../entrega-final/informe-final.md).
+
+**En la rama de continuación: 21 specs y 97 tests.** Allí no se ejecutó la suite completa: solo E2E-20 y los specs que visitan el detalle de la vacante. Los resultados están en el [informe de la continuación](../entrega-final/informe-continuacion.md).

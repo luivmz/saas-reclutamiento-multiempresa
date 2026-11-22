@@ -54,6 +54,7 @@ No dupliques estos documentos: enlázalos.
 | Modelos PowerDesigner de v1.1 (OOM, PDM y exportaciones) | `docs/v1.1/powerdesigner/` |
 | Divergencias documentales entre v1.0 y v1.1 | `docs/v1.1/documentation-update-map.md` |
 | Candidatos RF-28+, RNF y decisiones pendientes | `docs/v1.1/scope-preliminary.md` |
+| Arranque de la base de presentación, bandera experimental, ML-01 y ML-02 | `docs/presentacion/README.md` · `docs/experimental/README.md` |
 
 ## Comandos habituales
 
@@ -61,7 +62,7 @@ Laravel y el frontend corren en Docker; no hay PHP ni Node locales del proyecto.
 
 ```
 docker compose up -d --wait                                   # levantar
-docker compose exec app php artisan test                      # PHPUnit (v1.0: 244 pruebas; develop: 408 + 8 omitidas; F25: 411 + 8)
+docker compose exec app php artisan test                      # PHPUnit (v1.0: 244 pruebas; develop: 408 + 8 omitidas; F25: 411 + 8; base de presentación: 525 + 8)
 docker compose exec app npm run build                         # compilar frontend
 docker compose exec app npx tsc --noEmit                      # tipos
 docker compose exec app npx vp test --run                     # pruebas de componente (develop)
@@ -99,6 +100,8 @@ Commits F34E: A `0ea5e63bb84db717bcc5f2a94c3c93572d5b863e`; B `c016a75401eb127aa
 **Continuidad tras el cierre de F35-SBX (25/10/2026).** F35-SBX quedó CERRADA, CONGELADA E INTEGRADA, solo en su alcance académico y sintético. El candidato auditado `858b5fa71c01bf794715f78068ea0557fd56a16b` se integró con merges `--no-ff` en `develop` (`e366cbf81f7c6e158ddd848268cf66f1247b4ed8`, CI `tests` run 40221309615 en verde) y en `main` (`06b789f9e9e99268eccfb72a15df2dd30fe47360`, CI `tests` run 40221523362 en verde). Su gate se valida anclado en su rama, `chore/f35-sbx-global-closure`; sobre un HEAD posterior falla por diseño (DG-02). Queda abierta y diferida la deuda LOW GC-AF-L01, no bloqueante, en el [registro de deuda técnica](docs/academico/TECHNICAL_DEBT.md). Para continuar desde otro equipo se usa la [guía de handoff posterior a F35-SBX](docs/academico/handoff/F35SBX_SECONDARY_PC_HANDOFF.md). F36-SBX no está iniciada: ninguna F36-SBX empieza sin una autorización sucesora nueva, con su propia gobernanza.
 
 **F36-SBX en diseño (26/10/2026).** Por instrucción del equipo, F36-SBX se abrió en la rama `feature/f36-sbx-authorization-design`, desde `main` = `b8892af39a6492d8dd44a36290604efc602380cd`, como incremento **separado y solo documental** de autorización, investigación y diseño de la inteligencia sobre evidencia, exclusivamente sintética. Contiene el charter, la matriz ALLOWED/CONDITIONAL/BLOCKED, el contrato de evidencia, el threat model, el plan de evaluación y el gate sucesor F36-SBX-GATE, en [`f36-sbx`](docs/academico/f36-sbx/README.md). No implementa ML, NLP, embeddings, OCR, parsing ni LLM, no añade dependencias y no toca el runtime ni F35-SBX. F36-SBX-GATE = NO SUPERADO y F37-SBX = BLOQUEADA hasta la auditoría independiente y la autorización explícita del equipo. F36-SBX no es la F36 «ML baseline» del mapa F33, que sigue BLOQUEADA junto con F37–F40. Este párrafo sustituye la frase «F36-SBX no está iniciada» del párrafo anterior. El alcance C sigue BLOQUEADO y los datos reales, PROHIBIDOS. Es candidata a auditoría independiente, sin push, merge, tag ni release.
+
+**Base de presentación en `main` (22/11/2026).** Por autorización técnica del responsable del repositorio, `main` incorpora por el flujo `develop` → `main`, con merges `--no-ff`, el candidato aprobado para la demostración experimental F37: `design/f37-visual` = `bb86991e8313b28a3daa19dafcacb57eb10f62d0`, árbol `b5a4004b4c84e82d8311f26738b51a8a95dc1342`, con el dictamen de Codex «APTO PARA DEMOSTRACIÓN EXPERIMENTAL F37, CON OBSERVACIÓN NO BLOQUEANTE» (VIS-L01, LOW, abierta). Se le suma su guía de arranque. Entran SEG-01 a SEG-04 (DEF-14 a DEF-17), la documentación posterior de F36-SBX (Q2, RR-001, borradores D-10 y D-11, especificación S v2.2), el cronograma del proceso, DEF-18 y la portada. Y, **solo con `EXPERIMENTAL_EVIDENCIAS=true`, desactivada por omisión**, el flujo de evidencias F37 y la ayuda documental ML-02 BM25 (Recall@3 de 0,5 en `dev` y 0 en `test`, H2 rechazada, sin entrenamiento). Es funcionalidad experimental disponible, no una fase habilitada: ningún estado formal cambia y la integración formal EI-23 sigue BLOCKED (F36-SBX = EN DISEÑO, F36-SBX-GATE = NO SUPERADO, F37-SBX = BLOQUEADA, F36–F40 = BLOQUEADAS, G0 real = NO APROBADA). La autorización no emite votos de los demás integrantes ni adopta ningún ADR. Arranque, bandera, ML-01 y resultados: [`docs/presentacion/README.md`](docs/presentacion/README.md). Los hashes de los merges se consultan en Git.
 
 ## Antecedentes de estado (hasta F34D)
 

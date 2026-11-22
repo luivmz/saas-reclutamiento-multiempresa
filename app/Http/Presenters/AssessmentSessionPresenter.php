@@ -8,6 +8,7 @@ use App\Enums\InterviewOutcome;
 use App\Models\Evaluation;
 use App\Models\EvaluationCriterion;
 use App\Models\EvaluationResult;
+use App\Models\EvidenceItem;
 use App\Models\Interview;
 use App\Models\InterviewResult;
 use App\Models\User;
@@ -74,6 +75,9 @@ class AssessmentSessionPresenter
                 'record' => $viewer->can('recordResult', $session)
                     && $session->status === AssessmentStatus::Scheduled
                     && ! $application->vacancy->isClosed(),
+                // EXPERIMENTAL (exp/evidencias-ml02): link to the evidence of the assigned application.
+                'viewEvidence' => config('experimental.evidencias') === true
+                    && $viewer->can('viewAny', [EvidenceItem::class, $application]),
             ],
         ];
     }

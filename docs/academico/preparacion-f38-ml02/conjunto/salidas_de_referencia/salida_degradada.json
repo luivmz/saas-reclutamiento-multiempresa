@@ -1,0 +1,31 @@
+{
+  "set_id": "ml02-conjunto-sintetico-v1",
+  "method_id": "MANUAL-REFERENCIA-DEGRADADA",
+  "note_es": "Escrita a mano con errores sembrados para comprobar que el arnés los mide. Solo partición dev.",
+  "outputs": {
+    "EI-01": [
+      {"fragment": "FRG-002", "group": "cv|CRI-01-PLAN|documento_presentado"},
+      {"fragment": "FRG-004", "group": "observacion|CRI-01-PLAN|sesion_asignada"},
+      {"fragment": "FRG-006", "group": "certificado|CRI-01-PLAN|documento_presentado"}
+    ],
+    "EI-02": [
+      {"application": "APP-ML-001", "requirement": "REQ-01-CERT"},
+      {"application": "APP-ML-001", "requirement": "REQ-01-TIT"}
+    ],
+    "EI-03": ["LNK-03", "LNK-02"],
+    "EI-04": {"P-1": ["APP-ML-001", "APP-ML-002"], "P-2": ["APP-ML-002", "APP-ML-001"]},
+    "EI-05": [
+      {"id": "PII-01", "decision": "rechazo"}, {"id": "PII-02", "decision": "admision"},
+      {"id": "PII-05", "decision": "rechazo"}
+    ],
+    "EI-07": [
+      {"query": "Q-01", "fragments": ["FRG-002", "FRG-003"]}, {"query": "Q-02", "fragments": ["FRG-004"]},
+      {"query": "Q-03", "fragments": []}
+    ],
+    "EI-09": [
+      {"application": "APP-ML-001", "criterion": "CRI-01-PLAN", "fragment_refs": ["FRG-004", "FRG-002"], "abstained": false},
+      {"application": "APP-ML-001", "criterion": "CRI-01-CLASE", "fragment_refs": ["FRG-004"], "abstained": false},
+      {"application": "APP-ML-002", "criterion": "CRI-01-PLAN", "fragment_refs": ["FRG-005"], "abstained": false}
+    ]
+  }
+}

@@ -12,6 +12,7 @@ use App\Http\Resources\ApplicationResource;
 use App\Models\Application;
 use App\Models\ApplicationStageHistory;
 use App\Models\Evaluation;
+use App\Models\EvidenceItem;
 use App\Models\Interview;
 use App\Models\User;
 use App\Services\Assessments\AssessmentScheduler;
@@ -27,7 +28,7 @@ class ApplicationController extends Controller
 {
     public function __invoke(Request $request, Application $application, AssessmentSessionPresenter $sessions): Response
     {
-        Gate::authorize('view', $application);
+        Gate::authorize('viewFile', $application);
 
         $application->load([
             'vacancy:id,organization_id,code,title,status',
@@ -75,6 +76,9 @@ class ApplicationController extends Controller
                 'changeStage' => $canChangeStage,
                 'scheduleEvaluation' => $canSchedule && AssessmentScheduler::acceptsEvaluation($status),
                 'scheduleInterview' => $canSchedule && AssessmentScheduler::acceptsInterview($status),
+                // EXPERIMENTAL (exp/evidencias-ml02): link to the fictitious evidence flow, only with the flag on.
+                'viewEvidence' => config('experimental.evidencias') === true
+                    && $user->can('viewAny', [EvidenceItem::class, $application]),
             ],
         ]);
     }

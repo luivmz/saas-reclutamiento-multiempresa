@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototipo ML-02 · Ayudas sobre la evidencia</title>
+<meta name="description" content="Prototipo de diseño estático de ML-02 (F37-SBX, bloqueada): ayudas deterministas EI-01 a EI-07 sobre un expediente sintético. Sin modelo, sin cálculo y sin conexión al SaaS.">
+<style>
+  :root {
+    --bg: #f7f6f2; --card: #ffffff; --ink: #1d1f24; --muted: #4b5160; --line: #d9d7cf;
+    --accent: #1f4f8a; --ok-bg: #e5f3ea; --ok: #1d5c35; --warn-bg: #fdf1dc; --warn: #7a4a00;
+    --bad-bg: #fbe6e6; --bad: #8a1f1f; --mark: #fff2a8; --focus: #b3530c;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #15171c; --card: #1e2128; --ink: #eceef2; --muted: #b9bfcc; --line: #363a45;
+      --accent: #8fb8ee; --ok-bg: #173523; --ok: #a6e3bd; --warn-bg: #3a2c12; --warn: #f5cf8a;
+      --bad-bg: #3d1a1a; --bad: #f4b2b2; --mark: #5a4c00; --focus: #ffb37a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 system-ui, "Segoe UI", Roboto, sans-serif; }
+  a { color: var(--accent); }
+  a:focus-visible, summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .skip { position: absolute; left: -999px; top: 0; background: var(--card); padding: .6rem 1rem; }
+  .skip:focus { left: 1rem; top: 1rem; z-index: 10; }
+  header, main, footer { max-width: 72rem; margin: 0 auto; padding: 0 1rem; }
+  header { padding-top: 1.5rem; }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.6rem, 4vw, 2.3rem); line-height: 1.15; margin: .4rem 0 .6rem; }
+  h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.35rem; margin: 0 0 .3rem; }
+  .lead { color: var(--muted); max-width: 48rem; }
+  .banner { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; padding: 0; list-style: none; }
+  .tag { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: .2rem .7rem; font-size: .85rem; }
+  .tag.block { background: var(--bad-bg); color: var(--bad); border-color: transparent; font-weight: 600; }
+  nav { position: sticky; top: 0; background: var(--bg); border-bottom: 1px solid var(--line); z-index: 5; }
+  nav ol { display: flex; flex-wrap: wrap; gap: .25rem 1rem; max-width: 72rem; margin: 0 auto; padding: .6rem 1rem; list-style: none; font-size: .9rem; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: .8rem; padding: 1.2rem; margin: 1.2rem 0; scroll-margin-top: 4rem; }
+  .ei { font: 600 .8rem ui-monospace, Consolas, monospace; color: var(--muted); }
+  .why { color: var(--muted); font-size: .92rem; margin: .2rem 0 1rem; }
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .93rem; min-width: 34rem; }
+  caption { text-align: left; color: var(--muted); font-size: .85rem; padding-bottom: .4rem; }
+  th, td { border-bottom: 1px solid var(--line); padding: .5rem .55rem; text-align: left; vertical-align: top; }
+  th { font-weight: 600; }
+  code, .mono { font-family: ui-monospace, Consolas, monospace; font-size: .88rem; }
+  .pill { display: inline-block; border-radius: .4rem; padding: .05rem .45rem; font-size: .85rem; font-weight: 600; }
+  .ok { background: var(--ok-bg); color: var(--ok); }
+  .warn { background: var(--warn-bg); color: var(--warn); }
+  .bad { background: var(--bad-bg); color: var(--bad); }
+  .note { border-left: 4px solid var(--accent); padding: .5rem .8rem; background: var(--bg); margin-top: 1rem; font-size: .92rem; }
+  mark { background: var(--mark); color: inherit; padding: 0 .1rem; }
+  .search { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: .8rem; }
+  .search span { border: 1px solid var(--line); border-radius: .4rem; padding: .3rem .6rem; background: var(--bg); }
+  ul.plain { padding-left: 1.2rem; }
+  footer { color: var(--muted); font-size: .88rem; padding-bottom: 2rem; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<header>
+  <p class="ei">F36-SBX · Preparación de F37-SBX y F38-SBX · ML-02</p>
+  <h1>Ayudas sobre la evidencia para quien evalúa — prototipo de diseño</h1>
+  <p class="lead">Cómo se verían las ayudas deterministas EI-01 a EI-07 sobre un expediente <strong>sintético</strong>. Cada resultado de esta página está escrito a mano como ejemplo: no hay modelo, no hay cálculo y nada está conectado al SaaS.</p>
+  <ul class="banner" aria-label="Estado del prototipo">
+    <li class="tag block">F37-SBX BLOQUEADA · gate NO SUPERADO</li>
+    <li class="tag">Datos 100 % sintéticos</li>
+    <li class="tag">Sin modelo ni entrenamiento (EI-22 bloqueado)</li>
+    <li class="tag">La decisión es humana (RF-23)</li>
+  </ul>
+</header>
+<nav aria-label="Pantallas del prototipo">
+  <ol>
+    <li><a href="#expediente">Expediente</a></li>
+    <li><a href="#organizacion">EI-01 · EI-06 Organización</a></li>
+    <li><a href="#alertas">EI-02 Alertas del proceso</a></li>
+    <li><a href="#trazabilidad">EI-03 Trazabilidad</a></li>
+    <li><a href="#desglose">EI-04 Desglose</a></li>
+    <li><a href="#guardia">EI-05 Guardia de PII</a></li>
+    <li><a href="#busqueda">EI-07 Búsqueda</a></li>
+    <li><a href="#limites">Lo que nunca hace</a></li>
+  </ol>
+</nav>
+<main id="contenido">
+  <section id="expediente" aria-labelledby="t-exp">
+    <h2 id="t-exp">Expediente sintético</h2>
+    <p class="why">Vacante sintética <span class="mono">VAC-SYN-01</span> «Docente de Ciencia y Tecnología». Las postulaciones se identifican solo por código: el prototipo no muestra nombres ni datos de personas.</p>
+    <div class="table-wrap"><table>
+      <caption>Criterios de la vacante, con su versión</caption>
+      <thead><tr><th scope="col">Criterio</th><th scope="col">Versión</th><th scope="col">Etapa</th></tr></thead>
+      <tbody>
+        <tr><td>C1 · Conocimientos pedagógicos</td><td class="mono">v2</td><td>Evaluación</td></tr>
+        <tr><td>C2 · Clase modelo</td><td class="mono">v1</td><td>Evaluación</td></tr>
+        <tr><td>C3 · Experiencia en laboratorio escolar</td><td class="mono">v1</td><td>Entrevista</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="organizacion" aria-labelledby="t-org">
+    <p class="ei">EI-01 · EI-06 · ALLOWED, alcance B</p>
+    <h2 id="t-org">Evidencia organizada por tipo, criterio y fuente</h2>
+    <p class="why">Se ordena por metadatos que <strong>declaró una persona</strong>. No se lee el contenido para clasificarlo y no se crean campos sobre el postulante.</p>
+    <div class="table-wrap"><table>
+      <caption>Postulación <span class="mono">APP-SYN-0002</span></caption>
+      <thead><tr><th scope="col">Evidencia</th><th scope="col">Tipo declarado</th><th scope="col">Fuente</th><th scope="col">Criterio enlazado por</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">EV-0201</td><td>CV</td><td>Postulante sintético</td><td>C1 · por el evaluador sintético <span class="mono">EVA-SYN-1</span></td></tr>
+        <tr><td class="mono">EV-0202</td><td>Certificado</td><td>Institución sintética</td><td>C3 · por <span class="mono">EVA-SYN-1</span></td></tr>
+        <tr><td class="mono">EV-0203</td><td>Observación</td><td>Evaluador sintético <span class="mono">EVA-SYN-2</span></td><td>C2 · por <span class="mono">EVA-SYN-2</span></td></tr>
+        <tr><td class="mono">EV-0204</td><td>Transcripción revisada (texto)</td><td>Entrevista sintética</td><td>Sin enlazar</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="alertas" aria-labelledby="t-al">
+    <p class="ei">EI-02 · ALLOWED, alcance B</p>
+    <h2 id="t-al">Alertas del proceso: «requisito no evidenciado»</h2>
+    <p class="why">Comparan los requisitos de la vacante con la evidencia <strong>declarada</strong>. Hablan del expediente, no de la persona, y nunca descartan: el descarte sigue siendo humano (RF-13).</p>
+    <ul class="plain">
+      <li><span class="pill warn">Revisar expediente</span> <span class="mono">APP-SYN-0003</span>: el requisito «Título profesional en Educación» no tiene ninguna evidencia declarada.</li>
+      <li><span class="pill ok">Sin alertas</span> <span class="mono">APP-SYN-0001</span> y <span class="mono">APP-SYN-0002</span>.</li>
+    </ul>
+  </section>
+
+  <section id="trazabilidad" aria-labelledby="t-tr">
+    <p class="ei">EI-03 · ALLOWED, alcance B</p>
+    <h2 id="t-tr">Trazabilidad evidencia → criterio</h2>
+    <p class="why">Comprueba que cada enlace que creó una persona apunte a una cita que existe, con su fuente y la versión vigente del criterio. Mide la integridad del enlace, no su relevancia.</p>
+    <div class="table-wrap"><table>
+      <caption>Enlaces de <span class="mono">APP-SYN-0002</span></caption>
+      <thead><tr><th scope="col">Enlace</th><th scope="col">Cita</th><th scope="col">Estado</th></tr></thead>
+      <tbody>
+        <tr><td>EV-0201 → C1 <span class="mono">v2</span></td><td>«Diseñé unidades por competencias…» (caracteres 120–188)</td><td><span class="pill ok">Íntegro</span></td></tr>
+        <tr><td>EV-0202 → C3 <span class="mono">v1</span></td><td>Certificado, página 1</td><td><span class="pill ok">Íntegro</span></td></tr>
+        <tr><td>EV-0203 → C2 <span class="mono">v1</span></td><td>Caracteres 900–940</td><td><span class="pill bad">Roto: la cita no existe (el texto mide 612 caracteres)</span></td></tr>
+        <tr><td>EV-0201 → C1 <span class="mono">v1</span></td><td>Enlace antiguo</td><td><span class="pill warn">Versión del criterio desactualizada</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="desglose" aria-labelledby="t-de">
+    <p class="ei">EI-04 · ALLOWED, alcance B</p>
+    <h2 id="t-de">Desglose por criterio de las postulaciones</h2>
+    <p class="why">Los niveles los <strong>asignó una persona</strong>. El orden es fijo, por identificador sintético, y no cambia con los valores: no hay total, posición ni insignias. No sustituye al ranking de RF-22, que calcula el SaaS con sus ponderaciones.</p>
+    <div class="table-wrap"><table>
+      <caption>Orden por identificador, nunca por valor</caption>
+      <thead><tr><th scope="col">Postulación</th><th scope="col">C1</th><th scope="col">C2</th><th scope="col">C3</th></tr></thead>
+      <tbody>
+        <tr><th scope="row" class="mono">APP-SYN-0001</th><td>Logrado</td><td>En proceso</td><td>Sin evaluar</td></tr>
+        <tr><th scope="row" class="mono">APP-SYN-0002</th><td>Logrado</td><td>Logrado</td><td>Logrado</td></tr>
+        <tr><th scope="row" class="mono">APP-SYN-0003</th><td>En proceso</td><td>Sin evaluar</td><td>Sin evaluar</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="guardia" aria-labelledby="t-gu">
+    <p class="ei">EI-05 · ALLOWED, alcance B</p>
+    <h2 id="t-gu">Guardia de entrada de PII</h2>
+    <p class="why">Patrones deterministas: correo, teléfono, DNI y URL. Ante una coincidencia, falla cerrado y el artefacto no entra. El prototipo muestra solo el tipo de patrón, nunca el valor.</p>
+    <ul class="plain">
+      <li><span class="pill bad">Rechazado</span> <span class="mono">EV-0305</span>: patrón de tipo <strong>correo</strong> en la línea 4. Se devuelve a quien lo cargó.</li>
+      <li><span class="pill ok">Aceptado</span> <span class="mono">EV-0201</span> a <span class="mono">EV-0204</span>.</li>
+    </ul>
+  </section>
+
+  <section id="busqueda" aria-labelledby="t-bu">
+    <p class="ei">EI-07 · ALLOWED, alcance B</p>
+    <h2 id="t-bu">Búsqueda léxica dentro de una postulación</h2>
+    <p class="why">La inicia quien evalúa, dentro de <strong>una</strong> postulación. Hace coincidencia exacta, sin ordenar por relevancia y sin buscar entre postulaciones.</p>
+    <div class="search" aria-label="Consulta de ejemplo">
+      <span>Postulación: <span class="mono">APP-SYN-0002</span></span>
+      <span>Término: <strong>laboratorio</strong></span>
+      <span>2 coincidencias, en orden de aparición</span>
+    </div>
+    <ol class="plain">
+      <li><span class="mono">EV-0201</span>: «…coordiné el <mark>laboratorio</mark> de ciencias de una institución sintética durante dos años…»</li>
+      <li><span class="mono">EV-0202</span>: «…curso de seguridad en <mark>laboratorio</mark> escolar, 40 horas…»</li>
+    </ol>
+  </section>
+
+  <section id="limites" aria-labelledby="t-li">
+    <h2 id="t-li">Lo que estas ayudas nunca hacen</h2>
+    <ul class="plain">
+      <li>Puntuar, ordenar, recomendar o seleccionar personas (EI-19), ni sugerir un nivel (EI-14).</li>
+      <li>Resumir a un postulante, ni usar un LLM sobre su evidencia (EI-13, EI-16).</li>
+      <li>Comparar candidatos entre sí ni buscar entre postulaciones (EI-18).</li>
+      <li>Procesar audio, vídeo, rostro o voz, ni inferir emociones o personalidad (EI-20, EI-21).</li>
+      <li>Entrenar modelos con la evidencia (EI-22), usar datos reales o alimentar el SaaS (EI-23).</li>
+    </ul>
+    <p class="note">La decisión final la toma siempre Dirección, con confirmación y justificación (RF-23). Las ayudas organizan la evidencia; no deciden nada.</p>
+  </section>
+</main>
+<footer>
+  <p>Proyecto académico «SaaS Reclutamiento Multiempresa», caso Colegio Andino de Huancayo. Universidad Continental, curso Pruebas y Calidad de Software. Plan: <a href="F36SBX_ML02_Plan_Entrenamiento_Evaluacion.md">entrenamiento y evaluación de ML-02</a>.</p>
+</footer>
+</body>
+</html>
