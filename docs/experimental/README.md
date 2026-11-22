@@ -36,31 +36,44 @@ docker compose -p experimental exec app php artisan db:seed --class=Experimental
 
 La demo de la exposición (`entregaacad`) y el proyecto `continuacion` no se usan.
 
-## 3. Recorrido de demostración
+## 3. Guion de cinco minutos
 
-Usuarios de `docs/demo-users.md`, contraseña `password`.
+URL `http://localhost:8030`. Usuarios de `docs/demo-users.md`, contraseña `password`. Antes de empezar, con la base del proyecto `experimental` (nunca la de `entregaacad`), cargue los datos de la §2. Si ya se usó, reiníciela con `migrate:fresh --seed --force` y el seeder experimental. Abra una ventana privada por usuario.
 
-1. **RR. HH. (`rrhh@andino.test`).**
-   - Abra Vacantes, luego «Docente de Comunicación - Secundaria», sus postulaciones y POS-00003.
-   - Pulse «Evidencias (experimental)».
-2. **Evidencias.** Verá el aviso experimental y cuatro registros: un CV en versión 2, un certificado revisado y enlazado, y dos observaciones del evaluador.
-3. **Versiones y permisos.**
-   - En el CV, abra «Versiones anteriores (1)».
-   - En una observación no aparece «Corregir»: solo la corrige su autor (CONT-M01).
-4. **Ayuda documental.**
-   - Con «Conocimientos pedagógicos», devuelve el certificado con las palabras resaltadas y su fuente.
-   - Con «Clase modelo», devuelve la observación de la clase modelo. La de la «secuencia de actividades» es relevante pero no comparte palabras, y no aparece: es el fallo esperado del método léxico.
-   - Con «Entrevista personal», se abstiene y lo explica.
-5. **Registro con error.** Intente registrar un texto sin `[SINTÉTICO]`: aparece el error y no se guarda nada.
-6. **Evaluador (`evaluador@andino.test`).**
-   - Vaya a «Mis evaluaciones», abra la sesión y pulse «Evidencias (experimental)».
-   - Solo puede registrar observaciones y no ve el historial.
-7. **Dirección (`direccion@andino.test`).** Solo consulta y abre el «Historial», que lista identificadores, nunca el texto.
-8. **Otra organización (`rrhh@demob.test`).** `/postulaciones/3/evidencias` responde 404.
+| Min. | Quién | Qué hacer | Qué se ve |
+|---|---|---|---|
+| 0:00 | RR. HH. `rrhh@andino.test` | Vacantes → «Docente de Comunicación - Secundaria» → Postulaciones → POS-00003 → **Evidencias (experimental)** | Aviso experimental y cuatro registros ficticios. La página no muestra el nombre del postulante |
+| 0:30 | RR. HH. | Registrar: tipo «Certificado» y una descripción **sin** `[SINTÉTICO]` | Error de validación, sin registro |
+| 0:50 | RR. HH. | Repetir con `[SINTÉTICO] Constancia ficticia de un curso de evaluación formativa.` | Nueva evidencia con autor, fecha y fuente «Documento presentado» |
+| 1:20 | RR. HH. | En esa evidencia: **Corregir con una versión nueva**, cambiar el texto y **Registrar versión nueva**. Abrir «Versiones anteriores (1)» | Versión 2 vigente; la 1 se conserva con su autor y su fuente. Nada se borra |
+| 2:00 | RR. HH. | Ayuda documental: criterio «Conocimientos pedagógicos» → **Ver fragmentos** → **Abrir la evidencia EVD-…** | Fragmento con las palabras resaltadas y su fuente; la tarjeta completa de la evidencia queda destacada |
+| 2:30 | RR. HH. | Criterio «Clase modelo» | Recupera la observación de la clase modelo. **Fallo esperado:** la observación de la «secuencia de actividades» es pertinente y no aparece, porque no comparte palabras |
+| 2:50 | RR. HH. | Criterio «Entrevista personal» | **Abstención:** «no significa que el criterio no se cumpla» |
+| 3:10 | — | Explicar los límites (§5): BM25 léxico, 12 fragmentos, Recall@3 de 0,5 en `dev` y **0 en `test`**, H2 rechazada, sin entrenamiento. No puntúa personas; decide Dirección (RF-23) | — |
+| 3:40 | Evaluador `evaluador@andino.test` | Mis evaluaciones → sesión → **Evidencias (experimental)** | Solo puede registrar observaciones; no hay «Historial» |
+| 4:00 | Dirección `direccion@andino.test` | La misma postulación → Historial | Solo lectura; el historial lista identificadores, nunca el texto |
+| 4:15 | RR. HH. de otra organización `rrhh@demob.test` | Abrir `/postulaciones/3/evidencias` | 404 |
+| 4:30 | RR. HH. | Abrir `/postulaciones/7/evidencias` («Coordinador(a) de Tutoría», ya cerrada) | «Vacante cerrada»: se consulta, pero no hay formularios. Si se cierra con la página abierta, el envío vuelve con el motivo (R-08) y no registra nada (E2E-21) |
+
+La bandera desactivada (`EXPERIMENTAL_EVIDENCIAS=false`) quita los enlaces y deja las ocho rutas en 404. Se comprueba con `EvidenceEntryPointsTest`; no se cambia en vivo.
 
 ## 4. Pruebas
 
-### 4.1 Corte vigente: `153a523` (12/11/2026)
+### 4.0 Corte vigente: `cc315f6` (22/11/2026)
+
+Código de `cc315f6`, con las correcciones del recorrido de la §6.1. El commit de documentación que le sigue no cambia el código. Logs fuera de Git, en `evidencias/f37-cierre-20261122/`.
+
+| Prueba | Resultado |
+|---|---|
+| PHPUnit focal: Evidence, Ml02, carreras de APP-M01, Applications y Assessments | 121 passed |
+| PHPUnit completo | 525 passed, 8 skipped |
+| Componentes · tipos · build · `vp check` de lo cambiado | 63 passed · 0 errores · correcto · sin errores |
+| Arnés F38 y prototipo F37 | 28 OK · 23 OK |
+| Cypress E2E-00 a E2E-21, una spec por contenedor, en serie | **21 de 22 specs en verde a la primera.** E2E-21 pasa 10/10. E2E-10 falló una vez y pasó al repetirla sola (1/1). Su aserción (el orden de las notificaciones por `created_at`) depende del reloj de la VM, que oscilaba unos 11 s porque el reloj de Windows iba adelantado y sin sincronizar. Las esperas se ampliaron a 30 s solo en la ejecución (`CY_TIMEOUT_MS`), sin cambiar la configuración ni las specs |
+
+**Qué es simulado.** En E2E-21, el retraso, el fallo de red y el HTTP 500 de la ayuda se producen con `cy.intercept`; todo lo demás va contra el backend real.
+
+### 4.1 Corte anterior: `153a523` (12/11/2026)
 
 Código de `153a523`, que incluye las correcciones APP-M01 y APP-M02 de la §6. `0de8594` solo ordena los `use` de una prueba PHP (Pint), y sobre él se repitió PHPUnit, focal y completo, con el mismo resultado. El commit de documentación que le sigue no cambia el código.
 
@@ -108,6 +121,16 @@ Candidato auditado: `e5f83a4`. Informe de Codex, con SHA-256 `713d4d7d555b0e3e2d
 | APP-L01 | La guía y el manifiesto no reflejaban los logs reales | Inventario fechado del 11/11/2026 y la reconciliación de la §4.2, sin borrar el corte anterior | Este commit | Manifiestos en las evidencias |
 | APP-L02 | El preregistro decía 51 palabras vacías; el método tiene 49 | Errata fechada. El preregistro, el método y los resultados no cambian | Este commit | Conteo sobre el blob `3196300c…`, idéntico en `e3f80a1` y en `153a523` |
 
+### 6.1 Cierre del recorrido F37 (22/11/2026)
+
+Defectos del recorrido encontrados al revisar la cadena pantalla → ruta → autorización → servicio → almacenamiento → respuesta → pantalla. Commit `cc315f6`.
+
+| ID | Defecto | Corrección | Prueba |
+|---|---|---|---|
+| F37-UX-01 | Si el proceso se cerraba con la página abierta, el envío de RR. HH. o del evaluador asignado recibía un 403 sin explicación | El rechazo (R-08) vuelve a la página con el motivo del cierre, visible en un aviso. A quien no podía escribir con el proceso abierto se le sigue respondiendo 403/404. No se inserta nada | `EvidenceClosedProcessTest`: RED de 2 de 4 (403), GREEN de 4 de 4. E2E-21: el cierre con la página abierta y el proceso ya cerrado |
+| F37-UX-02 | La ayuda documental mostraba la fuente del fragmento, pero no permitía abrir la evidencia; las versiones anteriores no mostraban su procedencia | Cada fragmento enlaza con la tarjeta completa de su evidencia (foco y realce, sin otra visita). Cada versión anterior muestra su autor y su fuente | Vitest: RED de 1 de 7 con el componente anterior y GREEN de 7 de 7. E2E-21 abre la fuente recuperada |
+| F37-UX-03 | No había prueba de los puntos de entrada ni del enlace con la bandera desactivada | Solo cobertura: el expediente (RR. HH. y Dirección) y la sesión asignada muestran el enlace; con la bandera desactivada no aparece y las ocho rutas responden 404 | `EvidenceEntryPointsTest`, 3 de 3 |
+
 ## 7. Evidencias
 
 Fuera de Git, en `experimental-20261110/evidencias/`:
@@ -116,3 +139,4 @@ Fuera de Git, en `experimental-20261110/evidencias/`:
 - `correcciones-20261111/` y `correcciones-20261112/`: el RED y el GREEN de cada corrección, la verificación de `153a523` y la suite de Cypress, con un `00-resumen.txt` por carpeta;
 - `SHA256SUMS_20261112.txt`: manifiesto de todo lo anterior;
 - `correcciones-20261112/GUIA_REAUDITORIA_20261112.md`: guía para la reauditoría del delta.
+- `f37-cierre-20261122/`: el RED y el GREEN de la §6.1, la verificación y Cypress sobre `cc315f6`, y la guía de entrega a Codex (`GUIA_REAUDITORIA_20261122.md`), con su manifiesto `SHA256SUMS_20261122.txt`.
