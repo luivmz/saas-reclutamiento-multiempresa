@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type HTMLAttributes } from 'react';
 import { REDUCED_MOTION_QUERY } from '@/components/experience-3d/use-scene-capability';
+import { someIntersecting } from '@/lib/intersection';
 import { cn } from '@/lib/utils';
 
 export type RevealState = 'static' | 'hidden' | 'shown';
@@ -14,7 +15,8 @@ type RevealWindow = Pick<Window, 'matchMedia' | 'innerHeight'> & {
  *
  * - Lo que al montar ya se ve, o todo si hay movimiento reducido o no hay
  *   `IntersectionObserver`, se queda estático: no se oculta nunca.
- * - Lo de abajo se oculta y entra la primera vez que se ve.
+ * - Lo de abajo se oculta y entra la primera vez que se ve, aunque el aviso
+ *   inicial («fuera») y el siguiente («dentro») lleguen juntos (DEF-19).
  * - **Si el movimiento reducido se activa con la página abierta (VIS-L01)**,
  *   lo que seguía oculto pasa a estático en ese momento, sin desplazamiento.
  * - Cada bloque cambia de estado **una sola vez** después de ocultarse: al
@@ -38,9 +40,10 @@ export function watchReveal(
     }
 
     let settled = false;
+    // Todas las entradas del aviso, no solo la primera (DEF-19).
     const observer = new Observer(
-        ([entry]) => {
-            if (entry?.isIntersecting) {
+        (entries) => {
+            if (someIntersecting(entries)) {
                 settle('shown');
             }
         },

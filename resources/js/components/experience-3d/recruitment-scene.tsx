@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { latestIntersecting } from '@/lib/intersection';
 import { SheetFace, STAGE_SHEETS } from './recruitment-scene-poster';
 
 /**
@@ -219,8 +220,14 @@ export default function RecruitmentScene() {
         // la página. Después, las transiciones suavizan los saltos de la rueda.
         apply();
         const first = requestAnimationFrame(() => setReady(true));
-        const observer = new IntersectionObserver(([entry]) => {
-            watch(entry.isIntersecting);
+        // El estado más reciente del aviso, no el primero (DEF-19).
+        const observer = new IntersectionObserver((entries) => {
+            const visibleNow = latestIntersecting(entries);
+
+            if (visibleNow !== null) {
+                watch(visibleNow);
+            }
+
             schedule();
         });
 

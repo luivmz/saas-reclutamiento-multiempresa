@@ -33,7 +33,7 @@ describe('Reveal', () => {
 function fakeWindow({ reduced = false, top = 2000 } = {}) {
     const listeners = new Set<() => void>();
     const observers: {
-        fire: (isIntersecting: boolean) => void;
+        fire: (...isIntersecting: boolean[]) => void;
         disconnected: boolean;
         observed: number;
     }[] = [];
@@ -51,8 +51,12 @@ function fakeWindow({ reduced = false, top = 2000 } = {}) {
         constructor(
             callback: (entries: { isIntersecting: boolean }[]) => void,
         ) {
+            // Un aviso puede traer varias entradas: las que se acumularon desde el anterior.
             this.record = {
-                fire: (isIntersecting) => callback([{ isIntersecting }]),
+                fire: (...states) =>
+                    callback(
+                        states.map((isIntersecting) => ({ isIntersecting })),
+                    ),
                 disconnected: false,
                 observed: 0,
             };
@@ -132,6 +136,17 @@ describe('Reveal con movimiento reducido dinámico (VIS-L01)', () => {
         expect(states).toEqual(['hidden', 'shown']);
         expect(fake.observers[0].disconnected).toBe(true);
         expect(fake.listeners.size).toBe(0);
+    });
+
+    test('DEF-19: si el aviso inicial (fuera) y el siguiente (dentro) llegan juntos, entra igual', () => {
+        const fake = fakeWindow();
+        const states: RevealState[] = [];
+
+        watchReveal(fake.element, fake.win, (state) => states.push(state));
+        fake.observers[0].fire(false, true);
+
+        expect(states).toEqual(['hidden', 'shown']);
+        expect(fake.observers[0].disconnected).toBe(true);
     });
 
     test('con movimiento reducido al montar, o si ya se ve, no se oculta ni observa', () => {
