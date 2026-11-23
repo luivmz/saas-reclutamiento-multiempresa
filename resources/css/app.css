@@ -361,8 +361,8 @@
     }
     .folder-stage {
         background:
-            radial-gradient(ellipse at 68% 22%, #07373c, transparent 68%),
-            #00191e;
+            radial-gradient(ellipse at 22% 34%, #063238, transparent 64%),
+            #001419;
     }
     .folder-composition {
         position: relative;

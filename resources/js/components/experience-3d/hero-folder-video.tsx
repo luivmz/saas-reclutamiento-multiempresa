@@ -140,14 +140,14 @@ export function HeroFolderVideo() {
     const [source, setSource] = useState<string | null>(null);
     const [ready, setReady] = useState(false);
 
-    const kind: Kind =
-        reason === 'server'
-            ? 'pending'
-            : mode === 'scene' && !videoFailed
-              ? seen
-                  ? 'video'
-                  : 'pending'
-              : 'still';
+    let kind: Kind = 'pending';
+    if (reason !== 'server') {
+        if (mode !== 'scene' || videoFailed) {
+            kind = 'still';
+        } else if (seen) {
+            kind = 'video';
+        }
+    }
 
     // El clip se descarga entero (700 kB) y se sirve desde memoria: así se
     // puede buscar cualquier fotograma aunque el servidor no atienda
