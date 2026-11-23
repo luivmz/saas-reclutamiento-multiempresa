@@ -35,6 +35,7 @@ function escenaDescargada(win) {
 
 /** La portada se puede usar sin la escena: título y llamadas a la acción. */
 function portadaUtilizable() {
+    cy.scrollTo('top');
     cy.get('h1').should('be.visible');
     cy.dataCy('cta-jobs').should('be.visible').and('have.attr', 'href');
     cy.dataCy('cta-login').should('be.visible');

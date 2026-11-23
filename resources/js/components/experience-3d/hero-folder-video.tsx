@@ -2,65 +2,40 @@ import { useEffect, useRef, useState } from 'react';
 import { latestIntersecting } from '@/lib/intersection';
 import { useSceneCapability } from './use-scene-capability';
 
-/**
- * La carpeta de la portada, en vídeo: se abre al bajar y se cierra al subir.
- *
- * El clip (generado con Higgsfield, sin texto, personas ni logotipos) son los
- * 51 fotogramas en que una carpeta pasa de cerrada a abierta. **No se
- * reproduce**: el desplazamiento de la página elige el fotograma. Lo que
- * garantiza este componente:
- *
- * 1. **Es decorativo**: `aria-hidden`, `inert`, sin controles ni foco. Todo lo
- *    que la portada dice está en el texto de al lado.
- * 2. **Solo se descarga cuando se usa**: escritorio de 1024 px o más, sin
- *    movimiento reducido, sin ahorro de datos ni equipo modesto
- *    (`useSceneCapability`, la misma regla que la escena de ADR-003). En los
- *    demás casos queda una imagen fija de la carpeta abierta y, si también
- *    falla, el fondo CSS del panel. Antes de decidir no se pide nada. El clip
- *    se descarga una vez y se sirve desde memoria (blob), para poder buscar
- *    cualquier fotograma aunque el servidor no atienda peticiones parciales.
- * 3. **El desplazamiento es el del navegador**: no se captura ni se suaviza el
- *    scroll; el vídeo solo busca fotogramas, a lo sumo una vez por cuadro.
- * 4. **Una búsqueda cada vez**: sin metadatos no se busca; mientras el vídeo
- *    busca, la posición siguiente espera y solo se aplica la última
- *    (`createFrameSeeker`).
- * 5. **Si el vídeo falla**, queda la imagen fija; si el movimiento reducido o
- *    el ancho cambian con la página abierta, también, y se retiran las
- *    escuchas.
- */
-export const HERO_MEDIA = {
+type ScrollVideoMedia = {
+    video: string;
+    poster: string;
+    still?: string;
+    frames: number;
+    fps: number;
+};
+
+export const SCHOOL_MEDIA = {
+    video: '/media/portada/portada-colegio.mp4',
+    poster: '/media/portada/portada-colegio.webp',
+    frames: 156,
+    fps: 24,
+} satisfies ScrollVideoMedia;
+
+export const FOLDER_MEDIA = {
     video: '/media/portada/portada-carpeta.mp4',
     poster: '/media/portada/portada-carpeta-poster.webp',
     still: '/media/portada/portada-carpeta-abierta.webp',
-} as const;
+    frames: 51,
+    fps: 24,
+} satisfies ScrollVideoMedia;
 
-/** Fotogramas del clip (de cerrada a abierta) y su cadencia. */
-export const CLIP_FRAMES = 51;
-export const CLIP_FPS = 24;
-
-/** La apertura ocupa seis décimas de ventana, desde la entrada hasta el tramo fijo. */
-export function heroProgress(
-    sectionTop: number,
-    viewportHeight: number,
-): number {
-    if (viewportHeight <= 0) return 0;
-
-    return Math.min(
-        1,
-        Math.max(
-            0,
-            (0.3 * viewportHeight - sectionTop) / (0.6 * viewportHeight),
-        ),
-    );
+export function scrollProgress(distance: number, travel: number): number {
+    return travel > 0 ? Math.min(1, Math.max(0, distance / travel)) : 0;
 }
 
-export function frameForProgress(progress: number): number {
-    return Math.round(Math.min(1, Math.max(0, progress)) * (CLIP_FRAMES - 1));
+export function frameForProgress(progress: number, frames: number): number {
+    return Math.round(Math.min(1, Math.max(0, progress)) * (frames - 1));
 }
 
 /** El instante central del fotograma: ningún redondeo muestra el vecino. */
-export function timeForFrame(frame: number): number {
-    return (frame + 0.5) / CLIP_FPS;
+export function timeForFrame(frame: number, fps: number): number {
+    return (frame + 0.5) / fps;
 }
 
 /** HTMLMediaElement.HAVE_METADATA, sin depender del DOM en las pruebas. */
@@ -80,7 +55,7 @@ export type SeekableVideo = Pick<
  *   pedido y lo aplica al terminar (`seeked`).
  * - No repite la búsqueda del fotograma que ya pidió.
  */
-export function createFrameSeeker(video: SeekableVideo) {
+export function createFrameSeeker(video: SeekableVideo, fps: number) {
     let wanted: number | null = null;
     let requested: number | null = null;
     let disposed = false;
@@ -97,7 +72,7 @@ export function createFrameSeeker(video: SeekableVideo) {
         }
 
         requested = wanted;
-        video.currentTime = timeForFrame(wanted);
+        video.currentTime = timeForFrame(wanted, fps);
     };
 
     video.addEventListener('loadedmetadata', pump);
@@ -118,14 +93,15 @@ export function createFrameSeeker(video: SeekableVideo) {
 
 type Kind = 'pending' | 'video' | 'still';
 
-export function HeroFolderVideo() {
+/** Capa decorativa compartida. El contenedor del recorrido conserva el scroll nativo. */
+export function ScrollVideo({ media }: { media: ScrollVideoMedia }) {
     const rootRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const { mode, reason } = useSceneCapability();
     const [visible, setVisible] = useState(false);
     const [seen, setSeen] = useState(false);
     useEffect(() => {
-        const section = rootRef.current?.closest('section');
+        const section = rootRef.current?.closest('[data-video-track]');
         if (!section) return;
         const observer = new IntersectionObserver((entries) => {
             const inside = latestIntersecting(entries);
@@ -149,7 +125,7 @@ export function HeroFolderVideo() {
         }
     }
 
-    // El clip se descarga entero (700 kB) y se sirve desde memoria: así se
+    // El clip se descarga entero y se sirve desde memoria: así se
     // puede buscar cualquier fotograma aunque el servidor no atienda
     // peticiones parciales (`php artisan serve` no lo hace). Solo en modo
     // vídeo; si no llega, queda la imagen fija.
@@ -161,7 +137,7 @@ export function HeroFolderVideo() {
         const controller = new AbortController();
         let url: string | null = null;
 
-        fetch(HERO_MEDIA.video, { signal: controller.signal })
+        fetch(media.video, { signal: controller.signal })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
@@ -189,7 +165,7 @@ export function HeroFolderVideo() {
                 URL.revokeObjectURL(url);
             }
         };
-    }, [kind]);
+    }, [kind, media.video]);
 
     useEffect(() => {
         const root = rootRef.current;
@@ -199,15 +175,24 @@ export function HeroFolderVideo() {
             return;
         }
 
-        const hero = root.closest('section') ?? root;
-        const seeker = createFrameSeeker(video);
+        const track = root.closest('[data-video-track]');
+        if (!track) return;
+        const stage = root.closest<HTMLElement>('[data-video-stage]') ?? root;
+        const seeker = createFrameSeeker(video, media.fps);
         let frame = 0;
 
         const update = () => {
             frame = 0;
-            const box = hero.getBoundingClientRect();
+            const box = track.getBoundingClientRect();
+            const stickyTop =
+                Number.parseFloat(getComputedStyle(stage).top) || 0;
+            const travel = Math.min(
+                box.height - stage.clientHeight,
+                window.innerHeight * 0.6,
+            );
             const target = frameForProgress(
-                heroProgress(box.top, window.innerHeight),
+                scrollProgress(stickyTop - box.top, travel),
+                media.frames,
             );
 
             // Observable para las pruebas: el fotograma que pide el desplazamiento.
@@ -237,7 +222,7 @@ export function HeroFolderVideo() {
             video.removeEventListener('loadeddata', onData);
             seeker.dispose();
         };
-    }, [kind, source, visible]);
+    }, [kind, media, source, visible]);
 
     const state =
         kind === 'video'
@@ -253,7 +238,7 @@ export function HeroFolderVideo() {
             ref={rootRef}
             aria-hidden="true"
             inert
-            className="hero-folder pointer-events-none select-none"
+            className="scroll-video pointer-events-none select-none"
             data-cy="hero-video"
             data-mode={kind}
             data-reason={videoFailed ? 'video-error' : reason}
@@ -262,9 +247,9 @@ export function HeroFolderVideo() {
             {kind === 'video' ? (
                 <video
                     ref={videoRef}
-                    className="absolute inset-0 size-full object-contain"
+                    className="absolute inset-0 size-full"
                     src={source ?? undefined}
-                    poster={HERO_MEDIA.poster}
+                    poster={media.poster}
                     muted
                     playsInline
                     preload="auto"
@@ -276,8 +261,8 @@ export function HeroFolderVideo() {
             ) : null}
             {kind === 'still' && !stillFailed ? (
                 <img
-                    className="absolute inset-0 size-full object-contain"
-                    src={HERO_MEDIA.still}
+                    className="absolute inset-0 size-full"
+                    src={media.still ?? media.poster}
                     alt=""
                     decoding="async"
                     onError={() => setStillFailed(true)}

@@ -1,19 +1,6 @@
-/**
- * E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso.
- *
- * Lo que solo un navegador puede comprobar:
- *
- * - el vídeo de la portada no se reproduce solo: avanza al bajar y retrocede
- *   al subir, una búsqueda cada vez;
- * - si el vídeo no llega, con movimiento reducido (al cargar o con la página
- *   abierta), en móvil o a 320 px, queda la imagen fija y no se pide el vídeo;
- * - el progreso se recupera al salir de la escena, recargar o volver de empleos;
- * - el texto y los accesos no dependen de nada de lo anterior, en los dos temas.
- *
- * Las capturas (`cy.screenshot`) son la evidencia visual del avance y del
- * retroceso; las aserciones no dependen de ellas.
- */
-const VIDEO = 'portada-carpeta.mp4';
+/** E2E-23 · Los vídeos de la portada y el detalle público. */
+const VIDEO = 'portada-colegio.mp4';
+const JOB_VIDEO = 'portada-carpeta.mp4';
 const FPS = 24;
 
 function reducido(activo) {
@@ -27,10 +14,10 @@ function reducido(activo) {
     });
 }
 
-function videoPedido(win) {
+function videoPedido(win, video = VIDEO) {
     return win.performance
         .getEntriesByType('resource')
-        .some((recurso) => recurso.name.includes(VIDEO));
+        .some((recurso) => recurso.name.includes(video));
 }
 
 /** Cuenta las búsquedas, las que llegan con otra en curso y las reproducciones. */
@@ -91,23 +78,27 @@ function fotogramaAsentado() {
                 $video.closest('[data-cy="hero-video"]').attr('data-frame'),
             );
 
-            const portada = $video
-                .closest('section')[0]
+            const layer = video.parentElement;
+            const win = layer.ownerDocument.defaultView;
+            const box = layer
+                .closest('[data-video-track]')
                 .getBoundingClientRect();
-            const progreso = Math.min(
-                1,
-                Math.max(
-                    0,
-                    (0.3 * video.ownerDocument.defaultView.innerHeight -
-                        portada.top) /
-                        (video.ownerDocument.defaultView.innerHeight * 0.6),
-                ),
+            const stage = layer.closest('[data-video-stage]') ?? layer;
+            const stickyTop = Number.parseFloat(
+                win.getComputedStyle(stage).top,
             );
-
-            expect(
-                pedido,
-                'el fotograma que corresponde al desplazamiento',
-            ).to.eq(Math.round(progreso * 50));
+            const travel = Math.min(
+                box.height - stage.clientHeight,
+                win.innerHeight * 0.6,
+            );
+            const frameCount = Math.round(video.duration * FPS);
+            const progress = Math.max(
+                0,
+                Math.min(1, (stickyTop - box.top) / travel),
+            );
+            expect(pedido, 'fotograma de la posición actual').to.eq(
+                Math.round(progress * (frameCount - 1)),
+            );
             expect(video.seeking, 'sin búsqueda en curso').to.eq(false);
             expect(
                 Math.abs(video.currentTime - (pedido + 0.5) / FPS),
@@ -133,11 +124,36 @@ function imagenFija(razon) {
 
 // Posición relativa al comienzo y al final de la apertura.
 function recorrer(progreso) {
-    cy.dataCy('landing-process').then(($section) => {
-        const win = $section[0].ownerDocument.defaultView;
-        const top = $section[0].getBoundingClientRect().top + win.scrollY;
-        win.scrollTo(0, top + (0.6 * progreso - 0.3) * win.innerHeight);
-    });
+    cy.dataCy('hero-video')
+        .should(($layer) => {
+            const layer = $layer[0];
+            const track = layer.closest('[data-video-track]');
+            if (track.getBoundingClientRect().bottom <= 0) {
+                track.scrollIntoView();
+            }
+            expect(layer.dataset.state).to.eq('ready');
+        })
+        .then(($layer) => {
+            const layer = $layer[0];
+            const win = layer.ownerDocument.defaultView;
+            const box = layer
+                .closest('[data-video-track]')
+                .getBoundingClientRect();
+            const stage = layer.closest('[data-video-stage]') ?? layer;
+            const stickyTop = Number.parseFloat(
+                win.getComputedStyle(stage).top,
+            );
+            const travel = Math.min(
+                box.height - stage.clientHeight,
+                win.innerHeight * 0.6,
+            );
+            win.scrollTo(
+                0,
+                Math.ceil(
+                    win.scrollY + box.top - stickyTop + travel * progreso,
+                ),
+            );
+        });
 }
 
 describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () => {
@@ -176,7 +192,7 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
 
             expect(a, 'baja').to.be.greaterThan(0);
             expect(b, 'sigue bajando').to.be.greaterThan(a);
-            expect(c, 'abierta del todo').to.eq(50);
+            expect(c, 'abierta del todo').to.eq(155);
             expect(d, 'al subir retrocede').to.be.lessThan(c);
             expect(d, 'mismo sitio, mismo fotograma').to.eq(b);
             expect(e, 'arriba, cerrada').to.eq(0);
@@ -200,7 +216,6 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
         cy.viewport(1280, 800);
         cy.visit('/');
 
-        recorrer(0.5);
         imagenFija('video-error');
         portadaUtilizable();
         cy.screenshot('e2e23-video-fallido', { capture: 'viewport' });
@@ -282,7 +297,18 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
                 capture: 'viewport',
             });
             recorrer(1);
-            fotogramaAsentado().should('eq', 50);
+            fotogramaAsentado().should('eq', 155);
+            cy.get('.school-stage').should(($stage) => {
+                expect($stage[0].getBoundingClientRect().top).to.be.closeTo(
+                    Number.parseFloat(
+                        $stage[0].ownerDocument.defaultView.getComputedStyle(
+                            $stage[0],
+                        ).top,
+                    ),
+                    1,
+                );
+            });
+            cy.dataCy('landing-folder').scrollIntoView();
             cy.dataCy('recruitment-scene').should(
                 'have.attr',
                 'data-ready',
@@ -298,13 +324,13 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
         cy.viewport(1280, 800);
         cy.visit('/');
         recorrer(0.5);
-        fotogramaAsentado().should('eq', 25);
+        fotogramaAsentado().should('eq', 78);
         cy.reload();
         recorrer(0.5);
-        fotogramaAsentado().should('eq', 25);
+        fotogramaAsentado().should('eq', 78);
         cy.dataCy('landing-roles').scrollIntoView();
         recorrer(0.25);
-        fotogramaAsentado().should('eq', 13);
+        fotogramaAsentado().should('eq', 39);
         cy.dataCy('cta-jobs').click();
         cy.location('pathname').should('eq', '/empleos');
         cy.go('back');
@@ -326,5 +352,77 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
         cy.screenshot('e2e23-carpeta-movimiento-reducido', {
             capture: 'viewport',
         });
+    });
+    ['light', 'dark'].forEach((tema, index) => {
+        it(`en una oferta distinta en tema ${tema}, la carpeta acompaña al contenido`, () => {
+            cy.viewport(1280, 800);
+            cy.visit('/empleos', {
+                onBeforeLoad(win) {
+                    vigilarVideo(win);
+                    win.localStorage.setItem('appearance', tema);
+                },
+            });
+            cy.dataCy('job-detail-link')
+                .eq(index)
+                .then(($link) => {
+                    const nombre = $link.text().trim();
+                    cy.wrap($link).click();
+                    cy.dataCy('page-title').should('have.text', nombre);
+                });
+            cy.dataCy('hero-video')
+                .should('have.css', 'opacity', '0.2')
+                .and('have.attr', 'inert');
+            cy.dataCy('hero-video')
+                .find('video')
+                .should('not.have.attr', 'controls');
+            cy.contains('La convocatoria').should('be.visible');
+            cy.contains('Perfil del puesto').should('be.visible');
+            cy.contains('Criterios de evaluación').should('be.visible');
+            cy.contains('REQ-2026-0042').should('not.exist');
+            recorrer(0);
+            fotogramaAsentado().should('eq', 0);
+            cy.screenshot(`oferta-${tema}-inicio`, { capture: 'viewport' });
+            recorrer(1);
+            fotogramaAsentado().should('eq', 50);
+            cy.screenshot(`oferta-${tema}-apertura`, { capture: 'viewport' });
+            recorrer(0);
+            fotogramaAsentado().should('eq', 0);
+            cy.dataCy('apply-login')
+                .focus()
+                .should('be.focused')
+                .and('have.attr', 'href', '/login');
+            cy.dataCy('apply-register').should('be.visible');
+            cy.window().then((win) => {
+                expect(win.__video.solapadas).to.eq(0);
+                expect(win.__video.reproducciones).to.eq(0);
+                expect(videoPedido(win, JOB_VIDEO)).to.eq(true);
+                expect(videoPedido(win)).to.eq(false);
+            });
+            cy.then(() => reducido(true));
+            imagenFija('reduced-motion');
+            cy.dataCy('hero-video').should(
+                'not.have.css',
+                'position',
+                'sticky',
+            );
+        });
+    });
+
+    it('el detalle conserva sus acciones en móvil y ante un fallo del vídeo', () => {
+        cy.viewport(320, 640);
+        cy.visit('/empleos');
+        cy.dataCy('job-detail-link').first().click();
+        imagenFija('small-viewport');
+        sinDesborde();
+        cy.window().then((win) =>
+            expect(videoPedido(win, JOB_VIDEO)).to.eq(false),
+        );
+        cy.dataCy('apply-register').scrollIntoView().should('be.visible');
+        cy.screenshot('oferta-320-acciones', { capture: 'viewport' });
+        cy.intercept('GET', `**/${JOB_VIDEO}`, { statusCode: 404, body: '' });
+        cy.viewport(1280, 800);
+        cy.reload();
+        imagenFija('video-error');
+        cy.dataCy('apply-login').should('be.visible');
     });
 });

@@ -150,7 +150,8 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
             );
         });
 
-        // El texto y los accesos no se mueven con el cursor.
+        // Al volver al hero, el CTA sigue sin transformaciones del cursor.
+        cy.scrollTo('top');
         cy.dataCy('cta-jobs')
             .should('be.visible')
             .and('not.have.attr', 'style');
@@ -176,6 +177,7 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
                 expect($h[0].style.transform).to.eq(reposo),
             );
         });
+        cy.scrollTo('top');
         cy.dataCy('cta-jobs').should('be.visible');
     });
 

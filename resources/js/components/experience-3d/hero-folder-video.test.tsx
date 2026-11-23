@@ -1,12 +1,12 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import {
-    CLIP_FPS,
-    CLIP_FRAMES,
+    FOLDER_MEDIA,
+    SCHOOL_MEDIA,
     createFrameSeeker,
     frameForProgress,
-    heroProgress,
-    HeroFolderVideo,
+    scrollProgress,
+    ScrollVideo,
     timeForFrame,
 } from './hero-folder-video';
 
@@ -49,82 +49,88 @@ class FakeVideo extends EventTarget {
 }
 
 describe('Progreso y fotogramas', () => {
-    test('inicio, mitad y final del recorrido respecto a la ventana', () => {
-        expect(heroProgress(800, 800)).toBe(0);
-        expect(heroProgress(240, 800)).toBe(0);
-        expect(heroProgress(0, 800)).toBeCloseTo(0.5);
-        expect(heroProgress(-240, 800)).toBe(1);
-        expect(heroProgress(-5000, 800)).toBe(1);
-        expect(heroProgress(-100, 0)).toBe(0);
+    test('limita el progreso al recorrido del fondo', () => {
+        expect(scrollProgress(-20, 480)).toBe(0);
+        expect(scrollProgress(0, 480)).toBe(0);
+        expect(scrollProgress(240, 480)).toBe(0.5);
+        expect(scrollProgress(480, 480)).toBe(1);
+        expect(scrollProgress(5000, 480)).toBe(1);
+        expect(scrollProgress(100, 0)).toBe(0);
     });
 
-    test('cada progreso cae en un fotograma del clip, y cada fotograma en su centro', () => {
-        expect(frameForProgress(0)).toBe(0);
-        expect(frameForProgress(1)).toBe(CLIP_FRAMES - 1);
-        expect(frameForProgress(-1)).toBe(0);
-        expect(frameForProgress(2)).toBe(CLIP_FRAMES - 1);
+    test.each([SCHOOL_MEDIA, FOLDER_MEDIA])(
+        'elige los fotogramas del clip $video',
+        ({ frames, fps }) => {
+            expect(frameForProgress(0, frames)).toBe(0);
+            expect(frameForProgress(1, frames)).toBe(frames - 1);
+            expect(frameForProgress(-1, frames)).toBe(0);
+            expect(frameForProgress(2, frames)).toBe(frames - 1);
 
-        for (let frame = 0; frame < CLIP_FRAMES; frame++) {
-            const time = timeForFrame(frame);
+            for (let frame = 0; frame < frames; frame++) {
+                const time = timeForFrame(frame, fps);
 
-            expect(time).toBeGreaterThan(frame / CLIP_FPS);
-            expect(time).toBeLessThan((frame + 1) / CLIP_FPS);
-        }
-    });
+                expect(time).toBeGreaterThan(frame / fps);
+                expect(time).toBeLessThan((frame + 1) / fps);
+            }
+        },
+    );
 });
 
 describe('Búsquedas sin solaparse', () => {
     test('sin metadatos no busca; al llegar, aplica solo el último fotograma pedido', () => {
         const video = new FakeVideo();
-        const seeker = createFrameSeeker(video);
+        const seeker = createFrameSeeker(video, FOLDER_MEDIA.fps);
 
         seeker.request(3);
         seeker.request(9);
         expect(video.sets).toEqual([]);
 
         video.loadMetadata();
-        expect(video.sets).toEqual([timeForFrame(9)]);
+        expect(video.sets).toEqual([timeForFrame(9, FOLDER_MEDIA.fps)]);
         seeker.dispose();
     });
 
     test('mientras busca, guarda solo la última posición y la aplica al terminar', () => {
         const video = new FakeVideo();
-        const seeker = createFrameSeeker(video);
+        const seeker = createFrameSeeker(video, FOLDER_MEDIA.fps);
 
         video.loadMetadata();
         seeker.request(5);
         seeker.request(12);
         seeker.request(20);
         seeker.request(31);
-        expect(video.sets).toEqual([timeForFrame(5)]);
+        expect(video.sets).toEqual([timeForFrame(5, FOLDER_MEDIA.fps)]);
 
         video.finishSeek();
-        expect(video.sets).toEqual([timeForFrame(5), timeForFrame(31)]);
+        expect(video.sets).toEqual([
+            timeForFrame(5, FOLDER_MEDIA.fps),
+            timeForFrame(31, FOLDER_MEDIA.fps),
+        ]);
 
         // Hacia atrás también: retroceder al subir es otra búsqueda más.
         video.finishSeek();
         seeker.request(2);
-        expect(video.sets.at(-1)).toBe(timeForFrame(2));
+        expect(video.sets.at(-1)).toBe(timeForFrame(2, FOLDER_MEDIA.fps));
         expect(video.overlapping).toBe(0);
         seeker.dispose();
     });
 
     test('no repite la búsqueda del fotograma que ya pidió', () => {
         const video = new FakeVideo();
-        const seeker = createFrameSeeker(video);
+        const seeker = createFrameSeeker(video, FOLDER_MEDIA.fps);
 
         video.loadMetadata();
         seeker.request(7);
         video.finishSeek();
         seeker.request(7);
         seeker.request(7);
-        expect(video.sets).toEqual([timeForFrame(7)]);
+        expect(video.sets).toEqual([timeForFrame(7, FOLDER_MEDIA.fps)]);
         seeker.dispose();
     });
 
     test('tras retirarlo, ningún evento posterior vuelve a buscar', () => {
         const video = new FakeVideo();
-        const seeker = createFrameSeeker(video);
+        const seeker = createFrameSeeker(video, FOLDER_MEDIA.fps);
 
         video.loadMetadata();
         seeker.request(4);
@@ -132,13 +138,15 @@ describe('Búsquedas sin solaparse', () => {
         seeker.dispose();
         video.finishSeek();
         video.loadMetadata();
-        expect(video.sets).toEqual([timeForFrame(4)]);
+        expect(video.sets).toEqual([timeForFrame(4, FOLDER_MEDIA.fps)]);
     });
 });
 
 describe('Antes de decidir', () => {
     test('el panel es decorativo y no pide ni el vídeo ni la imagen', () => {
-        const markup = renderToStaticMarkup(<HeroFolderVideo />);
+        const markup = renderToStaticMarkup(
+            <ScrollVideo media={SCHOOL_MEDIA} />,
+        );
 
         expect(markup).toContain('data-cy="hero-video"');
         expect(markup).toContain('aria-hidden="true"');

@@ -11,22 +11,16 @@ import {
     Signature,
     type LucideIcon,
 } from 'lucide-react';
-import { HeroFolderVideo } from '@/components/experience-3d/hero-folder-video';
+import {
+    SCHOOL_MEDIA,
+    ScrollVideo,
+} from '@/components/experience-3d/hero-folder-video';
 import { RecruitmentDepth } from '@/components/experience-3d/recruitment-depth';
 import { Reveal } from '@/components/reveal';
 import { Button } from '@/components/ui/button';
 import { dashboard, login } from '@/routes';
 import { index as jobsIndex } from '@/routes/jobs';
 
-/**
- * Portada pública.
- *
- * Lo primero que se ve no es una promesa, es un expediente: una vacante del
- * caso de estudio con sus evidencias versionadas y la decisión que firma una
- * persona. Detrás, en profundidad y sin texto, las tres hojas del mismo
- * recorrido (ADR-003, decorativas). Todo lo que la portada dice está en el DOM
- * de delante, plano y sobre fondo sólido.
- */
 type RecordEntry = {
     icon: LucideIcon;
     title: string;
@@ -139,80 +133,115 @@ export default function Welcome() {
         <>
             <Head title="Inicio" />
 
-            <section className="hero-backdrop relative overflow-x-clip border-b">
-                <div
-                    aria-hidden="true"
-                    className="hero-grid pointer-events-none absolute inset-0"
-                />
-                <div className="relative mx-auto grid max-w-6xl gap-14 px-4 py-9 sm:px-6 sm:py-14 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-6 lg:py-20">
-                    <div className="space-y-7">
-                        <p className="bg-card text-muted-foreground inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium shadow-xs">
-                            <GraduationCap
-                                className="text-primary size-4"
-                                aria-hidden="true"
-                            />
-                            Colegio Andino de Huancayo · caso de estudio con
-                            datos ficticios
-                        </p>
-                        <h1 className="font-serif text-4xl leading-[1.06] font-semibold tracking-tight md:text-5xl lg:text-[3.35rem]">
-                            Reclutamiento con evidencia,{' '}
-                            <span className="text-primary">
-                                decisión con nombre propio
-                            </span>
-                        </h1>
-                        <p className="text-muted-foreground max-w-xl text-lg leading-relaxed">
-                            Plataforma multiempresa para publicar vacantes,
-                            reunir las evidencias de cada postulación con sus
-                            versiones y llegar a una decisión que firma una
-                            persona. El sistema ordena y explica; nunca elige
-                            por nadie.
-                        </p>
-                        <div className="flex flex-wrap gap-3">
-                            <Button
-                                size="lg"
-                                className="shadow-primary/20 shadow-md"
-                                asChild
-                            >
-                                <Link href={jobsIndex()} data-cy="cta-jobs">
-                                    Ver empleos disponibles
-                                    <ArrowRight aria-hidden="true" />
-                                </Link>
-                            </Button>
-                            <Button
-                                size="lg"
-                                variant="outline"
-                                className="bg-card"
-                                asChild
-                            >
-                                <Link
-                                    href={auth?.user ? dashboard() : login()}
-                                    data-cy="cta-login"
+            <section className="school-hero" data-video-track>
+                <div className="school-stage" data-video-stage>
+                    <ScrollVideo media={SCHOOL_MEDIA} />
+                    <div className="school-copy relative mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:py-16">
+                        <div className="max-w-[25rem] space-y-6">
+                            <p className="bg-card text-muted-foreground inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium shadow-xs">
+                                <GraduationCap
+                                    className="text-primary size-4"
+                                    aria-hidden="true"
+                                />
+                                Colegio Andino de Huancayo · caso de estudio con
+                                datos ficticios
+                            </p>
+                            <h1 className="font-serif text-4xl leading-[1.06] font-semibold tracking-tight md:text-5xl lg:text-[3.35rem]">
+                                Reclutamiento con evidencia,{' '}
+                                <span className="text-teal-200">
+                                    decisión con nombre propio
+                                </span>
+                            </h1>
+                            <p className="max-w-xl text-base leading-relaxed text-teal-50/90 sm:text-lg">
+                                Plataforma multiempresa para publicar vacantes,
+                                reunir las evidencias de cada postulación con
+                                sus versiones y llegar a una decisión que firma
+                                una persona. El sistema ordena y explica; nunca
+                                elige por nadie.
+                            </p>
+                            <div className="flex flex-wrap gap-3">
+                                <Button
+                                    size="lg"
+                                    className="shadow-primary/20 shadow-md"
+                                    asChild
                                 >
-                                    {auth?.user
-                                        ? 'Ir a mi panel'
-                                        : 'Iniciar sesión'}
-                                </Link>
-                            </Button>
+                                    <Link href={jobsIndex()} data-cy="cta-jobs">
+                                        Ver empleos disponibles
+                                        <ArrowRight aria-hidden="true" />
+                                    </Link>
+                                </Button>
+                                <Button
+                                    size="lg"
+                                    variant="outline"
+                                    className="bg-card text-card-foreground"
+                                    asChild
+                                >
+                                    <Link
+                                        href={
+                                            auth?.user ? dashboard() : login()
+                                        }
+                                        data-cy="cta-login"
+                                    >
+                                        {auth?.user
+                                            ? 'Ir a mi panel'
+                                            : 'Iniciar sesión'}
+                                    </Link>
+                                </Button>
+                            </div>
+                            <ul
+                                className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-teal-50/90"
+                                data-cy="landing-pillars"
+                            >
+                                {pillars.map(({ icon: Icon, text }) => (
+                                    <li
+                                        key={text}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <Icon
+                                            className="size-4 shrink-0 text-teal-200"
+                                            aria-hidden="true"
+                                        />
+                                        {text}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                        <ul
-                            className="text-muted-foreground flex flex-wrap gap-x-5 gap-y-2 text-sm"
-                            data-cy="landing-pillars"
+                    </div>
+                </div>
+            </section>
+
+            <section
+                className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16"
+                aria-labelledby="landing-process-title"
+                data-cy="landing-process"
+            >
+                <div className="grid items-center gap-10 lg:grid-cols-2">
+                    <div>
+                        <h2
+                            id="landing-process-title"
+                            className="font-serif text-3xl font-semibold tracking-tight md:text-4xl"
                         >
-                            {pillars.map(({ icon: Icon, text }) => (
-                                <li
-                                    key={text}
-                                    className="flex items-center gap-2"
-                                >
-                                    <Icon
-                                        className="text-primary size-4 shrink-0"
-                                        aria-hidden="true"
-                                    />
-                                    {text}
+                            Cómo avanza un proceso
+                        </h2>
+                        <ol className="mt-7 grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                            {steps.map((step) => (
+                                <li key={step.title} className="border-t pt-4">
+                                    <div className="flex items-center gap-3">
+                                        <step.icon
+                                            aria-hidden="true"
+                                            className="text-primary size-4"
+                                        />
+                                        <h3 className="font-serif text-xl font-semibold">
+                                            {step.title}
+                                        </h3>
+                                    </div>
+                                    <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                                        {step.text}
+                                    </p>
                                 </li>
                             ))}
-                        </ul>
+                        </ol>
                     </div>
-
                     {/* El expediente queda delante, plano y sólido: su texto
                         nunca depende del fondo para leerse. Detrás, la capa de
                         profundidad —decorativa y opcional (ADR-003)—. En
@@ -271,54 +300,6 @@ export default function Welcome() {
                                 </p>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            <section
-                className="folder-chapter"
-                aria-labelledby="landing-process-title"
-                data-cy="landing-process"
-            >
-                <div className="folder-stage">
-                    <div className="mx-auto grid w-full max-w-6xl gap-7 px-4 py-12 sm:px-6 lg:gap-8">
-                        <div className="folder-composition">
-                            <div className="relative z-10 max-w-md">
-                                <h2
-                                    id="landing-process-title"
-                                    className="font-serif text-4xl leading-[1.04] font-semibold tracking-tight sm:text-5xl lg:text-6xl"
-                                >
-                                    Cómo avanza un proceso
-                                </h2>
-                                <p className="mt-5 max-w-sm leading-relaxed text-teal-50/85">
-                                    Cuatro etapas, cada una con su responsable.
-                                    Lo que se hace queda registrado con nombre y
-                                    fecha.
-                                </p>
-                            </div>
-                            <HeroFolderVideo />
-                        </div>
-                        <ol className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
-                            {steps.map((step) => (
-                                <li
-                                    key={step.title}
-                                    className="border-t border-teal-100/30 pt-4"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <step.icon
-                                            aria-hidden="true"
-                                            className="size-4 text-amber-200"
-                                        />
-                                        <h3 className="font-serif text-xl font-semibold">
-                                            {step.title}
-                                        </h3>
-                                    </div>
-                                    <p className="mt-2 text-sm leading-relaxed text-teal-50/85">
-                                        {step.text}
-                                    </p>
-                                </li>
-                            ))}
-                        </ol>
                     </div>
                 </div>
             </section>
