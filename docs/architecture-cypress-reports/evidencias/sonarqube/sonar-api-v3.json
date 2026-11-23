@@ -1,0 +1,269 @@
+{
+  "generated_note": "Analisis V3 del working tree (sin commit) - practica arquitectura/cypress/reportes",
+  "task": {
+    "id": "af93f5e8-a58e-450a-bc7a-11fcac0862e9",
+    "status": "SUCCESS",
+    "submittedAt": "2026-11-10T02:45:51+0000",
+    "executedAt": "2026-11-10T02:45:54+0000",
+    "executionTimeMs": 2353,
+    "analysisId": "009b62ce-7f69-4c84-b5cf-1f8a0f257bec",
+    "componentKey": "saas-reclutamiento-multiempresa",
+    "warningCount": 1
+  },
+  "gate": {
+    "status": "OK",
+    "conditions": [
+      {
+        "status": "OK",
+        "metricKey": "new_coverage",
+        "comparator": "LT",
+        "errorThreshold": "80",
+        "actualValue": "85.0"
+      },
+      {
+        "status": "OK",
+        "metricKey": "new_duplicated_lines_density",
+        "comparator": "GT",
+        "errorThreshold": "3",
+        "actualValue": "0.0"
+      },
+      {
+        "status": "OK",
+        "metricKey": "new_violations",
+        "comparator": "GT",
+        "errorThreshold": "0",
+        "actualValue": "0"
+      }
+    ],
+    "ignoredConditions": false,
+    "period": {
+      "mode": "PREVIOUS_VERSION",
+      "date": "2026-10-20T21:01:25+0000"
+    },
+    "caycStatus": "compliant"
+  },
+  "measures": {
+    "alert_status": "OK",
+    "bugs": "0",
+    "vulnerabilities": "0",
+    "code_smells": "0",
+    "coverage": "70.3",
+    "line_coverage": "70.3",
+    "lines_to_cover": "4407",
+    "uncovered_lines": "1311",
+    "new_coverage": "85.0",
+    "new_lines_to_cover": "220",
+    "new_uncovered_lines": "33",
+    "duplicated_lines_density": "0.0",
+    "new_duplicated_lines_density": "0.0",
+    "security_hotspots": "0",
+    "security_hotspots_reviewed": null,
+    "ncloc": "19856",
+    "violations": "0",
+    "new_violations": "0",
+    "reliability_rating": "1.0",
+    "security_rating": "1.0",
+    "sqale_rating": "1.0",
+    "sqale_index": "0",
+    "complexity": "2064",
+    "cognitive_complexity": "712",
+    "software_quality_security_issues": "0",
+    "software_quality_reliability_issues": "0",
+    "software_quality_maintainability_issues": "0",
+    "new_lines": "1643"
+  },
+  "metrics_not_available": [],
+  "by_directory": [
+    {
+      "path": "app",
+      "measures": {
+        "coverage": "90.1",
+        "lines_to_cover": "3436",
+        "ncloc": "6334",
+        "uncovered_lines": "340"
+      }
+    },
+    {
+      "path": "resources/js",
+      "measures": {
+        "coverage": "0.0",
+        "lines_to_cover": "913",
+        "ncloc": "13405",
+        "uncovered_lines": "913"
+      }
+    },
+    {
+      "path": "routes",
+      "measures": {
+        "coverage": "0.0",
+        "lines_to_cover": "58",
+        "ncloc": "117",
+        "uncovered_lines": "58"
+      }
+    },
+    {
+      "path": "tests",
+      "measures": {}
+    }
+  ],
+  "issues_open": [],
+  "hotspots": {
+    "pageIndex": 1,
+    "pageSize": 100,
+    "total": 0
+  },
+  "analyses": [
+    {
+      "key": "009b62ce-7f69-4c84-b5cf-1f8a0f257bec",
+      "date": "2026-11-10T02:45:43+0000",
+      "events": [
+        {
+          "key": "840d26c4-202e-45ff-a4f2-335b0351ae79",
+          "category": "VERSION",
+          "name": "1.1"
+        }
+      ],
+      "projectVersion": "1.1",
+      "manualNewCodePeriodBaseline": false,
+      "revision": "41a830ca0674547aa0778d5d0d0b8bc228d62f63",
+      "detectedCI": "undetected"
+    },
+    {
+      "key": "4506671a-dad3-4e66-ab77-94317e92ff9b",
+      "date": "2026-10-21T02:07:16+0000",
+      "events": [
+        {
+          "key": "5cd311bb-48a0-441d-8efa-57f21552e56e",
+          "category": "QUALITY_GATE",
+          "name": "Passed",
+          "description": ""
+        }
+      ],
+      "projectVersion": "1.1",
+      "manualNewCodePeriodBaseline": false,
+      "revision": "b67f6443fb2bb71e736a60a645a15bd1fa0e7de6",
+      "detectedCI": "undetected"
+    },
+    {
+      "key": "fad88726-7762-4095-bbe0-7239f78be6ac",
+      "date": "2026-10-21T01:35:44+0000",
+      "events": [
+        {
+          "key": "e35d8f02-b514-4960-a99d-4b77169c232b",
+          "category": "QUALITY_GATE",
+          "name": "Failed",
+          "description": "Coverage on New Code < 80"
+        }
+      ],
+      "projectVersion": "1.1",
+      "manualNewCodePeriodBaseline": false,
+      "revision": "b67f6443fb2bb71e736a60a645a15bd1fa0e7de6",
+      "detectedCI": "undetected"
+    },
+    {
+      "key": "0cd5eb83-5a78-42ae-8289-78af6dc0cf90",
+      "date": "2026-10-20T21:01:25+0000",
+      "events": [
+        {
+          "key": "caf42dc7-2d55-4360-b0dc-05374a52285f",
+          "category": "SQ_UPGRADE",
+          "name": "26.10.0.133078"
+        }
+      ],
+      "projectVersion": "1.1",
+      "manualNewCodePeriodBaseline": false,
+      "revision": "b67f6443fb2bb71e736a60a645a15bd1fa0e7de6",
+      "detectedCI": "undetected"
+    }
+  ],
+  "new_code_files": [
+    {
+      "path": "app/Providers/AppServiceProvider.php",
+      "measures": {
+        "new_coverage": "100.0",
+        "new_lines_to_cover": "1",
+        "new_uncovered_lines": "0"
+      }
+    },
+    {
+      "path": "app/Http/Requests/Candidates/CandidateCvRequest.php",
+      "measures": {
+        "new_coverage": "100.0",
+        "new_lines_to_cover": "1",
+        "new_uncovered_lines": "0"
+      }
+    },
+    {
+      "path": "resources/js/pages/reports/index.tsx",
+      "measures": {
+        "new_coverage": "0.0",
+        "new_lines_to_cover": "20",
+        "new_uncovered_lines": "20"
+      }
+    },
+    {
+      "path": "resources/js/lib/navigation.ts",
+      "measures": {
+        "new_coverage": "0.0",
+        "new_lines_to_cover": "1",
+        "new_uncovered_lines": "1"
+      }
+    },
+    {
+      "path": "app/Http/Controllers/Reports/RecruitmentReportController.php",
+      "measures": {
+        "new_coverage": "100.0",
+        "new_lines_to_cover": "16",
+        "new_uncovered_lines": "0"
+      }
+    },
+    {
+      "path": "app/Policies/RecruitmentReportPolicy.php",
+      "measures": {
+        "new_coverage": "100.0",
+        "new_lines_to_cover": "3",
+        "new_uncovered_lines": "0"
+      }
+    },
+    {
+      "path": "app/Http/Requests/Reports/RecruitmentReportRequest.php",
+      "measures": {
+        "new_coverage": "98.1",
+        "new_lines_to_cover": "54",
+        "new_uncovered_lines": "1"
+      }
+    },
+    {
+      "path": "app/Services/Reports/RecruitmentReportService.php",
+      "measures": {
+        "new_coverage": "100.0",
+        "new_lines_to_cover": "113",
+        "new_uncovered_lines": "0"
+      }
+    },
+    {
+      "path": "resources/js/lib/reports.ts",
+      "measures": {
+        "new_coverage": "0.0",
+        "new_lines_to_cover": "9",
+        "new_uncovered_lines": "9"
+      }
+    },
+    {
+      "path": "resources/js/components/ui/sidebar.tsx",
+      "measures": {
+        "new_coverage": "0.0",
+        "new_lines_to_cover": "1",
+        "new_uncovered_lines": "1"
+      }
+    },
+    {
+      "path": "routes/web.php",
+      "measures": {
+        "new_coverage": "0.0",
+        "new_lines_to_cover": "1",
+        "new_uncovered_lines": "1"
+      }
+    }
+  ]
+}

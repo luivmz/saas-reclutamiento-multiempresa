@@ -143,3 +143,22 @@ Las pruebas de regresión se escribieron primero y se ejecutaron contra el códi
 | CONT-M02 · F38: una raíz JSON `[]`, `null`, cadena o número lanzaba `AttributeError` | RED | `test_una_raiz_que_no_es_objeto_se_rechaza_por_el_punto_de_entrada`, por `main` | **1 error**: `AttributeError: 'list' object has no attribute 'get'` |
 | CONT-M03 · F38: `['FRG-004', 'FRG-004', 'FRG-004']` en APP-ML-001 / CRI-01-CLASE pasaba como válida | RED | `test_ids_repetidos_en_una_lista_de_recuperacion_invalidan` y `test_las_metricas_de_recuperacion_validas_quedan_en_cero_uno` | **1 failed** (`True is not false`). Medido antes de corregir: `valid = true`, Recall@3 = 1,667 y nDCG@3 = 1,377 en `dev` |
 | CONT-M02 y CONT-M03 | GREEN | Ídem: la raíz se valida antes de `.get()` y una lista de recuperación con IDs repetidos se rechaza antes de calcular métricas | **28 passed**. Sello, semilla, `k` y conjunto sin cambios (`fb7e7e13…`) |
+
+## Práctica individual — Módulo de reportes (RF-28 candidato, 09/11/2026)
+
+Ejecución histórica en el working tree de `chore/sonarqube-macos-setup`, sin commit y pendiente de auditoría. Las pruebas se escribieron antes que la ruta, el Form Request, la Policy, el servicio y la página.
+
+Pruebas nuevas: **12** PHPUnit (`tests/Feature/Reports/RecruitmentReportTest.php`), **6** Vitest (`resources/js/lib/reports.test.tsx`) y **9** Cypress (`cypress/e2e/e2e-20-reports.cy.js`).
+
+| Requisito | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| RF-28 (cand.) | Ajuste previo | `RecruitmentReportTest` | Antes de la primera ejecución se corrigió una expectativa de la propia prueba: una postulación `en_evaluacion` sin historial sí alcanzó la preselección (4, no 3) |
+| RF-28 (cand.) | RED | `RecruitmentReportTest` | **12 failed (0 assertions)**: `Route [reports.index] not defined` |
+| RF-28 (cand.) | Implementación backend | `RecruitmentReportTest` | **8 passed, 4 failed**: la prueba esperaba `75.0` y el JSON serializa los valores enteros como `75`. Se ajustó la expectativa de la prueba; la lógica no cambió |
+| RF-28 (cand.) | GREEN (backend) | `RecruitmentReportTest` | **11 passed, 1 failed**: faltaba la página `reports/index` |
+| RF-28 (cand.) | GREEN | `RecruitmentReportTest` | **12 passed (209 assertions)** |
+| RF-28 (cand.) | GREEN | `reports.test.tsx` (Vitest) | **6 passed** |
+| RF-28 (cand.) | E2E | `e2e-20-reports.cy.js` | **9 passed** |
+| Regresión | — | `php artisan test` | **434 pruebas: 426 passed, 8 skipped, 0 failed (1715 assertions)** |
+| Regresión | — | `npx vp test --run`, `npm run build`, `npx tsc --noEmit` | 54/54; build OK; 0 errores |
+| Regresión E2E | — | `npm run cy:run` | Ejecución 1: **87/94** (DEF-20 y DEF-21, registrados originalmente como DEF-14 y DEF-15 en la práctica) → ejecución 2: **94/94** |

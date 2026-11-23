@@ -1,0 +1,505 @@
+{
+  "files": [
+    {
+      "file": "docs/metologia/diagramas/fuentes/01_ARQUITECTURA_GENERAL_SAAS.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Arquitectura y multitenencia",
+          "vertices": 15,
+          "edges": 8,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/02_DESPLIEGUE_DOCKER.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Servicios base y Sonar separado",
+          "vertices": 12,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Volúmenes y montajes",
+          "vertices": 11,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Perfil E2E opcional",
+          "vertices": 8,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/03_PROCESO_RECLUTAMIENTO_AS_IS.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "AS-IS 1 de 3",
+          "vertices": 14,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "AS-IS 2 de 3",
+          "vertices": 14,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "AS-IS 3 de 3",
+          "vertices": 13,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/04_PROCESO_RECLUTAMIENTO_TO_BE.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "TO-BE tramo 1 de 6",
+          "vertices": 15,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "TO-BE tramo 2 de 6",
+          "vertices": 15,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "TO-BE tramo 3 de 6",
+          "vertices": 15,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "TO-BE tramo 4 de 6",
+          "vertices": 15,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "TO-BE tramo 5 de 6",
+          "vertices": 15,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "TO-BE tramo 6 de 6",
+          "vertices": 14,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/05_CASOS_DE_USO_GENERAL.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Requerimientos y vacantes",
+          "vertices": 14,
+          "edges": 7,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Cuenta y postulación",
+          "vertices": 9,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Seguimiento",
+          "vertices": 10,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Evaluación y entrevista",
+          "vertices": 10,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Comparación y decisión",
+          "vertices": 12,
+          "edges": 6,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/06_MAPA_MODULOS_SAAS.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Flujo y capacidades transversales",
+          "vertices": 12,
+          "edges": 6,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/07_METODOLOGIA_DESARROLLO_IA.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Etapas 1–6",
+          "vertices": 10,
+          "edges": 5,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Etapas 7–12",
+          "vertices": 10,
+          "edges": 5,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/08_AI_DLC_VS_METODOLOGIA_PROYECTO.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Fases y control",
+          "vertices": 14,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Artefactos y límites",
+          "vertices": 14,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/09_TRAZABILIDAD_ACADEMICA.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Cadena conceptual",
+          "vertices": 17,
+          "edges": 12,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Ejemplo RF-01",
+          "vertices": 16,
+          "edges": 12,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/10_JERARQUIA_PROCESOS_FUNCIONES.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Vista general",
+          "vertices": 13,
+          "edges": 0,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "PR-01 · detalle",
+          "vertices": 16,
+          "edges": 6,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "PR-02 · detalle",
+          "vertices": 12,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "PR-03 · detalle",
+          "vertices": 12,
+          "edges": 4,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "PR-04 · detalle",
+          "vertices": 22,
+          "edges": 9,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "PR-05 · detalle",
+          "vertices": 18,
+          "edges": 7,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "PR-06 · detalle",
+          "vertices": 8,
+          "edges": 2,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "PR-07 · detalle",
+          "vertices": 6,
+          "edges": 1,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/11_ESTRATEGIA_PRUEBAS_CALIDAD.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Herramientas y ciclo",
+          "vertices": 14,
+          "edges": 5,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/12_MEJORA_SONARQUBE_V1_V2.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Correcciones y resultados",
+          "vertices": 10,
+          "edges": 5,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Cobertura y Quality Gate",
+          "vertices": 8,
+          "edges": 2,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/13_MAPA_ARTICULOS_METODOLOGIA_IA.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Productividad - Eficiencia",
+          "vertices": 12,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Calidad",
+          "vertices": 22,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Seguridad",
+          "vertices": 13,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Testing - TDD",
+          "vertices": 19,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Requisitos",
+          "vertices": 13,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Human-in-the-loop",
+          "vertices": 14,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Trazabilidad",
+          "vertices": 10,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Mantenibilidad",
+          "vertices": 14,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Automatización",
+          "vertices": 19,
+          "edges": 3,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/14_VARIABLES_OPERACIONALIZACION.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Protocolo y calidad",
+          "vertices": 10,
+          "edges": 6,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/15_REQUISITO_A_EVIDENCIA.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "RF-09",
+          "vertices": 11,
+          "edges": 7,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "RF-23",
+          "vertices": 11,
+          "edges": 7,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    },
+    {
+      "file": "docs/metologia/diagramas/fuentes/16_FLUJO_GIT_DESARROLLO.drawio",
+      "xml": true,
+      "schema_valid": true,
+      "pages": [
+        {
+          "name": "Estrategia documentada",
+          "vertices": 10,
+          "edges": 5,
+          "nonempty": true,
+          "editable": true
+        },
+        {
+          "name": "Historial y referencias observadas",
+          "vertices": 9,
+          "edges": 2,
+          "nonempty": true,
+          "editable": true
+        }
+      ]
+    }
+  ],
+  "problems": [],
+  "counts": {
+    "drawio": 16,
+    "pages": 50,
+    "as_is": 14,
+    "to_be": 30,
+    "cu": 20,
+    "macro": 2,
+    "procedures": 7,
+    "activities": 33,
+    "functions": 33,
+    "articles": 20,
+    "rf": 27,
+    "rnf": 10
+  },
+  "schema_source": "https://raw.githubusercontent.com/jgraph/drawio-mcp/main/shared/mxfile.xsd",
+  "schema_sha256": "905db85d4e8ebec0e91518cdd62982e0afb3f09ebdcaf9e6b1952957a606639a",
+  "date": "2026-11-03",
+  "integrity": {
+    "baseline_files": 1232,
+    "previous_files_missing": [],
+    "previous_files_changed": [
+      "docs/PROGRESS.md"
+    ],
+    "expected_change": "docs/PROGRESS.md — registro documental; cambio académico previo preservado",
+    "prior_academic_artifacts_unchanged": true,
+    "software_dependencies_configuration_unchanged": true
+  },
+  "scope": {
+    "functional_tests": "NO EJECUTADOS — documentación exclusivamente",
+    "scanner": "NO EJECUTADO",
+    "native_diagrams_net_open": "PENDIENTE",
+    "native_exports": 0,
+    "auxiliary_svg": 50,
+    "auxiliary_png": 50,
+    "local_visual_review": "50 páginas en vistas de conjunto; ampliaciones de páginas densas/especiales",
+    "markdown_links_broken": [],
+    "secrets_detected": 0
+  }
+}

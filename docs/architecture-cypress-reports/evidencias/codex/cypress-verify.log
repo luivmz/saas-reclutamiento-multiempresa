@@ -1,0 +1,8 @@
+ Container reclutamiento-cypress-run-ca297a1353a7 Creating
+ Container reclutamiento-cypress-run-ca297a1353a7 Created
+Cypress package version: 15.3.0
+Cypress binary version: 15.3.0
+Electron version: 36.8.1
+Bundled Node version: 22.18.0
+[03:08:20]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [started]
+[03:08:21]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [COMPLETED]

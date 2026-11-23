@@ -1,0 +1,32 @@
+# Versiones medidas 2026-11-09 21:42 -05 — host macOS y contenedores Docker
+## Host
+ProductName:		macOS
+ProductVersion:		27.2
+BuildVersion:		26B123
+arm64
+Docker version 29.7.2, build a7dcaa6
+Docker Compose version v5.5.1
+git version 2.54.0 (Apple Git-157)
+21:42:22.776 INFO  SonarScanner CLI 8.1.0.6389
+21:42:22.777 INFO  Mac OS X 27.2 aarch64
+## Contenedor app
+PHP 8.4.25 (cli) (built: Sep 19 2026 00:31:14) (NTS)
+Laravel Framework 13.31.0
+Composer version 2.10.3 2026-08-27 13:34:23
+node v22.23.2
+npm 10.9.8
+typescript Version 5.9.3
+PHPUnit 12.5.35 by Sebastian Bergmann and contributors.
+PCOV version => 1.0.12
+## Servicios
+postgres (PostgreSQL) 17.11
+Redis server v=7.4.11 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=c8d8130a4710f7c0
+{"id":"147B411E-AaE4M2NTj6ho7Vt4z6rE","version":"26.10.0.133078","status":"UP"}
+reclutamiento-app-1  reclutamiento-php:dev  Up 24 minutes (healthy)
+reclutamiento-app-e2e-1  reclutamiento-php:dev  Up 13 minutes (healthy)
+reclutamiento-postgres-1  postgres:17.11-alpine  Up 24 minutes (healthy)
+reclutamiento-queue-1  reclutamiento-php:dev  Up 24 minutes (healthy)
+reclutamiento-queue-e2e-1  reclutamiento-php:dev  Up 13 minutes (healthy)
+reclutamiento-redis-1  redis:7.4.11-alpine  Up 24 minutes (healthy)
+## Salud de la aplicación
+{"status":"ok","checks":{"database":"ok","redis":"ok"},"time":"2026-11-09T21:42:23-05:00"}

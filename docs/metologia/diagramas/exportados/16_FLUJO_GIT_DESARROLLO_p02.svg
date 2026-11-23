@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1580" height="1220" viewBox="0 0 1580 1220" role="img">
+  <title>16_FLUJO_GIT_DESARROLLO · Historial y referencias observadas</title>
+  <desc>FOTOGRAFÍA LOCAL · Sin fetch, checkout, staging, commit, push o merge Fuente: AGENTS.md; git branch -a; git log; .github/workflows/tests.yml; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="495,295.0 575,295.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="535.0" y="287.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">ancestría</text>
+  <polyline points="1005,295.0 1085,295.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="1045.0" y="287.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">ancestría</text>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Git: estrategia documentada e historial real</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">FOTOGRAFÍA LOCAL · Sin fetch, checkout, staging, commit, push o merge</tspan>
+  </text>
+  <text x="40" y="1158" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: AGENTS.md; git branch -a; git log; .github/workflows/tests.yml</tspan>
+    <tspan x="40" dy="19.52">Original editable: 16_FLUJO_GIT_DESARROLLO · Página: Historial y referencias observadas</tspan>
+  </text>
+  <rect x="65" y="220" width="430" height="150" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="280.0" y="278.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="280.0" dy="0">[DOC] b67f644</tspan>
+    <tspan x="280.0" dy="24.4">Merge del handoff macOS</tspan>
+    <tspan x="280.0" dy="24.4">Padres: 853d423 y 36660ae</tspan>
+  </text>
+  <rect x="575" y="220" width="430" height="150" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="790.0" y="278.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="790.0" dy="0">[DOC] a88cd3c</tspan>
+    <tspan x="790.0" dy="24.4">Correcciones Sonar + evidencia</tspan>
+    <tspan x="790.0" dy="24.4">Padre: b67f644</tspan>
+  </text>
+  <rect x="1085" y="220" width="430" height="150" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="1300.0" y="278.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1300.0" dy="0">[DOC] b345d9c · HEAD</tspan>
+    <tspan x="1300.0" dy="24.4">Reportes auditoría Sonar</tspan>
+    <tspan x="1300.0" dy="24.4">Padre: a88cd3c</tspan>
+  </text>
+  <rect x="70" y="470" width="1440" height="110" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="790.0" y="520.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="790.0" dy="0">[PROC] Rama actual: chore/sonarqube-macos-setup en b345d9c</tspan>
+    <tspan x="790.0" dy="24.4">Coincide con su origin/chore/sonarqube-macos-setup; cambios académicos locales sin commit.</tspan>
+  </text>
+  <rect x="70" y="670" width="1440" height="150" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1492 670 L 1492 688 L 1510 688" fill="none" stroke="#414F60"/>
+  <text x="790.0" y="728.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="790.0" dy="0">[DOC] REFERENCIAS LOCALES (no inferir sincronía)</tspan>
+    <tspan x="790.0" dy="24.4">main: 8a00505 · develop: f7017c1 · feature/phase-24-academic-documentation: 8ebaf70</tspan>
+    <tspan x="790.0" dy="24.4">Hay ramas remotas feature/*, chore/*, fix/github-actions-ci, release/qa-final y codex/mejoras-sonarqube.</tspan>
+  </text>
+  <rect x="70" y="910" width="1440" height="150" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1492 910 L 1492 928 L 1510 928" fill="none" stroke="#414F60"/>
+  <text x="790.0" y="968.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="790.0" dy="0">[DOC] REFERENCIAS REMOTAS DISPONIBLES</tspan>
+    <tspan x="790.0" dy="24.4">origin/main: b8892af · origin/develop: 87ef831 (más recientes que el contexto de esta rama).</tspan>
+    <tspan x="790.0" dy="24.4">No se incorporaron sus estados F35-SBX al alcance académico local ni se actualizó ninguna referencia.</tspan>
+  </text>
+</svg>

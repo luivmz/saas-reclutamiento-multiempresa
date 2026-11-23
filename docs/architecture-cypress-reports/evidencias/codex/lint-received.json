@@ -1,0 +1,16 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "app",
+    "npm",
+    "run",
+    "check"
+  ],
+  "exit_code": 1,
+  "duration_seconds": 4.782,
+  "started_epoch": 1794280136.4295921,
+  "log": "/private/tmp/saas-codex-audit-20261109/lint-received.log"
+}

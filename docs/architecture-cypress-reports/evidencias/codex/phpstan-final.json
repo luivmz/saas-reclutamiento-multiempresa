@@ -1,0 +1,15 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "app",
+    "composer",
+    "types:check"
+  ],
+  "exit_code": 1,
+  "duration_seconds": 1.513,
+  "started_epoch": 1794280610.396106,
+  "log": "/private/tmp/saas-codex-audit-20261109/phpstan-final.log"
+}

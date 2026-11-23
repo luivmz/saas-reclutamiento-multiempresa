@@ -11,11 +11,11 @@ import { cn } from '@/lib/utils';
  * **Por qué la semántica está escrita a mano.** En pantallas angostas la fila
  * se apila como ficha, y apilarla exige `display: block` y `display: flex`
  * sobre `tbody`, `tr` y `td`. Cambiar el `display` de los elementos de una
- * tabla destruye sus roles implícitos: el navegador deja de exponerla como
- * tabla y la convierte en bloques sueltos. Por eso:
+ * tabla puede afectar su exposición en tecnologías asistivas. Por eso:
  *
- * - cada elemento declara su rol (`table`, `rowgroup`, `row`, `columnheader`,
- *   `cell`), que en escritorio solo repite lo nativo y en móvil lo restituye;
+ * - se conservan los roles estructurales (`table`, `rowgroup`, `row`,
+ *   `columnheader`); las celdas usan `td`, cuyo rol nativo bajo `table` es
+ *   `cell`, sin sobrescribirlo con ARIA redundante ni convertirlo en un grid;
  * - el encabezado **no se oculta con `display: none`** —eso lo borraría del
  *   árbol de accesibilidad—, sino que se recorta visualmente y sigue
  *   existiendo;
@@ -146,7 +146,6 @@ export function DataTable<Row>({
                                     return (
                                         <td
                                             key={column.key}
-                                            role="cell"
                                             headers={headerId(column.key)}
                                             className={cn(
                                                 'flex items-baseline gap-3 py-1 md:table-cell md:px-4 md:py-3',

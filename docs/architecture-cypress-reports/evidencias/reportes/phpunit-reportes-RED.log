@@ -1,0 +1,14 @@
+    540▕         }
+    541▕
+  ➜ 542▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    543▕     }
+    544▕
+    545▕     /**
+    546▕      * Get the URL for a given route instance.
+
+      +2 vendor frames
+  3   tests/Feature/Reports/RecruitmentReportTest.php:291
+
+
+  Tests:    12 failed (0 assertions)
+  Duration: 0.88s

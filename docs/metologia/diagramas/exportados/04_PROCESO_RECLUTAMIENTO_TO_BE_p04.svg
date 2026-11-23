@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1750" viewBox="0 0 1500 1750" role="img">
+  <title>04_PROCESO_RECLUTAMIENTO_TO_BE · TO-BE tramo 4 de 6</title>
+  <desc>TO-BE PROPUESTO · Funciones presentes; adopción institucional pendiente Fuente: F5; F2–F9; matriz de procesos ACT-001–030; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <rect x="40" y="195" width="1420" height="210" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="40" y1="240" x2="1460" y2="240" stroke="#34576E"/>
+  <text x="52" y="224" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="52" dy="0">Solicitante</tspan>
+  </text>
+  <rect x="40" y="405" width="1420" height="210" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="40" y1="450" x2="1460" y2="450" stroke="#34576E"/>
+  <text x="52" y="434" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="52" dy="0">RR. HH.</tspan>
+  </text>
+  <rect x="40" y="615" width="1420" height="210" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="40" y1="660" x2="1460" y2="660" stroke="#34576E"/>
+  <text x="52" y="644" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="52" dy="0">Dirección</tspan>
+  </text>
+  <rect x="40" y="825" width="1420" height="210" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="40" y1="870" x2="1460" y2="870" stroke="#34576E"/>
+  <text x="52" y="854" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="52" dy="0">Postulante</tspan>
+  </text>
+  <rect x="40" y="1035" width="1420" height="210" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="40" y1="1080" x2="1460" y2="1080" stroke="#34576E"/>
+  <text x="52" y="1064" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="52" dy="0">Evaluador</tspan>
+  </text>
+  <rect x="40" y="1245" width="1420" height="210" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="40" y1="1290" x2="1460" y2="1290" stroke="#34576E"/>
+  <text x="52" y="1274" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="52" dy="0">Sistema</tspan>
+  </text>
+  <polyline points="465,516.0 480.0,516.0 480.0,1356.0 495,1356.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="700,1356.0 715.0,1356.0 715.0,505.0 730,505.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="935,505.0 950.0,505.0 950.0,1367.0 965,1367.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1170,1367.0 1185.0,1367.0 1185.0,505.0 1200,505.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Proceso TO-BE apoyado por el SaaS</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">TO-BE PROPUESTO · Funciones presentes; adopción institucional pendiente</tspan>
+  </text>
+  <text x="40" y="1688" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: F5; F2–F9; matriz de procesos ACT-001–030</tspan>
+    <tspan x="40" dy="19.52">Original editable: 04_PROCESO_RECLUTAMIENTO_TO_BE · Página: TO-BE tramo 4 de 6</tspan>
+  </text>
+  <rect x="260" y="460" width="205" height="112" fill="#FFF1D6" stroke="#684900" stroke-width="2"/>
+  <text x="362.5" y="490.08" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="362.5" dy="0">[H] TB-16</tspan>
+    <tspan x="362.5" dy="21.96">Preseleccionar o</tspan>
+    <tspan x="362.5" dy="21.96">descartar</tspan>
+    <tspan x="362.5" dy="21.96">RF-13</tspan>
+  </text>
+  <rect x="495" y="1300" width="205" height="112" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="597.5" y="1330.08" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="597.5" dy="0">[SIS] TB-17 Notificar</tspan>
+    <tspan x="597.5" dy="21.96">el cambio de etapa al</tspan>
+    <tspan x="597.5" dy="21.96">postulante</tspan>
+    <tspan x="597.5" dy="21.96">RF-15</tspan>
+  </text>
+  <rect x="730" y="460" width="205" height="90" fill="#FFF1D6" stroke="#684900" stroke-width="2"/>
+  <text x="832.5" y="490.06" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="832.5" dy="0">[H] TB-18 Programar</tspan>
+    <tspan x="832.5" dy="21.96">la evaluación</tspan>
+    <tspan x="832.5" dy="21.96">RF-16</tspan>
+  </text>
+  <rect x="965" y="1300" width="205" height="134" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1067.5" y="1330.1" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1067.5" dy="0">[SIS] TB-19 Enviar la</tspan>
+    <tspan x="1067.5" dy="21.96">convocatoria al</tspan>
+    <tspan x="1067.5" dy="21.96">postulante y el aviso</tspan>
+    <tspan x="1067.5" dy="21.96">al evaluador</tspan>
+    <tspan x="1067.5" dy="21.96">RF-17</tspan>
+  </text>
+  <rect x="1200" y="460" width="205" height="90" fill="#FFF1D6" stroke="#684900" stroke-width="2"/>
+  <text x="1302.5" y="490.06" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1302.5" dy="0">[H] TB-20 Programar</tspan>
+    <tspan x="1302.5" dy="21.96">la entrevista</tspan>
+    <tspan x="1302.5" dy="21.96">RF-18</tspan>
+  </text>
+  <rect x="60" y="1530" width="1380" height="100" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1422 1530 L 1422 1548 L 1440 1548" fill="none" stroke="#414F60"/>
+  <text x="750.0" y="1565.06" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="750.0" dy="0">[DOC] TB-30 / RF-27 · Auditoría transversal de acciones críticas, no una etapa posterior al cierre.</tspan>
+    <tspan x="750.0" dy="21.96">Rechazo: TB-05→TB-06 y fin; observación: TB-03→TB-04→TB-02.</tspan>
+    <tspan x="750.0" dy="21.96">Evaluación/entrevista y cambios de etapa dependen del caso; esta secuencia es síntesis, no BPMN ejecutable.</tspan>
+  </text>
+</svg>

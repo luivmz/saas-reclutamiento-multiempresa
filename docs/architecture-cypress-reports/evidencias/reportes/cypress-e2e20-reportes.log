@@ -1,0 +1,105 @@
+
+> cy:run
+> npm run e2e:setup && docker compose --profile e2e run --rm cypress --spec cypress/e2e/e2e-20-reports.cy.js
+
+
+> e2e:setup
+> docker compose run --rm --no-deps --entrypoint sh app docker/php/init-e2e-env.sh
+
+ Container reclutamiento-app-run-6b2c42799e9e Creating
+ Container reclutamiento-app-run-6b2c42799e9e Created
+.env.e2e ya existe; no se modifica.
+ Container reclutamiento-app-e2e-1 Running
+ Container reclutamiento-queue-e2e-1 Running
+ Container reclutamiento-app-1 Running
+ Container reclutamiento-postgres-1 Running
+ Container reclutamiento-redis-1 Running
+ Container reclutamiento-redis-1 Waiting
+ Container reclutamiento-postgres-1 Waiting
+ Container reclutamiento-redis-1 Healthy
+ Container reclutamiento-postgres-1 Healthy
+ Container reclutamiento-app-1 Waiting
+ Container reclutamiento-app-1 Healthy
+ Container reclutamiento-app-e2e-1 Waiting
+ Container reclutamiento-app-e2e-1 Healthy
+ Container reclutamiento-app-e2e-1 Waiting
+ Container reclutamiento-queue-e2e-1 Waiting
+ Container reclutamiento-queue-e2e-1 Healthy
+ Container reclutamiento-app-e2e-1 Healthy
+ Container reclutamiento-cypress-run-b4b28961b559 Creating
+ Container reclutamiento-cypress-run-b4b28961b559 Created
+[02:53:42]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [started]
+[02:53:44]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [COMPLETED]
+[209:1110/025344.801532:ERROR:dbus/object_proxy.cc:590] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+
+DevTools listening on ws://127.0.0.1:34999/devtools/browser/ac169c77-8f2c-4472-92d5-d7314696acd2
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        15.3.0                                                                         │
+  │ Browser:        Electron 136 (headless)                                                        │
+  │ Node Version:   v22.20.0 (/usr/local/bin/node)                                                 │
+  │ Specs:          1 found (e2e-20-reports.cy.js)                                                 │
+  │ Searched:       cypress/e2e/e2e-20-reports.cy.js                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-20-reports.cy.js                                                            (1 of 1)
+
+
+  E2E-20 · Reportes de reclutamiento (RF-28, candidato)
+    ✓ RR. HH. abre Reportes desde el menú y ve indicadores calculados desde la base de datos (2459ms)
+    ✓ el filtro por vacante recalcula indicadores, gráficos y tabla (639ms)
+    ✓ el filtro por etapa actual limita el conjunto analizado (364ms)
+    ✓ un período sin registros muestra cero y un estado vacío, sin datos de ejemplo (1039ms)
+    ✓ refleja al instante una preselección registrada en el sistema (956ms)
+    ✓ la organización B solo ve sus propios indicadores (1532ms)
+    ✓ rechaza filtrar por una vacante de otra organización sin filtrar sus datos (1087ms)
+    ✓ los roles sin permiso no acceden ni ven el menú de reportes (3742ms)
+    ✓ el aprobador también lo consulta, y en móvil la página no se desborda (1601ms)
+
+
+  9 passing (14s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        9                                                                                │
+  │ Passing:      9                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  4                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     13 seconds                                                                       │
+  │ Spec Ran:     e2e-20-reports.cy.js                                                             │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /e2e/cypress/screenshots/e2e-20-reports.cy.js/E2E-20-01-reportes-rrhh-organizaci    (1280x1583)
+     on-a.png
+  -  /e2e/cypress/screenshots/e2e-20-reports.cy.js/E2E-20-02-filtro-por-vacante.png      (1280x1435)
+  -  /e2e/cypress/screenshots/e2e-20-reports.cy.js/E2E-20-06-reportes-organizacion-b.    (1280x1455)
+     png
+  -  /e2e/cypress/screenshots/e2e-20-reports.cy.js/E2E-20-09-reportes-aprobador-movil     (390x3431)
+     .png
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  e2e-20-reports.cy.js                     00:13        9        9        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:13        9        9        -        -        -

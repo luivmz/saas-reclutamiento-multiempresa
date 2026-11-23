@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1250" viewBox="0 0 1680 1250" role="img">
+  <title>15_REQUISITO_A_EVIDENCIA · RF-23</title>
+  <desc>AS-IS preliminar y evidencia QA histórica; Sonar no sustituye aceptación funcional Fuente: MATRIZ_REQUERIMIENTOS_SISTEMA.xlsx; matriz de funciones; reporte V2; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="530,315.0 595,315.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1075,315.0 1140,315.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1380.0,420 1380.0,520" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1140,625.0 1075,625.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="595,625.0 530,625.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="290.0,730 290.0,830" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="530,935.0 595,935.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">RF-23 · Registrar decisión final de selección</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">AS-IS preliminar y evidencia QA histórica; Sonar no sustituye aceptación funcional</tspan>
+  </text>
+  <text x="40" y="1188" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: MATRIZ_REQUERIMIENTOS_SISTEMA.xlsx; matriz de funciones; reporte V2</tspan>
+    <tspan x="40" dy="19.52">Original editable: 15_REQUISITO_A_EVIDENCIA · Página: RF-23</tspan>
+  </text>
+  <rect x="50" y="210" width="480" height="210" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="290.0" y="298.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="290.0" dy="0">[PROC] Necesidad / solución</tspan>
+    <tspan x="290.0" dy="24.4">Sustento de decisión humana (S-05; problema</tspan>
+    <tspan x="290.0" dy="24.4">preliminar P5)</tspan>
+  </text>
+  <rect x="595" y="210" width="480" height="210" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="835.0" y="286.2" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="835.0" dy="0">[DOC] RF-23</tspan>
+    <tspan x="835.0" dy="24.4">El sistema debe permitir al Aprobador / Dirección</tspan>
+    <tspan x="835.0" dy="24.4">registrar la decisión final humana, con</tspan>
+    <tspan x="835.0" dy="24.4">confirmación explícita y justificación.</tspan>
+  </text>
+  <rect x="1140" y="210" width="480" height="210" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="1380.0" y="310.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1380.0" dy="0">[DOC] CU-18</tspan>
+    <tspan x="1380.0" dy="24.4">Catálogo académico F8</tspan>
+  </text>
+  <rect x="1140" y="520" width="480" height="210" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1380.0" y="620.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1380.0" dy="0">[SIS] Código</tspan>
+    <tspan x="1380.0" dy="24.4">app/Services/Selection/FinalDecisionService.php</tspan>
+  </text>
+  <rect x="595" y="520" width="480" height="210" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="835.0" y="596.2" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="835.0" dy="0">[QA] Prueba</tspan>
+    <tspan x="835.0" dy="24.4">tests/Feature/Selection/FinalDecisionTest.php</tspan>
+    <tspan x="835.0" dy="24.4">test_rf23_approver_records_the_final_decision_fo</tspan>
+    <tspan x="835.0" dy="24.4">r_a_ranked_finalist</tspan>
+  </text>
+  <rect x="50" y="520" width="480" height="210" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="290.0" y="608.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="290.0" dy="0">[QA] SonarQube</tspan>
+    <tspan x="290.0" dy="24.4">Alcance agregado: no hay métrica individual de</tspan>
+    <tspan x="290.0" dy="24.4">aceptación RF-23</tspan>
+  </text>
+  <rect x="50" y="830" width="480" height="210" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="290.0" y="918.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="290.0" dy="0">[DOC] Evidencia</tspan>
+    <tspan x="290.0" dy="24.4">Informe V2 y métodos de tests presentes; no</tspan>
+    <tspan x="290.0" dy="24.4">reejecutados</tspan>
+  </text>
+  <rect x="595" y="830" width="480" height="210" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="835.0" y="930.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="835.0" dy="0">[DOC] Matriz</tspan>
+    <tspan x="835.0" dy="24.4">Requisitos + procesos + trazabilidad académica</tspan>
+  </text>
+</svg>

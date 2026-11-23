@@ -1,0 +1,20 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "--profile",
+    "e2e",
+    "run",
+    "--rm",
+    "--no-deps",
+    "--entrypoint",
+    "sh",
+    "cypress",
+    "-c",
+    "npx --no-install cypress version && npx --no-install cypress verify"
+  ],
+  "exit_code": 0,
+  "duration_seconds": 2.501,
+  "started_epoch": 1794280099.525793,
+  "log": "/private/tmp/saas-codex-audit-20261109/cypress-verify.log"
+}

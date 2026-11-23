@@ -1,0 +1,17 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "app",
+    "php",
+    "artisan",
+    "test",
+    "--filter=RecruitmentReportTest"
+  ],
+  "exit_code": 0,
+  "duration_seconds": 1.302,
+  "started_epoch": 1794280057.759629,
+  "log": "/private/tmp/saas-codex-audit-20261109/reports-received.log"
+}

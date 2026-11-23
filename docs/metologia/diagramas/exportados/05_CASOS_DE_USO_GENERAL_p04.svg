@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1550" height="1220" viewBox="0 0 1550 1220" role="img">
+  <title>05_CASOS_DE_USO_GENERAL · Evaluación y entrevista</title>
+  <desc>20 CU académicos · Cinco roles humanos · CU-16 incluido; RF-27 transversal Fuente: F8 §4–5; matriz de requisitos; 20 CU aprobados; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <rect x="335" y="185" width="1170" height="820" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="335" y1="230" x2="1505" y2="230" stroke="#34576E"/>
+  <text x="347" y="214" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="347" dy="0">LÍMITE DEL SISTEMA · Evaluación y entrevista</tspan>
+  </text>
+  <polyline points="240,285.0 270,285.0 270,327.5 400,327.5" fill="none" stroke="#3B5268" stroke-width="2"/>
+  <polyline points="240,285.0 270,285.0 270,226 925,226 925,327.5 970,327.5" fill="none" stroke="#3B5268" stroke-width="2"/>
+  <polyline points="240,525.0 290,525.0 290,552.5 400,552.5" fill="none" stroke="#3B5268" stroke-width="2"/>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Casos de uso académicos del SaaS</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">20 CU académicos · Cinco roles humanos · CU-16 incluido; RF-27 transversal</tspan>
+  </text>
+  <text x="40" y="1158" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: F8 §4–5; matriz de requisitos; 20 CU aprobados</tspan>
+    <tspan x="40" dy="19.52">Original editable: 05_CASOS_DE_USO_GENERAL · Página: Evaluación y entrevista</tspan>
+  </text>
+  <circle cx="162.5" cy="250" r="14" fill="#FFF1D6" stroke="#684900" stroke-width="2"/>
+  <line x1="162.5" y1="264" x2="162.5" y2="300" stroke="#684900" stroke-width="3"/>
+  <line x1="130.5" y1="280" x2="194.5" y2="280" stroke="#684900" stroke-width="3"/>
+  <line x1="162.5" y1="300" x2="132.5" y2="335" stroke="#684900" stroke-width="3"/>
+  <line x1="162.5" y1="300" x2="192.5" y2="335" stroke="#684900" stroke-width="3"/>
+  <text x="162.5" y="361" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="162.5" dy="0">ACT-02</tspan>
+    <tspan x="162.5" dy="24.4">RR. HH.</tspan>
+  </text>
+  <circle cx="162.5" cy="490" r="14" fill="#FFF1D6" stroke="#684900" stroke-width="2"/>
+  <line x1="162.5" y1="504" x2="162.5" y2="540" stroke="#684900" stroke-width="3"/>
+  <line x1="130.5" y1="520" x2="194.5" y2="520" stroke="#684900" stroke-width="3"/>
+  <line x1="162.5" y1="540" x2="132.5" y2="575" stroke="#684900" stroke-width="3"/>
+  <line x1="162.5" y1="540" x2="192.5" y2="575" stroke="#684900" stroke-width="3"/>
+  <text x="162.5" y="601" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="162.5" dy="0">ACT-05</tspan>
+    <tspan x="162.5" dy="24.4">Evaluador</tspan>
+  </text>
+  <ellipse cx="640.0" cy="327.5" rx="240.0" ry="77.5" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="640.0" y="310.9" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="640.0" dy="0">CU-13</tspan>
+    <tspan x="640.0" dy="24.4">Programar evaluación</tspan>
+    <tspan x="640.0" dy="24.4">RF-16, RF-17</tspan>
+  </text>
+  <ellipse cx="1210.0" cy="327.5" rx="240.0" ry="77.5" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1210.0" y="310.9" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1210.0" dy="0">CU-14</tspan>
+    <tspan x="1210.0" dy="24.4">Programar entrevista</tspan>
+    <tspan x="1210.0" dy="24.4">RF-18</tspan>
+  </text>
+  <ellipse cx="640.0" cy="552.5" rx="240.0" ry="77.5" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="640.0" y="523.7" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="640.0" dy="0">CU-15</tspan>
+    <tspan x="640.0" dy="24.4">Registrar resultados de evaluación y</tspan>
+    <tspan x="640.0" dy="24.4">entrevista</tspan>
+    <tspan x="640.0" dy="24.4">RF-19</tspan>
+  </text>
+  <text x="55" y="1048" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="55" dy="0">RF-27 se documenta como capacidad transversal, sin crear CU-21. Ningún actor Sistema independiente.</tspan>
+  </text>
+</svg>

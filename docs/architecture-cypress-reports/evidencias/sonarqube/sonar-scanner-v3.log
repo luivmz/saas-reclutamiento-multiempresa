@@ -1,0 +1,143 @@
+21:45:40.041 INFO  Scanner configuration file: /opt/homebrew/Cellar/sonar-scanner/8.1.0.6389/libexec/conf/sonar-scanner.properties
+21:45:40.042 INFO  Project root configuration file: /Users/luisvilameza/Universidad/Pruebas_Calidad/Project_SaaS/saas-reclutamiento-multiempresa/sonar-project.properties
+21:45:40.049 INFO  SonarScanner CLI 8.1.0.6389
+21:45:40.049 INFO  Mac OS X 27.2 aarch64
+21:45:41.258 INFO  Communicating with SonarQube Community Build 26.10.0.133078
+21:45:41.259 INFO  JRE provisioning: os[macos], arch[arm64]
+WARNING: Final field id in class org.sonarsource.scanner.lib.internal.facade.forked.JavaRunnerFactory$JreMetadata has been mutated reflectively by class com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$2 in unnamed module @5442a311 (file:/opt/homebrew/Cellar/sonar-scanner/8.1.0.6389/libexec/lib/sonar-scanner-cli-8.1.0.6389.jar)
+WARNING: Use --enable-final-field-mutation=ALL-UNNAMED to avoid a warning
+WARNING: Mutating final fields will be blocked in a future release unless final field mutation is enabled
+21:45:41.653 INFO  Starting SonarScanner Engine...
+21:45:41.653 INFO  Java 21.0.12.1 Eclipse Adoptium (64-bit)
+21:45:42.866 INFO  Load global settings
+21:45:42.955 INFO  Load global settings (done) | time=87ms
+21:45:42.955 INFO  Server id: 147B411E-AaE4M2NTj6ho7Vt4z6rE
+21:45:42.958 INFO  Loading required plugins
+21:45:42.959 INFO  Load plugins index
+21:45:42.973 INFO  Load plugins index (done) | time=15ms
+21:45:42.974 INFO  Load/download plugins
+21:45:42.978 INFO  Load/download plugins (done) | time=5ms
+21:45:43.085 INFO  Load project settings for component key: 'saas-reclutamiento-multiempresa'
+21:45:43.112 INFO  Load project settings for component key: 'saas-reclutamiento-multiempresa' (done) | time=26ms
+21:45:43.117 INFO  Process project properties
+21:45:43.126 INFO  Process project properties (done) | time=8ms
+21:45:43.132 INFO  Project key: saas-reclutamiento-multiempresa
+21:45:43.132 INFO  Base dir: /Users/luisvilameza/Universidad/Pruebas_Calidad/Project_SaaS/saas-reclutamiento-multiempresa
+21:45:43.132 INFO  Working dir: /Users/luisvilameza/Universidad/Pruebas_Calidad/Project_SaaS/saas-reclutamiento-multiempresa/.scannerwork
+21:45:43.219 INFO  Load quality profiles
+21:45:43.334 INFO  Load quality profiles (done) | time=115ms
+21:45:43.348 INFO  Load active rules
+21:45:43.552 INFO  Load active rules (done) | time=205ms
+21:45:43.554 INFO  Load analysis cache
+21:45:43.576 INFO  Load analysis cache | time=21ms
+21:45:43.611 INFO  Preprocessing files...
+21:45:43.995 INFO  2 languages detected in 350 preprocessed files (done) | time=383ms
+21:45:43.995 INFO  252 files ignored because of inclusion/exclusion patterns
+21:45:43.995 INFO  111 files ignored because of scm ignore settings
+21:45:43.996 INFO  Loading plugins for detected languages
+21:45:43.996 INFO  Load/download plugins
+21:45:44.005 INFO  Load/download plugins (done) | time=8ms
+21:45:44.081 INFO  Load project repositories
+21:45:44.143 INFO  Load project repositories (done) | time=63ms
+21:45:44.152 INFO  Indexing files...
+21:45:44.152 INFO  Project configuration:
+21:45:44.152 INFO    Excluded sources: vendor/**, node_modules/**, public/build/**, storage/**, bootstrap/cache/**, docs/**, database/**, cypress/**, ml-service/**, tests/**, resources/js/**/*.test.tsx
+21:45:44.152 INFO    Included tests: tests/**, resources/js/**/*.test.tsx
+21:45:44.252 INFO  348 files indexed (done) | time=101ms
+21:45:44.252 INFO  Quality profile for php: Sonar way core
+21:45:44.252 INFO  Quality profile for ts: Sonar way core
+21:45:44.253 INFO  ------------- Run sensors on module SaaS Reclutamiento Multiempresa
+21:45:44.274 INFO  Load metrics repository
+21:45:44.289 INFO  Load metrics repository (done) | time=14ms
+21:45:44.447 INFO  Reflections took 24 ms to scan 1 urls, producing 30 keys and 303 values
+21:45:44.483 INFO  Sensor IaC YAML File Type Classification Sensor [iac]
+21:45:44.484 INFO  Sensor IaC YAML File Type Classification Sensor [iac] (done) | time=1ms
+21:45:44.485 INFO  Sensor PHP sensor [php]
+21:45:44.513 INFO  Starting PHP symbol indexer
+21:45:44.514 INFO  209 source files to be analyzed
+21:45:45.249 INFO  209/209 source files have been analyzed
+21:45:45.249 INFO  Cached information of global symbols will be used for 0 out of 209 files. Global symbols were recomputed for the remaining files.
+21:45:45.263 INFO  Starting PHP rules
+21:45:45.263 INFO  209 source files to be analyzed
+21:45:46.263 INFO  209/209 source files have been analyzed
+21:45:46.263 INFO  The PHP analyzer was able to leverage cached data from previous analyses for 0 out of 209 files. These files were not parsed.
+21:45:46.263 INFO  Sensor PHP sensor [php] (done) | time=1778ms
+21:45:46.263 INFO  Sensor Analyzer for "php.ini" files [php]
+21:45:46.264 INFO  Sensor Analyzer for "php.ini" files [php] (done) | time=0ms
+21:45:46.264 INFO  Sensor PHPUnit report sensor [php]
+21:45:46.264 INFO  No PHPUnit tests reports provided (see 'sonar.php.tests.reportPath' property)
+21:45:46.264 INFO  Importing /Users/luisvilameza/Universidad/Pruebas_Calidad/Project_SaaS/saas-reclutamiento-multiempresa/coverage.xml
+21:45:46.311 INFO  Sensor PHPUnit report sensor [php] (done) | time=47ms
+21:45:46.311 INFO  Sensor IaC hadolint report Sensor [iac]
+21:45:46.311 INFO  Sensor IaC hadolint report Sensor [iac] (done) | time=0ms
+21:45:46.311 INFO  Sensor Java Config Sensor [iac]
+21:45:46.311 INFO  There are no files to be analyzed for the Java language
+21:45:46.311 INFO  Sensor Java Config Sensor [iac] (done) | time=0ms
+21:45:46.312 INFO  Sensor IaC Docker Sensor [iac]
+21:45:46.315 INFO  There are no files to be analyzed for the Docker language
+21:45:46.315 INFO  Sensor IaC Docker Sensor [iac] (done) | time=3ms
+21:45:46.315 INFO  Sensor HTML [web]
+21:45:46.374 INFO  Sensor HTML [web] (done) | time=59ms
+21:45:46.374 INFO  Sensor TextAndSecretsSensor [text]
+21:45:46.402 INFO  Available processors: 10
+21:45:46.402 INFO  Using 10 threads for analysis.
+21:45:46.512 INFO  Start fetching files for the text and secrets analysis
+21:45:46.523 INFO  Using Git CLI to retrieve dirty files
+21:45:46.542 INFO  Retrieving language associated files and files included via "sonar.text.inclusions" that are tracked by git
+21:45:46.542 INFO  Starting the text and secrets analysis
+21:45:46.543 INFO  348 source files to be analyzed for the text and secrets analysis
+21:45:46.715 INFO  348/348 source files have been analyzed for the text and secrets analysis
+21:45:46.716 INFO  Sensor TextAndSecretsSensor [text] (done) | time=342ms
+21:45:46.719 INFO  ------------- Run sensors on project
+21:45:46.818 INFO  Sensor JavaScript/TypeScript/CSS analysis [javascript]
+21:45:46.995 INFO  Detected os: Mac OS X arch: aarch64 alpine: false. Platform: DARWIN_ARM64
+21:45:46.995 INFO  Deploy location /Users/luisvilameza/.sonar/js/node-runtime, tagetRuntime: /Users/luisvilameza/.sonar/js/node-runtime/node,  version: /Users/luisvilameza/.sonar/js/node-runtime/version.txt
+21:45:47.058 INFO  Using embedded Node.js runtime.
+21:45:47.058 INFO  Using Node.js executable: '/Users/luisvilameza/.sonar/js/node-runtime/node'.
+21:45:47.943 INFO  Memory configuration: OS (16384 MB), Node.js (4288 MB).
+21:45:47.951 INFO  gRPC analyze-project server listening on 127.0.0.1:53337
+21:45:48.024 INFO  Plugin version: [14.0.0.46108]
+21:45:48.804 INFO  Found 1 tsconfig.json file(s): [/Users/luisvilameza/Universidad/Pruebas_Calidad/Project_SaaS/saas-reclutamiento-multiempresa/tsconfig.json]
+21:45:50.488 INFO  139 source files to be analyzed
+21:45:50.488 INFO  Creating TypeScript(6.0.3) program with configuration file /Users/luisvilameza/Universidad/Pruebas_Calidad/Project_SaaS/saas-reclutamiento-multiempresa/tsconfig.json [lib: lib.es2024.d.ts, lib.dom.d.ts]
+21:45:50.488 INFO  Analyzing 139 file(s) from tsconfig /Users/luisvilameza/Universidad/Pruebas_Calidad/Project_SaaS/saas-reclutamiento-multiempresa/tsconfig.json (322 total files in program)
+21:45:50.488 INFO  139/139 source files have been analyzed
+21:45:50.493 INFO  Hit the cache for 0 out of 139
+21:45:50.494 INFO  Miss the cache for 139 out of 139: ANALYSIS_MODE_INELIGIBLE [139/139]
+21:45:50.494 INFO  Sensor JavaScript/TypeScript/CSS analysis [javascript] (done) | time=3675ms
+21:45:50.494 INFO  Sensor IaC Project Sensor [iac]
+21:45:50.494 INFO  Sensor IaC Project Sensor [iac] (done) | time=0ms
+21:45:50.495 INFO  Sensor Zero Coverage Sensor
+21:45:50.506 INFO  Sensor Zero Coverage Sensor (done) | time=11ms
+21:45:50.506 INFO  ------------- Gather SCA dependencies on project
+21:45:50.510 INFO  Dependency analysis skipped
+21:45:50.533 INFO  SCM Publisher SCM provider for this project is: git
+21:45:50.534 INFO  SCM Publisher 20 source files to be analyzed
+21:45:50.831 INFO  SCM Publisher 9/20 source files have been analyzed (done) | time=297ms
+21:45:50.832 WARN  Missing blame information for the following files:
+21:45:50.832 WARN    * resources/js/lib/navigation.ts
+21:45:50.832 WARN    * resources/js/lib/reports.test.tsx
+21:45:50.832 WARN    * app/Providers/AppServiceProvider.php
+21:45:50.833 WARN    * routes/web.php
+21:45:50.833 WARN    * resources/js/lib/reports.ts
+21:45:50.833 WARN    * app/Http/Requests/Reports/RecruitmentReportRequest.php
+21:45:50.833 WARN    * app/Services/Reports/RecruitmentReportService.php
+21:45:50.833 WARN    * tests/Feature/Reports/RecruitmentReportTest.php
+21:45:50.833 WARN    * app/Http/Controllers/Reports/RecruitmentReportController.php
+21:45:50.833 WARN    * app/Policies/RecruitmentReportPolicy.php
+21:45:50.833 WARN    * resources/js/pages/reports/index.tsx
+21:45:50.833 WARN  This may lead to missing/broken features in SonarQube
+21:45:50.850 INFO  CPD Executor 17 files had no CPD blocks
+21:45:50.851 INFO  CPD Executor Calculating CPD for 271 files
+21:45:50.904 INFO  CPD Executor CPD calculation finished (done) | time=54ms
+21:45:50.907 INFO  SCM revision ID '41a830ca0674547aa0778d5d0d0b8bc228d62f63'
+21:45:51.027 INFO  Analysis report generated in 111ms, dir size=2.6 MB
+21:45:51.728 INFO  Analysis report compressed in 700ms, zip size=1.6 MB
+21:45:51.827 INFO  Analysis report uploaded in 100ms
+21:45:51.828 INFO  ANALYSIS SUCCESSFUL, you can find the results at: http://localhost:9000/dashboard?id=saas-reclutamiento-multiempresa
+21:45:51.829 INFO  Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+21:45:51.829 INFO  More about the report processing at http://localhost:9000/api/ce/task?id=af93f5e8-a58e-450a-bc7a-11fcac0862e9
+21:45:52.018 INFO  Analysis total time: 10.345 s
+21:45:52.018 INFO  SonarScanner Engine completed successfully
+21:45:52.030 INFO  EXECUTION SUCCESS
+21:45:52.032 INFO  Total time: 11.991s

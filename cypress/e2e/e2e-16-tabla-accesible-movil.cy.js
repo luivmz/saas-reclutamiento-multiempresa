@@ -46,7 +46,11 @@ function verificarSemantica(tabla) {
         expect(celdas.length, 'la tabla tiene celdas').to.be.greaterThan(0);
 
         celdas.forEach((celda) => {
-            expect(celda.getAttribute('role')).to.eq('cell');
+            // Desde a88cd3c (Sonar typescript:S6843) la celda conserva el rol
+            // nativo de `td` en vez de declarar role="cell" (DEF-14); no debe
+            // sobrescribirse con otro rol.
+            expect(celda.tagName).to.eq('TD');
+            expect(celda.getAttribute('role') ?? 'cell').to.eq('cell');
             expect(
                 ids,
                 `headers de la celda «${celda.textContent.trim().slice(0, 30)}»`,
