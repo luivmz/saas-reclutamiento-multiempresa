@@ -30,7 +30,9 @@ function contraste(el, colorTexto) {
         return [r, g, b, a / 255];
     };
     const sobre = (arriba, abajo) =>
-        [0, 1, 2].map((i) => arriba[i] * arriba[3] + abajo[i] * (1 - arriba[3])).concat(1);
+        [0, 1, 2]
+            .map((i) => arriba[i] * arriba[3] + abajo[i] * (1 - arriba[3]))
+            .concat(1);
     const luminancia = (c) => {
         const [r, g, b] = c.slice(0, 3).map((v) => {
             const s = v / 255;
@@ -50,9 +52,17 @@ function contraste(el, colorTexto) {
         if (c[3] >= 1) break;
     }
 
-    const fondo = capas.reduceRight((abajo, arriba) => sobre(arriba, abajo), [255, 255, 255, 1]);
-    const texto = sobre(rgba(colorTexto ?? win.getComputedStyle(el).color), fondo);
-    const [l1, l2] = [luminancia(texto), luminancia(fondo)].sort((p, q) => q - p);
+    const fondo = capas.reduceRight(
+        (abajo, arriba) => sobre(arriba, abajo),
+        [255, 255, 255, 1],
+    );
+    const texto = sobre(
+        rgba(colorTexto ?? win.getComputedStyle(el).color),
+        fondo,
+    );
+    const [l1, l2] = [luminancia(texto), luminancia(fondo)].sort(
+        (p, q) => q - p,
+    );
 
     return (l1 + 0.05) / (l2 + 0.05);
 }
@@ -64,9 +74,14 @@ function sinAnimaciones() {
             new Cypress.Promise((resolve) => {
                 const finitas = win.document
                     .getAnimations()
-                    .filter((a) => a.effect?.getTiming().iterations !== Infinity);
+                    .filter(
+                        (a) => a.effect?.getTiming().iterations !== Infinity,
+                    );
 
-                Promise.all(finitas.map((a) => a.finished)).then(resolve, resolve);
+                Promise.all(finitas.map((a) => a.finished)).then(
+                    resolve,
+                    resolve,
+                );
             }),
     );
 }
@@ -89,15 +104,36 @@ describe('E2E-19 · QA visual y accesibilidad de la Fase 21', () => {
             cy.document().then((doc) => {
                 const { scrollWidth, clientWidth } = doc.documentElement;
 
-                expect(scrollWidth - clientWidth, `desborde en ${ruta}`).to.be.lessThan(2);
+                expect(
+                    scrollWidth - clientWidth,
+                    `desborde en ${ruta}`,
+                ).to.be.lessThan(2);
             });
         });
+    });
+
+    it('la portada conserva sus acciones y ancho con texto al 200 %', () => {
+        cy.viewport(320, 640);
+        visitar('/');
+        cy.document().then((doc) => {
+            doc.documentElement.style.fontSize = '200%';
+        });
+
+        cy.get('html').should(($html) => {
+            const { scrollWidth, clientWidth } = $html[0];
+            expect(scrollWidth).to.equal(clientWidth);
+        });
+        cy.dataCy('cta-jobs').should('be.visible');
+        cy.dataCy('cta-login').should('be.visible');
     });
 
     it('cada pantalla de acceso tiene un único contenido principal', () => {
         ['/login', '/register', '/forgot-password'].forEach((ruta) => {
             visitar(ruta);
-            cy.get('main').should('have.length', 1).find('form').should('exist');
+            cy.get('main')
+                .should('have.length', 1)
+                .find('form')
+                .should('exist');
         });
     });
 
@@ -122,7 +158,9 @@ describe('E2E-19 · QA visual y accesibilidad de la Fase 21', () => {
                 ['alert-title', 'alert-description'].forEach((slot) => {
                     const el = $alerta[0].querySelector(`[data-slot=${slot}]`);
 
-                    expect(contraste(el), `${slot} en ${tema}`).to.be.at.least(4.5);
+                    expect(contraste(el), `${slot} en ${tema}`).to.be.at.least(
+                        4.5,
+                    );
                 });
             });
         });
@@ -135,7 +173,9 @@ describe('E2E-19 · QA visual y accesibilidad de la Fase 21', () => {
             sinAnimaciones();
 
             cy.get('p[role=alert]').each(($error) => {
-                expect(contraste($error[0]), `error en ${tema}`).to.be.at.least(4.5);
+                expect(contraste($error[0]), `error en ${tema}`).to.be.at.least(
+                    4.5,
+                );
             });
 
             // El botón destructivo (`bg-destructive text-white`) no aparece en
@@ -146,7 +186,10 @@ describe('E2E-19 · QA visual y accesibilidad de la Fase 21', () => {
                 muestra.className = 'bg-destructive text-white';
                 doc.querySelector('main').appendChild(muestra);
 
-                expect(contraste(muestra), `botón destructivo en ${tema}`).to.be.at.least(4.5);
+                expect(
+                    contraste(muestra),
+                    `botón destructivo en ${tema}`,
+                ).to.be.at.least(4.5);
                 muestra.remove();
             });
         });

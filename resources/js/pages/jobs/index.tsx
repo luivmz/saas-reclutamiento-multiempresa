@@ -31,9 +31,9 @@ export default function JobsIndex({ vacancies, filters }: Props) {
                         Empleos disponibles
                     </h1>
                     <p className="text-muted-foreground max-w-2xl leading-relaxed">
-                        Convocatorias vigentes publicadas por las organizaciones
-                        de la plataforma. Para postular necesita una cuenta de
-                        postulante con perfil y CV.
+                        Convocatorias publicadas por las organizaciones de la
+                        plataforma. Para postular necesita una cuenta con perfil
+                        de postulante y CV.
                     </p>
                     <Form
                         {...jobsIndex.form()}
@@ -139,7 +139,9 @@ export default function JobsIndex({ vacancies, filters }: Props) {
                                                 Cierre de postulaciones
                                             </dt>
                                             <dd>
-                                                Postule hasta el{' '}
+                                                {vacancy.accepts_applications
+                                                    ? 'Postule hasta el '
+                                                    : 'Cierre de postulaciones: '}
                                                 {formatDate(vacancy.closes_at)}
                                             </dd>
                                         </div>

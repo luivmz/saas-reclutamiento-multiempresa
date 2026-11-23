@@ -168,8 +168,9 @@ export default function JobShow({
                                 {!auth?.user && (
                                     <>
                                         <p className="text-muted-foreground text-sm">
-                                            Para postular necesita una cuenta de
-                                            postulante.
+                                            {vacancy.accepts_applications
+                                                ? 'Para postular necesita una cuenta de postulante.'
+                                                : 'La convocatoria no está recibiendo postulaciones.'}
                                         </p>
                                         <Button asChild className="w-full">
                                             <Link
