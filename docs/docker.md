@@ -65,6 +65,18 @@ Variables principales:
 
 Si cambia `DB_USERNAME` o `DB_PASSWORD` en `.env`, replique el cambio en `.env.e2e`.
 
+### HTTPS detrás de Caddy
+
+Cuando Caddy termina TLS y reenvía por HTTP, conserva el encabezado `Host` público y envía `X-Forwarded-Proto`. Laravel acepta esa cabecera solo desde las direcciones de `TRUSTED_PROXIES`. Escribe las IP o rangos CIDR explícitos, separados por comas, tal como los ve Laravel en la conexión inmediata. Vacío mantiene el acceso HTTP directo. Se ignoran los comodines y los rangos `/0`.
+
+En el `.env` existente, conserva `APP_URL` con la URL HTTPS pública y limita el puerto del backend a loopback con `APP_PORT=127.0.0.1:8000`. Después de actualizar `TRUSTED_PROXIES`, aplica el cambio con el mismo proyecto y archivos Compose del despliegue:
+
+```bash
+docker compose exec -T app php artisan config:clear
+# Si el despliegue utiliza configuración cacheada:
+docker compose exec -T app php artisan config:cache
+```
+
 ## 4. Instalación desde cero
 
 Desde la raíz del repositorio:

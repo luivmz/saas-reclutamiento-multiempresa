@@ -1,16 +1,16 @@
 <?php
 
+use App\Http\Controllers\HealthController;
+use App\Http\Controllers\Testing\E2eController;
+use App\Http\Middleware\EnsureE2eSupportEnabled;
+use App\Http\Middleware\EnsureExperimentalFeature;
+use App\Http\Middleware\EnsureUserHasRole;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
-use App\Http\Controllers\HealthController;
-use App\Http\Controllers\Testing\E2eController;
-use App\Http\Middleware\EnsureE2eSupportEnabled;
-use App\Http\Middleware\EnsureExperimentalFeature;
-use App\Http\Middleware\EnsureUserHasRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +30,9 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // TrustProxies reads trustedproxy.proxies when handling the request, after configuration is loaded.
+        $middleware->trustProxies(headers: Request::HEADER_X_FORWARDED_PROTO);
+
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
         $middleware->alias([
