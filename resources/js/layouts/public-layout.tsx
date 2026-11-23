@@ -20,26 +20,25 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
     return (
         <div className="bg-background flex min-h-svh flex-col">
             <SkipLink />
-            <header className="bg-background/90 sticky top-0 z-20 border-b backdrop-blur">
-                {/* Una fila siempre que quepa. A 320 px las cuatro acciones no
-                    caben: en lugar de empujar la página en horizontal —WCAG
-                    1.4.10 pide que a ese ancho no haga falta—, la navegación
-                    pasa a una segunda fila. */}
+            <header className="bg-background/90 z-20 border-b backdrop-blur sm:sticky sm:top-0">
                 <div className="mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2 sm:px-6">
                     <Link
                         href={home()}
-                        className="flex items-center gap-2.5"
+                        className="flex min-w-0 items-center gap-2.5 max-sm:min-h-11 max-sm:basis-full"
                         data-cy="nav-home"
                     >
-                        <span className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md">
-                            <AppLogoIcon className="size-5 fill-current" />
+                        <span className="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-md">
+                            <AppLogoIcon
+                                className="size-5 fill-current"
+                                aria-hidden="true"
+                            />
                         </span>
-                        <span className="hidden font-serif font-semibold sm:inline">
+                        <span className="font-serif font-semibold [overflow-wrap:anywhere]">
                             {name}
                         </span>
                     </Link>
                     <nav
-                        className="flex items-center gap-0.5 sm:gap-2"
+                        className="flex items-center gap-0.5 max-sm:flex-1 max-sm:flex-wrap max-sm:justify-between sm:gap-2 max-sm:[&>[data-slot=button]]:min-h-11 max-sm:[&>a]:px-2"
                         aria-label="Navegación principal"
                     >
                         <Button variant="ghost" size="sm" asChild>
@@ -82,12 +81,16 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                                 </Button>
                             </>
                         )}
-                        <AppearanceToggle />
+                        <AppearanceToggle className="max-sm:size-11" />
                     </nav>
                 </div>
             </header>
 
-            <main id={MAIN_CONTENT_ID} tabIndex={-1} className="flex-1">
+            <main
+                id={MAIN_CONTENT_ID}
+                tabIndex={-1}
+                className="flex-1 sm:[&_:focus-visible]:scroll-mt-20"
+            >
                 {children}
             </main>
 

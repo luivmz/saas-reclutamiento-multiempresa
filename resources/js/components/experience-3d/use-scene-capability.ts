@@ -21,6 +21,7 @@ export type PosterReason =
     | 'reduced-motion'
     | 'save-data'
     | 'small-viewport'
+    | 'coarse-pointer'
     | 'low-end'
     | 'no-3d-support';
 
@@ -29,6 +30,7 @@ export type SceneCapability = { mode: SceneMode; reason?: PosterReason };
 /** Por debajo de este ancho la portada va a una columna y el 3D competiría con el contenido. */
 export const SCENE_MIN_WIDTH = 1024;
 
+export const COARSE_POINTER_QUERY = '(pointer: coarse)';
 export const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 export const WIDE_VIEWPORT_QUERY = `(min-width: ${SCENE_MIN_WIDTH}px)`;
 
@@ -57,6 +59,10 @@ export function detectSceneCapability(
 
     if (!win.matchMedia(WIDE_VIEWPORT_QUERY).matches) {
         return { mode: 'poster', reason: 'small-viewport' };
+    }
+
+    if (win.matchMedia(COARSE_POINTER_QUERY).matches) {
+        return { mode: 'poster', reason: 'coarse-pointer' };
     }
 
     const cores = win.navigator.hardwareConcurrency;
@@ -89,9 +95,11 @@ export function useSceneCapability(): SceneCapability {
 
     useEffect(() => {
         const update = () => setCapability(detectSceneCapability(window));
-        const queries = [REDUCED_MOTION_QUERY, WIDE_VIEWPORT_QUERY].map(
-            (query) => window.matchMedia(query),
-        );
+        const queries = [
+            REDUCED_MOTION_QUERY,
+            WIDE_VIEWPORT_QUERY,
+            COARSE_POINTER_QUERY,
+        ].map((query) => window.matchMedia(query));
 
         update();
         queries.forEach((query) => query.addEventListener('change', update));

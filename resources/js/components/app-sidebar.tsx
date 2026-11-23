@@ -10,11 +10,13 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    useSidebar,
 } from '@/components/ui/sidebar';
 import { navigationFor } from '@/lib/navigation';
 import { dashboard } from '@/routes';
 
 export function AppSidebar() {
+    const { setOpenMobile } = useSidebar();
     const { auth, notifications } = usePage().props;
     const groups = navigationFor(auth.user?.role, notifications?.unread ?? 0);
 
@@ -24,7 +26,11 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link
+                                href={dashboard()}
+                                prefetch
+                                onSuccess={() => setOpenMobile(false)}
+                            >
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import type { Appearance } from '@/hooks/use-appearance';
 import { useAppearance } from '@/hooks/use-appearance';
+import { cn } from '@/lib/utils';
 
 /**
  * Cambio de tema desde la barra superior.
@@ -27,7 +28,7 @@ const options: { value: Appearance; icon: typeof Sun; label: string }[] = [
     { value: 'system', icon: Monitor, label: 'Según el sistema' },
 ];
 
-export function AppearanceToggle() {
+export function AppearanceToggle({ className }: { className?: string }) {
     const { appearance, resolvedAppearance, updateAppearance } =
         useAppearance();
     const Icon = resolvedAppearance === 'dark' ? Moon : Sun;
@@ -38,7 +39,7 @@ export function AppearanceToggle() {
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="size-8"
+                    className={cn('size-8', className)}
                     data-cy="appearance-toggle"
                 >
                     <Icon className="size-4" aria-hidden="true" />

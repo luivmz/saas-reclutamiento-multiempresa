@@ -125,12 +125,12 @@ function ScheduleForm({
             {...action}
             resetOnSuccess
             options={{ preserveScroll: true }}
-            className="grid gap-4 rounded-lg border border-dashed p-4 md:grid-cols-2"
+            className="grid gap-4 rounded-lg border border-dashed p-4 xl:grid-cols-2"
             data-cy={`schedule-${kind}-form`}
         >
             {({ errors, processing }) => (
                 <>
-                    <p className="text-sm font-medium md:col-span-2">
+                    <p className="text-sm font-medium xl:col-span-2">
                         {kind === 'evaluacion'
                             ? 'Programar una evaluación'
                             : 'Programar una entrevista'}

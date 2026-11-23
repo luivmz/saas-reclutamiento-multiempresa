@@ -136,7 +136,7 @@ export default function Welcome() {
             <section className="school-hero" data-video-track>
                 <div className="school-stage" data-video-stage>
                     <ScrollVideo media={SCHOOL_MEDIA} />
-                    <div className="school-copy relative mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:py-16">
+                    <div className="school-copy relative mx-auto w-full max-w-6xl px-4 py-7 sm:px-6 sm:py-10 lg:py-16">
                         <div className="max-w-[25rem] space-y-6">
                             <p className="bg-card text-muted-foreground inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium shadow-xs">
                                 <GraduationCap
@@ -146,7 +146,7 @@ export default function Welcome() {
                                 Colegio Andino de Huancayo · caso de estudio con
                                 datos ficticios
                             </p>
-                            <h1 className="font-serif text-4xl leading-[1.06] font-semibold tracking-tight md:text-5xl lg:text-[3.35rem]">
+                            <h1 className="font-serif text-[2rem] leading-[1.06] font-semibold tracking-tight min-[360px]:text-4xl md:text-5xl lg:text-[3.35rem]">
                                 Reclutamiento con evidencia,{' '}
                                 <span className="text-teal-200">
                                     decisión con nombre propio

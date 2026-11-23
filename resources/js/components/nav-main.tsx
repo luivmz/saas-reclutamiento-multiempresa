@@ -5,6 +5,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    useSidebar,
 } from '@/components/ui/sidebar';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import type { NavItem } from '@/types';
@@ -16,6 +17,7 @@ export function NavMain({
     items: NavItem[];
     label?: string;
 }) {
+    const { setOpenMobile } = useSidebar();
     const { isCurrentUrl } = useCurrentUrl();
 
     return (
@@ -31,12 +33,14 @@ export function NavMain({
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton
                                 asChild
+                                className="max-lg:min-h-11"
                                 isActive={isCurrent}
                                 tooltip={{ children: item.title }}
                             >
                                 <Link
                                     href={item.href}
                                     prefetch
+                                    onSuccess={() => setOpenMobile(false)}
                                     // La página actual se anuncia, no solo se
                                     // pinta: con `aria-current` el lector de
                                     // pantalla dice dónde está uno.

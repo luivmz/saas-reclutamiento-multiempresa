@@ -67,6 +67,21 @@ describe('E2E-17 · El movimiento respeta el teclado y a quien lo reduce', () =>
         cy.focused().should('have.attr', 'data-sidebar', 'trigger');
     });
 
+    it('en tablet el panel de navegación deja espacio al contenido y cierra al navegar', () => {
+        cy.loginAs('hr');
+        cy.viewport(768, 900);
+        cy.visit('/vacantes');
+
+        cy.get('[data-sidebar="trigger"]').focus().type('{enter}');
+        cy.get('[data-mobile="true"]').within(() => {
+            cy.get('h2').contains('Navegación').should('be.visible');
+            cy.contains('button', 'Cerrar').should('be.visible');
+            cy.dataCy('nav-reports').click();
+        });
+        cy.location('pathname').should('eq', '/reportes');
+        cy.get('[data-mobile="true"]').should('not.exist');
+    });
+
     it('el diálogo de eliminar la cuenta atrapa y devuelve el foco', () => {
         cy.loginAs('hr');
         cy.visit('/settings/profile');
@@ -81,6 +96,25 @@ describe('E2E-17 · El movimiento respeta el teclado y a quien lo reduce', () =>
 
         cy.get('body').type('{esc}');
         cy.get('[role="dialog"]').should('not.exist');
+        cy.focused().should('have.attr', 'data-test', 'delete-user-button');
+    });
+
+    it('los controles del diálogo son alcanzables en un viewport bajo', () => {
+        cy.loginAs('hr');
+        cy.viewport(320, 300);
+        cy.visit('/settings/profile');
+        cy.get('[data-test="delete-user-button"]').click();
+
+        cy.get('[role="dialog"]').should(($dialog) => {
+            const dialog = $dialog[0];
+            expect(dialog.getBoundingClientRect().height).to.be.lessThan(300);
+            expect(dialog.scrollHeight).to.be.greaterThan(dialog.clientHeight);
+        });
+        cy.get('[role="dialog"]').scrollTo('bottom');
+        cy.get('[role="dialog"]')
+            .contains('button', 'Cancelar')
+            .should('be.visible')
+            .click();
         cy.focused().should('have.attr', 'data-test', 'delete-user-button');
     });
 

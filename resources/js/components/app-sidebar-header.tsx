@@ -23,8 +23,8 @@ export function AppSidebarHeader({
     const unread = notifications?.unread ?? 0;
 
     return (
-        <header className="bg-background/85 border-border/70 sticky top-0 z-20 flex h-14 shrink-0 items-center gap-2 rounded-t-xl border-b px-3 backdrop-blur sm:px-4">
-            <SidebarTrigger className="-ml-1" />
+        <header className="bg-background/85 border-border/70 z-20 flex min-h-14 shrink-0 items-center gap-2 rounded-t-xl border-b px-3 py-1.5 backdrop-blur sm:sticky sm:top-0 sm:px-4">
+            <SidebarTrigger className="-ml-1 max-lg:size-11" />
             <div className="min-w-0 flex-1">
                 <Breadcrumbs breadcrumbs={breadcrumbs} />
             </div>
@@ -32,7 +32,7 @@ export function AppSidebarHeader({
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="relative size-8"
+                    className="relative size-8 max-lg:size-11"
                     asChild
                 >
                     <Link
@@ -50,7 +50,7 @@ export function AppSidebarHeader({
                         </span>
                     </Link>
                 </Button>
-                <AppearanceToggle />
+                <AppearanceToggle className="max-lg:size-11" />
             </div>
         </header>
     );

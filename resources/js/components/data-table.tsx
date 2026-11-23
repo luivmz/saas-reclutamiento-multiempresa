@@ -93,8 +93,11 @@ export function DataTable<Row>({
 
     return (
         <div
+            role="region"
+            aria-label={caption}
+            tabIndex={0}
             className={cn(
-                'bg-card overflow-x-auto rounded-xl md:border',
+                'bg-card max-w-full overflow-x-auto rounded-xl md:border',
                 className,
             )}
         >
@@ -162,12 +165,12 @@ export function DataTable<Row>({
                                             {label && (
                                                 <span
                                                     aria-hidden="true"
-                                                    className="text-muted-foreground w-28 shrink-0 text-xs md:hidden"
+                                                    className="text-muted-foreground w-24 shrink-0 text-xs [overflow-wrap:anywhere] sm:w-28 md:hidden"
                                                 >
                                                     {label}
                                                 </span>
                                             )}
-                                            <span className="min-w-0 flex-1 md:contents">
+                                            <span className="min-w-0 flex-1 [overflow-wrap:anywhere] md:contents">
                                                 {column.cell(row)}
                                             </span>
                                         </td>
