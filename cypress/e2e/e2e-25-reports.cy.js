@@ -1,4 +1,4 @@
-// E2E-20 · Reportes de reclutamiento (RF-28, candidato).
+// E2E-25 · Reportes de reclutamiento (RF-28, candidato).
 //
 // Valores esperados derivados de DemoSeeder (docs/demo-users.md) tras /__e2e/reset. Organización A
 // (Colegio Andino demo): 9 postulaciones en 3 vacantes publicadas hoy. Etapas actuales: 1 postulación
@@ -10,7 +10,7 @@ const kpi = (name) => cy.dataCy(`kpi-${name}`);
 
 const statusCount = (status) => cy.get(`[data-cy=chart-status-row][data-status=${status}]`);
 
-describe('E2E-20 · Reportes de reclutamiento (RF-28, candidato)', () => {
+describe('E2E-25 · Reportes de reclutamiento (RF-28, candidato)', () => {
     before(() => cy.resetDatabase());
 
     beforeEach(() => cy.fixture('demo').as('demo'));
@@ -42,7 +42,7 @@ describe('E2E-20 · Reportes de reclutamiento (RF-28, candidato)', () => {
             .and('not.contain', this.demo.vacancies.orgB.title)
             .and('not.contain', this.demo.vacancies.draft.title);
 
-        cy.screenshot('E2E-20-01-reportes-rrhh-organizacion-a', { capture: 'fullPage' });
+        cy.screenshot('E2E-25-01-reportes-rrhh-organizacion-a', { capture: 'fullPage' });
     });
 
     it('el filtro por vacante recalcula indicadores, gráficos y tabla', function () {
@@ -61,7 +61,7 @@ describe('E2E-20 · Reportes de reclutamiento (RF-28, candidato)', () => {
         cy.dataCy('report-vacancy-row').should('have.length', 1).and('have.attr', 'data-code');
         cy.dataCy('report-by-vacancy').should('contain', ranking.title);
 
-        cy.screenshot('E2E-20-02-filtro-por-vacante', { capture: 'fullPage' });
+        cy.screenshot('E2E-25-02-filtro-por-vacante', { capture: 'fullPage' });
     });
 
     it('el filtro por etapa actual limita el conjunto analizado', () => {
@@ -128,7 +128,7 @@ describe('E2E-20 · Reportes de reclutamiento (RF-28, candidato)', () => {
             .should('have.length', 2)
             .and('not.contain', this.demo.vacancies.ranking.title);
 
-        cy.screenshot('E2E-20-06-reportes-organizacion-b', { capture: 'fullPage' });
+        cy.screenshot('E2E-25-06-reportes-organizacion-b', { capture: 'fullPage' });
     });
 
     it('rechaza filtrar por una vacante de otra organización sin filtrar sus datos', function () {
@@ -162,6 +162,6 @@ describe('E2E-20 · Reportes de reclutamiento (RF-28, candidato)', () => {
             expect(doc.documentElement.scrollWidth, 'sin desplazamiento horizontal').to.be.at.most(390);
         });
 
-        cy.screenshot('E2E-20-09-reportes-aprobador-movil', { capture: 'fullPage' });
+        cy.screenshot('E2E-25-09-reportes-aprobador-movil', { capture: 'fullPage' });
     });
 });

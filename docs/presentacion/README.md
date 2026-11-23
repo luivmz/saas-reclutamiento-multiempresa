@@ -67,7 +67,7 @@ docker compose -p presentacion exec app php artisan migrate:fresh --seed --force
 
 ## 3. Bandera experimental
 
-**Desactivada por omisión.** `config/experimental.php` lee `EXPERIMENTAL_EVIDENCIAS` con valor por defecto `false`, y `.env.example` no la define. Con la bandera apagada:
+**Desactivada por omisión.** `config/experimental.php` lee `EXPERIMENTAL_EVIDENCIAS` con valor por defecto `false`, y el ejemplo de entorno de la entrega fija el mismo valor. Con la bandera apagada:
 
 - no aparecen los enlaces;
 - las ocho rutas de evidencias responden 404 (`EvidenceEntryPointsTest`).
@@ -75,7 +75,7 @@ docker compose -p presentacion exec app php artisan migrate:fresh --seed --force
 **Activarla para presentar**, solo en el `.env` local:
 
 ```powershell
-# 1. Añadir al .env:  EXPERIMENTAL_EVIDENCIAS=true
+# 1. Configurar en .env:  EXPERIMENTAL_EVIDENCIAS=true
 docker compose -p presentacion exec app php artisan config:clear
 docker compose -p presentacion exec app php artisan db:seed --class=ExperimentalEvidenceSeeder --force   # una vez, sobre DemoSeeder
 ```

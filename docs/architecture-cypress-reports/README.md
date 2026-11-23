@@ -33,7 +33,7 @@ Están en esta carpeta, sin moverlas ni modificarlas (la carpeta `plantillas/` s
 open -a Docker
 docker compose up -d --wait            # entorno normal (necesario: app-e2e reutiliza sus volúmenes)
 npm run cy:run                         # genera .env.e2e (no versionado), levanta app-e2e y corre la suite
-npm run cy:run -- --spec cypress/e2e/e2e-20-reports.cy.js
+npm run cy:run -- --spec cypress/e2e/e2e-25-reports.cy.js
 ```
 
 La suite reinicia **solo** la base `reclutamiento_e2e`; la base demo `reclutamiento` no se toca (DEF-13).
