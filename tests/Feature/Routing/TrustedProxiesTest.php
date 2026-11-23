@@ -13,6 +13,23 @@ class TrustedProxiesTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        // PHPUnit sets the attribute value in $_ENV, but Dotenv reads $_SERVER first.
+        $previous = $_SERVER['TRUSTED_PROXIES'] ?? null;
+        $_SERVER['TRUSTED_PROXIES'] = $_ENV['TRUSTED_PROXIES'];
+
+        try {
+            parent::setUp();
+        } finally {
+            if ($previous === null) {
+                unset($_SERVER['TRUSTED_PROXIES']);
+            } else {
+                $_SERVER['TRUSTED_PROXIES'] = $previous;
+            }
+        }
+    }
+
     #[WithEnvironmentVariable('TRUSTED_PROXIES', ' 192.0.2.10, 2001:db8:20::/64 ')]
     public function test_trusted_proxy_generates_https_pagination_and_assets(): void
     {
