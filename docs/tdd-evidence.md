@@ -177,3 +177,9 @@ Cada RED se ejecutó contra el código anterior a su corrección; los resultados
 | Vídeo y carpeta del proceso | — | `hero-folder-video.test.tsx` (progreso, fotogramas, búsquedas sin solaparse, nada pedido antes de decidir) y pruebas de la carpeta en `reveal.test.tsx`; E2E-23 | Escritas junto al componente, no antes: no es TDD. E2E-23 **10/10** |
 
 La primera versión de la regresión de VIS-L01 cambiaba la preferencia fuera de la cola de Cypress; sus dos ejecuciones se conservan como inválidas en las evidencias, y la prueba vigente encola los cambios.
+
+## Integración académica del 23/11/2026
+
+- **RED observado sobre eb66fa6.** Cypress completó 26 specs, con 148 casos aprobados y 5 fallidos. E2E-24 heredó el cierre de E2E-21 (DEF-22). Las expectativas de E2E-25 omitían la vacante retrospectiva del seeder (DEF-23).
+- **GREEN focal sobre b84f355.** E2E-21, E2E-24 y E2E-25 completados en ese orden, 35/35. La selección incluye los dos specs cambiados y el que cerraba la vacante. Las aserciones de gesto, filtros y aislamiento permanecen. Los demás specs y el código funcional conservan identidad.
+- [Matriz de verificación de la entrega integrada](entrega-final/ENTREGA_INTEGRADA.md#verificación-del-23112026).

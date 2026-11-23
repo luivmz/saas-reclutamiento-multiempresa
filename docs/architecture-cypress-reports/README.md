@@ -4,6 +4,9 @@
 **Proyecto:** SaaS Multiempresa para Reclutamiento, Evaluación y Selección de Personal
 **Rama:** `chore/sonarqube-macos-setup` · **Base:** `41a830c` · **Estado:** implementado y validado en el working tree, **sin commit**, pendiente de auditoría humana (09/11/2026).
 
+
+> **Entrega integrada.** El encabezado documenta la práctica al 09/11/2026. El commit `5e2eae3` publicó ese trabajo. La suite integrada usa E2E-25 para Reportes. Las pruebas de la práctica y sus capturas conservan E2E-20 como identificador histórico. Consulta la [guía de entrega](../entrega-final/ENTREGA_INTEGRADA.md).
+
 ## Objetivo
 
 Aplicar sobre el proyecto existente (no uno nuevo) la *Guía Práctica INDIVIDUAL de Arquitectura*: documentar la arquitectura de software y la tecnológica, integrar y ejecutar Cypress y SonarQube, implementar un módulo de reportes con datos reales, analizar su impacto funcional y entregar un informe técnico individual con evidencias.

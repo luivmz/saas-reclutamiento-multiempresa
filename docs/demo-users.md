@@ -2,7 +2,7 @@
 
 Todos los datos son **ficticios** (nombres, correos con dominios `.test`, teléfonos y CV de ejemplo). No corresponden a personas ni al personal real del Colegio Andino.
 
-Carga: `docker compose exec app php artisan migrate:fresh --seed` (borra la base de desarrollo y ejecuta `Database\Seeders\DemoSeeder`).
+En una base demo recién migrada, carga `docker compose exec app php artisan db:seed --class=DemoSeeder --force`. Usa el nombre del proyecto de tu entorno si corresponde. Consulta la [guía de entrega](entrega-final/ENTREGA_INTEGRADA.md) para las ofertas adicionales y la carga opcional de evidencias.
 
 **Contraseña de todos los usuarios demo:** `password` (solo para desarrollo/demostración).
 

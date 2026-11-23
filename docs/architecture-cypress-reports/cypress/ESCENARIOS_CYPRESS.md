@@ -1,5 +1,7 @@
 # Escenarios automatizados con Cypress
 
+> La descripción de los resultados conserva los nombres de la práctica del 09/11/2026. En la entrega integrada, el comando para Reportes usa E2E-25.
+
 > Actividad 3 de la guía. Cypress **ya estaba integrado** en el proyecto (Fase 9 y siguientes). No se reinstaló: se inspeccionó, se ejecutó y se amplió con el spec del módulo nuevo (`e2e-20-reports.cy.js`). Todos los escenarios corren sobre la **aplicación real** (Laravel + React compilado) en el entorno E2E aislado, con datos **ficticios** de `DemoSeeder`.
 
 ## 1. Configuración verificada
@@ -22,7 +24,7 @@ Comandos (scripts reales de `package.json`):
 
 ```sh
 npm run cy:run                                   # prepara .env.e2e y ejecuta la suite completa en Docker
-npm run cy:run -- --spec cypress/e2e/e2e-20-reports.cy.js   # un spec
+npm run cy:run -- --spec cypress/e2e/e2e-25-reports.cy.js   # un spec en la entrega integrada
 npm run cy:open                                  # modo interactivo en el host (requiere Cypress local)
 ```
 

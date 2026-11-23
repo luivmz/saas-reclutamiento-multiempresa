@@ -80,7 +80,7 @@ El [inventario reproducible](recursos-v2/figuras.json) guarda cada nombre, SHA d
 - La tarea no requirió reiniciar bases, ejecutar suites ni repetir SonarScanner. Las cifras del capítulo 13 se atribuyen al código y la fecha de cada ejecución. Los resultados históricos de código nuevo y las herramientas complementarias conservan sus límites.
 - El nombre de los integrantes, docente y NRC coinciden con CLAUDE.md y README del proyecto y F29H v1. El formato de portada prioriza la plantilla visual, que carece de campo para códigos de estudiante. El equipo puede completarlos si el curso los solicita.
 
-## Validación del paquete final
+## Validación del paquete documental original (22/11/2026)
 
 - Word de escritorio 16 actualizó los campos y guardó el DOCX a partir del cual exportó el PDF etiquetado. Se contrastaron los 14 títulos de capítulo, los 53 apartados y los cuatro títulos de cierre con la plantilla estructural.
 - La comprobación del PDF confirmó 41 páginas, 17 figuras y 30 tablas con foliación en sus índices. La página 36 usa orientación horizontal para el modelo físico. Los encabezados de las tablas se repiten al cambiar de página. Se comprobó el contenido de los campos de índice y referencias, junto con los enlaces internos del PDF.
@@ -101,3 +101,11 @@ Usar Python con python-docx 1.2.0 y Pillow 10.4.0. Ejecutar desde la raíz del w
 python docs/academico/informe-final/generar_informe_v2.py
 powershell -NoProfile -File docs/academico/informe-final/exportar_informe_v2.ps1
 ```
+
+## Validación del paquete integrado (23/11/2026)
+
+- Se conserva la entrega documental original en el commit 8c188231db5daa2f99b0ee6381fdba1f49540fcc. La actualización mantiene sus cortes y añade el anexo A.5 con la integración real.
+- Microsoft Word 16 actualizó los campos y exportó el mismo DOCX como PDF. Se renderizaron las 42 páginas y se revisaron las 23 con cambios de contenido o paginación. Las tablas mantienen los encabezados junto con el primer dato y los repiten cuando continúan. El modelo físico sigue en horizontal en la p. 36 y el cierre está en la p. 42.
+- El informe conserva sus 14 capítulos, 53 apartados oficiales, 17 figuras y 30 tablas. Se comprobaron los campos de los índices, los destinos internos del PDF y la paginación de la matriz de cumplimiento.
+- SHA-256 vigente del DOCX `112f39ee0112926597f7cced735fc2dc1dbfc7efe1643276119d77f5c2517f25`.
+- SHA-256 vigente del PDF `454e45cd170cd95c267719b307ca21839fb81416030726cdf1d44e9f9b603653`.

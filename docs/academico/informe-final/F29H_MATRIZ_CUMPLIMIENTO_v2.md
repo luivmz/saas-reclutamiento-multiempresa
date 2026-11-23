@@ -8,7 +8,7 @@ La plantilla de estructura se contrastó por orden, títulos y contenido. El PDF
 |---|---|---|
 | Portada con integrantes | p. 1 | Tres integrantes y datos del curso cotejados con v1, CLAUDE.md y README. Portada, logo y folio de la plantilla visual. Desarrollado. |
 | Enunciado del caso práctico | §2.1, pp. 6–7 | Enunciado, alcance, actividades y objetivos de mejora. AS-IS preliminar. Desarrollado. |
-| Arquitectura grupal | §§6.1–7.4, desde p. 16 | Arquitectura general, UML, PDM, despliegue, mapeo a archivos y contexto experimental. Desarrollado. |
+| Arquitectura grupal | §§6.1–7.4, desde p. 17 | Arquitectura general, UML, PDM, despliegue, mapeo a archivos y contexto experimental. Desarrollado. |
 | Solución del caso | §§3.4, 4.2 y 8.1–8.4, desde p. 21 en desarrollo | Solución por problema, 27 RF y flujo transaccional. Decisión RF-23 a cargo de Dirección. Desarrollado. |
 | Evidencias del proceso de pruebas | §§11–13, matriz en p. 27, más A.2 y A.3 | Casos, alcance, fechas, referencia y evidencias. Coberturas y limitaciones diferenciadas. Desarrollado. |
 | Enlace Git | §9.1, p. 22 | Repositorio público y enlaces a revisiones, release y evidencias. Verificado. |
@@ -32,10 +32,10 @@ La plantilla de estructura se contrastó por orden, títulos y contenido. El PDF
 | 4.4. Casos de Uso del Sistema | 13 | CU-01 a CU-20, trazabilidad y figura de casos de uso. |
 | 5.1. Alcance del Proyecto | 14 | Ocho bloques, exclusiones y alcance experimental en Git. |
 | 5.2. Herramientas Tecnológicas del Proyecto | 15 | Stack real, herramientas y límites metodológicos. |
-| 5.3. Normas y Estándares de Calidad | 15 | ISO/IEC 25010, TDD, WCAG, acceso y uso ficticio. |
+| 5.3. Normas y Estándares de Calidad | 16 | ISO/IEC 25010, TDD, WCAG, acceso y uso ficticio. |
 | 5.4. Plan de Pruebas del Proyecto | 16 | Plan F29D, criterios CA-01 a CA-07 y enlace reproducible. |
 | 5.5. Lineamientos de Seguridad Informática | 16 | Autenticación, Policies, aislamiento, auditoría y CV privado. |
-| 6.1. Arquitectura Conceptual del Sistema | 16 | Arquitectura grupal, figura 1 y correspondencia con el código. |
+| 6.1. Arquitectura Conceptual del Sistema | 17 | Arquitectura grupal, figura 1 y correspondencia con el código. |
 | 6.2. Modelo UML del Sistema | 17 | UML F22/F23, secuencia RF-23 y catálogo de modelos. |
 | 6.3. Diseño de Interfaces de Usuario | 18 | Pantallas reales, navegación y casos de interfaz en anexos. |
 | 6.4. Diseño de Base de Datos | 19 | Relaciones, restricciones e imagen PDM de dominio. |
@@ -75,6 +75,7 @@ La plantilla de estructura se contrastó por orden, títulos y contenido. El PDF
 | Recomendaciones | 32 | Validación, instrumentación, seguridad operacional y publicación. |
 | Referencias | 32 | Fuentes institucionales, técnicas y científicas enlazadas. |
 | Anexos | 33 | Modelos, capturas, evidencias y catálogos editables. |
+| A.5. Cierre técnico de la entrega integrada | 42 | Revisiones de origen, controles del candidato, alcance y enlace de publicación. |
 
 ## Formato institucional
 

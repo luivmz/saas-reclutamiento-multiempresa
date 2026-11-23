@@ -293,6 +293,8 @@ def cell_contents(cell, text, head):
     p = cell.paragraphs[0]
     p.paragraph_format.space_after = Pt(0)
     p.paragraph_format.line_spacing = 1.02
+    if head:
+        p.paragraph_format.keep_with_next = True
     inline(p, text)
     for r in p.runs:
         r.font.size = Pt(9)
@@ -380,7 +382,9 @@ def build():
             if line.startswith(('## CAPÍTULO 1.', '## ANEXOS')):
                 p.paragraph_format.page_break_before = True
         elif line.startswith('### '):
-            doc.add_heading(line[4:], level=2)
+            p = doc.add_heading(line[4:], level=2)
+            if line.startswith('### A.5. '):
+                p.paragraph_format.page_break_before = True
         elif line.startswith('|'):
             rows = [line.strip('|').strip().split('|')]
             i += 1  # Separador de encabezado Markdown.

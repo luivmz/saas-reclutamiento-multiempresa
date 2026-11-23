@@ -8,7 +8,7 @@ Este informe presenta el análisis, diseño, implementación y verificación del
 
 La solución integrada cubre los 27 requisitos funcionales de la línea base. Una convocatoria pasa por la aprobación del requerimiento, la publicación, la postulación, la evaluación y la decisión de Dirección. El ranking explica sus cálculos. RF-23 exige que una persona autorizada confirme y justifique la decisión.
 
-El corte documental es el **22 de noviembre de 2026, hora de Lima**. La base integrada es main [04d3cfa](https://github.com/luivmz/saas-reclutamiento-multiempresa/commit/04d3cfa1db6f82d9cda8db2254338805137cdc3c), con el mismo árbol que develop [4371d90](https://github.com/luivmz/saas-reclutamiento-multiempresa/commit/4371d90e6fb9682fe8076c978f33a3ce5f086b49). La rama de Reportes y SonarQube tiene sus propias evidencias. La rama del anfitrión incluye los dos vídeos de la continuación de presentación. El capítulo 9 fija los SHA y el capítulo 13 atribuye cada medición a su revisión.
+El corte histórico del informe es el **22 de noviembre de 2026, hora de Lima**. Su base era main [04d3cfa](https://github.com/luivmz/saas-reclutamiento-multiempresa/commit/04d3cfa1db6f82d9cda8db2254338805137cdc3c), con el mismo árbol que develop [4371d90](https://github.com/luivmz/saas-reclutamiento-multiempresa/commit/4371d90e6fb9682fe8076c978f33a3ce5f086b49). La rama de Reportes y SonarQube tiene sus propias evidencias. La rama del anfitrión incluye los dos vídeos de la continuación de presentación. El capítulo 9 fija los SHA y el capítulo 13 atribuye cada medición a su revisión. El anexo A.5 registra el cierre de integración de Reportes, evidencias, vídeos, anfitrión y datos demo.
 
 En la presentación integrada, el registro experimental de evidencias versionadas y la búsqueda léxica ML-02 se habilitan con una bandera desactivada por omisión. ML-01 queda como servicio opcional de riesgo de demora del proceso. Los resultados técnicos se interpretan con datos ficticios. La adopción institucional, el uso productivo y los beneficios en el colegio siguen sin validación.
 
@@ -111,7 +111,7 @@ El proceso propuesto (TO-BE PROPUESTO, Formato 05) atiende cada problema con una
 | P2 | S-02 Control del avance y responsables identificados | Estados e historial sistematizados del requerimiento y de la postulación (quién, cuándo y de qué estado a cuál), con transiciones controladas. | RF-02, RF-03, RF-13, RF-14, RF-24, RF-25 |
 | P3 | S-03 Evaluación uniforme y comparable | Criterios con ponderación y rango definidos antes de publicar; puntajes validados; ranking ponderado explicable y comparación común. | RF-05, RF-16, RF-17, RF-18, RF-19, RF-20, RF-21, RF-22 |
 | P4 | S-04 Comunicación oportuna y con constancia | Notificaciones automáticas en cada evento clave: rechazo, recepción, cambio de etapa, convocatoria y resultado. No incluyen datos confidenciales. | RF-04, RF-11, RF-15, RF-17, RF-26 |
-| P5 | S-05 Sustento y trazabilidad de la decisión (parcial) | Comparación explicable como apoyo a la decisión humana y auditoría de solo inserción consultable por Dirección. **Límite:** los indicadores agregados de RF-28 se implementaron y probaron en la rama de Reportes. La base integrada conserva la comparación y la auditoría. | RF-21, RF-22, RF-23, RF-27 |
+| P5 | S-05 Sustento y trazabilidad de la decisión (parcial) | Comparación explicable como apoyo a la decisión humana y auditoría de solo inserción consultable por Dirección. Los indicadores agregados de RF-28 proceden de la práctica de Reportes y forman parte de la entrega integrada. La decisión y la auditoría conservan sus reglas. | RF-21, RF-22, RF-23, RF-27 |
 
 | Objetivo de mejora | Descripción | Problema |
 |---|---|---|
@@ -137,7 +137,7 @@ Además actúa el **Sistema** en las notificaciones automáticas (RF-04, RF-11, 
 
 ### 4.2. Requerimientos Funcionales
 
-Línea base de 27 requerimientos funcionales (Formato 06), todos SOFTWARE IMPLEMENTADO y con prueba automatizada. RF-28 es candidato implementado en la rama de Reportes. RF-29 es candidato experimental integrado como opción. Ambos conservan su estado formal fuera de la línea base.
+Línea base de 27 requerimientos funcionales (Formato 06), todos SOFTWARE IMPLEMENTADO y con prueba automatizada. RF-28 es candidato implementado en Reportes e incorporado a la entrega. RF-29 es candidato experimental integrado como opción. Ambos conservan su estado formal fuera de la línea base.
 
 | RF | Requerimiento | Descripción | Actor |
 |---|---|---|---|
@@ -239,7 +239,7 @@ Alcance del Formato 09 (entregable final v1.1): ocho bloques incluidos y once ex
 | OUT-08 a OUT-10 | Proveedores externos, infraestructura productiva en la nube, integraciones no especificadas |
 | OUT-11 | Uso productivo o decisorio del riesgo operacional ML (RF-29) |
 
-Reportes cubre indicadores operativos acotados y permanece fuera de main. Las pruebas visuales posteriores corresponden a ramas de presentación. La ayuda documental y el registro experimental de evidencias se integraron con bandera apagada en la base F37. G0 real sigue sin aprobación, ADR-005 permanece como propuesta, F35-SBX está cerrada y congelada y la integración formal EI-23 permanece bloqueada. El uso de datos reales queda fuera del corte.
+La entrega incorpora indicadores operativos acotados de Reportes y las capacidades visuales que proceden de las ramas de presentación. La ayuda documental y el registro experimental de evidencias se integraron con bandera apagada en la base F37. G0 real sigue sin aprobación, ADR-005 permanece como propuesta, F35-SBX está cerrada y congelada y la integración formal EI-23 permanece bloqueada. El uso de datos reales queda fuera del corte.
 
 ### 5.2. Herramientas Tecnológicas del Proyecto
 
@@ -296,7 +296,7 @@ El plan formal está en el Plan de Pruebas de Software (F29D, docs/academico/pla
 
 **Arquitectura del proyecto grupal.** Un monolito modular Laravel concentra las reglas, la autorización y la persistencia. React y TypeScript se ejecutan en el navegador. Inertia enlaza rutas del servidor, páginas y propiedades. Los controladores coordinan las acciones, los Form Requests validan entradas y las Policies aplican permisos. Servicios y transacciones mantienen las invariantes. La {{ref:arquitectura}} muestra esas dependencias y los cinco roles.
 
-PostgreSQL es el registro de negocio y auditoría. Redis mantiene sesiones, caché y trabajos. El worker consume la cola y procesa avisos. Los CV se guardan en almacenamiento privado y se entregan mediante una ruta autorizada. FastAPI se ejecuta aparte para ML-01. En la rama académica, Reportes consulta agregados en el mismo monolito, como muestra la {{ref:reportes-arq}}.
+PostgreSQL es el registro de negocio y auditoría. Redis mantiene sesiones, caché y trabajos. El worker consume la cola y procesa avisos. Los CV se guardan en almacenamiento privado y se entregan mediante una ruta autorizada. FastAPI se ejecuta aparte para ML-01. Reportes consulta agregados en el mismo monolito, como muestra la {{ref:reportes-arq}}.
 
 {{fig:arquitectura}}
 
@@ -394,7 +394,7 @@ En la base integrada se añadieron el pulido visual de v1.1, controles del exped
 
 **Reportes.** La práctica RF-28 en [5e2eae3](https://github.com/luivmz/saas-reclutamiento-multiempresa/commit/5e2eae37f63c7ac5d35ed2def9b2e843a644cd98) incorpora /reportes para RR. HH. y Dirección, con filtros de fechas, vacante y etapa actual. Muestra postulaciones recibidas, vacantes publicadas, promedio por vacante con postulaciones, llegada a preselección y tasa, casos en evaluación o entrevista y tiempo a preselección. Las postulaciones se filtran por applied_at. El indicador de publicación usa published_at y su cálculo es independiente del filtro de etapa. La Policy, el Form Request y el filtro explícito por organization_id acotan la consulta. Los gráficos y la tabla muestran agregados. La {{ref:reportes}} documenta un filtro en el entorno ficticio. [Módulo y definiciones de indicadores](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/5e2eae37f63c7ac5d35ed2def9b2e843a644cd98/docs/architecture-cypress-reports/reportes/MODULO_REPORTES.md)
 
-**Presentación posterior.** La rama del anfitrión desciende de la de los dos vídeos. El último commit agrega un seeder para diez ofertas ficticias. El corte de pruebas del anfitrión corresponde a b1dd8cb, anterior a ese seeder. Los vídeos y el anfitrión son recursos de interfaz. La decisión operativa continúa a cargo de Dirección.
+**Presentación y datos demo.** La rama del anfitrión desciende de la de los dos vídeos. La entrega integra su seeder opcional de diez ofertas ficticias, seis para Colegio Andino y cuatro para Demo B. La prueba histórica del anfitrión corresponde a b1dd8cb, anterior al seeder. Los vídeos y el anfitrión son recursos de interfaz. La decisión operativa continúa a cargo de Dirección.
 
 ## CAPÍTULO 9. CONTROL DE VERSIONES Y GESTIÓN DEL REPOSITORIO
 
@@ -415,7 +415,7 @@ GitHub aloja el repositorio del proyecto grupal, con su historia, fuentes, model
 
 Se consultaron las referencias mediante fetch normal. Se cotejó el árbol de main y develop y la presencia, por ruta y por ascendencia, de las continuaciones.
 
-| Referencia | SHA de corte | Estado del contenido |
+| Referencia histórica | SHA de corte | Estado al corte inicial |
 |---|---|---|
 | main / origin/main | [04d3cfa](https://github.com/luivmz/saas-reclutamiento-multiempresa/commit/04d3cfa1db6f82d9cda8db2254338805137cdc3c) | Base de presentación F37. Evidencias y BM25 detrás de la bandera experimental. |
 | develop / origin/develop | [4371d90](https://github.com/luivmz/saas-reclutamiento-multiempresa/commit/4371d90e6fb9682fe8076c978f33a3ce5f086b49) | Árbol 74f1d82c2bf6, idéntico al de main. Base documental. |
@@ -425,7 +425,7 @@ Se consultaron las referencias mediante fetch normal. Se cotejó el árbol de ma
 | design/presentacion-astra | c1b842a70388 | Antecedente de la escena de proceso tras la portada. |
 | design/presentacion-higgsfield | b8f42b581456 | Antecedente del primer vídeo y las correcciones VIS-L01 y DEF-19. |
 
-El registro de fuentes incluye los SHA completos. Reportes y la presentación posterior se documentan como dos demostraciones diferentes. Una futura integración conjunta requiere revisar los conflictos de rutas, progreso, defectos y TDD que registró la simulación previa. Las fuentes de la evidencia se conservan en sus ramas.
+El registro de fuentes incluye los SHA completos. Reportes y la presentación se verificaron primero en líneas distintas. El cierre de la entrega resolvió los conflictos de rutas, progreso, defectos y TDD. El anexo A.5 vincula cada origen y la evidencia del candidato reunido.
 
 ### 9.4. Registro de Commits Relevantes
 
@@ -563,7 +563,7 @@ El estado de CI pendiente del corte F29F se conserva como antecedente en la v1. 
 
 ### 13.1. Ejecución de Casos de Pruebas
 
-La matriz distingue cada ejecución por revisión. Esta edición verificó las fuentes y el estado de las referencias y reutilizó los resultados fechados. Las repeticiones quedan en sus propios cortes.
+La matriz distingue cada ejecución por revisión. Los resultados fechados de esta matriz conservan sus cortes. El anexo A.5 incorpora las comprobaciones de la entrega reunida.
 
 | Tipo | Alcance | Revisión | Fecha | Resultado | Evidencia |
 |---|---|---|---|---|---|
@@ -590,7 +590,7 @@ La {{ref:cypress}} conserva el resumen de una ejecución de Reportes. La reaudit
 | VIS-L01 y DEF-19 | Baja | Reveal muestra bloques pendientes al activar movimiento reducido. IntersectionObserver procesa el lote completo. | d67aa9d y 446b8fe, ramas visuales |
 | AUD-01 / AUD-10 | Media / informativa | Reportes corrigió 14 errores PHPStan nuevos mediante PHPDoc. El fallo de assets concurrente se conservó y la repetición secuencial pasó. | Reportes, 09/11 |
 
-DEF-14 y DEF-15 en la práctica Sonar tienen su propia cronología. Se citan por rama al consultar la [auditoría de Reportes](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/5e2eae37f63c7ac5d35ed2def9b2e843a644cd98/docs/architecture-cypress-reports/AUDITORIA_CODEX.md). El histórico F29F permanece en la v1 y el [registro de defectos](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/04d3cfa1db6f82d9cda8db2254338805137cdc3c/docs/defects.md).
+La práctica Sonar llamó DEF-14 y DEF-15 a los hallazgos de Cypress. La entrega los registra como DEF-20 y DEF-21. Los originales se conservan en la [auditoría de Reportes](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/5e2eae37f63c7ac5d35ed2def9b2e843a644cd98/docs/architecture-cypress-reports/AUDITORIA_CODEX.md). El histórico F29F permanece en la v1 y el [registro de defectos](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/04d3cfa1db6f82d9cda8db2254338805137cdc3c/docs/defects.md).
 
 ### 13.3. Métricas de Calidad del Software
 
@@ -623,13 +623,13 @@ La demostración requiere Docker Desktop o Docker Engine con Compose. Las variab
 
 ### 14.2. Implementación del Sistema
 
-Para reproducir, obtener la revisión, preparar la configuración local a partir del ejemplo, arrancar Compose y verificar /health antes del recorrido. El contenedor app resuelve las dependencias mediante Composer y npm, ejecuta el build de Vite y sirve los assets junto a las páginas Inertia. Laravel se conecta al servicio postgres por red Compose y Redis atiende sesiones, caché y cola. Para presentar, usar una base aislada y escenarios ficticios. El recorrido visual conjunto corresponde a la rama local del anfitrión. Reportes se presenta desde su propia rama. [Guía de implementación local](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/04d3cfa1db6f82d9cda8db2254338805137cdc3c/docs/presentacion/README.md)
+Para reproducir, obtener la revisión, preparar la configuración local a partir del ejemplo, arrancar Compose y verificar /health antes del recorrido. El contenedor app resuelve las dependencias mediante Composer y npm, ejecuta el build de Vite y sirve los assets junto a las páginas Inertia. Laravel se conecta al servicio postgres por red Compose y Redis atiende sesiones, caché y cola. Para presentar, usar una base aislada y escenarios ficticios. El clon de entrega reúne el recorrido visual y Reportes. Los seeders se cargan sobre la base demo del proyecto. [Guía de implementación local](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/main/docs/entrega-final/ENTREGA_INTEGRADA.md)
 
 **Enlace de implementación publicada. Pendiente de confirmación del equipo.** Las fuentes describen instalaciones locales y la consulta de despliegues de GitHub devolvió una lista vacía. Se requiere una URL pública y una revisión asociada. El enlace a GitHub permite consultar el código y su documentación.
 
 ### 14.3. Verificación de Funcionamiento
 
-Se comprobó en lectura el estado de los servicios locales y se reutilizó la evidencia del 22/11. La matriz del capítulo 13 ubica cada ejecución. La base integrada permite recorrer una convocatoria ficticia, autenticarse con el rol adecuado y consultar datos propios. Los controles experimentales aparecen al habilitar la bandera. La verificación técnica de la demostración deja pendiente la aceptación institucional.
+La matriz del capítulo 13 ubica las ejecuciones históricas. El anexo A.5 registra la verificación de la integración y el aislamiento de las bases de prueba. La base integrada permite recorrer una convocatoria ficticia, autenticarse con el rol adecuado y consultar datos propios. Los controles experimentales aparecen al habilitar la bandera. La verificación técnica de la demostración deja pendiente la aceptación institucional.
 
 ### 14.4. Monitoreo del Sistema
 
@@ -647,7 +647,7 @@ No hay monitoreo de errores en producción, alertas ni SLA: no se afirma disponi
 ## CONCLUSIONES
 
 - La solución concentra el expediente y registra sus estados con responsables. La evidencia automatizada cubre los 27 RF de la línea base, incluidos aislamiento, decisión humana y auditoría.
-- El corte distingue la operación integrada, la capacidad experimental detrás de bandera, los reportes operativos de una rama propia y los recursos visuales de la continuación local.
+- La entrega reúne Reportes y los recursos visuales. La ayuda documental y el expediente experimental mantienen su bandera de activación.
 - La cobertura de código y las pruebas funcionales miden aspectos distintos. El Gate V3 evaluado convive con deuda estática y falta de instrumentación del frontend en Sonar.
 - ML-01 mostró viabilidad técnica para riesgo operacional con datos sintéticos y una tasa de alerta elevada. ML-02 evidenció el límite de coincidencia léxica con Recall@3 cero en test. La decisión de selección sigue a cargo de Dirección.
 - La práctica demuestra el comportamiento del software con datos ficticios. Los beneficios y la aceptación requieren trabajo de campo.
@@ -655,7 +655,7 @@ No hay monitoreo de errores en producción, alertas ni SLA: no se afirma disponi
 ## RECOMENDACIONES
 
 - Validar el AS-IS y el TO-BE con responsables autorizados y definir una línea base de tiempos, trazabilidad y comunicación.
-- Someter Reportes y la continuación visual a revisión del candidato que se pretenda integrar. Repetir acceso, filtros y aislamiento si se cambia su base.
+- Repetir las pruebas de Reportes, aislamiento y accesibilidad de la presentación cuando se modifiquen esos flujos.
 - Planificar instrumentación LCOV, corrección de deuda estática, recuperación de respaldos y mediciones de rendimiento, accesibilidad y compatibilidad.
 - Para investigar ML-02, definir un método distinto con preregistro y conjunto de prueba independiente. Conservar el contrato experimental de ML-01.
 - Registrar la URL de implementación y su revisión cuando el equipo disponga de un entorno publicado.
@@ -725,3 +725,13 @@ La portada se documenta en la {{ref:portada}} y el detalle en la {{ref:oferta}}.
 | QA y métricas históricas | [QA F29F](https://github.com/luivmz/saas-reclutamiento-multiempresa/tree/04d3cfa1db6f82d9cda8db2254338805137cdc3c/docs/academico/qa-final) y [métricas F29G](https://github.com/luivmz/saas-reclutamiento-multiempresa/tree/04d3cfa1db6f82d9cda8db2254338805137cdc3c/docs/academico/metricas-calidad) |
 | Regresión y trazabilidad | [TDD](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/04d3cfa1db6f82d9cda8db2254338805137cdc3c/docs/tdd-evidence.md) y [matriz RF](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/04d3cfa1db6f82d9cda8db2254338805137cdc3c/docs/rf-implementation-matrix.md) |
 | Gobernanza | [Guía experimental](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/04d3cfa1db6f82d9cda8db2254338805137cdc3c/docs/experimental/README.md) y [progreso por fases](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/04d3cfa1db6f82d9cda8db2254338805137cdc3c/docs/PROGRESS.md) |
+
+### A.5. Cierre técnico de la entrega integrada
+
+El 23 de noviembre de 2026 se verificó el candidato funcional [eb66fa6](https://github.com/luivmz/saas-reclutamiento-multiempresa/commit/eb66fa6c8f88a77ba86f51315db506dd4d03cf0a), árbol `d79cee84a43985c083c96e755a4c9f0999fbd857`. El cierre documental añade este anexo y la guía de reproducción. Los cortes del 9 y el 22 de noviembre conservan sus revisiones, sus resultados y el estado histórico que describen.
+
+- **Orígenes.** Reportes y la práctica de calidad proceden de 5e2eae3. El anfitrión y las diez ofertas ficticias proceden de f9703f4, que ya contiene los dos vídeos de 2b87f36. El informe previo permanece en 8c18823. La integración conserva el expediente experimental, BM25 y las correcciones SEG del corte anterior.
+- **Comprobaciones.** PHPUnit aprobó 543 pruebas, con 8 omitidas y 3.130 aserciones. Pasaron 101 pruebas de componentes, la compilación, TypeScript y el lint de los cambios. La [guía de entrega](https://github.com/luivmz/saas-reclutamiento-multiempresa/blob/main/docs/entrega-final/ENTREGA_INTEGRADA.md) registra la suite Cypress y la correspondencia de E2E-25 con el spec histórico de Reportes.
+- **Navegador y datos.** Chrome mostró el avance y el retroceso de fotogramas en portada y dos empleos, los dos temas, el respaldo estático en móvil y con movimiento reducido, 14 ofertas en dos páginas y el anfitrión. Se verificaron una consulta BM25 con fuente y filtros separados por organización en Reportes. El seeder adicional creó diez ofertas y una segunda ejecución agregó cero.
+- **Alcance.** La verificación usó un proyecto Docker aislado y datos ficticios. ML-01 conserva el mismo servicio y contrato que la base previa. La bandera de evidencias sigue desactivada por omisión. Los resultados de SonarQube corresponden a sus propios cortes. Se mantienen el carácter candidato de RF-28, la decisión humana y los estados formales.
+- **Publicación.** Los SHA de las ramas y sus ejecuciones se consultan en [GitHub Actions](https://github.com/luivmz/saas-reclutamiento-multiempresa/actions/workflows/tests.yml). El enlace público de la aplicación permanece pendiente de confirmación.
