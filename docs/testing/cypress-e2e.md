@@ -234,3 +234,19 @@ Ambas corridas usaron Cypress 15.3.0 y Electron 136 headless, sin reintentos.
 **Total: 21 specs y 92 tests.** Los resultados de la ejecución completa están en el [informe de la entrega](../entrega-final/informe-final.md).
 
 **En la rama de continuación: 21 specs y 97 tests.** Allí no se ejecutó la suite completa: solo E2E-20 y los specs que visitan el detalle de la vacante. Los resultados están en el [informe de la continuación](../entrega-final/informe-continuacion.md).
+
+## 11. Presentación: E2E-23
+
+*Sección añadida el 22/11/2026, en la rama `design/presentacion-higgsfield`.*
+
+| Spec | Qué verifica | Tests |
+|---|---|---|
+| `e2e-23-portada-carpeta.cy.js` | El vídeo de la portada avanza al bajar y retrocede al subir, sin `play()` ni búsquedas solapadas; imagen fija si el vídeo no llega, con movimiento reducido (al cargar y con la página abierta) y a 390 y 320 px; los dos temas; la carpeta de «Cómo avanza un proceso» se abre al bajar y se cierra al subir, con paralaje del cursor independiente; sin desplazamiento horizontal | 10 |
+
+En la misma rama, E2E-18 y E2E-22 se desplazan hasta la carpeta antes de comprobar la escena, que ya no está en la portada, sin cambiar sus aserciones ni sus `data-cy`. E2E-22 suma la regresión de VIS-L01 (8 tests). **Total: 24 specs.** Resultados en [`../presentacion/incremento-visual-higgsfield.md`](../presentacion/incremento-visual-higgsfield.md).
+
+## 13. Reportes en la entrega integrada
+
+El spec vigente es `cypress/e2e/e2e-25-reports.cy.js`. Verifica acceso de RR. HH. y Dirección, rechazo a roles ajenos, filtros, totales y aislamiento entre las dos organizaciones demo. En la práctica de macOS del 09/11/2026 se llamaba `e2e-20-reports.cy.js`. Las capturas y logs de ese corte conservan su nombre. E2E-20 sigue identificando el recorrido demo.
+
+Para incluir E2E-21 en la suite completa, habilita `EXPERIMENTAL_EVIDENCIAS=true` en el `.env.e2e` ignorado por Git del proyecto de pruebas. Consulta la [guía de entrega integrada](../entrega-final/ENTREGA_INTEGRADA.md) para comprobar el aislamiento antes de ejecutar la suite.

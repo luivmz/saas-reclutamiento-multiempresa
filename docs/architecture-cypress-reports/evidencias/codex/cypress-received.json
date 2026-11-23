@@ -1,0 +1,16 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "--profile",
+    "e2e",
+    "run",
+    "--rm",
+    "--no-deps",
+    "cypress"
+  ],
+  "exit_code": 0,
+  "duration_seconds": 185.426,
+  "started_epoch": 1794280298.8425531,
+  "log": "/private/tmp/saas-codex-audit-20261109/cypress-received.log"
+}

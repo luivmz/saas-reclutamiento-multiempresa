@@ -57,7 +57,10 @@ describe('E2E-17 · El movimiento respeta el teclado y a quien lo reduce', () =>
         cy.get('[data-mobile="true"]').should('be.visible');
         cy.dataCy('nav-vacancies').should('be.visible');
 
-        cy.get('[data-mobile="true"]').type('{esc}');
+        // Escape se envía al elemento enfocado (el foco ya está dentro del panel)
+        // sin hacer clic: `.type()` sobre el panel pulsaba su centro, que es un
+        // enlace del menú cuando hay más entradas (DEF-15).
+        cy.get('body').type('{esc}');
         cy.get('[data-mobile="true"]').should('not.exist');
         // El panel se abre por estado y no por un disparador de Radix, asi que
         // la devolucion del foco es nuestra: sin ella se termina en `body`.

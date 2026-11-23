@@ -1,0 +1,3874 @@
+
+> cy:run
+> npm run e2e:setup && docker compose --profile e2e run --rm cypress
+
+
+> e2e:setup
+> docker compose run --rm --no-deps --entrypoint sh app docker/php/init-e2e-env.sh
+
+ Container reclutamiento-app-run-ea1d5d44e302 Creating
+ Container reclutamiento-app-run-ea1d5d44e302 Created
+.env.e2e creado con APP_KEY y E2E_TOKEN generados (no se muestran).
+ Container reclutamiento-app-1 Running
+ Container reclutamiento-postgres-1 Running
+ Container reclutamiento-redis-1 Running
+ Container reclutamiento-app-e2e-1 Creating
+ Container reclutamiento-app-e2e-1 Created
+ Container reclutamiento-queue-e2e-1 Creating
+ Container reclutamiento-queue-e2e-1 Created
+ Container reclutamiento-redis-1 Waiting
+ Container reclutamiento-postgres-1 Waiting
+ Container reclutamiento-postgres-1 Healthy
+ Container reclutamiento-redis-1 Healthy
+ Container reclutamiento-app-1 Waiting
+ Container reclutamiento-app-1 Healthy
+ Container reclutamiento-app-e2e-1 Starting
+ Container reclutamiento-app-e2e-1 Started
+ Container reclutamiento-app-e2e-1 Waiting
+ Container reclutamiento-app-e2e-1 Healthy
+ Container reclutamiento-queue-e2e-1 Starting
+ Container reclutamiento-queue-e2e-1 Started
+ Image cypress/included:15.3.0 Pulling
+ b93dff3f2471 Pulling fs layer 0B
+ 0ead1198ea98 Pulling fs layer 0B
+ b2feff975e6d Pulling fs layer 0B
+ 670ce22eaa89 Pulling fs layer 0B
+ d42920bd8ca5 Pulling fs layer 0B
+ 4f4fb700ef54 Pulling fs layer 0B
+ 4332b9e765a2 Pulling fs layer 0B
+ 4f4fb700ef54 Pulling fs layer 0B
+ 4f4fb700ef54 Pulling fs layer 0B
+ 79812bfcd6f8 Pulling fs layer 0B
+ d65d19a5f77b Pulling fs layer 0B
+ 7e2a4ea67adb Pulling fs layer 0B
+ 4f4fb700ef54 Already exists 0B
+ b2feff975e6d Downloading 1.049MB
+ b2feff975e6d Downloading 2.097MB
+ 5fb63f431e8c Download complete 0B
+ b2feff975e6d Downloading 2.097MB
+ b2feff975e6d Downloading 3.146MB
+ b2feff975e6d Downloading 3.146MB
+ b2feff975e6d Downloading 4.194MB
+ b2feff975e6d Downloading 5.243MB
+ b2feff975e6d Downloading 5.243MB
+ b2feff975e6d Downloading 6.291MB
+ b2feff975e6d Downloading 6.291MB
+ b2feff975e6d Downloading 7.34MB
+ b2feff975e6d Downloading 7.34MB
+ b2feff975e6d Downloading 8.389MB
+ b93dff3f2471 Download complete 0B
+ b2feff975e6d Downloading 8.389MB
+ b2feff975e6d Downloading 9.437MB
+ b2feff975e6d Downloading 9.437MB
+ b2feff975e6d Downloading 10.49MB
+ 0ead1198ea98 Downloading 1.049MB
+ b2feff975e6d Downloading 10.49MB
+ 0ead1198ea98 Downloading 1.049MB
+ b2feff975e6d Downloading 11.53MB
+ 0ead1198ea98 Downloading 1.049MB
+ b2feff975e6d Downloading 11.53MB
+ 0ead1198ea98 Downloading 1.049MB
+ b2feff975e6d Downloading 12.58MB
+ 0ead1198ea98 Downloading 1.049MB
+ b2feff975e6d Downloading 12.58MB
+ 0ead1198ea98 Downloading 1.049MB
+ b2feff975e6d Downloading 13.63MB
+ 0ead1198ea98 Downloading 1.049MB
+ b2feff975e6d Downloading 14.68MB
+ 0ead1198ea98 Downloading 1.049MB
+ b2feff975e6d Downloading 14.68MB
+ 0ead1198ea98 Downloading 1.049MB
+ b2feff975e6d Downloading 15.73MB
+ d42920bd8ca5 Download complete 0B
+ 0ead1198ea98 Downloading 2.097MB
+ b2feff975e6d Downloading 15.73MB
+ 0ead1198ea98 Downloading 2.097MB
+ b2feff975e6d Downloading 16.78MB
+ 0ead1198ea98 Downloading 2.097MB
+ b2feff975e6d Downloading 16.78MB
+ 0ead1198ea98 Downloading 2.097MB
+ b2feff975e6d Downloading 17.83MB
+ 0ead1198ea98 Downloading 2.097MB
+ b2feff975e6d Downloading 17.83MB
+ 0ead1198ea98 Downloading 2.097MB
+ b2feff975e6d Downloading 18.87MB
+ 0ead1198ea98 Downloading 2.097MB
+ b2feff975e6d Downloading 18.87MB
+ 0ead1198ea98 Downloading 2.097MB
+ b2feff975e6d Downloading 19.92MB
+ 0ead1198ea98 Downloading 2.097MB
+ b2feff975e6d Downloading 19.92MB
+ 0ead1198ea98 Downloading 2.097MB
+ b2feff975e6d Downloading 20.97MB
+ 0ead1198ea98 Downloading 2.097MB
+ b2feff975e6d Downloading 20.97MB
+ 0ead1198ea98 Downloading 3.146MB
+ b2feff975e6d Downloading 20.97MB
+ 0ead1198ea98 Downloading 3.146MB
+ b2feff975e6d Downloading 22.02MB
+ 0ead1198ea98 Downloading 3.146MB
+ b2feff975e6d Downloading 22.02MB
+ 0ead1198ea98 Downloading 3.146MB
+ b2feff975e6d Downloading 22.02MB
+ 4332b9e765a2 Downloading 1.049MB
+ 0ead1198ea98 Downloading 3.146MB
+ b2feff975e6d Downloading 23.07MB
+ 4332b9e765a2 Downloading 1.049MB
+ 0ead1198ea98 Downloading 3.146MB
+ b2feff975e6d Downloading 23.07MB
+ 4332b9e765a2 Downloading 1.049MB
+ 0ead1198ea98 Downloading 3.146MB
+ b2feff975e6d Downloading 23.07MB
+ 4332b9e765a2 Downloading 1.049MB
+ 0ead1198ea98 Downloading 4.194MB
+ b2feff975e6d Downloading 23.07MB
+ 4332b9e765a2 Downloading 1.049MB
+ 4332b9e765a2 Downloading 2.258MB
+ 0ead1198ea98 Downloading 4.194MB
+ b2feff975e6d Downloading 24.12MB
+ 0ead1198ea98 Downloading 4.194MB
+ b2feff975e6d Downloading 24.12MB
+ 4332b9e765a2 Download complete 0B
+ 0ead1198ea98 Downloading 4.194MB
+ b2feff975e6d Downloading 24.12MB
+ 0ead1198ea98 Downloading 4.194MB
+ b2feff975e6d Downloading 25.17MB
+ 0ead1198ea98 Downloading 5.243MB
+ b2feff975e6d Downloading 25.17MB
+ 0ead1198ea98 Downloading 5.243MB
+ b2feff975e6d Downloading 25.17MB
+ b2feff975e6d Downloading 26.21MB
+ 0ead1198ea98 Downloading 5.243MB
+ 0ead1198ea98 Downloading 5.243MB
+ b2feff975e6d Downloading 26.21MB
+ 0ead1198ea98 Downloading 6.291MB
+ b2feff975e6d Downloading 26.21MB
+ 0ead1198ea98 Downloading 6.291MB
+ b2feff975e6d Downloading 26.21MB
+ 0ead1198ea98 Downloading 6.291MB
+ b2feff975e6d Downloading 26.21MB
+ 0ead1198ea98 Downloading 6.291MB
+ b2feff975e6d Downloading 27.26MB
+ 0ead1198ea98 Downloading 6.291MB
+ b2feff975e6d Downloading 27.26MB
+ 670ce22eaa89 Downloading 1.049MB
+ 670ce22eaa89 Downloading 1.049MB
+ 0ead1198ea98 Downloading 7.34MB
+ b2feff975e6d Downloading 27.26MB
+ 0ead1198ea98 Downloading 7.34MB
+ b2feff975e6d Downloading 27.26MB
+ 670ce22eaa89 Downloading 1.049MB
+ 670ce22eaa89 Downloading 1.049MB
+ 0ead1198ea98 Downloading 7.34MB
+ b2feff975e6d Downloading 28.31MB
+ 0ead1198ea98 Downloading 7.34MB
+ b2feff975e6d Downloading 28.31MB
+ 670ce22eaa89 Downloading 1.049MB
+ 670ce22eaa89 Downloading 2.097MB
+ 0ead1198ea98 Downloading 7.34MB
+ b2feff975e6d Downloading 28.31MB
+ 0ead1198ea98 Downloading 8.389MB
+ b2feff975e6d Downloading 29.36MB
+ 670ce22eaa89 Downloading 2.097MB
+ b2feff975e6d Downloading 29.36MB
+ 670ce22eaa89 Downloading 2.097MB
+ 0ead1198ea98 Downloading 8.389MB
+ 670ce22eaa89 Downloading 2.097MB
+ 0ead1198ea98 Downloading 8.389MB
+ b2feff975e6d Downloading 29.36MB
+ 670ce22eaa89 Downloading 2.097MB
+ 0ead1198ea98 Downloading 8.389MB
+ b2feff975e6d Download complete 0B
+ b2feff975e6d Extracting 1B
+ 0ead1198ea98 Downloading 8.389MB
+ 670ce22eaa89 Downloading 3.146MB
+ b2feff975e6d Extracting 1B
+ 0ead1198ea98 Downloading 9.437MB
+ 670ce22eaa89 Downloading 3.146MB
+ b2feff975e6d Extracting 1B
+ 670ce22eaa89 Downloading 4.194MB
+ 0ead1198ea98 Downloading 9.437MB
+ b2feff975e6d Extracting 1B
+ 670ce22eaa89 Downloading 4.194MB
+ 0ead1198ea98 Downloading 9.437MB
+ b2feff975e6d Pull complete 0B
+ 670ce22eaa89 Downloading 5.243MB
+ 0ead1198ea98 Downloading 9.437MB
+ 670ce22eaa89 Downloading 5.243MB
+ 0ead1198ea98 Downloading 9.437MB
+ 670ce22eaa89 Downloading 5.243MB
+ 0ead1198ea98 Downloading 10.49MB
+ 670ce22eaa89 Downloading 6.291MB
+ 0ead1198ea98 Downloading 10.49MB
+ 670ce22eaa89 Downloading 6.291MB
+ 0ead1198ea98 Downloading 10.49MB
+ 670ce22eaa89 Downloading 6.291MB
+ 0ead1198ea98 Downloading 10.49MB
+ 0ead1198ea98 Downloading 11.53MB
+ 670ce22eaa89 Downloading 6.291MB
+ 0ead1198ea98 Downloading 11.53MB
+ 670ce22eaa89 Downloading 6.291MB
+ 670ce22eaa89 Downloading 7.34MB
+ 7e2a4ea67adb Downloading 1.049MB
+ 0ead1198ea98 Downloading 11.53MB
+ 7e2a4ea67adb Downloading 1.049MB
+ 0ead1198ea98 Downloading 11.53MB
+ 670ce22eaa89 Downloading 7.34MB
+ 670ce22eaa89 Downloading 7.34MB
+ 7e2a4ea67adb Downloading 1.049MB
+ 0ead1198ea98 Downloading 11.53MB
+ 0ead1198ea98 Downloading 11.53MB
+ 670ce22eaa89 Downloading 7.34MB
+ 7e2a4ea67adb Downloading 1.049MB
+ 0ead1198ea98 Downloading 11.53MB
+ 670ce22eaa89 Downloading 7.34MB
+ 7e2a4ea67adb Downloading 2.097MB
+ 670ce22eaa89 Downloading 8.389MB
+ 7e2a4ea67adb Downloading 2.097MB
+ 0ead1198ea98 Downloading 12.58MB
+ 670ce22eaa89 Downloading 8.389MB
+ 7e2a4ea67adb Downloading 2.097MB
+ 0ead1198ea98 Downloading 12.58MB
+ 7e2a4ea67adb Downloading 3.146MB
+ 0ead1198ea98 Downloading 12.58MB
+ 670ce22eaa89 Downloading 8.389MB
+ 670ce22eaa89 Downloading 8.389MB
+ 7e2a4ea67adb Downloading 3.146MB
+ 0ead1198ea98 Downloading 12.58MB
+ 0ead1198ea98 Downloading 12.58MB
+ 670ce22eaa89 Downloading 8.389MB
+ 7e2a4ea67adb Downloading 3.146MB
+ 670ce22eaa89 Downloading 9.437MB
+ 7e2a4ea67adb Downloading 4.194MB
+ 0ead1198ea98 Downloading 12.58MB
+ 0ead1198ea98 Downloading 13.63MB
+ 670ce22eaa89 Downloading 9.437MB
+ 7e2a4ea67adb Downloading 4.194MB
+ 670ce22eaa89 Downloading 9.437MB
+ 7e2a4ea67adb Downloading 4.194MB
+ 0ead1198ea98 Downloading 13.63MB
+ 0ead1198ea98 Downloading 13.63MB
+ 670ce22eaa89 Downloading 9.437MB
+ 7e2a4ea67adb Downloading 4.194MB
+ 670ce22eaa89 Downloading 10.49MB
+ 7e2a4ea67adb Downloading 4.194MB
+ 0ead1198ea98 Downloading 13.63MB
+ 670ce22eaa89 Downloading 10.49MB
+ 7e2a4ea67adb Downloading 5.243MB
+ 0ead1198ea98 Downloading 13.63MB
+ 0ead1198ea98 Downloading 13.63MB
+ 670ce22eaa89 Downloading 10.49MB
+ 7e2a4ea67adb Downloading 5.243MB
+ 0ead1198ea98 Downloading 14.68MB
+ 670ce22eaa89 Downloading 10.49MB
+ 7e2a4ea67adb Downloading 5.243MB
+ 670ce22eaa89 Downloading 11.53MB
+ 7e2a4ea67adb Downloading 5.243MB
+ 0ead1198ea98 Downloading 14.68MB
+ 0ead1198ea98 Downloading 14.68MB
+ 670ce22eaa89 Downloading 11.53MB
+ 7e2a4ea67adb Downloading 6.291MB
+ 670ce22eaa89 Downloading 11.53MB
+ 7e2a4ea67adb Downloading 6.291MB
+ 0ead1198ea98 Downloading 14.68MB
+ 7e2a4ea67adb Downloading 6.291MB
+ 0ead1198ea98 Downloading 14.68MB
+ 670ce22eaa89 Downloading 11.53MB
+ 0ead1198ea98 Downloading 14.68MB
+ 670ce22eaa89 Downloading 11.53MB
+ 7e2a4ea67adb Downloading 6.291MB
+ 7e2a4ea67adb Downloading 6.291MB
+ 0ead1198ea98 Downloading 15.73MB
+ 670ce22eaa89 Downloading 12.58MB
+ 670ce22eaa89 Downloading 12.58MB
+ 7e2a4ea67adb Downloading 7.34MB
+ 0ead1198ea98 Downloading 15.73MB
+ 670ce22eaa89 Downloading 12.58MB
+ 7e2a4ea67adb Downloading 7.34MB
+ 0ead1198ea98 Downloading 15.73MB
+ 0ead1198ea98 Downloading 15.73MB
+ 670ce22eaa89 Downloading 12.58MB
+ 7e2a4ea67adb Downloading 7.34MB
+ 0ead1198ea98 Downloading 15.73MB
+ 670ce22eaa89 Downloading 13.63MB
+ 7e2a4ea67adb Downloading 7.34MB
+ 670ce22eaa89 Downloading 13.63MB
+ 7e2a4ea67adb Downloading 8.389MB
+ 0ead1198ea98 Downloading 16.78MB
+ 670ce22eaa89 Downloading 13.63MB
+ 7e2a4ea67adb Downloading 8.389MB
+ 0ead1198ea98 Downloading 16.78MB
+ 0ead1198ea98 Downloading 16.78MB
+ 670ce22eaa89 Downloading 13.63MB
+ 7e2a4ea67adb Downloading 8.389MB
+ 0ead1198ea98 Downloading 16.78MB
+ 670ce22eaa89 Downloading 13.63MB
+ 7e2a4ea67adb Downloading 8.389MB
+ 670ce22eaa89 Downloading 14.68MB
+ 7e2a4ea67adb Downloading 8.389MB
+ 0ead1198ea98 Downloading 16.78MB
+ 670ce22eaa89 Downloading 14.68MB
+ 7e2a4ea67adb Downloading 9.437MB
+ 0ead1198ea98 Downloading 17.83MB
+ 670ce22eaa89 Downloading 14.68MB
+ 7e2a4ea67adb Downloading 9.437MB
+ 0ead1198ea98 Downloading 17.83MB
+ 670ce22eaa89 Downloading 14.68MB
+ 7e2a4ea67adb Downloading 9.437MB
+ 0ead1198ea98 Downloading 17.83MB
+ 670ce22eaa89 Downloading 15.73MB
+ 7e2a4ea67adb Downloading 9.437MB
+ 0ead1198ea98 Downloading 17.83MB
+ 670ce22eaa89 Downloading 15.73MB
+ 7e2a4ea67adb Downloading 10.49MB
+ 0ead1198ea98 Downloading 17.83MB
+ 0ead1198ea98 Downloading 18.87MB
+ 670ce22eaa89 Downloading 15.73MB
+ 7e2a4ea67adb Downloading 10.49MB
+ 670ce22eaa89 Downloading 15.73MB
+ 7e2a4ea67adb Downloading 10.49MB
+ 0ead1198ea98 Downloading 18.87MB
+ 0ead1198ea98 Downloading 18.87MB
+ 670ce22eaa89 Downloading 15.73MB
+ 7e2a4ea67adb Downloading 10.49MB
+ 0ead1198ea98 Downloading 18.87MB
+ 670ce22eaa89 Downloading 16.78MB
+ 7e2a4ea67adb Downloading 10.49MB
+ 670ce22eaa89 Downloading 16.78MB
+ 7e2a4ea67adb Downloading 11.53MB
+ 0ead1198ea98 Downloading 18.87MB
+ 7e2a4ea67adb Downloading 11.53MB
+ 0ead1198ea98 Downloading 19.92MB
+ 670ce22eaa89 Downloading 16.78MB
+ 670ce22eaa89 Downloading 16.78MB
+ 7e2a4ea67adb Downloading 11.53MB
+ 0ead1198ea98 Downloading 19.92MB
+ 0ead1198ea98 Downloading 19.92MB
+ 670ce22eaa89 Downloading 17.83MB
+ 7e2a4ea67adb Downloading 11.53MB
+ 0ead1198ea98 Downloading 19.92MB
+ 670ce22eaa89 Downloading 17.83MB
+ 7e2a4ea67adb Downloading 11.53MB
+ 0ead1198ea98 Downloading 19.92MB
+ 670ce22eaa89 Downloading 17.83MB
+ 7e2a4ea67adb Downloading 12.58MB
+ 670ce22eaa89 Downloading 17.83MB
+ 7e2a4ea67adb Downloading 12.58MB
+ 0ead1198ea98 Downloading 19.92MB
+ 7e2a4ea67adb Downloading 12.58MB
+ 0ead1198ea98 Downloading 19.92MB
+ 670ce22eaa89 Downloading 18.87MB
+ 0ead1198ea98 Downloading 20.97MB
+ 670ce22eaa89 Downloading 18.87MB
+ 7e2a4ea67adb Downloading 12.58MB
+ 670ce22eaa89 Downloading 18.87MB
+ 7e2a4ea67adb Downloading 13.63MB
+ 0ead1198ea98 Downloading 20.97MB
+ 670ce22eaa89 Downloading 18.87MB
+ 7e2a4ea67adb Downloading 13.63MB
+ 0ead1198ea98 Downloading 20.97MB
+ 670ce22eaa89 Downloading 18.87MB
+ 7e2a4ea67adb Downloading 13.63MB
+ 0ead1198ea98 Downloading 20.97MB
+ 670ce22eaa89 Downloading 19.92MB
+ 7e2a4ea67adb Downloading 13.63MB
+ 0ead1198ea98 Downloading 20.97MB
+ 0ead1198ea98 Downloading 22.02MB
+ 670ce22eaa89 Downloading 19.92MB
+ 7e2a4ea67adb Downloading 13.63MB
+ 0ead1198ea98 Downloading 22.02MB
+ 670ce22eaa89 Downloading 19.92MB
+ 7e2a4ea67adb Downloading 14.68MB
+ 0ead1198ea98 Downloading 22.02MB
+ 670ce22eaa89 Downloading 19.92MB
+ 7e2a4ea67adb Downloading 14.68MB
+ 670ce22eaa89 Downloading 19.92MB
+ 7e2a4ea67adb Downloading 14.68MB
+ 0ead1198ea98 Downloading 22.02MB
+ 670ce22eaa89 Downloading 20.97MB
+ 7e2a4ea67adb Downloading 14.68MB
+ 0ead1198ea98 Downloading 23.07MB
+ 0ead1198ea98 Downloading 23.07MB
+ 670ce22eaa89 Downloading 20.97MB
+ 7e2a4ea67adb Downloading 14.68MB
+ 670ce22eaa89 Downloading 20.97MB
+ 7e2a4ea67adb Downloading 15.73MB
+ 0ead1198ea98 Downloading 23.07MB
+ 0ead1198ea98 Downloading 23.07MB
+ 670ce22eaa89 Downloading 20.97MB
+ 7e2a4ea67adb Downloading 15.73MB
+ 0ead1198ea98 Downloading 24.12MB
+ 670ce22eaa89 Downloading 20.97MB
+ 7e2a4ea67adb Downloading 15.73MB
+ 0ead1198ea98 Downloading 24.12MB
+ 670ce22eaa89 Downloading 22.02MB
+ 7e2a4ea67adb Downloading 15.73MB
+ 0ead1198ea98 Downloading 24.12MB
+ 670ce22eaa89 Downloading 22.02MB
+ 7e2a4ea67adb Downloading 15.73MB
+ 0ead1198ea98 Downloading 24.12MB
+ 670ce22eaa89 Downloading 22.02MB
+ 7e2a4ea67adb Downloading 16.78MB
+ 0ead1198ea98 Downloading 24.12MB
+ 670ce22eaa89 Downloading 22.02MB
+ 7e2a4ea67adb Downloading 16.78MB
+ 7e2a4ea67adb Downloading 16.78MB
+ 0ead1198ea98 Downloading 25.17MB
+ 670ce22eaa89 Downloading 23.07MB
+ 670ce22eaa89 Downloading 23.07MB
+ 7e2a4ea67adb Downloading 16.78MB
+ 0ead1198ea98 Downloading 25.17MB
+ 0ead1198ea98 Downloading 25.17MB
+ 670ce22eaa89 Downloading 23.07MB
+ 7e2a4ea67adb Downloading 16.78MB
+ 0ead1198ea98 Downloading 25.17MB
+ 670ce22eaa89 Downloading 23.07MB
+ 7e2a4ea67adb Downloading 17.83MB
+ 0ead1198ea98 Downloading 25.17MB
+ 670ce22eaa89 Downloading 23.07MB
+ 7e2a4ea67adb Downloading 17.83MB
+ 0ead1198ea98 Downloading 26.21MB
+ 670ce22eaa89 Downloading 24.12MB
+ 7e2a4ea67adb Downloading 17.83MB
+ 0ead1198ea98 Downloading 26.21MB
+ 670ce22eaa89 Downloading 24.12MB
+ 7e2a4ea67adb Downloading 17.83MB
+ 7e2a4ea67adb Downloading 17.83MB
+ 0ead1198ea98 Downloading 26.21MB
+ 670ce22eaa89 Downloading 24.12MB
+ 670ce22eaa89 Downloading 24.12MB
+ 7e2a4ea67adb Downloading 18.87MB
+ 0ead1198ea98 Downloading 26.21MB
+ 0ead1198ea98 Downloading 26.21MB
+ 670ce22eaa89 Downloading 24.12MB
+ 7e2a4ea67adb Downloading 18.87MB
+ 670ce22eaa89 Downloading 24.12MB
+ 7e2a4ea67adb Downloading 18.87MB
+ 0ead1198ea98 Downloading 27.26MB
+ 7e2a4ea67adb Downloading 18.87MB
+ 0ead1198ea98 Downloading 27.26MB
+ 670ce22eaa89 Downloading 25.17MB
+ 0ead1198ea98 Downloading 27.26MB
+ 670ce22eaa89 Downloading 25.17MB
+ 7e2a4ea67adb Downloading 18.87MB
+ 0ead1198ea98 Downloading 27.26MB
+ 670ce22eaa89 Downloading 25.17MB
+ 7e2a4ea67adb Downloading 19.92MB
+ 670ce22eaa89 Downloading 25.17MB
+ 7e2a4ea67adb Downloading 19.92MB
+ 0ead1198ea98 Downloading 28.31MB
+ 670ce22eaa89 Downloading 26.21MB
+ 7e2a4ea67adb Downloading 19.92MB
+ 0ead1198ea98 Downloading 28.31MB
+ 0ead1198ea98 Downloading 28.31MB
+ 670ce22eaa89 Downloading 26.21MB
+ 7e2a4ea67adb Downloading 19.92MB
+ 670ce22eaa89 Downloading 26.21MB
+ 7e2a4ea67adb Downloading 20.97MB
+ 0ead1198ea98 Downloading 28.31MB
+ 670ce22eaa89 Downloading 26.21MB
+ 7e2a4ea67adb Downloading 20.97MB
+ 0ead1198ea98 Downloading 28.31MB
+ 670ce22eaa89 Downloading 26.21MB
+ 7e2a4ea67adb Downloading 20.97MB
+ 0ead1198ea98 Downloading 29.36MB
+ 670ce22eaa89 Downloading 27.26MB
+ 7e2a4ea67adb Downloading 20.97MB
+ 0ead1198ea98 Downloading 29.36MB
+ 7e2a4ea67adb Downloading 22.02MB
+ 0ead1198ea98 Downloading 29.36MB
+ 670ce22eaa89 Downloading 27.26MB
+ 7e2a4ea67adb Downloading 22.02MB
+ 0ead1198ea98 Downloading 29.36MB
+ 670ce22eaa89 Downloading 27.26MB
+ 670ce22eaa89 Downloading 27.26MB
+ 7e2a4ea67adb Downloading 22.02MB
+ 0ead1198ea98 Downloading 29.36MB
+ 670ce22eaa89 Downloading 27.26MB
+ 7e2a4ea67adb Downloading 22.02MB
+ 0ead1198ea98 Downloading 30.41MB
+ 670ce22eaa89 Downloading 27.26MB
+ 7e2a4ea67adb Downloading 22.02MB
+ 0ead1198ea98 Downloading 30.41MB
+ 670ce22eaa89 Downloading 27.26MB
+ 7e2a4ea67adb Downloading 23.07MB
+ 0ead1198ea98 Downloading 30.41MB
+ 670ce22eaa89 Downloading 28.31MB
+ 7e2a4ea67adb Downloading 23.07MB
+ 0ead1198ea98 Downloading 30.41MB
+ 670ce22eaa89 Downloading 28.31MB
+ 7e2a4ea67adb Downloading 23.07MB
+ 0ead1198ea98 Downloading 31.46MB
+ 670ce22eaa89 Downloading 28.31MB
+ 7e2a4ea67adb Downloading 23.07MB
+ 0ead1198ea98 Downloading 31.46MB
+ 0ead1198ea98 Downloading 31.46MB
+ 670ce22eaa89 Downloading 28.31MB
+ 7e2a4ea67adb Downloading 23.07MB
+ 670ce22eaa89 Downloading 28.31MB
+ 7e2a4ea67adb Downloading 23.07MB
+ 0ead1198ea98 Downloading 31.46MB
+ 0ead1198ea98 Downloading 31.46MB
+ 670ce22eaa89 Downloading 28.31MB
+ 7e2a4ea67adb Downloading 24.12MB
+ 670ce22eaa89 Downloading 29.36MB
+ 7e2a4ea67adb Downloading 24.12MB
+ 0ead1198ea98 Downloading 31.46MB
+ 670ce22eaa89 Downloading 29.36MB
+ 7e2a4ea67adb Downloading 24.12MB
+ 0ead1198ea98 Downloading 31.46MB
+ 7e2a4ea67adb Downloading 24.12MB
+ 0ead1198ea98 Downloading 32.51MB
+ 670ce22eaa89 Downloading 29.36MB
+ 0ead1198ea98 Downloading 32.51MB
+ 670ce22eaa89 Downloading 29.36MB
+ 7e2a4ea67adb Downloading 25.17MB
+ 670ce22eaa89 Downloading 29.36MB
+ 7e2a4ea67adb Downloading 25.17MB
+ 0ead1198ea98 Downloading 32.51MB
+ 0ead1198ea98 Downloading 32.51MB
+ 670ce22eaa89 Downloading 29.36MB
+ 7e2a4ea67adb Downloading 25.17MB
+ 670ce22eaa89 Downloading 30.41MB
+ 7e2a4ea67adb Downloading 25.17MB
+ 0ead1198ea98 Downloading 32.51MB
+ 670ce22eaa89 Downloading 30.41MB
+ 7e2a4ea67adb Downloading 26.21MB
+ 0ead1198ea98 Downloading 33.55MB
+ 0ead1198ea98 Downloading 33.55MB
+ 670ce22eaa89 Downloading 30.41MB
+ 7e2a4ea67adb Downloading 26.21MB
+ 670ce22eaa89 Downloading 30.41MB
+ 7e2a4ea67adb Downloading 26.21MB
+ 0ead1198ea98 Downloading 33.55MB
+ 670ce22eaa89 Downloading 30.41MB
+ 7e2a4ea67adb Downloading 26.21MB
+ 0ead1198ea98 Downloading 33.55MB
+ 670ce22eaa89 Downloading 31.46MB
+ 7e2a4ea67adb Downloading 26.21MB
+ 0ead1198ea98 Downloading 33.55MB
+ 670ce22eaa89 Downloading 31.46MB
+ 7e2a4ea67adb Downloading 27.26MB
+ 0ead1198ea98 Downloading 34.6MB
+ 670ce22eaa89 Downloading 31.46MB
+ 7e2a4ea67adb Downloading 27.26MB
+ 0ead1198ea98 Downloading 34.6MB
+ 0ead1198ea98 Downloading 34.6MB
+ 670ce22eaa89 Downloading 31.46MB
+ 7e2a4ea67adb Downloading 27.26MB
+ 7e2a4ea67adb Downloading 27.26MB
+ 0ead1198ea98 Downloading 34.6MB
+ 670ce22eaa89 Downloading 32.51MB
+ 7e2a4ea67adb Downloading 28.31MB
+ 0ead1198ea98 Downloading 35.65MB
+ 670ce22eaa89 Downloading 32.51MB
+ 0ead1198ea98 Downloading 35.65MB
+ 670ce22eaa89 Downloading 32.51MB
+ 7e2a4ea67adb Downloading 28.31MB
+ 0ead1198ea98 Downloading 35.65MB
+ 670ce22eaa89 Downloading 32.51MB
+ 7e2a4ea67adb Downloading 28.31MB
+ 670ce22eaa89 Downloading 33.55MB
+ 7e2a4ea67adb Downloading 28.31MB
+ 0ead1198ea98 Downloading 35.65MB
+ 0ead1198ea98 Downloading 35.65MB
+ 670ce22eaa89 Downloading 33.55MB
+ 7e2a4ea67adb Downloading 29.36MB
+ 670ce22eaa89 Downloading 33.55MB
+ 7e2a4ea67adb Downloading 29.36MB
+ 0ead1198ea98 Downloading 36.7MB
+ 670ce22eaa89 Downloading 33.55MB
+ 7e2a4ea67adb Downloading 29.36MB
+ 0ead1198ea98 Downloading 36.7MB
+ 670ce22eaa89 Downloading 33.55MB
+ 7e2a4ea67adb Downloading 29.36MB
+ 0ead1198ea98 Downloading 36.7MB
+ 670ce22eaa89 Downloading 33.55MB
+ 7e2a4ea67adb Downloading 30.41MB
+ 0ead1198ea98 Downloading 36.7MB
+ 670ce22eaa89 Downloading 34.6MB
+ 7e2a4ea67adb Downloading 30.41MB
+ 0ead1198ea98 Downloading 36.7MB
+ 0ead1198ea98 Downloading 36.7MB
+ 670ce22eaa89 Downloading 34.6MB
+ 7e2a4ea67adb Downloading 30.41MB
+ 670ce22eaa89 Downloading 34.6MB
+ 7e2a4ea67adb Downloading 30.41MB
+ 0ead1198ea98 Downloading 37.75MB
+ 0ead1198ea98 Downloading 37.75MB
+ 670ce22eaa89 Downloading 34.6MB
+ 7e2a4ea67adb Downloading 31.46MB
+ 670ce22eaa89 Downloading 34.6MB
+ 7e2a4ea67adb Downloading 31.46MB
+ 0ead1198ea98 Downloading 37.75MB
+ 670ce22eaa89 Downloading 34.6MB
+ 7e2a4ea67adb Downloading 31.46MB
+ 0ead1198ea98 Downloading 37.75MB
+ 670ce22eaa89 Downloading 34.6MB
+ 7e2a4ea67adb Downloading 31.46MB
+ 0ead1198ea98 Downloading 37.75MB
+ 7e2a4ea67adb Downloading 31.46MB
+ 0ead1198ea98 Downloading 37.75MB
+ 670ce22eaa89 Downloading 35.65MB
+ 0ead1198ea98 Downloading 37.75MB
+ 670ce22eaa89 Downloading 35.65MB
+ 7e2a4ea67adb Downloading 32.51MB
+ 0ead1198ea98 Downloading 38.8MB
+ 670ce22eaa89 Downloading 35.65MB
+ 7e2a4ea67adb Downloading 32.51MB
+ 670ce22eaa89 Downloading 35.65MB
+ 7e2a4ea67adb Downloading 32.51MB
+ 0ead1198ea98 Downloading 38.8MB
+ 670ce22eaa89 Downloading 35.65MB
+ 7e2a4ea67adb Downloading 32.51MB
+ 0ead1198ea98 Downloading 38.8MB
+ 0ead1198ea98 Downloading 38.8MB
+ 670ce22eaa89 Downloading 36.7MB
+ 7e2a4ea67adb Downloading 33.55MB
+ 670ce22eaa89 Downloading 36.7MB
+ 7e2a4ea67adb Downloading 33.55MB
+ 0ead1198ea98 Downloading 38.8MB
+ 0ead1198ea98 Downloading 38.8MB
+ 670ce22eaa89 Downloading 36.7MB
+ 7e2a4ea67adb Downloading 33.55MB
+ 7e2a4ea67adb Downloading 33.55MB
+ 0ead1198ea98 Downloading 38.8MB
+ 670ce22eaa89 Downloading 36.7MB
+ 0ead1198ea98 Downloading 39.85MB
+ 670ce22eaa89 Downloading 36.7MB
+ 7e2a4ea67adb Downloading 33.55MB
+ 0ead1198ea98 Downloading 39.85MB
+ 670ce22eaa89 Downloading 36.7MB
+ 7e2a4ea67adb Downloading 33.55MB
+ 670ce22eaa89 Downloading 36.7MB
+ 7e2a4ea67adb Downloading 33.55MB
+ 0ead1198ea98 Downloading 39.85MB
+ 0ead1198ea98 Downloading 39.85MB
+ 670ce22eaa89 Downloading 36.7MB
+ 7e2a4ea67adb Downloading 33.55MB
+ 0ead1198ea98 Downloading 39.85MB
+ 670ce22eaa89 Downloading 37.75MB
+ 7e2a4ea67adb Downloading 34.6MB
+ 0ead1198ea98 Downloading 39.85MB
+ 670ce22eaa89 Downloading 37.75MB
+ 7e2a4ea67adb Downloading 34.6MB
+ 7e2a4ea67adb Downloading 34.6MB
+ 0ead1198ea98 Downloading 39.85MB
+ 670ce22eaa89 Downloading 37.75MB
+ 7e2a4ea67adb Downloading 34.6MB
+ 0ead1198ea98 Downloading 39.85MB
+ 670ce22eaa89 Downloading 37.75MB
+ 670ce22eaa89 Downloading 37.75MB
+ 7e2a4ea67adb Downloading 34.6MB
+ 0ead1198ea98 Downloading 39.85MB
+ 670ce22eaa89 Downloading 37.75MB
+ 7e2a4ea67adb Downloading 34.6MB
+ 0ead1198ea98 Downloading 40.89MB
+ 0ead1198ea98 Downloading 40.89MB
+ 670ce22eaa89 Downloading 37.75MB
+ 7e2a4ea67adb Downloading 35.65MB
+ 0ead1198ea98 Downloading 40.89MB
+ 670ce22eaa89 Downloading 38.8MB
+ 7e2a4ea67adb Downloading 35.65MB
+ 670ce22eaa89 Downloading 38.8MB
+ 7e2a4ea67adb Downloading 35.65MB
+ 0ead1198ea98 Downloading 40.89MB
+ 670ce22eaa89 Downloading 38.8MB
+ 7e2a4ea67adb Downloading 35.65MB
+ 0ead1198ea98 Downloading 40.89MB
+ 0ead1198ea98 Downloading 40.89MB
+ 670ce22eaa89 Downloading 38.8MB
+ 7e2a4ea67adb Downloading 36.7MB
+ 0ead1198ea98 Downloading 41.94MB
+ 670ce22eaa89 Downloading 38.8MB
+ 7e2a4ea67adb Downloading 36.7MB
+ 7e2a4ea67adb Downloading 36.7MB
+ 0ead1198ea98 Downloading 41.94MB
+ 670ce22eaa89 Downloading 39.85MB
+ 670ce22eaa89 Downloading 39.85MB
+ 7e2a4ea67adb Downloading 36.7MB
+ 0ead1198ea98 Downloading 41.94MB
+ 670ce22eaa89 Downloading 39.85MB
+ 7e2a4ea67adb Downloading 36.7MB
+ 0ead1198ea98 Downloading 41.94MB
+ 0ead1198ea98 Downloading 41.94MB
+ 670ce22eaa89 Downloading 39.85MB
+ 7e2a4ea67adb Downloading 37.75MB
+ 0ead1198ea98 Downloading 42.99MB
+ 670ce22eaa89 Downloading 40.89MB
+ 7e2a4ea67adb Downloading 37.75MB
+ 670ce22eaa89 Downloading 40.89MB
+ 7e2a4ea67adb Downloading 37.75MB
+ 0ead1198ea98 Downloading 42.99MB
+ 7e2a4ea67adb Downloading 37.75MB
+ 0ead1198ea98 Downloading 42.99MB
+ 670ce22eaa89 Downloading 40.89MB
+ 0ead1198ea98 Downloading 42.99MB
+ 670ce22eaa89 Downloading 40.89MB
+ 7e2a4ea67adb Downloading 37.75MB
+ 0ead1198ea98 Downloading 44.04MB
+ 670ce22eaa89 Downloading 40.89MB
+ 7e2a4ea67adb Downloading 38.8MB
+ 0ead1198ea98 Downloading 44.04MB
+ 670ce22eaa89 Downloading 41.94MB
+ 7e2a4ea67adb Downloading 38.8MB
+ 670ce22eaa89 Downloading 41.94MB
+ 7e2a4ea67adb Downloading 38.8MB
+ 0ead1198ea98 Downloading 44.04MB
+ 0ead1198ea98 Downloading 44.04MB
+ 670ce22eaa89 Downloading 41.94MB
+ 7e2a4ea67adb Downloading 38.8MB
+ 0ead1198ea98 Downloading 45.09MB
+ 670ce22eaa89 Downloading 41.94MB
+ 7e2a4ea67adb Downloading 38.8MB
+ 0ead1198ea98 Downloading 45.09MB
+ 670ce22eaa89 Downloading 41.94MB
+ 7e2a4ea67adb Downloading 39.85MB
+ 0ead1198ea98 Downloading 45.09MB
+ 670ce22eaa89 Downloading 42.99MB
+ 7e2a4ea67adb Downloading 39.85MB
+ 670ce22eaa89 Downloading 42.99MB
+ 7e2a4ea67adb Downloading 39.85MB
+ 0ead1198ea98 Downloading 45.09MB
+ 0ead1198ea98 Downloading 45.09MB
+ 670ce22eaa89 Downloading 42.99MB
+ 7e2a4ea67adb Downloading 39.85MB
+ 670ce22eaa89 Downloading 42.99MB
+ 7e2a4ea67adb Downloading 39.85MB
+ 0ead1198ea98 Downloading 46.14MB
+ 0ead1198ea98 Downloading 46.14MB
+ 670ce22eaa89 Downloading 42.99MB
+ 7e2a4ea67adb Downloading 40.89MB
+ 670ce22eaa89 Downloading 44.04MB
+ 7e2a4ea67adb Downloading 40.89MB
+ 0ead1198ea98 Downloading 46.14MB
+ 0ead1198ea98 Downloading 46.14MB
+ 670ce22eaa89 Downloading 44.04MB
+ 7e2a4ea67adb Downloading 40.89MB
+ 0ead1198ea98 Downloading 46.14MB
+ 670ce22eaa89 Downloading 44.04MB
+ 7e2a4ea67adb Downloading 40.89MB
+ 670ce22eaa89 Downloading 44.04MB
+ 7e2a4ea67adb Downloading 40.89MB
+ 0ead1198ea98 Downloading 47.19MB
+ 0ead1198ea98 Downloading 47.19MB
+ 670ce22eaa89 Downloading 44.04MB
+ 7e2a4ea67adb Downloading 41.94MB
+ 0ead1198ea98 Downloading 47.19MB
+ 670ce22eaa89 Downloading 45.09MB
+ 7e2a4ea67adb Downloading 41.94MB
+ 670ce22eaa89 Downloading 45.09MB
+ 7e2a4ea67adb Downloading 41.94MB
+ 0ead1198ea98 Downloading 47.19MB
+ 670ce22eaa89 Downloading 45.09MB
+ 7e2a4ea67adb Downloading 41.94MB
+ 0ead1198ea98 Downloading 48.23MB
+ 670ce22eaa89 Downloading 45.09MB
+ 7e2a4ea67adb Downloading 41.94MB
+ 0ead1198ea98 Downloading 48.23MB
+ 0ead1198ea98 Downloading 48.23MB
+ 670ce22eaa89 Downloading 45.09MB
+ 7e2a4ea67adb Downloading 42.99MB
+ 0ead1198ea98 Downloading 48.23MB
+ 670ce22eaa89 Downloading 46.14MB
+ 7e2a4ea67adb Downloading 42.99MB
+ 670ce22eaa89 Downloading 46.14MB
+ 7e2a4ea67adb Downloading 42.99MB
+ 0ead1198ea98 Downloading 48.23MB
+ 7e2a4ea67adb Downloading 42.99MB
+ 0ead1198ea98 Downloading 49.28MB
+ 670ce22eaa89 Downloading 46.14MB
+ 7e2a4ea67adb Downloading 42.99MB
+ 0ead1198ea98 Downloading 49.28MB
+ 670ce22eaa89 Downloading 46.14MB
+ 670ce22eaa89 Downloading 46.14MB
+ 7e2a4ea67adb Downloading 44.04MB
+ 0ead1198ea98 Downloading 49.28MB
+ 670ce22eaa89 Downloading 47.19MB
+ 7e2a4ea67adb Downloading 44.04MB
+ 0ead1198ea98 Downloading 49.28MB
+ 7e2a4ea67adb Downloading 44.04MB
+ 0ead1198ea98 Downloading 49.28MB
+ 670ce22eaa89 Downloading 47.19MB
+ 670ce22eaa89 Downloading 47.19MB
+ 7e2a4ea67adb Downloading 44.04MB
+ 0ead1198ea98 Downloading 50.33MB
+ 7e2a4ea67adb Downloading 45.09MB
+ 0ead1198ea98 Downloading 50.33MB
+ 670ce22eaa89 Downloading 47.19MB
+ 7e2a4ea67adb Downloading 45.09MB
+ 0ead1198ea98 Downloading 50.33MB
+ 670ce22eaa89 Downloading 47.19MB
+ 0ead1198ea98 Downloading 50.33MB
+ 670ce22eaa89 Downloading 48.23MB
+ 7e2a4ea67adb Downloading 45.09MB
+ 0ead1198ea98 Downloading 51.38MB
+ 670ce22eaa89 Downloading 48.23MB
+ 7e2a4ea67adb Downloading 45.09MB
+ 670ce22eaa89 Downloading 48.23MB
+ 7e2a4ea67adb Downloading 45.09MB
+ 0ead1198ea98 Downloading 51.38MB
+ 0ead1198ea98 Downloading 51.38MB
+ 670ce22eaa89 Downloading 48.23MB
+ 7e2a4ea67adb Downloading 46.14MB
+ 670ce22eaa89 Downloading 49.28MB
+ 7e2a4ea67adb Downloading 46.14MB
+ 0ead1198ea98 Downloading 51.38MB
+ 670ce22eaa89 Downloading 49.28MB
+ 7e2a4ea67adb Downloading 46.14MB
+ 0ead1198ea98 Downloading 51.38MB
+ 0ead1198ea98 Downloading 52.43MB
+ 670ce22eaa89 Downloading 49.28MB
+ 7e2a4ea67adb Downloading 46.14MB
+ 670ce22eaa89 Downloading 49.28MB
+ 7e2a4ea67adb Downloading 47.19MB
+ 0ead1198ea98 Downloading 52.43MB
+ 0ead1198ea98 Downloading 52.43MB
+ 670ce22eaa89 Downloading 49.28MB
+ 7e2a4ea67adb Downloading 47.19MB
+ 0ead1198ea98 Downloading 52.43MB
+ 670ce22eaa89 Downloading 50.33MB
+ 7e2a4ea67adb Downloading 47.19MB
+ 0ead1198ea98 Downloading 53.48MB
+ 670ce22eaa89 Downloading 50.33MB
+ 7e2a4ea67adb Downloading 47.19MB
+ 0ead1198ea98 Downloading 53.48MB
+ 670ce22eaa89 Downloading 50.33MB
+ 7e2a4ea67adb Downloading 47.19MB
+ 0ead1198ea98 Downloading 53.48MB
+ 670ce22eaa89 Downloading 50.33MB
+ 7e2a4ea67adb Downloading 48.23MB
+ 0ead1198ea98 Downloading 53.48MB
+ 670ce22eaa89 Downloading 50.33MB
+ 7e2a4ea67adb Downloading 48.23MB
+ 670ce22eaa89 Downloading 51.38MB
+ 7e2a4ea67adb Downloading 48.23MB
+ 0ead1198ea98 Downloading 53.48MB
+ 670ce22eaa89 Downloading 51.38MB
+ 7e2a4ea67adb Downloading 48.23MB
+ 0ead1198ea98 Downloading 53.48MB
+ 0ead1198ea98 Downloading 53.48MB
+ 670ce22eaa89 Downloading 51.38MB
+ 7e2a4ea67adb Downloading 48.23MB
+ 670ce22eaa89 Downloading 51.38MB
+ 7e2a4ea67adb Downloading 48.23MB
+ 0ead1198ea98 Downloading 54.53MB
+ 670ce22eaa89 Downloading 51.38MB
+ 7e2a4ea67adb Downloading 48.23MB
+ 0ead1198ea98 Downloading 54.53MB
+ 670ce22eaa89 Downloading 51.38MB
+ 7e2a4ea67adb Downloading 48.23MB
+ 0ead1198ea98 Downloading 54.53MB
+ 0ead1198ea98 Downloading 54.53MB
+ 670ce22eaa89 Downloading 51.38MB
+ 7e2a4ea67adb Downloading 49.28MB
+ 0ead1198ea98 Downloading 54.53MB
+ 670ce22eaa89 Downloading 51.38MB
+ 7e2a4ea67adb Downloading 49.28MB
+ 7e2a4ea67adb Downloading 49.28MB
+ 0ead1198ea98 Downloading 54.53MB
+ 670ce22eaa89 Downloading 51.38MB
+ 670ce22eaa89 Downloading 52.43MB
+ 7e2a4ea67adb Downloading 49.28MB
+ 0ead1198ea98 Downloading 54.53MB
+ 670ce22eaa89 Downloading 52.43MB
+ 7e2a4ea67adb Downloading 49.28MB
+ 0ead1198ea98 Downloading 55.57MB
+ 7e2a4ea67adb Downloading 49.28MB
+ 0ead1198ea98 Downloading 55.57MB
+ 670ce22eaa89 Downloading 52.43MB
+ 670ce22eaa89 Downloading 52.43MB
+ 7e2a4ea67adb Downloading 49.28MB
+ 0ead1198ea98 Downloading 55.57MB
+ 670ce22eaa89 Downloading 53.48MB
+ 7e2a4ea67adb Downloading 50.33MB
+ 0ead1198ea98 Downloading 55.57MB
+ 670ce22eaa89 Downloading 53.48MB
+ 7e2a4ea67adb Downloading 50.33MB
+ 0ead1198ea98 Downloading 56.62MB
+ 670ce22eaa89 Downloading 53.48MB
+ 7e2a4ea67adb Downloading 50.33MB
+ 0ead1198ea98 Downloading 56.62MB
+ 0ead1198ea98 Downloading 56.62MB
+ 670ce22eaa89 Downloading 53.48MB
+ 7e2a4ea67adb Downloading 50.33MB
+ 7e2a4ea67adb Downloading 50.33MB
+ 0ead1198ea98 Downloading 56.62MB
+ 670ce22eaa89 Downloading 53.48MB
+ 670ce22eaa89 Downloading 54.53MB
+ 7e2a4ea67adb Downloading 51.38MB
+ 0ead1198ea98 Downloading 56.62MB
+ 0ead1198ea98 Downloading 57.67MB
+ 670ce22eaa89 Downloading 54.53MB
+ 7e2a4ea67adb Downloading 51.38MB
+ 670ce22eaa89 Downloading 54.53MB
+ 7e2a4ea67adb Downloading 51.38MB
+ 0ead1198ea98 Downloading 57.67MB
+ 670ce22eaa89 Downloading 54.53MB
+ 7e2a4ea67adb Downloading 51.38MB
+ 0ead1198ea98 Downloading 57.67MB
+ 670ce22eaa89 Downloading 55.57MB
+ 7e2a4ea67adb Downloading 51.38MB
+ 0ead1198ea98 Downloading 57.67MB
+ 670ce22eaa89 Downloading 55.57MB
+ 7e2a4ea67adb Downloading 52.43MB
+ 0ead1198ea98 Downloading 57.67MB
+ 0ead1198ea98 Download complete 0B
+ 670ce22eaa89 Downloading 55.57MB
+ 7e2a4ea67adb Downloading 52.43MB
+ 670ce22eaa89 Downloading 55.57MB
+ 7e2a4ea67adb Downloading 52.43MB
+ 670ce22eaa89 Downloading 56.62MB
+ 7e2a4ea67adb Downloading 53.48MB
+ 7e2a4ea67adb Downloading 53.48MB
+ 670ce22eaa89 Downloading 56.62MB
+ 670ce22eaa89 Downloading 56.62MB
+ 7e2a4ea67adb Downloading 53.48MB
+ 670ce22eaa89 Downloading 57.67MB
+ 7e2a4ea67adb Downloading 54.53MB
+ 670ce22eaa89 Downloading 57.67MB
+ 7e2a4ea67adb Downloading 54.53MB
+ 670ce22eaa89 Downloading 57.67MB
+ 7e2a4ea67adb Downloading 54.53MB
+ 670ce22eaa89 Downloading 57.67MB
+ 7e2a4ea67adb Downloading 55.57MB
+ 7e2a4ea67adb Downloading 55.57MB
+ 670ce22eaa89 Downloading 58.72MB
+ 670ce22eaa89 Downloading 58.72MB
+ 7e2a4ea67adb Downloading 55.57MB
+ 670ce22eaa89 Downloading 58.72MB
+ 7e2a4ea67adb Downloading 55.57MB
+ 670ce22eaa89 Downloading 58.72MB
+ 7e2a4ea67adb Downloading 56.62MB
+ d65d19a5f77b Downloading 1.049MB
+ 670ce22eaa89 Downloading 58.72MB
+ 7e2a4ea67adb Downloading 56.62MB
+ d65d19a5f77b Downloading 1.049MB
+ 670ce22eaa89 Downloading 58.72MB
+ 7e2a4ea67adb Downloading 56.62MB
+ 670ce22eaa89 Downloading 59.77MB
+ 7e2a4ea67adb Downloading 57.67MB
+ d65d19a5f77b Downloading 1.049MB
+ d65d19a5f77b Downloading 1.049MB
+ 670ce22eaa89 Downloading 59.77MB
+ 7e2a4ea67adb Downloading 57.67MB
+ 7e2a4ea67adb Downloading 57.67MB
+ d65d19a5f77b Downloading 1.049MB
+ 670ce22eaa89 Downloading 59.77MB
+ d65d19a5f77b Downloading 2.097MB
+ 670ce22eaa89 Downloading 59.77MB
+ 7e2a4ea67adb Downloading 57.67MB
+ 670ce22eaa89 Downloading 59.77MB
+ 7e2a4ea67adb Downloading 58.72MB
+ d65d19a5f77b Downloading 2.097MB
+ d65d19a5f77b Downloading 2.097MB
+ 670ce22eaa89 Downloading 59.77MB
+ 7e2a4ea67adb Downloading 58.72MB
+ 670ce22eaa89 Downloading 60.82MB
+ 7e2a4ea67adb Downloading 58.72MB
+ d65d19a5f77b Downloading 2.097MB
+ d65d19a5f77b Downloading 2.097MB
+ 670ce22eaa89 Downloading 60.82MB
+ 7e2a4ea67adb Downloading 58.72MB
+ d65d19a5f77b Downloading 3.146MB
+ 670ce22eaa89 Downloading 60.82MB
+ 7e2a4ea67adb Downloading 59.77MB
+ d65d19a5f77b Downloading 3.146MB
+ 670ce22eaa89 Downloading 60.82MB
+ 7e2a4ea67adb Downloading 59.77MB
+ d65d19a5f77b Downloading 3.146MB
+ 670ce22eaa89 Downloading 60.82MB
+ 7e2a4ea67adb Downloading 59.77MB
+ d65d19a5f77b Downloading 3.146MB
+ 670ce22eaa89 Downloading 61.87MB
+ 7e2a4ea67adb Downloading 59.77MB
+ d65d19a5f77b Downloading 4.194MB
+ 670ce22eaa89 Downloading 61.87MB
+ 7e2a4ea67adb Downloading 60.82MB
+ 670ce22eaa89 Downloading 61.87MB
+ 7e2a4ea67adb Downloading 60.82MB
+ d65d19a5f77b Downloading 4.194MB
+ d65d19a5f77b Downloading 4.194MB
+ 670ce22eaa89 Downloading 61.87MB
+ 7e2a4ea67adb Downloading 60.82MB
+ d65d19a5f77b Downloading 4.194MB
+ 670ce22eaa89 Downloading 61.87MB
+ 7e2a4ea67adb Downloading 60.82MB
+ d65d19a5f77b Downloading 4.194MB
+ 670ce22eaa89 Downloading 61.87MB
+ 7e2a4ea67adb Downloading 60.82MB
+ d65d19a5f77b Downloading 5.243MB
+ 670ce22eaa89 Downloading 62.91MB
+ 7e2a4ea67adb Downloading 61.87MB
+ 670ce22eaa89 Downloading 62.91MB
+ 7e2a4ea67adb Downloading 61.87MB
+ d65d19a5f77b Downloading 5.243MB
+ d65d19a5f77b Downloading 5.243MB
+ 670ce22eaa89 Downloading 62.91MB
+ 7e2a4ea67adb Downloading 61.87MB
+ 7e2a4ea67adb Downloading 61.87MB
+ d65d19a5f77b Downloading 5.243MB
+ 670ce22eaa89 Downloading 62.91MB
+ d65d19a5f77b Downloading 6.291MB
+ 670ce22eaa89 Downloading 62.91MB
+ 7e2a4ea67adb Downloading 61.87MB
+ d65d19a5f77b Downloading 6.291MB
+ 670ce22eaa89 Downloading 63.96MB
+ 7e2a4ea67adb Downloading 62.91MB
+ d65d19a5f77b Downloading 6.291MB
+ 670ce22eaa89 Downloading 63.96MB
+ 7e2a4ea67adb Downloading 62.91MB
+ 7e2a4ea67adb Downloading 62.91MB
+ d65d19a5f77b Downloading 6.291MB
+ 670ce22eaa89 Downloading 63.96MB
+ d65d19a5f77b Downloading 7.34MB
+ 670ce22eaa89 Downloading 63.96MB
+ 7e2a4ea67adb Downloading 62.91MB
+ d65d19a5f77b Downloading 7.34MB
+ 670ce22eaa89 Downloading 63.96MB
+ 7e2a4ea67adb Downloading 62.91MB
+ d65d19a5f77b Downloading 7.34MB
+ 670ce22eaa89 Downloading 65.01MB
+ 7e2a4ea67adb Downloading 63.96MB
+ 7e2a4ea67adb Downloading 63.96MB
+ d65d19a5f77b Downloading 7.34MB
+ 670ce22eaa89 Downloading 65.01MB
+ d65d19a5f77b Downloading 7.34MB
+ 670ce22eaa89 Downloading 65.01MB
+ 7e2a4ea67adb Downloading 63.96MB
+ d65d19a5f77b Downloading 8.389MB
+ 670ce22eaa89 Downloading 65.01MB
+ 7e2a4ea67adb Downloading 63.96MB
+ d65d19a5f77b Downloading 8.389MB
+ 670ce22eaa89 Downloading 66.06MB
+ 7e2a4ea67adb Downloading 63.96MB
+ d65d19a5f77b Downloading 8.389MB
+ 670ce22eaa89 Downloading 66.06MB
+ 7e2a4ea67adb Downloading 65.01MB
+ d65d19a5f77b Downloading 8.389MB
+ 670ce22eaa89 Downloading 66.06MB
+ 7e2a4ea67adb Downloading 65.01MB
+ 670ce22eaa89 Downloading 66.06MB
+ 7e2a4ea67adb Downloading 65.01MB
+ d65d19a5f77b Downloading 9.437MB
+ 670ce22eaa89 Downloading 66.06MB
+ 7e2a4ea67adb Downloading 65.01MB
+ d65d19a5f77b Downloading 9.437MB
+ d65d19a5f77b Downloading 9.437MB
+ 670ce22eaa89 Downloading 66.06MB
+ 7e2a4ea67adb Downloading 65.01MB
+ 670ce22eaa89 Downloading 67.11MB
+ 7e2a4ea67adb Downloading 66.06MB
+ d65d19a5f77b Downloading 9.437MB
+ d65d19a5f77b Downloading 10.49MB
+ 670ce22eaa89 Downloading 67.11MB
+ 7e2a4ea67adb Downloading 66.06MB
+ d65d19a5f77b Downloading 10.49MB
+ 670ce22eaa89 Downloading 67.11MB
+ 7e2a4ea67adb Downloading 66.06MB
+ 670ce22eaa89 Downloading 67.11MB
+ 7e2a4ea67adb Downloading 66.06MB
+ d65d19a5f77b Downloading 10.49MB
+ 670ce22eaa89 Downloading 67.11MB
+ 7e2a4ea67adb Downloading 66.06MB
+ d65d19a5f77b Downloading 10.49MB
+ d65d19a5f77b Downloading 10.49MB
+ 670ce22eaa89 Downloading 68.16MB
+ 7e2a4ea67adb Downloading 67.11MB
+ d65d19a5f77b Downloading 11.53MB
+ 670ce22eaa89 Downloading 68.16MB
+ 7e2a4ea67adb Downloading 67.11MB
+ 670ce22eaa89 Downloading 68.16MB
+ 7e2a4ea67adb Downloading 67.11MB
+ d65d19a5f77b Downloading 11.53MB
+ d65d19a5f77b Downloading 11.53MB
+ 670ce22eaa89 Downloading 68.16MB
+ 7e2a4ea67adb Downloading 67.11MB
+ 7e2a4ea67adb Downloading 68.16MB
+ d65d19a5f77b Downloading 11.53MB
+ 670ce22eaa89 Downloading 68.16MB
+ d65d19a5f77b Downloading 12.58MB
+ 670ce22eaa89 Downloading 69.21MB
+ 7e2a4ea67adb Downloading 68.16MB
+ d65d19a5f77b Downloading 12.58MB
+ 670ce22eaa89 Downloading 69.21MB
+ 7e2a4ea67adb Downloading 68.16MB
+ 7e2a4ea67adb Downloading 68.16MB
+ d65d19a5f77b Downloading 12.58MB
+ 670ce22eaa89 Downloading 69.21MB
+ d65d19a5f77b Downloading 12.58MB
+ 670ce22eaa89 Downloading 69.21MB
+ 7e2a4ea67adb Downloading 68.16MB
+ 7e2a4ea67adb Downloading 69.21MB
+ d65d19a5f77b Downloading 12.58MB
+ 670ce22eaa89 Downloading 69.21MB
+ d65d19a5f77b Downloading 13.63MB
+ 670ce22eaa89 Downloading 69.21MB
+ 7e2a4ea67adb Downloading 69.21MB
+ d65d19a5f77b Downloading 13.63MB
+ 670ce22eaa89 Downloading 70.25MB
+ 7e2a4ea67adb Downloading 69.21MB
+ d65d19a5f77b Downloading 13.63MB
+ 670ce22eaa89 Downloading 70.25MB
+ 7e2a4ea67adb Downloading 69.21MB
+ 7e2a4ea67adb Downloading 69.21MB
+ d65d19a5f77b Downloading 13.63MB
+ 670ce22eaa89 Downloading 70.25MB
+ d65d19a5f77b Downloading 13.63MB
+ 670ce22eaa89 Downloading 70.25MB
+ 7e2a4ea67adb Downloading 70.25MB
+ 670ce22eaa89 Downloading 70.25MB
+ 7e2a4ea67adb Downloading 70.25MB
+ d65d19a5f77b Downloading 13.63MB
+ 7e2a4ea67adb Downloading 70.25MB
+ d65d19a5f77b Downloading 14.68MB
+ 670ce22eaa89 Downloading 70.25MB
+ 670ce22eaa89 Downloading 70.25MB
+ 7e2a4ea67adb Downloading 70.25MB
+ d65d19a5f77b Downloading 14.68MB
+ d65d19a5f77b Downloading 14.68MB
+ 670ce22eaa89 Downloading 70.25MB
+ 7e2a4ea67adb Downloading 70.25MB
+ d65d19a5f77b Downloading 14.68MB
+ 670ce22eaa89 Downloading 70.25MB
+ 7e2a4ea67adb Downloading 70.25MB
+ 7e2a4ea67adb Downloading 70.25MB
+ d65d19a5f77b Downloading 14.68MB
+ 670ce22eaa89 Downloading 71.3MB
+ d65d19a5f77b Downloading 14.68MB
+ 670ce22eaa89 Downloading 71.3MB
+ 7e2a4ea67adb Downloading 71.3MB
+ d65d19a5f77b Downloading 15.73MB
+ 670ce22eaa89 Downloading 71.3MB
+ 7e2a4ea67adb Downloading 71.3MB
+ d65d19a5f77b Downloading 15.73MB
+ 670ce22eaa89 Downloading 71.3MB
+ 7e2a4ea67adb Downloading 71.3MB
+ d65d19a5f77b Downloading 15.73MB
+ 670ce22eaa89 Downloading 71.3MB
+ 7e2a4ea67adb Downloading 71.3MB
+ d65d19a5f77b Downloading 15.73MB
+ 670ce22eaa89 Downloading 71.3MB
+ 7e2a4ea67adb Downloading 71.3MB
+ d65d19a5f77b Downloading 16.78MB
+ 670ce22eaa89 Downloading 72.35MB
+ 7e2a4ea67adb Downloading 72.35MB
+ d65d19a5f77b Downloading 16.78MB
+ 670ce22eaa89 Downloading 72.35MB
+ 7e2a4ea67adb Downloading 72.35MB
+ d65d19a5f77b Downloading 16.78MB
+ 670ce22eaa89 Downloading 72.35MB
+ 7e2a4ea67adb Downloading 72.35MB
+ d65d19a5f77b Downloading 16.78MB
+ 670ce22eaa89 Downloading 72.35MB
+ 7e2a4ea67adb Downloading 72.35MB
+ d65d19a5f77b Downloading 16.78MB
+ 670ce22eaa89 Downloading 72.35MB
+ 7e2a4ea67adb Downloading 73.4MB
+ d65d19a5f77b Downloading 17.83MB
+ 670ce22eaa89 Downloading 73.4MB
+ 7e2a4ea67adb Downloading 73.4MB
+ d65d19a5f77b Downloading 17.83MB
+ 670ce22eaa89 Downloading 73.4MB
+ 7e2a4ea67adb Downloading 73.4MB
+ d65d19a5f77b Downloading 17.83MB
+ 670ce22eaa89 Downloading 73.4MB
+ 7e2a4ea67adb Downloading 73.4MB
+ d65d19a5f77b Downloading 17.83MB
+ 670ce22eaa89 Downloading 73.4MB
+ 7e2a4ea67adb Downloading 74.45MB
+ 670ce22eaa89 Downloading 73.4MB
+ 7e2a4ea67adb Downloading 74.45MB
+ d65d19a5f77b Downloading 18.87MB
+ d65d19a5f77b Downloading 18.87MB
+ 670ce22eaa89 Downloading 73.4MB
+ 7e2a4ea67adb Downloading 74.45MB
+ d65d19a5f77b Downloading 18.87MB
+ 670ce22eaa89 Downloading 74.45MB
+ 7e2a4ea67adb Downloading 74.45MB
+ 670ce22eaa89 Downloading 74.45MB
+ 7e2a4ea67adb Downloading 75.5MB
+ d65d19a5f77b Downloading 18.87MB
+ d65d19a5f77b Downloading 19.92MB
+ 670ce22eaa89 Downloading 74.45MB
+ 7e2a4ea67adb Downloading 75.5MB
+ d65d19a5f77b Downloading 19.92MB
+ 670ce22eaa89 Downloading 74.45MB
+ 7e2a4ea67adb Downloading 75.5MB
+ 670ce22eaa89 Downloading 74.45MB
+ 7e2a4ea67adb Downloading 75.5MB
+ d65d19a5f77b Downloading 19.92MB
+ 670ce22eaa89 Downloading 74.45MB
+ 7e2a4ea67adb Downloading 75.5MB
+ d65d19a5f77b Downloading 19.92MB
+ 670ce22eaa89 Downloading 75.5MB
+ 7e2a4ea67adb Downloading 75.5MB
+ d65d19a5f77b Downloading 19.92MB
+ d65d19a5f77b Downloading 20.97MB
+ 670ce22eaa89 Downloading 75.5MB
+ 7e2a4ea67adb Downloading 76.55MB
+ d65d19a5f77b Downloading 20.97MB
+ 670ce22eaa89 Downloading 75.5MB
+ 7e2a4ea67adb Downloading 76.55MB
+ d65d19a5f77b Downloading 20.97MB
+ 670ce22eaa89 Downloading 75.5MB
+ 7e2a4ea67adb Downloading 76.55MB
+ d65d19a5f77b Downloading 22.02MB
+ 670ce22eaa89 Downloading 75.5MB
+ 7e2a4ea67adb Downloading 76.55MB
+ 7e2a4ea67adb Downloading 76.55MB
+ d65d19a5f77b Downloading 22.02MB
+ 670ce22eaa89 Downloading 75.5MB
+ d65d19a5f77b Downloading 22.02MB
+ 670ce22eaa89 Downloading 76.55MB
+ 7e2a4ea67adb Downloading 77.59MB
+ d65d19a5f77b Downloading 22.02MB
+ 670ce22eaa89 Downloading 76.55MB
+ 7e2a4ea67adb Downloading 77.59MB
+ d65d19a5f77b Downloading 23.07MB
+ 670ce22eaa89 Downloading 76.55MB
+ 7e2a4ea67adb Downloading 77.59MB
+ d65d19a5f77b Downloading 23.07MB
+ 670ce22eaa89 Downloading 76.55MB
+ 7e2a4ea67adb Downloading 77.59MB
+ d65d19a5f77b Downloading 23.07MB
+ 670ce22eaa89 Downloading 76.55MB
+ 7e2a4ea67adb Downloading 78.64MB
+ 7e2a4ea67adb Downloading 78.64MB
+ d65d19a5f77b Downloading 23.07MB
+ 670ce22eaa89 Downloading 77.59MB
+ d65d19a5f77b Downloading 24.12MB
+ 670ce22eaa89 Downloading 77.59MB
+ 7e2a4ea67adb Downloading 78.64MB
+ d65d19a5f77b Downloading 24.12MB
+ 670ce22eaa89 Downloading 77.59MB
+ 7e2a4ea67adb Downloading 78.64MB
+ d65d19a5f77b Downloading 24.12MB
+ 670ce22eaa89 Downloading 77.59MB
+ 7e2a4ea67adb Downloading 79.69MB
+ d65d19a5f77b Downloading 24.12MB
+ 670ce22eaa89 Downloading 77.59MB
+ 7e2a4ea67adb Downloading 79.69MB
+ 7e2a4ea67adb Downloading 79.69MB
+ d65d19a5f77b Downloading 25.17MB
+ 670ce22eaa89 Downloading 77.59MB
+ d65d19a5f77b Downloading 25.17MB
+ 670ce22eaa89 Downloading 78.64MB
+ 7e2a4ea67adb Downloading 79.69MB
+ 670ce22eaa89 Downloading 78.64MB
+ 7e2a4ea67adb Downloading 80.74MB
+ d65d19a5f77b Downloading 25.17MB
+ 7e2a4ea67adb Downloading 80.74MB
+ d65d19a5f77b Downloading 25.17MB
+ 670ce22eaa89 Downloading 78.64MB
+ d65d19a5f77b Downloading 25.17MB
+ 670ce22eaa89 Downloading 78.64MB
+ 7e2a4ea67adb Downloading 80.74MB
+ d65d19a5f77b Downloading 26.21MB
+ 670ce22eaa89 Downloading 78.64MB
+ 7e2a4ea67adb Downloading 80.74MB
+ d65d19a5f77b Downloading 26.21MB
+ 670ce22eaa89 Downloading 78.64MB
+ 7e2a4ea67adb Downloading 81.79MB
+ 670ce22eaa89 Downloading 79.69MB
+ 7e2a4ea67adb Downloading 81.79MB
+ d65d19a5f77b Downloading 26.21MB
+ d65d19a5f77b Downloading 26.21MB
+ 670ce22eaa89 Downloading 79.69MB
+ 7e2a4ea67adb Downloading 81.79MB
+ d65d19a5f77b Downloading 27.26MB
+ 670ce22eaa89 Downloading 79.69MB
+ 7e2a4ea67adb Downloading 81.79MB
+ 670ce22eaa89 Downloading 79.69MB
+ 7e2a4ea67adb Downloading 81.79MB
+ d65d19a5f77b Downloading 27.26MB
+ 670ce22eaa89 Downloading 79.69MB
+ 7e2a4ea67adb Downloading 82.84MB
+ d65d19a5f77b Downloading 27.26MB
+ d65d19a5f77b Downloading 27.26MB
+ 670ce22eaa89 Downloading 79.69MB
+ 7e2a4ea67adb Downloading 82.84MB
+ d65d19a5f77b Downloading 27.26MB
+ 670ce22eaa89 Downloading 80.74MB
+ 7e2a4ea67adb Downloading 82.84MB
+ d65d19a5f77b Downloading 28.31MB
+ 670ce22eaa89 Downloading 80.74MB
+ 7e2a4ea67adb Downloading 82.84MB
+ 7e2a4ea67adb Downloading 82.84MB
+ d65d19a5f77b Downloading 28.31MB
+ 670ce22eaa89 Downloading 80.74MB
+ 670ce22eaa89 Downloading 80.74MB
+ 7e2a4ea67adb Downloading 83.89MB
+ d65d19a5f77b Downloading 28.31MB
+ 7e2a4ea67adb Downloading 83.89MB
+ d65d19a5f77b Downloading 28.31MB
+ 670ce22eaa89 Downloading 80.74MB
+ d65d19a5f77b Downloading 29.36MB
+ 670ce22eaa89 Downloading 81.79MB
+ 7e2a4ea67adb Downloading 83.89MB
+ 670ce22eaa89 Downloading 81.79MB
+ 7e2a4ea67adb Downloading 83.89MB
+ d65d19a5f77b Downloading 29.36MB
+ d65d19a5f77b Downloading 29.36MB
+ 670ce22eaa89 Downloading 81.79MB
+ 7e2a4ea67adb Downloading 84.93MB
+ 7e2a4ea67adb Downloading 84.93MB
+ d65d19a5f77b Downloading 29.36MB
+ 670ce22eaa89 Downloading 81.79MB
+ 670ce22eaa89 Downloading 81.79MB
+ 7e2a4ea67adb Downloading 84.93MB
+ d65d19a5f77b Downloading 29.36MB
+ d65d19a5f77b Downloading 30.41MB
+ 670ce22eaa89 Downloading 81.79MB
+ 7e2a4ea67adb Downloading 84.93MB
+ d65d19a5f77b Downloading 30.41MB
+ 670ce22eaa89 Downloading 82.84MB
+ 7e2a4ea67adb Downloading 85.98MB
+ 670ce22eaa89 Downloading 82.84MB
+ 7e2a4ea67adb Downloading 85.98MB
+ d65d19a5f77b Downloading 30.41MB
+ d65d19a5f77b Downloading 30.41MB
+ 670ce22eaa89 Downloading 82.84MB
+ 7e2a4ea67adb Downloading 85.98MB
+ d65d19a5f77b Downloading 30.41MB
+ 670ce22eaa89 Downloading 82.84MB
+ 7e2a4ea67adb Downloading 85.98MB
+ d65d19a5f77b Downloading 31.46MB
+ 670ce22eaa89 Downloading 82.84MB
+ 7e2a4ea67adb Downloading 85.98MB
+ d65d19a5f77b Downloading 31.46MB
+ 670ce22eaa89 Downloading 82.84MB
+ 7e2a4ea67adb Downloading 87.03MB
+ d65d19a5f77b Downloading 31.46MB
+ 670ce22eaa89 Downloading 83.89MB
+ 7e2a4ea67adb Downloading 87.03MB
+ d65d19a5f77b Downloading 31.46MB
+ 670ce22eaa89 Downloading 83.89MB
+ 7e2a4ea67adb Downloading 87.03MB
+ d65d19a5f77b Downloading 31.46MB
+ 670ce22eaa89 Downloading 83.89MB
+ 7e2a4ea67adb Downloading 87.03MB
+ 7e2a4ea67adb Downloading 88.08MB
+ d65d19a5f77b Downloading 32.51MB
+ 670ce22eaa89 Downloading 83.89MB
+ d65d19a5f77b Downloading 32.51MB
+ 670ce22eaa89 Downloading 83.89MB
+ 7e2a4ea67adb Downloading 88.08MB
+ d65d19a5f77b Downloading 32.51MB
+ 670ce22eaa89 Downloading 84.93MB
+ 7e2a4ea67adb Downloading 88.08MB
+ 670ce22eaa89 Downloading 84.93MB
+ 7e2a4ea67adb Downloading 88.08MB
+ d65d19a5f77b Downloading 32.51MB
+ 7e2a4ea67adb Downloading 88.08MB
+ d65d19a5f77b Downloading 33.55MB
+ 670ce22eaa89 Downloading 84.93MB
+ 7e2a4ea67adb Downloading 89.13MB
+ d65d19a5f77b Downloading 33.55MB
+ 670ce22eaa89 Downloading 84.93MB
+ d65d19a5f77b Downloading 33.55MB
+ 670ce22eaa89 Downloading 84.93MB
+ 7e2a4ea67adb Downloading 89.13MB
+ d65d19a5f77b Downloading 33.55MB
+ 670ce22eaa89 Downloading 85.98MB
+ 7e2a4ea67adb Downloading 89.13MB
+ d65d19a5f77b Downloading 34.6MB
+ 670ce22eaa89 Downloading 85.98MB
+ 7e2a4ea67adb Downloading 89.13MB
+ 670ce22eaa89 Downloading 85.98MB
+ 7e2a4ea67adb Downloading 90.18MB
+ d65d19a5f77b Downloading 34.6MB
+ d65d19a5f77b Downloading 34.6MB
+ 670ce22eaa89 Downloading 85.98MB
+ 7e2a4ea67adb Downloading 90.18MB
+ 670ce22eaa89 Downloading 85.98MB
+ 7e2a4ea67adb Downloading 90.18MB
+ d65d19a5f77b Downloading 34.6MB
+ 7e2a4ea67adb Downloading 90.18MB
+ d65d19a5f77b Downloading 34.6MB
+ 670ce22eaa89 Downloading 87.03MB
+ 670ce22eaa89 Downloading 87.03MB
+ 7e2a4ea67adb Downloading 90.18MB
+ d65d19a5f77b Downloading 34.6MB
+ d65d19a5f77b Downloading 35.65MB
+ 670ce22eaa89 Downloading 87.03MB
+ 7e2a4ea67adb Downloading 91.23MB
+ 670ce22eaa89 Downloading 87.03MB
+ 7e2a4ea67adb Downloading 91.23MB
+ d65d19a5f77b Downloading 35.65MB
+ 670ce22eaa89 Downloading 88.08MB
+ 7e2a4ea67adb Downloading 91.23MB
+ d65d19a5f77b Downloading 35.65MB
+ d65d19a5f77b Downloading 35.65MB
+ 670ce22eaa89 Downloading 88.08MB
+ 7e2a4ea67adb Downloading 91.23MB
+ d65d19a5f77b Downloading 35.65MB
+ 670ce22eaa89 Downloading 88.08MB
+ 7e2a4ea67adb Downloading 92.27MB
+ d65d19a5f77b Downloading 36.7MB
+ 670ce22eaa89 Downloading 88.08MB
+ 7e2a4ea67adb Downloading 92.27MB
+ d65d19a5f77b Downloading 36.7MB
+ 670ce22eaa89 Downloading 88.08MB
+ 7e2a4ea67adb Downloading 92.27MB
+ 670ce22eaa89 Downloading 89.13MB
+ 7e2a4ea67adb Downloading 92.27MB
+ d65d19a5f77b Downloading 36.7MB
+ 670ce22eaa89 Downloading 89.13MB
+ 7e2a4ea67adb Downloading 92.27MB
+ d65d19a5f77b Downloading 36.7MB
+ d65d19a5f77b Downloading 36.7MB
+ 670ce22eaa89 Downloading 89.13MB
+ 7e2a4ea67adb Downloading 92.27MB
+ 7e2a4ea67adb Downloading 93.32MB
+ d65d19a5f77b Downloading 36.7MB
+ 670ce22eaa89 Downloading 89.13MB
+ d65d19a5f77b Downloading 37.75MB
+ 670ce22eaa89 Downloading 89.13MB
+ 7e2a4ea67adb Downloading 93.32MB
+ d65d19a5f77b Downloading 37.75MB
+ 670ce22eaa89 Downloading 89.13MB
+ 7e2a4ea67adb Downloading 93.32MB
+ 7e2a4ea67adb Downloading 93.32MB
+ d65d19a5f77b Downloading 37.75MB
+ 670ce22eaa89 Downloading 89.13MB
+ d65d19a5f77b Downloading 37.75MB
+ 670ce22eaa89 Downloading 90.18MB
+ 7e2a4ea67adb Downloading 93.32MB
+ 670ce22eaa89 Downloading 90.18MB
+ 7e2a4ea67adb Downloading 93.32MB
+ d65d19a5f77b Downloading 37.75MB
+ 670ce22eaa89 Downloading 90.18MB
+ 7e2a4ea67adb Downloading 94.37MB
+ d65d19a5f77b Downloading 37.75MB
+ d65d19a5f77b Downloading 38.8MB
+ 670ce22eaa89 Downloading 90.18MB
+ 7e2a4ea67adb Downloading 94.37MB
+ 670ce22eaa89 Downloading 90.18MB
+ 7e2a4ea67adb Downloading 94.37MB
+ d65d19a5f77b Downloading 38.8MB
+ 670ce22eaa89 Downloading 90.18MB
+ 7e2a4ea67adb Downloading 94.37MB
+ d65d19a5f77b Downloading 38.8MB
+ 670ce22eaa89 Downloading 91.23MB
+ 7e2a4ea67adb Downloading 94.37MB
+ d65d19a5f77b Downloading 38.8MB
+ d65d19a5f77b Downloading 38.8MB
+ 670ce22eaa89 Downloading 91.23MB
+ 7e2a4ea67adb Downloading 94.37MB
+ d65d19a5f77b Downloading 39.85MB
+ 670ce22eaa89 Downloading 91.23MB
+ 7e2a4ea67adb Downloading 95.42MB
+ d65d19a5f77b Downloading 39.85MB
+ 670ce22eaa89 Downloading 91.23MB
+ 7e2a4ea67adb Downloading 95.42MB
+ d65d19a5f77b Downloading 39.85MB
+ 670ce22eaa89 Downloading 91.23MB
+ 7e2a4ea67adb Downloading 95.42MB
+ 7e2a4ea67adb Downloading 95.42MB
+ d65d19a5f77b Downloading 39.85MB
+ 670ce22eaa89 Downloading 92.27MB
+ d65d19a5f77b Downloading 39.85MB
+ 670ce22eaa89 Downloading 92.27MB
+ 7e2a4ea67adb Downloading 95.42MB
+ d65d19a5f77b Downloading 40.89MB
+ 670ce22eaa89 Downloading 92.27MB
+ 7e2a4ea67adb Downloading 95.42MB
+ d65d19a5f77b Downloading 40.89MB
+ 670ce22eaa89 Downloading 92.27MB
+ 7e2a4ea67adb Downloading 96.47MB
+ 7e2a4ea67adb Downloading 96.47MB
+ d65d19a5f77b Downloading 40.89MB
+ 670ce22eaa89 Downloading 92.27MB
+ d65d19a5f77b Downloading 40.89MB
+ 670ce22eaa89 Downloading 93.32MB
+ 7e2a4ea67adb Downloading 96.47MB
+ 7e2a4ea67adb Downloading 96.47MB
+ d65d19a5f77b Downloading 40.89MB
+ 670ce22eaa89 Downloading 93.32MB
+ d65d19a5f77b Downloading 40.89MB
+ 670ce22eaa89 Downloading 93.32MB
+ 7e2a4ea67adb Downloading 96.47MB
+ d65d19a5f77b Downloading 40.89MB
+ 670ce22eaa89 Downloading 93.32MB
+ 7e2a4ea67adb Downloading 96.47MB
+ d65d19a5f77b Downloading 41.94MB
+ 670ce22eaa89 Downloading 93.32MB
+ 7e2a4ea67adb Downloading 97.52MB
+ d65d19a5f77b Downloading 41.94MB
+ 670ce22eaa89 Downloading 94.37MB
+ 7e2a4ea67adb Downloading 97.52MB
+ d65d19a5f77b Downloading 41.94MB
+ 670ce22eaa89 Downloading 94.37MB
+ 7e2a4ea67adb Downloading 97.52MB
+ 670ce22eaa89 Downloading 94.37MB
+ 7e2a4ea67adb Downloading 97.52MB
+ d65d19a5f77b Downloading 41.94MB
+ 670ce22eaa89 Downloading 94.37MB
+ 7e2a4ea67adb Downloading 97.52MB
+ d65d19a5f77b Downloading 41.94MB
+ d65d19a5f77b Downloading 42.99MB
+ 670ce22eaa89 Downloading 94.37MB
+ 7e2a4ea67adb Downloading 98.57MB
+ d65d19a5f77b Downloading 42.99MB
+ 670ce22eaa89 Downloading 95.42MB
+ 7e2a4ea67adb Downloading 98.57MB
+ d65d19a5f77b Downloading 42.99MB
+ 670ce22eaa89 Downloading 95.42MB
+ 7e2a4ea67adb Downloading 98.57MB
+ d65d19a5f77b Downloading 42.99MB
+ 670ce22eaa89 Downloading 95.42MB
+ 7e2a4ea67adb Downloading 98.57MB
+ d65d19a5f77b Downloading 42.99MB
+ 670ce22eaa89 Downloading 95.42MB
+ 7e2a4ea67adb Downloading 98.57MB
+ 670ce22eaa89 Downloading 95.42MB
+ 7e2a4ea67adb Downloading 98.57MB
+ d65d19a5f77b Downloading 42.99MB
+ d65d19a5f77b Downloading 42.99MB
+ 670ce22eaa89 Downloading 95.42MB
+ 7e2a4ea67adb Downloading 98.57MB
+ d65d19a5f77b Downloading 44.04MB
+ 670ce22eaa89 Downloading 96.47MB
+ 7e2a4ea67adb Downloading 99.61MB
+ 670ce22eaa89 Downloading 96.47MB
+ 7e2a4ea67adb Downloading 99.61MB
+ d65d19a5f77b Downloading 44.04MB
+ 670ce22eaa89 Downloading 96.47MB
+ 7e2a4ea67adb Downloading 99.61MB
+ d65d19a5f77b Downloading 44.04MB
+ d65d19a5f77b Downloading 44.04MB
+ 670ce22eaa89 Downloading 96.47MB
+ 7e2a4ea67adb Downloading 99.61MB
+ 7e2a4ea67adb Downloading 99.61MB
+ d65d19a5f77b Downloading 44.04MB
+ 670ce22eaa89 Downloading 96.47MB
+ d65d19a5f77b Downloading 44.04MB
+ 670ce22eaa89 Downloading 96.47MB
+ 7e2a4ea67adb Downloading 99.61MB
+ d65d19a5f77b Downloading 44.04MB
+ 670ce22eaa89 Downloading 96.47MB
+ 7e2a4ea67adb Downloading 100.7MB
+ 670ce22eaa89 Downloading 97.52MB
+ 7e2a4ea67adb Downloading 100.7MB
+ d65d19a5f77b Downloading 45.09MB
+ d65d19a5f77b Downloading 45.09MB
+ 670ce22eaa89 Downloading 97.52MB
+ 7e2a4ea67adb Downloading 100.7MB
+ d65d19a5f77b Downloading 45.09MB
+ 670ce22eaa89 Downloading 97.52MB
+ 7e2a4ea67adb Downloading 100.7MB
+ d65d19a5f77b Downloading 45.09MB
+ 670ce22eaa89 Downloading 97.52MB
+ 7e2a4ea67adb Downloading 100.7MB
+ d65d19a5f77b Downloading 45.09MB
+ 670ce22eaa89 Downloading 97.52MB
+ 7e2a4ea67adb Downloading 100.7MB
+ d65d19a5f77b Downloading 45.09MB
+ 670ce22eaa89 Downloading 97.52MB
+ 7e2a4ea67adb Downloading 100.7MB
+ d65d19a5f77b Downloading 46.14MB
+ 670ce22eaa89 Downloading 97.52MB
+ 7e2a4ea67adb Downloading 101.7MB
+ d65d19a5f77b Downloading 46.14MB
+ 670ce22eaa89 Downloading 98.57MB
+ 7e2a4ea67adb Downloading 101.7MB
+ d65d19a5f77b Downloading 46.14MB
+ 670ce22eaa89 Downloading 98.57MB
+ 7e2a4ea67adb Downloading 101.7MB
+ 7e2a4ea67adb Downloading 101.7MB
+ d65d19a5f77b Downloading 46.14MB
+ 670ce22eaa89 Downloading 98.57MB
+ d65d19a5f77b Downloading 46.14MB
+ 670ce22eaa89 Downloading 98.57MB
+ 7e2a4ea67adb Downloading 101.7MB
+ d65d19a5f77b Downloading 47.19MB
+ 670ce22eaa89 Downloading 98.57MB
+ 7e2a4ea67adb Downloading 101.7MB
+ d65d19a5f77b Downloading 47.19MB
+ 670ce22eaa89 Downloading 99.61MB
+ 7e2a4ea67adb Downloading 102.8MB
+ d65d19a5f77b Downloading 47.19MB
+ 670ce22eaa89 Downloading 99.61MB
+ 7e2a4ea67adb Downloading 102.8MB
+ d65d19a5f77b Downloading 47.19MB
+ 670ce22eaa89 Downloading 99.61MB
+ 7e2a4ea67adb Downloading 102.8MB
+ d65d19a5f77b Downloading 48.23MB
+ 670ce22eaa89 Downloading 99.61MB
+ 7e2a4ea67adb Downloading 102.8MB
+ 7e2a4ea67adb Downloading 102.8MB
+ d65d19a5f77b Downloading 48.23MB
+ 670ce22eaa89 Downloading 99.61MB
+ d65d19a5f77b Downloading 48.23MB
+ 670ce22eaa89 Downloading 100.7MB
+ 7e2a4ea67adb Downloading 102.8MB
+ d65d19a5f77b Downloading 48.23MB
+ 670ce22eaa89 Downloading 100.7MB
+ 7e2a4ea67adb Downloading 103.8MB
+ 670ce22eaa89 Downloading 100.7MB
+ 7e2a4ea67adb Downloading 103.8MB
+ d65d19a5f77b Downloading 48.23MB
+ 7e2a4ea67adb Downloading 103.8MB
+ d65d19a5f77b Downloading 48.23MB
+ 670ce22eaa89 Downloading 100.7MB
+ 670ce22eaa89 Downloading 100.7MB
+ 7e2a4ea67adb Downloading 103.8MB
+ d65d19a5f77b Downloading 49.28MB
+ 7e2a4ea67adb Downloading 103.8MB
+ d65d19a5f77b Downloading 49.28MB
+ 670ce22eaa89 Downloading 101.7MB
+ 670ce22eaa89 Downloading 101.7MB
+ 7e2a4ea67adb Downloading 104.9MB
+ d65d19a5f77b Downloading 49.28MB
+ d65d19a5f77b Downloading 49.28MB
+ 670ce22eaa89 Downloading 101.7MB
+ 7e2a4ea67adb Downloading 104.9MB
+ 670ce22eaa89 Downloading 101.7MB
+ 7e2a4ea67adb Downloading 104.9MB
+ d65d19a5f77b Downloading 50.33MB
+ d65d19a5f77b Downloading 50.33MB
+ 670ce22eaa89 Downloading 101.7MB
+ 7e2a4ea67adb Downloading 104.9MB
+ d65d19a5f77b Downloading 50.33MB
+ 670ce22eaa89 Downloading 102.8MB
+ 7e2a4ea67adb Downloading 104.9MB
+ d65d19a5f77b Downloading 51.38MB
+ 670ce22eaa89 Downloading 102.8MB
+ 7e2a4ea67adb Downloading 105.9MB
+ d65d19a5f77b Downloading 51.38MB
+ 670ce22eaa89 Downloading 102.8MB
+ 7e2a4ea67adb Downloading 105.9MB
+ d65d19a5f77b Downloading 51.38MB
+ 670ce22eaa89 Downloading 102.8MB
+ 7e2a4ea67adb Downloading 105.9MB
+ 7e2a4ea67adb Downloading 105.9MB
+ d65d19a5f77b Downloading 51.38MB
+ 670ce22eaa89 Downloading 102.8MB
+ d65d19a5f77b Downloading 51.38MB
+ 670ce22eaa89 Downloading 103.8MB
+ 7e2a4ea67adb Downloading 107MB
+ d65d19a5f77b Downloading 52.43MB
+ 670ce22eaa89 Downloading 103.8MB
+ 7e2a4ea67adb Downloading 107MB
+ d65d19a5f77b Downloading 52.43MB
+ 670ce22eaa89 Downloading 103.8MB
+ 7e2a4ea67adb Downloading 107MB
+ 7e2a4ea67adb Downloading 107MB
+ d65d19a5f77b Downloading 52.43MB
+ 670ce22eaa89 Downloading 103.8MB
+ 7e2a4ea67adb Downloading 107MB
+ d65d19a5f77b Downloading 52.43MB
+ 670ce22eaa89 Downloading 104.9MB
+ d65d19a5f77b Downloading 52.43MB
+ 670ce22eaa89 Downloading 104.9MB
+ 7e2a4ea67adb Downloading 108MB
+ d65d19a5f77b Downloading 53.48MB
+ 670ce22eaa89 Downloading 104.9MB
+ 7e2a4ea67adb Downloading 108MB
+ 670ce22eaa89 Downloading 104.9MB
+ 7e2a4ea67adb Downloading 108MB
+ d65d19a5f77b Downloading 53.48MB
+ d65d19a5f77b Downloading 53.48MB
+ 670ce22eaa89 Downloading 104.9MB
+ 7e2a4ea67adb Downloading 108MB
+ d65d19a5f77b Downloading 53.48MB
+ 670ce22eaa89 Downloading 105.9MB
+ 7e2a4ea67adb Downloading 109.1MB
+ 7e2a4ea67adb Downloading 109.1MB
+ d65d19a5f77b Downloading 53.48MB
+ 670ce22eaa89 Downloading 105.9MB
+ d65d19a5f77b Downloading 54.53MB
+ 670ce22eaa89 Downloading 105.9MB
+ 7e2a4ea67adb Downloading 109.1MB
+ 7e2a4ea67adb Downloading 109.1MB
+ d65d19a5f77b Downloading 54.53MB
+ 670ce22eaa89 Downloading 105.9MB
+ d65d19a5f77b Downloading 54.53MB
+ 670ce22eaa89 Downloading 105.9MB
+ 7e2a4ea67adb Downloading 110.1MB
+ d65d19a5f77b Downloading 54.53MB
+ 670ce22eaa89 Downloading 105.9MB
+ 7e2a4ea67adb Downloading 110.1MB
+ d65d19a5f77b Downloading 54.53MB
+ 670ce22eaa89 Downloading 107MB
+ 7e2a4ea67adb Downloading 110.1MB
+ d65d19a5f77b Downloading 54.53MB
+ 670ce22eaa89 Downloading 107MB
+ 7e2a4ea67adb Downloading 110.1MB
+ d65d19a5f77b Downloading 55.57MB
+ 670ce22eaa89 Downloading 107MB
+ 7e2a4ea67adb Downloading 110.1MB
+ 670ce22eaa89 Downloading 107MB
+ 7e2a4ea67adb Downloading 111.1MB
+ d65d19a5f77b Downloading 55.57MB
+ d65d19a5f77b Downloading 55.57MB
+ 670ce22eaa89 Downloading 107MB
+ 7e2a4ea67adb Downloading 111.1MB
+ 670ce22eaa89 Downloading 107MB
+ 7e2a4ea67adb Downloading 111.1MB
+ d65d19a5f77b Downloading 55.57MB
+ d65d19a5f77b Downloading 55.57MB
+ 670ce22eaa89 Downloading 108MB
+ 7e2a4ea67adb Downloading 111.1MB
+ d65d19a5f77b Downloading 55.57MB
+ 670ce22eaa89 Downloading 108MB
+ 7e2a4ea67adb Downloading 111.1MB
+ 7e2a4ea67adb Downloading 112.2MB
+ d65d19a5f77b Downloading 56.62MB
+ 670ce22eaa89 Downloading 108MB
+ 7e2a4ea67adb Downloading 112.2MB
+ d65d19a5f77b Downloading 56.62MB
+ 670ce22eaa89 Downloading 108MB
+ d65d19a5f77b Downloading 56.62MB
+ 670ce22eaa89 Downloading 108MB
+ 7e2a4ea67adb Downloading 112.2MB
+ 670ce22eaa89 Downloading 109.1MB
+ 7e2a4ea67adb Downloading 112.2MB
+ d65d19a5f77b Downloading 56.62MB
+ d65d19a5f77b Downloading 56.62MB
+ 670ce22eaa89 Downloading 109.1MB
+ 7e2a4ea67adb Downloading 112.2MB
+ d65d19a5f77b Downloading 56.62MB
+ 670ce22eaa89 Downloading 109.1MB
+ 7e2a4ea67adb Downloading 113.2MB
+ d65d19a5f77b Downloading 57.67MB
+ 670ce22eaa89 Downloading 109.1MB
+ 7e2a4ea67adb Downloading 113.2MB
+ d65d19a5f77b Downloading 57.67MB
+ 670ce22eaa89 Downloading 109.1MB
+ 7e2a4ea67adb Downloading 113.2MB
+ d65d19a5f77b Downloading 57.67MB
+ 670ce22eaa89 Downloading 109.1MB
+ 7e2a4ea67adb Downloading 113.2MB
+ d65d19a5f77b Downloading 57.67MB
+ 670ce22eaa89 Downloading 110.1MB
+ 7e2a4ea67adb Downloading 113.2MB
+ d65d19a5f77b Downloading 57.67MB
+ 670ce22eaa89 Downloading 110.1MB
+ 7e2a4ea67adb Downloading 114.3MB
+ 670ce22eaa89 Downloading 110.1MB
+ 7e2a4ea67adb Downloading 114.3MB
+ d65d19a5f77b Downloading 58.72MB
+ 670ce22eaa89 Downloading 110.1MB
+ 7e2a4ea67adb Downloading 114.3MB
+ d65d19a5f77b Downloading 58.72MB
+ 670ce22eaa89 Downloading 110.1MB
+ 7e2a4ea67adb Downloading 114.3MB
+ d65d19a5f77b Downloading 58.72MB
+ d65d19a5f77b Downloading 58.72MB
+ 670ce22eaa89 Downloading 111.1MB
+ 7e2a4ea67adb Downloading 114.3MB
+ d65d19a5f77b Downloading 58.72MB
+ 670ce22eaa89 Downloading 111.1MB
+ 7e2a4ea67adb Downloading 115.3MB
+ d65d19a5f77b Downloading 58.72MB
+ 670ce22eaa89 Downloading 111.1MB
+ 7e2a4ea67adb Downloading 115.3MB
+ 670ce22eaa89 Downloading 111.1MB
+ 7e2a4ea67adb Downloading 115.3MB
+ d65d19a5f77b Downloading 59.77MB
+ d65d19a5f77b Downloading 59.77MB
+ 670ce22eaa89 Downloading 111.1MB
+ 7e2a4ea67adb Downloading 115.3MB
+ 670ce22eaa89 Downloading 112.2MB
+ 7e2a4ea67adb Downloading 115.3MB
+ d65d19a5f77b Downloading 59.77MB
+ d65d19a5f77b Downloading 59.77MB
+ 670ce22eaa89 Downloading 112.2MB
+ 7e2a4ea67adb Downloading 116.4MB
+ d65d19a5f77b Downloading 59.77MB
+ 670ce22eaa89 Downloading 112.2MB
+ 7e2a4ea67adb Downloading 116.4MB
+ d65d19a5f77b Downloading 60.82MB
+ 670ce22eaa89 Downloading 112.2MB
+ 7e2a4ea67adb Downloading 116.4MB
+ d65d19a5f77b Downloading 60.82MB
+ 670ce22eaa89 Downloading 113.2MB
+ 7e2a4ea67adb Downloading 116.4MB
+ d65d19a5f77b Downloading 60.82MB
+ 670ce22eaa89 Downloading 113.2MB
+ 7e2a4ea67adb Downloading 116.4MB
+ d65d19a5f77b Downloading 60.82MB
+ 670ce22eaa89 Downloading 113.2MB
+ 7e2a4ea67adb Downloading 116.4MB
+ 670ce22eaa89 Downloading 113.2MB
+ 7e2a4ea67adb Downloading 117.4MB
+ d65d19a5f77b Downloading 60.82MB
+ d65d19a5f77b Downloading 60.82MB
+ 670ce22eaa89 Downloading 114.3MB
+ 7e2a4ea67adb Downloading 117.4MB
+ d65d19a5f77b Downloading 61.87MB
+ 670ce22eaa89 Downloading 114.3MB
+ 7e2a4ea67adb Downloading 117.4MB
+ d65d19a5f77b Downloading 61.87MB
+ 670ce22eaa89 Downloading 114.3MB
+ 7e2a4ea67adb Downloading 117.4MB
+ d65d19a5f77b Downloading 61.87MB
+ 670ce22eaa89 Downloading 114.3MB
+ 7e2a4ea67adb Downloading 117.4MB
+ d65d19a5f77b Downloading 61.87MB
+ 670ce22eaa89 Downloading 115.3MB
+ 7e2a4ea67adb Downloading 118.5MB
+ 7e2a4ea67adb Downloading 118.5MB
+ d65d19a5f77b Downloading 61.87MB
+ 670ce22eaa89 Downloading 115.3MB
+ d65d19a5f77b Downloading 62.91MB
+ 670ce22eaa89 Downloading 115.3MB
+ 7e2a4ea67adb Downloading 118.5MB
+ 670ce22eaa89 Downloading 115.3MB
+ 7e2a4ea67adb Downloading 118.5MB
+ d65d19a5f77b Downloading 62.91MB
+ 670ce22eaa89 Downloading 115.3MB
+ 7e2a4ea67adb Downloading 118.5MB
+ d65d19a5f77b Downloading 62.91MB
+ d65d19a5f77b Downloading 62.91MB
+ 670ce22eaa89 Downloading 115.3MB
+ 7e2a4ea67adb Downloading 118.5MB
+ 7e2a4ea67adb Downloading 118.5MB
+ d65d19a5f77b Downloading 62.91MB
+ 670ce22eaa89 Downloading 116.4MB
+ d65d19a5f77b Downloading 62.91MB
+ 670ce22eaa89 Downloading 116.4MB
+ 7e2a4ea67adb Downloading 118.5MB
+ d65d19a5f77b Downloading 62.91MB
+ 670ce22eaa89 Downloading 116.4MB
+ 7e2a4ea67adb Downloading 118.5MB
+ 670ce22eaa89 Downloading 116.4MB
+ 7e2a4ea67adb Downloading 118.5MB
+ d65d19a5f77b Downloading 62.91MB
+ d65d19a5f77b Downloading 62.91MB
+ 670ce22eaa89 Downloading 116.4MB
+ 7e2a4ea67adb Downloading 118.5MB
+ 670ce22eaa89 Downloading 116.4MB
+ 7e2a4ea67adb Downloading 119.5MB
+ d65d19a5f77b Downloading 62.91MB
+ 7e2a4ea67adb Downloading 119.5MB
+ d65d19a5f77b Downloading 62.91MB
+ 670ce22eaa89 Downloading 116.4MB
+ d65d19a5f77b Downloading 62.91MB
+ 670ce22eaa89 Downloading 116.4MB
+ 7e2a4ea67adb Downloading 119.5MB
+ d65d19a5f77b Downloading 63.96MB
+ 670ce22eaa89 Downloading 116.4MB
+ 7e2a4ea67adb Downloading 119.5MB
+ d65d19a5f77b Downloading 63.96MB
+ 670ce22eaa89 Downloading 117.4MB
+ 7e2a4ea67adb Downloading 119.5MB
+ 670ce22eaa89 Downloading 117.4MB
+ 7e2a4ea67adb Downloading 119.5MB
+ d65d19a5f77b Downloading 63.96MB
+ 670ce22eaa89 Downloading 117.4MB
+ 7e2a4ea67adb Downloading 120.6MB
+ d65d19a5f77b Downloading 63.96MB
+ 7e2a4ea67adb Downloading 120.6MB
+ d65d19a5f77b Downloading 63.96MB
+ 670ce22eaa89 Downloading 117.4MB
+ d65d19a5f77b Downloading 63.96MB
+ 670ce22eaa89 Downloading 117.4MB
+ 7e2a4ea67adb Downloading 120.6MB
+ 7e2a4ea67adb Downloading 120.6MB
+ d65d19a5f77b Downloading 65.01MB
+ 670ce22eaa89 Downloading 118.5MB
+ 670ce22eaa89 Downloading 118.5MB
+ 7e2a4ea67adb Downloading 120.6MB
+ d65d19a5f77b Downloading 65.01MB
+ d65d19a5f77b Downloading 65.01MB
+ 670ce22eaa89 Downloading 118.5MB
+ 7e2a4ea67adb Downloading 121.6MB
+ d65d19a5f77b Downloading 65.01MB
+ 670ce22eaa89 Downloading 118.5MB
+ 7e2a4ea67adb Downloading 121.6MB
+ d65d19a5f77b Downloading 65.01MB
+ 670ce22eaa89 Downloading 118.5MB
+ 7e2a4ea67adb Downloading 121.6MB
+ d65d19a5f77b Downloading 65.01MB
+ 670ce22eaa89 Downloading 118.5MB
+ 7e2a4ea67adb Downloading 121.6MB
+ d65d19a5f77b Downloading 66.06MB
+ 670ce22eaa89 Downloading 119.5MB
+ 7e2a4ea67adb Downloading 122.7MB
+ d65d19a5f77b Downloading 66.06MB
+ 670ce22eaa89 Downloading 119.5MB
+ 7e2a4ea67adb Downloading 122.7MB
+ d65d19a5f77b Downloading 66.06MB
+ 670ce22eaa89 Downloading 119.5MB
+ 7e2a4ea67adb Downloading 122.7MB
+ d65d19a5f77b Downloading 66.06MB
+ 670ce22eaa89 Downloading 119.5MB
+ 7e2a4ea67adb Downloading 122.7MB
+ d65d19a5f77b Downloading 66.06MB
+ 670ce22eaa89 Downloading 119.5MB
+ 7e2a4ea67adb Downloading 122.7MB
+ 670ce22eaa89 Downloading 120.6MB
+ 7e2a4ea67adb Downloading 123.7MB
+ d65d19a5f77b Downloading 67.11MB
+ 670ce22eaa89 Downloading 120.6MB
+ 7e2a4ea67adb Downloading 123.7MB
+ d65d19a5f77b Downloading 67.11MB
+ d65d19a5f77b Downloading 67.11MB
+ 670ce22eaa89 Downloading 120.6MB
+ 7e2a4ea67adb Downloading 123.7MB
+ d65d19a5f77b Downloading 67.11MB
+ 670ce22eaa89 Downloading 120.6MB
+ 7e2a4ea67adb Downloading 123.7MB
+ d65d19a5f77b Downloading 67.11MB
+ 670ce22eaa89 Downloading 121.6MB
+ 7e2a4ea67adb Downloading 124.8MB
+ d65d19a5f77b Downloading 67.11MB
+ 670ce22eaa89 Downloading 121.6MB
+ 7e2a4ea67adb Downloading 124.8MB
+ 670ce22eaa89 Downloading 121.6MB
+ 7e2a4ea67adb Downloading 124.8MB
+ d65d19a5f77b Downloading 68.16MB
+ d65d19a5f77b Downloading 68.16MB
+ 670ce22eaa89 Downloading 121.6MB
+ 7e2a4ea67adb Downloading 124.8MB
+ 7e2a4ea67adb Downloading 124.8MB
+ d65d19a5f77b Downloading 68.16MB
+ 670ce22eaa89 Downloading 121.6MB
+ 7e2a4ea67adb Downloading 125.8MB
+ d65d19a5f77b Downloading 68.16MB
+ 670ce22eaa89 Downloading 122.7MB
+ d65d19a5f77b Downloading 68.16MB
+ 670ce22eaa89 Downloading 122.7MB
+ 7e2a4ea67adb Downloading 125.8MB
+ d65d19a5f77b Downloading 69.21MB
+ 670ce22eaa89 Downloading 122.7MB
+ 7e2a4ea67adb Downloading 125.8MB
+ d65d19a5f77b Downloading 69.21MB
+ 670ce22eaa89 Downloading 122.7MB
+ 7e2a4ea67adb Downloading 125.8MB
+ d65d19a5f77b Downloading 69.21MB
+ 670ce22eaa89 Downloading 123.7MB
+ 7e2a4ea67adb Downloading 126.9MB
+ 7e2a4ea67adb Downloading 126.9MB
+ d65d19a5f77b Downloading 69.21MB
+ 670ce22eaa89 Downloading 123.7MB
+ d65d19a5f77b Downloading 69.21MB
+ 670ce22eaa89 Downloading 123.7MB
+ 7e2a4ea67adb Downloading 126.9MB
+ 7e2a4ea67adb Downloading 126.9MB
+ d65d19a5f77b Downloading 69.21MB
+ 670ce22eaa89 Downloading 123.7MB
+ d65d19a5f77b Downloading 70.25MB
+ 670ce22eaa89 Downloading 124.8MB
+ 7e2a4ea67adb Downloading 126.9MB
+ 670ce22eaa89 Downloading 124.8MB
+ 7e2a4ea67adb Downloading 127.9MB
+ d65d19a5f77b Downloading 70.25MB
+ 7e2a4ea67adb Downloading 127.9MB
+ d65d19a5f77b Downloading 70.25MB
+ 670ce22eaa89 Downloading 124.8MB
+ 670ce22eaa89 Downloading 124.8MB
+ 7e2a4ea67adb Downloading 127.9MB
+ d65d19a5f77b Downloading 70.25MB
+ 7e2a4ea67adb Downloading 127.9MB
+ d65d19a5f77b Downloading 70.25MB
+ 670ce22eaa89 Downloading 124.8MB
+ d65d19a5f77b Downloading 71.3MB
+ 670ce22eaa89 Downloading 125.8MB
+ 7e2a4ea67adb Downloading 129MB
+ d65d19a5f77b Downloading 71.3MB
+ 670ce22eaa89 Downloading 125.8MB
+ 7e2a4ea67adb Downloading 129MB
+ d65d19a5f77b Downloading 71.3MB
+ 670ce22eaa89 Downloading 125.8MB
+ 7e2a4ea67adb Downloading 129MB
+ 7e2a4ea67adb Downloading 129MB
+ d65d19a5f77b Downloading 71.3MB
+ 670ce22eaa89 Downloading 125.8MB
+ 670ce22eaa89 Downloading 126.9MB
+ 7e2a4ea67adb Downloading 130MB
+ d65d19a5f77b Downloading 71.3MB
+ d65d19a5f77b Downloading 72.35MB
+ 670ce22eaa89 Downloading 126.9MB
+ 7e2a4ea67adb Downloading 130MB
+ d65d19a5f77b Downloading 72.35MB
+ 670ce22eaa89 Downloading 126.9MB
+ 7e2a4ea67adb Downloading 130MB
+ d65d19a5f77b Downloading 72.35MB
+ 670ce22eaa89 Downloading 126.9MB
+ 7e2a4ea67adb Downloading 130MB
+ d65d19a5f77b Downloading 72.35MB
+ 670ce22eaa89 Downloading 126.9MB
+ 7e2a4ea67adb Downloading 130MB
+ d65d19a5f77b Downloading 72.35MB
+ 670ce22eaa89 Downloading 127.9MB
+ 7e2a4ea67adb Downloading 130MB
+ d65d19a5f77b Downloading 72.35MB
+ 670ce22eaa89 Downloading 127.9MB
+ 7e2a4ea67adb Downloading 131.1MB
+ d65d19a5f77b Downloading 72.35MB
+ 670ce22eaa89 Downloading 127.9MB
+ 7e2a4ea67adb Downloading 131.1MB
+ d65d19a5f77b Downloading 73.4MB
+ 670ce22eaa89 Downloading 127.9MB
+ 7e2a4ea67adb Downloading 131.1MB
+ 670ce22eaa89 Downloading 127.9MB
+ 7e2a4ea67adb Downloading 131.1MB
+ d65d19a5f77b Downloading 73.4MB
+ d65d19a5f77b Downloading 73.4MB
+ 670ce22eaa89 Downloading 129MB
+ 7e2a4ea67adb Downloading 131.1MB
+ 7e2a4ea67adb Downloading 131.1MB
+ d65d19a5f77b Downloading 73.4MB
+ 670ce22eaa89 Downloading 129MB
+ d65d19a5f77b Downloading 73.4MB
+ 670ce22eaa89 Downloading 129MB
+ 7e2a4ea67adb Downloading 131.1MB
+ 7e2a4ea67adb Downloading 132.1MB
+ d65d19a5f77b Downloading 74.45MB
+ 670ce22eaa89 Downloading 129MB
+ d65d19a5f77b Downloading 74.45MB
+ 670ce22eaa89 Downloading 129MB
+ 7e2a4ea67adb Downloading 132.1MB
+ d65d19a5f77b Downloading 74.45MB
+ 670ce22eaa89 Downloading 130MB
+ 7e2a4ea67adb Downloading 132.1MB
+ d65d19a5f77b Downloading 74.45MB
+ 670ce22eaa89 Downloading 130MB
+ 7e2a4ea67adb Downloading 132.1MB
+ d65d19a5f77b Downloading 74.45MB
+ 670ce22eaa89 Downloading 130MB
+ 7e2a4ea67adb Downloading 132.1MB
+ d65d19a5f77b Downloading 75.5MB
+ 670ce22eaa89 Downloading 130MB
+ 7e2a4ea67adb Downloading 133.2MB
+ 670ce22eaa89 Downloading 130MB
+ 7e2a4ea67adb Downloading 133.2MB
+ d65d19a5f77b Downloading 75.5MB
+ 670ce22eaa89 Downloading 131.1MB
+ 7e2a4ea67adb Downloading 133.2MB
+ d65d19a5f77b Downloading 75.5MB
+ d65d19a5f77b Downloading 75.5MB
+ 670ce22eaa89 Downloading 131.1MB
+ 7e2a4ea67adb Downloading 133.2MB
+ d65d19a5f77b Downloading 75.5MB
+ 670ce22eaa89 Downloading 131.1MB
+ 7e2a4ea67adb Downloading 133.2MB
+ d65d19a5f77b Downloading 76.55MB
+ 670ce22eaa89 Downloading 131.1MB
+ 7e2a4ea67adb Downloading 134.2MB
+ 670ce22eaa89 Downloading 132.1MB
+ 7e2a4ea67adb Downloading 134.2MB
+ d65d19a5f77b Downloading 76.55MB
+ d65d19a5f77b Downloading 76.55MB
+ 670ce22eaa89 Downloading 132.1MB
+ 7e2a4ea67adb Downloading 134.2MB
+ 7e2a4ea67adb Downloading 134.2MB
+ d65d19a5f77b Downloading 76.55MB
+ 670ce22eaa89 Downloading 132.1MB
+ d65d19a5f77b Downloading 76.55MB
+ 670ce22eaa89 Downloading 132.1MB
+ 7e2a4ea67adb Downloading 134.2MB
+ d65d19a5f77b Downloading 77.59MB
+ 670ce22eaa89 Downloading 133.2MB
+ 7e2a4ea67adb Downloading 134.2MB
+ 670ce22eaa89 Downloading 133.2MB
+ 7e2a4ea67adb Downloading 135.3MB
+ d65d19a5f77b Downloading 77.59MB
+ 7e2a4ea67adb Downloading 135.3MB
+ d65d19a5f77b Downloading 77.59MB
+ 670ce22eaa89 Downloading 133.2MB
+ d65d19a5f77b Downloading 77.59MB
+ 670ce22eaa89 Downloading 133.2MB
+ 7e2a4ea67adb Downloading 135.3MB
+ d65d19a5f77b Downloading 77.59MB
+ 670ce22eaa89 Downloading 134.2MB
+ 7e2a4ea67adb Downloading 135.3MB
+ d65d19a5f77b Downloading 78.64MB
+ 670ce22eaa89 Downloading 134.2MB
+ 7e2a4ea67adb Downloading 135.3MB
+ 670ce22eaa89 Downloading 134.2MB
+ 7e2a4ea67adb Downloading 135.3MB
+ d65d19a5f77b Downloading 78.64MB
+ 7e2a4ea67adb Downloading 136.3MB
+ d65d19a5f77b Downloading 78.64MB
+ 670ce22eaa89 Downloading 134.2MB
+ d65d19a5f77b Downloading 78.64MB
+ 670ce22eaa89 Downloading 135.3MB
+ 7e2a4ea67adb Downloading 136.3MB
+ 7e2a4ea67adb Downloading 136.3MB
+ d65d19a5f77b Downloading 78.64MB
+ 670ce22eaa89 Downloading 135.3MB
+ d65d19a5f77b Downloading 79.69MB
+ 670ce22eaa89 Downloading 135.3MB
+ 7e2a4ea67adb Downloading 136.3MB
+ d65d19a5f77b Downloading 79.69MB
+ 670ce22eaa89 Downloading 135.3MB
+ 7e2a4ea67adb Downloading 136.3MB
+ 7e2a4ea67adb Downloading 136.3MB
+ d65d19a5f77b Downloading 79.69MB
+ 670ce22eaa89 Downloading 136.3MB
+ 7e2a4ea67adb Downloading 137.4MB
+ d65d19a5f77b Downloading 79.69MB
+ 670ce22eaa89 Downloading 136.3MB
+ d65d19a5f77b Downloading 80.74MB
+ 670ce22eaa89 Downloading 136.3MB
+ 7e2a4ea67adb Downloading 137.4MB
+ d65d19a5f77b Downloading 80.74MB
+ 670ce22eaa89 Downloading 136.3MB
+ 7e2a4ea67adb Downloading 137.4MB
+ d65d19a5f77b Downloading 80.74MB
+ 670ce22eaa89 Downloading 137.4MB
+ 7e2a4ea67adb Downloading 137.4MB
+ d65d19a5f77b Downloading 80.74MB
+ 670ce22eaa89 Downloading 137.4MB
+ 7e2a4ea67adb Downloading 137.4MB
+ d65d19a5f77b Downloading 81.79MB
+ 670ce22eaa89 Downloading 137.4MB
+ 7e2a4ea67adb Downloading 138.4MB
+ 7e2a4ea67adb Downloading 138.4MB
+ d65d19a5f77b Downloading 81.79MB
+ 670ce22eaa89 Downloading 137.4MB
+ d65d19a5f77b Downloading 81.79MB
+ 670ce22eaa89 Downloading 137.4MB
+ 7e2a4ea67adb Downloading 138.4MB
+ 670ce22eaa89 Downloading 138.4MB
+ 7e2a4ea67adb Downloading 138.4MB
+ d65d19a5f77b Downloading 81.79MB
+ d65d19a5f77b Downloading 81.79MB
+ 670ce22eaa89 Downloading 138.4MB
+ 7e2a4ea67adb Downloading 138.4MB
+ d65d19a5f77b Downloading 82.84MB
+ 670ce22eaa89 Downloading 138.4MB
+ 7e2a4ea67adb Downloading 138.4MB
+ 670ce22eaa89 Downloading 138.4MB
+ 7e2a4ea67adb Downloading 139.5MB
+ d65d19a5f77b Downloading 82.84MB
+ d65d19a5f77b Downloading 82.84MB
+ 670ce22eaa89 Downloading 138.4MB
+ 7e2a4ea67adb Downloading 139.5MB
+ d65d19a5f77b Downloading 82.84MB
+ 670ce22eaa89 Downloading 139.5MB
+ 7e2a4ea67adb Downloading 139.5MB
+ d65d19a5f77b Downloading 83.89MB
+ 670ce22eaa89 Downloading 139.5MB
+ 7e2a4ea67adb Downloading 139.5MB
+ d65d19a5f77b Downloading 83.89MB
+ 670ce22eaa89 Downloading 139.5MB
+ 7e2a4ea67adb Downloading 139.5MB
+ d65d19a5f77b Downloading 83.89MB
+ 670ce22eaa89 Downloading 139.5MB
+ 7e2a4ea67adb Downloading 139.5MB
+ d65d19a5f77b Downloading 83.89MB
+ 670ce22eaa89 Downloading 139.5MB
+ 7e2a4ea67adb Downloading 140.5MB
+ d65d19a5f77b Downloading 84.93MB
+ 670ce22eaa89 Downloading 140.5MB
+ 7e2a4ea67adb Downloading 140.5MB
+ d65d19a5f77b Downloading 84.93MB
+ 670ce22eaa89 Downloading 140.5MB
+ 7e2a4ea67adb Downloading 140.5MB
+ d65d19a5f77b Downloading 84.93MB
+ 670ce22eaa89 Downloading 140.5MB
+ 7e2a4ea67adb Downloading 140.5MB
+ d65d19a5f77b Downloading 84.93MB
+ 670ce22eaa89 Downloading 140.5MB
+ 7e2a4ea67adb Downloading 140.5MB
+ 670ce22eaa89 Downloading 141.6MB
+ 7e2a4ea67adb Downloading 140.5MB
+ d65d19a5f77b Downloading 84.93MB
+ d65d19a5f77b Downloading 85.98MB
+ 670ce22eaa89 Downloading 141.6MB
+ 7e2a4ea67adb Downloading 141.6MB
+ d65d19a5f77b Downloading 85.98MB
+ 670ce22eaa89 Downloading 141.6MB
+ 7e2a4ea67adb Downloading 141.6MB
+ 670ce22eaa89 Downloading 141.6MB
+ 7e2a4ea67adb Downloading 141.6MB
+ d65d19a5f77b Downloading 85.98MB
+ 7e2a4ea67adb Downloading 141.6MB
+ d65d19a5f77b Downloading 85.98MB
+ 670ce22eaa89 Downloading 141.6MB
+ 7e2a4ea67adb Downloading 141.6MB
+ d65d19a5f77b Downloading 85.98MB
+ 670ce22eaa89 Downloading 142.6MB
+ d65d19a5f77b Downloading 87.03MB
+ 670ce22eaa89 Downloading 142.6MB
+ 7e2a4ea67adb Downloading 142.6MB
+ 670ce22eaa89 Downloading 142.6MB
+ 7e2a4ea67adb Downloading 142.6MB
+ d65d19a5f77b Downloading 87.03MB
+ d65d19a5f77b Downloading 87.03MB
+ 670ce22eaa89 Downloading 142.6MB
+ 7e2a4ea67adb Downloading 142.6MB
+ 670ce22eaa89 Downloading 143.7MB
+ 7e2a4ea67adb Downloading 142.6MB
+ d65d19a5f77b Downloading 87.03MB
+ d65d19a5f77b Downloading 88.08MB
+ 670ce22eaa89 Downloading 143.7MB
+ 7e2a4ea67adb Downloading 142.6MB
+ d65d19a5f77b Downloading 88.08MB
+ 670ce22eaa89 Downloading 143.7MB
+ 7e2a4ea67adb Downloading 142.6MB
+ 7e2a4ea67adb Downloading 143.7MB
+ d65d19a5f77b Downloading 88.08MB
+ 670ce22eaa89 Downloading 143.7MB
+ 7e2a4ea67adb Downloading 143.7MB
+ d65d19a5f77b Downloading 88.08MB
+ 670ce22eaa89 Downloading 144.7MB
+ d65d19a5f77b Downloading 88.08MB
+ 670ce22eaa89 Downloading 144.7MB
+ 7e2a4ea67adb Downloading 143.7MB
+ d65d19a5f77b Downloading 89.13MB
+ 670ce22eaa89 Downloading 144.7MB
+ 7e2a4ea67adb Downloading 143.7MB
+ 670ce22eaa89 Downloading 144.7MB
+ 7e2a4ea67adb Downloading 143.7MB
+ d65d19a5f77b Downloading 89.13MB
+ d65d19a5f77b Downloading 89.13MB
+ 670ce22eaa89 Downloading 145.8MB
+ 7e2a4ea67adb Downloading 144.7MB
+ d65d19a5f77b Downloading 89.13MB
+ 670ce22eaa89 Downloading 145.8MB
+ 7e2a4ea67adb Downloading 144.7MB
+ d65d19a5f77b Downloading 89.13MB
+ 670ce22eaa89 Downloading 145.8MB
+ 7e2a4ea67adb Downloading 144.7MB
+ d65d19a5f77b Downloading 90.18MB
+ 670ce22eaa89 Downloading 145.8MB
+ 7e2a4ea67adb Downloading 144.7MB
+ 670ce22eaa89 Downloading 145.8MB
+ 7e2a4ea67adb Downloading 144.7MB
+ d65d19a5f77b Downloading 90.18MB
+ d65d19a5f77b Downloading 90.18MB
+ 670ce22eaa89 Downloading 146.8MB
+ 7e2a4ea67adb Downloading 144.7MB
+ d65d19a5f77b Downloading 90.18MB
+ 670ce22eaa89 Downloading 146.8MB
+ 7e2a4ea67adb Downloading 145.8MB
+ d65d19a5f77b Downloading 90.18MB
+ 670ce22eaa89 Downloading 146.8MB
+ 7e2a4ea67adb Downloading 145.8MB
+ d65d19a5f77b Downloading 91.23MB
+ 670ce22eaa89 Downloading 146.8MB
+ 7e2a4ea67adb Downloading 145.8MB
+ d65d19a5f77b Downloading 91.23MB
+ 670ce22eaa89 Downloading 146.8MB
+ 7e2a4ea67adb Downloading 145.8MB
+ d65d19a5f77b Downloading 91.23MB
+ 670ce22eaa89 Downloading 146.8MB
+ 7e2a4ea67adb Downloading 145.8MB
+ d65d19a5f77b Downloading 91.23MB
+ 670ce22eaa89 Downloading 147.8MB
+ 7e2a4ea67adb Downloading 145.8MB
+ 670ce22eaa89 Downloading 147.8MB
+ 7e2a4ea67adb Downloading 146.8MB
+ d65d19a5f77b Downloading 91.23MB
+ d65d19a5f77b Downloading 91.23MB
+ 670ce22eaa89 Downloading 147.8MB
+ 7e2a4ea67adb Downloading 146.8MB
+ d65d19a5f77b Downloading 91.23MB
+ 670ce22eaa89 Downloading 147.8MB
+ 7e2a4ea67adb Downloading 146.8MB
+ d65d19a5f77b Downloading 92.27MB
+ 670ce22eaa89 Downloading 147.8MB
+ 7e2a4ea67adb Downloading 146.8MB
+ d65d19a5f77b Downloading 92.27MB
+ 670ce22eaa89 Downloading 147.8MB
+ 7e2a4ea67adb Downloading 146.8MB
+ d65d19a5f77b Downloading 92.27MB
+ 670ce22eaa89 Downloading 148.9MB
+ 7e2a4ea67adb Downloading 146.8MB
+ d65d19a5f77b Downloading 92.27MB
+ 670ce22eaa89 Downloading 148.9MB
+ 7e2a4ea67adb Downloading 147.8MB
+ d65d19a5f77b Downloading 92.27MB
+ 670ce22eaa89 Downloading 148.9MB
+ 7e2a4ea67adb Downloading 147.8MB
+ d65d19a5f77b Downloading 92.27MB
+ 670ce22eaa89 Downloading 148.9MB
+ 7e2a4ea67adb Downloading 147.8MB
+ d65d19a5f77b Downloading 93.32MB
+ 670ce22eaa89 Downloading 148.9MB
+ 7e2a4ea67adb Downloading 147.8MB
+ d65d19a5f77b Downloading 93.32MB
+ 670ce22eaa89 Downloading 149.9MB
+ 7e2a4ea67adb Downloading 147.8MB
+ 7e2a4ea67adb Downloading 148.9MB
+ d65d19a5f77b Downloading 93.32MB
+ 670ce22eaa89 Downloading 149.9MB
+ 670ce22eaa89 Downloading 149.9MB
+ 7e2a4ea67adb Downloading 148.9MB
+ d65d19a5f77b Downloading 93.32MB
+ d65d19a5f77b Downloading 94.37MB
+ 670ce22eaa89 Downloading 149.9MB
+ 7e2a4ea67adb Downloading 148.9MB
+ d65d19a5f77b Downloading 94.37MB
+ 670ce22eaa89 Downloading 149.9MB
+ 7e2a4ea67adb Downloading 148.9MB
+ d65d19a5f77b Downloading 94.37MB
+ 670ce22eaa89 Downloading 151MB
+ 7e2a4ea67adb Downloading 148.9MB
+ d65d19a5f77b Downloading 94.37MB
+ 670ce22eaa89 Downloading 151MB
+ 7e2a4ea67adb Downloading 149.9MB
+ 670ce22eaa89 Downloading 151MB
+ 7e2a4ea67adb Downloading 149.9MB
+ d65d19a5f77b Downloading 94.37MB
+ d65d19a5f77b Downloading 95.42MB
+ 670ce22eaa89 Downloading 151MB
+ 7e2a4ea67adb Downloading 149.9MB
+ d65d19a5f77b Downloading 95.42MB
+ 670ce22eaa89 Downloading 152MB
+ 7e2a4ea67adb Downloading 149.9MB
+ d65d19a5f77b Downloading 95.42MB
+ 670ce22eaa89 Downloading 152MB
+ 7e2a4ea67adb Downloading 149.9MB
+ d65d19a5f77b Downloading 95.42MB
+ 670ce22eaa89 Downloading 152MB
+ 7e2a4ea67adb Downloading 151MB
+ 670ce22eaa89 Downloading 152MB
+ 7e2a4ea67adb Downloading 151MB
+ d65d19a5f77b Downloading 95.42MB
+ d65d19a5f77b Downloading 96.47MB
+ 670ce22eaa89 Downloading 152MB
+ 7e2a4ea67adb Downloading 151MB
+ d65d19a5f77b Downloading 96.47MB
+ 670ce22eaa89 Downloading 152MB
+ 7e2a4ea67adb Downloading 151MB
+ 670ce22eaa89 Downloading 153.1MB
+ 7e2a4ea67adb Downloading 151MB
+ d65d19a5f77b Downloading 96.47MB
+ d65d19a5f77b Downloading 96.47MB
+ 670ce22eaa89 Downloading 153.1MB
+ 7e2a4ea67adb Downloading 152MB
+ 670ce22eaa89 Downloading 153.1MB
+ 7e2a4ea67adb Downloading 152MB
+ d65d19a5f77b Downloading 97.52MB
+ d65d19a5f77b Downloading 97.52MB
+ 670ce22eaa89 Downloading 153.1MB
+ 7e2a4ea67adb Downloading 152MB
+ d65d19a5f77b Downloading 97.52MB
+ 670ce22eaa89 Downloading 153.1MB
+ 7e2a4ea67adb Downloading 152MB
+ d65d19a5f77b Downloading 98.57MB
+ 670ce22eaa89 Downloading 154.1MB
+ 7e2a4ea67adb Downloading 152MB
+ d65d19a5f77b Downloading 98.57MB
+ 670ce22eaa89 Downloading 154.1MB
+ 7e2a4ea67adb Downloading 152MB
+ 7e2a4ea67adb Downloading 153.1MB
+ d65d19a5f77b Downloading 98.57MB
+ 670ce22eaa89 Downloading 154.1MB
+ d65d19a5f77b Downloading 98.57MB
+ 670ce22eaa89 Downloading 154.1MB
+ 7e2a4ea67adb Downloading 153.1MB
+ d65d19a5f77b Downloading 99.61MB
+ 670ce22eaa89 Downloading 154.1MB
+ 7e2a4ea67adb Downloading 153.1MB
+ 7e2a4ea67adb Downloading 153.1MB
+ d65d19a5f77b Downloading 99.61MB
+ 670ce22eaa89 Downloading 155.2MB
+ 670ce22eaa89 Downloading 155.2MB
+ 7e2a4ea67adb Downloading 153.1MB
+ d65d19a5f77b Downloading 99.61MB
+ d65d19a5f77b Downloading 99.61MB
+ 670ce22eaa89 Downloading 155.2MB
+ 7e2a4ea67adb Downloading 154.1MB
+ d65d19a5f77b Downloading 100.7MB
+ 670ce22eaa89 Downloading 155.2MB
+ 7e2a4ea67adb Downloading 154.1MB
+ 670ce22eaa89 Downloading 155.2MB
+ 7e2a4ea67adb Downloading 154.1MB
+ d65d19a5f77b Downloading 100.7MB
+ d65d19a5f77b Downloading 100.7MB
+ 670ce22eaa89 Downloading 156.2MB
+ 7e2a4ea67adb Downloading 154.1MB
+ d65d19a5f77b Downloading 100.7MB
+ 670ce22eaa89 Downloading 156.2MB
+ 7e2a4ea67adb Downloading 154.1MB
+ d65d19a5f77b Downloading 101.7MB
+ 670ce22eaa89 Download complete 0B
+ 7e2a4ea67adb Downloading 155.2MB
+ 670ce22eaa89 Extracting 1B
+ d65d19a5f77b Downloading 101.7MB
+ 7e2a4ea67adb Downloading 155.2MB
+ 670ce22eaa89 Extracting 1B
+ d65d19a5f77b Downloading 101.7MB
+ 7e2a4ea67adb Downloading 156.2MB
+ 670ce22eaa89 Extracting 1B
+ d65d19a5f77b Downloading 101.7MB
+ 7e2a4ea67adb Downloading 156.2MB
+ 670ce22eaa89 Extracting 1B
+ d65d19a5f77b Downloading 102.8MB
+ 7e2a4ea67adb Downloading 156.2MB
+ 670ce22eaa89 Extracting 1B
+ d65d19a5f77b Downloading 102.8MB
+ 7e2a4ea67adb Downloading 156.2MB
+ 670ce22eaa89 Extracting 1B
+ d65d19a5f77b Downloading 102.8MB
+ 7e2a4ea67adb Downloading 157.3MB
+ 670ce22eaa89 Extracting 1B
+ d65d19a5f77b Downloading 102.8MB
+ 7e2a4ea67adb Downloading 157.3MB
+ 670ce22eaa89 Extracting 1B
+ d65d19a5f77b Downloading 103.8MB
+ 7e2a4ea67adb Downloading 157.3MB
+ 670ce22eaa89 Extracting 1B
+ 7e2a4ea67adb Downloading 158.3MB
+ d65d19a5f77b Downloading 103.8MB
+ 670ce22eaa89 Extracting 1B
+ 7e2a4ea67adb Downloading 158.3MB
+ d65d19a5f77b Downloading 103.8MB
+ 670ce22eaa89 Extracting 2B
+ d65d19a5f77b Downloading 104.9MB
+ 7e2a4ea67adb Downloading 158.3MB
+ 670ce22eaa89 Extracting 2B
+ d65d19a5f77b Downloading 104.9MB
+ 7e2a4ea67adb Downloading 158.3MB
+ 670ce22eaa89 Extracting 2B
+ d65d19a5f77b Downloading 104.9MB
+ 7e2a4ea67adb Downloading 158.3MB
+ 670ce22eaa89 Extracting 2B
+ 7e2a4ea67adb Downloading 159.4MB
+ d65d19a5f77b Downloading 104.9MB
+ 670ce22eaa89 Extracting 2B
+ 7e2a4ea67adb Downloading 159.4MB
+ d65d19a5f77b Downloading 104.9MB
+ 670ce22eaa89 Extracting 2B
+ 79812bfcd6f8 Downloading 1.049MB
+ d65d19a5f77b Downloading 105.9MB
+ 7e2a4ea67adb Downloading 159.4MB
+ 670ce22eaa89 Extracting 2B
+ d65d19a5f77b Downloading 105.9MB
+ 7e2a4ea67adb Downloading 159.4MB
+ 79812bfcd6f8 Downloading 1.049MB
+ d42920bd8ca5 Pull complete 0B
+ 0ead1198ea98 Extracting 1B
+ 670ce22eaa89 Pull complete 0B
+ 79812bfcd6f8 Downloading 1.049MB
+ d65d19a5f77b Downloading 105.9MB
+ 7e2a4ea67adb Downloading 159.4MB
+ 0ead1198ea98 Extracting 1B
+ d65d19a5f77b Downloading 105.9MB
+ 7e2a4ea67adb Downloading 159.4MB
+ 79812bfcd6f8 Downloading 1.049MB
+ 0ead1198ea98 Extracting 1B
+ 79812bfcd6f8 Downloading 1.049MB
+ d65d19a5f77b Downloading 105.9MB
+ 7e2a4ea67adb Downloading 160.4MB
+ 0ead1198ea98 Extracting 1B
+ d65d19a5f77b Downloading 105.9MB
+ 7e2a4ea67adb Downloading 160.4MB
+ 79812bfcd6f8 Downloading 1.049MB
+ 0ead1198ea98 Extracting 1B
+ 79812bfcd6f8 Downloading 1.049MB
+ d65d19a5f77b Downloading 105.9MB
+ 7e2a4ea67adb Downloading 160.4MB
+ 0ead1198ea98 Extracting 1B
+ 7e2a4ea67adb Downloading 160.4MB
+ 79812bfcd6f8 Downloading 2.097MB
+ d65d19a5f77b Downloading 107MB
+ 0ead1198ea98 Extracting 1B
+ 79812bfcd6f8 Downloading 2.253MB
+ d65d19a5f77b Downloading 107MB
+ 7e2a4ea67adb Downloading 160.4MB
+ 0ead1198ea98 Extracting 1B
+ d65d19a5f77b Downloading 107MB
+ 7e2a4ea67adb Downloading 161.5MB
+ 79812bfcd6f8 Download complete 0B
+ 4332b9e765a2 Extracting 1B
+ 0ead1198ea98 Pull complete 0B
+ d65d19a5f77b Downloading 107MB
+ 7e2a4ea67adb Downloading 161.5MB
+ 4f4fb700ef54 Pull complete 0B
+ 4332b9e765a2 Pull complete 0B
+ 7e2a4ea67adb Downloading 161.5MB
+ d65d19a5f77b Downloading 108MB
+ d65d19a5f77b Downloading 108MB
+ 7e2a4ea67adb Downloading 162.5MB
+ d65d19a5f77b Downloading 108MB
+ 7e2a4ea67adb Downloading 162.5MB
+ d65d19a5f77b Downloading 109.1MB
+ 7e2a4ea67adb Downloading 162.5MB
+ 7e2a4ea67adb Downloading 163.6MB
+ d65d19a5f77b Downloading 109.1MB
+ d65d19a5f77b Downloading 109.1MB
+ 7e2a4ea67adb Downloading 163.6MB
+ 7e2a4ea67adb Downloading 163.6MB
+ d65d19a5f77b Downloading 109.1MB
+ d65d19a5f77b Downloading 110.1MB
+ 7e2a4ea67adb Downloading 163.6MB
+ d65d19a5f77b Downloading 110.1MB
+ 7e2a4ea67adb Downloading 163.6MB
+ d65d19a5f77b Downloading 110.1MB
+ 7e2a4ea67adb Downloading 164.6MB
+ 7e2a4ea67adb Downloading 164.6MB
+ d65d19a5f77b Downloading 110.1MB
+ 7e2a4ea67adb Downloading 164.6MB
+ d65d19a5f77b Downloading 110.1MB
+ 7e2a4ea67adb Downloading 164.6MB
+ d65d19a5f77b Downloading 111.1MB
+ d65d19a5f77b Downloading 111.1MB
+ 7e2a4ea67adb Downloading 164.6MB
+ d65d19a5f77b Downloading 111.1MB
+ 7e2a4ea67adb Downloading 165.7MB
+ d65d19a5f77b Downloading 111.1MB
+ 7e2a4ea67adb Downloading 165.7MB
+ d65d19a5f77b Downloading 112.2MB
+ 7e2a4ea67adb Downloading 165.7MB
+ d65d19a5f77b Downloading 112.2MB
+ 7e2a4ea67adb Downloading 165.7MB
+ d65d19a5f77b Downloading 112.2MB
+ 7e2a4ea67adb Downloading 166.7MB
+ d65d19a5f77b Downloading 112.2MB
+ 7e2a4ea67adb Downloading 166.7MB
+ 7e2a4ea67adb Downloading 166.7MB
+ d65d19a5f77b Downloading 113.2MB
+ d65d19a5f77b Downloading 113.2MB
+ 7e2a4ea67adb Downloading 167.8MB
+ d65d19a5f77b Downloading 113.2MB
+ 7e2a4ea67adb Downloading 167.8MB
+ d65d19a5f77b Downloading 113.2MB
+ 7e2a4ea67adb Downloading 167.8MB
+ d65d19a5f77b Downloading 113.2MB
+ 7e2a4ea67adb Downloading 167.8MB
+ d65d19a5f77b Downloading 113.2MB
+ 7e2a4ea67adb Downloading 167.8MB
+ 7e2a4ea67adb Downloading 167.8MB
+ d65d19a5f77b Downloading 114.3MB
+ d65d19a5f77b Downloading 114.3MB
+ 7e2a4ea67adb Downloading 168.8MB
+ d65d19a5f77b Downloading 114.3MB
+ 7e2a4ea67adb Downloading 168.8MB
+ d65d19a5f77b Downloading 114.3MB
+ 7e2a4ea67adb Downloading 168.8MB
+ d65d19a5f77b Downloading 114.3MB
+ 7e2a4ea67adb Downloading 168.8MB
+ d65d19a5f77b Downloading 115.3MB
+ 7e2a4ea67adb Downloading 168.8MB
+ d65d19a5f77b Downloading 115.3MB
+ 7e2a4ea67adb Downloading 169.9MB
+ d65d19a5f77b Downloading 115.3MB
+ 7e2a4ea67adb Downloading 169.9MB
+ d65d19a5f77b Downloading 115.3MB
+ 7e2a4ea67adb Downloading 169.9MB
+ 7e2a4ea67adb Downloading 169.9MB
+ d65d19a5f77b Downloading 115.3MB
+ d65d19a5f77b Downloading 115.3MB
+ 7e2a4ea67adb Downloading 169.9MB
+ d65d19a5f77b Downloading 116.4MB
+ 7e2a4ea67adb Downloading 169.9MB
+ 7e2a4ea67adb Downloading 169.9MB
+ d65d19a5f77b Downloading 116.4MB
+ d65d19a5f77b Downloading 116.4MB
+ 7e2a4ea67adb Downloading 169.9MB
+ d65d19a5f77b Downloading 116.4MB
+ 7e2a4ea67adb Downloading 170.9MB
+ d65d19a5f77b Downloading 116.4MB
+ 7e2a4ea67adb Downloading 170.9MB
+ 7e2a4ea67adb Downloading 170.9MB
+ d65d19a5f77b Downloading 117.4MB
+ d65d19a5f77b Downloading 117.4MB
+ 7e2a4ea67adb Downloading 172MB
+ d65d19a5f77b Downloading 117.4MB
+ 7e2a4ea67adb Downloading 172MB
+ d65d19a5f77b Downloading 118.5MB
+ 7e2a4ea67adb Downloading 172MB
+ d65d19a5f77b Downloading 118.5MB
+ 7e2a4ea67adb Downloading 173MB
+ d65d19a5f77b Downloading 118.5MB
+ 7e2a4ea67adb Downloading 173MB
+ 7e2a4ea67adb Downloading 173MB
+ d65d19a5f77b Downloading 119.5MB
+ d65d19a5f77b Downloading 119.5MB
+ 7e2a4ea67adb Downloading 173MB
+ 7e2a4ea67adb Downloading 174.1MB
+ d65d19a5f77b Downloading 119.5MB
+ d65d19a5f77b Downloading 119.5MB
+ 7e2a4ea67adb Downloading 174.1MB
+ d65d19a5f77b Downloading 120.6MB
+ 7e2a4ea67adb Downloading 174.1MB
+ d65d19a5f77b Downloading 120.6MB
+ 7e2a4ea67adb Downloading 174.1MB
+ 7e2a4ea67adb Downloading 175.1MB
+ d65d19a5f77b Downloading 120.6MB
+ d65d19a5f77b Downloading 120.6MB
+ 7e2a4ea67adb Downloading 175.1MB
+ d65d19a5f77b Downloading 121.6MB
+ 7e2a4ea67adb Downloading 175.1MB
+ d65d19a5f77b Downloading 121.6MB
+ 7e2a4ea67adb Downloading 175.1MB
+ 7e2a4ea67adb Downloading 176.2MB
+ d65d19a5f77b Downloading 121.6MB
+ d65d19a5f77b Downloading 121.6MB
+ 7e2a4ea67adb Downloading 176.2MB
+ 7e2a4ea67adb Downloading 176.2MB
+ d65d19a5f77b Downloading 122.7MB
+ 7e2a4ea67adb Downloading 176.2MB
+ d65d19a5f77b Downloading 122.7MB
+ 7e2a4ea67adb Downloading 177.2MB
+ d65d19a5f77b Downloading 122.7MB
+ d65d19a5f77b Downloading 122.7MB
+ 7e2a4ea67adb Downloading 177.2MB
+ 7e2a4ea67adb Downloading 177.2MB
+ d65d19a5f77b Downloading 122.7MB
+ d65d19a5f77b Downloading 122.7MB
+ 7e2a4ea67adb Downloading 177.2MB
+ d65d19a5f77b Downloading 122.7MB
+ 7e2a4ea67adb Downloading 177.2MB
+ d65d19a5f77b Downloading 122.7MB
+ 7e2a4ea67adb Downloading 177.2MB
+ d65d19a5f77b Downloading 123.7MB
+ 7e2a4ea67adb Downloading 177.2MB
+ d65d19a5f77b Downloading 123.7MB
+ 7e2a4ea67adb Downloading 178.3MB
+ d65d19a5f77b Downloading 123.7MB
+ 7e2a4ea67adb Downloading 178.3MB
+ d65d19a5f77b Downloading 123.7MB
+ 7e2a4ea67adb Downloading 178.3MB
+ d65d19a5f77b Downloading 124.8MB
+ 7e2a4ea67adb Downloading 178.3MB
+ d65d19a5f77b Downloading 124.8MB
+ 7e2a4ea67adb Downloading 179.3MB
+ d65d19a5f77b Downloading 124.8MB
+ 7e2a4ea67adb Downloading 179.3MB
+ d65d19a5f77b Downloading 124.8MB
+ 7e2a4ea67adb Downloading 179.3MB
+ 7e2a4ea67adb Downloading 179.3MB
+ d65d19a5f77b Downloading 125.8MB
+ 7e2a4ea67adb Downloading 180.4MB
+ d65d19a5f77b Downloading 125.8MB
+ d65d19a5f77b Downloading 125.8MB
+ 7e2a4ea67adb Downloading 180.4MB
+ d65d19a5f77b Downloading 125.8MB
+ 7e2a4ea67adb Downloading 180.4MB
+ 7e2a4ea67adb Downloading 180.4MB
+ d65d19a5f77b Downloading 125.8MB
+ d65d19a5f77b Downloading 126.9MB
+ 7e2a4ea67adb Downloading 180.4MB
+ d65d19a5f77b Downloading 126.9MB
+ 7e2a4ea67adb Downloading 181.4MB
+ d65d19a5f77b Downloading 126.9MB
+ 7e2a4ea67adb Downloading 181.4MB
+ d65d19a5f77b Downloading 126.9MB
+ 7e2a4ea67adb Downloading 181.4MB
+ d65d19a5f77b Downloading 127.9MB
+ 7e2a4ea67adb Downloading 181.4MB
+ d65d19a5f77b Downloading 127.9MB
+ 7e2a4ea67adb Downloading 182.5MB
+ d65d19a5f77b Downloading 127.9MB
+ 7e2a4ea67adb Downloading 182.5MB
+ d65d19a5f77b Downloading 129MB
+ 7e2a4ea67adb Downloading 183.5MB
+ d65d19a5f77b Downloading 129MB
+ 7e2a4ea67adb Downloading 183.5MB
+ 7e2a4ea67adb Downloading 183.5MB
+ d65d19a5f77b Downloading 129MB
+ d65d19a5f77b Downloading 130MB
+ 7e2a4ea67adb Downloading 184.5MB
+ d65d19a5f77b Downloading 130MB
+ 7e2a4ea67adb Downloading 184.5MB
+ d65d19a5f77b Downloading 130MB
+ 7e2a4ea67adb Downloading 184.5MB
+ d65d19a5f77b Downloading 131.1MB
+ 7e2a4ea67adb Downloading 185.6MB
+ d65d19a5f77b Downloading 131.1MB
+ 7e2a4ea67adb Downloading 185.6MB
+ 7e2a4ea67adb Downloading 185.6MB
+ d65d19a5f77b Downloading 131.1MB
+ d65d19a5f77b Downloading 132.1MB
+ 7e2a4ea67adb Downloading 185.6MB
+ d65d19a5f77b Downloading 132.1MB
+ 7e2a4ea67adb Downloading 186.6MB
+ d65d19a5f77b Downloading 132.1MB
+ 7e2a4ea67adb Downloading 186.6MB
+ d65d19a5f77b Downloading 132.1MB
+ 7e2a4ea67adb Downloading 186.6MB
+ d65d19a5f77b Downloading 133.2MB
+ 7e2a4ea67adb Downloading 187.7MB
+ d65d19a5f77b Downloading 133.2MB
+ 7e2a4ea67adb Downloading 187.7MB
+ d65d19a5f77b Downloading 133.2MB
+ 7e2a4ea67adb Downloading 187.7MB
+ d65d19a5f77b Downloading 134.2MB
+ 7e2a4ea67adb Downloading 187.7MB
+ d65d19a5f77b Downloading 134.2MB
+ 7e2a4ea67adb Downloading 188.7MB
+ d65d19a5f77b Downloading 134.2MB
+ 7e2a4ea67adb Downloading 188.7MB
+ d65d19a5f77b Downloading 134.2MB
+ 7e2a4ea67adb Downloading 188.7MB
+ d65d19a5f77b Downloading 135.3MB
+ 7e2a4ea67adb Downloading 188.7MB
+ d65d19a5f77b Downloading 135.3MB
+ 7e2a4ea67adb Downloading 189.8MB
+ 7e2a4ea67adb Downloading 189.8MB
+ d65d19a5f77b Downloading 135.3MB
+ d65d19a5f77b Downloading 136.3MB
+ 7e2a4ea67adb Downloading 189.8MB
+ d65d19a5f77b Downloading 136.3MB
+ 7e2a4ea67adb Downloading 190.8MB
+ d65d19a5f77b Downloading 136.3MB
+ 7e2a4ea67adb Downloading 190.8MB
+ d65d19a5f77b Downloading 136.3MB
+ 7e2a4ea67adb Downloading 190.8MB
+ 7e2a4ea67adb Downloading 190.8MB
+ d65d19a5f77b Downloading 137.4MB
+ d65d19a5f77b Downloading 137.4MB
+ 7e2a4ea67adb Downloading 191.9MB
+ 7e2a4ea67adb Downloading 191.9MB
+ d65d19a5f77b Downloading 137.4MB
+ d65d19a5f77b Downloading 138.4MB
+ 7e2a4ea67adb Downloading 191.9MB
+ d65d19a5f77b Downloading 138.4MB
+ 7e2a4ea67adb Downloading 192.9MB
+ d65d19a5f77b Downloading 138.4MB
+ 7e2a4ea67adb Downloading 192.9MB
+ d65d19a5f77b Downloading 139.5MB
+ 7e2a4ea67adb Downloading 192.9MB
+ 7e2a4ea67adb Downloading 194MB
+ d65d19a5f77b Downloading 139.5MB
+ d65d19a5f77b Downloading 139.5MB
+ 7e2a4ea67adb Downloading 194MB
+ d65d19a5f77b Downloading 139.5MB
+ 7e2a4ea67adb Downloading 194MB
+ 7e2a4ea67adb Downloading 194MB
+ d65d19a5f77b Downloading 139.5MB
+ d65d19a5f77b Downloading 140.5MB
+ 7e2a4ea67adb Downloading 195MB
+ 7e2a4ea67adb Downloading 195MB
+ d65d19a5f77b Downloading 140.5MB
+ d65d19a5f77b Downloading 140.5MB
+ 7e2a4ea67adb Downloading 195MB
+ d65d19a5f77b Downloading 140.5MB
+ 7e2a4ea67adb Downloading 195MB
+ d65d19a5f77b Downloading 141.6MB
+ 7e2a4ea67adb Downloading 196.1MB
+ d65d19a5f77b Downloading 141.6MB
+ 7e2a4ea67adb Downloading 196.1MB
+ d65d19a5f77b Downloading 141.6MB
+ 7e2a4ea67adb Downloading 196.1MB
+ 7e2a4ea67adb Downloading 197.1MB
+ d65d19a5f77b Downloading 141.6MB
+ d65d19a5f77b Downloading 142.6MB
+ 7e2a4ea67adb Downloading 197.1MB
+ 7e2a4ea67adb Downloading 197.1MB
+ d65d19a5f77b Downloading 142.6MB
+ d65d19a5f77b Downloading 142.6MB
+ 7e2a4ea67adb Downloading 197.1MB
+ d65d19a5f77b Downloading 143.7MB
+ 7e2a4ea67adb Downloading 198.2MB
+ d65d19a5f77b Downloading 143.7MB
+ 7e2a4ea67adb Downloading 198.2MB
+ d65d19a5f77b Downloading 143.7MB
+ 7e2a4ea67adb Downloading 198.2MB
+ 7e2a4ea67adb Downloading 198.2MB
+ d65d19a5f77b Downloading 143.7MB
+ 7e2a4ea67adb Downloading 199.2MB
+ d65d19a5f77b Downloading 144.7MB
+ d65d19a5f77b Downloading 144.7MB
+ 7e2a4ea67adb Downloading 199.2MB
+ d65d19a5f77b Downloading 144.7MB
+ 7e2a4ea67adb Downloading 199.2MB
+ d65d19a5f77b Downloading 145.8MB
+ 7e2a4ea67adb Downloading 200.3MB
+ 7e2a4ea67adb Downloading 200.3MB
+ d65d19a5f77b Downloading 145.8MB
+ d65d19a5f77b Downloading 145.8MB
+ 7e2a4ea67adb Downloading 200.3MB
+ d65d19a5f77b Downloading 145.8MB
+ 7e2a4ea67adb Downloading 201.3MB
+ d65d19a5f77b Downloading 146.8MB
+ 7e2a4ea67adb Downloading 201.3MB
+ d65d19a5f77b Downloading 146.8MB
+ 7e2a4ea67adb Downloading 201.3MB
+ d65d19a5f77b Downloading 146.8MB
+ 7e2a4ea67adb Downloading 201.3MB
+ d65d19a5f77b Downloading 147.8MB
+ 7e2a4ea67adb Downloading 202.4MB
+ d65d19a5f77b Downloading 147.8MB
+ 7e2a4ea67adb Downloading 202.4MB
+ d65d19a5f77b Downloading 147.8MB
+ 7e2a4ea67adb Downloading 202.4MB
+ d65d19a5f77b Downloading 147.8MB
+ 7e2a4ea67adb Downloading 203.4MB
+ d65d19a5f77b Downloading 148.9MB
+ 7e2a4ea67adb Downloading 203.4MB
+ d65d19a5f77b Downloading 148.9MB
+ 7e2a4ea67adb Downloading 203.4MB
+ d65d19a5f77b Downloading 148.9MB
+ 7e2a4ea67adb Downloading 203.4MB
+ 7e2a4ea67adb Downloading 204.5MB
+ d65d19a5f77b Downloading 148.9MB
+ d65d19a5f77b Downloading 149.9MB
+ 7e2a4ea67adb Downloading 204.5MB
+ 7e2a4ea67adb Downloading 204.5MB
+ d65d19a5f77b Downloading 149.9MB
+ 7e2a4ea67adb Downloading 204.5MB
+ d65d19a5f77b Downloading 149.9MB
+ 7e2a4ea67adb Downloading 204.5MB
+ d65d19a5f77b Downloading 149.9MB
+ 7e2a4ea67adb Downloading 205.5MB
+ d65d19a5f77b Downloading 149.9MB
+ d65d19a5f77b Downloading 151MB
+ 7e2a4ea67adb Downloading 205.5MB
+ 7e2a4ea67adb Downloading 205.5MB
+ d65d19a5f77b Downloading 151MB
+ d65d19a5f77b Downloading 151MB
+ 7e2a4ea67adb Downloading 205.5MB
+ d65d19a5f77b Downloading 152MB
+ 7e2a4ea67adb Downloading 206.6MB
+ d65d19a5f77b Downloading 152MB
+ 7e2a4ea67adb Downloading 206.6MB
+ 7e2a4ea67adb Downloading 206.6MB
+ d65d19a5f77b Downloading 152MB
+ d65d19a5f77b Downloading 152MB
+ 7e2a4ea67adb Downloading 207.6MB
+ d65d19a5f77b Downloading 152MB
+ 7e2a4ea67adb Downloading 207.6MB
+ d65d19a5f77b Downloading 153.1MB
+ 7e2a4ea67adb Downloading 207.6MB
+ d65d19a5f77b Downloading 153.1MB
+ 7e2a4ea67adb Downloading 207.6MB
+ 7e2a4ea67adb Downloading 208.7MB
+ d65d19a5f77b Downloading 153.1MB
+ d65d19a5f77b Downloading 153.1MB
+ 7e2a4ea67adb Downloading 208.7MB
+ d65d19a5f77b Downloading 154.1MB
+ 7e2a4ea67adb Downloading 208.7MB
+ 7e2a4ea67adb Downloading 208.7MB
+ d65d19a5f77b Downloading 154.1MB
+ d65d19a5f77b Downloading 154.1MB
+ 7e2a4ea67adb Downloading 209.7MB
+ 7e2a4ea67adb Downloading 209.7MB
+ d65d19a5f77b Downloading 155.2MB
+ d65d19a5f77b Downloading 155.2MB
+ 7e2a4ea67adb Downloading 209.7MB
+ 7e2a4ea67adb Downloading 210.8MB
+ d65d19a5f77b Downloading 155.2MB
+ d65d19a5f77b Downloading 155.2MB
+ 7e2a4ea67adb Downloading 210.8MB
+ d65d19a5f77b Downloading 156.2MB
+ 7e2a4ea67adb Downloading 210.8MB
+ d65d19a5f77b Downloading 156.2MB
+ 7e2a4ea67adb Downloading 210.8MB
+ d65d19a5f77b Downloading 156.2MB
+ 7e2a4ea67adb Downloading 211.8MB
+ 7e2a4ea67adb Downloading 211.8MB
+ d65d19a5f77b Downloading 157.3MB
+ d65d19a5f77b Downloading 157.3MB
+ 7e2a4ea67adb Downloading 211.8MB
+ d65d19a5f77b Downloading 157.3MB
+ 7e2a4ea67adb Downloading 211.8MB
+ 7e2a4ea67adb Downloading 212.9MB
+ d65d19a5f77b Downloading 157.3MB
+ d65d19a5f77b Downloading 158.3MB
+ 7e2a4ea67adb Download complete 0B
+ d65d19a5f77b Downloading 158.3MB
+ d65d19a5f77b Downloading 159.4MB
+ d65d19a5f77b Downloading 159.4MB
+ d65d19a5f77b Downloading 160.4MB
+ d65d19a5f77b Downloading 160.4MB
+ d65d19a5f77b Downloading 161.5MB
+ d65d19a5f77b Downloading 161.5MB
+ d65d19a5f77b Downloading 162.5MB
+ d65d19a5f77b Downloading 163.6MB
+ d65d19a5f77b Downloading 163.6MB
+ d65d19a5f77b Downloading 164.6MB
+ d65d19a5f77b Downloading 164.6MB
+ d65d19a5f77b Downloading 165.7MB
+ d65d19a5f77b Downloading 165.7MB
+ d65d19a5f77b Downloading 166.7MB
+ d65d19a5f77b Downloading 167.8MB
+ d65d19a5f77b Downloading 168.8MB
+ d65d19a5f77b Downloading 168.8MB
+ d65d19a5f77b Downloading 169.9MB
+ d65d19a5f77b Downloading 170.9MB
+ d65d19a5f77b Downloading 170.9MB
+ d65d19a5f77b Downloading 172MB
+ d65d19a5f77b Downloading 172MB
+ d65d19a5f77b Downloading 173MB
+ d65d19a5f77b Downloading 174.1MB
+ d65d19a5f77b Downloading 175.1MB
+ d65d19a5f77b Downloading 175.1MB
+ d65d19a5f77b Downloading 176.2MB
+ d65d19a5f77b Downloading 176.2MB
+ d65d19a5f77b Downloading 177.2MB
+ d65d19a5f77b Downloading 178.3MB
+ d65d19a5f77b Downloading 178.3MB
+ d65d19a5f77b Downloading 179.3MB
+ d65d19a5f77b Downloading 180.4MB
+ d65d19a5f77b Downloading 180.4MB
+ d65d19a5f77b Downloading 181.4MB
+ d65d19a5f77b Downloading 181.4MB
+ d65d19a5f77b Downloading 182.5MB
+ d65d19a5f77b Downloading 183.5MB
+ d65d19a5f77b Downloading 183.5MB
+ d65d19a5f77b Downloading 184.5MB
+ d65d19a5f77b Downloading 184.5MB
+ d65d19a5f77b Downloading 185.6MB
+ d65d19a5f77b Downloading 186.6MB
+ d65d19a5f77b Downloading 186.6MB
+ d65d19a5f77b Downloading 186.6MB
+ d65d19a5f77b Downloading 187.7MB
+ d65d19a5f77b Downloading 187.7MB
+ d65d19a5f77b Downloading 187.7MB
+ d65d19a5f77b Downloading 187.7MB
+ d65d19a5f77b Downloading 188.7MB
+ d65d19a5f77b Downloading 188.7MB
+ d65d19a5f77b Downloading 189.8MB
+ d65d19a5f77b Downloading 189.8MB
+ d65d19a5f77b Downloading 189.8MB
+ d65d19a5f77b Downloading 190.8MB
+ d65d19a5f77b Downloading 191.9MB
+ d65d19a5f77b Downloading 191.9MB
+ d65d19a5f77b Downloading 192.9MB
+ d65d19a5f77b Downloading 192.9MB
+ d65d19a5f77b Downloading 194MB
+ d65d19a5f77b Downloading 194MB
+ d65d19a5f77b Downloading 195MB
+ d65d19a5f77b Downloading 196.1MB
+ d65d19a5f77b Downloading 196.1MB
+ d65d19a5f77b Downloading 196.1MB
+ d65d19a5f77b Downloading 197.1MB
+ d65d19a5f77b Downloading 197.1MB
+ d65d19a5f77b Downloading 197.1MB
+ d65d19a5f77b Downloading 197.1MB
+ d65d19a5f77b Downloading 197.1MB
+ d65d19a5f77b Downloading 197.1MB
+ d65d19a5f77b Downloading 197.1MB
+ d65d19a5f77b Downloading 198.2MB
+ d65d19a5f77b Downloading 198.2MB
+ d65d19a5f77b Download complete 0B
+ d65d19a5f77b Extracting 1B
+ d65d19a5f77b Extracting 1B
+ d65d19a5f77b Extracting 1B
+ d65d19a5f77b Extracting 1B
+ d65d19a5f77b Extracting 1B
+ d65d19a5f77b Extracting 1B
+ d65d19a5f77b Extracting 1B
+ d65d19a5f77b Extracting 1B
+ d65d19a5f77b Extracting 1B
+ d65d19a5f77b Extracting 1B
+ d65d19a5f77b Extracting 1B
+ d65d19a5f77b Extracting 2B
+ d65d19a5f77b Extracting 2B
+ d65d19a5f77b Extracting 2B
+ d65d19a5f77b Extracting 2B
+ d65d19a5f77b Extracting 2B
+ 79812bfcd6f8 Pull complete 0B
+ 7e2a4ea67adb Extracting 1B
+ d65d19a5f77b Pull complete 0B
+ 7e2a4ea67adb Extracting 1B
+ 7e2a4ea67adb Extracting 1B
+ 7e2a4ea67adb Extracting 1B
+ 7e2a4ea67adb Extracting 1B
+ 7e2a4ea67adb Extracting 1B
+ 7e2a4ea67adb Extracting 1B
+ 7e2a4ea67adb Extracting 1B
+ 7e2a4ea67adb Extracting 1B
+ 7e2a4ea67adb Extracting 1B
+ 7e2a4ea67adb Extracting 1B
+ 7e2a4ea67adb Extracting 2B
+ 7e2a4ea67adb Extracting 2B
+ 7e2a4ea67adb Extracting 2B
+ 7e2a4ea67adb Extracting 2B
+ 7e2a4ea67adb Extracting 2B
+ 7e2a4ea67adb Extracting 2B
+ 7e2a4ea67adb Extracting 2B
+ 7e2a4ea67adb Extracting 2B
+ 7e2a4ea67adb Extracting 2B
+ 7e2a4ea67adb Extracting 3B
+ 7e2a4ea67adb Extracting 3B
+ 7e2a4ea67adb Extracting 3B
+ 7e2a4ea67adb Extracting 3B
+ 7e2a4ea67adb Extracting 3B
+ 7e2a4ea67adb Extracting 3B
+ 7e2a4ea67adb Extracting 3B
+ 7e2a4ea67adb Extracting 3B
+ 7e2a4ea67adb Extracting 3B
+ 7e2a4ea67adb Extracting 3B
+ 7e2a4ea67adb Extracting 4B
+ 7e2a4ea67adb Extracting 4B
+ 7e2a4ea67adb Extracting 4B
+ 7e2a4ea67adb Extracting 4B
+ 7e2a4ea67adb Extracting 4B
+ 7e2a4ea67adb Extracting 4B
+ 7e2a4ea67adb Extracting 4B
+ 7e2a4ea67adb Extracting 4B
+ 7e2a4ea67adb Extracting 4B
+ 7e2a4ea67adb Extracting 4B
+ 7e2a4ea67adb Extracting 4B
+ 7e2a4ea67adb Extracting 5B
+ 7e2a4ea67adb Extracting 5B
+ 7e2a4ea67adb Extracting 5B
+ 7e2a4ea67adb Extracting 5B
+ 7e2a4ea67adb Extracting 5B
+ 7e2a4ea67adb Extracting 5B
+ 7e2a4ea67adb Extracting 5B
+ 7e2a4ea67adb Extracting 5B
+ b93dff3f2471 Pull complete 0B
+ 7e2a4ea67adb Pull complete 0B
+ Image cypress/included:15.3.0 Pulled
+ Container reclutamiento-app-e2e-1 Waiting
+ Container reclutamiento-queue-e2e-1 Waiting
+ Container reclutamiento-queue-e2e-1 Healthy
+ Container reclutamiento-app-e2e-1 Healthy
+ Container reclutamiento-cypress-run-503444c73521 Creating
+ Container reclutamiento-cypress-run-503444c73521 Created
+[02:30:50]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [started]
+[02:30:52]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [COMPLETED]
+[208:1110/023052.536872:ERROR:dbus/object_proxy.cc:590] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+
+DevTools listening on ws://127.0.0.1:45659/devtools/browser/dc7b34ab-f088-4f03-9de6-0880692a9cb3
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        15.3.0                                                                         │
+  │ Browser:        Electron 136 (headless)                                                        │
+  │ Node Version:   v22.20.0 (/usr/local/bin/node)                                                 │
+  │ Specs:          21 found (e2e-00-app-dates.cy.js, e2e-01-login.cy.js, e2e-02-register-job-requ │
+  │                 est.cy.js, e2e-03-approve-job-request.cy.js, e2e-04-configure-publish-vacancy. │
+  │                 cy.js, e2e-05-candidate-apply.cy.js, e2e-06-shortlist-candidate.cy.js, e2e-07- │
+  │                 evaluator-records-resul...)                                                    │
+  │ Searched:       cypress**/*.cy.js                                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-00-app-dates.cy.js                                                         (1 of 21)
+
+
+  Soporte · fechas en la zona horaria de la aplicación
+    ✓ usa la fecha de Lima aunque en UTC ya sea el día siguiente (17ms)
+    ✓ coincide con UTC durante el día en Lima (4ms)
+    ✓ usa America/Lima por defecto (5ms)
+
+
+  3 passing (50ms)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        3                                                                                │
+  │ Passing:      3                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     0 seconds                                                                        │
+  │ Spec Ran:     e2e-00-app-dates.cy.js                                                           │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-01-login.cy.js                                                             (2 of 21)
+
+
+  E2E-01 · Inicio de sesión por rol
+    ✓ Área solicitante: inicia sesión y ve solo el menú de su rol (2101ms)
+    ✓ Recursos Humanos: inicia sesión y ve solo el menú de su rol (1139ms)
+    ✓ Aprobador / Dirección: inicia sesión y ve solo el menú de su rol (1066ms)
+    ✓ Evaluador: inicia sesión y ve solo el menú de su rol (1097ms)
+    ✓ Postulante: inicia sesión y ve solo el menú de su rol (1139ms)
+    ✓ rechaza credenciales inválidas sin iniciar sesión (1044ms)
+
+
+  6 passing (8s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        6                                                                                │
+  │ Passing:      6                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     7 seconds                                                                        │
+  │ Spec Ran:     e2e-01-login.cy.js                                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-02-register-job-request.cy.js                                              (3 of 21)
+
+
+  E2E-02 · El área solicitante registra un requerimiento (RF-01)
+    ✓ registra el requerimiento y lo envía a RR. HH. (4978ms)
+    ✓ no registra un requerimiento con datos obligatorios vacíos (1251ms)
+
+
+  2 passing (6s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     6 seconds                                                                        │
+  │ Spec Ran:     e2e-02-register-job-request.cy.js                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-03-approve-job-request.cy.js                                               (4 of 21)
+
+
+  E2E-03 · El aprobador decide un requerimiento validado (RF-03, RF-04)
+    ✓ aprueba el requerimiento validado por RR. HH. (3002ms)
+    ✓ no permite rechazar sin indicar el motivo (1061ms)
+
+
+  2 passing (4s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     4 seconds                                                                        │
+  │ Spec Ran:     e2e-03-approve-job-request.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-04-configure-publish-vacancy.cy.js                                         (5 of 21)
+
+
+  E2E-04 · RR. HH. configura y publica una vacante (RF-05 a RF-07)
+    ✓ genera la vacante desde un requerimiento aprobado, la valida y la publica (7086ms)
+    ✓ impide publicar si las ponderaciones no suman 100 (1344ms)
+
+
+  2 passing (8s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     8 seconds                                                                        │
+  │ Spec Ran:     e2e-04-configure-publish-vacancy.cy.js                                           │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-05-candidate-apply.cy.js                                                   (6 of 21)
+
+
+  E2E-05 · El postulante completa su perfil y postula (RF-08 a RF-11)
+    ✓ completa perfil, carga su CV, postula y recibe la confirmación (4877ms)
+
+
+  1 passing (5s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     4 seconds                                                                        │
+  │ Spec Ran:     e2e-05-candidate-apply.cy.js                                                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-06-shortlist-candidate.cy.js                                               (7 of 21)
+
+
+  E2E-06 · RR. HH. preselecciona a un candidato (RF-12 a RF-15)
+    ✓ revisa la postulación, la preselecciona y el postulante es notificado (4530ms)
+    ✓ no descarta una postulación sin indicar el motivo (974ms)
+
+
+  2 passing (6s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     5 seconds                                                                        │
+  │ Spec Ran:     e2e-06-shortlist-candidate.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-07-evaluator-records-results.cy.js                                         (8 of 21)
+
+
+  E2E-07 · El evaluador registra resultados (RF-19, RF-20)
+    ✓ registra los puntajes de la evaluación asignada dentro del rango de cada criterio (3333ms)
+
+
+  1 passing (3s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     3 seconds                                                                        │
+  │ Spec Ran:     e2e-07-evaluator-records-results.cy.js                                           │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-08-comparison-ranking.cy.js                                                (9 of 21)
+
+
+  E2E-08 · RR. HH. consulta la comparación y el ranking (RF-21, RF-22)
+    ✓ muestra el ranking ponderado y explicable sin seleccionar a nadie (2040ms)
+
+
+  1 passing (2s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     2 seconds                                                                        │
+  │ Spec Ran:     e2e-08-comparison-ranking.cy.js                                                  │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-09-human-final-decision.cy.js                                             (10 of 21)
+
+
+  E2E-09 · El aprobador registra la decisión final humana (RF-23)
+    ✓ exige justificación y confirmación humana antes de registrar la decisión (2146ms)
+    ✓ registra la decisión eligiendo a un candidato que no es el primero del ranking (2105ms)
+
+
+  2 passing (4s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     4 seconds                                                                        │
+  │ Spec Ran:     e2e-09-human-final-decision.cy.js                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-10-selection-and-closure.cy.js                                            (11 of 21)
+
+
+  E2E-10 · RR. HH. registra la selección y cierra el proceso (RF-24 a RF-26)
+    ✓ registra la selección decidida por Dirección, cierra la convocatoria y notifica el resultado (7570ms)
+
+
+  1 passing (8s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     7 seconds                                                                        │
+  │ Spec Ran:     e2e-10-selection-and-closure.cy.js                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-11-multitenancy.cy.js                                                     (12 of 21)
+
+
+  Multitenancy · aislamiento entre organizaciones
+    ✓ RR. HH. de la organización B solo ve sus vacantes y no accede a recursos de A (1917ms)
+    ✓ RR. HH. de la organización A no ve la vacante de B (1194ms)
+    ✓ la auditoría de cada organización no muestra registros de la otra (2419ms)
+    ✓ rechaza acciones sobre identificadores de otra organización (565ms)
+
+
+  4 passing (6s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      4                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     6 seconds                                                                        │
+  │ Spec Ran:     e2e-11-multitenancy.cy.js                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-12-negative-rules.cy.js                                                   (13 of 21)
+
+
+  Negativos · permisos y reglas del proceso
+    ✓ un rol sin permiso no accede a pantallas de otros roles (4125ms)
+    ✓ no se puede postular a una vacante cerrada (1329ms)
+    ✓ solo el aprobador puede registrar la decisión final (2670ms)
+    ✓ no se puede registrar una selección después del cierre (197ms)
+
+
+  4 passing (8s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      4                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     8 seconds                                                                        │
+  │ Spec Ran:     e2e-12-negative-rules.cy.js                                                      │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-13-full-recruitment-flow.cy.js                                            (14 of 21)
+
+
+  Flujo integral · de requerimiento a auditoría
+    ✓ 01 el área solicitante registra y envía el requerimiento (4385ms)
+    ✓ 02 RR. HH. valida el requerimiento (1217ms)
+    ✓ 03 el aprobador aprueba el requerimiento (1279ms)
+    ✓ 04 RR. HH. genera, valida y publica la vacante (5346ms)
+    ✓ 05 el postulante completa su perfil, carga su CV y postula (2894ms)
+    ✓ 06 RR. HH. preselecciona y programa evaluación y entrevista (2585ms)
+    ✓ 07 el evaluador registra la evaluación y la entrevista (3814ms)
+    ✓ 08 RR. HH. pasa la postulación a finalista y consulta el ranking (518ms)
+    ✓ 09 el aprobador registra la decisión final humana (1218ms)
+    ✓ 10 RR. HH. registra la selección y cierra la convocatoria (300ms)
+    ✓ 11 el postulante ve el resultado y su notificación (1316ms)
+    ✓ 12 el aprobador consulta la auditoría del proceso (164ms)
+
+
+  12 passing (25s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        12                                                                               │
+  │ Passing:      12                                                                               │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     25 seconds                                                                       │
+  │ Spec Ran:     e2e-13-full-recruitment-flow.cy.js                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-14-target-completion-form.cy.js                                           (15 of 21)
+
+
+  E2E-14 · RR. HH. captura el plazo objetivo del proceso (GAP-01)
+    ✓ registra el plazo objetivo al configurar una vacante en borrador (2827ms)
+    ✓ el navegador impide enviar un plazo anterior al cierre (1776ms)
+    ✓ el plazo es opcional: la vacante se guarda y publica sin él (985ms)
+    ✓ deja de poder editarse una vez publicada la vacante (1897ms)
+
+
+  4 passing (8s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      4                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     7 seconds                                                                        │
+  │ Spec Ran:     e2e-14-target-completion-form.cy.js                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-15-operational-risk-panel.cy.js                                           (16 of 21)
+
+
+  E2E-15 · Panel de riesgo operacional (RF-29, experimental)
+    ✓ muestra el panel en una vacante publicada, sin inventar una estimación (1952ms)
+    ✓ declara su naturaleza experimental y que no decide nada (901ms)
+    ✓ nunca habla de candidatos, ranking ni recomendaciones (871ms)
+    ✓ evita lenguaje alarmista pese a la tasa de alerta alta (849ms)
+    ✓ no aparece en una vacante en borrador (867ms)
+    ✓ el Aprobador también lo ve (1942ms)
+    ✓ un postulante no puede consultar el riesgo por la ruta directa (1872ms)
+    ✓ una organización no alcanza el riesgo de otra (802ms)
+
+
+  8 passing (10s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        8                                                                                │
+  │ Passing:      8                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     10 seconds                                                                       │
+  │ Spec Ran:     e2e-15-operational-risk-panel.cy.js                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-16-tabla-accesible-movil.cy.js                                            (17 of 21)
+
+
+  E2E-16 · La tabla de expedientes conserva su semántica en móvil
+    1) requerimientos
+    2) vacantes
+    3) postulaciones de una vacante
+    4) ranking de la comparación
+    5) auditoría
+    6) evaluaciones asignadas
+    ✓ en móvil cada celda muestra su etiqueta como texto, no como adorno CSS (147ms)
+
+
+  1 passing (6s)
+  6 failing
+
+  1) E2E-16 · La tabla de expedientes conserva su semántica en móvil
+       requerimientos:
+     AssertionError: expected null to equal 'cell'
+      at eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:49:50)
+  at Array.forEach (<anonymous>)
+      at Context.eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:48:15)
+      at getRet (http://app-e2e:8000/__cypress/runner/cypress_runner.js:121618:20)
+      at tryCatcher (http://app-e2e:8000/__cypress/runner/cypress_runner.js:1777:23)
+      at Promise.attempt.Promise.try (http://app-e2e:8000/__cypress/runner/cypress_runner.js:4285:29)
+
+  2) E2E-16 · La tabla de expedientes conserva su semántica en móvil
+       vacantes:
+     AssertionError: expected null to equal 'cell'
+      at eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:49:50)
+  at Array.forEach (<anonymous>)
+      at Context.eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:48:15)
+      at getRet (http://app-e2e:8000/__cypress/runner/cypress_runner.js:121618:20)
+      at tryCatcher (http://app-e2e:8000/__cypress/runner/cypress_runner.js:1777:23)
+      at Promise.attempt.Promise.try (http://app-e2e:8000/__cypress/runner/cypress_runner.js:4285:29)
+
+  3) E2E-16 · La tabla de expedientes conserva su semántica en móvil
+       postulaciones de una vacante:
+     AssertionError: expected null to equal 'cell'
+      at eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:49:50)
+  at Array.forEach (<anonymous>)
+      at Context.eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:48:15)
+      at getRet (http://app-e2e:8000/__cypress/runner/cypress_runner.js:121618:20)
+      at tryCatcher (http://app-e2e:8000/__cypress/runner/cypress_runner.js:1777:23)
+      at Promise.attempt.Promise.try (http://app-e2e:8000/__cypress/runner/cypress_runner.js:4285:29)
+
+  4) E2E-16 · La tabla de expedientes conserva su semántica en móvil
+       ranking de la comparación:
+     AssertionError: expected null to equal 'cell'
+      at eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:49:50)
+  at Array.forEach (<anonymous>)
+      at Context.eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:48:15)
+      at getRet (http://app-e2e:8000/__cypress/runner/cypress_runner.js:121618:20)
+      at tryCatcher (http://app-e2e:8000/__cypress/runner/cypress_runner.js:1777:23)
+      at Promise.attempt.Promise.try (http://app-e2e:8000/__cypress/runner/cypress_runner.js:4285:29)
+
+  5) E2E-16 · La tabla de expedientes conserva su semántica en móvil
+       auditoría:
+     AssertionError: expected null to equal 'cell'
+      at eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:49:50)
+  at Array.forEach (<anonymous>)
+      at Context.eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:48:15)
+      at getRet (http://app-e2e:8000/__cypress/runner/cypress_runner.js:121618:20)
+      at tryCatcher (http://app-e2e:8000/__cypress/runner/cypress_runner.js:1777:23)
+      at Promise.attempt.Promise.try (http://app-e2e:8000/__cypress/runner/cypress_runner.js:4285:29)
+
+  6) E2E-16 · La tabla de expedientes conserva su semántica en móvil
+       evaluaciones asignadas:
+     AssertionError: expected null to equal 'cell'
+      at eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:49:50)
+  at Array.forEach (<anonymous>)
+      at Context.eval (webpack:///./cypress/e2e/e2e-16-tabla-accesible-movil.cy.js:48:15)
+      at getRet (http://app-e2e:8000/__cypress/runner/cypress_runner.js:121618:20)
+      at tryCatcher (http://app-e2e:8000/__cypress/runner/cypress_runner.js:1777:23)
+      at Promise.attempt.Promise.try (http://app-e2e:8000/__cypress/runner/cypress_runner.js:4285:29)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        7                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      6                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  6                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     5 seconds                                                                        │
+  │ Spec Ran:     e2e-16-tabla-accesible-movil.cy.js                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /e2e/cypress/screenshots/e2e-16-tabla-accesible-movil.cy.js/E2E-16 · La tabla de     (1280x720)
+      expedientes conserva su semántica en móvil -- requerimientos (failed).png
+  -  /e2e/cypress/screenshots/e2e-16-tabla-accesible-movil.cy.js/E2E-16 · La tabla de     (1280x720)
+      expedientes conserva su semántica en móvil -- vacantes (failed).png
+  -  /e2e/cypress/screenshots/e2e-16-tabla-accesible-movil.cy.js/E2E-16 · La tabla de     (1280x720)
+      expedientes conserva su semántica en móvil -- postulaciones de una vacante (fai
+     led).png
+  -  /e2e/cypress/screenshots/e2e-16-tabla-accesible-movil.cy.js/E2E-16 · La tabla de     (1280x720)
+      expedientes conserva su semántica en móvil -- ranking de la comparación (failed
+     ).png
+  -  /e2e/cypress/screenshots/e2e-16-tabla-accesible-movil.cy.js/E2E-16 · La tabla de     (1280x720)
+      expedientes conserva su semántica en móvil -- auditoría (failed).png
+  -  /e2e/cypress/screenshots/e2e-16-tabla-accesible-movil.cy.js/E2E-16 · La tabla de     (1280x720)
+      expedientes conserva su semántica en móvil -- evaluaciones asignadas (failed).p
+     ng
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-17-motion-accesible.cy.js                                                 (18 of 21)
+
+
+  E2E-17 · El movimiento respeta el teclado y a quien lo reduce
+    ✓ el menú de usuario se abre con teclado y devuelve el foco al cerrarse (2203ms)
+    1) la navegación móvil se abre, se cierra con Escape y devuelve el foco
+    ✓ el diálogo de eliminar la cuenta atrapa y devuelve el foco (3143ms)
+    ✓ usa la curva del sistema y no la del navegador (152ms)
+    ✓ con movimiento reducido no se desplaza nada y la interfaz sigue usable (2842ms)
+    ✓ con movimiento reducido el esqueleto deja de latir y el spinner sigue girando (159ms)
+    ✓ con movimiento reducido la tabla conserva su semántica accesible (188ms)
+    ✓ el panel de riesgo aparece con una atenuación, sin latido ni alarma (163ms)
+
+
+  7 passing (9s)
+  1 failing
+
+  1) E2E-17 · El movimiento respeta el teclado y a quien lo reduce
+       la navegación móvil se abre, se cierra con Escape y devuelve el foco:
+     CypressError: `cy.type()` failed because it requires a valid typeable element.
+
+The element typed into was:
+
+  > `<span>Empleos...</span>`
+
+  A typeable element matches one of the following selectors:
+  `a[href]`
+  `area[href]`
+  `input`
+  `select`
+  `textarea`
+  `button`
+  `iframe`
+  `[tabindex]`
+  `[contenteditable]`
+
+https://on.cypress.io/type
+      at <unknown> (http://app-e2e:8000/__cypress/runner/cypress_runner.js:117021:76)
+      at tryCatcher (http://app-e2e:8000/__cypress/runner/cypress_runner.js:1777:23)
+      at Promise._settlePromiseFromHandler (http://app-e2e:8000/__cypress/runner/cypress_runner.js:1489:31)
+      at Promise._settlePromise (http://app-e2e:8000/__cypress/runner/cypress_runner.js:1546:18)
+      at Promise._settlePromise0 (http://app-e2e:8000/__cypress/runner/cypress_runner.js:1591:10)
+      at Promise._settlePromises (http://app-e2e:8000/__cypress/runner/cypress_runner.js:1671:18)
+      at _drainQueueStep (http://app-e2e:8000/__cypress/runner/cypress_runner.js:2377:12)
+      at _drainQueue (http://app-e2e:8000/__cypress/runner/cypress_runner.js:2370:9)
+      at Async._drainQueues (http://app-e2e:8000/__cypress/runner/cypress_runner.js:2386:5)
+      at Async.drainQueues (http://app-e2e:8000/__cypress/runner/cypress_runner.js:2256:14)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        8                                                                                │
+  │ Passing:      7                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     9 seconds                                                                        │
+  │ Spec Ran:     e2e-17-motion-accesible.cy.js                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /e2e/cypress/screenshots/e2e-17-motion-accesible.cy.js/E2E-17 · El movimiento re     (1280x720)
+     speta el teclado y a quien lo reduce -- la navegación móvil se abre, se cierra c
+     on Escape y devuelve el foco (failed).png
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-18-profundidad-portada.cy.js                                              (19 of 21)
+
+
+  E2E-18 · La profundidad de la portada es opcional y nunca estorba
+    ✓ si el fragmento de la escena falla, queda el póster y la portada sigue entera (127ms)
+    ✓ en escritorio la escena se monta desde su propio fragmento (401ms)
+    ✓ no descarga la escena hasta que entra en el viewport (401ms)
+    ✓ con movimiento reducido: póster, sin descargar la escena (100ms)
+    ✓ en móvil: póster, sin descargar la escena y sin desbordar (92ms)
+    ✓ en un equipo modesto: póster (89ms)
+    ✓ sin WebGL la escena se muestra igual: no depende de él (412ms)
+    ✓ es decorativa: oculta, inerte y fuera del orden de tabulación (108ms)
+
+
+  8 passing (2s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        8                                                                                │
+  │ Passing:      8                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     1 second                                                                         │
+  │ Spec Ran:     e2e-18-profundidad-portada.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-19-qa-visual-accesible.cy.js                                              (20 of 21)
+
+
+  E2E-19 · QA visual y accesibilidad de la Fase 21
+    ✓ las páginas públicas no se desbordan a 320 px (WCAG 1.4.10) (1038ms)
+    ✓ cada pantalla de acceso tiene un único contenido principal (269ms)
+    ✓ el enlace de salto enfocado mide al menos 24 px de alto (WCAG 2.5.8) (86ms)
+    ✓ la alerta de rechazo se lee en light (WCAG 1.4.3) (1336ms)
+    ✓ el error de un campo y el botón destructivo se leen en light (354ms)
+    ✓ la alerta de rechazo se lee en dark (WCAG 1.4.3) (204ms)
+    ✓ el error de un campo y el botón destructivo se leen en dark (364ms)
+
+
+  7 passing (4s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        7                                                                                │
+  │ Passing:      7                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     3 seconds                                                                        │
+  │ Spec Ran:     e2e-19-qa-visual-accesible.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-20-reports.cy.js                                                          (21 of 21)
+
+
+  E2E-20 · Reportes de reclutamiento (RF-28, candidato)
+    ✓ RR. HH. abre Reportes desde el menú y ve indicadores calculados desde la base de datos (2389ms)
+    ✓ el filtro por vacante recalcula indicadores, gráficos y tabla (620ms)
+    ✓ el filtro por etapa actual limita el conjunto analizado (364ms)
+    ✓ un período sin registros muestra cero y un estado vacío, sin datos de ejemplo (1039ms)
+    ✓ refleja al instante una preselección registrada en el sistema (1032ms)
+    ✓ la organización B solo ve sus propios indicadores (1503ms)
+    ✓ rechaza filtrar por una vacante de otra organización sin filtrar sus datos (1093ms)
+    ✓ los roles sin permiso no acceden ni ven el menú de reportes (3895ms)
+    ✓ el aprobador también lo consulta, y en móvil la página no se desborda (1629ms)
+
+
+  9 passing (14s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        9                                                                                │
+  │ Passing:      9                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  4                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     13 seconds                                                                       │
+  │ Spec Ran:     e2e-20-reports.cy.js                                                             │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /e2e/cypress/screenshots/e2e-20-reports.cy.js/E2E-20-01-reportes-rrhh-organizaci    (1280x1583)
+     on-a.png
+  -  /e2e/cypress/screenshots/e2e-20-reports.cy.js/E2E-20-02-filtro-por-vacante.png      (1280x1435)
+  -  /e2e/cypress/screenshots/e2e-20-reports.cy.js/E2E-20-06-reportes-organizacion-b.    (1280x1455)
+     png
+  -  /e2e/cypress/screenshots/e2e-20-reports.cy.js/E2E-20-09-reportes-aprobador-movil     (390x3431)
+     .png
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  e2e-00-app-dates.cy.js                    51ms        3        3        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-01-login.cy.js                       00:07        6        6        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-02-register-job-request.cy.js        00:06        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-03-approve-job-request.cy.js         00:04        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-04-configure-publish-vacancy.cy      00:08        2        2        -        -        - │
+  │    .js                                                                                         │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-05-candidate-apply.cy.js             00:04        1        1        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-06-shortlist-candidate.cy.js         00:05        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-07-evaluator-records-results.cy      00:03        1        1        -        -        - │
+  │    .js                                                                                         │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-08-comparison-ranking.cy.js          00:02        1        1        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-09-human-final-decision.cy.js        00:04        2        2        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-10-selection-and-closure.cy.js       00:07        1        1        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-11-multitenancy.cy.js                00:06        4        4        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-12-negative-rules.cy.js              00:08        4        4        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-13-full-recruitment-flow.cy.js       00:25       12       12        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-14-target-completion-form.cy.js      00:07        4        4        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-15-operational-risk-panel.cy.js      00:10        8        8        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  e2e-16-tabla-accesible-movil.cy.js       00:05        7        1        6        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  e2e-17-motion-accesible.cy.js            00:09        8        7        1        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-18-profundidad-portada.cy.js         00:01        8        8        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-19-qa-visual-accesible.cy.js         00:03        7        7        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-20-reports.cy.js                     00:13        9        9        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  2 of 21 failed (10%)                     02:26       94       87        7        -        -
+
+----------------------------------------------------------------------------------------------------
+
+  Debug faster with full visibility.
+
+  Record to Cypress Cloud and get instant access to full test details and replays.
+  Inspect the DOM, network events, and console logs exactly as they ran in CI.
+
+  >> https://on.cypress.io/cloud-get-started
+
+----------------------------------------------------------------------------------------------------
+
+npm run cy:run  0.40s user 0.39s system 0% cpu 4:51.28 total
+exit=7

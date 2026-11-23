@@ -1,0 +1,1836 @@
+{
+  "date": "2026-11-03",
+  "branch": "chore/sonarqube-macos-setup",
+  "commit_base": "b345d9c97077d1589a06d98ddfa9c6879ded58d1",
+  "native_exports": 0,
+  "auxiliary_svg": 50,
+  "auxiliary_png": 50,
+  "source_sha256": {
+    ".github/workflows/tests.yml": "687eff66ef783c92ffa9409e1aa493b37f6cdffebcbf69c9d9126f71913073fb",
+    "AGENTS.md": "86a5276c9e16f1f59d6769c4ce2cf4339538b6eba251cea08b07ec40edc74419",
+    "CLAUDE.md": "e700bd9ca7e0d488a0682c3532725fb2ce4410fd13d0b16550f54123a61d0e81",
+    "README.md": "387263f47a92aebb56a912965063d3b9b0dbc58d9df7f7b2b5e9c94feab649de",
+    "app/Http/Requests/Candidates/CandidateCvRequest.php": "198abaae313a50a339a85e5c1cfcb57d2478ddb3db3d932c6da9967b9ec1fec0",
+    "app/Models/Concerns/BelongsToOrganization.php": "be040d29eda8b58ce781282a71428cf6d77d20335e45cd5ce7b4d5df2f0785bf",
+    "app/Services/Ml/MlRiskClient.php": "4a261e4299942978699f248fed3c4566fc5032377d1f06c5c49b932f1a912cd0",
+    "composer.json": "6a5bc8730a84255a26bb8c6331e75d17bff114778013092e447e67b3b2dccc47",
+    "docker-compose.yml": "c933fc38113da741d0cff96e146e125b9c2121677864f88f729dff4deab53a19",
+    "docker/php/Dockerfile": "b3f3fe67dcdca870253798ffe2a842232c11075e8d1260635abd9c640b528711",
+    "docs/PROGRESS.md": "000b13c503a80795e2182cbd76d36e84ce33853e7108f3a327c164c58ba07522",
+    "docs/academico/practica-02/F2_Analisis_del_Proceso_Colegio_Andino.md": "c9fb6f2355530e179c65e7a72b6b8a232b8894ef263626690c0e627b65028dde",
+    "docs/academico/practica-03/F3_Diagrama_BPM_ASIS_Colegio_Andino.md": "f298c3e7e0eab35793d5a0621ddbe3149fb245cbf86dd16d99c52f8cfb5afbd9",
+    "docs/academico/practica-05/F5_Modelo_BPM_TOBE_Colegio_Andino.md": "e795439a894439cff2906ac0294196f02adcfabddff810a5e33817c78cfb83b0",
+    "docs/academico/practica-08/F8_Diagrama_Casos_de_Uso_Colegio_Andino.md": "42be5604a4e232f92203b8b079cd62d52f6b159864b5788c12d93092b8153118",
+    "docs/academico/trazabilidad/F2-F9-traceability.md": "373a9802e320497bbbebfd442130a0fb99e6fa2028c858e65b4e099e97180c1c",
+    "docs/metologia/entregables-finales/CASOS_USO_SAAS_RECLUTAMIENTO.md": "ce98baf9d6498f3a8f64bb7ebf05c21a781a99efaad01b14fb8d6472fde81346",
+    "docs/metologia/entregables-finales/INFORME_FINAL_SAAS_RECLUTAMIENTO.docx": "7e675f827bec037f55e10ea959e76606812a68542c9945553dae5d639a3766b8",
+    "docs/metologia/entregables-finales/MATRIZ_DOBLE_ENTRADA_METODOLOGIA_IA.xlsx": "06e1cd7ebb1c5fd6e09c92ecc1540deeb024cde21d1003418e8afca1a0c6fdf5",
+    "docs/metologia/entregables-finales/MATRIZ_REQUERIMIENTOS_SISTEMA.xlsx": "4789f4f38fba51a17af3842996ac2b28d8751270ff35e94a01a76aae7a473212",
+    "docs/metologia/entregables-finales/MATRIZ_TRAZABILIDAD_ACADEMICA.xlsx": "883a23bb4e777b666beec5ca65d5afa9d2040e682840d3dea3c38909c2871cbd",
+    "docs/metologia/entregables-finales/MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx": "9b88853f6e3283dcaef8b8273438601c81744379897bef03d4d9424c5e5f92a3",
+    "docs/metologia/entregables-finales/PRESENTACION_FINAL_U3_SAAS_RECLUTAMIENTO.pptx": "d1a001bd0e7a59bfb27dc6df1dfc64c7e286dfc45c676942acc0e21a3c202ad5",
+    "docs/metologia/entregables-finales/REPORTE_MAESTRO_ENTREGA.md": "2755dc74b612f218e280752ac2ce76bef3b04dd472656547a696d40c56f7405e",
+    "docs/metologia/fuentes/ANALISIS_AI_DLC_Y_REGISTRO.md": "e593aa434d7d7b544b99c2d1d239c4b380f36b6f14d95c42b1531e73019ffcc4",
+    "docs/metologia/investigacion-ia/MATRIZ_ARTICULOS_IA.md": "ff403f0118b5d33ccb4b9a9e889e51cb990620d4f0f01a6c53d54d09c20d912a",
+    "docs/metologia/investigacion-ia/MATRIZ_ARTICULOS_IA.xlsx": "014f8bdae8324d1a10df251a00f55a5de4a85063762ba9f1272871864840e094",
+    "docs/metologia/investigacion-ia/METODOLOGIA_DESARROLLO_ASISTIDO_IA.md": "23b1d0876733cb488efca1487b30ebce241dc026ff9b6f2d25bd6aa9a29c5678",
+    "docs/metologia/investigacion-ia/OPERACIONALIZACION_VARIABLES.xlsx": "bd72656d922816a2c026b789a991eab50e1b2f57d17b97481a2ef5dfae19e4ee",
+    "docs/metologia/platillas/AI-Driven Development Lifecycle (1) (1).pdf": "660fb938a5af1629f6b0a0ff2c443367be12cb8c22b44606ed6159b4cb8d61d6",
+    "docs/sonarqube/README.md": "f12f0d5bef6e86469b5e4a9213b3be2f25ff0935c785957d265f81c64ef73edc",
+    "docs/sonarqube/evidencias/v1/REPORTE_EVIDENCIAS_V1_SONARQUBE.md": "59d040541be125824b93ff5ed2d38d7728f06cef78abf037ebb5288c4d5056a2",
+    "docs/sonarqube/evidencias/v2/REPORTE_RESULTADOS_V2_PRELIMINAR.md": "bbe341cb714a9fb85b8e78fe3fe32d4645bd71062db25e7e6cbcdb0bb684dedd",
+    "package.json": "150d438aa8f8923ebe380056819b2f82a6ef44867ba87a239d4921179123ba6b",
+    "tests/Feature/Candidates/CandidateProfileTest.php": "08c80a3faf86b5b91c8e11489da624f001e1c89219ee05851c49366cbaf14cfd"
+  },
+  "diagrams": [
+    {
+      "code": "01_ARQUITECTURA_GENERAL_SAAS",
+      "title": "Arquitectura general del SaaS",
+      "source": "README.md; Compose; app/Policies; BelongsToOrganization; MlRiskClient",
+      "objective": "Separar cliente, monolito, dominio, datos y soporte.",
+      "warning": "ARQUITECTURA VERIFICADA EN ARCHIVOS · Runtime no consultado en esta tarea",
+      "word": "Capítulos 6–7",
+      "ppt": "Arquitectura / stack",
+      "file": "docs/metologia/diagramas/fuentes/01_ARQUITECTURA_GENERAL_SAAS.drawio",
+      "sources": [
+        "README.md",
+        "docker-compose.yml",
+        "app/Models/Concerns/BelongsToOrganization.php",
+        "app/Policies/",
+        "app/Services/Ml/MlRiskClient.php"
+      ],
+      "sha256": "5b3a855f76dfa0311d6beb1a66fd32c82c22ac53bd7a0e128b707d69607abf28",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Arquitectura y multitenencia",
+          "width": 1440,
+          "height": 1160,
+          "elements": 15,
+          "edges": 8,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "container"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/01_ARQUITECTURA_GENERAL_SAAS_p01.svg",
+              "sha256": "47220b2bacc67a49be3ee910520c0528a6e18bb5d134fe5c3cfd059adf548682"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/01_ARQUITECTURA_GENERAL_SAAS_p01.png",
+              "sha256": "3ee64239bae03f1599e10d7e13300e7cd146594ba9d454a031f5b1e1ca3abb52"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "02_DESPLIEGUE_DOCKER",
+      "title": "Despliegue Docker local",
+      "source": "docker-compose.yml; docker/php/; docs/sonarqube/README.md",
+      "objective": "Documentar servicios, dependencias y persistencia reales.",
+      "warning": "CONFIGURACIÓN ESTÁTICA · Puertos son valores por defecto; variables pueden cambiarlos",
+      "word": "Capítulo 10",
+      "ppt": "Docker / infraestructura",
+      "file": "docs/metologia/diagramas/fuentes/02_DESPLIEGUE_DOCKER.drawio",
+      "sources": [
+        "docker-compose.yml",
+        "docker/php/Dockerfile",
+        "docs/sonarqube/README.md"
+      ],
+      "sha256": "ce432dde71347df1b2b2a5abc977ee8b134870434d06fc6329e3142a1574c755",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Servicios base y Sonar separado",
+          "width": 1440,
+          "height": 1120,
+          "elements": 12,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "container"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/02_DESPLIEGUE_DOCKER_p01.svg",
+              "sha256": "1676c31341cb783d1b17fa46fb31375da7ce17f43317e935e179dc2a58c084b6"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/02_DESPLIEGUE_DOCKER_p01.png",
+              "sha256": "e5473eba99ecf9db59a329e835bbe8aee03e210180f9018a89a104718491b570"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "Volúmenes y montajes",
+          "width": 1440,
+          "height": 1090,
+          "elements": 11,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/02_DESPLIEGUE_DOCKER_p02.svg",
+              "sha256": "61b813d104c526a0050a121e9e4f06c82270af0457b342dfd3164d3c9dc57247"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/02_DESPLIEGUE_DOCKER_p02.png",
+              "sha256": "233d8980ee7224030f2ac90c5d2e36e96dc6273975eda6e8b6a173d1ab38fa8d"
+            }
+          }
+        },
+        {
+          "number": 3,
+          "name": "Perfil E2E opcional",
+          "width": 1440,
+          "height": 1100,
+          "elements": 8,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/02_DESPLIEGUE_DOCKER_p03.svg",
+              "sha256": "7a029aa323eeb9c69e4e2fab0d4443757771fba4eb774dc9313f66141c736dae"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/02_DESPLIEGUE_DOCKER_p03.png",
+              "sha256": "43a2da2dea57c18caa4aae94e7a7b587bbe7572eee8e7817645e3c791bc64f1d"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "03_PROCESO_RECLUTAMIENTO_AS_IS",
+      "title": "Proceso de reclutamiento AS-IS preliminar",
+      "source": "F2/F3; informe final cap. 3; F2–F9",
+      "objective": "Exponer las 14 actividades del modelo institucional preliminar.",
+      "warning": "AS-IS PRELIMINAR · PENDIENTE DE VALIDACIÓN INSTITUCIONAL",
+      "word": "Capítulo 3.1–3.3",
+      "ppt": "AS-IS; usar una página por vez",
+      "file": "docs/metologia/diagramas/fuentes/03_PROCESO_RECLUTAMIENTO_AS_IS.drawio",
+      "sources": [
+        "docs/academico/practica-02/F2_Analisis_del_Proceso_Colegio_Andino.md",
+        "docs/academico/practica-03/F3_Diagrama_BPM_ASIS_Colegio_Andino.md",
+        "docs/academico/trazabilidad/F2-F9-traceability.md",
+        "docs/metologia/entregables-finales/INFORME_FINAL_SAAS_RECLUTAMIENTO.docx"
+      ],
+      "sha256": "62301965791666a0d7acf0570712c2d58862da19bcb881ac4fb3391d41868d71",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "AS-IS 1 de 3",
+          "width": 1500,
+          "height": 1500,
+          "elements": 14,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "AS-01",
+            "AS-02",
+            "AS-03",
+            "AS-04",
+            "AS-05",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/03_PROCESO_RECLUTAMIENTO_AS_IS_p01.svg",
+              "sha256": "1f525e252cdc0d3f07336b4aa5d93c744903167f0600783c4d2791ef85eaa65f"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/03_PROCESO_RECLUTAMIENTO_AS_IS_p01.png",
+              "sha256": "03ee39ee9fccd516fbb69839e24416274c257f45dd70a62ffd88dd0411491ee4"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "AS-IS 2 de 3",
+          "width": 1500,
+          "height": 1500,
+          "elements": 14,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "AS-06",
+            "AS-07",
+            "AS-08",
+            "AS-09",
+            "AS-10",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/03_PROCESO_RECLUTAMIENTO_AS_IS_p02.svg",
+              "sha256": "7a9917448911d0e03123925af973b3c8482652b62fa0dda6977c593bc9ce0574"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/03_PROCESO_RECLUTAMIENTO_AS_IS_p02.png",
+              "sha256": "6c2d26b4e9ccee4de5454ee37d31e5d88f0128cd6139be9d1b333f8e76efe6df"
+            }
+          }
+        },
+        {
+          "number": 3,
+          "name": "AS-IS 3 de 3",
+          "width": 1500,
+          "height": 1500,
+          "elements": 13,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "AS-11",
+            "AS-12",
+            "AS-13",
+            "AS-14",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/03_PROCESO_RECLUTAMIENTO_AS_IS_p03.svg",
+              "sha256": "b8780f88e8b9e693dff39ebbf0e67be4117d0240949942c98ab8a781b652da81"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/03_PROCESO_RECLUTAMIENTO_AS_IS_p03.png",
+              "sha256": "bd2070c897b6a01f207bece0eb118c364ca03a0376e21e5eb7af6d38964465c0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "04_PROCESO_RECLUTAMIENTO_TO_BE",
+      "title": "Proceso TO-BE apoyado por el SaaS",
+      "source": "F5; F2–F9; matriz de procesos ACT-001–030",
+      "objective": "Distinguir tareas humanas, automatizaciones y alcance del proceso.",
+      "warning": "TO-BE PROPUESTO · Funciones presentes; adopción institucional pendiente",
+      "word": "Capítulo 3.4",
+      "ppt": "TO-BE; síntesis por tramo",
+      "file": "docs/metologia/diagramas/fuentes/04_PROCESO_RECLUTAMIENTO_TO_BE.drawio",
+      "sources": [
+        "docs/academico/practica-05/F5_Modelo_BPM_TOBE_Colegio_Andino.md",
+        "docs/academico/trazabilidad/F2-F9-traceability.md",
+        "docs/metologia/entregables-finales/MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx"
+      ],
+      "sha256": "8ac0fe97b6c8bf8c59650e3b1fac1e421ac5d1338a82d42b43f6ecebba4f4583",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "TO-BE tramo 1 de 6",
+          "width": 1500,
+          "height": 1750,
+          "elements": 15,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "TB-01",
+            "TB-02",
+            "TB-03",
+            "TB-04",
+            "TB-05",
+            "TB-30"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p01.svg",
+              "sha256": "be8f89d8c7b87a76dbcad745172b339e93ca7d18d49674999331de37a905d338"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p01.png",
+              "sha256": "b7d50154d94711e668399f4115874c7a61939d31e3ef51d069778e88d85fd2d2"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "TO-BE tramo 2 de 6",
+          "width": 1500,
+          "height": 1750,
+          "elements": 15,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "TB-06",
+            "TB-07",
+            "TB-08",
+            "TB-09",
+            "TB-10",
+            "ref-TB-30"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p02.svg",
+              "sha256": "cb678ba74dc3ad1567197fb570eab05899785d18870443a6d8f48a18de4a878d"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p02.png",
+              "sha256": "3219b984d7e3757234db0e59be757dd511cddd8047532cc7737235d3a33c69dd"
+            }
+          }
+        },
+        {
+          "number": 3,
+          "name": "TO-BE tramo 3 de 6",
+          "width": 1500,
+          "height": 1750,
+          "elements": 15,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "TB-11",
+            "TB-12",
+            "TB-13",
+            "TB-14",
+            "TB-15",
+            "ref-TB-30"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p03.svg",
+              "sha256": "fa8203b860a50bb9ac46c398e9c6a73fd38a364cae2263f4647010278db009b1"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p03.png",
+              "sha256": "69285f270558a92390aa3e009c0e74d7509e3cd6b5b41bfdb7db68bda9c4ced6"
+            }
+          }
+        },
+        {
+          "number": 4,
+          "name": "TO-BE tramo 4 de 6",
+          "width": 1500,
+          "height": 1750,
+          "elements": 15,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "TB-16",
+            "TB-17",
+            "TB-18",
+            "TB-19",
+            "TB-20",
+            "ref-TB-30"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p04.svg",
+              "sha256": "6223a58b91258d6a8aeb71cbd78ae0b331bf447619b954003118302fd272950a"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p04.png",
+              "sha256": "357179fc1acdc7c2742ce0c825c03510ccb757b37592c8c735d358924371e9cd"
+            }
+          }
+        },
+        {
+          "number": 5,
+          "name": "TO-BE tramo 5 de 6",
+          "width": 1500,
+          "height": 1750,
+          "elements": 15,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "TB-21",
+            "TB-22",
+            "TB-23",
+            "TB-24",
+            "TB-25",
+            "ref-TB-30"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p05.svg",
+              "sha256": "c42dd57d538b578b12acd8126390364c1fa01d6da76fa9e39f537e816dd02fd5"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p05.png",
+              "sha256": "9618384a1405201e1b3ef5daed61ecdaab8189cab971b67c4e7cf703abb10448"
+            }
+          }
+        },
+        {
+          "number": 6,
+          "name": "TO-BE tramo 6 de 6",
+          "width": 1500,
+          "height": 1750,
+          "elements": 14,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "container",
+            "TB-26",
+            "TB-27",
+            "TB-28",
+            "TB-29",
+            "ref-TB-30"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p06.svg",
+              "sha256": "62405fd7740be48243d5668f8e0e2c4ee6492d637eb4c19702b8808852a32512"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p06.png",
+              "sha256": "7314a89492976e040490c65398e604d71f880ae5f92ee84b57e8a480864bcda1"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "05_CASOS_DE_USO_GENERAL",
+      "title": "Casos de uso académicos del SaaS",
+      "source": "F8 §4–5; matriz de requisitos; 20 CU aprobados",
+      "objective": "Conservar actores, veinte CU y RF sin ampliar el catálogo.",
+      "warning": "20 CU académicos · Cinco roles humanos · CU-16 incluido; RF-27 transversal",
+      "word": "Capítulo 4.4",
+      "ppt": "Actores y CU; seleccionar página",
+      "file": "docs/metologia/diagramas/fuentes/05_CASOS_DE_USO_GENERAL.drawio",
+      "sources": [
+        "docs/academico/practica-08/F8_Diagrama_Casos_de_Uso_Colegio_Andino.md",
+        "docs/metologia/entregables-finales/MATRIZ_REQUERIMIENTOS_SISTEMA.xlsx",
+        "docs/metologia/entregables-finales/CASOS_USO_SAAS_RECLUTAMIENTO.md"
+      ],
+      "sha256": "f012a815575889d0c5b0d09b7133f070e3a89747a20baf6b8186fcab59235ada",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Requerimientos y vacantes",
+          "width": 1550,
+          "height": 1220,
+          "elements": 14,
+          "edges": 7,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "actor-ACT-01",
+            "actor-ACT-02",
+            "actor-ACT-03",
+            "CU-01",
+            "CU-02",
+            "CU-03",
+            "CU-04",
+            "CU-05",
+            "CU-06",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/05_CASOS_DE_USO_GENERAL_p01.svg",
+              "sha256": "819213299ab9520386f912b91e02e11ee40a1e1b96e1d0b82be8ad710a737ba6"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/05_CASOS_DE_USO_GENERAL_p01.png",
+              "sha256": "9af187583ff3d57ae3870444abf9e11dda8740a0e5e2f5587af3de0257814639"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "Cuenta y postulación",
+          "width": 1550,
+          "height": 1220,
+          "elements": 9,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "actor-ACT-04",
+            "CU-07",
+            "CU-08",
+            "CU-09",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/05_CASOS_DE_USO_GENERAL_p02.svg",
+              "sha256": "0ecb6d369e5aa3e6bed0551248e46a66de6b64e1f216be6ba4a1acec45448890"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/05_CASOS_DE_USO_GENERAL_p02.png",
+              "sha256": "282f2f1495c5e342a353948f9db089ea86c7c3305bfc64736e57225d9e08c51e"
+            }
+          }
+        },
+        {
+          "number": 3,
+          "name": "Seguimiento",
+          "width": 1550,
+          "height": 1220,
+          "elements": 10,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "actor-ACT-02",
+            "actor-ACT-03",
+            "CU-10",
+            "CU-11",
+            "CU-12",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/05_CASOS_DE_USO_GENERAL_p03.svg",
+              "sha256": "86b05111826a41ec03e4d32dfd6da54d89a7f91b5181a3ab023688a3681a38ea"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/05_CASOS_DE_USO_GENERAL_p03.png",
+              "sha256": "a73707cdd749d9f006704e2c8b82d641d4d47ba2380c0a66b9d425963759ccd6"
+            }
+          }
+        },
+        {
+          "number": 4,
+          "name": "Evaluación y entrevista",
+          "width": 1550,
+          "height": 1220,
+          "elements": 10,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "actor-ACT-02",
+            "actor-ACT-05",
+            "CU-13",
+            "CU-14",
+            "CU-15",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/05_CASOS_DE_USO_GENERAL_p04.svg",
+              "sha256": "468bc6ceafd196e6ea22035715182ff8b88e0b4c6490ef2252d657371db3554a"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/05_CASOS_DE_USO_GENERAL_p04.png",
+              "sha256": "cfd0b28092dcbbfcdd68d99376b29a38f1bcf0eec90284a1071e88501e7ce338"
+            }
+          }
+        },
+        {
+          "number": 5,
+          "name": "Comparación y decisión",
+          "width": 1550,
+          "height": 1220,
+          "elements": 12,
+          "edges": 6,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "container",
+            "actor-ACT-02",
+            "actor-ACT-03",
+            "CU-16",
+            "CU-17",
+            "CU-18",
+            "CU-19",
+            "CU-20"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/05_CASOS_DE_USO_GENERAL_p05.svg",
+              "sha256": "e3e05703f7d843fa342890eba8a0785610b5d102e403c0b9ff0e9c31ca4811c6"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/05_CASOS_DE_USO_GENERAL_p05.png",
+              "sha256": "9c8991554043d22baecb95c9860c343bd71fbe3d702fb4f78afc42c0200f8d39"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "06_MAPA_MODULOS_SAAS",
+      "title": "Mapa funcional de módulos reales",
+      "source": "RF-01–27; matriz requisitos; rutas y servicios; README",
+      "objective": "Mostrar el recorrido funcional y capacidades transversales.",
+      "warning": "Sin banco de talentos, planillas, contratación o reportes BI implementados",
+      "word": "Capítulos 4–6",
+      "ppt": "Alcance y módulos",
+      "file": "docs/metologia/diagramas/fuentes/06_MAPA_MODULOS_SAAS.drawio",
+      "sources": [
+        "docs/metologia/entregables-finales/MATRIZ_REQUERIMIENTOS_SISTEMA.xlsx",
+        "docs/metologia/entregables-finales/MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx",
+        "routes/",
+        "app/Services/",
+        "README.md"
+      ],
+      "sha256": "6e0da0cd410b20c37329bf8e06d445d74c2304ac398201c9a82612ba45127e38",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Flujo y capacidades transversales",
+          "width": 1440,
+          "height": 1130,
+          "elements": 12,
+          "edges": 6,
+          "semantics": [
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/06_MAPA_MODULOS_SAAS_p01.svg",
+              "sha256": "8a02fa5e56e404e8f7162d2827a95929f7af213eed60ceee2a6fae595d7c1a57"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/06_MAPA_MODULOS_SAAS_p01.png",
+              "sha256": "6074023aba7b546c08538d7aa4eb8031a78da60f7b0bb27e9c229cb06ccd056b"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "07_METODOLOGIA_DESARROLLO_IA",
+      "title": "Desarrollo colaborativo humano IA",
+      "source": "METODOLOGIA_DESARROLLO_ASISTIDO_IA.md; AGENTS.md",
+      "objective": "Distribuir actividades, controles y responsabilidad de aceptación.",
+      "warning": "GUIADO POR ESPECIFICACIONES Y VERIFICACIÓN · Reconstrucción académica PROPUESTA",
+      "word": "Capítulo 5.6",
+      "ppt": "Metodología / intervención",
+      "file": "docs/metologia/diagramas/fuentes/07_METODOLOGIA_DESARROLLO_IA.drawio",
+      "sources": [
+        "docs/metologia/investigacion-ia/METODOLOGIA_DESARROLLO_ASISTIDO_IA.md",
+        "AGENTS.md",
+        "docs/metologia/entregables-finales/MATRIZ_DOBLE_ENTRADA_METODOLOGIA_IA.xlsx"
+      ],
+      "sha256": "9f826ff59c71824d7c80366229a2066e2bd1bc42a2fe49de7b15033b6e57b0a1",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Etapas 1–6",
+          "width": 1440,
+          "height": 1100,
+          "elements": 10,
+          "edges": 5,
+          "semantics": [
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/07_METODOLOGIA_DESARROLLO_IA_p01.svg",
+              "sha256": "079b74addfc39edfc7283e263581368660b6ad650bb56f904d826a89b10c4ebb"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/07_METODOLOGIA_DESARROLLO_IA_p01.png",
+              "sha256": "da99943cf72507d7506bcd9f20a16e30b152914f492637fe83ee4458c58ddf93"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "Etapas 7–12",
+          "width": 1440,
+          "height": 1100,
+          "elements": 10,
+          "edges": 5,
+          "semantics": [
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/07_METODOLOGIA_DESARROLLO_IA_p02.svg",
+              "sha256": "6462110fbc8aaceb40f3ebab1d3e791fd6c61c108353cc005b268ddc988a1b95"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/07_METODOLOGIA_DESARROLLO_IA_p02.png",
+              "sha256": "8bf145daac4a8bfe2583401d5d2b9abf641417711dd5e973e229172a975c3e83"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "08_AI_DLC_VS_METODOLOGIA_PROYECTO",
+      "title": "AI-DLC como marco de contraste",
+      "source": "PDF Raja SP/AWS; AI_DLC_vs_Proyecto; metodología IA",
+      "objective": "Comparar sin convertir correspondencias en adopción histórica.",
+      "warning": "AI-DLC COMO MARCO DE CONTRASTE · No aplicación formal demostrada desde el inicio",
+      "word": "Capítulo 5.7",
+      "ppt": "Contraste AI-DLC",
+      "file": "docs/metologia/diagramas/fuentes/08_AI_DLC_VS_METODOLOGIA_PROYECTO.drawio",
+      "sources": [
+        "docs/metologia/platillas/AI-Driven Development Lifecycle (1) (1).pdf",
+        "docs/metologia/fuentes/ANALISIS_AI_DLC_Y_REGISTRO.md",
+        "docs/metologia/entregables-finales/MATRIZ_DOBLE_ENTRADA_METODOLOGIA_IA.xlsx",
+        "docs/metologia/investigacion-ia/METODOLOGIA_DESARROLLO_ASISTIDO_IA.md"
+      ],
+      "sha256": "2a545d253ef9d13aa7d6294ce51e2d919f9236397d908982d76d16e934c20ff5",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Fases y control",
+          "width": 1600,
+          "height": 1180,
+          "elements": 14,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/08_AI_DLC_VS_METODOLOGIA_PROYECTO_p01.svg",
+              "sha256": "ded40d1082ae58e07a77e6583728a1534e851594a90025591fe16eaafd24538a"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/08_AI_DLC_VS_METODOLOGIA_PROYECTO_p01.png",
+              "sha256": "ca4077cbf375ded0a8a5b4e86ba4d2d6bd753769cc85c203f7142a6aaa5f7a7f"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "Artefactos y límites",
+          "width": 1600,
+          "height": 1180,
+          "elements": 14,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/08_AI_DLC_VS_METODOLOGIA_PROYECTO_p02.svg",
+              "sha256": "31e69d6b74fe86007f8a78401c1b1889fa8a350f79848882ab4355c859ba7037"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/08_AI_DLC_VS_METODOLOGIA_PROYECTO_p02.png",
+              "sha256": "01cc7f8e0d06516819c1e48e8f89b92e0a6b7d9b56f9aea35d4a64be403578b0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "09_TRAZABILIDAD_ACADEMICA",
+      "title": "Trazabilidad académica de extremo a extremo",
+      "source": "MATRIZ_TRAZABILIDAD_ACADEMICA.xlsx; F2–F9",
+      "objective": "Explicar la cadena y un ejemplo real sin expandir todos los RF.",
+      "warning": "AS-IS preliminar; los artículos sustentan controles, no prueban el problema institucional",
+      "word": "Capítulos 3–5 y anexos",
+      "ppt": "Trazabilidad resumida",
+      "file": "docs/metologia/diagramas/fuentes/09_TRAZABILIDAD_ACADEMICA.drawio",
+      "sources": [
+        "docs/metologia/entregables-finales/MATRIZ_TRAZABILIDAD_ACADEMICA.xlsx",
+        "docs/academico/trazabilidad/F2-F9-traceability.md",
+        "docs/metologia/entregables-finales/MATRIZ_REQUERIMIENTOS_SISTEMA.xlsx",
+        "docs/metologia/investigacion-ia/MATRIZ_ARTICULOS_IA.xlsx"
+      ],
+      "sha256": "3b369207b4aee67f79436cb5cb37a5c76de7c75510b5e08b65e17bac677727bc",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Cadena conceptual",
+          "width": 1560,
+          "height": 1200,
+          "elements": 17,
+          "edges": 12,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/09_TRAZABILIDAD_ACADEMICA_p01.svg",
+              "sha256": "3a882fbab111eb649c2c0227335c6d28082cb6e7e836f3ce5d4aeb3806db42a7"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/09_TRAZABILIDAD_ACADEMICA_p01.png",
+              "sha256": "ad13e012878ceebfa96074cdcb49c6a4fc8398fda561ca53696ceeca2386bca2"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "Ejemplo RF-01",
+          "width": 1560,
+          "height": 1230,
+          "elements": 16,
+          "edges": 12,
+          "semantics": [
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/09_TRAZABILIDAD_ACADEMICA_p02.svg",
+              "sha256": "e4285115fb323134f5b3719357b455f1cb436a5819f02b1248e2f4d93919d722"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/09_TRAZABILIDAD_ACADEMICA_p02.png",
+              "sha256": "7aaf8ac67cbb7f904da1168e5751eb40579d511bd32951f488f8a5bbb1d2e4c0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "10_JERARQUIA_PROCESOS_FUNCIONES",
+      "title": "Jerarquía de procesos adoptada para la trazabilidad",
+      "source": "MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx",
+      "objective": "Desplegar las agrupaciones propuestas y todos sus vínculos actividad–función.",
+      "warning": "2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001",
+      "word": "Capítulo 3 / anexo de procesos",
+      "ppt": "Usar solo vista general; detalles en anexos",
+      "file": "docs/metologia/diagramas/fuentes/10_JERARQUIA_PROCESOS_FUNCIONES.drawio",
+      "sources": [
+        "docs/metologia/entregables-finales/MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx",
+        "docs/metologia/entregables-finales/MATRIZ_REQUERIMIENTOS_SISTEMA.xlsx"
+      ],
+      "sha256": "002bda5fd5977f7d275190b449fdd04be7c04efd93e145b3ad9bf530e243cd68",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Vista general",
+          "width": 1600,
+          "height": 1140,
+          "elements": 13,
+          "edges": 0,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "MP-01",
+            "MP-02",
+            "PR-01",
+            "PR-02",
+            "PR-03",
+            "PR-04",
+            "PR-05",
+            "PR-07",
+            "PR-06",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p01.svg",
+              "sha256": "c216a14f6b7e0c6c0f92aebe954dcb4a4b22195d9dcc69e369047ec0031a9194"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p01.png",
+              "sha256": "67e91750583b67fa7f30b41f7b65a86296123ff639dd1ec938db7a96f4fd2287"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "PR-01 · detalle",
+          "width": 1760,
+          "height": 1130,
+          "elements": 16,
+          "edges": 6,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "ACT-001",
+            "FUN-001",
+            "ACT-002",
+            "FUN-002",
+            "ACT-003",
+            "FUN-003",
+            "ACT-004",
+            "FUN-004",
+            "ACT-005",
+            "FUN-005",
+            "ACT-006",
+            "FUN-006"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p02.svg",
+              "sha256": "bf3f4d2c5e8a200408d63372bfd56ea66b34c55d3ebd10e10ec4d697948f310a"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p02.png",
+              "sha256": "a6502a0e499daab9256d6ac270d88450871bf8f2feb6d814a233dc21c359c671"
+            }
+          }
+        },
+        {
+          "number": 3,
+          "name": "PR-02 · detalle",
+          "width": 1760,
+          "height": 960,
+          "elements": 12,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "ACT-007",
+            "FUN-007",
+            "ACT-008",
+            "FUN-008",
+            "ACT-009",
+            "FUN-009",
+            "ACT-010",
+            "FUN-010"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p03.svg",
+              "sha256": "38a501b6e6f72ae70547878220f5b584fd5d1b17fda58b10cb23998f14a932ea"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p03.png",
+              "sha256": "009daf2d0db3984185b153346c65df7070f7a5746193933899e043a813f1d922"
+            }
+          }
+        },
+        {
+          "number": 4,
+          "name": "PR-03 · detalle",
+          "width": 1760,
+          "height": 960,
+          "elements": 12,
+          "edges": 4,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "ACT-011",
+            "FUN-011",
+            "ACT-012",
+            "FUN-012",
+            "ACT-013",
+            "FUN-013",
+            "ACT-014",
+            "FUN-014"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p04.svg",
+              "sha256": "76a339b9b45f9904f3c76938670d2e7cf0698fea6719895dfd4c0348a20b463b"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p04.png",
+              "sha256": "c99a2e05bdad19fb4f21b1b3f71c2ac26b605ab444c433678ebb0e09b6c10405"
+            }
+          }
+        },
+        {
+          "number": 5,
+          "name": "PR-04 · detalle",
+          "width": 1760,
+          "height": 1490,
+          "elements": 22,
+          "edges": 9,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "ACT-015",
+            "FUN-015",
+            "ACT-016",
+            "FUN-016",
+            "ACT-017",
+            "FUN-017",
+            "ACT-018",
+            "FUN-018",
+            "ACT-019",
+            "FUN-019",
+            "ACT-020",
+            "FUN-020",
+            "ACT-021",
+            "FUN-021",
+            "ACT-022",
+            "FUN-022",
+            "ACT-023",
+            "FUN-023"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p05.svg",
+              "sha256": "c5542003a8e223d0375b78b39152468798c71f66931bf556a03d5ab1e3717f62"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p05.png",
+              "sha256": "7de79ac0b166069a30f6013caff3b4b219370a83167b6859a3dcd4dd7ec60093"
+            }
+          }
+        },
+        {
+          "number": 6,
+          "name": "PR-05 · detalle",
+          "width": 1760,
+          "height": 1250,
+          "elements": 18,
+          "edges": 7,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "ACT-024",
+            "FUN-024",
+            "ACT-025",
+            "FUN-025",
+            "ACT-026",
+            "FUN-026",
+            "ACT-027",
+            "FUN-027",
+            "ACT-028",
+            "FUN-028",
+            "ACT-029",
+            "FUN-029",
+            "ACT-030",
+            "FUN-030"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p06.svg",
+              "sha256": "4e2b7e09e17806ce3e6180da3f6339f5fedba410f5a6bf91ea682d62a031c400"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p06.png",
+              "sha256": "5bcccf6c343f8f2feb5da57fde08311ebb131cf02fa4f535ef2b683d8d8b5973"
+            }
+          }
+        },
+        {
+          "number": 7,
+          "name": "PR-06 · detalle",
+          "width": 1760,
+          "height": 960,
+          "elements": 8,
+          "edges": 2,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "ACT-031",
+            "FUN-031",
+            "ACT-032",
+            "FUN-032"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p07.svg",
+              "sha256": "1555d3cfa7c02560073beabac4e38b27f94eab682ce9fea37a72c8a22001f207"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p07.png",
+              "sha256": "390f61a8c259993db7186be4c442b2697dd086d5cae0dd29a6269fdbf79f58ca"
+            }
+          }
+        },
+        {
+          "number": 8,
+          "name": "PR-07 · detalle",
+          "width": 1760,
+          "height": 960,
+          "elements": 6,
+          "edges": 1,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "ACT-033",
+            "FUN-033"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p08.svg",
+              "sha256": "e8324024ec3e78e09e3c570bb1b4961eda2ec3f85bda4ea1821c9f0f6ca6bd52"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/10_JERARQUIA_PROCESOS_FUNCIONES_p08.png",
+              "sha256": "c1bc109072ec21940ab9d18e0963b9ed71edfb37338944d7ddf092856d77e76b"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "11_ESTRATEGIA_PRUEBAS_CALIDAD",
+      "title": "Estrategia de pruebas y controles de calidad",
+      "source": "tests/; cypress/; package.json; composer.json; informes Sonar",
+      "objective": "Separar pruebas funcionales, análisis estático y cobertura real.",
+      "warning": "RESULTADOS HISTÓRICOS · Esta tarea documental no ejecuta software",
+      "word": "Capítulos 11–13",
+      "ppt": "Testing / calidad",
+      "file": "docs/metologia/diagramas/fuentes/11_ESTRATEGIA_PRUEBAS_CALIDAD.drawio",
+      "sources": [
+        "tests/",
+        "cypress/",
+        "composer.json",
+        "package.json",
+        "docs/sonarqube/evidencias/v1/REPORTE_EVIDENCIAS_V1_SONARQUBE.md",
+        "docs/sonarqube/evidencias/v2/REPORTE_RESULTADOS_V2_PRELIMINAR.md"
+      ],
+      "sha256": "4b8cc2029978d8cb7165bcf738bdc2f1816794f30b651e48f8f77974db7a4f87",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Herramientas y ciclo",
+          "width": 1600,
+          "height": 1160,
+          "elements": 14,
+          "edges": 5,
+          "semantics": [
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/11_ESTRATEGIA_PRUEBAS_CALIDAD_p01.svg",
+              "sha256": "eab77416883fb0ef4b8e92a8d539adc691841e97282224d5de97f7763d44637f"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/11_ESTRATEGIA_PRUEBAS_CALIDAD_p01.png",
+              "sha256": "4b59d31694aaf03338fe001c2d0b40321ebcf03e6fba322a1d2e22f059f6ed76"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "12_MEJORA_SONARQUBE_V1_V2",
+      "title": "Mejora SonarQube V1 → V2",
+      "source": "REPORTE_RESULTADOS_V2_PRELIMINAR.md §1, 6, 15–16; reporte evidencias V1",
+      "objective": "Separar corrección de hallazgos de la clasificación y cobertura.",
+      "warning": "HISTÓRICO: 20/10/2026 · Misma Project Key; sin resultados nuevos en esta tarea",
+      "word": "Capítulo 13",
+      "ppt": "Resultados antes/después",
+      "file": "docs/metologia/diagramas/fuentes/12_MEJORA_SONARQUBE_V1_V2.drawio",
+      "sources": [
+        "docs/sonarqube/evidencias/v1/REPORTE_EVIDENCIAS_V1_SONARQUBE.md",
+        "docs/sonarqube/evidencias/v2/REPORTE_RESULTADOS_V2_PRELIMINAR.md",
+        "docs/metologia/entregables-finales/REPORTE_MAESTRO_ENTREGA.md"
+      ],
+      "sha256": "a34a1b7a143932cfdba71b6571297e41f49b5073ec233c2960397cb59f42bc44",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Correcciones y resultados",
+          "width": 1530,
+          "height": 1160,
+          "elements": 10,
+          "edges": 5,
+          "semantics": [
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/12_MEJORA_SONARQUBE_V1_V2_p01.svg",
+              "sha256": "f3895cfa38186171efa968f76dc64cba0bac9ffb7df54105fad8fb0298e55794"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/12_MEJORA_SONARQUBE_V1_V2_p01.png",
+              "sha256": "b4dbd7f01245b955953809ffbce15e786c35775679402957495bfc425cae8c79"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "Cobertura y Quality Gate",
+          "width": 1530,
+          "height": 1130,
+          "elements": 8,
+          "edges": 2,
+          "semantics": [
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/12_MEJORA_SONARQUBE_V1_V2_p02.svg",
+              "sha256": "e8568e864e31edfbeec93d1a81ba5dc8a8b64f8e83272902acdcab658c6df324"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/12_MEJORA_SONARQUBE_V1_V2_p02.png",
+              "sha256": "f3675243ba96a7182b614a265905c5dc7e53f569c51e3109240557228af3febb"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "13_MAPA_ARTICULOS_METODOLOGIA_IA",
+      "title": "Artículos y metodología asistida por IA",
+      "source": "Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos",
+      "objective": "Explicar qué dimensión respalda cada grupo de artículos.",
+      "warning": "20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local",
+      "word": "Capítulo 5 / referencias",
+      "ppt": "Seleccionar dimensión; no proyectar referencias completas",
+      "file": "docs/metologia/diagramas/fuentes/13_MAPA_ARTICULOS_METODOLOGIA_IA.drawio",
+      "sources": [
+        "docs/metologia/entregables-finales/MATRIZ_DOBLE_ENTRADA_METODOLOGIA_IA.xlsx",
+        "docs/metologia/investigacion-ia/MATRIZ_ARTICULOS_IA.xlsx",
+        "docs/metologia/investigacion-ia/MATRIZ_ARTICULOS_IA.md"
+      ],
+      "sha256": "45d4f8a9929aa5f6be4ba8a3b009966c46358699f0b438dded6128b144c8f849",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Productividad - Eficiencia",
+          "width": 1680,
+          "height": 960,
+          "elements": 12,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "container",
+            "ART-05",
+            "ART-06",
+            "ART-11",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p01.svg",
+              "sha256": "0131426622e7e61e3898ad0e1f0f94c86b964dba3f1f233ee0dc74709eb535e1"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p01.png",
+              "sha256": "98031a4bcc548deca59c779b859e57b701de3d2f0e3e8bc07bdfdad65db771b5"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "Calidad",
+          "width": 1680,
+          "height": 1185,
+          "elements": 22,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "container",
+            "ART-01",
+            "ART-02",
+            "ART-04",
+            "ART-07",
+            "ART-08",
+            "ART-09",
+            "ART-10",
+            "ART-13",
+            "ART-15",
+            "ART-16",
+            "ART-17",
+            "ART-18",
+            "ART-20",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p02.svg",
+              "sha256": "c6bee29d80428e09355ab6c46fa4957633b5cfb856332830b7f6ccad1d39c101"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p02.png",
+              "sha256": "567fb0f3037175a83bb8bd1722470911c85c7204607c9e2a9d27bb1a8bd35e5f"
+            }
+          }
+        },
+        {
+          "number": 3,
+          "name": "Seguridad",
+          "width": 1680,
+          "height": 960,
+          "elements": 13,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "container",
+            "ART-03",
+            "ART-04",
+            "ART-14",
+            "ART-15",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p03.svg",
+              "sha256": "a39f207e44fa65f49de2f1435888c5dcda78b638438db6125a41e8130d15d516"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p03.png",
+              "sha256": "6b4d4ea4579311d595ea168180c48ce197a8df052a1953deec04833b290cd624"
+            }
+          }
+        },
+        {
+          "number": 4,
+          "name": "Testing - TDD",
+          "width": 1680,
+          "height": 975,
+          "elements": 19,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "container",
+            "ART-01",
+            "ART-02",
+            "ART-08",
+            "ART-09",
+            "ART-10",
+            "ART-14",
+            "ART-15",
+            "ART-16",
+            "ART-19",
+            "ART-20",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p04.svg",
+              "sha256": "4322404d6eb23000d35b2e20ca332c51fef2e0becdef6ade2ceceebe6f1b39be"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p04.png",
+              "sha256": "cb83eed6d94e5d03a06913ccfb17df3919cf74a59fc755135b094fc884da747d"
+            }
+          }
+        },
+        {
+          "number": 5,
+          "name": "Requisitos",
+          "width": 1680,
+          "height": 960,
+          "elements": 13,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "container",
+            "ART-01",
+            "ART-02",
+            "ART-15",
+            "ART-17",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p05.svg",
+              "sha256": "0bc336be4f74c2de6413e1013ed5a555f65c676e39b87a282f0a981afffe095c"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p05.png",
+              "sha256": "22d737d7e3bde180974fc22d62ff62dc39ce8c8aecdc497910e31eb4cd223346"
+            }
+          }
+        },
+        {
+          "number": 6,
+          "name": "Human-in-the-loop",
+          "width": 1680,
+          "height": 960,
+          "elements": 14,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "container",
+            "ART-03",
+            "ART-05",
+            "ART-06",
+            "ART-13",
+            "ART-15",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p06.svg",
+              "sha256": "e77de83d160cf1b20b3b79d5af93ede13cfb6ade76b1215a5381e2f306162bc0"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p06.png",
+              "sha256": "6ccd79ab11449cca11e679b3473b74bde3afa8ea7677c9621f80e65464e4e91d"
+            }
+          }
+        },
+        {
+          "number": 7,
+          "name": "Trazabilidad",
+          "width": 1680,
+          "height": 960,
+          "elements": 10,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "container",
+            "ART-13",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p07.svg",
+              "sha256": "ae398689c62a5daee204ab228500ce778ab328419f6ed2198b1b3565d2c36e4d"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p07.png",
+              "sha256": "87df8dba5b5df5c5de8cfab999a5ba421840e3e5f5c4f30414a28a460766e9fe"
+            }
+          }
+        },
+        {
+          "number": 8,
+          "name": "Mantenibilidad",
+          "width": 1680,
+          "height": 960,
+          "elements": 14,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "container",
+            "ART-02",
+            "ART-14",
+            "ART-15",
+            "ART-19",
+            "ART-20",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p08.svg",
+              "sha256": "944e822f86d7e290578aaacba7052b6c6e86d5001f7a19075e929f1e37b8c818"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p08.png",
+              "sha256": "8cdfcfcfb9dcc93db40a442acbe1cefbe61f9cebe8c89acae3a3b0c8398023aa"
+            }
+          }
+        },
+        {
+          "number": 9,
+          "name": "Automatización",
+          "width": 1680,
+          "height": 975,
+          "elements": 19,
+          "edges": 3,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text",
+            "container",
+            "ART-01",
+            "ART-02",
+            "ART-09",
+            "ART-10",
+            "ART-12",
+            "ART-14",
+            "ART-16",
+            "ART-18",
+            "ART-19",
+            "ART-20",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p09.svg",
+              "sha256": "30bc4da0080f624a1d945683655c708072f9cb93cf8e38130ce9bbf71db4c4bf"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/13_MAPA_ARTICULOS_METODOLOGIA_IA_p09.png",
+              "sha256": "04393e262615a39a4a088dce9d0ebec0b6a1622455d72f4eeb7d2447c5738163"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "14_VARIABLES_OPERACIONALIZACION",
+      "title": "Variables y operacionalización",
+      "source": "OPERACIONALIZACION_VARIABLES; metodología IA; informes V1/V2",
+      "objective": "Separar protocolo propuesto, mecanismos e indicadores observados.",
+      "warning": "ESTUDIO DE CASO DOCUMENTAL · Asociación antes/después no demuestra causalidad de IA",
+      "word": "Capítulo 5.6 / operacionalización",
+      "ppt": "Variables y discusión",
+      "file": "docs/metologia/diagramas/fuentes/14_VARIABLES_OPERACIONALIZACION.drawio",
+      "sources": [
+        "docs/metologia/investigacion-ia/OPERACIONALIZACION_VARIABLES.xlsx",
+        "docs/metologia/investigacion-ia/METODOLOGIA_DESARROLLO_ASISTIDO_IA.md",
+        "docs/sonarqube/evidencias/v1/REPORTE_EVIDENCIAS_V1_SONARQUBE.md",
+        "docs/sonarqube/evidencias/v2/REPORTE_RESULTADOS_V2_PRELIMINAR.md"
+      ],
+      "sha256": "9202a5ba19097cf4b4b67cdd281f18d16b985cfc41a75e52fe8884e7d5d7ce6a",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Protocolo y calidad",
+          "width": 1500,
+          "height": 1210,
+          "elements": 10,
+          "edges": 6,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/14_VARIABLES_OPERACIONALIZACION_p01.svg",
+              "sha256": "0a95ce0b55f1eb8e4de4b67412056bca3f0b6f7ba463f27d0dfbbf534de6f9df"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/14_VARIABLES_OPERACIONALIZACION_p01.png",
+              "sha256": "2eb41b55aa58cd8f792302c400df1383a85e70d08d524e3a2d857afa1f3827bf"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "15_REQUISITO_A_EVIDENCIA",
+      "title": "Del requisito a la evidencia",
+      "source": "MATRIZ_REQUERIMIENTOS_SISTEMA.xlsx; matriz de funciones; reporte V2",
+      "objective": "Seguir ejemplos reales de CV privado y decisión final humana.",
+      "warning": "AS-IS preliminar y evidencia QA histórica; Sonar no sustituye aceptación funcional",
+      "word": "Capítulos 4, 11 y 13",
+      "ppt": "Ejemplo trazable RF-09 o RF-23",
+      "file": "docs/metologia/diagramas/fuentes/15_REQUISITO_A_EVIDENCIA.drawio",
+      "sources": [
+        "docs/metologia/entregables-finales/MATRIZ_REQUERIMIENTOS_SISTEMA.xlsx",
+        "docs/metologia/entregables-finales/MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx",
+        "docs/metologia/entregables-finales/MATRIZ_TRAZABILIDAD_ACADEMICA.xlsx",
+        "app/Http/Requests/Candidates/CandidateCvRequest.php",
+        "tests/Feature/Candidates/CandidateProfileTest.php",
+        "docs/sonarqube/evidencias/v2/REPORTE_RESULTADOS_V2_PRELIMINAR.md"
+      ],
+      "sha256": "b1fbf167662dccc687677a6fa67d940b53769847bff9941142da212f9bf2a826",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "RF-09",
+          "width": 1680,
+          "height": 1250,
+          "elements": 11,
+          "edges": 7,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "RF-09"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/15_REQUISITO_A_EVIDENCIA_p01.svg",
+              "sha256": "6e2f1205a4f82ce646589c29f1c0398cc5278ae46a8cfec778f3ca912aa604dc"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/15_REQUISITO_A_EVIDENCIA_p01.png",
+              "sha256": "bf7b622a861580485085eac83417a7257a33b5fb44599a3929ad3acc4b20cf4c"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "RF-23",
+          "width": 1680,
+          "height": 1250,
+          "elements": 11,
+          "edges": 7,
+          "semantics": [
+            "text",
+            "text",
+            "text",
+            "RF-23"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/15_REQUISITO_A_EVIDENCIA_p02.svg",
+              "sha256": "f8025746e7b779552fb78351149b02a45f8b4d311cb93b0d548cc3262eff01d4"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/15_REQUISITO_A_EVIDENCIA_p02.png",
+              "sha256": "9d9ffb0c3534d69803181d102b025e1526db5639d30b0ca9d2a955f452646d8d"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "16_FLUJO_GIT_DESARROLLO",
+      "title": "Git: estrategia documentada e historial real",
+      "source": "AGENTS.md; git branch -a; git log; .github/workflows/tests.yml",
+      "objective": "Evitar atribuir una GitFlow ideal o sincronía inexistente.",
+      "warning": "FOTOGRAFÍA LOCAL · Sin fetch, checkout, staging, commit, push o merge",
+      "word": "Capítulo 9",
+      "ppt": "Versionamiento y límites CI",
+      "file": "docs/metologia/diagramas/fuentes/16_FLUJO_GIT_DESARROLLO.drawio",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        ".github/workflows/tests.yml",
+        "docs/PROGRESS.md"
+      ],
+      "sha256": "f3cad7a513d2e8b0b4479bc6f8c7ed229fef26eb9367f1cd35acd8fad6118706",
+      "native_open_verified": false,
+      "pages": [
+        {
+          "number": 1,
+          "name": "Estrategia documentada",
+          "width": 1520,
+          "height": 1120,
+          "elements": 10,
+          "edges": 5,
+          "semantics": [
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/16_FLUJO_GIT_DESARROLLO_p01.svg",
+              "sha256": "3c32ab69e16f2f20c9cbbf816652265f25a372ccba7963eccc7f87f7a592a846"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/16_FLUJO_GIT_DESARROLLO_p01.png",
+              "sha256": "6a6d9a252ce08729d545a012018068602e6cb6c0146487a8437c26c4f5f701f4"
+            }
+          }
+        },
+        {
+          "number": 2,
+          "name": "Historial y referencias observadas",
+          "width": 1580,
+          "height": 1220,
+          "elements": 9,
+          "edges": 2,
+          "semantics": [
+            "text",
+            "text",
+            "text"
+          ],
+          "auxiliary_exports": {
+            "svg": {
+              "path": "docs/metologia/diagramas/exportados/16_FLUJO_GIT_DESARROLLO_p02.svg",
+              "sha256": "1eff120a9ae10bc532e3dc2edea27d271fbe33ea9b8607b27c0e31e1bc85b2c4"
+            },
+            "png": {
+              "path": "docs/metologia/diagramas/exportados/16_FLUJO_GIT_DESARROLLO_p02.png",
+              "sha256": "2aa38c656b29f4034c1200a408ed07aa99ca7b9c4f7544e80b70b439d34aa3d2"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

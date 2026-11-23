@@ -11,6 +11,7 @@
  * Para saber si el fragmento se descargó se usa la API de Resource Timing, que
  * registra también lo servido desde caché: una interceptación de red no lo
  * vería.
+ *
  */
 const ESCENA = 'recruitment-scene';
 
@@ -34,9 +35,15 @@ function escenaDescargada(win) {
 
 /** La portada se puede usar sin la escena: título y llamadas a la acción. */
 function portadaUtilizable() {
+    cy.scrollTo('top');
     cy.get('h1').should('be.visible');
     cy.dataCy('cta-jobs').should('be.visible').and('have.attr', 'href');
     cy.dataCy('cta-login').should('be.visible');
+}
+
+/** La carpeta del proceso, donde vive la escena, a la vista. */
+function irALaCarpeta() {
+    cy.dataCy('landing-folder').scrollIntoView();
 }
 
 function sinDesborde() {
@@ -60,6 +67,7 @@ describe('E2E-18 · La profundidad de la portada es opcional y nunca estorba', (
 
         cy.viewport(1280, 800);
         cy.visit('/');
+        irALaCarpeta();
 
         cy.wait('@fragmento');
         cy.dataCy('recruitment-poster').should('exist');
@@ -76,6 +84,7 @@ describe('E2E-18 · La profundidad de la portada es opcional y nunca estorba', (
             'data-mode',
             'scene',
         );
+        irALaCarpeta();
         cy.dataCy('recruitment-scene').should(
             'have.attr',
             'data-ready',
@@ -171,6 +180,7 @@ describe('E2E-18 · La profundidad de la portada es opcional y nunca estorba', (
                 };
             },
         });
+        irALaCarpeta();
 
         cy.dataCy('recruitment-scene').should(
             'have.attr',

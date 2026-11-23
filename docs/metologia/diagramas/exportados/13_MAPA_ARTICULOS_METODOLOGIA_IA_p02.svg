@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1185" viewBox="0 0 1680 1185" role="img">
+  <title>13_MAPA_ARTICULOS_METODOLOGIA_IA · Calidad</title>
+  <desc>20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local Fuente: Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <rect x="40" y="230" width="870" height="805" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="40" y1="275" x2="910" y2="275" stroke="#34576E"/>
+  <text x="52" y="259" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="52" dy="0">GRUPO DE ARTÍCULOS · respaldo temático</tspan>
+  </text>
+  <polyline points="910,632.5 960.0,632.5 960.0,310.0 1010,310.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1310.0,365 1310.0,455" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1310.0,575 1310.0,680" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Artículos → Calidad</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local</tspan>
+  </text>
+  <text x="40" y="1123" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos</tspan>
+    <tspan x="40" dy="19.52">Original editable: 13_MAPA_ARTICULOS_METODOLOGIA_IA · Página: Calidad</tspan>
+  </text>
+  <text x="55" y="207" font-family="Arial, sans-serif" font-size="22" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="55" dy="0">ARTÍCULOS: IDs y referencias breves</tspan>
+  </text>
+  <rect x="55" y="290" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 427 290 L 427 308 L 445 308" fill="none" stroke="#414F60"/>
+  <text x="250.0" y="328.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="250.0" dy="0">[DOC] ART-01</tspan>
+    <tspan x="250.0" dy="24.4">Hou et al. (2024)</tspan>
+  </text>
+  <rect x="490" y="290" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 862 290 L 862 308 L 880 308" fill="none" stroke="#414F60"/>
+  <text x="685.0" y="328.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="685.0" dy="0">[DOC] ART-02</tspan>
+    <tspan x="685.0" dy="24.4">Fan et al. (2023)</tspan>
+  </text>
+  <rect x="55" y="395" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 427 395 L 427 413 L 445 413" fill="none" stroke="#414F60"/>
+  <text x="250.0" y="433.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="250.0" dy="0">[DOC] ART-04</tspan>
+    <tspan x="250.0" dy="24.4">Pearce et al. (2022)</tspan>
+  </text>
+  <rect x="490" y="395" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 862 395 L 862 413 L 880 413" fill="none" stroke="#414F60"/>
+  <text x="685.0" y="433.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="685.0" dy="0">[DOC] ART-07</tspan>
+    <tspan x="685.0" dy="24.4">Dakhel et al. (2023)</tspan>
+  </text>
+  <rect x="55" y="500" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 427 500 L 427 518 L 445 518" fill="none" stroke="#414F60"/>
+  <text x="250.0" y="538.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="250.0" dy="0">[DOC] ART-08</tspan>
+    <tspan x="250.0" dy="24.4">Nguyen et al. (2022)</tspan>
+  </text>
+  <rect x="490" y="500" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 862 500 L 862 518 L 880 518" fill="none" stroke="#414F60"/>
+  <text x="685.0" y="538.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="685.0" dy="0">[DOC] ART-09</tspan>
+    <tspan x="685.0" dy="24.4">Chen et al. (2024)</tspan>
+  </text>
+  <rect x="55" y="605" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 427 605 L 427 623 L 445 623" fill="none" stroke="#414F60"/>
+  <text x="250.0" y="643.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="250.0" dy="0">[DOC] ART-10</tspan>
+    <tspan x="250.0" dy="24.4">Wang et al. (2024)</tspan>
+  </text>
+  <rect x="490" y="605" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 862 605 L 862 623 L 880 623" fill="none" stroke="#414F60"/>
+  <text x="685.0" y="643.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="685.0" dy="0">[DOC] ART-13</tspan>
+    <tspan x="685.0" dy="24.4">Syahputri et al. (2025)</tspan>
+  </text>
+  <rect x="55" y="710" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 427 710 L 427 728 L 445 728" fill="none" stroke="#414F60"/>
+  <text x="250.0" y="748.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="250.0" dy="0">[DOC] ART-15</tspan>
+    <tspan x="250.0" dy="24.4">Gao et al. (2025)</tspan>
+  </text>
+  <rect x="490" y="710" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 862 710 L 862 728 L 880 728" fill="none" stroke="#414F60"/>
+  <text x="685.0" y="748.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="685.0" dy="0">[DOC] ART-16</tspan>
+    <tspan x="685.0" dy="24.4">Wang et al. (2026)</tspan>
+  </text>
+  <rect x="55" y="815" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 427 815 L 427 833 L 445 833" fill="none" stroke="#414F60"/>
+  <text x="250.0" y="853.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="250.0" dy="0">[DOC] ART-17</tspan>
+    <tspan x="250.0" dy="24.4">Ferrari y Spoletini (2025)</tspan>
+  </text>
+  <rect x="490" y="815" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 862 815 L 862 833 L 880 833" fill="none" stroke="#414F60"/>
+  <text x="685.0" y="853.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="685.0" dy="0">[DOC] ART-18</tspan>
+    <tspan x="685.0" dy="24.4">Jiang et al. (2026)</tspan>
+  </text>
+  <rect x="55" y="920" width="390" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 427 920 L 427 938 L 445 938" fill="none" stroke="#414F60"/>
+  <text x="250.0" y="958.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="250.0" dy="0">[DOC] ART-20</tspan>
+    <tspan x="250.0" dy="24.4">Jimenez et al. (2024)</tspan>
+  </text>
+  <rect x="1010" y="255" width="600" height="110" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1310.0" y="305.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1310.0" dy="0">[PROC] DIMENSIÓN</tspan>
+    <tspan x="1310.0" dy="24.4">Calidad</tspan>
+  </text>
+  <rect x="1010" y="455" width="600" height="120" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1310.0" y="510.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1310.0" dy="0">[PROC] ELEMENTO METODOLÓGICO</tspan>
+    <tspan x="1310.0" dy="24.4">Verificar salidas</tspan>
+  </text>
+  <rect x="1010" y="680" width="600" height="140" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1310.0" y="745.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1310.0" dy="0">[SIS] APLICACIÓN AL SaaS</tspan>
+    <tspan x="1310.0" dy="24.4">Tests, assertions y lectura prudente de Sonar</tspan>
+  </text>
+  <text x="55" y="1053" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="55" dy="0">Los artículos respaldan el tema indicado; no adoptan por ello AI-DLC ni prueban resultados del</tspan>
+    <tspan x="55" dy="21.96">colegio.</tspan>
+  </text>
+</svg>

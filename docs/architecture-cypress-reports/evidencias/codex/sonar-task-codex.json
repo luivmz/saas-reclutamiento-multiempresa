@@ -1,0 +1,23 @@
+{
+  "task": {
+    "id": "96f51c6e-cb3f-435b-b32b-9d28f6ac02a2",
+    "type": "REPORT",
+    "componentId": "3dd22a7f-975e-4b2d-8651-80e97d614a50",
+    "componentKey": "saas-reclutamiento-multiempresa",
+    "componentName": "SaaS Reclutamiento Multiempresa",
+    "componentQualifier": "TRK",
+    "analysisId": "ff71984c-9177-40eb-b244-0468a15bbdf2",
+    "status": "SUCCESS",
+    "submittedAt": "2026-11-10T03:20:27+0000",
+    "submitterLogin": "admin",
+    "startedAt": "2026-11-10T03:20:29+0000",
+    "executedAt": "2026-11-10T03:20:31+0000",
+    "executionTimeMs": 1550,
+    "hasScannerContext": true,
+    "warningCount": 1,
+    "warnings": [
+      "Missing blame information for 11 files. This may lead to some features not working correctly. Please check the analysis logs and refer to <a href=\"https://docs.sonarsource.com/sonarqube-community-build/analyzing-source-code/scm-integration/\" rel=\"noopener noreferrer\" target=\"_blank\">the documentation</a>."
+    ],
+    "infoMessages": []
+  }
+}

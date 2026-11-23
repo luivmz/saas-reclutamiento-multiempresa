@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1140" viewBox="0 0 1600 1140" role="img">
+  <title>10_JERARQUIA_PROCESOS_FUNCIONES · Vista general</title>
+  <desc>2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001 Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <rect x="45" y="210" width="990" height="740" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="45" y1="255" x2="1035" y2="255" stroke="#34576E"/>
+  <text x="57" y="239" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="57" dy="0">MP-01 · Gestión del reclutamiento en el sistema</tspan>
+  </text>
+  <rect x="1090" y="210" width="465" height="740" fill="#F8FAFC" stroke="#34576E" stroke-width="2"/>
+  <line x1="1090" y1="255" x2="1555" y2="255" stroke="#34576E"/>
+  <text x="1102" y="239" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="1102" dy="0">MP-02 · Soporte transversal de interfaz</tspan>
+  </text>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Jerarquía de procesos adoptada para la trazabilidad</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001</tspan>
+  </text>
+  <text x="40" y="1078" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx</tspan>
+    <tspan x="40" dy="19.52">Original editable: 10_JERARQUIA_PROCESOS_FUNCIONES · Página: Vista general</tspan>
+  </text>
+  <rect x="75" y="345" width="440" height="120" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="295.0" y="400.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="295.0" dy="0">[PROC] PR-01</tspan>
+    <tspan x="295.0" dy="24.4">Requerimiento y aprobación</tspan>
+  </text>
+  <rect x="555" y="345" width="440" height="120" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="775.0" y="400.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="775.0" dy="0">[PROC] PR-02</tspan>
+    <tspan x="775.0" dy="24.4">Configuración y publicación de vacantes</tspan>
+  </text>
+  <rect x="75" y="525" width="440" height="120" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="295.0" y="580.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="295.0" dy="0">[PROC] PR-03</tspan>
+    <tspan x="295.0" dy="24.4">Cuenta y postulación</tspan>
+  </text>
+  <rect x="555" y="525" width="440" height="120" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="775.0" y="580.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="775.0" dy="0">[PROC] PR-04</tspan>
+    <tspan x="775.0" dy="24.4">Evaluaciones y seguimiento</tspan>
+  </text>
+  <rect x="75" y="705" width="440" height="120" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="295.0" y="760.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="295.0" dy="0">[PROC] PR-05</tspan>
+    <tspan x="295.0" dy="24.4">Comparación, decisión humana y cierre</tspan>
+  </text>
+  <rect x="555" y="705" width="440" height="120" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="775.0" y="760.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="775.0" dy="0">[PROC] PR-07</tspan>
+    <tspan x="775.0" dy="24.4">Consulta operacional experimental</tspan>
+  </text>
+  <rect x="1115" y="440" width="415" height="150" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1322.5" y="510.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1322.5" dy="0">[PROC] PR-06</tspan>
+    <tspan x="1322.5" dy="24.4">Componentes transversales de interfaz</tspan>
+  </text>
+  <text x="60" y="1013" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="60" dy="0">Siete procedimientos → 33 actividades → 33 funciones. Detalle en las siete páginas siguientes.</tspan>
+    <tspan x="60" dy="21.96">RF-29 conserva carácter experimental fuera de la línea base RF-01–27.</tspan>
+  </text>
+</svg>

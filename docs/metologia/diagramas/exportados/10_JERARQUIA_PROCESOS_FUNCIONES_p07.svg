@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="960" viewBox="0 0 1760 960" role="img">
+  <title>10_JERARQUIA_PROCESOS_FUNCIONES · PR-06 · detalle</title>
+  <desc>2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001 Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="705,315.0 860,315.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="782.5" y="307.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">se implementa en</text>
+  <polyline points="705,435.0 860,435.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="782.5" y="427.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">se implementa en</text>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">PR-06 · Componentes transversales de interfaz</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001</tspan>
+  </text>
+  <text x="40" y="898" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx</tspan>
+    <tspan x="40" dy="19.52">Original editable: 10_JERARQUIA_PROCESOS_FUNCIONES · Página: PR-06 · detalle</tspan>
+  </text>
+  <text x="55" y="207" font-family="Arial, sans-serif" font-size="22" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="55" dy="0">MP-02 → PR-06 · 2 actividades / 2 funciones</tspan>
+  </text>
+  <rect x="55" y="265" width="650" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="380.0" y="310.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="380.0" dy="0">[PROC] ACT-031</tspan>
+    <tspan x="380.0" dy="24.4">DataTable</tspan>
+  </text>
+  <rect x="860" y="265" width="830" height="100" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1275.0" y="310.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1275.0" dy="0">[SIS] FUN-031 · DataTable</tspan>
+    <tspan x="1275.0" dy="24.4">Transversal UI</tspan>
+  </text>
+  <rect x="55" y="385" width="650" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="380.0" y="430.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="380.0" dy="0">[PROC] ACT-032</tspan>
+    <tspan x="380.0" dy="24.4">SidebarMenuSkeleton</tspan>
+  </text>
+  <rect x="860" y="385" width="830" height="100" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1275.0" y="430.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1275.0" dy="0">[SIS] FUN-032 · SidebarMenuSkeleton</tspan>
+    <tspan x="1275.0" dy="24.4">Transversal UI</tspan>
+  </text>
+</svg>

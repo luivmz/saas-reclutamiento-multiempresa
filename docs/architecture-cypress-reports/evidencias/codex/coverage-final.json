@@ -1,0 +1,20 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "app",
+    "php",
+    "-d",
+    "pcov.enabled=1",
+    "vendor/bin/phpunit",
+    "--coverage-clover",
+    "coverage.xml",
+    "--colors=never"
+  ],
+  "exit_code": 0,
+  "duration_seconds": 16.317,
+  "started_epoch": 1794280734.7175932,
+  "log": "/private/tmp/saas-codex-audit-20261109/coverage-final.log"
+}

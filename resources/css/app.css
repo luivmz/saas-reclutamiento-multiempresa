@@ -354,6 +354,152 @@
                 transparent 70%
             );
     }
+
+    [data-video-track] {
+        --video-nav-height: calc(4rem + 1px);
+    }
+
+    .school-hero {
+        background: #102527;
+        color: #fff9ee;
+    }
+
+    .school-stage {
+        position: relative;
+        display: grid;
+        align-items: center;
+    }
+
+    .school-stage .scroll-video {
+        position: relative;
+        order: 1;
+        aspect-ratio: 16 / 9;
+    }
+
+    .school-stage :is(video, img) {
+        object-fit: cover;
+        object-position: right center;
+    }
+
+    .job-video-track {
+        display: grid;
+        isolation: isolate;
+    }
+
+    .job-video-track > * {
+        grid-area: 1 / 1;
+    }
+
+    .job-video-track .scroll-video {
+        position: relative;
+        align-self: start;
+        height: calc(100svh - var(--video-nav-height));
+        opacity: 0.2;
+        mask-image: linear-gradient(black 65%, transparent);
+    }
+
+    .job-video-track :is(video, img) {
+        object-fit: cover;
+        object-position: right center;
+    }
+
+    @media (min-width: 1024px) {
+        .school-stage {
+            min-height: calc(100svh - var(--video-nav-height));
+        }
+
+        .school-stage .scroll-video {
+            position: absolute;
+            inset: 0;
+            aspect-ratio: auto;
+        }
+
+        .school-stage::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(
+                90deg,
+                #091a1c 0%,
+                #091a1c 23%,
+                #091a1ced 37%,
+                transparent 57%
+            );
+        }
+
+        .school-copy {
+            z-index: 1;
+        }
+    }
+
+    @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+        .school-hero:has([data-mode='video'])::after {
+            content: '';
+            display: block;
+            height: 60svh;
+        }
+
+        .school-hero:has([data-mode='video']) .school-stage,
+        .job-video-track .scroll-video[data-mode='video'] {
+            position: sticky;
+            top: var(--video-nav-height);
+        }
+
+        .job-video-track:has([data-mode='video']) {
+            min-height: calc(118svh - var(--video-nav-height));
+        }
+    }
+}
+
+/*
+ * Anfitrión de /empleos (decorativo). Tres capas superpuestas —el póster de
+ * reposo y los dos clips con transparencia— y solo se ve la del estado actual
+ * (`data-clip`), con un fundido breve. El contenedor se inclina unos grados
+ * hacia el cursor; el personaje no se desplaza por la pantalla.
+ */
+@layer components {
+    .job-host-sticky {
+        position: sticky;
+        top: max(5rem, calc(50vh - 8.4rem));
+    }
+
+    .job-host-figure {
+        position: relative;
+        aspect-ratio: 286 / 562;
+        transform-origin: 50% 90%;
+        transition: transform 320ms var(--ease-out);
+        will-change: transform;
+    }
+
+    .job-host-layer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        opacity: 0;
+        transition: opacity 180ms var(--ease-out);
+    }
+
+    .job-host [data-layer='rest'],
+    .job-host[data-clip='interest'] [data-layer='interest'],
+    .job-host[data-clip='point'] [data-layer='point'] {
+        opacity: 1;
+    }
+
+    .job-host[data-clip='interest'] [data-layer='rest'],
+    .job-host[data-clip='point'] [data-layer='rest'] {
+        opacity: 0;
+    }
+
+    /* La oferta a la que atiende: un borde un poco más marcado, sin cambiar su
+       contenido ni su tamaño. */
+    [data-cy='job-card'][data-anfitrion='activa'] {
+        border-color: color-mix(in oklab, var(--primary) 55%, var(--border));
+        box-shadow: 0 0 0 3px
+            color-mix(in oklab, var(--primary) 12%, transparent);
+    }
 }
 
 /*
@@ -377,6 +523,14 @@
         animation-delay: 0ms !important;
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
+    }
+
+    /* VIS-L01: si el movimiento reducido se activa con la página abierta, lo
+       que esperaba a verse aparece en su sitio, sin desplazarse, aunque el
+       script todavía no haya reaccionado (Reveal lo deja después en estático). */
+    [data-reveal='hidden'] {
+        opacity: 1;
+        transform: none;
     }
 
     /* El giro del spinner es información, no adorno: sin él una espera larga

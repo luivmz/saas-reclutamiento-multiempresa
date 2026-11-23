@@ -1,0 +1,60 @@
+@startuml
+left to right direction
+title Casos de uso académicos F8 — síntesis trazable
+actor "Área solicitante" as ACT01
+actor "Recursos Humanos" as ACT02
+actor "Aprobador / Dirección" as ACT03
+actor "Postulante" as ACT04
+actor "Evaluador" as ACT05
+rectangle "SaaS Reclutamiento Multiempresa" {
+usecase "CU-01\nRegistrar requerimiento de personal" as CU01
+usecase "CU-02\nValidar y corregir requerimiento" as CU02
+usecase "CU-03\nAprobar o rechazar requerimiento" as CU03
+usecase "CU-04\nRegistrar perfil y criterios del puesto" as CU04
+usecase "CU-05\nConfigurar y validar vacante" as CU05
+usecase "CU-06\nPublicar vacante" as CU06
+usecase "CU-07\nGestionar cuenta y acceso" as CU07
+usecase "CU-08\nGestionar perfil y CV" as CU08
+usecase "CU-09\nRegistrar postulación" as CU09
+usecase "CU-10\nConsultar y revisar postulaciones" as CU10
+usecase "CU-11\nRegistrar preselección o descarte" as CU11
+usecase "CU-12\nGestionar cambio de etapa" as CU12
+usecase "CU-13\nProgramar evaluación" as CU13
+usecase "CU-14\nProgramar entrevista" as CU14
+usecase "CU-15\nRegistrar resultados de evaluación y entrevista" as CU15
+usecase "CU-16\nValidar rangos y ponderaciones" as CU16
+usecase "CU-17\nConsultar ranking y comparación" as CU17
+usecase "CU-18\nRegistrar decisión final humana" as CU18
+usecase "CU-19\nRegistrar selección" as CU19
+usecase "CU-20\nCerrar convocatoria y notificar resultado" as CU20
+}
+ACT01 --> CU01
+ACT01 --> CU02
+ACT02 --> CU02
+ACT03 --> CU03
+ACT02 --> CU04
+ACT02 --> CU05
+ACT02 --> CU06
+ACT04 --> CU07
+ACT04 --> CU08
+ACT04 --> CU09
+ACT02 --> CU10
+ACT03 --> CU10
+ACT02 --> CU11
+ACT02 --> CU12
+ACT02 --> CU13
+ACT02 --> CU14
+ACT05 --> CU15
+ACT02 --> CU17
+ACT03 --> CU17
+ACT03 --> CU18
+ACT02 --> CU19
+ACT02 --> CU20
+CU05 ..> CU16 : <<include>>
+CU15 ..> CU16 : <<include>>
+CU17 ..> CU16 : <<include>>
+note bottom
+Fuente: F8 §4–5. CU-16 no tiene actor directo.
+RF-27 transversal; CU-21 diferido. No se reemplaza el modelo PowerDesigner.
+end note
+@enduml

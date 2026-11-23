@@ -143,3 +143,43 @@ Las pruebas de regresión se escribieron primero y se ejecutaron contra el códi
 | CONT-M02 · F38: una raíz JSON `[]`, `null`, cadena o número lanzaba `AttributeError` | RED | `test_una_raiz_que_no_es_objeto_se_rechaza_por_el_punto_de_entrada`, por `main` | **1 error**: `AttributeError: 'list' object has no attribute 'get'` |
 | CONT-M03 · F38: `['FRG-004', 'FRG-004', 'FRG-004']` en APP-ML-001 / CRI-01-CLASE pasaba como válida | RED | `test_ids_repetidos_en_una_lista_de_recuperacion_invalidan` y `test_las_metricas_de_recuperacion_validas_quedan_en_cero_uno` | **1 failed** (`True is not false`). Medido antes de corregir: `valid = true`, Recall@3 = 1,667 y nDCG@3 = 1,377 en `dev` |
 | CONT-M02 y CONT-M03 | GREEN | Ídem: la raíz se valida antes de `.get()` y una lista de recuperación con IDs repetidos se rechaza antes de calcular métricas | **28 passed**. Sello, semilla, `k` y conjunto sin cambios (`fb7e7e13…`) |
+
+## Práctica individual — Módulo de reportes (RF-28 candidato, 09/11/2026)
+
+Ejecución histórica en el working tree de `chore/sonarqube-macos-setup`, sin commit y pendiente de auditoría. Las pruebas se escribieron antes que la ruta, el Form Request, la Policy, el servicio y la página.
+
+Pruebas nuevas: **12** PHPUnit (`tests/Feature/Reports/RecruitmentReportTest.php`), **6** Vitest (`resources/js/lib/reports.test.tsx`) y **9** Cypress (`cypress/e2e/e2e-20-reports.cy.js`).
+
+| Requisito | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| RF-28 (cand.) | Ajuste previo | `RecruitmentReportTest` | Antes de la primera ejecución se corrigió una expectativa de la propia prueba: una postulación `en_evaluacion` sin historial sí alcanzó la preselección (4, no 3) |
+| RF-28 (cand.) | RED | `RecruitmentReportTest` | **12 failed (0 assertions)**: `Route [reports.index] not defined` |
+| RF-28 (cand.) | Implementación backend | `RecruitmentReportTest` | **8 passed, 4 failed**: la prueba esperaba `75.0` y el JSON serializa los valores enteros como `75`. Se ajustó la expectativa de la prueba; la lógica no cambió |
+| RF-28 (cand.) | GREEN (backend) | `RecruitmentReportTest` | **11 passed, 1 failed**: faltaba la página `reports/index` |
+| RF-28 (cand.) | GREEN | `RecruitmentReportTest` | **12 passed (209 assertions)** |
+| RF-28 (cand.) | GREEN | `reports.test.tsx` (Vitest) | **6 passed** |
+| RF-28 (cand.) | E2E | `e2e-20-reports.cy.js` | **9 passed** |
+| Regresión | — | `php artisan test` | **434 pruebas: 426 passed, 8 skipped, 0 failed (1715 assertions)** |
+| Regresión | — | `npx vp test --run`, `npm run build`, `npx tsc --noEmit` | 54/54; build OK; 0 errores |
+| Regresión E2E | — | `npm run cy:run` | Ejecución 1: **87/94** (DEF-20 y DEF-21, registrados originalmente como DEF-14 y DEF-15 en la práctica) → ejecución 2: **94/94** |
+
+## Incremento visual de la presentación (`design/presentacion-higgsfield`, 22/11/2026)
+
+Cada RED se ejecutó contra el código anterior a su corrección; los resultados GREEN, contra `446b8fe`.
+
+| Cambio | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| VIS-L01 · movimiento reducido activado con la portada abierta | RED | E2E-22, regresión nueva con `getComputedStyle`, contra el `Reveal` y el CSS de `main` | **1 failed**: «opacidad: expected '0' to equal '1'» |
+| Ídem | Ablación | Ídem, con solo la defensa CSS y el JS de `main` | **1 failed** (línea 244): los bloques siguen en estado oculto |
+| Ídem | GREEN | Ídem, con `watchReveal` y la defensa CSS | **8 passed** en E2E-22; unitarias de `watchReveal` en verde |
+| DEF-19 · lote `[fuera, dentro]` de IntersectionObserver | RED | Prueba unitaria nueva de `watchReveal` y pruebas de `lib/intersection.ts` | **1 failed** (seguía oculto) y el módulo aún no existía |
+| Ídem | GREEN | Ídem, con `someIntersecting` y `latestIntersecting` | **83 passed** (11 archivos); E2E-22 **5 de 5** ejecuciones seguidas |
+| Vídeo y carpeta del proceso | — | `hero-folder-video.test.tsx` (progreso, fotogramas, búsquedas sin solaparse, nada pedido antes de decidir) y pruebas de la carpeta en `reveal.test.tsx`; E2E-23 | Escritas junto al componente, no antes: no es TDD. E2E-23 **10/10** |
+
+La primera versión de la regresión de VIS-L01 cambiaba la preferencia fuera de la cola de Cypress; sus dos ejecuciones se conservan como inválidas en las evidencias, y la prueba vigente encola los cambios.
+
+## Integración académica del 23/11/2026
+
+- **RED observado sobre eb66fa6.** Cypress completó 26 specs, con 148 casos aprobados y 5 fallidos. E2E-24 heredó el cierre de E2E-21 (DEF-22). Las expectativas de E2E-25 omitían la vacante retrospectiva del seeder (DEF-23).
+- **GREEN focal sobre b84f355.** E2E-21, E2E-24 y E2E-25 completados en ese orden, 35/35. La selección incluye los dos specs cambiados y el que cerraba la vacante. Las aserciones de gesto, filtros y aislamiento permanecen. Los demás specs y el código funcional conservan identidad.
+- [Matriz de verificación de la entrega integrada](entrega-final/ENTREGA_INTEGRADA.md#verificación-del-23112026).

@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mxfile host="app.diagrams.net" agent="Codex · documentación derivada" type="device" compressed="false" pages="2">
+  <diagram id="16-p01" name="Estrategia documentada">
+    <mxGraphModel dx="1520" dy="1120" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1520" pageHeight="1120" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Git: estrategia documentada e historial real" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1440" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="FOTOGRAFÍA LOCAL · Sin fetch, checkout, staging, commit, push o merge" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1440" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: AGENTS.md; git branch -a; git log; .github/workflows/tests.yml&#10;Original editable: 16_FLUJO_GIT_DESARROLLO · Página: Estrategia documentada" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="1042" width="1440" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="[DOC] develop limpio y sincronizado&#10;Base exigida por gobierno" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="50" y="210" width="420" height="165" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="[PROC] Rama acotada&#10;feature/* / fix/* / docs/* / chore/*" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="540" y="210" width="420" height="165" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[PROC] Implementación o documentación&#10;Un writer; contratos preservados" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1030" y="210" width="420" height="165" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n7" label="[QA] Revisión y pruebas proporcionales&#10;Diff y evidencia" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="QA">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F9EDDA;strokeColor=#795318;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1030" y="485" width="420" height="165" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n8" label="[H] Integración / publicación&#10;Solo con autorización" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="H">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#FFF1D6;strokeColor=#684900;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="540" y="485" width="420" height="165" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[DOC] main / release / tags&#10;No trabajo directo; historia protegida" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="50" y="485" width="420" height="165" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e10" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n4" target="n5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n6" target="n7">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0;exitY=0.5;entryX=1;entryY=0.5;dashed=0;" edge="1" parent="1" source="n7" target="n8">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0;exitY=0.5;entryX=1;entryY=0.5;dashed=0;" edge="1" parent="1" source="n8" target="n9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n15" label="[DOC] Es una ESTRATEGIA DOCUMENTADA, no prueba de que cada cambio histórico siguió ese flujo.&#10;CI: push main/develop/release//fix/, PR y manual. chore/ no activa push CI.&#10;CD productivo no demostrado. En esta tarea se detiene antes de staging o publicación." sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="1">
+            <mxGeometry x="60" y="855" width="1400" height="130" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="16-p02" name="Historial y referencias observadas">
+    <mxGraphModel dx="1580" dy="1220" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1580" pageHeight="1220" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Git: estrategia documentada e historial real" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1500" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="FOTOGRAFÍA LOCAL · Sin fetch, checkout, staging, commit, push o merge" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1500" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: AGENTS.md; git branch -a; git log; .github/workflows/tests.yml&#10;Original editable: 16_FLUJO_GIT_DESARROLLO · Página: Historial y referencias observadas" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="1142" width="1500" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="[DOC] b67f644&#10;Merge del handoff macOS&#10;Padres: 853d423 y 36660ae" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="65" y="220" width="430" height="150" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="[DOC] a88cd3c&#10;Correcciones Sonar + evidencia&#10;Padre: b67f644" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="575" y="220" width="430" height="150" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[DOC] b345d9c · HEAD&#10;Reportes auditoría Sonar&#10;Padre: a88cd3c" sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1085" y="220" width="430" height="150" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e7" value="ancestría" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n4" target="n5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="ancestría" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n9" label="[PROC] Rama actual: chore/sonarqube-macos-setup en b345d9c&#10;Coincide con su origin/chore/sonarqube-macos-setup; cambios académicos locales sin commit." sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="70" y="470" width="1440" height="110" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n10" label="[DOC] REFERENCIAS LOCALES (no inferir sincronía)&#10;main: 8a00505 · develop: f7017c1 · feature/phase-24-academic-documentation: 8ebaf70&#10;Hay ramas remotas feature/*, chore/*, fix/github-actions-ci, release/qa-final y codex/mejoras-sonarqube." sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="1">
+            <mxGeometry x="70" y="670" width="1440" height="150" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n11" label="[DOC] REFERENCIAS REMOTAS DISPONIBLES&#10;origin/main: b8892af · origin/develop: 87ef831 (más recientes que el contexto de esta rama).&#10;No se incorporaron sus estados F35-SBX al alcance académico local ni se actualizó ninguna referencia." sourceRef="AGENTS.md; git branch -a; git log; .github/workflows/tests.yml" evidenceState="VERIFICADO documentalmente" semanticId="" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="1">
+            <mxGeometry x="70" y="910" width="1440" height="150" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

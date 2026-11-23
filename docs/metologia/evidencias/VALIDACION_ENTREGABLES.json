@@ -1,0 +1,239 @@
+{
+  "branch": "chore/sonarqube-macos-setup",
+  "head": "b345d9c97077d1589a06d98ddfa9c6879ded58d1",
+  "files": {
+    "docs/metologia/entregables-finales/MATRIZ_DOBLE_ENTRADA_METODOLOGIA_IA.xlsx": {
+      "sha256": "06e1cd7ebb1c5fd6e09c92ecc1540deeb024cde21d1003418e8afca1a0c6fdf5",
+      "sheets": [
+        {
+          "name": "Articulos_vs_Dimensiones",
+          "rows_with_data": 21,
+          "columns": 13
+        },
+        {
+          "name": "Articulos_vs_AI_DLC",
+          "rows_with_data": 21,
+          "columns": 16
+        },
+        {
+          "name": "AI_DLC_vs_Proyecto",
+          "rows_with_data": 12,
+          "columns": 12
+        },
+        {
+          "name": "Metodologia_vs_Evidencias",
+          "rows_with_data": 14,
+          "columns": 13
+        },
+        {
+          "name": "Requisitos_vs_Pruebas",
+          "rows_with_data": 38,
+          "columns": 10
+        },
+        {
+          "name": "Requisitos_vs_Modulos",
+          "rows_with_data": 38,
+          "columns": 18
+        },
+        {
+          "name": "Evidencias_vs_Indicadores",
+          "rows_with_data": 26,
+          "columns": 11
+        },
+        {
+          "name": "Catalogo_Articulos",
+          "rows_with_data": 21,
+          "columns": 17
+        },
+        {
+          "name": "Registro_vs_Evidencias",
+          "rows_with_data": 28,
+          "columns": 7
+        }
+      ],
+      "formulas": 0,
+      "errors": [],
+      "reopened": true
+    },
+    "docs/metologia/entregables-finales/MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx": {
+      "sha256": "9b88853f6e3283dcaef8b8273438601c81744379897bef03d4d9424c5e5f92a3",
+      "sheets": [
+        {
+          "name": "0. Guía de Uso",
+          "rows_with_data": 12,
+          "columns": 2
+        },
+        {
+          "name": "1. Macroprocesos",
+          "rows_with_data": 3,
+          "columns": 6
+        },
+        {
+          "name": "2. Procedimientos",
+          "rows_with_data": 8,
+          "columns": 17
+        },
+        {
+          "name": "3. Actividades",
+          "rows_with_data": 34,
+          "columns": 6
+        },
+        {
+          "name": "4. Matriz Consolidada",
+          "rows_with_data": 34,
+          "columns": 29
+        },
+        {
+          "name": "5. Prompts Detallados",
+          "rows_with_data": 8,
+          "columns": 11
+        },
+        {
+          "name": "6. Diccionario de Columnas",
+          "rows_with_data": 24,
+          "columns": 4
+        }
+      ],
+      "formulas": 0,
+      "errors": [],
+      "reopened": true
+    },
+    "docs/metologia/entregables-finales/MATRIZ_CUMPLIMIENTO_INFORME.xlsx": {
+      "sha256": "38d8f9dac4846a64bf131374d1eceae914641be7d23840190192f1f253358e7e",
+      "sheets": [
+        {
+          "name": "Cumplimiento",
+          "rows_with_data": 54,
+          "columns": 11
+        },
+        {
+          "name": "Brechas",
+          "rows_with_data": 13,
+          "columns": 7
+        },
+        {
+          "name": "Fuentes adicionales",
+          "rows_with_data": 43,
+          "columns": 10
+        }
+      ],
+      "formulas": 0,
+      "errors": [],
+      "reopened": true
+    },
+    "docs/metologia/entregables-finales/MATRIZ_REQUERIMIENTOS_SISTEMA.xlsx": {
+      "sha256": "4789f4f38fba51a17af3842996ac2b28d8751270ff35e94a01a76aae7a473212",
+      "sheets": [
+        {
+          "name": "Requerimientos",
+          "rows_with_data": 38,
+          "columns": 16
+        },
+        {
+          "name": "Casos de uso",
+          "rows_with_data": 21,
+          "columns": 4
+        }
+      ],
+      "formulas": 0,
+      "errors": [],
+      "reopened": true
+    },
+    "docs/metologia/entregables-finales/MATRIZ_TRAZABILIDAD_ACADEMICA.xlsx": {
+      "sha256": "883a23bb4e777b666beec5ca65d5afa9d2040e682840d3dea3c38909c2871cbd",
+      "sheets": [
+        {
+          "name": "Trazabilidad",
+          "rows_with_data": 31,
+          "columns": 15
+        }
+      ],
+      "formulas": 0,
+      "errors": [],
+      "reopened": true
+    },
+    "docs/metologia/investigacion-ia/OPERACIONALIZACION_VARIABLES.xlsx": {
+      "sha256": "bd72656d922816a2c026b789a991eab50e1b2f57d17b97481a2ef5dfae19e4ee",
+      "sheets": [
+        {
+          "name": "Operacionalización",
+          "rows_with_data": 26,
+          "columns": 14
+        },
+        {
+          "name": "Comparación histórica",
+          "rows_with_data": 17,
+          "columns": 5
+        }
+      ],
+      "formulas": 16,
+      "errors": [],
+      "reopened": true
+    },
+    "docs/metologia/investigacion-ia/MATRIZ_ARTICULOS_IA.xlsx": {
+      "sha256": "014f8bdae8324d1a10df251a00f55a5de4a85063762ba9f1272871864840e094",
+      "sheets": [
+        {
+          "name": "Artículos",
+          "rows_with_data": 21,
+          "columns": 26
+        }
+      ],
+      "formulas": 0,
+      "errors": [],
+      "reopened": true
+    },
+    "docs/metologia/entregables-finales/INFORME_FINAL_SAAS_RECLUTAMIENTO.docx": {
+      "sha256": "7e675f827bec037f55e10ea959e76606812a68542c9945553dae5d639a3766b8",
+      "reopened": true,
+      "chapters": 14,
+      "subsections": 56,
+      "figures": 10,
+      "logo": 1,
+      "media_parts": 12,
+      "red_instructions": 0,
+      "rendered_pages": 49
+    },
+    "docs/metologia/entregables-finales/PRESENTACION_FINAL_U3_SAAS_RECLUTAMIENTO.pptx": {
+      "sha256": "d1a001bd0e7a59bfb27dc6df1dfc64c7e286dfc45c676942acc0e21a3c202ad5",
+      "slides": 24,
+      "notes": 24,
+      "native_tables": 4,
+      "native_charts": 1,
+      "reopened_package": true
+    }
+  },
+  "errors": [],
+  "limits": [
+    "Apertura nativa en Microsoft Word/PowerPoint/Excel no automatizada; reimportación/render y OOXML verificados.",
+    "Los resultados QA/Sonar son históricos, no ejecutados en esta tarea documental.",
+    "Lectura completa de artículos y campos señalados parcialmente verificados requiere revisión humana.",
+    "Validación institucional, experimento causal y métricas de eficiencia pendientes."
+  ],
+  "tracked_changed_from_start": [
+    "docs/PROGRESS.md"
+  ],
+  "counts": {
+    "sources": 5,
+    "articles": 20,
+    "peer_regime_confirmed": 13,
+    "preprints_counted": 0,
+    "rejected_records": 7,
+    "macroprocesses": 2,
+    "procedures": 7,
+    "activities": 33,
+    "functions": 33,
+    "rf": 27,
+    "rnf": 10,
+    "cu": 20,
+    "distinct_function_test_links": 26,
+    "sonar_individual_functions": 4,
+    "source_requirements": 184,
+    "word_complete_subsections": 38,
+    "word_partial_subsections": 15,
+    "critical_gaps": 0,
+    "high_gaps": 6
+  },
+  "crossref_records": 21,
+  "local_markdown_links_broken": []
+}

@@ -1,0 +1,881 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mxfile host="app.diagrams.net" agent="Codex · documentación derivada" type="device" compressed="false" pages="9">
+  <diagram id="13-p01" name="Productividad - Eficiencia">
+    <mxGraphModel dx="1680" dy="960" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="960" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Artículos → Productividad/Eficiencia" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1600" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1600" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos&#10;Original editable: 13_MAPA_ARTICULOS_METODOLOGIA_IA · Página: Productividad - Eficiencia" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="882" width="1600" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="ARTÍCULOS: IDs y referencias breves" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="870" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="GRUPO DE ARTÍCULOS · respaldo temático" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="container" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=swimlane;horizontal=1;startSize=45;container=1;collapsible=0;recursiveResize=0;align=left;verticalAlign=top;fillColor=#F8FAFC;" vertex="1" parent="1">
+            <mxGeometry x="40" y="230" width="870" height="280" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[DOC] ART-05&#10;Vaithilingam et al. (2022)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-05" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n7" label="[DOC] ART-06&#10;Barke et al. (2023)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-06" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n8" label="[DOC] ART-11&#10;Ziegler et al. (2022)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-11" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[PROC] DIMENSIÓN&#10;Productividad/Eficiencia" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="255" width="600" height="110" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n10" label="[PROC] ELEMENTO METODOLÓGICO&#10;Registrar esfuerzo y control" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="455" width="600" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n11" label="[SIS] APLICACIÓN AL SaaS&#10;Eficiencia PENDIENTE: sin horas ni grupo sin IA" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="680" width="600" height="140" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e12" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960.0" y="370.0"/>
+              <mxPoint x="960.0" y="310.0"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n9" target="n10">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n10" target="n11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n15" label="Los artículos respaldan el tema indicado; no adoptan por ello AI-DLC ni prueban resultados del&#10;colegio." sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="55" y="810" width="850" height="68" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="13-p02" name="Calidad">
+    <mxGraphModel dx="1680" dy="1185" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="1185" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Artículos → Calidad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1600" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1600" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos&#10;Original editable: 13_MAPA_ARTICULOS_METODOLOGIA_IA · Página: Calidad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="1107" width="1600" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="ARTÍCULOS: IDs y referencias breves" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="870" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="GRUPO DE ARTÍCULOS · respaldo temático" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="container" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=swimlane;horizontal=1;startSize=45;container=1;collapsible=0;recursiveResize=0;align=left;verticalAlign=top;fillColor=#F8FAFC;" vertex="1" parent="1">
+            <mxGeometry x="40" y="230" width="870" height="805" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[DOC] ART-01&#10;Hou et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-01" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n7" label="[DOC] ART-02&#10;Fan et al. (2023)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-02" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n8" label="[DOC] ART-04&#10;Pearce et al. (2022)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-04" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[DOC] ART-07&#10;Dakhel et al. (2023)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-07" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n10" label="[DOC] ART-08&#10;Nguyen et al. (2022)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-08" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="270" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n11" label="[DOC] ART-09&#10;Chen et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-09" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="270" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[DOC] ART-10&#10;Wang et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-10" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="375" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n13" label="[DOC] ART-13&#10;Syahputri et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-13" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="375" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n14" label="[DOC] ART-15&#10;Gao et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-15" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="480" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n15" label="[DOC] ART-16&#10;Wang et al. (2026)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-16" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="480" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n16" label="[DOC] ART-17&#10;Ferrari y Spoletini (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-17" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="585" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n17" label="[DOC] ART-18&#10;Jiang et al. (2026)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-18" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="585" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n18" label="[DOC] ART-20&#10;Jimenez et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-20" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="690" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n19" label="[PROC] DIMENSIÓN&#10;Calidad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="255" width="600" height="110" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n20" label="[PROC] ELEMENTO METODOLÓGICO&#10;Verificar salidas" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="455" width="600" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n21" label="[SIS] APLICACIÓN AL SaaS&#10;Tests, assertions y lectura prudente de Sonar" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="680" width="600" height="140" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e22" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n19">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960.0" y="632.5"/>
+              <mxPoint x="960.0" y="310.0"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e23" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n19" target="n20">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e24" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n20" target="n21">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n25" label="Los artículos respaldan el tema indicado; no adoptan por ello AI-DLC ni prueban resultados del&#10;colegio." sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="55" y="1035" width="850" height="68" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="13-p03" name="Seguridad">
+    <mxGraphModel dx="1680" dy="960" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="960" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Artículos → Seguridad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1600" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1600" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos&#10;Original editable: 13_MAPA_ARTICULOS_METODOLOGIA_IA · Página: Seguridad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="882" width="1600" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="ARTÍCULOS: IDs y referencias breves" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="870" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="GRUPO DE ARTÍCULOS · respaldo temático" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="container" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=swimlane;horizontal=1;startSize=45;container=1;collapsible=0;recursiveResize=0;align=left;verticalAlign=top;fillColor=#F8FAFC;" vertex="1" parent="1">
+            <mxGeometry x="40" y="230" width="870" height="280" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[DOC] ART-03&#10;Perry et al. (2023)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-03" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n7" label="[DOC] ART-04&#10;Pearce et al. (2022)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-04" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n8" label="[DOC] ART-14&#10;Zhu et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-14" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[DOC] ART-15&#10;Gao et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-15" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n10" label="[PROC] DIMENSIÓN&#10;Seguridad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="255" width="600" height="110" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n11" label="[PROC] ELEMENTO METODOLÓGICO&#10;Revisión de seguridad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="455" width="600" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[SIS] APLICACIÓN AL SaaS&#10;Hallazgos por regla; Policies y multitenencia" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="680" width="600" height="140" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e13" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n10">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960.0" y="370.0"/>
+              <mxPoint x="960.0" y="310.0"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n10" target="n11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e15" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n11" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n16" label="Los artículos respaldan el tema indicado; no adoptan por ello AI-DLC ni prueban resultados del&#10;colegio." sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="55" y="810" width="850" height="68" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="13-p04" name="Testing - TDD">
+    <mxGraphModel dx="1680" dy="975" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="975" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Artículos → Testing/TDD" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1600" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1600" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos&#10;Original editable: 13_MAPA_ARTICULOS_METODOLOGIA_IA · Página: Testing - TDD" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="897" width="1600" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="ARTÍCULOS: IDs y referencias breves" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="870" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="GRUPO DE ARTÍCULOS · respaldo temático" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="container" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=swimlane;horizontal=1;startSize=45;container=1;collapsible=0;recursiveResize=0;align=left;verticalAlign=top;fillColor=#F8FAFC;" vertex="1" parent="1">
+            <mxGeometry x="40" y="230" width="870" height="595" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[DOC] ART-01&#10;Hou et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-01" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n7" label="[DOC] ART-02&#10;Fan et al. (2023)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-02" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n8" label="[DOC] ART-08&#10;Nguyen et al. (2022)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-08" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[DOC] ART-09&#10;Chen et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-09" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n10" label="[DOC] ART-10&#10;Wang et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-10" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="270" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n11" label="[DOC] ART-14&#10;Zhu et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-14" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="270" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[DOC] ART-15&#10;Gao et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-15" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="375" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n13" label="[DOC] ART-16&#10;Wang et al. (2026)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-16" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="375" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n14" label="[DOC] ART-19&#10;Yang et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-19" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="480" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n15" label="[DOC] ART-20&#10;Jimenez et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-20" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="480" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n16" label="[PROC] DIMENSIÓN&#10;Testing/TDD" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="255" width="600" height="110" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n17" label="[PROC] ELEMENTO METODOLÓGICO&#10;Oráculos y validación de tests" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="455" width="600" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n18" label="[SIS] APLICACIÓN AL SaaS&#10;PHPUnit/Vitest; TDD solo con RED/GREEN documentado" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="680" width="600" height="140" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e19" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n16">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960.0" y="527.5"/>
+              <mxPoint x="960.0" y="310.0"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e20" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n16" target="n17">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e21" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n17" target="n18">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n22" label="Los artículos respaldan el tema indicado; no adoptan por ello AI-DLC ni prueban resultados del&#10;colegio." sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="55" y="825" width="850" height="68" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="13-p05" name="Requisitos">
+    <mxGraphModel dx="1680" dy="960" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="960" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Artículos → Requisitos" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1600" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1600" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos&#10;Original editable: 13_MAPA_ARTICULOS_METODOLOGIA_IA · Página: Requisitos" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="882" width="1600" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="ARTÍCULOS: IDs y referencias breves" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="870" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="GRUPO DE ARTÍCULOS · respaldo temático" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="container" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=swimlane;horizontal=1;startSize=45;container=1;collapsible=0;recursiveResize=0;align=left;verticalAlign=top;fillColor=#F8FAFC;" vertex="1" parent="1">
+            <mxGeometry x="40" y="230" width="870" height="280" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[DOC] ART-01&#10;Hou et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-01" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n7" label="[DOC] ART-02&#10;Fan et al. (2023)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-02" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n8" label="[DOC] ART-15&#10;Gao et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-15" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[DOC] ART-17&#10;Ferrari y Spoletini (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-17" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n10" label="[PROC] DIMENSIÓN&#10;Requisitos" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="255" width="600" height="110" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n11" label="[PROC] ELEMENTO METODOLÓGICO&#10;Especificación y aceptación" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="455" width="600" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[SIS] APLICACIÓN AL SaaS&#10;RF/RNF y criterios; contratos humanos" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="680" width="600" height="140" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e13" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n10">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960.0" y="370.0"/>
+              <mxPoint x="960.0" y="310.0"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n10" target="n11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e15" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n11" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n16" label="Los artículos respaldan el tema indicado; no adoptan por ello AI-DLC ni prueban resultados del&#10;colegio." sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="55" y="810" width="850" height="68" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="13-p06" name="Human-in-the-loop">
+    <mxGraphModel dx="1680" dy="960" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="960" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Artículos → Human-in-the-loop" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1600" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1600" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos&#10;Original editable: 13_MAPA_ARTICULOS_METODOLOGIA_IA · Página: Human-in-the-loop" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="882" width="1600" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="ARTÍCULOS: IDs y referencias breves" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="870" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="GRUPO DE ARTÍCULOS · respaldo temático" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="container" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=swimlane;horizontal=1;startSize=45;container=1;collapsible=0;recursiveResize=0;align=left;verticalAlign=top;fillColor=#F8FAFC;" vertex="1" parent="1">
+            <mxGeometry x="40" y="230" width="870" height="385" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[DOC] ART-03&#10;Perry et al. (2023)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-03" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n7" label="[DOC] ART-05&#10;Vaithilingam et al. (2022)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-05" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n8" label="[DOC] ART-06&#10;Barke et al. (2023)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-06" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[DOC] ART-13&#10;Syahputri et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-13" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n10" label="[DOC] ART-15&#10;Gao et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-15" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="270" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n11" label="[PROC] DIMENSIÓN&#10;Human-in-the-loop" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="255" width="600" height="110" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[PROC] ELEMENTO METODOLÓGICO&#10;Supervisión y aceptación" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="455" width="600" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n13" label="[SIS] APLICACIÓN AL SaaS&#10;Guardian; decisión y publicación humanas" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="680" width="600" height="140" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e14" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960.0" y="422.5"/>
+              <mxPoint x="960.0" y="310.0"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n11" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e16" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n12" target="n13">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n17" label="Los artículos respaldan el tema indicado; no adoptan por ello AI-DLC ni prueban resultados del&#10;colegio." sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="55" y="810" width="850" height="68" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="13-p07" name="Trazabilidad">
+    <mxGraphModel dx="1680" dy="960" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="960" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Artículos → Trazabilidad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1600" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1600" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos&#10;Original editable: 13_MAPA_ARTICULOS_METODOLOGIA_IA · Página: Trazabilidad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="882" width="1600" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="ARTÍCULOS: IDs y referencias breves" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="870" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="GRUPO DE ARTÍCULOS · respaldo temático" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="container" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=swimlane;horizontal=1;startSize=45;container=1;collapsible=0;recursiveResize=0;align=left;verticalAlign=top;fillColor=#F8FAFC;" vertex="1" parent="1">
+            <mxGeometry x="40" y="230" width="870" height="175" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[DOC] ART-13&#10;Syahputri et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-13" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n7" label="[PROC] DIMENSIÓN&#10;Trazabilidad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="255" width="600" height="110" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n8" label="[PROC] ELEMENTO METODOLÓGICO&#10;Persistir fuente y versión" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="455" width="600" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[SIS] APLICACIÓN AL SaaS&#10;RF→código→test; prompts originales incompletos" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="680" width="600" height="140" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e10" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960.0" y="317.5"/>
+              <mxPoint x="960.0" y="310.0"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n7" target="n8">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n8" target="n9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n13" label="Los artículos respaldan el tema indicado; no adoptan por ello AI-DLC ni prueban resultados del&#10;colegio." sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="55" y="810" width="850" height="68" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="13-p08" name="Mantenibilidad">
+    <mxGraphModel dx="1680" dy="960" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="960" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Artículos → Mantenibilidad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1600" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1600" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos&#10;Original editable: 13_MAPA_ARTICULOS_METODOLOGIA_IA · Página: Mantenibilidad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="882" width="1600" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="ARTÍCULOS: IDs y referencias breves" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="870" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="GRUPO DE ARTÍCULOS · respaldo temático" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="container" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=swimlane;horizontal=1;startSize=45;container=1;collapsible=0;recursiveResize=0;align=left;verticalAlign=top;fillColor=#F8FAFC;" vertex="1" parent="1">
+            <mxGeometry x="40" y="230" width="870" height="385" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[DOC] ART-02&#10;Fan et al. (2023)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-02" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n7" label="[DOC] ART-14&#10;Zhu et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-14" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n8" label="[DOC] ART-15&#10;Gao et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-15" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[DOC] ART-19&#10;Yang et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-19" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n10" label="[DOC] ART-20&#10;Jimenez et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-20" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="270" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n11" label="[PROC] DIMENSIÓN&#10;Mantenibilidad" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="255" width="600" height="110" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[PROC] ELEMENTO METODOLÓGICO&#10;Revisión de cambios y regresión" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="455" width="600" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n13" label="[SIS] APLICACIÓN AL SaaS&#10;Mantenimiento y corrección acotada de hallazgos" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="680" width="600" height="140" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e14" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960.0" y="422.5"/>
+              <mxPoint x="960.0" y="310.0"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n11" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e16" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n12" target="n13">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n17" label="Los artículos respaldan el tema indicado; no adoptan por ello AI-DLC ni prueban resultados del&#10;colegio." sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="55" y="810" width="850" height="68" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="13-p09" name="Automatización">
+    <mxGraphModel dx="1680" dy="975" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="975" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <object id="n1" label="Artículos → Automatización" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=30;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="25" width="1600" height="80" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n2" label="20 IDENTIDADES BIBLIOGRÁFICAS VALIDADAS · Contenido parcialmente verificado; sin efecto causal local" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="110" width="1600" height="50" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n3" label="Fuente: Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos&#10;Original editable: 13_MAPA_ARTICULOS_METODOLOGIA_IA · Página: Automatización" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=16;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="40" y="897" width="1600" height="65" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n4" label="ARTÍCULOS: IDs y referencias breves" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=22;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;fontStyle=1;" vertex="1" parent="1">
+            <mxGeometry x="55" y="185" width="870" height="51" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n5" label="GRUPO DE ARTÍCULOS · respaldo temático" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="container" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=swimlane;horizontal=1;startSize=45;container=1;collapsible=0;recursiveResize=0;align=left;verticalAlign=top;fillColor=#F8FAFC;" vertex="1" parent="1">
+            <mxGeometry x="40" y="230" width="870" height="595" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n6" label="[DOC] ART-01&#10;Hou et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-01" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n7" label="[DOC] ART-02&#10;Fan et al. (2023)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-02" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="60" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n8" label="[DOC] ART-09&#10;Chen et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-09" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n9" label="[DOC] ART-10&#10;Wang et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-10" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="165" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n10" label="[DOC] ART-12&#10;Amaro et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-12" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="270" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n11" label="[DOC] ART-14&#10;Zhu et al. (2025)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-14" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="270" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n12" label="[DOC] ART-16&#10;Wang et al. (2026)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-16" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="375" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n13" label="[DOC] ART-18&#10;Jiang et al. (2026)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-18" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="375" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n14" label="[DOC] ART-19&#10;Yang et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-19" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="15" y="480" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n15" label="[DOC] ART-20&#10;Jimenez et al. (2024)" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="ART-20" category="DOC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#F0F2F5;strokeColor=#414F60;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=note;size=18;" vertex="1" parent="n5">
+            <mxGeometry x="450" y="480" width="390" height="85" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n16" label="[PROC] DIMENSIÓN&#10;Automatización" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="255" width="600" height="110" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n17" label="[PROC] ELEMENTO METODOLÓGICO&#10;Herramientas bajo alcance" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="PROC">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#EDF3F8;strokeColor=#34576E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="455" width="600" height="120" as="geometry"/>
+          </mxCell>
+        </object>
+        <object id="n18" label="[SIS] APLICACIÓN AL SaaS&#10;CI configurada; CD/operación productiva no demostrados" sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="" category="SIS">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=20;fontColor=#172B3A;fillColor=#E5F0FA;strokeColor=#16476E;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;" vertex="1" parent="1">
+            <mxGeometry x="1010" y="680" width="600" height="140" as="geometry"/>
+          </mxCell>
+        </object>
+        <mxCell id="e19" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=0;" edge="1" parent="1" source="n5" target="n16">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960.0" y="527.5"/>
+              <mxPoint x="960.0" y="310.0"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e20" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n16" target="n17">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e21" value="" style="edgeStyle=segmentEdgeStyle;orthogonal=1;rounded=0;html=0;strokeWidth=2;strokeColor=#3B5268;endArrow=block;endFill=1;fontFamily=Arial;fontSize=16;fontColor=#172B3A;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=0;" edge="1" parent="1" source="n17" target="n18">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <object id="n22" label="Los artículos respaldan el tema indicado; no adoptan por ello AI-DLC ni prueban resultados del&#10;colegio." sourceRef="Articulos_vs_Dimensiones; Catalogo_Articulos; matriz artículos" evidenceState="VERIFICADO documentalmente" semanticId="text" category="TXT">
+          <mxCell style="whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=18;fontColor=#172B3A;fillColor=#FFFFFF;strokeColor=#FFFFFF;strokeWidth=2;spacing=10;rounded=0;shadow=0;shape=rectangle;fillColor=none;strokeColor=none;align=left;spacing=0;" vertex="1" parent="1">
+            <mxGeometry x="55" y="825" width="850" height="68" as="geometry"/>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,87 @@
+
+> cy:run
+> npm run e2e:setup && docker compose --profile e2e run --rm cypress --spec cypress/e2e/e2e-03-approve-job-request.cy.js
+
+
+> e2e:setup
+> docker compose run --rm --no-deps --entrypoint sh app docker/php/init-e2e-env.sh
+
+ Container reclutamiento-app-run-bbe35c503a7e Creating
+ Container reclutamiento-app-run-bbe35c503a7e Created
+.env.e2e ya existe; no se modifica.
+ Container reclutamiento-queue-e2e-1 Running
+ Container reclutamiento-app-1 Running
+ Container reclutamiento-postgres-1 Running
+ Container reclutamiento-redis-1 Running
+ Container reclutamiento-app-e2e-1 Running
+ Container reclutamiento-redis-1 Waiting
+ Container reclutamiento-postgres-1 Waiting
+ Container reclutamiento-postgres-1 Healthy
+ Container reclutamiento-redis-1 Healthy
+ Container reclutamiento-app-1 Waiting
+ Container reclutamiento-app-1 Healthy
+ Container reclutamiento-app-e2e-1 Waiting
+ Container reclutamiento-app-e2e-1 Healthy
+ Container reclutamiento-queue-e2e-1 Waiting
+ Container reclutamiento-app-e2e-1 Waiting
+ Container reclutamiento-queue-e2e-1 Healthy
+ Container reclutamiento-app-e2e-1 Healthy
+ Container reclutamiento-cypress-run-285cc364e6f1 Creating
+ Container reclutamiento-cypress-run-285cc364e6f1 Created
+[02:45:03]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [started]
+[02:45:05]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [COMPLETED]
+[207:1110/024505.712023:ERROR:dbus/object_proxy.cc:590] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+
+DevTools listening on ws://127.0.0.1:40655/devtools/browser/ea0775f8-b159-4a1d-8748-91760dbd07b7
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        15.3.0                                                                         │
+  │ Browser:        Electron 136 (headless)                                                        │
+  │ Node Version:   v22.20.0 (/usr/local/bin/node)                                                 │
+  │ Specs:          1 found (e2e-03-approve-job-request.cy.js)                                     │
+  │ Searched:       cypress/e2e/e2e-03-approve-job-request.cy.js                                   │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-03-approve-job-request.cy.js                                                (1 of 1)
+
+
+  E2E-03 · El aprobador decide un requerimiento validado (RF-03, RF-04)
+    ✓ aprueba el requerimiento validado por RR. HH. (2939ms)
+    ✓ no permite rechazar sin indicar el motivo (1066ms)
+
+
+  2 passing (4s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     4 seconds                                                                        │
+  │ Spec Ran:     e2e-03-approve-job-request.cy.js                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  e2e-03-approve-job-request.cy.js         00:04        2        2        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:04        2        2        -        -        -

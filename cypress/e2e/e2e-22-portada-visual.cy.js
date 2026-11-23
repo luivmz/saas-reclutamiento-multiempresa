@@ -7,7 +7,10 @@
  * - con un puntero fino, las hojas se desplazan según su profundidad (paralaje); sin él, quedan quietas;
  * - el acceso principal se alcanza con el teclado y muestra el foco;
  * - las entradas al desplazarse no ocultan nada con movimiento reducido ni a quien ya lo está viendo;
- * - a 320 px no hay desplazamiento horizontal.
+ * - a 320 px no hay desplazamiento horizontal;
+ * - VIS-L01: si el movimiento reducido se activa con la portada abierta, lo
+ *   pendiente aparece en su sitio y no vuelve a ocultarse.
+ *
  */
 function reducido(activo) {
     return Cypress.automation('remote:debugger:protocol', {
@@ -56,7 +59,19 @@ function moverCursor(clientX, clientY) {
     );
 }
 
-/** Transform en línea de una hoja de la escena. */
+/** La carpeta del proceso a la vista, y dos cuadros para que la escena asiente su posición. */
+function irALaCarpeta() {
+    cy.dataCy('landing-folder').scrollIntoView();
+    cy.window().then(
+        (win) =>
+            new Cypress.Promise((listo) =>
+                win.requestAnimationFrame(() =>
+                    win.requestAnimationFrame(listo),
+                ),
+            ),
+    );
+}
+
 /** Una hoja de la escena; sus aserciones con callback se reintentan. */
 function hoja(etapa) {
     return cy.get(`[data-sheet="${etapa}"]`);
@@ -83,6 +98,7 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
                 cy.contains('Decisión humana').should('be.visible');
             });
         cy.dataCy('landing-pillars').find('li').should('have.length', 3);
+        irALaCarpeta();
         cy.dataCy('recruitment-scene').should(
             'have.attr',
             'data-ready',
@@ -102,6 +118,7 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
         cy.viewport(1280, 800);
         // Electron sin pantalla no tiene ratón: se declara un puntero fino, como en un escritorio.
         cy.visit('/', { onBeforeLoad: (win) => punteroFino(win, true) });
+        irALaCarpeta();
         cy.dataCy('recruitment-scene').should(
             'have.attr',
             'data-ready',
@@ -113,6 +130,7 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
             'data-pointer',
             'listening',
         );
+        irALaCarpeta();
         transformDe('vacancy').then((reposo) => {
             moverCursor(1240, 120);
             hoja('vacancy').should(($h) =>
@@ -132,7 +150,8 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
             );
         });
 
-        // El texto y los accesos no se mueven con el cursor.
+        // Al volver al hero, el CTA sigue sin transformaciones del cursor.
+        cy.scrollTo('top');
         cy.dataCy('cta-jobs')
             .should('be.visible')
             .and('not.have.attr', 'style');
@@ -141,6 +160,7 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
     it('en pantallas táctiles (sin puntero fino) la escena queda quieta', () => {
         cy.viewport(1280, 800);
         cy.visit('/', { onBeforeLoad: (win) => punteroFino(win, false) });
+        irALaCarpeta();
         cy.dataCy('recruitment-scene').should(
             'have.attr',
             'data-ready',
@@ -157,6 +177,7 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
                 expect($h[0].style.transform).to.eq(reposo),
             );
         });
+        cy.scrollTo('top');
         cy.dataCy('cta-jobs').should('be.visible');
     });
 
@@ -188,6 +209,48 @@ describe('E2E-22 · Portada: profundidad, paralaje y accesos', () => {
         cy.get('[data-reveal]').should('have.length.at.least', 5);
         cy.get('[data-reveal="hidden"]').should('not.exist');
         cy.dataCy('landing-ml-note').should('have.css', 'opacity', '1');
+    });
+
+    it('VIS-L01: si el movimiento reducido se activa con la portada abierta, lo pendiente aparece sin desplazarse y no vuelve a ocultarse', () => {
+        cy.viewport(1280, 800);
+        cy.visit('/');
+
+        // Antes: lo de abajo espera oculto y desplazado.
+        cy.dataCy('landing-ml-note').should('have.css', 'opacity', '0');
+        cy.get('[data-reveal="hidden"]')
+            .should('have.length.at.least', 3)
+            .then(($pendientes) => {
+                const pendientes = $pendientes.toArray();
+                const aLaVista = () =>
+                    cy.wrap(pendientes).each((bloque) =>
+                        cy.wrap(bloque).should(($b) => {
+                            const estilo = getComputedStyle($b[0]);
+
+                            expect(estilo.opacity, 'opacidad').to.eq('1');
+                            expect(
+                                estilo.transform,
+                                'sin desplazamiento',
+                            ).to.eq('none');
+                        }),
+                    );
+
+                // Se activa con la página abierta y sin desplazarla: la
+                // apariencia real de cada bloque pendiente cambia en su sitio.
+                // Va en la cola de Cypress, en orden con las aserciones.
+                cy.then(() => reducido(true));
+                aLaVista();
+                cy.window().its('scrollY').should('eq', 0);
+                cy.get('[data-reveal="hidden"]').should('not.exist');
+
+                // Ni al recorrer la página ni al desactivar la preferencia
+                // vuelve a ocultarse nada: ya no hay observadores pendientes.
+                cy.scrollTo('bottom');
+                cy.scrollTo('top');
+                cy.then(() => reducido(false));
+                cy.scrollTo('bottom');
+                aLaVista();
+                cy.get('[data-reveal="hidden"]').should('not.exist');
+            });
     });
 
     it('sin movimiento reducido, lo de abajo entra al desplazarse y queda visible', () => {
