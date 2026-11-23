@@ -453,6 +453,56 @@
 }
 
 /*
+ * Anfitrión de /empleos (decorativo). Tres capas superpuestas —el póster de
+ * reposo y los dos clips con transparencia— y solo se ve la del estado actual
+ * (`data-clip`), con un fundido breve. El contenedor se inclina unos grados
+ * hacia el cursor; el personaje no se desplaza por la pantalla.
+ */
+@layer components {
+    .job-host-sticky {
+        position: sticky;
+        top: max(5rem, calc(50vh - 8.4rem));
+    }
+
+    .job-host-figure {
+        position: relative;
+        aspect-ratio: 286 / 562;
+        transform-origin: 50% 90%;
+        transition: transform 320ms var(--ease-out);
+        will-change: transform;
+    }
+
+    .job-host-layer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        opacity: 0;
+        transition: opacity 180ms var(--ease-out);
+    }
+
+    .job-host [data-layer='rest'],
+    .job-host[data-clip='interest'] [data-layer='interest'],
+    .job-host[data-clip='point'] [data-layer='point'] {
+        opacity: 1;
+    }
+
+    .job-host[data-clip='interest'] [data-layer='rest'],
+    .job-host[data-clip='point'] [data-layer='rest'] {
+        opacity: 0;
+    }
+
+    /* La oferta a la que atiende: un borde un poco más marcado, sin cambiar su
+       contenido ni su tamaño. */
+    [data-cy='job-card'][data-anfitrion='activa'] {
+        border-color: color-mix(in oklab, var(--primary) 55%, var(--border));
+        box-shadow: 0 0 0 3px
+            color-mix(in oklab, var(--primary) 12%, transparent);
+    }
+}
+
+/*
  * Movimiento reducido.
  *
  * No significa «sin animación»: significa menos y más suave. Lo que molesta
