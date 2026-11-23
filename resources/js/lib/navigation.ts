@@ -29,7 +29,8 @@ const reports = {
     href: RecruitmentReportController(),
     icon: ChartColumnBig,
     cy: 'reports',
-    description: 'Indicadores del proceso: postulaciones, preselección y tiempos (RF-28, candidato).',
+    description:
+        'Indicadores del proceso: postulaciones, preselección y tiempos (RF-28, candidato).',
 };
 
 const portal: NavGroup = {
@@ -84,14 +85,16 @@ export function navigationFor(
                             href: JobRequestController.index(),
                             icon: ClipboardList,
                             cy: 'job-requests',
-                            description: 'Consulte el estado y el historial de sus requerimientos.',
+                            description:
+                                'Consulte el estado y el historial de sus requerimientos.',
                         },
                         {
                             title: 'Nuevo requerimiento',
                             href: JobRequestController.create(),
                             icon: FilePlus2,
                             cy: 'new-job-request',
-                            description: 'Registre una necesidad de personal (RF-01).',
+                            description:
+                                'Registre una necesidad de personal (RF-01).',
                         },
                     ],
                 },
@@ -108,14 +111,16 @@ export function navigationFor(
                             href: JobRequestController.index(),
                             icon: ClipboardList,
                             cy: 'job-requests',
-                            description: 'Valide u observe los requerimientos enviados (RF-02).',
+                            description:
+                                'Valide u observe los requerimientos enviados (RF-02).',
                         },
                         {
                             title: 'Vacantes y postulaciones',
                             href: VacancyController.index(),
                             icon: Briefcase,
                             cy: 'vacancies',
-                            description: 'Configure y publique vacantes y revise sus postulaciones (RF-05 a RF-15).',
+                            description:
+                                'Configure y publique vacantes y revise sus postulaciones (RF-05 a RF-15).',
                         },
                         reports,
                     ],
@@ -133,21 +138,24 @@ export function navigationFor(
                             href: JobRequestController.index(),
                             icon: ClipboardList,
                             cy: 'job-requests',
-                            description: 'Apruebe o rechace requerimientos validados (RF-03).',
+                            description:
+                                'Apruebe o rechace requerimientos validados (RF-03).',
                         },
                         {
                             title: 'Vacantes',
                             href: VacancyController.index(),
                             icon: Briefcase,
                             cy: 'vacancies',
-                            description: 'Consulte las vacantes y los procesos en curso.',
+                            description:
+                                'Consulte las vacantes y los procesos en curso.',
                         },
                         {
                             title: 'Auditoría',
                             href: AuditLogController.index(),
                             icon: ShieldCheck,
                             cy: 'audit',
-                            description: 'Consulte el registro de acciones críticas de su organización (RF-27).',
+                            description:
+                                'Consulte el registro de acciones críticas de su organización (RF-27).',
                         },
                         reports,
                     ],
@@ -165,7 +173,8 @@ export function navigationFor(
                             href: AssessmentAssignmentController(),
                             icon: ClipboardCheck,
                             cy: 'assessments',
-                            description: 'Registre puntajes y observaciones de las sesiones asignadas (RF-19).',
+                            description:
+                                'Registre puntajes y observaciones de las sesiones asignadas (RF-19).',
                         },
                     ],
                 },
@@ -182,14 +191,16 @@ export function navigationFor(
                             href: CandidateProfileController.edit(),
                             icon: FileUser,
                             cy: 'candidate-profile',
-                            description: 'Complete su perfil y cargue su CV (RF-09).',
+                            description:
+                                'Complete su perfil y cargue su CV (RF-09).',
                         },
                         {
                             title: 'Mis postulaciones',
                             href: CandidateApplicationController.index(),
                             icon: Send,
                             cy: 'my-applications',
-                            description: 'Siga la etapa de cada postulación (RF-11, RF-15).',
+                            description:
+                                'Siga la etapa de cada postulación (RF-11, RF-15).',
                         },
                     ],
                 },

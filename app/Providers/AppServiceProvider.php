@@ -15,7 +15,6 @@ use App\Models\User;
 use App\Models\Vacancy;
 use App\Policies\RecruitmentReportPolicy;
 use App\Services\Evaluation\WeightingValidator;
-use Illuminate\Support\Facades\Route;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -23,6 +22,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
