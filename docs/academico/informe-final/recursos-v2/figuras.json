@@ -1,0 +1,172 @@
+{
+  "arquitectura": {
+    "file": "arquitectura.png",
+    "title": "Arquitectura general del proyecto grupal",
+    "description": "El navegador usa React e Inertia. Laravel aplica roles y alcance por organización. PostgreSQL, Redis y el worker sostienen la operación.",
+    "commit": "5e2eae37f63c7ac5d35ed2def9b2e843a644cd98",
+    "source": "docs/metologia/diagramas/exportados/01_ARQUITECTURA_GENERAL_SAAS_p01.png",
+    "source_sha256": "3ee64239bae03f1599e10d7e13300e7cd146594ba9d454a031f5b1e1ca3abb52",
+    "sha256": "3ee64239bae03f1599e10d7e13300e7cd146594ba9d454a031f5b1e1ca3abb52",
+    "crop": ""
+  },
+  "secuencia": {
+    "file": "secuencia.png",
+    "title": "Secuencia UML de decisión final RF-23",
+    "description": "La solicitud de Dirección atraviesa autorización, validación y el servicio que persiste la decisión y la auditoría. Modelo F23.",
+    "commit": "04d3cfa1db6f82d9cda8db2254338805137cdc3c",
+    "source": "docs/v1.1/powerdesigner/exports/SEQ-07-decision-final.png",
+    "source_sha256": "d61c8e2aa97ba152004ed7e501b76c3218631af17940b220d0914e15f6384ed9",
+    "sha256": "d61c8e2aa97ba152004ed7e501b76c3218631af17940b220d0914e15f6384ed9",
+    "crop": ""
+  },
+  "datos": {
+    "file": "datos.png",
+    "title": "Modelo físico de las tablas del dominio",
+    "description": "Modelo PDM-02 formalizado en F23. El original enlazado permite ampliar las relaciones y consultar atributos.",
+    "commit": "04d3cfa1db6f82d9cda8db2254338805137cdc3c",
+    "source": "docs/v1.1/powerdesigner/exports/PDM-02-tablas-de-dominio.png",
+    "source_sha256": "d7539258a698be3052abb6db33d6c8a0345f0241968d9d3905d992173b828b81",
+    "sha256": "d7539258a698be3052abb6db33d6c8a0345f0241968d9d3905d992173b828b81",
+    "crop": ""
+  },
+  "reportes": {
+    "file": "reportes-recorte.png",
+    "title": "Reportes filtrados por vacante",
+    "description": "El filtro por vacante acota la salida a tres postulaciones de una vacante ficticia. Recorte de E2E-20 de la práctica del 09/11/2026.",
+    "commit": "5e2eae37f63c7ac5d35ed2def9b2e843a644cd98",
+    "source": "docs/architecture-cypress-reports/evidencias/reportes/E2E-20-02-filtro-por-vacante.png",
+    "source_sha256": "54d57cc6b9eba64b2154c92ee5c05a26a8859f32880400afbe3623777090ffea",
+    "sha256": "807779d9d8caa9aa641a1c9ab28aa8a5b0282af86dd6a4226cf682d718798d7a",
+    "crop": "Recorte (280, 88, 1250, 680)"
+  },
+  "sonar": {
+    "file": "sonar-recorte.png",
+    "title": "Quality Gate de SonarQube V3",
+    "description": "El panel muestra 85,0 % de cobertura en New Code, 0,0 % de duplicación nueva y cero incidencias nuevas. La advertencia de seguridad sigue visible. 09/11/2026.",
+    "commit": "5e2eae37f63c7ac5d35ed2def9b2e843a644cd98",
+    "source": "docs/architecture-cypress-reports/evidencias/sonarqube/SONAR-UI-02_Quality_Gate.jpg",
+    "source_sha256": "d791ab924889d44f316c0c325a0a1e57bc32311faed4e3264ed05d9ead610d50",
+    "sha256": "36d26fb234458eb588b3cf90508afb9df4fdf0474712b228e2a06c9e10b5c71a",
+    "crop": "Recorte (745, 515, 1970, 1414)"
+  },
+  "cypress": {
+    "file": "cypress-recorte.png",
+    "title": "Resumen de Cypress de la práctica de Reportes",
+    "description": "Salida de terminal renderizada a partir del log de la ejecución 2. Pasaron 94 casos en 21 specs. La corrida independiente se informa en la matriz. 09/11/2026.",
+    "commit": "5e2eae37f63c7ac5d35ed2def9b2e843a644cd98",
+    "source": "docs/architecture-cypress-reports/evidencias/cypress/CYP_ejecucion2_resumen_terminal.png",
+    "source_sha256": "1bbe633c4c31c59840114e22330646eb2b4d7e6d59a3d2f24f797c14aada12c9",
+    "sha256": "42bae468a8edeeba2e4c2edd881a33a6d2643f4de26273edbe842d991e03a121",
+    "crop": "Recorte de las últimas especificaciones y el total (36, 767, 879, 1099)"
+  },
+  "riesgo": {
+    "file": "riesgo.png",
+    "title": "Panel opcional de riesgo operacional ML-01",
+    "description": "La ficha interna identifica el riesgo del proceso como experimental. El panel queda en modo descriptivo porque la vacante de la captura carece de plazo objetivo. QA visual F21, 23/09/2026.",
+    "commit": "04d3cfa1db6f82d9cda8db2254338805137cdc3c",
+    "source": "docs/v1.1/phase-21-screenshots/22-riesgo-operacional-oscuro-1280.png",
+    "source_sha256": "aa58b7b24ba74c01ed025c9e37c27171c7416b9b762e899671e95cc93b12a2b0",
+    "sha256": "aa58b7b24ba74c01ed025c9e37c27171c7416b9b762e899671e95cc93b12a2b0",
+    "crop": ""
+  },
+  "evidencias": {
+    "file": "evidencias-recortes.png",
+    "title": "Evidencia versionada y ayuda documental léxica",
+    "description": "Dos recortes de una misma captura muestran la versión 2, el criterio enlazado y el fragmento recuperado con su fuente. E2E-21, 22/11/2026.",
+    "commit": "446b8fe5efdd697f6c3d7d593f2411bac9585f18",
+    "source": "D:/bt/pres/visual/final/cypress/capturas-e2e-21-evidencias-experimental/e2e-21-escritorio.png",
+    "source_sha256": "9af0304bb01f23a02df0a290f83dfba19c2f75695803e2ae8d7d6cc95c9fe5aa",
+    "sha256": "7ae5b50e172707771b10343d73b4ee36f39196348c8356de554e5fa087055deb",
+    "crop": "Dos áreas de la misma captura, en orden versión / fragmento"
+  },
+  "portada": {
+    "file": "portada.png",
+    "title": "Portada con el vídeo del colegio",
+    "description": "El fotograma abierto se muestra detrás del título y los CTA. Evidencia Chrome del candidato de dos vídeos, 22/11/2026.",
+    "commit": "2b87f3667dce6f98f8250083cc7dd354aa21a961",
+    "source": "D:/bt/pres/visual/dos-videos-20261122/portada-claro/apertura.png",
+    "source_sha256": "5a8e09dcf753cbdaa837dbf9aaa3934bf0b5c9e1f0e2d4c51ab310ab0ae60fe1",
+    "sha256": "5a8e09dcf753cbdaa837dbf9aaa3934bf0b5c9e1f0e2d4c51ab310ab0ae60fe1",
+    "crop": ""
+  },
+  "oferta": {
+    "file": "oferta.png",
+    "title": "Vídeo de carpeta en una oferta ficticia",
+    "description": "El fondo decorativo acompaña la lectura de convocatoria, perfil y criterios. Captura oscura en Chrome, 22/11/2026.",
+    "commit": "2b87f3667dce6f98f8250083cc7dd354aa21a961",
+    "source": "D:/bt/pres/visual/dos-videos-20261122/empleo-2-oscuro/apertura.png",
+    "source_sha256": "2feb15b1798589da2cdedd9955d0efe400b7aa132fd34df4aa4ee6db8e79cafb",
+    "sha256": "2feb15b1798589da2cdedd9955d0efe400b7aa132fd34df4aa4ee6db8e79cafb",
+    "crop": ""
+  },
+  "anfitrion": {
+    "file": "anfitrion.png",
+    "title": "Anfitrión en el listado público de empleos",
+    "description": "Gesto pregrabado que señala la zona de una oferta. Evidencia Chrome, 22/11/2026, previa al seeder adicional.",
+    "commit": "b1dd8cb9f7a57edbb2ba746de6bebb132ce4bb5a",
+    "source": "D:/bt/anfitrion/entrega/capturas/claro-4-senala-arriba.png",
+    "source_sha256": "5367043e6a434f1d022ced5069f05cdf178eb09c193f811ba2521c2ef09ab171",
+    "sha256": "5367043e6a434f1d022ced5069f05cdf178eb09c193f811ba2521c2ef09ab171",
+    "crop": ""
+  },
+  "asis": {
+    "file": "asis.png",
+    "title": "Proceso AS-IS preliminar del caso",
+    "description": "Primer tramo de la reconstrucción AS-IS. Los carriles distinguen solicitante, RR. HH. y Dirección. La validación institucional está pendiente.",
+    "commit": "5e2eae37f63c7ac5d35ed2def9b2e843a644cd98",
+    "source": "docs/metologia/diagramas/exportados/03_PROCESO_RECLUTAMIENTO_AS_IS_p01.png",
+    "source_sha256": "03ee39ee9fccd516fbb69839e24416274c257f45dd70a62ffd88dd0411491ee4",
+    "sha256": "03ee39ee9fccd516fbb69839e24416274c257f45dd70a62ffd88dd0411491ee4",
+    "crop": ""
+  },
+  "tobe": {
+    "file": "tobe.png",
+    "title": "Proceso TO-BE para el requerimiento",
+    "description": "Tramo 1 de 6. Muestra el registro, revisión, corrección y aprobación propuestos en la fase de requerimientos.",
+    "commit": "5e2eae37f63c7ac5d35ed2def9b2e843a644cd98",
+    "source": "docs/metologia/diagramas/exportados/04_PROCESO_RECLUTAMIENTO_TO_BE_p01.png",
+    "source_sha256": "b7d50154d94711e668399f4115874c7a61939d31e3ef51d069778e88d85fd2d2",
+    "sha256": "b7d50154d94711e668399f4115874c7a61939d31e3ef51d069778e88d85fd2d2",
+    "crop": ""
+  },
+  "casos": {
+    "file": "casos.png",
+    "title": "Actores y casos de uso de requerimientos y vacantes",
+    "description": "Lámina del modelo académico. Relaciona tres actores con CU-01 a CU-06. El catálogo conserva los 20 casos.",
+    "commit": "5e2eae37f63c7ac5d35ed2def9b2e843a644cd98",
+    "source": "docs/metologia/diagramas/exportados/05_CASOS_DE_USO_GENERAL_p01.png",
+    "source_sha256": "9af187583ff3d57ae3870444abf9e11dda8740a0e5e2f5587af3de0257814639",
+    "sha256": "9af187583ff3d57ae3870444abf9e11dda8740a0e5e2f5587af3de0257814639",
+    "crop": ""
+  },
+  "despliegue": {
+    "file": "despliegue.png",
+    "title": "Despliegue Docker local y SonarQube",
+    "description": "Configuración estática del entorno de práctica macOS. SonarQube y su H2 operan fuera del Compose de la aplicación.",
+    "commit": "5e2eae37f63c7ac5d35ed2def9b2e843a644cd98",
+    "source": "docs/metologia/diagramas/exportados/02_DESPLIEGUE_DOCKER_p01.png",
+    "source_sha256": "e5473eba99ecf9db59a329e835bbe8aee03e210180f9018a89a104718491b570",
+    "sha256": "e5473eba99ecf9db59a329e835bbe8aee03e210180f9018a89a104718491b570",
+    "crop": ""
+  },
+  "comparacion": {
+    "file": "comparacion.png",
+    "title": "Comparación ponderada y decisión humana",
+    "description": "La pantalla de Dirección muestra la fórmula, el tratamiento de empates y la separación entre ranking y decisión. QA visual F21, septiembre de 2026.",
+    "commit": "04d3cfa1db6f82d9cda8db2254338805137cdc3c",
+    "source": "docs/v1.1/phase-21-screenshots/11-comparacion-1024.png",
+    "source_sha256": "fc2b856f0e1d5103c09b6614f662c510917adbee46a0715e9149ac61043fcd4c",
+    "sha256": "fc2b856f0e1d5103c09b6614f662c510917adbee46a0715e9149ac61043fcd4c",
+    "crop": ""
+  },
+  "reportes-arq": {
+    "file": "reportes-arq.png",
+    "title": "Componentes del módulo de Reportes",
+    "description": "Esta rama conecta Policies y validación de filtros con la consulta agregada y la página de resultados.",
+    "commit": "5e2eae37f63c7ac5d35ed2def9b2e843a644cd98",
+    "source": "docs/architecture-cypress-reports/arquitectura/diagramas/17_MODULO_REPORTES_COMPONENTES.png",
+    "source_sha256": "bcee83e7ff494c4dbe525dd3ca069454b1fc9f96fd1da40e82344e79dd313caa",
+    "sha256": "bcee83e7ff494c4dbe525dd3ca069454b1fc9f96fd1da40e82344e79dd313caa",
+    "crop": ""
+  }
+}
