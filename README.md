@@ -45,12 +45,13 @@ No usa XAMPP ni MySQL. No implementa despliegue en la nube, R2/S3, Sentry, Meili
 Requisitos: Docker Desktop o Docker Engine con Compose ≥ 2.24, y Git.
 
 ```powershell
-copy .env.example .env                                              # opcional; ajuste puertos si están ocupados
-docker compose up -d --build --wait                                 # primera vez: instala dependencias, compila y migra
-docker compose exec app php artisan migrate:fresh --seed --force    # datos demo ficticios
+Copy-Item .env.example .env                                          # en un clon nuevo
+docker compose -p entrega-colegio up -d --build --wait
+docker compose -p entrega-colegio exec app php artisan db:seed --class=DemoSeeder --force
+docker compose -p entrega-colegio exec app php artisan db:seed --class=DemoJobOffersSeeder --force
 ```
 
-Abra http://localhost:8000. Guía completa (entorno E2E, reset y solución de problemas): **`docs/docker.md`**. Para la presentación, con un proyecto Docker aislado, la bandera experimental y ML-01 opcional: **`docs/presentacion/README.md`**.
+Ejecute DemoSeeder una vez sobre la base recién migrada de este proyecto. Si el entorno ya tiene datos, siga los pasos para conservar el volumen en la [guía de entrega](docs/entrega-final/ENTREGA_INTEGRADA.md). Abra http://localhost:8000. Guía completa (entorno E2E, reset y solución de problemas): **`docs/docker.md`**. Para la presentación, con un proyecto Docker aislado, la bandera experimental y ML-01 opcional: **`docs/presentacion/README.md`**.
 
 ## Usuarios de demostración (ficticios)
 
@@ -67,7 +68,9 @@ Contraseña de todos: `password` (solo para desarrollo y demostración). Lista c
 
 ## Pruebas
 
-| Tipo | Comando | Último resultado (QA global, Fase 25) |
+Los resultados del candidato actual están en el [cierre responsive y auditoría técnica](docs/entrega-final/RESPONSIVE_QA.md). La tabla conserva la referencia histórica de Fase 25.
+
+| Tipo | Comando | Resultado histórico (QA global, Fase 25) |
 |---|---|---|
 | PHPUnit (unitarias + *feature*) | `docker compose exec app php artisan test` | 411 superadas, 8 omitidas, 0 fallidas (1498 aserciones) |
 | Componentes (Vitest) | `docker compose exec app npx vp test --run` | 42/42 |
