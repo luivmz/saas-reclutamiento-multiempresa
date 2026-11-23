@@ -156,6 +156,8 @@ function listado() {
 }
 
 describe('E2E-24 · Anfitrión del listado de empleos', () => {
+    before(() => cy.resetDatabase());
+
     afterEach(() => reducido(false));
 
     it('reposo, interés al entrar en una oferta, señala hacia ella y vuelve al reposo', () => {
