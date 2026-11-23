@@ -78,9 +78,9 @@ function sinAnimaciones() {
                         (a) => a.effect?.getTiming().iterations !== Infinity,
                     );
 
-                Promise.all(finitas.map((a) => a.finished)).then(
-                    resolve,
-                    resolve,
+                void Promise.all(finitas.map((a) => a.finished)).then(
+                    () => resolve(),
+                    () => resolve(),
                 );
             }),
     );
