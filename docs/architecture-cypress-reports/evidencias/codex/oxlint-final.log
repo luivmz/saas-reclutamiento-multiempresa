@@ -1,0 +1,59 @@
+
+  ! eslint(no-unused-expressions): Expected expression to be used
+    ,-[cypress/e2e/e2e-14-target-completion-form.cy.js:63:13]
+ 62 |             expect($input[0].min, 'min derivado del cierre').to.not.equal('');
+ 63 |             expect($input[0].checkValidity(), 'el campo queda invalido').to.be.false;
+    :             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 64 |         });
+    `----
+  help: Consider using this expression or removing it
+
+  ! typescript(no-floating-promises): Promises must be awaited, add void operator to ignore.
+    ,-[cypress/visual/phase-21-visual.cy.js:25:17]
+ 24 |
+ 25 |                 Promise.all(finitas.map((a) => a.finished)).then(resolve, resolve);
+    :                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^|
+    :                                                  |                                |`-- This rejection handler has type `any`, which is not callable.
+    :                                                  `-- This unhandled promise-like value has type `Promise<any[]>`.
+ 26 |             }),
+    `----
+  help: The promise must end with a call to .catch, or end with a call to .then with a rejection handler, or be explicitly marked as ignored with the `void` operator. A rejection handler that is not a function will be ignored.
+
+  ! typescript(no-floating-promises): Promises must be awaited, add void operator to ignore.
+     ,-[cypress/visual/phase-21-a11y-audit.cy.js:441:21]
+ 440 |
+ 441 | ,-->                     Promise.all(finitas.map((a) => a.finished)).then(
+ 442 | ||                           resolve,
+ 443 | ||                           resolve,
+     : ||                           ^^^|^^^
+     : ||                              `-- This rejection handler has type `any`, which is not callable.
+ 444 | |-->                     );
+     : `----- This unhandled promise-like value has type `Promise<any[]>`.
+ 445 |                      }),
+     `----
+  help: The promise must end with a call to .catch, or end with a call to .then with a rejection handler, or be explicitly marked as ignored with the `void` operator. A rejection handler that is not a function will be ignored.
+
+  ! typescript(no-floating-promises): Promises must be awaited, add void operator to ignore.
+     ,-[cypress/visual/phase-21-2fa.cy.js:148:17]
+ 147 |
+ 148 |                 Promise.all(finitas.map((a) => a.finished)).then(resolve, resolve);
+     :                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^|
+     :                                                  |                                |`-- This rejection handler has type `any`, which is not callable.
+     :                                                  `-- This unhandled promise-like value has type `Promise<any[]>`.
+ 149 |             }),
+     `----
+  help: The promise must end with a call to .catch, or end with a call to .then with a rejection handler, or be explicitly marked as ignored with the `void` operator. A rejection handler that is not a function will be ignored.
+
+  ! typescript(no-floating-promises): Promises must be awaited, add void operator to ignore.
+    ,-[cypress/e2e/e2e-19-qa-visual-accesible.cy.js:69:17]
+ 68 |
+ 69 |                 Promise.all(finitas.map((a) => a.finished)).then(resolve, resolve);
+    :                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^|
+    :                                                  |                                |`-- This rejection handler has type `any`, which is not callable.
+    :                                                  `-- This unhandled promise-like value has type `Promise<any[]>`.
+ 70 |             }),
+    `----
+  help: The promise must end with a call to .catch, or end with a call to .then with a rejection handler, or be explicitly marked as ignored with the `void` operator. A rejection handler that is not a function will be ignored.
+
+Found 5 warnings and 0 errors.
+Finished in 503ms on 151 files with 111 rules using 10 threads.

@@ -1,0 +1,105 @@
+PHPUnit 12.5.35 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.25 with PCOV 1.0.12
+Configuration: /var/www/html/phpunit.xml
+
+...............................................................  63 / 434 ( 14%)
+...........................................................SSSS 126 / 434 ( 29%)
+SS..............SS................................[2026-11-09 22:19:01] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":47}
+[2026-11-09 22:19:01] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:01] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+..[2026-11-09 22:19:01] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:01] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:01] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:01] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+..[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"connection_failed","status":null,"duration_ms":0}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"timeout","status":null,"duration_ms":0}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"model_unavailable","status":503,"duration_ms":0}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"payload_rejected","status":422,"duration_ms":0}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"server_error","status":401,"duration_ms":0}
+. 189 / 434 ( 43%)
+[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"server_error","status":500,"duration_ms":0}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"invalid_json","status":200,"duration_ms":0}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"fingerprint_mismatch"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_mismatch"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_mismatch"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_out_of_range"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_out_of_range"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"flag_not_boolean"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"flag_inconsistent_with_threshold"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_experimental"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:risk_score"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:risk_flag"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:threshold"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:model_version"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:freeze_fingerprint"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":2,"detail":"model_version_empty"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_empty"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_mismatch"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"model_version_not_string"}
+.[2026-11-09 22:19:01] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"freeze_fingerprint_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"freeze_fingerprint_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"freeze_fingerprint_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"freeze_fingerprint_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"freeze_fingerprint_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"freeze_fingerprint_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"status_not_string"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"score_not_numeric"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_not_numeric"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_not_numeric"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_not_numeric"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"threshold_not_numeric"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":3,"detail":"threshold_not_numeric"}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"missing:status"}
+.[2026-11-09 22:19:02] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:02] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:02] testing.WARNING: ml.risk.predict {"outcome":"model_unavailable","status":503,"duration_ms":1}
+...[2026-11-09 22:19:02] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:02] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.......[2026-11-09 22:19:02] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+[2026-11-09 22:19:02] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+. 252 / 434 ( 58%)
+.............[2026-11-09 22:19:03] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+......[2026-11-09 22:19:03] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.......................[2026-11-09 22:19:03] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:03] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:04] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:04] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+......[2026-11-09 22:19:04] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+[2026-11-09 22:19:04] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":1}
+.[2026-11-09 22:19:04] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.....[2026-11-09 22:19:04] testing.WARNING: ml.risk.predict {"outcome":"connection_failed","status":null,"duration_ms":0}
+.[2026-11-09 22:19:04] testing.WARNING: ml.risk.predict {"outcome":"connection_failed","status":null,"duration_ms":0}
+.[2026-11-09 22:19:04] testing.WARNING: ml.risk.predict {"outcome":"incompatible_contract","status":200,"duration_ms":0,"detail":"fingerprint_mismatch"}
+.... 315 / 434 ( 72%)
+..............[2026-11-09 22:19:05] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:05] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+......[2026-11-09 22:19:05] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":1}
+.[2026-11-09 22:19:05] testing.DEBUG: ml.risk.predict {"outcome":"ok","status":200,"duration_ms":0}
+.[2026-11-09 22:19:05] testing.WARNING: ml.risk.predict {"outcome":"connection_failed","status":null,"duration_ms":0}
+..[2026-11-09 22:19:05] testing.WARNING: ml.risk.predict {"outcome":"connection_failed","status":null,"duration_ms":0}
+...................................... 378 / 434 ( 87%)
+........................................................        434 / 434 (100%)
+
+Time: 00:15.961, Memory: 97.00 MB
+
+OK, but some tests were skipped!
+Tests: 434, Assertions: 1715, Skipped: 8.
+
+Generating code coverage report in Clover XML format ... done [00:00.036]

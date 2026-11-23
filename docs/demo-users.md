@@ -2,7 +2,7 @@
 
 Todos los datos son **ficticios** (nombres, correos con dominios `.test`, teléfonos y CV de ejemplo). No corresponden a personas ni al personal real del Colegio Andino.
 
-Carga: `docker compose exec app php artisan migrate:fresh --seed` (borra la base de desarrollo y ejecuta `Database\Seeders\DemoSeeder`).
+En una base demo recién migrada, carga `docker compose exec app php artisan db:seed --class=DemoSeeder --force`. Usa el nombre del proyecto de tu entorno si corresponde. Consulta la [guía de entrega](entrega-final/ENTREGA_INTEGRADA.md) para las ofertas adicionales y la carga opcional de evidencias.
 
 **Contraseña de todos los usuarios demo:** `password` (solo para desarrollo/demostración).
 
@@ -48,3 +48,23 @@ Carga: `docker compose exec app php artisan migrate:fresh --seed` (borra la base
 | Proceso concluido | «Coordinador(a) de Tutoría»: decisión de Dirección, selección de postulante5, cierre; postulante6 y postulante1 no seleccionados; notificaciones de resultado y auditoría | RF-23 a RF-27 |
 | Organización Demo B | «Asistente Administrativo (Demo B)» publicada con una postulación de postulante2 | Aislamiento |
 | Riesgo operacional (ML-01, experimental) | «Docente de Ciencia y Tecnología - Secundaria»: proceso ficticio reproducido en el pasado. Se publicó hace 30 días, cerró postulaciones hace 10, sigue abierto y tiene un plazo objetivo a 30 días. Tiene postulaciones de postulante1, postulante3 y postulante6, con postulante1 preseleccionado y sin evaluaciones asignadas. Con el servicio ML levantado y `ML_SERVICE_ENABLED=true`, su panel muestra una estimación; sin el servicio, el modo descriptivo | RF-29 (candidato, experimental) |
+
+## Ofertas adicionales para el listado público (opcional)
+
+Diez ofertas ficticias más, para que `/empleos` tenga varias páginas y más tarjetas que explorar. No las carga `DemoSeeder` ni el entorno E2E: se añaden a mano, sobre una base ya sembrada con `DemoSeeder`.
+
+```
+docker compose exec app php artisan db:seed --class=DemoJobOffersSeeder --force
+```
+
+- **Idempotente:** la primera ejecución añade exactamente diez y las siguientes no añaden nada. Cada oferta lleva en su requerimiento la clave estable `clave demo-ofertas-NN`.
+- **Flujo real:** cada oferta pasa por requerimiento aprobado, vacante con perfil y criterios (ponderaciones que suman 100) y publicación. Abre el día de la carga y cierra entre 30 y 45 días después.
+- **Sin postulaciones:** no crea postulaciones, evaluaciones ni decisiones.
+- **Códigos:** dependen de lo que ya existe, porque son secuenciales por organización y año. Sobre una base recién sembrada son `VAC-2026-0006` a `VAC-2026-0011` (Colegio Andino) y `VAC-2026-0002` a `VAC-2026-0005` (Demo B).
+
+| Organización | Ofertas |
+|---|---|
+| Colegio Andino de Huancayo (Demo) | Docente de Matemática - Secundaria (2 plazas) · Docente de Inglés - Primaria · Docente de Educación Física · Psicólogo/a educativo/a · Bibliotecario/a escolar · Asistente de soporte informático |
+| Organización Demo B | Analista de Recursos Humanos · Asistente de Contabilidad (2 plazas) · Coordinador/a de Operaciones · Técnico/a de Soporte TI |
+
+«Docente de Inglés - Primaria» coincide en título con la vacante en borrador de `DemoSeeder` (RF-05 a RF-07). Son dos vacantes distintas: la nueva está publicada y tiene su propio código.

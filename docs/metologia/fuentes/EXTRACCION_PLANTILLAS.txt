@@ -1,0 +1,585 @@
+
+FILE PLANTILLA-MATRIZ-ISO9001-SIGEMAD-MPA-V4.xlsx
+HOJA 0. Guía de Uso
+1: {"A": "PLANTILLA MATRIZ DE TRAZABILIDAD — MODELO JERÁRQUICO ISO 9001"}
+3: {"A": "Propósito de esta plantilla", "B": "Esta plantilla está completamente en blanco. No contiene datos del caso Sigemad MPA V2: es la estructura que tu compañero debe completar directamente, nivel por nivel, para construir la matriz de trazabilidad definitiva. Ninguna hoja trae información precargada; todas las filas de datos están vacías y listas para llenarse."}
+4: {"A": "Jerarquía del modelo (4 niveles)", "B": "El modelo sigue la lógica exigida por ISO 9001 para la gestión por procesos: MACROPROCESO > PROCEDIMIENTO > ACTIVIDAD > FUNCIÓN. Cada nivel vive en su propia hoja y se conecta con el nivel superior mediante un identificador (ID). Un Macroproceso engloba uno o varios Procedimientos; un Procedimiento engloba una o varias Actividades; una Actividad engloba una o varias Funciones de software."}
+5: {"A": "Hoja 1. Macroprocesos", "B": "Registra los procesos institucionales de más alto nivel (por ejemplo, Gestión de Activos Informáticos). Cada macroproceso tiene un ID Proceso único. No requiere trazabilidad de prompt porque es un nivel puramente organizacional/institucional, no un artefacto generado por IA."}
+6: {"A": "Hoja 2. Procedimientos", "B": "Registra los procedimientos dentro de cada macroproceso (columna ID Proceso, que enlaza a la Hoja 1). Cada procedimiento debe poder representarse mediante un diagrama de proceso (Bizagi u otra herramienta), y ese diagrama se genera idealmente con un único prompt. Por eso esta hoja incluye su propio bloque de trazabilidad de prompt: ID Prompt, técnica de prompting, versión, número de iteraciones, criterio de aceptación, resultado obtenido, herramienta de diagramación utilizada y el enlace a la evidencia del diagrama en GitHub."}
+7: {"A": "Hoja 3. Actividades", "B": "Registra las actividades dentro de cada procedimiento (columna ID Procedimiento, que enlaza a la Hoja 2). Una actividad es una tarea concreta dentro del procedimiento, a la que luego se asocian una o varias funciones de software."}
+8: {"A": "Hoja 4. Matriz Consolidada (Funciones)", "B": "Es el nivel más detallado: cada fila es una función o componente de software (por ejemplo, 'Alta de equipo'). Cada función se conecta hacia arriba mediante la columna ID Actividad (que enlaza a la Hoja 3). Aquí se mantiene la trazabilidad DevOps (control de versiones, CI, CD, pruebas, monitoreo), la trazabilidad del prompt de implementación (Jiang et al., 2025) y la trazabilidad física del código (ruta, archivo, commit, test asociado). Se agregaron además dos columnas nuevas de calidad de código: 'SonarQube (Estado)' y 'SonarQube (Evidencia / Link GitHub)', solicitadas por el asesor."}
+9: {"A": "Hoja 5. Prompts Detallados (Funciones)", "B": "Complementa la Matriz Consolidada con el texto completo de cada prompt de implementación, su técnica, versión, iteraciones y resultado. Se relaciona con la Hoja 4 mediante la columna ID Prompt."}
+10: {"A": "Sobre la evidencia de SonarQube en GitHub", "B": "El repositorio Gestion-MPA no tiene todavía una carpeta dedicada a evidencia de calidad de código. Se recomienda crear la ruta documents/06_calidad/sonarqube/ y guardar ahí un archivo o captura por función analizada (por ejemplo, documents/06_calidad/sonarqube/F-014_inventario.png), enlazando ese archivo desde la columna 'SonarQube (Evidencia / Link GitHub)' de la Hoja 4. La columna 'SonarQube (Estado)' solo debe marcarse como 'Sí' cuando exista ese enlace real; de lo contrario debe quedar en 'No' o 'No aplica'."}
+11: {"A": "Sobre la trazabilidad de los Procedimientos (diagramas de proceso)", "B": "El bloque de prompt en la Hoja 2 (Procedimientos) es independiente del bloque de prompt en la Hoja 4 (Funciones). El primero traza el prompt que generó el DIAGRAMA del procedimiento (por ejemplo, un prompt que pidió a la IA modelar el procedimiento en notación BPMN para importarlo o replicarlo en Bizagi). El segundo traza el prompt que generó el CÓDIGO de una función. Son artefactos distintos y no deben mezclarse en la misma columna."}
+12: {"A": "Orden recomendado de llenado", "B": "1) Completar la Hoja 1 con los macroprocesos institucionales reales (validados con el asesor). 2) Completar la Hoja 2 con los procedimientos de cada macroproceso y su respectivo prompt de diagramación. 3) Completar la Hoja 3 con las actividades de cada procedimiento. 4) Completar la Hoja 4 asociando cada función existente a su actividad correspondiente (columna ID Actividad) y agregando el estado de SonarQube cuando exista evidencia. 5) Completar la Hoja 5 con el detalle textual de cada prompt de implementación."}
+13: {"A": "Advertencia de honestidad metodológica", "B": "No se debe registrar ninguna fila en niveles superiores (Macroproceso, Procedimiento, Actividad) sin que exista al menos una función real asociada en la Hoja 4. Del mismo modo, no se debe registrar un ID Prompt en la Hoja 2 si el diagrama de proceso no fue realmente generado o asistido por IA; en ese caso, esas columnas deben quedar vacías o marcarse como 'No aplica'."}
+HOJA 1. Macroprocesos
+1: {"A": "ID Proceso", "B": "Macroproceso (nombre)", "C": "Objetivo del proceso", "D": "Alcance / módulos del sistema relacionados", "E": "Responsable del proceso", "F": "Observaciones"}
+HOJA 2. Procedimientos
+1: {"A": "ID Procedimiento", "B": "ID Proceso (relación)", "C": "Procedimiento (nombre)", "D": "ID Prompt (diagrama de proceso)", "E": "Técnica de prompting", "F": "Versión del prompt", "G": "N.º de iteraciones", "H": "Criterio de aceptación", "I": "Resultado obtenido", "J": "Herramienta de diagramación (Bizagi u otra)", "K": "Ubicación exacta (ruta del diagrama)", "L": "Archivo principal (diagrama)", "M": "Link GitHub (evidencia del diagrama)", "N": "Commit", "O": "Responsable", "P": "Rol", "Q": "Observaciones"}
+HOJA 3. Actividades
+1: {"A": "ID Actividad", "B": "ID Procedimiento (relación)", "C": "Actividad (nombre)", "D": "Descripción breve", "E": "Responsable", "F": "Observaciones"}
+HOJA 4. Matriz Consolidada
+1: {"A": "ID Actividad (relación)", "B": "ID Función", "C": "Feature/Módulo", "D": "Función/Componente", "E": "Fase SDLC", "F": "Capa (arquitectura Sigemad)", "G": "Impacto LCP (Amaro et al., 2025)", "H": "DevOps: Control de Versiones", "I": "DevOps: Continuous Integration (CI)", "J": "DevOps: Continuous Delivery/Deployment (CD)", "K": "DevOps: Test Automation", "L": "DevOps: Continuous Monitoring", "M": "Calidad de código: SonarQube (Estado)", "N": "Calidad de código: SonarQube (Evidencia / Link GitHub)", "O": "ID Prompt (Jiang et al., 2025)", "P": "Técnica de prompting", "Q": "Versión del prompt", "R": "N.º de iteraciones", "S": "Criterio de aceptación", "T": "Resultado obtenido", "U": "Ubicación exacta (ruta)", "V": "Archivo principal", "W": "Ruta completa", "X": "Link GitHub (línea exacta)", "Y": "Commit", "Z": "Test asociado", "AA": "Responsable", "AB": "Rol", "AC": "Observaciones"}
+HOJA 5. Prompts Detallados
+1: {"A": "ID Prompt", "B": "Función(es) asociada(s)", "C": "Prompt exacto", "D": "Técnica", "E": "Versión del prompt", "F": "N.º de iteraciones", "G": "Motivo de refinamiento", "H": "Versión final", "I": "Estado", "J": "Resultado obtenido", "K": "Evidencia"}
+HOJA 6. Diccionario de Columnas
+1: {"A": "Hoja", "B": "Columna", "C": "Definición", "D": "Fuente / Origen"}
+2: {"A": "1. Macroprocesos", "B": "ID Proceso", "C": "Identificador único del macroproceso institucional.", "D": "ISO 9001"}
+3: {"A": "1. Macroprocesos", "B": "Macroproceso (nombre)", "C": "Nombre del proceso institucional de alto nivel (por ejemplo, Gestión de Activos Informáticos).", "D": "ISO 9001"}
+4: {"A": "1. Macroprocesos", "B": "Objetivo del proceso", "C": "Propósito general del macroproceso dentro de la institución.", "D": "ISO 9001"}
+5: {"A": "1. Macroprocesos", "B": "Alcance / módulos del sistema relacionados", "C": "Módulos del software que apoyan o automatizan este proceso.", "D": "Original"}
+6: {"A": "2. Procedimientos", "B": "ID Procedimiento", "C": "Identificador único del procedimiento dentro de un macroproceso.", "D": "ISO 9001"}
+7: {"A": "2. Procedimientos", "B": "ID Proceso (relación)", "C": "Enlaza el procedimiento con su macroproceso en la Hoja 1.", "D": "ISO 9001"}
+8: {"A": "2. Procedimientos", "B": "Procedimiento (nombre)", "C": "Nombre del procedimiento. Debe poder representarse mediante un diagrama de proceso generado, en principio, con un único prompt.", "D": "ISO 9001"}
+9: {"A": "2. Procedimientos", "B": "ID Prompt (diagrama de proceso)", "C": "Identificador del prompt usado para generar o asistir el diagrama del procedimiento (distinto del prompt de implementación de código).", "D": "Jiang et al. (2025), adaptado"}
+10: {"A": "2. Procedimientos", "B": "Técnica de prompting / Versión / N.º de iteraciones / Criterio de aceptación / Resultado obtenido", "C": "Bloque de trazabilidad del prompt de diagramación, con la misma lógica que el bloque de prompt de la Hoja 4, pero aplicado al diagrama del procedimiento.", "D": "Jiang et al. (2025), adaptado"}
+11: {"A": "2. Procedimientos", "B": "Herramienta de diagramación (Bizagi u otra)", "C": "Software usado para construir o exportar el diagrama de proceso.", "D": "Original"}
+12: {"A": "2. Procedimientos", "B": "Ubicación exacta (ruta del diagrama) / Archivo principal / Link GitHub / Commit", "C": "Trazabilidad física del diagrama dentro del repositorio, igual que la trazabilidad física de código de la Hoja 4.", "D": "Original"}
+13: {"A": "3. Actividades", "B": "ID Actividad", "C": "Identificador único de la actividad dentro de un procedimiento.", "D": "ISO 9001"}
+14: {"A": "3. Actividades", "B": "ID Procedimiento (relación)", "C": "Enlaza la actividad con su procedimiento en la Hoja 2.", "D": "ISO 9001"}
+15: {"A": "3. Actividades", "B": "Actividad (nombre)", "C": "Tarea concreta dentro del procedimiento, a la que se asocian una o varias funciones de software.", "D": "ISO 9001"}
+16: {"A": "4. Matriz Consolidada", "B": "ID Actividad (relación)", "C": "Enlaza la función con su actividad en la Hoja 3, cerrando la jerarquía Proceso > Procedimiento > Actividad > Función.", "D": "ISO 9001"}
+17: {"A": "4. Matriz Consolidada", "B": "ID Función / Feature-Módulo / Función-Componente", "C": "Identificación de la función o componente de software.", "D": "Original"}
+18: {"A": "4. Matriz Consolidada", "B": "Fase SDLC / Capa (arquitectura Sigemad) / Impacto LCP", "C": "Contextualización técnica de la función dentro del ciclo de vida del software.", "D": "Amaro et al. (2025)"}
+19: {"A": "4. Matriz Consolidada", "B": "DevOps: Control de Versiones / CI / CD / Test Automation / Continuous Monitoring", "C": "Cinco capacidades técnicas DevOps evaluadas para cada función (Sí / Parcial / No).", "D": "Amaro et al. (2025)"}
+20: {"A": "4. Matriz Consolidada", "B": "Calidad de código: SonarQube (Estado)", "C": "Indica si la función fue validada con SonarQube como código limpio. Valores: Sí, Parcial, No, No aplica. Solo se marca 'Sí' si existe evidencia real enlazada.", "D": "Aporte propio — mejora solicitada por el asesor"}
+21: {"A": "4. Matriz Consolidada", "B": "Calidad de código: SonarQube (Evidencia / Link GitHub)", "C": "Enlace directo a la evidencia (reporte o captura) del análisis SonarQube de la función, almacenada en GitHub. Si no existe la carpeta de evidencia, debe crearse (propuesta: documents/06_calidad/sonarqube/).", "D": "Aporte propio — mejora solicitada por el asesor"}
+22: {"A": "4. Matriz Consolidada", "B": "ID Prompt / Técnica / Versión / N.º de iteraciones / Criterio de aceptación / Resultado obtenido", "C": "Trazabilidad del prompt de implementación que generó o modificó la función.", "D": "Jiang et al. (2025)"}
+23: {"A": "4. Matriz Consolidada", "B": "Ubicación exacta / Archivo principal / Ruta completa / Link GitHub / Commit / Test asociado / Responsable / Rol / Observaciones", "C": "Trazabilidad física del código de la función dentro del repositorio.", "D": "Original"}
+24: {"A": "5. Prompts Detallados", "B": "ID Prompt / Función(es) asociada(s) / Prompt exacto / Técnica / Versión / N.º de iteraciones / Motivo de refinamiento / Versión final / Estado / Resultado obtenido / Evidencia", "C": "Registro textual completo de cada prompt de implementación, ampliando lo resumido en la Hoja 4.", "D": "Jiang et al. (2025)"}
+
+FILE Plantilla Estructura de proyecto final.docx
+word/document.xml p1: UNIVERSIDAD CONTINENTAL
+word/document.xml p2: FACULTAD DE INGENIERÍA
+word/document.xml p3: ESCUELA ACADÉMICO PROFESIONAL DE INGENIERÍA DE SISTEMAS E INFORMÁTICA
+word/document.xml p4:
+word/document.xml p5: PROYECTO
+word/document.xml p6: “[Título del proyecto del Equipo]”
+word/document.xml p7: PORTADA
+word/document.xml p8: PRESENTADO POR:
+word/document.xml p9: APELLIDOS Y NOMBRES
+word/document.xml p10: CÓDIGO
+word/document.xml p11:
+word/document.xml p12:
+word/document.xml p13:
+word/document.xml p14:
+word/document.xml p15:
+word/document.xml p16:
+word/document.xml p17:
+word/document.xml p18: ASESOR:
+word/document.xml p19: DR. MAGLIONI ARANA CAPARACHIN
+word/document.xml p20:
+word/document.xml p21: HUANCAYO – PERÚ
+word/document.xml p22: 2026
+word/document.xml p23:
+word/document.xml p24:
+word/document.xml p25: Aclaración Importante:
+word/document.xml p26: Cada sección de color ROJO son comentarios e instrucciones guías para el estudiante, en su entrega final, eso debe ser borrado según sea el avance de su proyecto.
+word/document.xml p27: La estructura del proyecto sigue una lógica de un proyecto real de Ingeniería de Software, comenzando con la descripción del problema, luego se analiza el contexto organizacional, posteriormente se planifica y diseña la solución tecnológica, se implementa el sistema, se ejecutan las pruebas de software y finalmente se analizan los resultados monitoreados.
+word/document.xml p28: Esta estructura permite evidenciar la aplicación de prácticas modernas de desarrollo como SCRUM, TDD, DevOps y automatización de pruebas, además de integrar conceptos de calidad de software, seguridad informática y métricas basadas en estándares internacionales.
+word/document.xml p29: CONTENIDO GENERAL
+word/document.xml p30: PORTADAi
+word/document.xml p31: CONTENIDO GENERALii
+word/document.xml p32: CAPÍTULO 1v
+word/document.xml p33: INFORMACIÓN GENERAL DEL PROYECTOv
+word/document.xml p34: 1.1.Resumen Ejecutivov
+word/document.xml p35: 1.2.Introducciónvi
+word/document.xml p36: CAPÍTULO 2vi
+word/document.xml p37: CONTEXTO ORGANIZACIONAL Y ANÁLISIS DEL PROBLEMAvi
+word/document.xml p38: 2.1.Contexto de la Organizaciónvi
+word/document.xml p39: 2.2.Identificación del Problemavi
+word/document.xml p40: CAPÍTULO 3vii
+word/document.xml p41: ANÁLISIS DE PROCESOS DE NEGOCIOvii
+word/document.xml p42: 3.1.Descripción del Proceso Actualvii
+word/document.xml p43: 3.2.Modelado del Proceso Actual (AS-IS)vii
+word/document.xml p44: 3.3.Problemas del Proceso Actualvii
+word/document.xml p45: 3.4.Modelado del Proceso Propuesto (TO-BE)viii
+word/document.xml p46: CAPÍTULO 4viii
+word/document.xml p47: ANÁLISIS DE REQUERIMIENTOS DEL SISTEMAviii
+word/document.xml p48: 4.1.Identificación de Actores del Sistemaviii
+word/document.xml p49: 4.2.Requerimientos Funcionalesviii
+word/document.xml p50: 4.3.Requerimientos no Funcionalesix
+word/document.xml p51: 4.4.Casos de Uso del Sistemaix
+word/document.xml p52: CAPÍTULO 5ix
+word/document.xml p53: PLANIFICACIÓN DEL PROYECTO Y PLAN DE CALIDADix
+word/document.xml p54: 5.1.Alcance del Proyectoix
+word/document.xml p55: 5.2.Herramientas Tecnológicas del Proyectoix
+word/document.xml p56: 5.3.Normas y Estándares de Calidadx
+word/document.xml p57: 5.4.Plan de Pruebas del Proyectox
+word/document.xml p58: 5.5.Lineamientos de Seguridad Informáticax
+word/document.xml p59: CAPÍTULO 6x
+word/document.xml p60: DISEÑO DEL SISTEMAx
+word/document.xml p61: 6.1.Arquitectura Conceptual del Sistemaxi
+word/document.xml p62: 6.2.Modelo UML del Sistemaxi
+word/document.xml p63: 6.3.Diseño de Interfaces de Usuarioxi
+word/document.xml p64: 6.4.Diseño de Base de Datosxi
+word/document.xml p65: CAPÍTULO 7xii
+word/document.xml p66: ARQUITECTURA TECNOLÓGICA DEL SISTEMAxii
+word/document.xml p67: 7.1.Tecnologías del Frontendxii
+word/document.xml p68: 7.2.Tecnologías del Backendxii
+word/document.xml p69: 7.3.Base de Datos del Sistemaxii
+word/document.xml p70: 7.4.Infraestructura de Desarrolloxiii
+word/document.xml p71: CAPÍTULO 8xiii
+word/document.xml p72: DESARROLLO DEL SISTEMAxiii
+word/document.xml p73: 8.1.Iteración 1: Configuración Inicial del Proyectoxiii
+word/document.xml p74: 8.2.Iteración 2: Desarrollo de Funcionalidades Básicasxiii
+word/document.xml p75: 8.3.Iteración 3: Implementación de Módulos Funcionalesxiii
+word/document.xml p76: 8.4.Iteraciones Posterioresxiv
+word/document.xml p77: CAPÍTULO 9xiv
+word/document.xml p78: CONTROL DE VERSIONES Y GESTIÓN DEL REPOSITORIOxiv
+word/document.xml p79: 9.1.Repositorio del Proyectoxiv
+word/document.xml p80: 9.2.Estrategia de Control de Versionesxiv
+word/document.xml p81: 9.3.Gestión de Ramas del Proyectoxiv
+word/document.xml p82: 9.4.Registro de Commits Relevantesxv
+word/document.xml p83: CAPÍTULO 10xv
+word/document.xml p84: DOCKERIZACIÓN Y DESPLIEGUE DE MÓDULOSxv
+word/document.xml p85: 10.1.Introducción a Docker en el Proyectoxv
+word/document.xml p86: 10.2.Dockerización del Backendxv
+word/document.xml p87: 10.3.Dockerización del Frontendxv
+word/document.xml p88: 10.4.Orquestación con Docker Composexv
+word/document.xml p89: CAPÍTULO 11xvi
+word/document.xml p90: ESTRATEGIA DE PRUEBAS DE SOFTWARExvi
+word/document.xml p91: 11.1.Enfoque de Pruebas del Proyectoxvi
+word/document.xml p92: 11.2.Niveles de Pruebas Aplicadosxvi
+word/document.xml p93: 11.3.Tipos de Pruebas Ejecutadasxvi
+word/document.xml p94: 11.4.Plan de Ejecución de Pruebasxvii
+word/document.xml p95: CAPÍTULO 12xvii
+word/document.xml p96: AUTOMATIZACIÓN DE PRUEBASxvii
+word/document.xml p97: 12.1.Herramientas de Automatizaciónxvii
+word/document.xml p98: 12.2.Configuración del Entorno de Pruebasxvii
+word/document.xml p99: 12.3.Scripts de Pruebas Automatizadasxvii
+word/document.xml p100: 12.4.Ejecución Automática de Pruebasxviii
+word/document.xml p101: CAPÍTULO 13xviii
+word/document.xml p102: MÉTRICAS DE CALIDADxviii
+word/document.xml p103: 13.1.Ejecución de Casos de Pruebasxviii
+word/document.xml p104: 13.2.Registro de Defectosxviii
+word/document.xml p105: 13.3.Métricas de Calidad del Softwarexviii
+word/document.xml p106: 13.4.Evaluación de Calidad basada en Estándaresxix
+word/document.xml p107: CAPÍTULO 14xix
+word/document.xml p108: IMPLEMENTACIÓN Y MONITOREOxix
+word/document.xml p109: 14.1.Preparación del Entorno de Implementaciónxix
+word/document.xml p110: 14.2.Implementación del Sistemaxix
+word/document.xml p111: 14.3.Verificación de Funcionamientoxix
+word/document.xml p112: 14.4.Monitoreo del Sistemaxx
+word/document.xml p113: CONCLUSIONESxx
+word/document.xml p114: RECOMENDACIONESxx
+word/document.xml p115: REFERENCIASxx
+word/document.xml p116: ANEXOSxxi
+word/document.xml p117:
+word/document.xml p118:
+word/document.xml p119:
+word/document.xml p120: CAPÍTULO 1
+word/document.xml p121: INFORMACIÓN GENERAL DEL PROYECTO
+word/document.xml p122: Este capítulo presenta la información básica del proyecto y permite comprender rápidamente el propósito del sistema desarrollado, el contexto académico del trabajo y el alcance general del proyecto.
+word/document.xml p123: Resumen Ejecutivo
+word/document.xml p124: El resumen ejecutivo presenta una síntesis clara del proyecto desarrollado. Debe permitir comprender rápidamente:
+word/document.xml p125: el problema identificado
+word/document.xml p126: la solución tecnológica propuesta
+word/document.xml p127: las tecnologías utilizadas
+word/document.xml p128: el enfoque de calidad aplicado
+word/document.xml p129: los principales resultados obtenidos
+word/document.xml p130: Debe redactarse de manera concisa y comprensible para cualquier lector.
+word/document.xml p131: Extensión sugerida: entre media página y una página.
+word/document.xml p132: Introducción
+word/document.xml p133: La introducción contextualiza el proyecto dentro del campo de la ingeniería de software y del aseguramiento de la calidad del software.
+word/document.xml p134: Debe incluir:
+word/document.xml p135: contexto general del proyecto
+word/document.xml p136: importancia de las pruebas de software en el desarrollo moderno
+word/document.xml p137: propósito del sistema desarrollado
+word/document.xml p138: breve descripción de la estructura del informe
+word/document.xml p139: Este apartado orienta al lector sobre el contenido del documento.
+word/document.xml p140: CAPÍTULO 2
+word/document.xml p141: CONTEXTO ORGANIZACIONAL Y ANÁLISIS DEL PROBLEMA
+word/document.xml p142: Este capítulo describe el entorno donde se identifica el problema y explica por qué es necesario desarrollar una solución informática.
+word/document.xml p143: Contexto de la Organización
+word/document.xml p144: Debe describir el escenario organizacional donde surge la necesidad del sistema.
+word/document.xml p145: Contenido sugerido:
+word/document.xml p146: descripción de la organización o escenario simulado
+word/document.xml p147: actividades principales
+word/document.xml p148: área donde se presenta el problema
+word/document.xml p149: herramientas tecnológicas utilizadas actualmente
+word/document.xml p150: Este análisis permite comprender el entorno donde se implementará la solución.
+word/document.xml p151: Identificación del Problema
+word/document.xml p152: Se describe el problema central que afecta al proceso organizacional.
+word/document.xml p153: Debe incluir:
+word/document.xml p154: descripción detallada del problema
+word/document.xml p155: causas del problema
+word/document.xml p156: consecuencias operativas
+word/document.xml p157: impacto en la eficiencia del proceso
+word/document.xml p158: CAPÍTULO 3
+word/document.xml p159: ANÁLISIS DE PROCESOS DE NEGOCIO
+word/document.xml p160: Este capítulo analiza cómo funcionan los procesos organizacionales antes de implementar el sistema. Se utilizan técnicas de Business Process Management (BPM) para comprender el flujo de trabajo actual.
+word/document.xml p161: Descripción del Proceso Actual
+word/document.xml p162: Se describe paso a paso cómo se ejecuta actualmente el proceso dentro de la organización.
+word/document.xml p163: Debe incluir:
+word/document.xml p164: actores involucrados
+word/document.xml p165: actividades principales
+word/document.xml p166: flujo de información
+word/document.xml p167: Modelado del Proceso Actual (AS-IS)
+word/document.xml p168: Se presenta el diagrama BPM que representa el proceso actual.
+word/document.xml p169: Este modelo permite identificar:
+word/document.xml p170: secuencia de actividades
+word/document.xml p171: responsables del proceso
+word/document.xml p172: puntos críticos del flujo de trabajo
+word/document.xml p173: Problemas del Proceso Actual
+word/document.xml p174: A partir del modelo ASIS se identifican problemas como:
+word/document.xml p175: procesos manuales
+word/document.xml p176: duplicación de tareas
+word/document.xml p177: falta de control de información
+word/document.xml p178: retrasos en el flujo de trabajo
+word/document.xml p179: Modelado del Proceso Propuesto (TO-BE)
+word/document.xml p180: Se presenta el modelo BPM del proceso mejorado que incorpora el sistema propuesto. Este modelo muestra cómo la tecnología permitirá:
+word/document.xml p181: automatizar tareas
+word/document.xml p182: mejorar el control de información
+word/document.xml p183: optimizar el flujo de trabajo
+word/document.xml p184: CAPÍTULO 4
+word/document.xml p185: ANÁLISIS DE REQUERIMIENTOS DEL SISTEMA
+word/document.xml p186: Este capítulo documenta los requerimientos del sistema que será desarrollado. El análisis de requerimientos permite definir qué debe hacer el sistema antes de comenzar su implementación.
+word/document.xml p187: Identificación de Actores del Sistema
+word/document.xml p188: Se identifican los usuarios que interactuarán con el sistema.
+word/document.xml p189: Ejemplos:
+word/document.xml p190: administrador
+word/document.xml p191: usuario operativo
+word/document.xml p192: supervisor
+word/document.xml p193: Requerimientos Funcionales
+word/document.xml p194: Describe las funcionalidades que el sistema debe implementar.
+word/document.xml p195: Cada requerimiento funcional debe incluir:
+word/document.xml p196: identificador del requerimiento
+word/document.xml p197: descripción funcional
+word/document.xml p198: actor involucrado
+word/document.xml p199: Ejemplo:
+word/document.xml p200: RF01 Registrar usuario.
+word/document.xml p201: RF02 Gestionar productos.
+word/document.xml p202: RF03 Registrar pedidos
+word/document.xml p203: Requerimientos no Funcionales
+word/document.xml p204: Define características de calidad del sistema.
+word/document.xml p205: Ejemplos:
+word/document.xml p206: rendimiento
+word/document.xml p207: seguridad
+word/document.xml p208: disponibilidad
+word/document.xml p209: usabilidad
+word/document.xml p210: Casos de Uso del Sistema
+word/document.xml p211: Se presenta el diagrama de casos de uso que muestra las interacciones entre los actores y el sistema.
+word/document.xml p212: CAPÍTULO 5
+word/document.xml p213: PLANIFICACIÓN DEL PROYECTO Y PLAN DE CALIDAD
+word/document.xml p214: Este capítulo define cómo se organizará el desarrollo del sistema antes de iniciar la implementación. Incluye la planificación del proyecto, el plan de pruebas, los estándares de calidad y las herramientas tecnológicas que se utilizarán.
+word/document.xml p215: Alcance del Proyecto
+word/document.xml p216: Define los límites del sistema.
+word/document.xml p217: Debe especificar:
+word/document.xml p218: funcionalidades incluidas
+word/document.xml p219: funcionalidades excluidas
+word/document.xml p220: Herramientas Tecnológicas del Proyecto
+word/document.xml p221: Se describen las tecnologías que se utilizarán durante el desarrollo.
+word/document.xml p222: Ejemplo:
+word/document.xml p223: Frontend: React
+word/document.xml p224: Backend: Laravel
+word/document.xml p225: Base de datos: MySQL
+word/document.xml p226: Control de versiones: Git y GitHub
+word/document.xml p227: Contenedores: Docker
+word/document.xml p228: Herramienta de pruebas: Cypress
+word/document.xml p229: Normas y Estándares de Calidad
+word/document.xml p230: Se definen los estándares que guiarán la calidad del software.
+word/document.xml p231: Ejemplos:
+word/document.xml p232: ISO 25010 – Calidad del producto software
+word/document.xml p233: ISO 29119 – Pruebas de software
+word/document.xml p234: Buenas prácticas de desarrollo seguro
+word/document.xml p235: Plan de Pruebas del Proyecto
+word/document.xml p236: Define la estrategia de pruebas antes de iniciar el desarrollo.
+word/document.xml p237: Debe incluir:
+word/document.xml p238: niveles de pruebas
+word/document.xml p239: tipos de pruebas
+word/document.xml p240: herramientas de pruebas
+word/document.xml p241: estrategia de automatización
+word/document.xml p242: Lineamientos de Seguridad Informática
+word/document.xml p243: Se establecen principios básicos de seguridad que se aplicarán durante el desarrollo.
+word/document.xml p244: Ejemplos:
+word/document.xml p245: validación de datos
+word/document.xml p246: control de autenticación
+word/document.xml p247: protección contra ataques comunes
+word/document.xml p248: CAPÍTULO 6
+word/document.xml p249: DISEÑO DEL SISTEMA
+word/document.xml p250: Este capítulo describe el diseño conceptual del sistema antes de iniciar su implementación. El diseño permite definir cómo se estructurará la solución tecnológica para cumplir con los requerimientos identificados.
+word/document.xml p251: Arquitectura Conceptual del Sistema
+word/document.xml p252: Se describe la estructura general del sistema desde un punto de vista conceptual.
+word/document.xml p253: Debe incluir:
+word/document.xml p254: descripción de los componentes principales del sistema
+word/document.xml p255: interacción entre frontend, backend y base de datos
+word/document.xml p256: diagrama conceptual de arquitectura
+word/document.xml p257: Este apartado permite comprender cómo se organiza la solución tecnológica.
+word/document.xml p258: Modelo UML del Sistema
+word/document.xml p259: Se presentan los diagramas utilizados para representar la estructura y comportamiento del sistema.
+word/document.xml p260: Diagramas sugeridos:
+word/document.xml p261: Diagrama de casos de uso
+word/document.xml p262: Diagrama de clases
+word/document.xml p263: Diagrama de secuencia
+word/document.xml p264: Estos diagramas permiten visualizar la lógica interna del sistema.
+word/document.xml p265: Diseño de Interfaces de Usuario
+word/document.xml p266: Se presentan los prototipos de interfaz elaborados mediante herramientas de diseño como Figma.
+word/document.xml p267: Debe incluir:
+word/document.xml p268: pantallas principales del sistema
+word/document.xml p269: flujo de navegación entre pantallas
+word/document.xml p270: descripción funcional de cada interfaz
+word/document.xml p271: Diseño de Base de Datos
+word/document.xml p272: Describe la estructura de almacenamiento de datos del sistema.
+word/document.xml p273: Debe incluir:
+word/document.xml p274: modelo entidad–relación
+word/document.xml p275: descripción de las tablas
+word/document.xml p276: claves primarias
+word/document.xml p277: relaciones entre entidades
+word/document.xml p278: CAPÍTULO 7
+word/document.xml p279: ARQUITECTURA TECNOLÓGICA DEL SISTEMA
+word/document.xml p280: Este capítulo describe las tecnologías utilizadas para implementar el sistema y cómo interactúan entre sí.
+word/document.xml p281: Tecnologías del Frontend
+word/document.xml p282: Se describe el uso de React para el desarrollo de la interfaz del sistema.
+word/document.xml p283: Debe incluir:
+word/document.xml p284: estructura del proyecto frontend
+word/document.xml p285: componentes principales
+word/document.xml p286: manejo de rutas
+word/document.xml p287: comunicación con el backend
+word/document.xml p288: Tecnologías del Backend
+word/document.xml p289: Se describe el uso de Laravel para el desarrollo del servidor de aplicaciones.
+word/document.xml p290: Debe incluir:
+word/document.xml p291: estructura del proyecto backend
+word/document.xml p292: controladores
+word/document.xml p293: modelos
+word/document.xml p294: servicios
+word/document.xml p295: Base de Datos del Sistema
+word/document.xml p296: Se describe el uso de MySQL para la gestión de datos.
+word/document.xml p297: Debe incluir:
+word/document.xml p298: configuración de base de datos
+word/document.xml p299: migraciones
+word/document.xml p300: relaciones entre tablas
+word/document.xml p301: Infraestructura de Desarrollo
+word/document.xml p302: Se describe el entorno de desarrollo utilizado por el equipo.
+word/document.xml p303: Ejemplo:
+word/document.xml p304: servidor local
+word/document.xml p305: herramientas de desarrollo
+word/document.xml p306: gestor de dependencias
+word/document.xml p307: CAPÍTULO 8
+word/document.xml p308: DESARROLLO DEL SISTEMA
+word/document.xml p309: Este capítulo documenta el proceso de desarrollo del software mediante iteraciones o incrementos del sistema. Cada iteración representa un conjunto de funcionalidades implementadas durante el desarrollo del proyecto. Este capítulo es clave porque permite documentar cómo se construyó realmente el sistema.
+word/document.xml p310: Iteración 1: Configuración Inicial del Proyecto
+word/document.xml p311: Debe documentar:
+word/document.xml p312: creación del repositorio
+word/document.xml p313: configuración del proyecto frontend
+word/document.xml p314: configuración del proyecto backend
+word/document.xml p315: configuración inicial de la base de datos
+word/document.xml p316: Iteración 2: Desarrollo de Funcionalidades Básicas
+word/document.xml p317: Debe documentar:
+word/document.xml p318: endpoints iniciales del backend
+word/document.xml p319: primeros componentes del frontend
+word/document.xml p320: conexión entre frontend y backend
+word/document.xml p321: Iteración 3: Implementación de Módulos Funcionales
+word/document.xml p322: Debe documentar:
+word/document.xml p323: funcionalidades principales del sistema
+word/document.xml p324: formularios
+word/document.xml p325: operaciones CRUD
+word/document.xml p326: Iteraciones Posteriores
+word/document.xml p327: Cada iteración adicional debe documentar:
+word/document.xml p328: funcionalidades implementadas
+word/document.xml p329: mejoras realizadas
+word/document.xml p330: problemas encontrados
+word/document.xml p331: soluciones aplicadas
+word/document.xml p332: Este registro permite evidenciar la evolución del sistema durante el desarrollo.
+word/document.xml p333: CAPÍTULO 9
+word/document.xml p334: CONTROL DE VERSIONES Y GESTIÓN DEL REPOSITORIO
+word/document.xml p335: Este capítulo describe cómo se gestionó el código fuente del proyecto mediante herramientas de control de versiones.
+word/document.xml p336: Repositorio del Proyecto
+word/document.xml p337: Debe incluir:
+word/document.xml p338: enlace al repositorio en GitHub
+word/document.xml p339: descripción general del repositorio
+word/document.xml p340: Estrategia de Control de Versiones
+word/document.xml p341: Se describe la estrategia utilizada para organizar el desarrollo del código.
+word/document.xml p342: Debe incluir:
+word/document.xml p343: uso de ramas
+word/document.xml p344: flujo de trabajo Git
+word/document.xml p345: manejo de commits
+word/document.xml p346: Gestión de Ramas del Proyecto
+word/document.xml p347: Debe explicar cómo se organizaron las ramas del repositorio.
+word/document.xml p348: Ejemplo:
+word/document.xml p349: rama main
+word/document.xml p350: rama develop
+word/document.xml p351: ramas de funcionalidades
+word/document.xml p352: Registro de Commits Relevantes
+word/document.xml p353: Se presentan ejemplos de commits importantes realizados durante el desarrollo del sistema.
+word/document.xml p354: Esto permite evidenciar la evolución del proyecto.
+word/document.xml p355: CAPÍTULO 10
+word/document.xml p356: DOCKERIZACIÓN Y DESPLIEGUE DE MÓDULOS
+word/document.xml p357: Este capítulo describe el proceso de dockerización del sistema y cómo se encapsulan los componentes del proyecto en contenedores.
+word/document.xml p358: Introducción a Docker en el Proyecto
+word/document.xml p359: Se explica el uso de contenedores para facilitar la ejecución del sistema.
+word/document.xml p360: Debe incluir:
+word/document.xml p361: ventajas de usar Docker
+word/document.xml p362: objetivos de la dockerización
+word/document.xml p363: Dockerización del Backend
+word/document.xml p364: Debe documentar:
+word/document.xml p365: creación del Dockerfile
+word/document.xml p366: configuración del entorno de ejecución
+word/document.xml p367: Dockerización del Frontend
+word/document.xml p368: Debe documentar:
+word/document.xml p369: configuración del contenedor frontend
+word/document.xml p370: conexión con backend
+word/document.xml p371: Orquestación con Docker Compose
+word/document.xml p372: Se describe la configuración del archivo docker-compose para ejecutar todos los servicios del sistema.
+word/document.xml p373: Debe incluir:
+word/document.xml p374: servicio frontend
+word/document.xml p375: servicio backend
+word/document.xml p376: servicio base de datos
+word/document.xml p377: CAPÍTULO 11
+word/document.xml p378: ESTRATEGIA DE PRUEBAS DE SOFTWARE
+word/document.xml p379: Este capítulo describe la estrategia general de pruebas definida para garantizar la calidad del sistema desarrollado. El objetivo es verificar que el software cumple con los requerimientos funcionales y no funcionales definidos durante el análisis del proyecto.
+word/document.xml p380: Enfoque de Pruebas del Proyecto
+word/document.xml p381: Se describe el enfoque general utilizado para las pruebas del sistema.
+word/document.xml p382: Debe incluir:
+word/document.xml p383: enfoque de pruebas adoptado
+word/document.xml p384: integración de pruebas durante el desarrollo
+word/document.xml p385: relación con el enfoque TDD (Test Driven Development)
+word/document.xml p386: Niveles de Pruebas Aplicados
+word/document.xml p387: Se describen los diferentes niveles de pruebas implementados en el proyecto.
+word/document.xml p388: Ejemplos:
+word/document.xml p389: pruebas unitarias
+word/document.xml p390: pruebas de integración
+word/document.xml p391: pruebas funcionales
+word/document.xml p392: pruebas de aceptación
+word/document.xml p393: Tipos de Pruebas Ejecutadas
+word/document.xml p394: Se documentan los tipos de pruebas realizados durante el desarrollo del sistema.
+word/document.xml p395: Ejemplos:
+word/document.xml p396: pruebas de funcionalidad
+word/document.xml p397: pruebas de validación de datos
+word/document.xml p398: pruebas de interfaz
+word/document.xml p399: pruebas de seguridad básicas
+word/document.xml p400: Plan de Ejecución de Pruebas
+word/document.xml p401: Se describe cómo se organizó la ejecución de las pruebas durante el proyecto.
+word/document.xml p402: Debe incluir:
+word/document.xml p403: calendario de pruebas
+word/document.xml p404: responsables de pruebas
+word/document.xml p405: herramientas utilizadas
+word/document.xml p406: CAPÍTULO 12
+word/document.xml p407: AUTOMATIZACIÓN DE PRUEBAS
+word/document.xml p408: Este capítulo describe el proceso de automatización de pruebas del sistema. La automatización permite ejecutar pruebas de manera repetible y eficiente, reduciendo errores humanos y mejorando el control de calidad.
+word/document.xml p409: Herramientas de Automatización
+word/document.xml p410: Se describen las herramientas utilizadas para automatizar pruebas.
+word/document.xml p411: Ejemplo:
+word/document.xml p412: Cypress para pruebas funcionales en aplicaciones web
+word/document.xml p413: Configuración del Entorno de Pruebas
+word/document.xml p414: Se documenta la preparación del entorno necesario para ejecutar pruebas automatizadas.
+word/document.xml p415: Debe incluir:
+word/document.xml p416: instalación de herramientas
+word/document.xml p417: configuración del entorno
+word/document.xml p418: integración con el proyecto
+word/document.xml p419: Scripts de Pruebas Automatizadas
+word/document.xml p420: Se presentan ejemplos de scripts desarrollados para automatizar pruebas.
+word/document.xml p421: Debe incluir:
+word/document.xml p422: estructura de los scripts
+word/document.xml p423: ejemplos de pruebas automatizadas
+word/document.xml p424: Ejecución Automática de Pruebas
+word/document.xml p425: Se describe cómo se ejecutan las pruebas automatizadas durante el desarrollo del proyecto.
+word/document.xml p426: Puede incluir:
+word/document.xml p427: ejecución manual
+word/document.xml p428: integración con herramientas de desarrollo
+word/document.xml p429: CAPÍTULO 13
+word/document.xml p430: MÉTRICAS DE CALIDAD
+word/document.xml p431: Este capítulo presenta los resultados obtenidos durante la ejecución de las pruebas del sistema. Además, se analizan métricas de calidad basadas en estándares internacionales.
+word/document.xml p432: Ejecución de Casos de Pruebas
+word/document.xml p433: Se documenta la ejecución de los casos de prueba definidos en el plan de pruebas.
+word/document.xml p434: Debe incluir:
+word/document.xml p435: lista de casos de prueba ejecutados
+word/document.xml p436: resultados obtenidos
+word/document.xml p437: Registro de Defectos
+word/document.xml p438: Se documentan los defectos encontrados durante las pruebas.
+word/document.xml p439: Debe incluir:
+word/document.xml p440: descripción del defecto
+word/document.xml p441: nivel de severidad
+word/document.xml p442: acción correctiva aplicada
+word/document.xml p443: Métricas de Calidad del Software
+word/document.xml p444: Se presentan métricas que permiten evaluar la calidad del sistema.
+word/document.xml p445: Ejemplos:
+word/document.xml p446: tasa de defectos
+word/document.xml p447: cobertura de pruebas
+word/document.xml p448: estabilidad del sistema
+word/document.xml p449: Evaluación de Calidad basada en Estándares
+word/document.xml p450: Se analiza la calidad del sistema utilizando estándares de calidad de software.
+word/document.xml p451: Ejemplo:
+word/document.xml p452: ISO 25010
+word/document.xml p453: CAPÍTULO 14
+word/document.xml p454: IMPLEMENTACIÓN Y MONITOREO
+word/document.xml p455: Este capítulo describe la fase final de implantación del sistema y las actividades de monitoreo realizadas después de su implementación. El objetivo es asegurar que el sistema funciona correctamente en su entorno de ejecución.
+word/document.xml p456: Preparación del Entorno de Implementación
+word/document.xml p457: Se describe el proceso de preparación del entorno donde se ejecutará el sistema.
+word/document.xml p458: Debe incluir:
+word/document.xml p459: configuración del entorno
+word/document.xml p460: instalación de dependencias
+word/document.xml p461: configuración de contenedores Docker
+word/document.xml p462: Implementación del Sistema
+word/document.xml p463: Se documenta el proceso de puesta en funcionamiento del sistema.
+word/document.xml p464: Debe incluir:
+word/document.xml p465: despliegue del frontend
+word/document.xml p466: despliegue del backend
+word/document.xml p467: conexión con la base de datos
+word/document.xml p468: Verificación de Funcionamiento
+word/document.xml p469: Se realizan verificaciones para asegurar que el sistema funciona correctamente después de su implementación.
+word/document.xml p470: Debe incluir:
+word/document.xml p471: pruebas básicas de funcionamiento
+word/document.xml p472: validación de servicios
+word/document.xml p473: Monitoreo del Sistema
+word/document.xml p474: Se describen actividades de supervisión del sistema después de su implementación.
+word/document.xml p475: Puede incluir:
+word/document.xml p476: monitoreo de errores
+word/document.xml p477: monitoreo de rendimiento
+word/document.xml p478: registro de eventos del sistema
+word/document.xml p479: CONCLUSIONES
+word/document.xml p480: Se presentan las principales conclusiones obtenidas durante el desarrollo del sistema.
+word/document.xml p481: Deben relacionarse con:
+word/document.xml p482: cumplimiento de los objetivos del proyecto
+word/document.xml p483: calidad del software desarrollado
+word/document.xml p484: efectividad de las pruebas aplicadas
+word/document.xml p485: RECOMENDACIONES
+word/document.xml p486: Se proponen mejoras futuras para el sistema o para el proceso de desarrollo.
+word/document.xml p487: Ejemplos:
+word/document.xml p488: ampliación de funcionalidades
+word/document.xml p489: mejoras en rendimiento
+word/document.xml p490: ampliación de pruebas automatizadas
+word/document.xml p491: REFERENCIAS
+word/document.xml p492: Listado de todas las fuentes utilizadas durante el proyecto.
+word/document.xml p493: Debe incluir:
+word/document.xml p494: libros
+word/document.xml p495: documentación técnica
+word/document.xml p496: recursos web
+word/document.xml p497: artículos científicos
+word/document.xml p498: Formato sugerido: APA.
+word/document.xml p499: ANEXOS
+word/document.xml p500: Se incluyen materiales complementarios que respaldan el proyecto.
+word/document.xml p501: Ejemplos:
+word/document.xml p502: capturas del sistema
+word/document.xml p503: fragmentos de código
+word/document.xml p504: resultados de pruebas
+word/document.xml p505: configuraciones del entorno
+word/footnotes.xml p1:
+word/footnotes.xml p2:
+word/endnotes.xml p1:
+word/endnotes.xml p2:
+word/footer1.xml p1: 2
+word/footer1.xml p2:
+
+FILE Plantilla_Evaluacion_Practica_U3.pptx
+ppt/slides/slide1.xml: UNIVERSIDAD CONTINENTAL / FACULTAD DE INGENIERÍA / PROYECTO / … / Presentado por: / Bach. … / 2025 / ESCUELA PROFESIONAL DE INGENIERÍA DE SISTEMAS Y COMPUTACIÓN
+ppt/slides/slide2.xml: CAPÍTULO I / PLANTEAMIENTO DEL ESTUDIO
+ppt/slides/slide3.xml: DESCRIPCIÓN DEL PROBLEMA / Durante el estudio realizado, el Instituto Centroamericano de Administración de Empresas (INCAE) encuestó a un total de 1 281 trabajadores de distintos centros de salud a lo largo de 18 países de toda Latinoamérica. / Esta razón puede darse a la mala gestión de los mismos, según las autoridades de distintos nosocomios; según los encuestados, la siguiente razón de problemas en el sector salud la capacidad de atención, llegando a ser mencionado por un total de 38.5% de los encuestados / .
+ppt/slides/slide4.xml: DELIMITACIÓN DEL PROBLEMA / … / …
+ppt/slides/slide5.xml: VARIABLES / VARIABLE INDEPENDIENTE / …
+ppt/slides/slide6.xml: VARIABLES / VARIABLE DEPENDIENTE / …
+ppt/slides/slide7.xml: VARIABLES / OPERACIONALIZACIÓN DE VARIABLES
+ppt/slides/slide8.xml: CAPÍTULO II / PLANEACIÓN DEL PROYECTO
+ppt/slides/slide9.xml: ASPECTOS GENERALES DE LA EMPRESA / Diagnóstico:   / … / Detalles del Proyecto: / …
+ppt/slides/slide10.xml: CAPÍTULO III / ANÁLISIS DEL PROYECTO
+ppt/slides/slide11.xml: ANÁLISIS DEL PROYECTO / Requerimientos del Sistema / … / Metas del Proyecto / …
+ppt/slides/slide12.xml: CAPÍTULO IV / ESPECIFICACIÓN DEL PROYECTO
+ppt/slides/slide13.xml: P / LANIFICACIÓN DE PRUEBAS / ALCANCE DE PRUEBAS / … / ESTIMACIÓN DE COSTOS / …
+ppt/slides/slide14.xml: PRUEBAS DEL PROGRAMA / TIPOS DE PRUEBAS / … / HERRAMIENTAS DE PRUEBAS / …
+ppt/slides/slide15.xml: RESULTADOS / DISCUSIÓN DE RESULTADOS / …
+ppt/slides/slide16.xml: CONCLUSIONES
+ppt/slides/slide17.xml: RECOMENDACIONES
+ppt/slides/slide18.xml: REFERENCIAS BIBLIOGRAFÍA
+ppt/slides/slide19.xml: ANEXOS
+ppt/slides/slide20.xml: INTERVENCIÓN METODOLÓGICA

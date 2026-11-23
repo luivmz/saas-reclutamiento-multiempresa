@@ -1,0 +1,17 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "app",
+    "vendor/bin/phpstan",
+    "analyse",
+    "app/Services/Reports/RecruitmentReportService.php",
+    "--no-progress"
+  ],
+  "exit_code": 0,
+  "duration_seconds": 1.66,
+  "started_epoch": 1794280557.045604,
+  "log": "/private/tmp/saas-codex-audit-20261109/phpstan-reports-final.log"
+}

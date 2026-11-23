@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="1120" viewBox="0 0 1520 1120" role="img">
+  <title>16_FLUJO_GIT_DESARROLLO · Estrategia documentada</title>
+  <desc>FOTOGRAFÍA LOCAL · Sin fetch, checkout, staging, commit, push o merge Fuente: AGENTS.md; git branch -a; git log; .github/workflows/tests.yml; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="470,292.5 540,292.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="960,292.5 1030,292.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1240.0,375 1240.0,485" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1030,567.5 960,567.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="540,567.5 470,567.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Git: estrategia documentada e historial real</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">FOTOGRAFÍA LOCAL · Sin fetch, checkout, staging, commit, push o merge</tspan>
+  </text>
+  <text x="40" y="1058" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: AGENTS.md; git branch -a; git log; .github/workflows/tests.yml</tspan>
+    <tspan x="40" dy="19.52">Original editable: 16_FLUJO_GIT_DESARROLLO · Página: Estrategia documentada</tspan>
+  </text>
+  <rect x="50" y="210" width="420" height="165" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="260.0" y="288.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="260.0" dy="0">[DOC] develop limpio y sincronizado</tspan>
+    <tspan x="260.0" dy="24.4">Base exigida por gobierno</tspan>
+  </text>
+  <rect x="540" y="210" width="420" height="165" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="750.0" y="288.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="750.0" dy="0">[PROC] Rama acotada</tspan>
+    <tspan x="750.0" dy="24.4">feature/* / fix/* / docs/* / chore/*</tspan>
+  </text>
+  <rect x="1030" y="210" width="420" height="165" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1240.0" y="288.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1240.0" dy="0">[PROC] Implementación o documentación</tspan>
+    <tspan x="1240.0" dy="24.4">Un writer; contratos preservados</tspan>
+  </text>
+  <rect x="1030" y="485" width="420" height="165" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="1240.0" y="563.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1240.0" dy="0">[QA] Revisión y pruebas proporcionales</tspan>
+    <tspan x="1240.0" dy="24.4">Diff y evidencia</tspan>
+  </text>
+  <rect x="540" y="485" width="420" height="165" fill="#FFF1D6" stroke="#684900" stroke-width="2"/>
+  <text x="750.0" y="563.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="750.0" dy="0">[H] Integración / publicación</tspan>
+    <tspan x="750.0" dy="24.4">Solo con autorización</tspan>
+  </text>
+  <rect x="50" y="485" width="420" height="165" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="260.0" y="563.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="260.0" dy="0">[DOC] main / release / tags</tspan>
+    <tspan x="260.0" dy="24.4">No trabajo directo; historia protegida</tspan>
+  </text>
+  <rect x="60" y="855" width="1400" height="130" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1442 855 L 1442 873 L 1460 873" fill="none" stroke="#414F60"/>
+  <text x="760.0" y="905.06" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="760.0" dy="0">[DOC] Es una ESTRATEGIA DOCUMENTADA, no prueba de que cada cambio histórico siguió ese flujo.</tspan>
+    <tspan x="760.0" dy="21.96">CI: push main/develop/release//fix/, PR y manual. chore/ no activa push CI.</tspan>
+    <tspan x="760.0" dy="21.96">CD productivo no demostrado. En esta tarea se detiene antes de staging o publicación.</tspan>
+  </text>
+</svg>

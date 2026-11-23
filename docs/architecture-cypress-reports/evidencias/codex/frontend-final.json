@@ -1,0 +1,16 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "app",
+    "sh",
+    "-c",
+    "npm run types:check && npx --no-install vp test --run && npm run build"
+  ],
+  "exit_code": 0,
+  "duration_seconds": 10.01,
+  "started_epoch": 1794280584.896638,
+  "log": "/private/tmp/saas-codex-audit-20261109/frontend-final.log"
+}

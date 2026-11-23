@@ -1,0 +1,15 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "app",
+    "vendor/bin/pint",
+    "--test"
+  ],
+  "exit_code": 1,
+  "duration_seconds": 3.019,
+  "started_epoch": 1794280163.534816,
+  "log": "/private/tmp/saas-codex-audit-20261109/pint-received.log"
+}

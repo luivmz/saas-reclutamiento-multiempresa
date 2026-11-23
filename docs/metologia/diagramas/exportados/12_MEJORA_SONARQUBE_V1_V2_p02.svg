@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1530" height="1130" viewBox="0 0 1530 1130" role="img">
+  <title>12_MEJORA_SONARQUBE_V1_V2 · Cobertura y Quality Gate</title>
+  <desc>HISTÓRICO: 20/10/2026 · Misma Project Key; sin resultados nuevos en esta tarea Fuente: REPORTE_RESULTADOS_V2_PRELIMINAR.md §1, 6, 15–16; reporte evidencias V1; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="470,335.0 540,335.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="960,335.0 1030,335.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Mejora SonarQube V1 → V2</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">HISTÓRICO: 20/10/2026 · Misma Project Key; sin resultados nuevos en esta tarea</tspan>
+  </text>
+  <text x="40" y="1068" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: REPORTE_RESULTADOS_V2_PRELIMINAR.md §1, 6, 15–16; reporte evidencias V1</tspan>
+    <tspan x="40" dy="19.52">Original editable: 12_MEJORA_SONARQUBE_V1_V2 · Página: Cobertura y Quality Gate</tspan>
+  </text>
+  <rect x="50" y="235" width="420" height="200" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="260.0" y="318.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="260.0" dy="0">[QA] V1</tspan>
+    <tspan x="260.0" dy="24.4">Global 66.5 %</tspan>
+    <tspan x="260.0" dy="24.4">Gate OK; conditions: []</tspan>
+  </text>
+  <rect x="540" y="235" width="420" height="200" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="750.0" y="318.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="750.0" dy="0">[QA] V2 inicial</tspan>
+    <tspan x="750.0" dy="24.4">Global 65.6 %</tspan>
+    <tspan x="750.0" dy="24.4">New Code 1.7 %; Gate ERROR</tspan>
+  </text>
+  <rect x="1030" y="235" width="420" height="200" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="1240.0" y="318.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1240.0" dy="0">[QA] V2 tras clasificar tests</tspan>
+    <tspan x="1240.0" dy="24.4">Global 69.5 %</tspan>
+    <tspan x="1240.0" dy="24.4">New Code 50 %; Gate OK</tspan>
+  </text>
+  <rect x="70" y="560" width="1390" height="155" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1442 560 L 1442 578 L 1460 578" fill="none" stroke="#414F60"/>
+  <text x="765.0" y="619.24" font-family="Arial, sans-serif" font-size="22" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="765.0" dy="0">[DOC] Small Changes / ignoredConditions=true (heredado)</tspan>
+    <tspan x="765.0" dy="26.84">El Gate ignora la condición con menos de 20 líneas elegibles.</tspan>
+    <tspan x="765.0" dy="26.84">NO se alcanzó 80 %: una de dos líneas productivas elegibles está cubierta.</tspan>
+  </text>
+  <rect x="70" y="800" width="1390" height="155" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1442 800 L 1442 818 L 1460 818" fill="none" stroke="#414F60"/>
+  <text x="765.0" y="860.9" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="765.0" dy="0">[DOC] app/ 89.6 % en V1 y V2. Sin LCOV frontend; sidebar.tsx:621 queda sin cobertura importada.</tspan>
+    <tspan x="765.0" dy="24.4">11 líneas nuevas productivas, 2 elegibles, 1 cubierta. El aumento global es reclasificación de tests, no cobertura nueva.</tspan>
+    <tspan x="765.0" dy="24.4">No comparar porcentajes como si sus denominadores fueran idénticos.</tspan>
+  </text>
+</svg>

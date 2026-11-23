@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1130" viewBox="0 0 1440 1130" role="img">
+  <title>06_MAPA_MODULOS_SAAS · Flujo y capacidades transversales</title>
+  <desc>Sin banco de talentos, planillas, contratación o reportes BI implementados Fuente: RF-01–27; matriz requisitos; rutas y servicios; README; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="440,265.0 505,265.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="895,265.0 960,265.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1155.0,320 1155.0,400" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="960,455.0 895,455.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="505,455.0 440,455.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="245.0,510 245.0,580.0 715.0,580.0 715.0,650" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="480.0" y="572.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">apoya, no decide</text>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Mapa funcional de módulos reales</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Sin banco de talentos, planillas, contratación o reportes BI implementados</tspan>
+  </text>
+  <text x="40" y="1068" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: RF-01–27; matriz requisitos; rutas y servicios; README</tspan>
+    <tspan x="40" dy="19.52">Original editable: 06_MAPA_MODULOS_SAAS · Página: Flujo y capacidades transversales</tspan>
+  </text>
+  <rect x="50" y="210" width="390" height="110" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="245.0" y="260.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="245.0" dy="0">[PROC] Requerimientos</tspan>
+    <tspan x="245.0" dy="24.4">RF-01–04</tspan>
+  </text>
+  <rect x="505" y="210" width="390" height="110" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="700.0" y="260.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="700.0" dy="0">[PROC] Vacantes</tspan>
+    <tspan x="700.0" dy="24.4">RF-05–07, RF-20</tspan>
+  </text>
+  <rect x="960" y="210" width="390" height="110" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1155.0" y="260.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1155.0" dy="0">[PROC] Cuenta / perfil / CV</tspan>
+    <tspan x="1155.0" dy="24.4">RF-08–09</tspan>
+  </text>
+  <rect x="960" y="400" width="390" height="110" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1155.0" y="450.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1155.0" dy="0">[PROC] Postulaciones y seguimiento</tspan>
+    <tspan x="1155.0" dy="24.4">RF-10–15</tspan>
+  </text>
+  <rect x="505" y="400" width="390" height="110" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="700.0" y="450.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="700.0" dy="0">[PROC] Evaluación y entrevista</tspan>
+    <tspan x="700.0" dy="24.4">RF-16–20</tspan>
+  </text>
+  <rect x="50" y="400" width="390" height="110" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="245.0" y="450.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="245.0" dy="0">[PROC] Ranking / comparación</tspan>
+    <tspan x="245.0" dy="24.4">RF-21–22</tspan>
+  </text>
+  <rect x="70" y="650" width="1290" height="110" fill="#FFF1D6" stroke="#684900" stroke-width="2"/>
+  <text x="715.0" y="700.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="715.0" dy="0">[H] Decisión humana, registro de selección y cierre</tspan>
+    <tspan x="715.0" dy="24.4">RF-23–26 · Dirección decide; RR. HH. registra y cierra</tspan>
+  </text>
+  <rect x="70" y="815" width="1290" height="100" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1342 815 L 1342 833 L 1360 833" fill="none" stroke="#414F60"/>
+  <text x="715.0" y="860.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="715.0" dy="0">[DOC] Transversales: multitenencia lógica · usuarios / roles / Policies · notificaciones · auditoría RF-27</tspan>
+    <tspan x="715.0" dy="24.4">No se representa un CRUD comercial de organizaciones ni una selección automática.</tspan>
+  </text>
+  <rect x="70" y="950" width="1290" height="85" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1342 950 L 1342 968 L 1360 968" fill="none" stroke="#414F60"/>
+  <text x="715.0" y="1000.3" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="715.0" dy="0">[DOC] Soporte UI: DataTable y SidebarMenuSkeleton. RF-29: consulta operacional experimental y opcional, fuera de RF-01–27.</tspan>
+  </text>
+</svg>

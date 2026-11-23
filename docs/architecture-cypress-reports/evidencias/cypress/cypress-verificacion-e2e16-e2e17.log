@@ -1,0 +1,129 @@
+
+> cy:run
+> npm run e2e:setup && docker compose --profile e2e run --rm cypress --spec cypress/e2e/e2e-16-tabla-accesible-movil.cy.js,cypress/e2e/e2e-17-motion-accesible.cy.js
+
+
+> e2e:setup
+> docker compose run --rm --no-deps --entrypoint sh app docker/php/init-e2e-env.sh
+
+ Container reclutamiento-app-run-f66899a984a5 Creating
+ Container reclutamiento-app-run-f66899a984a5 Created
+.env.e2e ya existe; no se modifica.
+ Container reclutamiento-postgres-1 Running
+ Container reclutamiento-redis-1 Running
+ Container reclutamiento-app-e2e-1 Running
+ Container reclutamiento-queue-e2e-1 Running
+ Container reclutamiento-app-1 Running
+ Container reclutamiento-postgres-1 Waiting
+ Container reclutamiento-redis-1 Waiting
+ Container reclutamiento-postgres-1 Healthy
+ Container reclutamiento-redis-1 Healthy
+ Container reclutamiento-app-1 Waiting
+ Container reclutamiento-app-1 Healthy
+ Container reclutamiento-app-e2e-1 Waiting
+ Container reclutamiento-app-e2e-1 Healthy
+ Container reclutamiento-queue-e2e-1 Waiting
+ Container reclutamiento-app-e2e-1 Waiting
+ Container reclutamiento-queue-e2e-1 Healthy
+ Container reclutamiento-app-e2e-1 Healthy
+ Container reclutamiento-cypress-run-a3391bfd0359 Creating
+ Container reclutamiento-cypress-run-a3391bfd0359 Created
+[02:34:53]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [started]
+[02:34:55]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [COMPLETED]
+[209:1110/023455.684804:ERROR:dbus/object_proxy.cc:590] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type:
+
+DevTools listening on ws://127.0.0.1:42697/devtools/browser/345476b4-1f8a-48aa-8a6c-8a61f15e0e5f
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        15.3.0                                                                         │
+  │ Browser:        Electron 136 (headless)                                                        │
+  │ Node Version:   v22.20.0 (/usr/local/bin/node)                                                 │
+  │ Specs:          2 found (e2e-16-tabla-accesible-movil.cy.js, e2e-17-motion-accesible.cy.js)    │
+  │ Searched:       cypress/e2e/e2e-16-tabla-accesible-movil.cy.js, cypress/e2e/e2e-17-motion-acce │
+  │                 sible.cy.js                                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-16-tabla-accesible-movil.cy.js                                              (1 of 2)
+
+
+  E2E-16 · La tabla de expedientes conserva su semántica en móvil
+    ✓ requerimientos (2287ms)
+    ✓ vacantes (322ms)
+    ✓ postulaciones de una vacante (343ms)
+    ✓ ranking de la comparación (347ms)
+    ✓ auditoría (1662ms)
+    ✓ evaluaciones asignadas (1527ms)
+    ✓ en móvil cada celda muestra su etiqueta como texto, no como adorno CSS (140ms)
+
+
+  7 passing (7s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        7                                                                                │
+  │ Passing:      7                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     6 seconds                                                                        │
+  │ Spec Ran:     e2e-16-tabla-accesible-movil.cy.js                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Running:  e2e-17-motion-accesible.cy.js                                                   (2 of 2)
+
+
+  E2E-17 · El movimiento respeta el teclado y a quien lo reduce
+    ✓ el menú de usuario se abre con teclado y devuelve el foco al cerrarse (2184ms)
+    ✓ la navegación móvil se abre, se cierra con Escape y devuelve el foco (435ms)
+    ✓ el diálogo de eliminar la cuenta atrapa y devuelve el foco (426ms)
+    ✓ usa la curva del sistema y no la del navegador (139ms)
+    ✓ con movimiento reducido no se desplaza nada y la interfaz sigue usable (299ms)
+    ✓ con movimiento reducido el esqueleto deja de latir y el spinner sigue girando (137ms)
+    ✓ con movimiento reducido la tabla conserva su semántica accesible (162ms)
+    ✓ el panel de riesgo aparece con una atenuación, sin latido ni alarma (180ms)
+
+
+  8 passing (4s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        8                                                                                │
+  │ Passing:      8                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     4 seconds                                                                        │
+  │ Spec Ran:     e2e-17-motion-accesible.cy.js                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  e2e-16-tabla-accesible-movil.cy.js       00:06        7        7        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  e2e-17-motion-accesible.cy.js            00:04        8        8        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✔  All specs passed!                        00:11       15       15        -        -        -

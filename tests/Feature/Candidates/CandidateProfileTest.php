@@ -96,6 +96,42 @@ class CandidateProfileTest extends TestCase
         $this->assertSame(0, CandidateDocument::query()->count());
     }
 
+    public function test_rf09_cv_accepts_the_five_megabyte_boundary(): void
+    {
+        config(['recruitment.cv.max_kb' => 5120]);
+        $candidate = User::factory()->candidate()->create();
+
+        $this->actingAs($candidate)
+            ->post(route('candidate.cv.store'), ['cv' => UploadedFile::fake()->create('cv.pdf', 5120, 'application/pdf')])
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame(5120 * 1024, CandidateDocument::query()->sole()->size_bytes);
+    }
+
+    public function test_rf09_cv_cannot_exceed_five_megabytes_even_with_a_larger_configuration(): void
+    {
+        config(['recruitment.cv.max_kb' => 8192]);
+        $candidate = User::factory()->candidate()->create();
+
+        $this->actingAs($candidate)
+            ->post(route('candidate.cv.store'), ['cv' => UploadedFile::fake()->create('cv.pdf', 5121, 'application/pdf')])
+            ->assertSessionHasErrors('cv');
+
+        $this->assertSame(0, CandidateDocument::query()->count());
+    }
+
+    public function test_rf09_cv_respects_a_lower_configured_limit(): void
+    {
+        config(['recruitment.cv.max_kb' => 1024]);
+        $candidate = User::factory()->candidate()->create();
+
+        $this->actingAs($candidate)
+            ->post(route('candidate.cv.store'), ['cv' => UploadedFile::fake()->create('cv.pdf', 1025, 'application/pdf')])
+            ->assertSessionHasErrors('cv');
+
+        $this->assertSame(0, CandidateDocument::query()->count());
+    }
+
     public function test_rf09_staff_cannot_use_candidate_profile_routes(): void
     {
         $hr = User::factory()->hr(Organization::factory()->create())->create();

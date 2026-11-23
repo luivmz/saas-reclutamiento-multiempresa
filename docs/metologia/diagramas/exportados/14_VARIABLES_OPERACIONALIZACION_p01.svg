@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1210" viewBox="0 0 1500 1210" role="img">
+  <title>14_VARIABLES_OPERACIONALIZACION · Protocolo y calidad</title>
+  <desc>ESTUDIO DE CASO DOCUMENTAL · Asociación antes/después no demuestra causalidad de IA Fuente: OPERACIONALIZACION_VARIABLES; metodología IA; informes V1/V2; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="750.0,340 750.0,400.0 270.0,400.0 270.0,460" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="510.0" y="392.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">mecanismo propuesto</text>
+  <polyline points="750.0,340 750.0,460" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="750.0" y="392.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">mecanismo propuesto</text>
+  <polyline points="750.0,340 750.0,400.0 1230.0,400.0 1230.0,460" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="990.0" y="392.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">mecanismo propuesto</text>
+  <polyline points="270.0,585 270.0,657.5 750.0,657.5 750.0,730" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+  <polyline points="750.0,585 750.0,730" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+  <polyline points="1230.0,585 1230.0,657.5 750.0,657.5 750.0,730" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Variables y operacionalización</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">ESTUDIO DE CASO DOCUMENTAL · Asociación antes/después no demuestra causalidad de IA</tspan>
+  </text>
+  <text x="40" y="1148" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: OPERACIONALIZACION_VARIABLES; metodología IA; informes V1/V2</tspan>
+    <tspan x="40" dy="19.52">Original editable: 14_VARIABLES_OPERACIONALIZACION · Página: Protocolo y calidad</tspan>
+  </text>
+  <rect x="200" y="210" width="1100" height="130" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="750.0" y="258.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="750.0" dy="0">[PROC] VARIABLE INDEPENDIENTE PROPUESTA</tspan>
+    <tspan x="750.0" dy="24.4">Aplicación del protocolo colaborativo humano IA</tspan>
+    <tspan x="750.0" dy="24.4">Guiado por especificaciones y verificación</tspan>
+  </text>
+  <rect x="55" y="460" width="430" height="125" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="270.0" y="518.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="270.0" dy="0">[PROC] Contratos y contexto</tspan>
+    <tspan x="270.0" dy="24.4">RF/RNF, alcance y trazabilidad</tspan>
+  </text>
+  <rect x="535" y="460" width="430" height="125" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="750.0" y="518.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="750.0" dy="0">[PROC] Supervisión humana</tspan>
+    <tspan x="750.0" dy="24.4">Revisión y aceptación</tspan>
+  </text>
+  <rect x="1015" y="460" width="430" height="125" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1230.0" y="518.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1230.0" dy="0">[PROC] Verificación</tspan>
+    <tspan x="1230.0" dy="24.4">Pruebas y análisis de calidad</tspan>
+  </text>
+  <rect x="160" y="730" width="1180" height="150" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="750.0" y="788.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="750.0" dy="0">[QA] VARIABLE DEPENDIENTE PROPUESTA</tspan>
+    <tspan x="750.0" dy="24.4">Calidad del producto software</tspan>
+    <tspan x="750.0" dy="24.4">Indicadores: Issues, Vulnerabilities, Code Smells, coverage, tests y duplicación</tspan>
+  </text>
+  <text x="65" y="695" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="65" dy="0">Correspondencia propuesta: NO implica causalidad.</tspan>
+  </text>
+  <rect x="65" y="985" width="1370" height="120" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1417 985 L 1417 1003 L 1435 1003" fill="none" stroke="#414F60"/>
+  <text x="750.0" y="1028.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="750.0" dy="0">[DOC] Eficiencia EXPLORATORIA: PENDIENTE de horas, costos, retrabajo y control sin IA.</tspan>
+    <tspan x="750.0" dy="24.4">Trazabilidad: vínculos presentes; no inventar porcentaje de adopción del protocolo.</tspan>
+    <tspan x="750.0" dy="24.4">Métricas Sonar son históricas y la cobertura cambia de denominador al clasificar tests.</tspan>
+  </text>
+</svg>

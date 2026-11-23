@@ -1,0 +1,17 @@
+
+   PASS  Tests\Feature\Reports\RecruitmentReportTest
+  ✓ rf28 hr and approver open the reports module                         0.33s
+  ✓ rf28 unauthorized roles cannot open the reports module               0.06s
+  ✓ rf28 indicators are calculated from stored records                   0.06s
+  ✓ rf28 charts and table group the same filtered records                0.06s
+  ✓ rf28 reports never include records of another organization           0.07s
+  ✓ rf28 vacancy of another organization cannot be used as filter        0.06s
+  ✓ rf28 period filter changes indicators charts and table               0.06s
+  ✓ rf28 vacancy and status filters narrow every section                 0.06s
+  ✓ rf28 filters are validated                                           0.06s
+  ✓ rf28 draft vacancies are not offered as filter options               0.06s
+  ✓ rf28 reports expose aggregates only and no personal data             0.08s
+  ✓ rf28 empty organization shows zeros instead of errors                0.08s
+
+  Tests:    12 passed (209 assertions)
+  Duration: 1.12s

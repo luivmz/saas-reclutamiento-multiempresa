@@ -1,5 +1,7 @@
 # Plataforma SaaS Multiempresa para la Gestión del Reclutamiento, Evaluación y Selección de Personal
 
+**Entrega académica integrada.** Consulta la [guía de arranque, datos demo y validación](docs/entrega-final/ENTREGA_INTEGRADA.md) y el [informe final F29H](docs/academico/informe-final/).
+
 **Análisis y Diseño de una Plataforma SaaS Multiempresa para la Gestión del Reclutamiento, Evaluación y Selección de Personal – Caso de estudio: Colegio Andino de Huancayo**
 
 | | |

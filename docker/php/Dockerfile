@@ -18,6 +18,12 @@ RUN apt-get update \
     && docker-php-ext-enable redis \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Coverage-only CLI extension. Release 1.0.12 adds PHP 8.4 compatibility.
+# Native compilation uses the image architecture; collection is disabled in php.ini.
+ARG PCOV_VERSION=1.0.12
+RUN pecl install "pcov-${PCOV_VERSION}" \
+    && docker-php-ext-enable pcov
+
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules

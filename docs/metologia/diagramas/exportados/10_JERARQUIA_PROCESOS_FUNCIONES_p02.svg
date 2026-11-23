@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1130" viewBox="0 0 1760 1130" role="img">
+  <title>10_JERARQUIA_PROCESOS_FUNCIONES · PR-01 · detalle</title>
+  <desc>2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001 Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="705,315.0 860,315.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="782.5" y="307.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">se implementa en</text>
+  <polyline points="705,435.0 860,435.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="782.5" y="427.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">se implementa en</text>
+  <polyline points="705,555.0 860,555.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="782.5" y="547.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">se implementa en</text>
+  <polyline points="705,675.0 860,675.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="782.5" y="667.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">se implementa en</text>
+  <polyline points="705,795.0 860,795.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="782.5" y="787.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">se implementa en</text>
+  <polyline points="705,915.0 860,915.0" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="782.5" y="907.0" font-family="Arial" font-size="16" text-anchor="middle" fill="#172B3A" stroke="white" stroke-width="5" paint-order="stroke">se implementa en</text>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">PR-01 · Requerimiento y aprobación</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">2 MACROPROCESOS PROPUESTOS · No jerarquía de cuatro niveles exigida literalmente por ISO 9001</tspan>
+  </text>
+  <text x="40" y="1068" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: MATRIZ_TRAZABILIDAD_SAAS_RECLUTAMIENTO.xlsx</tspan>
+    <tspan x="40" dy="19.52">Original editable: 10_JERARQUIA_PROCESOS_FUNCIONES · Página: PR-01 · detalle</tspan>
+  </text>
+  <text x="55" y="207" font-family="Arial, sans-serif" font-size="22" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="55" dy="0">MP-01 → PR-01 · 6 actividades / 6 funciones</tspan>
+  </text>
+  <rect x="55" y="265" width="650" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="380.0" y="310.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="380.0" dy="0">[PROC] ACT-001</tspan>
+    <tspan x="380.0" dy="24.4">TB-01 Registrar el requerimiento de personal</tspan>
+  </text>
+  <rect x="860" y="265" width="830" height="100" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1275.0" y="310.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1275.0" dy="0">[SIS] FUN-001 · JobRequestWorkflow::register</tspan>
+    <tspan x="1275.0" dy="24.4">RF-01</tspan>
+  </text>
+  <rect x="55" y="385" width="650" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="380.0" y="430.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="380.0" dy="0">[PROC] ACT-002</tspan>
+    <tspan x="380.0" dy="24.4">TB-02 Enviar el requerimiento a RR. HH.</tspan>
+  </text>
+  <rect x="860" y="385" width="830" height="100" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1275.0" y="430.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1275.0" dy="0">[SIS] FUN-002 · JobRequestWorkflow::submit</tspan>
+    <tspan x="1275.0" dy="24.4">RF-02</tspan>
+  </text>
+  <rect x="55" y="505" width="650" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="380.0" y="550.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="380.0" dy="0">[PROC] ACT-003</tspan>
+    <tspan x="380.0" dy="24.4">TB-03 Revisar el requerimiento y validarlo u observarlo</tspan>
+  </text>
+  <rect x="860" y="505" width="830" height="100" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1275.0" y="550.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1275.0" dy="0">[SIS] FUN-003 · JobRequestWorkflow::validate</tspan>
+    <tspan x="1275.0" dy="24.4">RF-02</tspan>
+  </text>
+  <rect x="55" y="625" width="650" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="380.0" y="670.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="380.0" dy="0">[PROC] ACT-004</tspan>
+    <tspan x="380.0" dy="24.4">TB-04 Corregir y reenviar el requerimiento observado</tspan>
+  </text>
+  <rect x="860" y="625" width="830" height="100" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1275.0" y="670.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1275.0" dy="0">[SIS] FUN-004 · JobRequestWorkflow::correct</tspan>
+    <tspan x="1275.0" dy="24.4">RF-02</tspan>
+  </text>
+  <rect x="55" y="745" width="650" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="380.0" y="790.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="380.0" dy="0">[PROC] ACT-005</tspan>
+    <tspan x="380.0" dy="24.4">TB-05 Aprobar o rechazar el requerimiento</tspan>
+  </text>
+  <rect x="860" y="745" width="830" height="100" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1275.0" y="790.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1275.0" dy="0">[SIS] FUN-005 · JobRequestWorkflow::approve</tspan>
+    <tspan x="1275.0" dy="24.4">RF-03</tspan>
+  </text>
+  <rect x="55" y="865" width="650" height="100" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="380.0" y="910.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="380.0" dy="0">[PROC] ACT-006</tspan>
+    <tspan x="380.0" dy="24.4">TB-06 Notificar el rechazo al área solicitante</tspan>
+  </text>
+  <rect x="860" y="865" width="830" height="100" fill="#E5F0FA" stroke="#16476E" stroke-width="2"/>
+  <text x="1275.0" y="910.6" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1275.0" dy="0">[SIS] FUN-006 · JobRequestRejectedNotification::message</tspan>
+    <tspan x="1275.0" dy="24.4">RF-04</tspan>
+  </text>
+</svg>

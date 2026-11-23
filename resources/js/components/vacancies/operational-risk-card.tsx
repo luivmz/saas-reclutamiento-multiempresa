@@ -53,7 +53,9 @@ export function OperationalRiskCard({ vacancyId }: Props) {
             headers: { Accept: 'application/json' },
         })
             .then((response) =>
-                response.ok ? response.json() : Promise.reject(response.status),
+                response.ok
+                    ? response.json()
+                    : Promise.reject(new Error(`HTTP ${response.status}`)),
             )
             .then((data: { risk: RiskPayload }) => {
                 if (!cancelled) {

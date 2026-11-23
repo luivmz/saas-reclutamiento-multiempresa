@@ -1,0 +1,10 @@
+ Container reclutamiento-cypress-run-b935e5eb16e4 Creating
+ Container reclutamiento-cypress-run-b935e5eb16e4 Created
+[02:44:58]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [started]
+[02:45:00]  Verifying Cypress can run /root/.cache/Cypress/15.3.0/Cypress [COMPLETED]
+ Container reclutamiento-cypress-run-564da136d919 Creating
+ Container reclutamiento-cypress-run-564da136d919 Created
+Cypress package version: 15.3.0
+Cypress binary version: 15.3.0
+Electron version: 36.8.1
+Bundled Node version: 22.18.0

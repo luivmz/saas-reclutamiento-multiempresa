@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1530" height="1160" viewBox="0 0 1530 1160" role="img">
+  <title>12_MEJORA_SONARQUBE_V1_V2 · Correcciones y resultados</title>
+  <desc>HISTÓRICO: 20/10/2026 · Misma Project Key; sin resultados nuevos en esta tarea Fuente: REPORTE_RESULTADOS_V2_PRELIMINAR.md §1, 6, 15–16; reporte evidencias V1; vista auxiliar de las geometrías editables, no exportación nativa draw.io.</desc>
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3B5268"/>
+    </marker>
+  </defs>
+  <polyline points="470,297.5 540,297.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="960,297.5 1030,297.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1240.0,385 1240.0,485" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="1030,572.5 960,572.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <polyline points="540,572.5 470,572.5" fill="none" stroke="#3B5268" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="40" y="55" font-family="Arial, sans-serif" font-size="30" fill="#172B3A" text-anchor="start" font-weight="bold">
+    <tspan x="40" dy="0">Mejora SonarQube V1 → V2</tspan>
+  </text>
+  <text x="40" y="128" font-family="Arial, sans-serif" font-size="18" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">HISTÓRICO: 20/10/2026 · Misma Project Key; sin resultados nuevos en esta tarea</tspan>
+  </text>
+  <text x="40" y="1098" font-family="Arial, sans-serif" font-size="16" fill="#172B3A" text-anchor="start" font-weight="normal">
+    <tspan x="40" dy="0">Fuente: REPORTE_RESULTADOS_V2_PRELIMINAR.md §1, 6, 15–16; reporte evidencias V1</tspan>
+    <tspan x="40" dy="19.52">Original editable: 12_MEJORA_SONARQUBE_V1_V2 · Página: Correcciones y resultados</tspan>
+  </text>
+  <rect x="50" y="210" width="420" height="175" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="260.0" y="293.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="260.0" dy="0">[QA] V1</tspan>
+    <tspan x="260.0" dy="24.4">5 Issues: 2 Vulnerabilities + 3 Code Smells</tspan>
+  </text>
+  <rect x="540" y="210" width="420" height="175" fill="#FFF1D6" stroke="#684900" stroke-width="2"/>
+  <text x="750.0" y="293.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="750.0" dy="0">[H] Análisis por regla</tspan>
+    <tspan x="750.0" dy="24.4">Prioridad y contexto real</tspan>
+  </text>
+  <rect x="1030" y="210" width="420" height="175" fill="#EDF3F8" stroke="#34576E" stroke-width="2"/>
+  <text x="1240.0" y="293.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1240.0" dy="0">[PROC] Correcciones mínimas</tspan>
+    <tspan x="1240.0" dy="24.4">Sin silenciar reglas ni eliminar validaciones</tspan>
+  </text>
+  <rect x="1030" y="485" width="420" height="175" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="1240.0" y="555.9" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="1240.0" dy="0">[QA] Nuevas pruebas y regresión</tspan>
+    <tspan x="1240.0" dy="24.4">PHPUnit 414 / 8 skipped / 0 failed</tspan>
+    <tspan x="1240.0" dy="24.4">Vitest 48/48</tspan>
+  </text>
+  <rect x="540" y="485" width="420" height="175" fill="#F9EDDA" stroke="#795318" stroke-width="2"/>
+  <text x="750.0" y="568.1" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="750.0" dy="0">[QA] Scanner y procesamiento</tspan>
+    <tspan x="750.0" dy="24.4">SUCCESS documentado</tspan>
+  </text>
+  <rect x="50" y="485" width="420" height="175" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <text x="260.0" y="555.9" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="260.0" dy="0">[DOC] V2</tspan>
+    <tspan x="260.0" dy="24.4">0 Issues · 0 Vulnerabilities</tspan>
+    <tspan x="260.0" dy="24.4">0 Code Smells; 5/5 FIXED</tspan>
+  </text>
+  <rect x="60" y="860" width="1400" height="140" fill="#F0F2F5" stroke="#414F60" stroke-width="2"/>
+  <path d="M 1442 860 L 1442 878 L 1460 878" fill="none" stroke="#414F60"/>
+  <text x="760.0" y="913.4" font-family="Arial, sans-serif" font-size="20" fill="#172B3A" text-anchor="middle" font-weight="normal">
+    <tspan x="760.0" dy="0">[DOC] Reglas: php:S5693; typescript:S2245, S6843, S8786 y S6671.</tspan>
+    <tspan x="760.0" dy="24.4">Bugs 0→0 · Hotspots 0→0 · Duplicación 0.0 %→0.0 %.</tspan>
+    <tspan x="760.0" dy="24.4">El cierre de cinco hallazgos no certifica ausencia de defectos ni preparación productiva.</tspan>
+  </text>
+</svg>

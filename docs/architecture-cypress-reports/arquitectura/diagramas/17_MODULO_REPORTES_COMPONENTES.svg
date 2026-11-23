@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1080" viewBox="0 0 1440 1080" font-family="Arial, Helvetica, sans-serif" role="img" aria-labelledby="title desc">
+<title id="title">Módulo de Reportes: vista de componentes (RF-28 candidato)</title>
+<desc id="desc">Vista auxiliar generada desde la misma definición que el archivo .drawio: usuario RR. HH./Aprobador, página React/Inertia, ruta, Form Request, Policy, controlador, servicio y PostgreSQL; salida solo agregada.</desc>
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#334E68"/></marker></defs>
+<rect width="1440" height="1080" fill="#FFFFFF"/>
+<text x="40" y="70" font-size="30" font-weight="bold" fill="#172B3A">Módulo de Reportes: vista de componentes (RF-28 candidato)</text>
+<text x="40" y="115" font-size="16" fill="#172B3A">COMPONENTES VERIFICADOS EN EL CÓDIGO · complementa 01_ARQUITECTURA_GENERAL_SAAS y 06_MAPA_MODULOS_SAAS (fotografía del 03/11/2026)</text>
+<rect x="40" y="150" width="1360" height="180" fill="#F7F9FB" stroke="#334E68" stroke-width="2"/>
+<text x="54" y="180" font-size="18" fill="#172B3A">NAVEGADOR</text>
+<line x1="40" y1="195" x2="1400" y2="195" stroke="#334E68" stroke-width="1"/>
+<rect x="40" y="380" width="1360" height="380" fill="#F7F9FB" stroke="#334E68" stroke-width="2"/>
+<text x="54" y="410" font-size="18" fill="#172B3A">SERVIDOR · Laravel 13</text>
+<line x1="40" y1="425" x2="1400" y2="425" stroke="#334E68" stroke-width="1"/>
+<rect x="80" y="210" width="420" height="90" fill="#FFF1D6" stroke="#7A5A00" stroke-width="2"/>
+<text x="290.0" y="249.0" font-size="18" text-anchor="middle" fill="#172B3A">[H] RR. HH. · Aprobador/Dirección</text>
+<text x="290.0" y="273.0" font-size="18" text-anchor="middle" fill="#172B3A">de una organización</text>
+<rect x="640" y="210" width="720" height="90" fill="#E6F0FA" stroke="#1F4E79" stroke-width="2"/>
+<text x="1000.0" y="249.0" font-size="18" text-anchor="middle" fill="#172B3A">[SIS] React 19 + Inertia 3 · pages/reports/index.tsx</text>
+<text x="1000.0" y="273.0" font-size="18" text-anchor="middle" fill="#172B3A">KPI · barras por etapa · columnas por semana · tabla · filtros</text>
+<rect x="80" y="440" width="300" height="90" fill="#E6F0FA" stroke="#1F4E79" stroke-width="2"/>
+<text x="230.0" y="479.0" font-size="18" text-anchor="middle" fill="#172B3A">[SIS] Ruta GET /reportes</text>
+<text x="230.0" y="503.0" font-size="18" text-anchor="middle" fill="#172B3A">middleware auth</text>
+<rect x="440" y="440" width="400" height="90" fill="#EEF2F7" stroke="#334E68" stroke-width="2"/>
+<text x="640.0" y="479.0" font-size="18" text-anchor="middle" fill="#172B3A">[PROC] RecruitmentReportRequest</text>
+<text x="640.0" y="503.0" font-size="18" text-anchor="middle" fill="#172B3A">valida desde/hasta/vacante/etapa</text>
+<rect x="900" y="440" width="460" height="90" fill="#EEF2F7" stroke="#334E68" stroke-width="2"/>
+<text x="1130.0" y="479.0" font-size="18" text-anchor="middle" fill="#172B3A">[PROC] RecruitmentReportPolicy</text>
+<text x="1130.0" y="503.0" font-size="18" text-anchor="middle" fill="#172B3A">Gate viewRecruitmentReports: rol + organización</text>
+<rect x="440" y="620" width="400" height="90" fill="#E6F0FA" stroke="#1F4E79" stroke-width="2"/>
+<text x="640.0" y="659.0" font-size="18" text-anchor="middle" fill="#172B3A">[SIS] RecruitmentReportController</text>
+<text x="640.0" y="683.0" font-size="18" text-anchor="middle" fill="#172B3A">delgado: período y filtros → servicio</text>
+<rect x="900" y="620" width="460" height="90" fill="#EEF2F7" stroke="#334E68" stroke-width="2"/>
+<text x="1130.0" y="659.0" font-size="18" text-anchor="middle" fill="#172B3A">[PROC] RecruitmentReportService</text>
+<text x="1130.0" y="683.0" font-size="18" text-anchor="middle" fill="#172B3A">organization_id explícito + OrganizationScope</text>
+<path d="M840,832 v86 a260.0,12 0 0 0 520,0 v-86" fill="#E8EDF2" stroke="#334E68" stroke-width="2"/>
+<ellipse cx="1100.0" cy="832" rx="260.0" ry="12" fill="#E8EDF2" stroke="#334E68" stroke-width="2"/>
+<text x="1100.0" y="875.0" font-size="18" text-anchor="middle" fill="#172B3A">[DAT] PostgreSQL 17</text>
+<text x="1100.0" y="899.0" font-size="18" text-anchor="middle" fill="#172B3A">applications · application_stage_histories · vacancies</text>
+<path d="M80,800 h684 l16,16 v94 h-700 z" fill="#F1F3F6" stroke="#334E68" stroke-width="2"/>
+<path d="M764,800 v16 h16" fill="none" stroke="#334E68" stroke-width="2"/>
+<text x="430.0" y="837.0" font-size="18" text-anchor="middle" fill="#172B3A">[DOC] Salida: solo agregados (conteos, tasas, días).</text>
+<text x="430.0" y="861.0" font-size="18" text-anchor="middle" fill="#172B3A">Sin nombres, correos ni puntajes. No selecciona</text>
+<text x="430.0" y="885.0" font-size="18" text-anchor="middle" fill="#172B3A">ni puntúa personas; la decisión sigue siendo humana (RF-23).</text>
+<rect x="80" y="940" width="700" height="80" fill="#F8EBDD" stroke="#7A4A12" stroke-width="2"/>
+<text x="430.0" y="974.0" font-size="18" text-anchor="middle" fill="#172B3A">[QA] Pruebas: RecruitmentReportTest (PHPUnit) ·</text>
+<text x="430.0" y="998.0" font-size="18" text-anchor="middle" fill="#172B3A">reports.test.tsx (Vitest) · e2e-20-reports (Cypress)</text>
+<path d="M500,255 L640,255" fill="none" stroke="#334E68" stroke-width="2"  marker-end="url(#arr)"/>
+<rect x="552.0" y="243" width="36" height="22" fill="#FFFFFF"/>
+<text x="570" y="259" font-size="15" text-anchor="middle" fill="#172B3A">usa</text>
+<path d="M700,300 L700,345 L330,345 L330,440" fill="none" stroke="#334E68" stroke-width="2"  marker-end="url(#arr)"/>
+<rect x="424.0" y="333" width="212" height="22" fill="#FFFFFF"/>
+<text x="530" y="349" font-size="15" text-anchor="middle" fill="#172B3A">GET /reportes con filtros</text>
+<path d="M380,485 L440,485" fill="none" stroke="#334E68" stroke-width="2"  marker-end="url(#arr)"/>
+<path d="M840,485 L900,485" fill="none" stroke="#334E68" stroke-width="2"  marker-end="url(#arr)"/>
+<rect x="828.0" y="450" width="84" height="22" fill="#FFFFFF"/>
+<text x="870" y="466" font-size="15" text-anchor="middle" fill="#172B3A">authorize</text>
+<path d="M640,530 L640,620" fill="none" stroke="#334E68" stroke-width="2"  marker-end="url(#arr)"/>
+<rect x="574.0" y="563" width="132" height="22" fill="#FFFFFF"/>
+<text x="640" y="579" font-size="15" text-anchor="middle" fill="#172B3A">filtros válidos</text>
+<path d="M840,665 L900,665" fill="none" stroke="#334E68" stroke-width="2"  marker-end="url(#arr)"/>
+<rect x="824.0" y="630" width="92" height="22" fill="#FFFFFF"/>
+<text x="870" y="646" font-size="15" text-anchor="middle" fill="#172B3A">generate()</text>
+<path d="M1130,710 L1130,820" fill="none" stroke="#334E68" stroke-width="2"  marker-end="url(#arr)"/>
+<rect x="1048.0" y="753" width="164" height="22" fill="#FFFFFF"/>
+<text x="1130" y="769" font-size="15" text-anchor="middle" fill="#172B3A">SQL de solo lectura</text>
+<path d="M440,690 L410,690 L410,365 L1200,365 L1200,300" fill="none" stroke="#334E68" stroke-width="2" stroke-dasharray="8 6" marker-end="url(#arr)"/>
+<rect x="778.0" y="353" width="244" height="22" fill="#FFFFFF"/>
+<text x="900" y="369" font-size="15" text-anchor="middle" fill="#172B3A">props Inertia (JSON agregado)</text>
+<text x="40" y="1040" font-size="14" fill="#172B3A">Fuente: routes/web.php; app/Http/Controllers/Reports; app/Http/Requests/Reports; app/Policies/RecruitmentReportPolicy.php; app/Services/Reports; resources/js/pages/reports/index.tsx</text>
+<text x="40" y="1060" font-size="14" fill="#172B3A">Original editable: 17_MODULO_REPORTES_COMPONENTES · Página: Componentes y flujo</text>
+</svg>

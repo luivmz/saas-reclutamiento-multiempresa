@@ -4,10 +4,10 @@ use App\Http\Controllers\Applications\ApplicationController;
 use App\Http\Controllers\Applications\ApplicationStageController;
 use App\Http\Controllers\Applications\VacancyApplicationController;
 use App\Http\Controllers\Assessments\AssessmentAssignmentController;
-use App\Http\Controllers\Audit\AuditLogController;
 use App\Http\Controllers\Assessments\AssessmentScheduleController;
 use App\Http\Controllers\Assessments\EvaluationController;
 use App\Http\Controllers\Assessments\InterviewController;
+use App\Http\Controllers\Audit\AuditLogController;
 use App\Http\Controllers\Candidates\ApplyController;
 use App\Http\Controllers\Candidates\CandidateApplicationController;
 use App\Http\Controllers\Candidates\CandidateCvController;
@@ -19,6 +19,7 @@ use App\Http\Controllers\JobRequests\JobRequestController;
 use App\Http\Controllers\JobRequests\JobRequestTransitionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublicVacancyController;
+use App\Http\Controllers\Reports\RecruitmentReportController;
 use App\Http\Controllers\Selection\FinalDecisionController;
 use App\Http\Controllers\Selection\SelectionRegistrationController;
 use App\Http\Controllers\Selection\VacancyClosureController;
@@ -113,6 +114,9 @@ Route::middleware(['auth'])->group(function () {
 
     // RF-27 (solo lectura)
     Route::get('auditoria', [AuditLogController::class, 'index'])->name('audit.index');
+
+    // RF-28 (candidato): reportes operativos del proceso, solo lectura y agregados.
+    Route::get('reportes', RecruitmentReportController::class)->name('reports.index');
 
     // EXPERIMENTAL (rama local exp/evidencias-ml02): flujo de evidencias ficticias y ayuda documental ML-02.
     // Responde 404 salvo con EXPERIMENTAL_EVIDENCIAS=true (config/experimental.php). No es la integración formal
