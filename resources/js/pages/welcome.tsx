@@ -136,17 +136,17 @@ export default function Welcome() {
             <section className="school-hero" data-video-track>
                 <div className="school-stage" data-video-stage>
                     <ScrollVideo media={SCHOOL_MEDIA} />
-                    <div className="school-copy relative mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:py-16">
+                    <div className="school-copy relative mx-auto w-full max-w-6xl px-4 py-7 [overflow-wrap:anywhere] sm:px-6 sm:py-10 lg:py-16">
                         <div className="max-w-[25rem] space-y-6">
                             <p className="bg-card text-muted-foreground inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium shadow-xs">
                                 <GraduationCap
-                                    className="text-primary size-4"
+                                    className="text-primary size-4 shrink-0"
                                     aria-hidden="true"
                                 />
                                 Colegio Andino de Huancayo · caso de estudio con
                                 datos ficticios
                             </p>
-                            <h1 className="font-serif text-4xl leading-[1.06] font-semibold tracking-tight md:text-5xl lg:text-[3.35rem]">
+                            <h1 className="font-serif text-[2rem] leading-[1.06] font-semibold tracking-tight min-[360px]:text-4xl md:text-5xl lg:text-[3.35rem]">
                                 Reclutamiento con evidencia,{' '}
                                 <span className="text-teal-200">
                                     decisión con nombre propio
@@ -159,7 +159,7 @@ export default function Welcome() {
                                 una persona. El sistema ordena y explica; nunca
                                 elige por nadie.
                             </p>
-                            <div className="flex flex-wrap gap-3">
+                            <div className="flex flex-wrap gap-3 max-sm:[&>a]:h-auto max-sm:[&>a]:min-h-11 max-sm:[&>a]:max-w-full max-sm:[&>a]:text-center max-sm:[&>a]:whitespace-normal">
                                 <Button
                                     size="lg"
                                     className="shadow-primary/20 shadow-md"
@@ -215,7 +215,7 @@ export default function Welcome() {
                 aria-labelledby="landing-process-title"
                 data-cy="landing-process"
             >
-                <div className="grid items-center gap-10 lg:grid-cols-2">
+                <div className="grid grid-cols-1 items-center gap-10 [overflow-wrap:anywhere] lg:grid-cols-2">
                     <div>
                         <h2
                             id="landing-process-title"
@@ -223,7 +223,7 @@ export default function Welcome() {
                         >
                             Cómo avanza un proceso
                         </h2>
-                        <ol className="mt-7 grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                        <ol className="mt-7 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
                             {steps.map((step) => (
                                 <li key={step.title} className="border-t pt-4">
                                     <div className="flex items-center gap-3">
@@ -322,7 +322,7 @@ export default function Welcome() {
                             dentro de su organización.
                         </p>
                     </Reveal>
-                    <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                    <ul className="mt-8 grid grid-cols-1 gap-4 [overflow-wrap:anywhere] sm:grid-cols-2 lg:grid-cols-5">
                         {roles.map((item, index) => (
                             <li key={item.role}>
                                 <Reveal
@@ -343,7 +343,7 @@ export default function Welcome() {
             </section>
 
             <section className="border-t">
-                <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2">
+                <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-4 py-14 [overflow-wrap:anywhere] sm:px-6 lg:grid-cols-2">
                     <Reveal
                         className="flex flex-col gap-4 sm:flex-row sm:items-start"
                         data-cy="landing-limits"

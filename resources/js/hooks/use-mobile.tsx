@@ -1,11 +1,10 @@
 import { useSyncExternalStore } from 'react';
 
-const MOBILE_BREAKPOINT = 768;
+// Keep in sync with the sidebar's Tailwind lg breakpoint.
+const DRAWER_QUERY = '(width < 64rem)';
 
 const mql =
-    typeof window === 'undefined'
-        ? undefined
-        : window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    typeof window === 'undefined' ? undefined : window.matchMedia(DRAWER_QUERY);
 
 function mediaQueryListener(callback: (event: MediaQueryListEvent) => void) {
     if (!mql) {

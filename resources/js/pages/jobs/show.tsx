@@ -55,7 +55,7 @@ export default function JobShow({
                 <div className="relative mx-auto w-full max-w-6xl space-y-6 px-4 py-8 sm:px-6">
                     <Link
                         href={jobsIndex()}
-                        className="bg-card text-foreground inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm"
+                        className="bg-card text-foreground inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm pointer-coarse:min-h-11"
                     >
                         <ArrowLeft className="size-4" aria-hidden="true" />
                         Volver a empleos
@@ -68,7 +68,7 @@ export default function JobShow({
                             {vacancy.organization?.name}
                         </p>
                         <h1
-                            className="font-serif text-3xl font-semibold tracking-tight"
+                            className="font-serif text-3xl font-semibold tracking-tight [overflow-wrap:anywhere]"
                             data-cy="page-title"
                         >
                             {vacancy.title}
@@ -78,7 +78,7 @@ export default function JobShow({
                         </p>
                     </header>
 
-                    <div className="grid min-w-0 gap-6 lg:grid-cols-3">
+                    <div className="grid min-w-0 gap-6 [overflow-wrap:anywhere] lg:grid-cols-3">
                         <div className="min-w-0 space-y-6 lg:col-span-2">
                             <Section title="La convocatoria">
                                 <p className="text-sm leading-relaxed whitespace-pre-line">
@@ -168,8 +168,9 @@ export default function JobShow({
                                 {!auth?.user && (
                                     <>
                                         <p className="text-muted-foreground text-sm">
-                                            Para postular necesita una cuenta de
-                                            postulante.
+                                            {vacancy.accepts_applications
+                                                ? 'Para postular necesita una cuenta de postulante.'
+                                                : 'La convocatoria no está recibiendo postulaciones.'}
                                         </p>
                                         <Button asChild className="w-full">
                                             <Link

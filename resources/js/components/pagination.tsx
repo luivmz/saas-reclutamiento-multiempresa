@@ -17,7 +17,7 @@ export function Pagination({ meta }: { meta: Paginated<unknown>['meta'] }) {
 
     const lastIndex = meta.links.length - 1;
     const base =
-        'inline-flex h-8 min-w-8 items-center justify-center gap-1 rounded-md border px-2.5 text-sm';
+        'inline-flex h-8 min-w-8 items-center justify-center gap-1 rounded-md border px-2.5 text-sm pointer-coarse:h-11 pointer-coarse:min-w-11';
 
     return (
         <nav
@@ -27,7 +27,7 @@ export function Pagination({ meta }: { meta: Paginated<unknown>['meta'] }) {
             <p className="text-muted-foreground">
                 Mostrando {meta.from}–{meta.to} de {meta.total}
             </p>
-            <ul className="flex flex-wrap items-center gap-1">
+            <ul className="flex flex-wrap items-center justify-center gap-1">
                 {meta.links.map((link, index) => {
                     const isFirst = index === 0;
                     const isLast = index === lastIndex;

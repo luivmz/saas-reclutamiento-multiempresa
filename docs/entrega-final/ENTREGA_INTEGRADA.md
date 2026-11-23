@@ -2,6 +2,8 @@
 
 La aplicación reúne la base F37 y las correcciones SEG, Reportes, las evidencias versionadas y la ayuda documental experimental, los dos vídeos, el anfitrión, las ofertas demo adicionales y el informe F29H v2. RF-28 sigue siendo candidato. La decisión de selección la confirma y justifica Dirección (RF-23). La integración técnica conserva los estados formales y el uso de datos ficticios.
 
+El [cierre responsive y auditoría técnica](RESPONSIVE_QA.md) registra la validación a siete anchos, la suite completa y las capturas. El apartado de verificación de esta guía documenta el corte integrado anterior. El informe académico F29H v2 mantiene su propio corte.
+
 ## Arranque desde un clon
 
 Se requiere Git y Docker Desktop o Docker Engine con Compose V2. Los contenedores instalan Composer y Node, usan los archivos de dependencias bloqueadas, compilan Vite y ejecutan las migraciones.

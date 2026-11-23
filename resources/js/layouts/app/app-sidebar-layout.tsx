@@ -13,11 +13,15 @@ export default function AppSidebarLayout({
         <AppShell variant="sidebar">
             <SkipLink />
             <AppSidebar />
-            <AppContent variant="sidebar" className="min-w-0 overflow-x-clip">
+            <AppContent variant="sidebar" className="min-w-0">
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 {/* `tabIndex={-1}` para que el salto al contenido deje el foco
                     aquí y la siguiente tabulación siga dentro de la página. */}
-                <div id={MAIN_CONTENT_ID} tabIndex={-1} className="flex-1">
+                <div
+                    id={MAIN_CONTENT_ID}
+                    tabIndex={-1}
+                    className="min-w-0 flex-1 sm:[&_:focus-visible]:scroll-mt-20"
+                >
                     {children}
                 </div>
             </AppContent>

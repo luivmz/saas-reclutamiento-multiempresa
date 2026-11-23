@@ -23,7 +23,7 @@ export default function JobsIndex({ vacancies, filters }: Props) {
             <Head title="Empleos disponibles" />
 
             <section className="border-b">
-                <div className="mx-auto max-w-6xl space-y-5 px-4 py-12 sm:px-6">
+                <div className="mx-auto max-w-6xl space-y-5 px-4 py-8 sm:px-6 sm:py-12">
                     <h1
                         className="font-serif text-3xl font-semibold tracking-tight md:text-4xl"
                         data-cy="page-title"
@@ -31,13 +31,13 @@ export default function JobsIndex({ vacancies, filters }: Props) {
                         Empleos disponibles
                     </h1>
                     <p className="text-muted-foreground max-w-2xl leading-relaxed">
-                        Convocatorias vigentes publicadas por las organizaciones
-                        de la plataforma. Para postular necesita una cuenta de
-                        postulante con perfil y CV.
+                        Convocatorias publicadas por las organizaciones de la
+                        plataforma. Para postular necesita una cuenta con perfil
+                        de postulante y CV.
                     </p>
                     <Form
                         {...jobsIndex.form()}
-                        className="flex max-w-xl gap-2"
+                        className="grid max-w-xl gap-2 min-[360px]:grid-cols-[minmax(0,1fr)_auto]"
                         role="search"
                     >
                         <Input
@@ -45,9 +45,14 @@ export default function JobsIndex({ vacancies, filters }: Props) {
                             defaultValue={filters.q}
                             placeholder="Buscar por puesto…"
                             aria-label="Buscar por puesto"
+                            className="max-sm:h-11"
                             data-cy="jobs-search"
                         />
-                        <Button type="submit" variant="secondary">
+                        <Button
+                            type="submit"
+                            variant="secondary"
+                            className="max-[359px]:justify-self-start max-sm:h-11"
+                        >
                             <Search aria-hidden="true" />
                             Buscar
                         </Button>
@@ -56,9 +61,9 @@ export default function JobsIndex({ vacancies, filters }: Props) {
             </section>
 
             {/* Desde 1280 px, una columna propia para el anfitrión decorativo: no
-                tapa ofertas, búsqueda, paginación ni pie. Más estrecho, no hay
-                columna y el componente no se monta. */}
-            <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 xl:grid xl:grid-cols-[minmax(0,1fr)_8.5rem] xl:gap-8">
+                tapa ofertas, búsqueda, paginación ni pie. La columna solo existe
+                cuando el anfitrión tiene una presentación visible. */}
+            <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 xl:grid-cols-[minmax(0,1fr)_8.5rem] xl:gap-8 xl:has-[[data-cy=job-host]]:grid">
                 <div ref={listRef} className="min-w-0 space-y-6">
                     {vacancies.data.length === 0 ? (
                         <EmptyState
@@ -81,7 +86,7 @@ export default function JobsIndex({ vacancies, filters }: Props) {
                                     data-cy="job-card"
                                     data-code={vacancy.code}
                                 >
-                                    <div className="flex-1 space-y-3 p-5">
+                                    <div className="flex-1 space-y-3 p-5 [overflow-wrap:anywhere]">
                                         <p className="text-muted-foreground text-xs">
                                             {vacancy.organization?.name}
                                         </p>
@@ -98,7 +103,7 @@ export default function JobsIndex({ vacancies, filters }: Props) {
                                             {vacancy.summary}
                                         </p>
                                     </div>
-                                    <dl className="text-muted-foreground space-y-2 border-t px-5 py-4 text-sm">
+                                    <dl className="text-muted-foreground space-y-2 border-t px-5 py-4 text-sm [overflow-wrap:anywhere]">
                                         <div className="flex items-center gap-2">
                                             <MapPin
                                                 className="size-4 shrink-0"
@@ -134,7 +139,9 @@ export default function JobsIndex({ vacancies, filters }: Props) {
                                                 Cierre de postulaciones
                                             </dt>
                                             <dd>
-                                                Postule hasta el{' '}
+                                                {vacancy.accepts_applications
+                                                    ? 'Postule hasta el '
+                                                    : 'Cierre de postulaciones: '}
                                                 {formatDate(vacancy.closes_at)}
                                             </dd>
                                         </div>
@@ -145,11 +152,13 @@ export default function JobsIndex({ vacancies, filters }: Props) {
                     )}
                     <Pagination meta={vacancies.meta} />
                 </div>
-                <div className="hidden xl:block">
-                    <div className="job-host-sticky">
-                        <JobHost listRef={listRef} />
+                {vacancies.data.length > 0 && (
+                    <div className="hidden xl:has-[[data-cy=job-host]]:block">
+                        <div className="job-host-sticky">
+                            <JobHost listRef={listRef} />
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </>
     );

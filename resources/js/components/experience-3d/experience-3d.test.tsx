@@ -6,6 +6,7 @@ import {
     STAGE_SHEETS,
 } from './recruitment-scene-poster';
 import {
+    COARSE_POINTER_QUERY,
     detectSceneCapability,
     REDUCED_MOTION_QUERY,
     WIDE_VIEWPORT_QUERY,
@@ -20,6 +21,7 @@ import {
 type Options = {
     reduced?: boolean;
     wide?: boolean;
+    coarse?: boolean;
     saveData?: boolean;
     cores?: number;
     memory?: number;
@@ -29,6 +31,7 @@ type Options = {
 function fakeWindow({
     reduced = false,
     wide = true,
+    coarse = false,
     saveData = false,
     cores = 8,
     memory,
@@ -42,7 +45,7 @@ function fakeWindow({
                         ? reduced
                         : query === WIDE_VIEWPORT_QUERY
                           ? wide
-                          : false,
+                          : query === COARSE_POINTER_QUERY && coarse,
             }) as MediaQueryList,
         navigator: {
             hardwareConcurrency: cores,
@@ -90,6 +93,13 @@ describe('Cuándo la escena cede su sitio al póster', () => {
         expect(detectSceneCapability(fakeWindow({ wide: false }))).toEqual({
             mode: 'poster',
             reason: 'small-viewport',
+        });
+    });
+
+    test('una tablet ancha con puntero táctil conserva el póster', () => {
+        expect(detectSceneCapability(fakeWindow({ coarse: true }))).toEqual({
+            mode: 'poster',
+            reason: 'coarse-pointer',
         });
     });
 
