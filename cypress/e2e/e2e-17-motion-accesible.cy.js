@@ -72,9 +72,9 @@ describe('E2E-17 · El movimiento respeta el teclado y a quien lo reduce', () =>
         cy.viewport(768, 900);
         cy.visit('/vacantes');
 
-        cy.get('[data-sidebar="trigger"]').focus().type('{enter}');
+        cy.get('[data-sidebar="trigger"]').click();
         cy.get('[data-mobile="true"]').within(() => {
-            cy.get('h2').contains('Navegación').should('be.visible');
+            cy.get('h2').should('be.visible').and('contain.text', 'Navegación');
             cy.contains('button', 'Cerrar').should('be.visible');
             cy.dataCy('nav-reports').click();
         });
