@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { latestIntersecting } from '@/lib/intersection';
 import { useSceneCapability } from './use-scene-capability';
 
 /**
@@ -37,16 +38,20 @@ export const HERO_MEDIA = {
 export const CLIP_FRAMES = 51;
 export const CLIP_FPS = 24;
 
-/** Fracción de la altura de la portada que hay que desplazar para abrirla del todo. */
-const OPEN_DISTANCE = 0.6;
+/** La apertura ocupa seis décimas de ventana, desde la entrada hasta el tramo fijo. */
+export function heroProgress(
+    sectionTop: number,
+    viewportHeight: number,
+): number {
+    if (viewportHeight <= 0) return 0;
 
-/** 0 con la portada arriba del todo; 1 tras desplazar el 60 % de su altura. */
-export function heroProgress(top: number, height: number): number {
-    if (!(height > 0)) {
-        return 0;
-    }
-
-    return Math.min(1, Math.max(0, -top / (height * OPEN_DISTANCE)));
+    return Math.min(
+        1,
+        Math.max(
+            0,
+            (0.3 * viewportHeight - sectionTop) / (0.6 * viewportHeight),
+        ),
+    );
 }
 
 export function frameForProgress(progress: number): number {
@@ -117,6 +122,19 @@ export function HeroFolderVideo() {
     const rootRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const { mode, reason } = useSceneCapability();
+    const [visible, setVisible] = useState(false);
+    const [seen, setSeen] = useState(false);
+    useEffect(() => {
+        const section = rootRef.current?.closest('section');
+        if (!section) return;
+        const observer = new IntersectionObserver((entries) => {
+            const inside = latestIntersecting(entries);
+            if (inside !== null) setVisible(inside);
+            if (inside) setSeen(true);
+        });
+        observer.observe(section);
+        return () => observer.disconnect();
+    }, []);
     const [videoFailed, setVideoFailed] = useState(false);
     const [stillFailed, setStillFailed] = useState(false);
     const [source, setSource] = useState<string | null>(null);
@@ -126,7 +144,9 @@ export function HeroFolderVideo() {
         reason === 'server'
             ? 'pending'
             : mode === 'scene' && !videoFailed
-              ? 'video'
+              ? seen
+                  ? 'video'
+                  : 'pending'
               : 'still';
 
     // El clip se descarga entero (700 kB) y se sirve desde memoria: así se
@@ -150,6 +170,7 @@ export function HeroFolderVideo() {
                 return response.blob();
             })
             .then((blob) => {
+                if (controller.signal.aborted) return;
                 url = URL.createObjectURL(blob);
                 setSource(url);
             })
@@ -174,7 +195,7 @@ export function HeroFolderVideo() {
         const root = rootRef.current;
         const video = videoRef.current;
 
-        if (kind !== 'video' || !source || !root || !video) {
+        if (kind !== 'video' || !visible || !source || !root || !video) {
             return;
         }
 
@@ -185,7 +206,9 @@ export function HeroFolderVideo() {
         const update = () => {
             frame = 0;
             const box = hero.getBoundingClientRect();
-            const target = frameForProgress(heroProgress(box.top, box.height));
+            const target = frameForProgress(
+                heroProgress(box.top, window.innerHeight),
+            );
 
             // Observable para las pruebas: el fotograma que pide el desplazamiento.
             root.dataset.frame = String(target);
@@ -214,7 +237,7 @@ export function HeroFolderVideo() {
             video.removeEventListener('loadeddata', onData);
             seeker.dispose();
         };
-    }, [kind, source]);
+    }, [kind, source, visible]);
 
     const state =
         kind === 'video'
@@ -230,7 +253,7 @@ export function HeroFolderVideo() {
             ref={rootRef}
             aria-hidden="true"
             inert
-            className="hero-folder relative aspect-[4/3] w-full overflow-hidden rounded-2xl border shadow-[0_28px_56px_-28px_oklch(0.2_0.04_220/0.55)] select-none"
+            className="hero-folder pointer-events-none select-none"
             data-cy="hero-video"
             data-mode={kind}
             data-reason={videoFailed ? 'video-error' : reason}
@@ -239,7 +262,7 @@ export function HeroFolderVideo() {
             {kind === 'video' ? (
                 <video
                     ref={videoRef}
-                    className="absolute inset-0 size-full object-cover object-right"
+                    className="absolute inset-0 size-full object-contain"
                     src={source ?? undefined}
                     poster={HERO_MEDIA.poster}
                     muted
@@ -253,7 +276,7 @@ export function HeroFolderVideo() {
             ) : null}
             {kind === 'still' && !stillFailed ? (
                 <img
-                    className="absolute inset-0 size-full object-cover object-right"
+                    className="absolute inset-0 size-full object-contain"
                     src={HERO_MEDIA.still}
                     alt=""
                     decoding="async"

@@ -12,10 +12,6 @@
  * registra también lo servido desde caché: una interceptación de red no lo
  * vería.
  *
- * Desde el incremento visual de la presentación, la escena acompaña al
- * expediente de «Cómo avanza un proceso», debajo de la portada: las pruebas que
- * necesitan la escena montada desplazan antes la página hasta la carpeta. Lo
- * que se comprueba no cambia.
  */
 const ESCENA = 'recruitment-scene';
 

@@ -21,13 +21,11 @@ import { index as jobsIndex } from '@/routes/jobs';
 /**
  * Portada pública.
  *
- * Arriba, la promesa en texto y, al lado, una carpeta que se abre al bajar
- * (vídeo decorativo, sin texto). Más abajo, en «Cómo avanza un proceso», la
- * misma idea con contenido: un expediente del caso de estudio —la vacante, sus
- * evidencias versionadas y la decisión que firma una persona— y, detrás, las
- * tres hojas del recorrido, que se separan en profundidad al bajar y vuelven a
- * apilarse al subir (ADR-003, decorativas). Todo lo que la portada dice está en
- * el DOM de delante, plano y sobre fondo sólido.
+ * Lo primero que se ve no es una promesa, es un expediente: una vacante del
+ * caso de estudio con sus evidencias versionadas y la decisión que firma una
+ * persona. Detrás, en profundidad y sin texto, las tres hojas del mismo
+ * recorrido (ADR-003, decorativas). Todo lo que la portada dice está en el DOM
+ * de delante, plano y sobre fondo sólido.
  */
 type RecordEntry = {
     icon: LucideIcon;
@@ -215,71 +213,11 @@ export default function Welcome() {
                         </ul>
                     </div>
 
-                    {/* Una carpeta que se abre al bajar y se cierra al subir:
-                        vídeo decorativo, sin texto y fuera del orden de
-                        tabulación. El expediente con contenido está más abajo,
-                        en «Cómo avanza un proceso». */}
-                    <div className="lg:pl-6">
-                        <HeroFolderVideo />
-                    </div>
-                </div>
-            </section>
-
-            <section
-                className="mx-auto max-w-6xl px-4 py-16 sm:px-6"
-                aria-labelledby="landing-process-title"
-                data-cy="landing-process"
-            >
-                <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-6">
-                    <div>
-                        <Reveal>
-                            <h2
-                                id="landing-process-title"
-                                className="font-serif text-2xl font-semibold tracking-tight md:text-3xl"
-                            >
-                                Cómo avanza un proceso
-                            </h2>
-                            <p className="text-muted-foreground mt-2 max-w-2xl text-sm leading-relaxed">
-                                Cuatro etapas, cada una con su responsable. Lo
-                                que se hace queda registrado con nombre y fecha.
-                            </p>
-                        </Reveal>
-                        <ol className="mt-8 grid gap-4 sm:grid-cols-2">
-                            {steps.map((step, index) => (
-                                <li key={step.title}>
-                                    <Reveal
-                                        delay={index * 80}
-                                        className="bg-card h-full rounded-xl border p-5 shadow-xs"
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <span className="bg-tone-primary text-tone-primary-foreground flex size-9 items-center justify-center rounded-lg">
-                                                <step.icon
-                                                    className="size-4"
-                                                    aria-hidden="true"
-                                                />
-                                            </span>
-                                            <p className="text-muted-foreground font-mono text-xs">
-                                                Paso {index + 1} de{' '}
-                                                {steps.length}
-                                            </p>
-                                        </div>
-                                        <h3 className="mt-4 font-serif text-lg font-semibold">
-                                            {step.title}
-                                        </h3>
-                                        <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                                            {step.text}
-                                        </p>
-                                    </Reveal>
-                                </li>
-                            ))}
-                        </ol>
-                    </div>
-
-                    {/* La carpeta del proceso: el expediente queda delante, plano
-                        y sólido, y su texto nunca depende del fondo para leerse.
-                        Detrás, las hojas del recorrido se separan al bajar y se
-                        apilan al subir —decorativas y opcionales (ADR-003)—. En
-                        escritorio, el margen deja sitio para que asomen. */}
+                    {/* El expediente queda delante, plano y sólido: su texto
+                        nunca depende del fondo para leerse. Detrás, la capa de
+                        profundidad —decorativa y opcional (ADR-003)—. En
+                        escritorio, el margen deja sitio para que asomen las
+                        hojas de la escena. */}
                     <div className="lg:px-14 lg:py-24">
                         <div className="relative" data-cy="landing-folder">
                             <RecruitmentDepth />
@@ -333,6 +271,54 @@ export default function Welcome() {
                                 </p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                className="folder-chapter"
+                aria-labelledby="landing-process-title"
+                data-cy="landing-process"
+            >
+                <div className="folder-stage">
+                    <div className="mx-auto grid w-full max-w-6xl gap-7 px-4 py-12 sm:px-6 lg:gap-8">
+                        <div className="folder-composition">
+                            <div className="relative z-10 max-w-md">
+                                <h2
+                                    id="landing-process-title"
+                                    className="font-serif text-4xl leading-[1.04] font-semibold tracking-tight sm:text-5xl lg:text-6xl"
+                                >
+                                    Cómo avanza un proceso
+                                </h2>
+                                <p className="mt-5 max-w-sm leading-relaxed text-teal-50/85">
+                                    Cuatro etapas, cada una con su responsable.
+                                    Lo que se hace queda registrado con nombre y
+                                    fecha.
+                                </p>
+                            </div>
+                            <HeroFolderVideo />
+                        </div>
+                        <ol className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+                            {steps.map((step) => (
+                                <li
+                                    key={step.title}
+                                    className="border-t border-teal-100/30 pt-4"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <step.icon
+                                            aria-hidden="true"
+                                            className="size-4 text-amber-200"
+                                        />
+                                        <h3 className="font-serif text-xl font-semibold">
+                                            {step.title}
+                                        </h3>
+                                    </div>
+                                    <p className="mt-2 text-sm leading-relaxed text-teal-50/85">
+                                        {step.text}
+                                    </p>
+                                </li>
+                            ))}
+                        </ol>
                     </div>
                 </div>
             </section>

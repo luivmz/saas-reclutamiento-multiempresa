@@ -11,9 +11,6 @@
  * - VIS-L01: si el movimiento reducido se activa con la portada abierta, lo
  *   pendiente aparece en su sitio y no vuelve a ocultarse.
  *
- * Desde el incremento visual de la presentación, el expediente y su escena
- * están en «Cómo avanza un proceso», debajo de la portada: las pruebas que
- * necesitan la escena desplazan antes la página hasta la carpeta.
  */
 function reducido(activo) {
     return Cypress.automation('remote:debugger:protocol', {

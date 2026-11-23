@@ -7,8 +7,7 @@
  *   al subir, una búsqueda cada vez;
  * - si el vídeo no llega, con movimiento reducido (al cargar o con la página
  *   abierta), en móvil o a 320 px, queda la imagen fija y no se pide el vídeo;
- * - la carpeta de «Cómo avanza un proceso» se abre al bajar y se cierra al
- *   subir; el cursor la mueve aparte, sin abrirla ni cerrarla;
+ * - el progreso se recupera al salir de la escena, recargar o volver de empleos;
  * - el texto y los accesos no dependen de nada de lo anterior, en los dos temas.
  *
  * Las capturas (`cy.screenshot`) son la evidencia visual del avance y del
@@ -63,21 +62,6 @@ function vigilarVideo(win) {
     };
 }
 
-/** Declara si hay un puntero fino con hover (ratón) o no (pantalla táctil). */
-function punteroFino(win, hay) {
-    const original = win.matchMedia.bind(win);
-
-    win.matchMedia = (query) =>
-        query.includes('hover: hover')
-            ? {
-                  matches: hay,
-                  media: query,
-                  addEventListener() {},
-                  removeEventListener() {},
-              }
-            : original(query);
-}
-
 function sinDesborde() {
     cy.document().then((doc) => {
         expect(
@@ -112,7 +96,12 @@ function fotogramaAsentado() {
                 .getBoundingClientRect();
             const progreso = Math.min(
                 1,
-                Math.max(0, -portada.top / (portada.height * 0.6)),
+                Math.max(
+                    0,
+                    (0.3 * video.ownerDocument.defaultView.innerHeight -
+                        portada.top) /
+                        (video.ownerDocument.defaultView.innerHeight * 0.6),
+                ),
             );
 
             expect(
@@ -142,46 +131,12 @@ function imagenFija(razon) {
         );
 }
 
-function aperturaDe() {
-    return cy
-        .dataCy('recruitment-scene')
-        .invoke('attr', 'data-open')
-        .then(Number);
-}
-
-/** Lo abierta que debe estar según dónde está la carpeta: la regla del componente, con su suavizado. */
-function aperturaEsperada($escena) {
-    const win = $escena[0].ownerDocument.defaultView;
-    const arriba = $escena[0].getBoundingClientRect().top;
-    const t = Math.min(
-        1,
-        Math.max(0, (0.9 * win.innerHeight - arriba) / (0.6 * win.innerHeight)),
-    );
-
-    return (t * t * (3 - 2 * t)).toFixed(2);
-}
-
-/** Espera a que la carpeta muestre la apertura que corresponde a su posición y la devuelve. */
-function aperturaAsentada() {
-    return cy
-        .dataCy('recruitment-scene')
-        .should(($escena) =>
-            expect(
-                $escena.attr('data-open'),
-                'apertura según la posición',
-            ).to.eq(aperturaEsperada($escena)),
-        )
-        .invoke('attr', 'data-open')
-        .then(Number);
-}
-
-/** Desplaza la página para dejar el borde superior de la carpeta en esa fracción de la ventana. */
-function carpetaEn(fraccion) {
-    cy.dataCy('landing-folder').then(($carpeta) => {
-        const win = $carpeta[0].ownerDocument.defaultView;
-        const arriba = $carpeta[0].getBoundingClientRect().top + win.scrollY;
-
-        win.scrollTo(0, arriba - fraccion * win.innerHeight);
+// Posición relativa al comienzo y al final de la apertura.
+function recorrer(progreso) {
+    cy.dataCy('landing-process').then(($section) => {
+        const win = $section[0].ownerDocument.defaultView;
+        const top = $section[0].getBoundingClientRect().top + win.scrollY;
+        win.scrollTo(0, top + (0.6 * progreso - 0.3) * win.innerHeight);
     });
 }
 
@@ -191,6 +146,7 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
     it('el vídeo avanza al bajar y retrocede al subir, sin reproducirse solo ni solapar búsquedas', () => {
         cy.viewport(1280, 800);
         cy.visit('/', { onBeforeLoad: vigilarVideo });
+        recorrer(0);
 
         cy.dataCy('hero-video')
             .should('have.attr', 'data-mode', 'video')
@@ -200,15 +156,15 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
 
         const vistos = [];
 
-        [120, 240, 600].forEach((y, paso) => {
-            desplazar(y);
+        [0.25, 0.5, 1].forEach((y, paso) => {
+            recorrer(y);
             fotogramaAsentado().then((fotograma) => vistos.push(fotograma));
             cy.screenshot(`e2e23-video-${paso + 2}-bajando-${y}`, {
                 capture: 'viewport',
             });
         });
-        [240, 0].forEach((y, paso) => {
-            desplazar(y);
+        [0.5, 0].forEach((y, paso) => {
+            recorrer(y);
             fotogramaAsentado().then((fotograma) => vistos.push(fotograma));
             cy.screenshot(`e2e23-video-${paso + 5}-subiendo-${y}`, {
                 capture: 'viewport',
@@ -244,6 +200,7 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
         cy.viewport(1280, 800);
         cy.visit('/');
 
+        recorrer(0.5);
         imagenFija('video-error');
         portadaUtilizable();
         cy.screenshot('e2e23-video-fallido', { capture: 'viewport' });
@@ -264,6 +221,7 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
     it('si el movimiento reducido se activa con la página abierta, el vídeo cede a la imagen fija', () => {
         cy.viewport(1280, 800);
         cy.visit('/');
+        recorrer(0);
         cy.dataCy('hero-video')
             .should('have.attr', 'data-mode', 'video')
             .and('have.attr', 'data-state', 'ready');
@@ -318,12 +276,13 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
                 tema === 'dark' ? 'have.class' : 'not.have.class',
                 'dark',
             );
-            cy.dataCy('hero-video').should('have.attr', 'data-state', 'ready');
+
             portadaUtilizable();
             cy.screenshot(`e2e23-tema-${tema}-portada`, {
                 capture: 'viewport',
             });
-            carpetaEn(0.25);
+            recorrer(1);
+            fotogramaAsentado().should('eq', 50);
             cy.dataCy('recruitment-scene').should(
                 'have.attr',
                 'data-ready',
@@ -335,88 +294,22 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
         });
     });
 
-    it('la carpeta del proceso se abre al bajar y se cierra al subir; el cursor la mueve aparte', () => {
+    it('la escena recupera el progreso tras salir, recargar y volver de empleos', () => {
         cy.viewport(1280, 800);
-        cy.visit('/', { onBeforeLoad: (win) => punteroFino(win, true) });
-
-        cy.dataCy('landing-folder').scrollIntoView();
-        cy.dataCy('recruitment-scene').should(
-            'have.attr',
-            'data-ready',
-            'true',
-        );
-
-        const aperturas = [];
-        const pasos = [
-            ['cerrada', 1.0],
-            ['entrando', 0.7],
-            ['a-medias', 0.55],
-            ['abierta', 0.25],
-            ['volviendo', 0.55],
-            ['cerrada-otra-vez', 1.0],
-        ];
-
-        pasos.forEach(([nombre, fraccion], indice) => {
-            carpetaEn(fraccion);
-            aperturaAsentada().then((abierta) => aperturas.push(abierta));
-            if (nombre === 'abierta') {
-                sinDesborde();
-            }
-            cy.screenshot(`e2e23-carpeta-${indice + 1}-${nombre}`, {
-                capture: 'viewport',
-            });
-        });
-
-        cy.then(() => {
-            const [cerrada, entrando, medias, abierta, volviendo, otraVez] =
-                aperturas;
-
-            expect(cerrada, 'cerrada').to.eq(0);
-            expect(entrando, 'entrando').to.be.greaterThan(cerrada);
-            expect(medias, 'a medias').to.be.greaterThan(entrando);
-            expect(abierta, 'abierta').to.eq(1);
-            expect(volviendo, 'al subir se cierra').to.be.lessThan(abierta);
-            expect(volviendo, 'mismo sitio, misma apertura').to.eq(medias);
-            expect(otraVez, 'cerrada otra vez').to.eq(0);
-        });
-
-        // A medias, el cursor mueve las hojas sin cambiar lo abierta que está.
-        carpetaEn(0.55);
-        aperturaAsentada().then((antes) => {
-            cy.get('[data-sheet="vacancy"]').then(($hoja) => {
-                const reposo = $hoja[0].style.transform;
-
-                cy.window().then((win) =>
-                    win.dispatchEvent(
-                        new win.PointerEvent('pointermove', {
-                            clientX: 1240,
-                            clientY: 120,
-                            bubbles: true,
-                        }),
-                    ),
-                );
-                cy.get('[data-sheet="vacancy"]').should(($h) =>
-                    expect($h[0].style.transform).not.to.eq(reposo),
-                );
-                aperturaDe().should('eq', antes);
-                cy.document().then((doc) =>
-                    doc.documentElement.dispatchEvent(
-                        new PointerEvent('pointerleave'),
-                    ),
-                );
-                cy.get('[data-sheet="vacancy"]').should(($h) =>
-                    expect($h[0].style.transform).to.eq(reposo),
-                );
-            });
-        });
-
-        // El expediente se lee con la carpeta abierta o cerrada.
-        cy.contains('REQ-2026-0042')
-            .closest('.z-10')
-            .within(() => {
-                cy.contains('Vacante').should('be.visible');
-                cy.contains('Decisión humana').should('be.visible');
-            });
+        cy.visit('/');
+        recorrer(0.5);
+        fotogramaAsentado().should('eq', 25);
+        cy.reload();
+        recorrer(0.5);
+        fotogramaAsentado().should('eq', 25);
+        cy.dataCy('landing-roles').scrollIntoView();
+        recorrer(0.25);
+        fotogramaAsentado().should('eq', 13);
+        cy.dataCy('cta-jobs').click();
+        cy.location('pathname').should('eq', '/empleos');
+        cy.go('back');
+        recorrer(0);
+        fotogramaAsentado().should('eq', 0);
     });
 
     it('la carpeta del proceso con movimiento reducido: estática y legible', () => {

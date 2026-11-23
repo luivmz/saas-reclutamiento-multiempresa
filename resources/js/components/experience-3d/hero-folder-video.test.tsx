@@ -49,11 +49,11 @@ class FakeVideo extends EventTarget {
 }
 
 describe('Progreso y fotogramas', () => {
-    test('0 arriba del todo, 1 tras desplazar el 60 % de la portada, sin salirse', () => {
-        expect(heroProgress(0, 800)).toBe(0);
-        expect(heroProgress(120, 800)).toBe(0);
-        expect(heroProgress(-240, 800)).toBeCloseTo(0.5);
-        expect(heroProgress(-480, 800)).toBe(1);
+    test('inicio, mitad y final del recorrido respecto a la ventana', () => {
+        expect(heroProgress(800, 800)).toBe(0);
+        expect(heroProgress(240, 800)).toBe(0);
+        expect(heroProgress(0, 800)).toBeCloseTo(0.5);
+        expect(heroProgress(-240, 800)).toBe(1);
         expect(heroProgress(-5000, 800)).toBe(1);
         expect(heroProgress(-100, 0)).toBe(0);
     });
