@@ -2,6 +2,8 @@
 
 > **Experimental y local**, rama `design/f37-visual`. No cambia funciones del producto ni estados formales.
 
+> **Nota del 22/11/2026.** El vídeo de Higgsfield se incorporó en la rama `design/presentacion-higgsfield`, y no como preveía la §2. No es un bucle ambiental al 25 % detrás del expediente: es la apertura de una carpeta, de 2,125 s y sin audio, que el desplazamiento recorre hacia delante y hacia atrás en la columna derecha de la portada. El expediente y sus hojas pasaron a «Cómo avanza un proceso». El original no es un bucle perfecto, dura 5,18 s y trae audio. Inspección, copia web, decisiones y pruebas: [`../presentacion/incremento-visual-higgsfield.md`](../presentacion/incremento-visual-higgsfield.md). La §1 y la §2 se conservan como el plan de entonces.
+
 ## 1. Qué se usó
 
 | Recurso | Origen | Dónde |

@@ -7,6 +7,7 @@ import {
     useState,
     type ReactNode,
 } from 'react';
+import { someIntersecting } from '@/lib/intersection';
 import { RecruitmentScenePoster } from './recruitment-scene-poster';
 import { useSceneCapability } from './use-scene-capability';
 
@@ -56,8 +57,10 @@ function useSeenOnce<T extends Element>(ref: React.RefObject<T | null>) {
             return;
         }
 
-        const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) {
+        // Todas las entradas del aviso, no solo la primera (DEF-19): si la
+        // página se desplaza justo al montar, «fuera» y «dentro» llegan juntas.
+        const observer = new IntersectionObserver((entries) => {
+            if (someIntersecting(entries)) {
                 setSeen(true);
                 observer.disconnect();
             }

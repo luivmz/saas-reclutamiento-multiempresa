@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { latestIntersecting } from '@/lib/intersection';
 import { SheetFace, STAGE_SHEETS } from './recruitment-scene-poster';
 
 /**
@@ -171,9 +172,10 @@ export default function RecruitmentScene() {
             }
         };
 
-        const observer = new IntersectionObserver(([entry]) =>
-            listen(entry.isIntersecting),
-        );
+        const observer = new IntersectionObserver((entries) => {
+            const visible = latestIntersecting(entries);
+            if (visible !== null) listen(visible);
+        });
 
         observer.observe(root);
 

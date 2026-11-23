@@ -162,3 +162,18 @@ Pruebas nuevas: **12** PHPUnit (`tests/Feature/Reports/RecruitmentReportTest.php
 | Regresión | — | `php artisan test` | **434 pruebas: 426 passed, 8 skipped, 0 failed (1715 assertions)** |
 | Regresión | — | `npx vp test --run`, `npm run build`, `npx tsc --noEmit` | 54/54; build OK; 0 errores |
 | Regresión E2E | — | `npm run cy:run` | Ejecución 1: **87/94** (DEF-20 y DEF-21, registrados originalmente como DEF-14 y DEF-15 en la práctica) → ejecución 2: **94/94** |
+
+## Incremento visual de la presentación (`design/presentacion-higgsfield`, 22/11/2026)
+
+Cada RED se ejecutó contra el código anterior a su corrección; los resultados GREEN, contra `446b8fe`.
+
+| Cambio | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| VIS-L01 · movimiento reducido activado con la portada abierta | RED | E2E-22, regresión nueva con `getComputedStyle`, contra el `Reveal` y el CSS de `main` | **1 failed**: «opacidad: expected '0' to equal '1'» |
+| Ídem | Ablación | Ídem, con solo la defensa CSS y el JS de `main` | **1 failed** (línea 244): los bloques siguen en estado oculto |
+| Ídem | GREEN | Ídem, con `watchReveal` y la defensa CSS | **8 passed** en E2E-22; unitarias de `watchReveal` en verde |
+| DEF-19 · lote `[fuera, dentro]` de IntersectionObserver | RED | Prueba unitaria nueva de `watchReveal` y pruebas de `lib/intersection.ts` | **1 failed** (seguía oculto) y el módulo aún no existía |
+| Ídem | GREEN | Ídem, con `someIntersecting` y `latestIntersecting` | **83 passed** (11 archivos); E2E-22 **5 de 5** ejecuciones seguidas |
+| Vídeo y carpeta del proceso | — | `hero-folder-video.test.tsx` (progreso, fotogramas, búsquedas sin solaparse, nada pedido antes de decidir) y pruebas de la carpeta en `reveal.test.tsx`; E2E-23 | Escritas junto al componente, no antes: no es TDD. E2E-23 **10/10** |
+
+La primera versión de la regresión de VIS-L01 cambiaba la preferencia fuera de la cola de Cypress; sus dos ejecuciones se conservan como inválidas en las evidencias, y la prueba vigente encola los cambios.
