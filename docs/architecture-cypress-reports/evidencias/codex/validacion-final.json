@@ -1,0 +1,248 @@
+{
+  "checked_at": "2026-11-09T22:40:14.064103-05:00",
+  "branch": "chore/sonarqube-macos-setup",
+  "head": "41a830ca0674547aa0778d5d0d0b8bc228d62f63",
+  "modified_since_received": [
+    "docs/PROGRESS.md",
+    "docs/defects.md",
+    "app/Services/Reports/RecruitmentReportService.php",
+    "docs/architecture-cypress-reports/README.md",
+    "docs/architecture-cypress-reports/arquitectura/ARQUITECTURA_SOFTWARE.md",
+    "docs/architecture-cypress-reports/arquitectura/ARQUITECTURA_TECNOLOGICA.md",
+    "docs/architecture-cypress-reports/cypress/RESULTADOS_CYPRESS.md",
+    "docs/architecture-cypress-reports/evidencias/EVIDENCIAS_MANIFEST.md",
+    "docs/architecture-cypress-reports/final-report/INFORME_TECNICO_INDIVIDUAL.md",
+    "docs/architecture-cypress-reports/reportes/IMPACTO_FUNCIONAL.md",
+    "docs/architecture-cypress-reports/reportes/MODULO_REPORTES.md",
+    "docs/architecture-cypress-reports/requisitos/MATRIZ_REQUISITOS.md",
+    "docs/architecture-cypress-reports/requisitos/MATRIZ_RUBRICA.md",
+    "docs/architecture-cypress-reports/sonarqube/RESULTADOS_SONARQUBE.md"
+  ],
+  "new_since_received": [
+    "docs/architecture-cypress-reports/AUDITORIA_CODEX.md",
+    "docs/architecture-cypress-reports/evidencias/arquitectura/ARQ-TECH-09_IDE_VSCode.jpg",
+    "docs/architecture-cypress-reports/evidencias/codex/coverage-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/coverage-final.log",
+    "docs/architecture-cypress-reports/evidencias/codex/cypress-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/cypress-final.log",
+    "docs/architecture-cypress-reports/evidencias/codex/cypress-received.json",
+    "docs/architecture-cypress-reports/evidencias/codex/cypress-received.log",
+    "docs/architecture-cypress-reports/evidencias/codex/cypress-verify.json",
+    "docs/architecture-cypress-reports/evidencias/codex/cypress-verify.log",
+    "docs/architecture-cypress-reports/evidencias/codex/docker-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/frontend-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/frontend-final.log",
+    "docs/architecture-cypress-reports/evidencias/codex/frontend-received.json",
+    "docs/architecture-cypress-reports/evidencias/codex/frontend-received.log",
+    "docs/architecture-cypress-reports/evidencias/codex/health-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/lint-received.json",
+    "docs/architecture-cypress-reports/evidencias/codex/lint-received.log",
+    "docs/architecture-cypress-reports/evidencias/codex/oxlint-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/oxlint-final.log",
+    "docs/architecture-cypress-reports/evidencias/codex/phpstan-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/phpstan-final.log",
+    "docs/architecture-cypress-reports/evidencias/codex/phpstan-received.json",
+    "docs/architecture-cypress-reports/evidencias/codex/phpstan-received.log",
+    "docs/architecture-cypress-reports/evidencias/codex/phpstan-reports-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/phpstan-reports-final.log",
+    "docs/architecture-cypress-reports/evidencias/codex/phpunit-final-sequential.json",
+    "docs/architecture-cypress-reports/evidencias/codex/phpunit-final-sequential.log",
+    "docs/architecture-cypress-reports/evidencias/codex/phpunit-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/phpunit-final.log",
+    "docs/architecture-cypress-reports/evidencias/codex/phpunit-received.json",
+    "docs/architecture-cypress-reports/evidencias/codex/phpunit-received.log",
+    "docs/architecture-cypress-reports/evidencias/codex/pint-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/pint-final.log",
+    "docs/architecture-cypress-reports/evidencias/codex/pint-received.json",
+    "docs/architecture-cypress-reports/evidencias/codex/pint-received.log",
+    "docs/architecture-cypress-reports/evidencias/codex/reports-received.json",
+    "docs/architecture-cypress-reports/evidencias/codex/reports-received.log",
+    "docs/architecture-cypress-reports/evidencias/codex/sonar-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/sonar-received.json",
+    "docs/architecture-cypress-reports/evidencias/codex/sonar-run-codex.json",
+    "docs/architecture-cypress-reports/evidencias/codex/sonar-scanner-codex.log",
+    "docs/architecture-cypress-reports/evidencias/codex/sonar-task-codex.json",
+    "docs/architecture-cypress-reports/evidencias/codex/sonarqube-container-final.json",
+    "docs/architecture-cypress-reports/evidencias/codex/validacion-final.json",
+    "docs/architecture-cypress-reports/evidencias/sonarqube/SONAR-UI-01_Proyecto.jpg",
+    "docs/architecture-cypress-reports/evidencias/sonarqube/SONAR-UI-02_Quality_Gate.jpg",
+    "docs/architecture-cypress-reports/evidencias/sonarqube/SONAR-UI-03_Metricas_Globales.jpg",
+    "docs/architecture-cypress-reports/evidencias/sonarqube/SONAR-UI-04_Coverage.jpg",
+    "docs/architecture-cypress-reports/evidencias/sonarqube/SONAR-UI-05_Issues.jpg",
+    "docs/architecture-cypress-reports/evidencias/sonarqube/SONAR-UI-06_Security_Hotspots.jpg",
+    "docs/architecture-cypress-reports/evidencias/sonarqube/SONAR-UI-07_Limitaciones_Seguridad.jpg"
+  ],
+  "missing_received_files": [],
+  "outside_authorized_scope": [],
+  "protected_files_unchanged": true,
+  "report_service_executable_unchanged": true,
+  "broken_markdown_links": [],
+  "requirements": {
+    "total": 59,
+    "unique": 59,
+    "states": {
+      "C": 59,
+      "P": 0,
+      "N": 0
+    }
+  },
+  "manifest_main_records": 32,
+  "technical_report_sections": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10"
+  ],
+  "audit_sections": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14"
+  ],
+  "diagram17": {
+    "root": "mxfile",
+    "pages": 1,
+    "models": 1,
+    "cells": 26,
+    "svg": true,
+    "png": true
+  },
+  "images": [
+    {
+      "file": "arquitectura/diagramas/17_MODULO_REPORTES_COMPONENTES.png",
+      "format": "PNG",
+      "width": 1440,
+      "height": 1080,
+      "sha256": "bcee83e7ff494c4dbe525dd3ca069454b1fc9f96fd1da40e82344e79dd313caa"
+    },
+    {
+      "file": "evidencias/arquitectura/ARQ-TECH-09_IDE_VSCode.jpg",
+      "format": "JPEG",
+      "width": 2880,
+      "height": 1686,
+      "sha256": "fa1e86f62a41867a309cdc100ce7172ea9febde31e243706112d1ae35188c529"
+    },
+    {
+      "file": "evidencias/cypress/CYP_ejecucion1_resumen_terminal.png",
+      "format": "PNG",
+      "width": 1150,
+      "height": 1100,
+      "sha256": "df172cb133e378a6ced65b14ab68efb182de01d006af8a3cc6207571ea8ff5f6"
+    },
+    {
+      "file": "evidencias/cypress/CYP_ejecucion2_resumen_terminal.png",
+      "format": "PNG",
+      "width": 1150,
+      "height": 1100,
+      "sha256": "1bbe633c4c31c59840114e22330646eb2b4d7e6d59a3d2f24f797c14aada12c9"
+    },
+    {
+      "file": "evidencias/reportes/E2E-20-01-reportes-rrhh-organizacion-a.png",
+      "format": "PNG",
+      "width": 1280,
+      "height": 1583,
+      "sha256": "b4905b376904ede973553e646610e1cc5c06da37738521035a6335ca0124262a"
+    },
+    {
+      "file": "evidencias/reportes/E2E-20-02-filtro-por-vacante.png",
+      "format": "PNG",
+      "width": 1280,
+      "height": 1435,
+      "sha256": "54d57cc6b9eba64b2154c92ee5c05a26a8859f32880400afbe3623777090ffea"
+    },
+    {
+      "file": "evidencias/reportes/E2E-20-06-reportes-organizacion-b.png",
+      "format": "PNG",
+      "width": 1280,
+      "height": 1455,
+      "sha256": "c826bbe21d4ae3573caf8dc9458574e62ccb494131cc9736dcaa391005239a9c"
+    },
+    {
+      "file": "evidencias/reportes/E2E-20-09-reportes-aprobador-movil.png",
+      "format": "PNG",
+      "width": 390,
+      "height": 3431,
+      "sha256": "b40feab2dae87e3af9bc6892019e8457a2b2750c22da36d8357862e5dcbd0167"
+    },
+    {
+      "file": "evidencias/sonarqube/SONAR-UI-01_Proyecto.jpg",
+      "format": "JPEG",
+      "width": 2630,
+      "height": 1568,
+      "sha256": "5520852aa157c1748dad4239cbe4c84e040e8df0fc8da32760c007444ac59ed6"
+    },
+    {
+      "file": "evidencias/sonarqube/SONAR-UI-02_Quality_Gate.jpg",
+      "format": "JPEG",
+      "width": 2630,
+      "height": 1568,
+      "sha256": "d791ab924889d44f316c0c325a0a1e57bc32311faed4e3264ed05d9ead610d50"
+    },
+    {
+      "file": "evidencias/sonarqube/SONAR-UI-03_Metricas_Globales.jpg",
+      "format": "JPEG",
+      "width": 2630,
+      "height": 1568,
+      "sha256": "6a9ab1fe4fcd6508a6980dbaaad603a7fa4ff22ef24c5205f9533550a778a555"
+    },
+    {
+      "file": "evidencias/sonarqube/SONAR-UI-04_Coverage.jpg",
+      "format": "JPEG",
+      "width": 2630,
+      "height": 1568,
+      "sha256": "945e7b3a95eb7eb1ea3e94ddfb017c61266fddfc11c0492ab5d1fbab87a95942"
+    },
+    {
+      "file": "evidencias/sonarqube/SONAR-UI-05_Issues.jpg",
+      "format": "JPEG",
+      "width": 2630,
+      "height": 1568,
+      "sha256": "938b22a60f5264760d7d480263bc00cdf7ac757a3ee5ee18b90fd1bc6a0db28a"
+    },
+    {
+      "file": "evidencias/sonarqube/SONAR-UI-06_Security_Hotspots.jpg",
+      "format": "JPEG",
+      "width": 2630,
+      "height": 1568,
+      "sha256": "d5151e4f276712d1c07a0538c5e1d806bf9f24fcf73e053338523eeeb7ea85eb"
+    },
+    {
+      "file": "evidencias/sonarqube/SONAR-UI-07_Limitaciones_Seguridad.jpg",
+      "format": "JPEG",
+      "width": 2630,
+      "height": 1568,
+      "sha256": "e438e4663eff3116177c61a1af033724e54e45efc9f90d5188617fc0d00520eb"
+    },
+    {
+      "file": "evidencias/sonarqube/SONAR_V3_resultados_terminal_api.png",
+      "format": "PNG",
+      "width": 1150,
+      "height": 1250,
+      "sha256": "cbec00f44c0c37f5bf7b9ad9af253d06ec4b7be85a0fa7f24dc0e3db1811fb1e"
+    }
+  ],
+  "literal_secret_pattern_findings": [],
+  "git_diff_check": {
+    "exit_code": 0,
+    "output": ""
+  },
+  "index_unchanged_unstaged": true,
+  "main_local": "8a00505",
+  "origin_main_cached": "b8892af"
+}

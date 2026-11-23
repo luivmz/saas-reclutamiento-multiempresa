@@ -1,0 +1,16 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "exec",
+    "-T",
+    "app",
+    "php",
+    "artisan",
+    "test"
+  ],
+  "exit_code": 0,
+  "duration_seconds": 10.839,
+  "started_epoch": 1794280631.705564,
+  "log": "/private/tmp/saas-codex-audit-20261109/phpunit-final-sequential.log"
+}

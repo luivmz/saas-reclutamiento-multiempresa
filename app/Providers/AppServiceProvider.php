@@ -12,6 +12,7 @@ use App\Models\Organization;
 use App\Models\SelectionDecision;
 use App\Models\User;
 use App\Models\Vacancy;
+use App\Policies\RecruitmentReportPolicy;
 use App\Services\Evaluation\WeightingValidator;
 use Illuminate\Support\Facades\Route;
 use Carbon\CarbonImmutable;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -39,6 +41,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+
+        // RF-28 (candidato): reportes operativos, sin modelo propio sobre el que colgar una Policy.
+        Gate::define('viewRecruitmentReports', [RecruitmentReportPolicy::class, 'view']);
     }
 
     /**

@@ -1,6 +1,7 @@
 import {
     Bell,
     Briefcase,
+    ChartColumnBig,
     ClipboardCheck,
     ClipboardList,
     FilePlus2,
@@ -16,10 +17,20 @@ import CandidateApplicationController from '@/actions/App/Http/Controllers/Candi
 import CandidateProfileController from '@/actions/App/Http/Controllers/Candidates/CandidateProfileController';
 import JobRequestController from '@/actions/App/Http/Controllers/JobRequests/JobRequestController';
 import NotificationController from '@/actions/App/Http/Controllers/NotificationController';
+import RecruitmentReportController from '@/actions/App/Http/Controllers/Reports/RecruitmentReportController';
 import VacancyController from '@/actions/App/Http/Controllers/Vacancies/VacancyController';
 import { dashboard } from '@/routes';
 import { index as jobsIndex } from '@/routes/jobs';
 import type { NavGroup, RoleValue } from '@/types';
+
+// RF-28 (candidato): mismo acceso que la Policy, RR. HH. y Aprobador.
+const reports = {
+    title: 'Reportes',
+    href: RecruitmentReportController(),
+    icon: ChartColumnBig,
+    cy: 'reports',
+    description: 'Indicadores del proceso: postulaciones, preselección y tiempos (RF-28, candidato).',
+};
 
 const portal: NavGroup = {
     label: 'Portal',
@@ -106,6 +117,7 @@ export function navigationFor(
                             cy: 'vacancies',
                             description: 'Configure y publique vacantes y revise sus postulaciones (RF-05 a RF-15).',
                         },
+                        reports,
                     ],
                 },
                 portal,
@@ -137,6 +149,7 @@ export function navigationFor(
                             cy: 'audit',
                             description: 'Consulte el registro de acciones críticas de su organización (RF-27).',
                         },
+                        reports,
                     ],
                 },
                 portal,

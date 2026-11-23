@@ -94,3 +94,22 @@ Pruebas nuevas de la fase: **3**.
 | Regresión | — | `php artisan test` | **233 pruebas: 225 passed, 8 skipped, 0 failed (1045 assertions)** |
 | Build | — | `npm run build`, `npx tsc --noEmit` | OK, 0 errores |
 | Navegador | — | Recorrido visual por rol / flujo integral | **10/10 (49 capturas) / 12/12** |
+
+## Práctica individual — Módulo de reportes (RF-28 candidato, 09/11/2026)
+
+Trabajo en el working tree de `chore/sonarqube-macos-setup`, sin commit y pendiente de auditoría. Las pruebas se escribieron antes que la ruta, el Form Request, la Policy, el servicio y la página.
+
+Pruebas nuevas: **12** PHPUnit (`tests/Feature/Reports/RecruitmentReportTest.php`), **6** Vitest (`resources/js/lib/reports.test.tsx`) y **9** Cypress (`cypress/e2e/e2e-20-reports.cy.js`).
+
+| Requisito | Paso | Pruebas | Resultado real |
+|---|---|---|---|
+| RF-28 (cand.) | Ajuste previo | `RecruitmentReportTest` | Antes de la primera ejecución se corrigió una expectativa de la propia prueba: una postulación `en_evaluacion` sin historial sí alcanzó la preselección (4, no 3) |
+| RF-28 (cand.) | RED | `RecruitmentReportTest` | **12 failed (0 assertions)**: `Route [reports.index] not defined` |
+| RF-28 (cand.) | Implementación backend | `RecruitmentReportTest` | **8 passed, 4 failed**: la prueba esperaba `75.0` y el JSON serializa los valores enteros como `75`. Se ajustó la expectativa de la prueba; la lógica no cambió |
+| RF-28 (cand.) | GREEN (backend) | `RecruitmentReportTest` | **11 passed, 1 failed**: faltaba la página `reports/index` |
+| RF-28 (cand.) | GREEN | `RecruitmentReportTest` | **12 passed (209 assertions)** |
+| RF-28 (cand.) | GREEN | `reports.test.tsx` (Vitest) | **6 passed** |
+| RF-28 (cand.) | E2E | `e2e-20-reports.cy.js` | **9 passed** |
+| Regresión | — | `php artisan test` | **434 pruebas: 426 passed, 8 skipped, 0 failed (1715 assertions)** |
+| Regresión | — | `npx vp test --run`, `npm run build`, `npx tsc --noEmit` | 54/54; build OK; 0 errores |
+| Regresión E2E | — | `npm run cy:run` | Ejecución 1: **87/94** (DEF-14, DEF-15, ambos en pruebas existentes) → ejecución 2: **94/94** |

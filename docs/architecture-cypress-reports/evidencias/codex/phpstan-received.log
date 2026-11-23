@@ -1,0 +1,736 @@
+Note: Using configuration file /var/www/html/phpstan.neon.
+   0/204 [░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   0%  19/204 [▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░]   9%  57/204 [▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░]  27% 114/204 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░]  55% 132/204 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░]  64% 150/204 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░]  73% 186/204 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░]  91% 204/204 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Http/Controllers/Candidates/CandidateApplicationController.php
+ ------ -----------------------------------------------------------------------
+  76     Method
+         App\Http\Controllers\Candidates\CandidateApplicationController::vacan
+         cyRelations() should return array<string, mixed> but returns array<in
+         t|string, (Closure)|string>.
+         🪪  return.type
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Http/Controllers/Vacancies/VacancyController.php
+ ------ -----------------------------------------------------------------------
+  82     Parameter #2 $jobRequest of method
+         App\Services\Vacancies\VacancyService::create() expects
+         App\Models\JobRequest,
+         App\Models\JobRequest|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\JobRequest> given.
+         🪪  argument.type
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Http/Requests/Assessments/RecordEvaluationResultRequest.php
+ ------ -----------------------------------------------------------------------
+  12     Method
+         App\Http\Requests\Assessments\RecordEvaluationResultRequest::assessme
+         ntSession() should return App\Models\Evaluation but returns
+         (object|string|null).
+         🪪  return.type
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Http/Requests/Assessments/RecordInterviewResultRequest.php
+ ------ -----------------------------------------------------------------------
+  14     Method
+         App\Http\Requests\Assessments\RecordInterviewResultRequest::assessmen
+         tSession() should return App\Models\Interview but returns
+         (object|string|null).
+         🪪  return.type
+ ------ -----------------------------------------------------------------------
+
+ ------ --------------------------------------------------------------------
+  Line   app/Http/Requests/Selection/FinalDecisionRequest.php
+ ------ --------------------------------------------------------------------
+  38     Method App\Http\Requests\Selection\FinalDecisionRequest::vacancy()
+         should return App\Models\Vacancy but returns (object|string|null).
+         🪪  return.type
+ ------ --------------------------------------------------------------------
+
+ ------ ----------------------------------------------------------------
+  Line   app/Http/Resources/AuditLogResource.php
+ ------ ----------------------------------------------------------------
+  65     Using nullsafe property access "?->name" on left side of ?? is
+         unnecessary. Use -> instead.
+         🪪  nullsafe.neverNull
+ ------ ----------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Models/Scopes/OrganizationScope.php
+ ------ -----------------------------------------------------------------------
+  15     Class App\Models\Scopes\OrganizationScope implements generic
+         interface Illuminate\Database\Eloquent\Scope but does not specify its
+         types: TModel
+         🪪  missingType.generics
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/Applications/ApplicationService.php
+ ------ -----------------------------------------------------------------------
+  31     Call to an undefined method
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::acceptsApplications().
+         🪪  method.notFound
+  45     Parameter #2 $vacancy of method
+         App\Services\Applications\ApplicationService::alreadyApplied()
+         expects App\Models\Vacancy,
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy> given.
+         🪪  argument.type
+  51     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$organization_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  52     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  69     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$code.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  77     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$organization.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  77     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$title.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/Applications/ApplicationStageService.php
+ ------ -----------------------------------------------------------------------
+  55     Access to an undefined property
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>::$vacancy_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  61     Access to an undefined property
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  67     Access to an undefined property
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  68     Access to an undefined property
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>::$stage_changed_at.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  69     Call to an undefined method
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>::save().
+         🪪  method.notFound
+  73     Access to an undefined property
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>::$organization_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  74     Access to an undefined property
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  81     Parameter #2 $subject of method
+         App\Services\Audit\AuditLogger::record() expects
+         Illuminate\Database\Eloquent\Model,
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application> given.
+         🪪  argument.type
+  91     Access to an undefined property
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>::$candidate.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  91     Parameter #1 $application of class
+         App\Notifications\ApplicationStageChangedNotification constructor
+         expects App\Models\Application,
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application> given.
+         🪪  argument.type
+  94     Method
+         App\Services\Applications\ApplicationStageService::transition()
+         should return App\Models\Application but returns
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>.
+         🪪  return.type
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/Assessments/AssessmentResultRecorder.php
+ ------ -----------------------------------------------------------------------
+  39     Parameter #1 $session of method
+         App\Services\Assessments\AssessmentResultRecorder::guardAndValidate()
+         expects App\Models\Evaluation|App\Models\Interview,
+         App\Models\Evaluation|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\Evaluation> given.
+         🪪  argument.type
+  44     Access to an undefined property
+         App\Models\Evaluation|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\Evaluation>::$organization_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  45     Access to an undefined property
+         App\Models\Evaluation|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\Evaluation>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  52     Call to an undefined method
+         App\Models\Evaluation|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\Evaluation>::forceFill().
+         🪪  method.notFound
+  58     Parameter #2 $subject of method
+         App\Services\Audit\AuditLogger::record() expects
+         Illuminate\Database\Eloquent\Model,
+         App\Models\Evaluation|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\Evaluation> given.
+         🪪  argument.type
+  60     Anonymous function should return App\Models\Evaluation but returns
+         App\Models\Evaluation|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\Evaluation>.
+         🪪  return.type
+  71     Parameter #1 $session of method
+         App\Services\Assessments\AssessmentResultRecorder::guardAndValidate()
+         expects App\Models\Evaluation|App\Models\Interview,
+         App\Models\Interview|Illuminate\Database\Eloquent\Collection<(int|str
+         ing), App\Models\Interview> given.
+         🪪  argument.type
+  76     Access to an undefined property
+         App\Models\Interview|Illuminate\Database\Eloquent\Collection<(int|str
+         ing), App\Models\Interview>::$organization_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  77     Access to an undefined property
+         App\Models\Interview|Illuminate\Database\Eloquent\Collection<(int|str
+         ing), App\Models\Interview>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  84     Call to an undefined method
+         App\Models\Interview|Illuminate\Database\Eloquent\Collection<(int|str
+         ing), App\Models\Interview>::forceFill().
+         🪪  method.notFound
+  91     Parameter #2 $subject of method
+         App\Services\Audit\AuditLogger::record() expects
+         Illuminate\Database\Eloquent\Model,
+         App\Models\Interview|Illuminate\Database\Eloquent\Collection<(int|str
+         ing), App\Models\Interview> given.
+         🪪  argument.type
+  96     Anonymous function should return App\Models\Interview but returns
+         App\Models\Interview|Illuminate\Database\Eloquent\Collection<(int|str
+         ing), App\Models\Interview>.
+         🪪  return.type
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/Assessments/AssessmentScheduler.php
+ ------ -----------------------------------------------------------------------
+  114    Access to an undefined property
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>::$vacancy_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  124    Method
+         App\Services\Assessments\AssessmentScheduler::lockForScheduling()
+         should return array{App\Models\Application, App\Models\Vacancy} but
+         returns
+         array{App\Models\Application|Illuminate\Database\Eloquent\Collection<
+         (int|string), App\Models\Application>, App\Models\Vacancy}.
+         🪪  return.type
+         💡  Offset 0 (App\Models\Application) does not accept type
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>.
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/Audit/AuditLogger.php
+ ------ -----------------------------------------------------------------------
+  67     Call to function is_string() with string will always evaluate to
+         true.
+         🪪  function.alreadyNarrowedType
+         💡  Because the type is coming from a PHPDoc, you can turn off this
+         check by setting treatPhpDocTypesAsCertain: false in your phpstan.neo
+         n.
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/JobRequests/JobRequestWorkflow.php
+ ------ -----------------------------------------------------------------------
+  72     Property App\Models\JobRequest::$submitted_at
+         (Illuminate\Support\Carbon|null) does not accept
+         Carbon\CarbonImmutable.
+         🪪  assign.propertyType
+  89     Property App\Models\JobRequest::$validated_at
+         (Illuminate\Support\Carbon|null) does not accept
+         Carbon\CarbonImmutable.
+         🪪  assign.propertyType
+  117    Property App\Models\JobRequest::$decided_at
+         (Illuminate\Support\Carbon|null) does not accept
+         Carbon\CarbonImmutable.
+         🪪  assign.propertyType
+  129    Access to an undefined property
+         App\Models\JobRequest|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\JobRequest>::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  135    Access to an undefined property
+         App\Models\JobRequest|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\JobRequest>::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  136    Parameter #1 of closure expects App\Models\JobRequest,
+         App\Models\JobRequest|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\JobRequest> given.
+         🪪  argument.type
+  137    Call to an undefined method
+         App\Models\JobRequest|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\JobRequest>::save().
+         🪪  method.notFound
+  139    Parameter #1 $jobRequest of method
+         App\Services\JobRequests\JobRequestWorkflow::recordHistory() expects
+         App\Models\JobRequest,
+         App\Models\JobRequest|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\JobRequest> given.
+         🪪  argument.type
+  140    Parameter #2 $subject of method
+         App\Services\Audit\AuditLogger::record() expects
+         Illuminate\Database\Eloquent\Model,
+         App\Models\JobRequest|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\JobRequest> given.
+         🪪  argument.type
+  146    Anonymous function should return App\Models\JobRequest but returns
+         App\Models\JobRequest|Illuminate\Database\Eloquent\Collection<(int|st
+         ring), App\Models\JobRequest>.
+         🪪  return.type
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------
+  Line   app/Services/Ml/OperationalRiskFeatureBuilder.php
+ ------ -----------------------------------------------------------------
+  132    Method
+         App\Services\Ml\OperationalRiskFeatureBuilder::applicationIds()
+         should return list<int> but returns array<int>.
+         🪪  return.type
+         💡  array<int> might not be a list.
+ ------ -----------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/Ranking/VacancyRankingBuilder.php
+ ------ -----------------------------------------------------------------------
+  32     Parameter #2 $applicationIds of method
+         App\Services\Ranking\VacancyRankingBuilder::recordedScores() expects
+         list<int>, array<int, (int|string)> given.
+         🪪  argument.type
+         💡  array<int, (int|string)> might not be a list.
+  40     Parameter #2 $candidates of method
+         App\Services\Ranking\RankingService::rank() expects list<App\Services
+         \Ranking\CandidateScores>, array<int, App\Services\Ranking\CandidateS
+         cores> given.
+         🪪  argument.type
+         💡  array<int, App\Services\Ranking\CandidateScores> might not be a li
+         st.
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/Reports/RecruitmentReportService.php
+ ------ -----------------------------------------------------------------------
+  68     Parameter #1 $rows of method
+         App\Services\Reports\RecruitmentReportService::indicators() expects
+         Illuminate\Support\Collection<int, object>, Illuminate\Support\Collec
+         tion<int, object{vacancy_id: int, status: App\Enums\ApplicationStatus
+         , applied_at: Carbon\CarbonImmutable, shortlisted_at:
+         Carbon\CarbonImmutable|null, reached_shortlist: bool}> given.
+         🪪  argument.type
+         💡  Template type TValue on class Illuminate\Support\Collection is not
+         covariant. Learn more: https://phpstan.org/blog/whats-up-with-templat
+         e-covariant
+  69     Parameter #1 $rows of method
+         App\Services\Reports\RecruitmentReportService::byStatus() expects
+         Illuminate\Support\Collection<int, object>, Illuminate\Support\Collec
+         tion<int, object{vacancy_id: int, status: App\Enums\ApplicationStatus
+         , applied_at: Carbon\CarbonImmutable, shortlisted_at:
+         Carbon\CarbonImmutable|null, reached_shortlist: bool}> given.
+         🪪  argument.type
+         💡  Template type TValue on class Illuminate\Support\Collection is not
+         covariant. Learn more: https://phpstan.org/blog/whats-up-with-templat
+         e-covariant
+  70     Parameter #1 $rows of method
+         App\Services\Reports\RecruitmentReportService::byWeek() expects
+         Illuminate\Support\Collection<int, object>, Illuminate\Support\Collec
+         tion<int, object{vacancy_id: int, status: App\Enums\ApplicationStatus
+         , applied_at: Carbon\CarbonImmutable, shortlisted_at:
+         Carbon\CarbonImmutable|null, reached_shortlist: bool}> given.
+         🪪  argument.type
+         💡  Template type TValue on class Illuminate\Support\Collection is not
+         covariant. Learn more: https://phpstan.org/blog/whats-up-with-templat
+         e-covariant
+  71     Parameter #1 $rows of method
+         App\Services\Reports\RecruitmentReportService::byVacancy() expects
+         Illuminate\Support\Collection<int, object>, Illuminate\Support\Collec
+         tion<int, object{vacancy_id: int, status: App\Enums\ApplicationStatus
+         , applied_at: Carbon\CarbonImmutable, shortlisted_at:
+         Carbon\CarbonImmutable|null, reached_shortlist: bool}> given.
+         🪪  argument.type
+         💡  Template type TValue on class Illuminate\Support\Collection is not
+         covariant. Learn more: https://phpstan.org/blog/whats-up-with-templat
+         e-covariant
+  82     Method
+         App\Services\Reports\RecruitmentReportService::vacancyOptions()
+         should return list<array{value: string, label: string}> but returns a
+         rray<int, array{value: decimal-int-string, label: non-falsy-string}>.
+         🪪  return.type
+         💡  array<int, array{value: decimal-int-string, label: non-falsy-strin
+         g}> might not be a list.
+  109    Method
+         App\Services\Reports\RecruitmentReportService::applicationRows()
+         should return Illuminate\Support\Collection<int, object{vacancy_id: i
+         nt, status: App\Enums\ApplicationStatus, applied_at:
+         Carbon\CarbonImmutable, shortlisted_at: Carbon\CarbonImmutable|null,
+         reached_shortlist: bool}> but returns Illuminate\Support\Collection<i
+         nt, object{vacancy_id: int, status: App\Enums\ApplicationStatus,
+         applied_at: Carbon\CarbonImmutable, shortlisted_at:
+         Carbon\CarbonImmutable|null, reached_shortlist: bool}&stdClass>.
+         🪪  return.type
+         💡  Template type TValue on class Illuminate\Support\Collection is not
+         covariant. Learn more: https://phpstan.org/blog/whats-up-with-templat
+         e-covariant
+  153    Access to an undefined property object::$shortlisted_at.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  154    Access to an undefined property object::$applied_at.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  154    Access to an undefined property object::$shortlisted_at.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  163    Access to an undefined property object::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  174    Access to an undefined property object::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  190    Access to an undefined property object::$applied_at.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  219    Method App\Services\Reports\RecruitmentReportService::byVacancy()
+         should return list<array<string, mixed>> but returns array<int, array
+         {id: int, code: string, title: string, status: array{value: string,
+         label: string, tone: string}, applications: int, reached_shortlist:
+         int, shortlist_rate: float|null, in_assessment: int}>.
+         🪪  return.type
+         💡  array<int, array{id: int, code: string, title: string, status: arr
+         ay{value: string, label: string, tone: string}, applications: int,
+         reached_shortlist: int, shortlist_rate: float, in_assessment: int}> m
+         ight not be a list.
+  233    Access to an undefined property object::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/Selection/FinalDecisionService.php
+ ------ -----------------------------------------------------------------------
+  33     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  37     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  43     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  44     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$organization_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  55     Parameter #1 $vacancy of method
+         App\Services\Ranking\VacancyRankingBuilder::forVacancy() expects
+         App\Models\Vacancy,
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy> given.
+         🪪  argument.type
+  64     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$organization_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  65     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/Selection/SelectionRegistrationService.php
+ ------ -----------------------------------------------------------------------
+  32     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  36     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  48     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/Selection/VacancyClosureService.php
+ ------ -----------------------------------------------------------------------
+  38     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  39     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  42     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  48     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  52     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  69     Call to an undefined method
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::forceFill().
+         🪪  method.notFound
+  77     Parameter #2 $subject of method
+         App\Services\Audit\AuditLogger::record() expects
+         Illuminate\Database\Eloquent\Model,
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy> given.
+         🪪  argument.type
+  83     Parameter #2 $subject of method
+         App\Services\Audit\AuditLogger::record() expects
+         Illuminate\Database\Eloquent\Model,
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy> given.
+         🪪  argument.type
+  91     Parameter #1 $vacancy of method
+         App\Services\Selection\VacancyClosureService::notifyResults() expects
+         App\Models\Vacancy,
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy> given.
+         🪪  argument.type
+  91     Parameter #3 $notSelected of method
+         App\Services\Selection\VacancyClosureService::notifyResults() expects
+         list<App\Models\Application>, array<int, App\Models\Application> give
+         n.
+         🪪  argument.type
+         💡  array<int, App\Models\Application> might not be a list.
+  93     Method App\Services\Selection\VacancyClosureService::close() should
+         return App\Models\Vacancy but returns
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>.
+         🪪  return.type
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   app/Services/Vacancies/VacancyService.php
+ ------ -----------------------------------------------------------------------
+  100    Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  101    Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  104    Parameter #1 $vacancy of method
+         App\Services\Vacancies\VacancyValidator::issues() expects
+         App\Models\Vacancy,
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy> given.
+         🪪  argument.type
+  109    Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$status.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  110    Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$published_by.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  111    Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$published_at.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  112    Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$opens_at.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  113    Call to an undefined method
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::save().
+         🪪  method.notFound
+  115    Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$code.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+  115    Parameter #2 $subject of method
+         App\Services\Audit\AuditLogger::record() expects
+         Illuminate\Database\Eloquent\Model,
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy> given.
+         🪪  argument.type
+  117    Anonymous function should return App\Models\Vacancy but returns
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>.
+         🪪  return.type
+  140    Parameter #1 $array (list<array<string, mixed>>) of array_values is a
+         lready a list, call has no effect.
+         🪪  arrayValues.list
+         💡  Because the type is coming from a PHPDoc, you can turn off this
+         check by setting treatPhpDocTypesAsCertain: false in your phpstan.neo
+         n.
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   config/recruitment.php
+ ------ -----------------------------------------------------------------------
+  12     Strict comparison using === between 100|bool|string and null will
+         always evaluate to false.
+         🪪  identical.alwaysFalse
+         💡  Because the type is coming from a PHPDoc, you can turn off this
+         check by setting treatPhpDocTypesAsCertain: false in your phpstan.neo
+         n.
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   database/factories/ApplicationFactory.php
+ ------ -----------------------------------------------------------------------
+  24     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$organization_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   database/factories/EvaluationCriterionFactory.php
+ ------ -----------------------------------------------------------------------
+  18     Access to an undefined property
+         App\Models\Vacancy|Illuminate\Database\Eloquent\Collection<(int|strin
+         g), App\Models\Vacancy>::$organization_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   database/factories/EvaluationFactory.php
+ ------ -----------------------------------------------------------------------
+  23     Access to an undefined property
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>::$organization_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+ ------ -----------------------------------------------------------------------
+
+ ------ -----------------------------------------------------------------------
+  Line   database/factories/InterviewFactory.php
+ ------ -----------------------------------------------------------------------
+  23     Access to an undefined property
+         App\Models\Application|Illuminate\Database\Eloquent\Collection<(int|s
+         tring), App\Models\Application>::$organization_id.
+         🪪  property.notFound
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und
+         efined-property
+ ------ -----------------------------------------------------------------------
+
+ [ERROR] Found 105 errors
+
+Script phpstan analyse handling the types:check event returned with error code 1

@@ -17,6 +17,7 @@ use App\Http\Controllers\JobRequests\JobRequestController;
 use App\Http\Controllers\JobRequests\JobRequestTransitionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublicVacancyController;
+use App\Http\Controllers\Reports\RecruitmentReportController;
 use App\Http\Controllers\Selection\FinalDecisionController;
 use App\Http\Controllers\Selection\SelectionRegistrationController;
 use App\Http\Controllers\Selection\VacancyClosureController;
@@ -111,6 +112,9 @@ Route::middleware(['auth'])->group(function () {
 
     // RF-27 (solo lectura)
     Route::get('auditoria', [AuditLogController::class, 'index'])->name('audit.index');
+
+    // RF-28 (candidato): reportes operativos del proceso, solo lectura y agregados.
+    Route::get('reportes', RecruitmentReportController::class)->name('reports.index');
 });
 
 require __DIR__.'/settings.php';
