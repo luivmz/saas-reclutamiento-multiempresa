@@ -245,11 +245,13 @@ Observaciones:
 ### Pendientes
 
 1. **Llamadas de dibujo por encima del techo** (99–144 frente a 60). Reducirlas exige rediseñar la escena con menos mallas, por ejemplo tarjetas como planos con textura. Requiere decisión del equipo y cuota de Spline.
-2. **Atribución de la plantilla «Carousel Tutorial for Community»:** autor y licencia sin registrar.
+2. **Atribución de la plantilla «Carousel Tutorial for Community»:** autor y licencia sin verificar. El 24/11 no se encontró en el archivo original, que no guarda metadatos de autor, ni en una búsqueda web de la comunidad de Spline. No se registra hasta poder comprobarla en la ficha original.
 3. **Flechas en el Preview del editor**, si el equipo quiere esa prueba además de la del navegador.
 4. **Fuente externa:** decidir si se acepta la petición a `fonts.gstatic.com` o se altera el export para servir Inter desde el proyecto.
 5. **Memoria GPU** sin medir, y **FPS en un equipo de gama media** sin comprobar.
-6. **Registro formal:** recoger en ADR-003 y en `scope-preliminary.md` la ampliación a WebGL que autorizó el equipo.
+6. **Renderizado continuo** mientras la escena está visible, en el modo `auto` del runtime.
+7. **Alcance de los términos:** la opción A se aceptó para el prototipo académico local. Publicarlo en el VPS amplía ese uso.
+8. **Registro formal:** ADR-003 recoge la ampliación desde el 24/11. Siguen abiertas la pregunta 3 de `scope-preliminary.md` y la promoción de RNF-C.
 
 ## Comparación histórica del prototipo estático en Chrome
 
