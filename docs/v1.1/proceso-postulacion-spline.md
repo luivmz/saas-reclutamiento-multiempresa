@@ -208,7 +208,7 @@ Mismas condiciones que la base documentada (`medir.py`). Bytes transferidos seg�
 | Escritorio, en la sección | 42 → 96 | 2 148 232 → 4 430 798 | 640 540 → 2 683 348 |
 | Móvil o movimiento reducido, al cargar y en la sección | 41 → 43 | 1 033 246 → 1 038 874 | 640 540 → 645 666 |
 
-- Las dos peticiones nuevas de la carga inicial (+5,6 kB) eran el fragmento de control diferido, que se pedía al tener cargador. Desde la integración en main, `ApplicationProcessScene` decide la capacidad antes de montarlo. Así, en móvil, con movimiento reducido o en equipos modestos ya no se pide ni se monta; las cifras de esta tabla son anteriores a ese ajuste. El cambio también eliminó un fallo intermitente de E2E-23 a 390 px (error 177 de React durante la captura de Cypress), que solo apareció con el fragmento montado en móvil.
+- Las dos peticiones nuevas de la carga inicial (+5,6 kB) eran el fragmento de control diferido, que se pedía al tener cargador. Desde la integración en main, `ApplicationProcessScene` decide la capacidad antes de montarlo. Así, en móvil, con movimiento reducido o en equipos modestos ya no se pide ni se monta; las cifras de esta tabla son anteriores a ese ajuste. Antes del ajuste, E2E-23 falló 2 de 5 veces a 390 px con el error 177 de React durante la captura de Cypress, mientras el fragmento se montaba también en móvil. Después pasó 13 de 13 en tres repeticiones seguidas y en la suite completa. No reapareció, aunque su causa exacta no quedó demostrada.
 - La escena solo se pide en escritorio capaz, al acercarse a la sección:
   - runtime: 49 fragmentos JS, 2 019 362 B sin comprimir, 547 609 B con gzip -9;
   - WASM: 123 717 B;
@@ -240,7 +240,15 @@ Observaciones:
 - **E2E-29**, ampliada a tres casos. El nuevo comprueba que la escena se pide solo cerca de la sección y que, si falla el export, queda el respaldo sincronizado.
 - **E2E-27** pasó sus 11 casos contra el entorno E2E aislado del prototipo (`APP_ENV=e2e`), que se reinicia con datos demo.
 - **E2E-23** pasó 12 de 13 en la primera ejecución. Falló «a 390 px: imagen fija…» con «Minified React error #177» durante `cy.screenshot`, a un ancho donde la escena no se monta. Dos repeticiones pasaron 13 de 13. Queda registrado como intermitente, sin relación demostrada con la integración; los registros están en `integracion/`.
-- **PHPUnit** no se repitió: no hay cambios de backend.
+- **PHPUnit** no se repitió en ese momento: no había cambios de backend.
+
+**Integración en main (24/11/2026).** Pruebas sobre el resultado integrado (`4ef2042`), en el stack Compose `reclutamiento` y con bases aisladas: `reclutamiento_testing` para PHPUnit y `reclutamiento_e2e` para Cypress.
+
+- Pasan tipos, build, componentes (130) y formato y lint de los 43 archivos de código del lote.
+- PHPUnit: 626 aprobadas y 8 omitidas.
+- Cypress completo: 173 de 183. La única spec que falla es E2E-21, por diseño, con `EXPERIMENTAL_EVIDENCIAS=false`; con la bandera activada en el `.env.e2e` local pasa 10 de 10.
+- La primera ejecución completa reveló una regresión del lote en E2E-19: «Cómo postular» desbordaba a 320 px con el texto al 200 %. Se corrigió en `942e25b`.
+- La comprobación de todo el repositorio (`vp check`) sigue fallando por archivos que ya estaban en main, como `docs/architecture-cypress-reports/evidencias/codex/docker-final.json`; no los trajo este lote.
 
 ### Pendientes
 
