@@ -20,5 +20,5 @@
     @else
         <a class="boton primario" href="/login">Iniciar sesión</a>
     @endif
-    <a class="boton" href="/empleos">Ver empleos disponibles</a>
+    <a class="boton" href="/empleos">Ver convocatorias</a>
 @endsection

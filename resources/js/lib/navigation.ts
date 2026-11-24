@@ -37,7 +37,7 @@ const portal: NavGroup = {
     label: 'Portal',
     items: [
         {
-            title: 'Empleos publicados',
+            title: 'Convocatorias publicadas',
             href: jobsIndex(),
             icon: Globe,
             cy: 'jobs',

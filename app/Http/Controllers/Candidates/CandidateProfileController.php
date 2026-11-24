@@ -8,6 +8,7 @@ use App\Http\Requests\Candidates\CandidateCvRequest;
 use App\Http\Requests\Candidates\CandidateProfileRequest;
 use App\Http\Support\ConvocatoriaDeRetorno;
 use App\Http\Support\Toast;
+use App\Models\Application;
 use App\Models\CandidateProfile;
 use App\Services\Candidates\CandidateProfileService;
 use Illuminate\Http\RedirectResponse;
@@ -71,6 +72,18 @@ class CandidateProfileController extends Controller
         }
 
         $vacante = $estado['vacante'];
+
+        // Si ya postuló (por ejemplo, vuelve con el historial a una dirección antigua), no hay decisión pendiente.
+        $yaPostulo = Application::query()->withoutGlobalScopes()
+            ->where('candidate_id', $request->user()->id)
+            ->where('vacancy_id', $vacante->id)
+            ->exists();
+
+        if ($yaPostulo) {
+            $retorno->olvidar($request);
+
+            return null;
+        }
 
         return [
             'disponible' => true,

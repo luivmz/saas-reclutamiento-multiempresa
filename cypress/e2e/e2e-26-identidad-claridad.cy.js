@@ -181,7 +181,7 @@ describe('E2E-26 · Identidad y claridad de la interfaz', () => {
         cy.visit('/empleos/999999', { failOnStatusCode: false });
         cy.get('html').should('have.attr', 'lang', 'es');
         cy.get('h1').should('have.text', 'No encontramos esta página');
-        cy.contains('a', 'Ver empleos disponibles').should(
+        cy.contains('a', 'Ver convocatorias').should(
             'have.attr',
             'href',
             '/empleos',

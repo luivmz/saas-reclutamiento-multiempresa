@@ -32,7 +32,9 @@ export default function Login({
         <>
             <Head title="Iniciar sesión" />
 
-            {convocatoria && <ReturnNotice vacancy={convocatoria} />}
+            {convocatoria && (
+                <ReturnNotice vacancy={convocatoria} context="login" />
+            )}
 
             <PasskeyVerify />
 

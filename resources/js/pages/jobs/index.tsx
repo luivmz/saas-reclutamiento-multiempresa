@@ -21,7 +21,7 @@ export default function JobsIndex({ vacancies, filters }: Props) {
 
     return (
         <>
-            <Head title="Empleos disponibles" />
+            <Head title="Convocatorias" />
 
             <section className="border-b">
                 <div className="mx-auto max-w-6xl space-y-5 px-4 py-8 sm:px-6 sm:py-12">
@@ -29,12 +29,12 @@ export default function JobsIndex({ vacancies, filters }: Props) {
                         className="font-serif text-3xl font-semibold tracking-tight md:text-4xl"
                         data-cy="page-title"
                     >
-                        Empleos disponibles
+                        Convocatorias
                     </h1>
                     <p className="text-muted-foreground max-w-2xl leading-relaxed">
-                        Convocatorias publicadas por las organizaciones de la
-                        plataforma. Para postular necesita una cuenta con perfil
-                        de postulante y CV.
+                        Ofertas de empleo publicadas por las organizaciones de
+                        la plataforma. Para postular necesita una cuenta con
+                        perfil de postulante y CV.
                     </p>
                     <Form
                         {...jobsIndex.form()}

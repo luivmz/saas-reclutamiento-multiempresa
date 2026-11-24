@@ -32,7 +32,9 @@ export default function Register({
     return (
         <>
             <Head title="Crear cuenta" />
-            {convocatoria && <ReturnNotice vacancy={convocatoria} />}
+            {convocatoria && (
+                <ReturnNotice vacancy={convocatoria} context="register" />
+            )}
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}

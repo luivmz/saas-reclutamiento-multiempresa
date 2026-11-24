@@ -72,7 +72,7 @@ export default function JobShow({
                         className="bg-card text-foreground inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm pointer-coarse:min-h-11"
                     >
                         <ArrowLeft className="size-4" aria-hidden="true" />
-                        Volver a empleos
+                        Volver a convocatorias
                     </Link>
 
                     <WorkflowAlert />

@@ -17,9 +17,9 @@
 @section('actions')
     @if ($conSesion)
         <a class="boton primario" href="/dashboard">Ir a mi panel</a>
-        <a class="boton" href="/empleos">Ver empleos disponibles</a>
+        <a class="boton" href="/empleos">Ver convocatorias</a>
     @else
-        <a class="boton primario" href="/empleos">Ver empleos disponibles</a>
+        <a class="boton primario" href="/empleos">Ver convocatorias</a>
         <a class="boton" href="/login">Iniciar sesión</a>
     @endif
 @endsection

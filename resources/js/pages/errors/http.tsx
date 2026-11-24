@@ -66,7 +66,7 @@ export default function HttpError({ status }: { status: 403 | 404 }) {
                                 </Button>
                                 <Button asChild variant="outline">
                                     <Link href={jobsIndex()}>
-                                        Ver empleos disponibles
+                                        Ver convocatorias
                                     </Link>
                                 </Button>
                             </>
@@ -74,7 +74,7 @@ export default function HttpError({ status }: { status: 403 | 404 }) {
                             <>
                                 <Button asChild>
                                     <Link href={jobsIndex()}>
-                                        Ver empleos disponibles
+                                        Ver convocatorias
                                     </Link>
                                 </Button>
                                 <Button asChild variant="outline">

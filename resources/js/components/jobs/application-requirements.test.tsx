@@ -49,12 +49,17 @@ describe('Requisitos para postular', () => {
         expect(markup).toContain('PDF de hasta 2 MB');
     });
 
-    test('el aviso de retorno nombra la convocatoria y no promete postular', () => {
-        const markup = renderToStaticMarkup(
-            <ReturnNotice vacancy={{ id: 7, title: 'Docente de Prueba' }} />,
+    test('el aviso de retorno no promete postular ni el retorno a otros roles', () => {
+        const vacancy = { id: 7, title: 'Docente de Prueba' };
+        const acceso = renderToStaticMarkup(
+            <ReturnNotice vacancy={vacancy} context="login" />,
+        );
+        const registro = renderToStaticMarkup(
+            <ReturnNotice vacancy={vacancy} context="register" />,
         );
 
-        expect(markup).toContain('Docente de Prueba');
-        expect(markup).toContain('decidirá si postula');
+        expect(acceso).toContain('Docente de Prueba');
+        expect(acceso).toContain('cuenta de postulante');
+        expect(registro).not.toContain('Si entra');
     });
 });

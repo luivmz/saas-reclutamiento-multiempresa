@@ -113,6 +113,44 @@ class VacancyReturnTest extends TestCase
         $this->assertSame(route('jobs.show', $this->vacancy->id), $response->getTargetUrl());
     }
 
+    /**
+     * Las respuestas JSON de Fortify (acceso, segundo factor y registro) no consumen la URL «intended». Si el
+     * retorno la fijara igualmente, quedaría en la sesión y una redirección posterior —por ejemplo, la de
+     * confirmar la contraseña— llevaría a la convocatoria.
+     */
+    public function test_json_login_leaves_no_pending_destination_behind(): void
+    {
+        $candidate = $this->candidate();
+        $this->get('/login?convocatoria='.$this->vacancy->id)->assertOk();
+
+        $this->postJson(route('login'), ['email' => $candidate->email, 'password' => 'password'])
+            ->assertOk()
+            ->assertJson(['two_factor' => false]);
+        $this->assertFalse(session()->has('url.intended'));
+
+        $this->post(route('password.confirm.store'), ['password' => 'password'])
+            ->assertRedirect(route('dashboard'));
+    }
+
+    public function test_json_two_factor_and_registration_leave_no_pending_destination_behind(): void
+    {
+        $candidate = User::factory()->candidate()->withTwoFactor()->create();
+        $this->get('/login?convocatoria='.$this->vacancy->id)->assertOk();
+        $this->post(route('login'), ['email' => $candidate->email, 'password' => 'password']);
+        $this->postJson(route('two-factor.login.store'), ['recovery_code' => 'recovery-code-1'])->assertNoContent();
+        $this->assertFalse(session()->has('url.intended'));
+
+        $this->post(route('logout'));
+        $this->get('/register?convocatoria='.$this->vacancy->id)->assertOk();
+        $this->postJson(route('register.store'), [
+            'name' => 'Postulante Json',
+            'email' => 'json.retorno@correo.test',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ])->assertCreated();
+        $this->assertFalse(session()->has('url.intended'));
+    }
+
     public function test_profile_keeps_the_vacancy_until_it_is_complete_and_then_offers_the_way_back(): void
     {
         Storage::fake('local');
@@ -271,6 +309,24 @@ class VacancyReturnTest extends TestCase
         $this->get('/login')->assertInertia(fn (AssertableInertia $page) => $page->where('convocatoria', null));
         $this->post(route('login'), ['email' => $candidate->email, 'password' => 'password'])
             ->assertRedirect(route('dashboard'));
+    }
+
+    /**
+     * Volver con el historial a `/mi-perfil?convocatoria=ID` después de postular no debe invitar a «decidir si
+     * postula» a una convocatoria en la que ya postuló.
+     */
+    public function test_profile_does_not_offer_to_return_to_a_vacancy_already_applied_to(): void
+    {
+        $candidate = $this->candidate();
+        Application::factory()->for($this->vacancy)->create([
+            'organization_id' => $this->organization->id,
+            'candidate_id' => $candidate->id,
+        ]);
+
+        $this->actingAs($candidate)
+            ->get(route('candidate.profile.edit', ['convocatoria' => $this->vacancy->id]))
+            ->assertInertia(fn (AssertableInertia $page) => $page->where('retorno', null));
+        $this->assertFalse(session()->has('postulacion.retorno'));
     }
 
     public function test_the_profile_route_stays_restricted_to_candidates(): void
