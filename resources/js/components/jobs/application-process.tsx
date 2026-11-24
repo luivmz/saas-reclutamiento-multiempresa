@@ -55,7 +55,7 @@ export function ApplicationProcess({
 
     return (
         <div className="grid min-w-0 items-start gap-6 lg:grid-cols-[1fr_1fr] lg:gap-8">
-            <div>
+            <div className="min-w-0">
                 <ol
                     className="divide-border divide-y border-y"
                     aria-label="Pasos para postular"
@@ -102,7 +102,11 @@ export function ApplicationProcess({
                     {current.text}
                 </p>
 
-                <Button asChild variant="outline" className="mt-3 min-h-11">
+                <Button
+                    asChild
+                    variant="outline"
+                    className="mt-3 h-auto min-h-11 whitespace-normal"
+                >
                     <Link href={jobsIndex()} data-cy="apply-jobs">
                         Ver convocatorias
                         <ArrowRight aria-hidden="true" />
