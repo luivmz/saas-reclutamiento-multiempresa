@@ -3,6 +3,7 @@ import type {
     ApplicationStep,
     LoadApplicationScene,
 } from './application-scene-session';
+import { useSceneCapability } from './use-scene-capability';
 
 const DeferredApplicationScene = lazy(
     () => import('./deferred-application-scene'),
@@ -34,6 +35,11 @@ export function ApplicationProcessScene({
     load?: LoadApplicationScene;
     onStepChange: (step: ApplicationStep) => void;
 }) {
+    // El fragmento diferido solo se pide y se monta si la escena procede: en
+    // móvil, con movimiento reducido o en equipos modestos queda el póster sin
+    // descargar ni montar nada.
+    const { mode } = useSceneCapability();
+
     return (
         <div
             aria-hidden="true"
@@ -43,7 +49,7 @@ export function ApplicationProcessScene({
             <div className="group-has-[canvas[data-status=ready]]:invisible">
                 {poster}
             </div>
-            {load && (
+            {load && mode === 'scene' && (
                 <SceneBoundary>
                     <Suspense fallback={null}>
                         <DeferredApplicationScene

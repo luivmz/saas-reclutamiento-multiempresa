@@ -208,7 +208,7 @@ Mismas condiciones que la base documentada (`medir.py`). Bytes transferidos seg�
 | Escritorio, en la sección | 42 → 96 | 2 148 232 → 4 430 798 | 640 540 → 2 683 348 |
 | Móvil o movimiento reducido, al cargar y en la sección | 41 → 43 | 1 033 246 → 1 038 874 | 640 540 → 645 666 |
 
-- Las dos peticiones nuevas de la carga inicial (+5,6 kB) son el fragmento de control diferido, que ahora se pide al tener cargador.
+- Las dos peticiones nuevas de la carga inicial (+5,6 kB) eran el fragmento de control diferido, que se pedía al tener cargador. Desde la integración en main, `ApplicationProcessScene` decide la capacidad antes de montarlo. Así, en móvil, con movimiento reducido o en equipos modestos ya no se pide ni se monta; las cifras de esta tabla son anteriores a ese ajuste. El cambio también eliminó un fallo intermitente de E2E-23 a 390 px (error 177 de React durante la captura de Cypress), que solo apareció con el fragmento montado en móvil.
 - La escena solo se pide en escritorio capaz, al acercarse a la sección:
   - runtime: 49 fragmentos JS, 2 019 362 B sin comprimir, 547 609 B con gzip -9;
   - WASM: 123 717 B;
