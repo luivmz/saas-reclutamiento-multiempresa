@@ -1,6 +1,6 @@
 # Prototipo de «Cómo postular» con Spline
 
-**Estado.** Preparación local en `feature/proceso-postulacion-3d`, desde `01b26d17e8f3aec9e89f7f44a834f8dcbcb89bf4`. La interfaz HTML, su ilustración estática y el contrato de carga están implementados. El carrusel se validó y refinó en el editor de Spline el 24/11/2026. Su export y su conexión con la portada esperan la decisión del equipo sobre el runtime. La portada sirve la ilustración estática.
+**Estado.** Preparación local en `feature/proceso-postulacion-3d`, desde `01b26d17e8f3aec9e89f7f44a834f8dcbcb89bf4`. La interfaz HTML, su ilustración estática y el contrato de carga están implementados. El carrusel se validó y refinó en el editor de Spline el 24/11/2026. Ese mismo día el equipo eligió la opción A, y el export quedó integrado en la portada con `@splinetool/runtime` 2.0.198. En escritorio capaz se muestra la escena y en los demás casos queda la ilustración estática. Detalle en [Integración del export](#integración-del-export-24112026).
 
 La sección explica la consulta pública de convocatorias (RF-07), la cuenta de postulante (RF-08), el perfil y el CV (RF-09), y la postulación y su seguimiento (RF-10 a RF-11). Seleccionar un paso cambia su explicación y la ilustración. Los enlaces llevan al listado y al registro real. El encabezado principal y el bloque institucional del proceso conservan su composición.
 
@@ -97,7 +97,159 @@ Consultas al registro público de npm y a GitHub sobre `@splinetool/runtime`, la
 - **Comunidad.** El contenido publicado se rige por la «Standard Commercial License», que permite remezclar y modificar para uso personal y comercial. Su texto no está enlazado en los términos.
 - **Origen.** Lo publican personas de Spline. La versión 2.0.219 se publicó el 24/11/2026; de 2.0.214 a 2.0.218 salieron el día anterior. Pesa 36,5 MB desempaquetado, con 372 archivos.
 
-Con estas condiciones desconocidas, el runtime **no se incorpora**. Hace falta una decisión expresa del equipo para aceptarlas o elegir una alternativa: un visor alojado por Spline o capturas del editor para el respaldo estático. Mientras tanto, la portada mantiene la ilustración estática y el contrato `LoadApplicationScene` queda sin cargador. En la validación del 24/11 la decisión quedó sin elegir: no se publicó el export, no se instaló el runtime y no se conectó la portada.
+Con estas condiciones desconocidas, el runtime **no se incorpora**. Hace falta una decisión expresa del equipo para aceptarlas o elegir una alternativa: un visor alojado por Spline o capturas del editor para el respaldo estático. Mientras tanto, la portada mantiene la ilustración estática y el contrato `LoadApplicationScene` queda sin cargador. En la validación del 24/11 la decisión quedó sin elegir: no se publicó el export, no se instaló el runtime y no se conectó la portada. Esa misma tarde el equipo eligió la opción A; su registro está en la sección siguiente.
+
+## Integración del export (24/11/2026)
+
+**Decisión del equipo: opción A.** El equipo acepta los términos de Spline para este prototipo académico local y autoriza `@splinetool/runtime` con estas condiciones:
+
+- versión exacta;
+- publicada preferiblemente al menos 14 días antes; si ninguna funciona con el export, la compatible más antigua, con su fecha y el motivo;
+- origen, mantenedores, integrity, licencia, tamaño y riesgo documentados;
+- sin ocultar la marca ni la atribución del export o del runtime.
+
+La autorización amplía la experiencia 3D a WebGL solo en esta sección. No modifica ADR-003 ni cierra la pregunta 3 de `scope-preliminary.md`.
+
+### Export
+
+| Dato | Valor |
+|---|---|
+| Origen | Copia `791fcb5a-2978-433f-a341-3d2abfa898e1`, publicada con `3d_publish_export` (exportación de código, vanilla) |
+| URL pública | https://prod.spline.design/o9V17OqJsPxpJn0x/scene.splinecode |
+| Archivo servido | `public/spline/proceso-postulacion-eaa9e57f.splinecode`, 115 092 B (90 551 B con gzip -9) |
+| SHA-256 | `eaa9e57f93c73319d24c07b872a65540bf44ad22c863be1e2a5b0d92f3df3246` |
+| Formato | Esquema 136, editor 2.0.219 |
+
+Se comprobó que es la escena refinada y no la plantilla:
+
+- la variable `applicationStep` vale 1;
+- están los grupos `convocatoria`, `cuenta`, `perfil_cv` y `seguimiento`, con cuatro estados cada uno;
+- la tarjeta 3 se titula «Complete su perfil y cargue su CV»;
+- «Siguiente» tiene su propio evento `a21032cd…` con `min(applicationStep + 1, 4)`;
+- la cámara está en z = 1150 y el panel en y = 51.
+
+El export incluye la fuente Inter 600 (`fonts.gstatic.com`) y la imagen `SplineWatermark`. El runtime dibuja esa imagen dentro del canvas como la insignia «Built with Spline», que se conserva.
+
+### Versión del runtime
+
+Se probaron versiones con el export real en una página aislada, fuera del repositorio, comprobando carga, variable, las dos flechas, los límites 1 y 4, y los saltos por variable. Script `probar-runtimes.py`, junto a las copias de trabajo.
+
+| Versión | Publicada (UTC) | Resultado |
+|---|---|---|
+| 2.0.170, última publicada hasta el 10/11 | 10/11/2026 17:37 | El recorrido pasa, pero la consola da un error: «file format 136, this runtime reads 135» |
+| 2.0.197 | 19/11/2026 13:05 | El mismo error de formato |
+| **2.0.198, elegida** | **19/11/2026 13:30** | Recorrido completo sin errores; queda la advertencia «Your .splinecode file is more recent than the library» |
+| 2.0.219, control | 24/11/2026 08:02 | Recorrido completo sin errores ni advertencias |
+
+La búsqueda binaria entre 2.0.171 y 2.0.219 mostró que la 2.0.198 es la primera que lee el esquema 136. Ninguna versión con al menos 14 días lo lee sin error, así que se fijó la compatible más antigua, que tenía 5 días al instalarla. La advertencia es informativa y no afecta al funcionamiento: aparece porque el export declara la versión 2.0.219.
+
+| Revisión de `@splinetool/runtime@2.0.198` | Valor |
+|---|---|
+| Declaración | `"@splinetool/runtime": "2.0.198"` en `dependencies`, sin `^` ni `~`, y la misma versión en `package-lock.json` |
+| Integrity | `sha512-0I7H+ynKJBTopqyeipFYIo+5TOh2OCUsi5PL3+tcN8CJ+KJRKTXzsjox6QfbHfrl/EBlhJPY1ePE+iisa6KEFA==` (shasum `f5a3ba4b8b4e633069f873dcdca1722ca2952d45`) |
+| Origen | Registro público de npm; tarball `https://registry.npmjs.org/@splinetool/runtime/-/runtime-2.0.198.tgz` |
+| Mantenedores | Tres cuentas con dominio `spline.design` |
+| Repositorio declarado | `github.com/splinetool/spline`, no público |
+| Licencia | No declarada en npm ni en el paquete. Los términos de Spline (spline.design/terms, vigentes desde el 29/10/2026) lo declaran software propietario |
+| Tamaño | 36 405 429 B desempaquetado, 372 archivos, tarball de 19 044 517 B |
+| Dependencias | `on-change` 4.0.0 y `semver-compare` 1.0.0, ambas MIT |
+| Auditoría | `npm audit --omit=dev` no atribuye avisos a estos paquetes. Los cuatro existentes vienen de `concurrently`/`shell-quote`, `source-map-js` y `vite`/`launch-editor` |
+
+Riesgos:
+
+- **Licencia.** No hay licencia abierta: el uso queda bajo los términos que el equipo aceptó, solo para este prototipo académico local.
+- **Ritmo de publicación.** El paquete publica casi a diario: 1231 versiones, y 2.0.214 a 2.0.219 en dos días. Sustituir el export puede exigir una versión más nueva; cada cambio se vuelve a probar con `probar-runtimes.py` y se fija con versión exacta.
+- **Petición externa.** La fuente del texto se pide a `fonts.gstatic.com`, porque su URL viene dentro del export. Servirla desde el proyecto exigiría alterar el export.
+
+### Adaptador
+
+`application-scene-loader.ts` es el cargador estable que recibe la portada. Importa bajo demanda `spline-application-scene.ts`, que a su vez carga el runtime con `import()` dentro del fragmento diferido. El contrato `LoadApplicationScene` no cambia. El adaptador:
+
+- crea `Application` con `renderer: 'webgl'`, `renderMode: 'auto'` y `htmlContentMode: 'none'`, y fija `wasmPath` en `/build/spline-runtime`;
+- carga el export propio con `applicationStep: 1` y la señal de cancelación, y resuelve con el evento `rendered` del primer cuadro;
+- `setStep` llama a `setVariable('applicationStep', paso)`;
+- al pulsar «Siguiente» o «Anterior» lee la variable en el cuadro siguiente y la entrega a `onStepChange`; la sesión descarta duplicados, valores inválidos y eventos fuera de reproducción;
+- `setPlaying` llama a `play()` o `stop()`;
+- `dispose` llama a `app.dispose()`, que libera el contexto WebGL, y se ejecuta al abortar o al desmontar;
+- ante un fallo de decodificación o de inicialización, libera el runtime y rechaza la promesa.
+
+La sesión ya cubre la espera de 8 s y la pérdida de contexto: en ambos casos deja el respaldo estático.
+
+El plugin `spline-runtime-wasm` de `vite.config.ts` copia `bevel.wasm`, el único WASM que pide esta escena, de `node_modules` a `public/build/spline-runtime/` en cada build. Así no se versiona y no se pide a unpkg. En `vite dev` se usa el CDN del paquete.
+
+**Fondo.** Es transparente (`setBackgroundColor('transparent')`): se ve el fondo de la sección en ambos temas. Las tarjetas llevan su propio fondo claro, así que el texto conserva el contraste. Se comprobó en claro y en oscuro.
+
+**Seguridad funcional.** Seleccionar un paso solo cambia la variable de la escena y la explicación HTML. No registra postulaciones ni ejecuta acciones de negocio.
+
+### Validación en el navegador (http://localhost:8087/)
+
+Build real y Chrome sin interfaz, con un contexto nuevo por caso. GPU NVIDIA RTX 4060 con ANGLE/D3D11, que es de gama alta: los FPS no representan un escritorio de gama media. Script `validar-integracion.py`; resultados en `integracion/integracion.json` y capturas en `integracion/capturas/` de la carpeta de evidencia.
+
+| Caso | Resultado |
+|---|---|
+| Escritorio 1440 × 900, claro y oscuro | Escena lista en la sección. Los cuatro pasos HTML mueven la tarjeta activa. Las flechas cambian la selección y la explicación HTML: 2, 3, 4, 4 en el límite, 3, 2, 1, 1 en el límite. CLS 0 |
+| Teclado y foco | Los pasos reciben foco visible y se seleccionan con Espacio. El tabulador nunca llega al canvas (`tabIndex = -1`) |
+| Desplazamiento | La rueda sobre el canvas desplaza la página |
+| Pausa | Con la pestaña oculta o fuera de la vista, 0 cuadros, incluso si el paso cambia. Al volver dibuja el paso vigente |
+| Salida de la sección | Al alejarse se desmonta el canvas y se libera el runtime. Al volver se recrea con el paso vigente |
+| Móvil 390 × 844 y 320 × 740, táctil | Respaldo estático sincronizado, sin canvas, sin peticiones de Spline, desborde 0, CLS 0 |
+| Movimiento reducido al cargar | Respaldo, sin peticiones de Spline |
+| Movimiento reducido con la página abierta | El canvas se desmonta y el respaldo conserva el paso 3. Ver la observación sobre el CLS |
+| Export bloqueado, fragmento del adaptador bloqueado, pérdida de contexto WebGL | Respaldo visible, sin canvas, la altura de la ilustración no cambia (335,75 px), CLS 0, sin errores de página |
+| Insignia «Built with Spline» | Dibujada dentro del canvas; la ilustración no añade elementos al DOM |
+
+### Mediciones
+
+Mismas condiciones que la base documentada (`medir.py`). Bytes transferidos según Resource Timing, solo locales y sin compresión, porque el servidor local no comprime:
+
+| Caso | Peticiones locales base → integración | Bytes base → integración | JS base → integración |
+|---|---:|---:|---:|
+| Escritorio, claro u oscuro, al cargar | 42 → 44 | 2 148 232 → 2 153 860 | 640 540 → 645 666 |
+| Escritorio, en la sección | 42 → 96 | 2 148 232 → 4 430 798 | 640 540 → 2 683 348 |
+| Móvil o movimiento reducido, al cargar y en la sección | 41 → 43 | 1 033 246 → 1 038 874 | 640 540 → 645 666 |
+
+- Las dos peticiones nuevas de la carga inicial (+5,6 kB) son el fragmento de control diferido, que ahora se pide al tener cargador.
+- La escena solo se pide en escritorio capaz, al acercarse a la sección:
+  - runtime: 49 fragmentos JS, 2 019 362 B sin comprimir, 547 609 B con gzip -9;
+  - WASM: 123 717 B;
+  - export: 115 213 B;
+  - fuente externa de `fonts.gstatic.com`: 162 619 B.
+
+| Presupuesto (BUDGETS.md) | Medido | Estado |
+|---|---|---|
+| Aumento del *bundle* inicial: 0 KB | Entrada `app` +0,16 kB: el mapa de precarga gana una referencia al fragmento compartido `rolldown-runtime`. Página `welcome` +0,86 kB. Ni el runtime, ni el adaptador ni el WASM están en la entrada | Desviación menor |
+| Primer cuadro ≤ 1,5 s tras entrar en la vista | 793–828 ms en claro; 338 ms en oscuro | Cumple |
+| ≥ 45 FPS | 59,9–60,2 FPS en transiciones (intervalo mediano 16,7 ms, p95 17,2 ms), en una GPU de gama alta | Cumple en este equipo |
+| Pausado fuera de la vista | 0 cuadros fuera de la vista y con la pestaña oculta | Cumple |
+| Triángulos ≤ 100 000 | 62 328 polígonos según el analizador del editor | Cumple |
+| Texturas | 0 en la escena | Cumple |
+| Llamadas de dibujo ≤ 60 | 99 por cuadro en reposo (paso 1); 132 de mediana y 144 de máximo durante las transiciones. Sin sombra y con profundidad 0 sigue en 99: el coste viene de las 52 mallas | **No cumple** |
+| Memoria GPU ≤ 150 MB | No medida: no hay API fiable en el navegador | Pendiente |
+| CLS | 0 en escritorio, móvil y fallos | Cumple |
+
+Observaciones:
+
+- **Dibujo en reposo.** Con `renderMode: 'auto'`, el runtime dibuja unos 60 cuadros por segundo mientras la escena está visible, aunque no cambie nada; la pausa fuera de la vista sí es completa. El modo `manual` daría 0 cuadros en reposo, pero hay que pedir cuadros en cada transición: sin ellos la imagen queda a mitad de camino, y no se redibuja al llegar la fuente ni al cambiar el tamaño. Se mantuvo `auto` por robustez.
+- **CLS con movimiento reducido en vivo.** Al activar el movimiento reducido con la página abierta, el CLS es 0,3528. Es idéntico con la escena bloqueada: lo producen el hero y el bloque del proceso al recomponerse, no esta integración.
+- **Consola.** Solo queda la advertencia de versión del export. Con un recurso bloqueado aparece además el error de red del navegador.
+
+### Pruebas
+
+- **Adaptador.** `spline-application-scene.test.ts` (siete casos, runtime simulado): opciones de carga, primer cuadro, paso y reproducción, notificación solo desde las flechas, liberación al desmontar, cancelación durante la carga, export dañado y carga ya cancelada.
+- **Componentes.** Pasan las 35 pruebas de `experience-3d`, incluidas las seis de sesión. Tipos, formato y lint de los seis archivos tocados y el build también pasan.
+- **E2E-29**, ampliada a tres casos. El nuevo comprueba que la escena se pide solo cerca de la sección y que, si falla el export, queda el respaldo sincronizado.
+- **E2E-27** pasó sus 11 casos contra el entorno E2E aislado del prototipo (`APP_ENV=e2e`), que se reinicia con datos demo.
+- **E2E-23** pasó 12 de 13 en la primera ejecución. Falló «a 390 px: imagen fija…» con «Minified React error #177» durante `cy.screenshot`, a un ancho donde la escena no se monta. Dos repeticiones pasaron 13 de 13. Queda registrado como intermitente, sin relación demostrada con la integración; los registros están en `integracion/`.
+- **PHPUnit** no se repitió: no hay cambios de backend.
+
+### Pendientes
+
+1. **Llamadas de dibujo por encima del techo** (99–144 frente a 60). Reducirlas exige rediseñar la escena con menos mallas, por ejemplo tarjetas como planos con textura. Requiere decisión del equipo y cuota de Spline.
+2. **Atribución de la plantilla «Carousel Tutorial for Community»:** autor y licencia sin registrar.
+3. **Flechas en el Preview del editor**, si el equipo quiere esa prueba además de la del navegador.
+4. **Fuente externa:** decidir si se acepta la petición a `fonts.gstatic.com` o se altera el export para servir Inter desde el proyecto.
+5. **Memoria GPU** sin medir, y **FPS en un equipo de gama media** sin comprobar.
+6. **Registro formal:** recoger en ADR-003 y en `scope-preliminary.md` la ampliación a WebGL que autorizó el equipo.
 
 ## Comparación histórica del prototipo estático en Chrome
 

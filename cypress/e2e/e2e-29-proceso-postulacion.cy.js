@@ -42,6 +42,40 @@ describe('E2E-29 · Cómo postular en la portada', () => {
         cy.dataCy('jobs-filters').should('be.visible');
     });
 
+    it('pide la escena solo cerca de la sección y, si el export falla, deja el respaldo sincronizado', () => {
+        cy.intercept('GET', '/spline/*.splinecode', {
+            forceNetworkError: true,
+        }).as('export');
+        cy.viewport(1440, 900);
+        cy.visit('/', {
+            onBeforeLoad(win) {
+                // Equipo capaz: la escena intenta cargar en lugar del póster.
+                Object.defineProperty(win.navigator, 'hardwareConcurrency', {
+                    value: 8,
+                });
+                Object.defineProperty(win.navigator, 'deviceMemory', {
+                    value: 8,
+                });
+            },
+        });
+        cy.dataCy('apply-step').should('have.length', 4);
+        cy.get('@export.all').should('have.length', 0);
+
+        cy.dataCy('apply-illustration').scrollIntoView();
+        cy.wait('@export');
+        cy.dataCy('apply-illustration').find('canvas').should('not.exist');
+        cy.dataCy('apply-poster').should('be.visible');
+        cy.dataCy('apply-step').eq(2).click();
+        cy.dataCy('apply-poster')
+            .children()
+            .eq(2)
+            .should('have.attr', 'data-active', 'true');
+        cy.dataCy('apply-description').should(
+            'contain.text',
+            'Cargue allí su CV',
+        );
+    });
+
     it('mantiene el recorrido con teclado y la alternativa estática a 320 px con movimiento reducido', () => {
         cy.viewport(320, 740);
         cy.visit('/', {

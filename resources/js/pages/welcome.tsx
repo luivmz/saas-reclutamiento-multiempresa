@@ -11,6 +11,7 @@ import {
     Signature,
     type LucideIcon,
 } from 'lucide-react';
+import { loadApplicationScene } from '@/components/experience-3d/application-scene-loader';
 import {
     SCHOOL_MEDIA,
     ScrollVideo,
@@ -254,7 +255,7 @@ export default function Welcome({
                     >
                         Cómo postular
                     </h2>
-                    <ApplicationProcess />
+                    <ApplicationProcess loadScene={loadApplicationScene} />
                     <div
                         className="bg-card h-fit space-y-4 rounded-xl border p-5"
                         data-cy="landing-requirements"
