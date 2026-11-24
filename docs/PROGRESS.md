@@ -6,6 +6,8 @@
 
 **Entrega académica integrada (23/11/2026).** Reúne la base SEG/F37, el módulo candidato RF-28, los vídeos, el anfitrión, las ofertas ficticias y el informe F29H v2. La [guía de entrega](entrega-final/ENTREGA_INTEGRADA.md) registra los orígenes, la reproducción y la verificación. Se preservan la bandera experimental desactivada por omisión, RF-23 y los estados formales.
 
+**Listado público de convocatorias · lote 3 (23/11/2026).** La rama local `feature/filtros-convocatorias` amplía la consulta de RF-07 por organización, ubicación y contrato. El [registro del lote](v1.1/filtros-convocatorias.md) detalla sus reglas, pruebas y evidencias.
+
 > Los cuatro registros siguientes documentan la práctica paralela de macOS de octubre y noviembre de 2026. Sus referencias al árbol sin commit, a las fases vigentes en esa rama y a los pendientes describen cada ejecución histórica. La práctica se publicó posteriormente en el commit 5e2eae37f63c7ac5d35ed2def9b2e843a644cd98.
 
 ## Reauditoría Codex de la práctica individual (09/11/2026)

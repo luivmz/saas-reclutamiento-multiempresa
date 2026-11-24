@@ -143,7 +143,12 @@ export type AssessmentSummary = {
     outcome: Presented | null;
     completed_at: string | null;
     evaluator?: string;
-    results?: { criterion: string; score: number; max_score: number; comment: string | null }[];
+    results?: {
+        criterion: string;
+        score: number;
+        max_score: number;
+        comment: string | null;
+    }[];
 };
 
 export type AppNotification = {
@@ -196,3 +201,18 @@ export type ApplicationRequirements = {
 
 /** Convocatoria a la que se volverá tras entrar o registrarse. */
 export type ChosenVacancy = { id: number; title: string };
+
+/** Búsqueda y filtros del listado público, ya validados por el servidor. */
+export type JobCriteria = {
+    q: string;
+    organizacion: number | null;
+    ubicacion: string | null;
+    contrato: string | null;
+};
+
+/** Opciones de los filtros: solo valores presentes en convocatorias publicadas. */
+export type JobFilterOptions = {
+    organizaciones: { value: string; label: string }[];
+    ubicaciones: { value: string; label: string }[];
+    contratos: { value: string; label: string }[];
+};

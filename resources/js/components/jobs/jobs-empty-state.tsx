@@ -2,27 +2,36 @@ import { Link } from '@inertiajs/react';
 import { SearchX } from 'lucide-react';
 import { EmptyState } from '@/components/empty-state';
 import { Button } from '@/components/ui/button';
+import { home } from '@/routes';
 import { index as jobsIndex } from '@/routes/jobs';
 
 /**
- * Lista de empleos sin resultados (DEF-26).
+ * Lista de convocatorias sin resultados (DEF-26, lote 3).
  *
  * Son tres casos distintos y cada uno pide algo diferente a quien busca:
- * - la búsqueda no coincide con nada: se nombra el término y se ofrece quitarlo;
- * - no hay ninguna convocatoria publicada: no hay filtro que quitar;
- * - la página pedida está fuera de rango: se vuelve a la primera. No se afirma por
- *   qué (enlace viejo, número escrito a mano…): solo se sabe que no existe.
+ * - la búsqueda o los filtros no coinciden con nada: se dice que es por esos
+ *   criterios (no que no haya convocatorias) y se ofrece quitarlos;
+ * - no hay ninguna convocatoria publicada: no hay criterio que quitar;
+ * - la página pedida está fuera de rango: se vuelve a la primera con los mismos
+ *   criterios. No se afirma por qué: solo se sabe que no existe.
  *
- * `total` es el total de la consulta (con la búsqueda aplicada), no de la página.
+ * `total` es el total de la consulta (con búsqueda y filtros), no de la página.
+ * `criteria` son los parámetros aplicados, sin la página.
  */
 export function JobsEmptyState({
     query,
     total,
+    filterCount = 0,
+    criteria,
 }: {
     query: string;
     total: number;
+    filterCount?: number;
+    criteria?: Record<string, string>;
 }) {
     if (total > 0) {
+        const firstPage = criteria ?? (query ? { q: query } : {});
+
         return (
             <EmptyState
                 title="Esta página no tiene convocatorias"
@@ -31,11 +40,36 @@ export function JobsEmptyState({
                     <Button asChild variant="outline">
                         <Link
                             href={jobsIndex(
-                                query ? { query: { q: query } } : undefined,
+                                Object.keys(firstPage).length > 0
+                                    ? { query: firstPage }
+                                    : undefined,
                             )}
                             data-cy="jobs-first-page"
                         >
                             Ir a la primera página
+                        </Link>
+                    </Button>
+                }
+            />
+        );
+    }
+
+    if (filterCount > 0) {
+        return (
+            <EmptyState
+                icon={SearchX}
+                title={
+                    query
+                        ? `Ninguna convocatoria coincide con «${query}» y los filtros actuales`
+                        : 'Ninguna convocatoria coincide con los filtros actuales'
+                }
+                description="Hay convocatorias publicadas que no cumplen estos criterios. Quite algún filtro o vuelva a ver todas."
+                action={
+                    <Button asChild>
+                        <Link href={jobsIndex()} data-cy="jobs-clear-search">
+                            {query
+                                ? 'Quitar búsqueda y filtros'
+                                : 'Quitar filtros'}
                         </Link>
                     </Button>
                 }
@@ -64,6 +98,11 @@ export function JobsEmptyState({
         <EmptyState
             title="Todavía no hay convocatorias publicadas"
             description="Cuando una organización publique una convocatoria, aparecerá aquí."
+            action={
+                <Button asChild variant="outline">
+                    <Link href={home()}>Volver al inicio</Link>
+                </Button>
+            }
         />
     );
 }

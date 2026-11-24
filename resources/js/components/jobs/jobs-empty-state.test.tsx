@@ -41,6 +41,48 @@ describe('Empleos · estados vacíos', () => {
         expect(markup).toMatch(/href="\/empleos\?q=docente"/);
     });
 
+    test.each([
+        [
+            '',
+            'Ninguna convocatoria coincide con los filtros actuales',
+            'Quitar filtros',
+        ],
+        [
+            'docente',
+            'Ninguna convocatoria coincide con «docente» y los filtros actuales',
+            'Quitar búsqueda y filtros',
+        ],
+    ])(
+        'distingue una combinación sin coincidencias con el puesto «%s»',
+        (query, title, action) => {
+            const markup = renderToStaticMarkup(
+                <JobsEmptyState query={query} total={0} filterCount={2} />,
+            );
+            expect(markup).toContain(title);
+            expect(markup).toContain(action);
+            expect(markup).toContain('href="/empleos"');
+        },
+    );
+
+    test('la salida de página fuera de rango conserva todos los criterios', () => {
+        const markup = renderToStaticMarkup(
+            <JobsEmptyState
+                query="aula"
+                total={14}
+                criteria={{
+                    q: 'aula',
+                    organizacion: '2',
+                    ubicacion: 'Lima',
+                    contrato: 'por_horas',
+                }}
+            />,
+        );
+        expect(markup).toContain(
+            'q=aula&amp;organizacion=2&amp;ubicacion=Lima&amp;contrato=por_horas',
+        );
+        expect(markup).not.toContain('page=');
+    });
+
     test('el término se muestra como texto, sin interpretar HTML', () => {
         const markup = renderToStaticMarkup(
             <JobsEmptyState query="<b>x</b>" total={0} />,
