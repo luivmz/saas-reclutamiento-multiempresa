@@ -174,6 +174,8 @@ export type Vacancy = {
     closure_type: Presented | null;
     closure_notes: string | null;
     accepts_applications: boolean;
+    /** Publicada, pero con la fecha de cierre de postulaciones ya pasada (regla del servidor). */
+    application_deadline_passed: boolean;
     organization?: { id: number; name: string };
     job_request?: {
         id: number;

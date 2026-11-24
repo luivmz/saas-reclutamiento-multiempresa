@@ -1,11 +1,12 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { CalendarClock, MapPin, Search, Users } from 'lucide-react';
 import { useRef } from 'react';
-import { EmptyState } from '@/components/empty-state';
 import { JobHost } from '@/components/job-host/job-host';
+import { JobsEmptyState } from '@/components/jobs/jobs-empty-state';
 import { Pagination } from '@/components/pagination';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DeadlinePassedBadge } from '@/components/vacancies/deadline-passed-badge';
 import { formatDate } from '@/lib/format';
 import { index as jobsIndex, show as jobsShow } from '@/routes/jobs';
 import type { Paginated, Vacancy } from '@/types';
@@ -40,7 +41,11 @@ export default function JobsIndex({ vacancies, filters }: Props) {
                         className="grid max-w-xl gap-2 min-[360px]:grid-cols-[minmax(0,1fr)_auto]"
                         role="search"
                     >
+                        {/* La clave rehace el campo cuando cambia la búsqueda
+                            aplicada: al quitar el filtro, el texto no se queda
+                            escrito aunque la lista ya muestre todo. */}
                         <Input
+                            key={filters.q}
                             name="q"
                             defaultValue={filters.q}
                             placeholder="Buscar por puesto…"
@@ -66,13 +71,9 @@ export default function JobsIndex({ vacancies, filters }: Props) {
             <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 xl:grid-cols-[minmax(0,1fr)_8.5rem] xl:gap-8 xl:has-[[data-cy=job-host]]:grid">
                 <div ref={listRef} className="min-w-0 space-y-6">
                     {vacancies.data.length === 0 ? (
-                        <EmptyState
-                            title="No hay convocatorias vigentes"
-                            description={
-                                filters.q
-                                    ? 'Ninguna convocatoria abierta coincide con esa búsqueda. Pruebe con otro puesto.'
-                                    : 'Cuando una organización publique una vacante, aparecerá aquí.'
-                            }
+                        <JobsEmptyState
+                            query={filters.q}
+                            total={vacancies.meta.total}
                         />
                     ) : (
                         <ul
@@ -90,6 +91,9 @@ export default function JobsIndex({ vacancies, filters }: Props) {
                                         <p className="text-muted-foreground text-xs">
                                             {vacancy.organization?.name}
                                         </p>
+                                        {vacancy.application_deadline_passed && (
+                                            <DeadlinePassedBadge />
+                                        )}
                                         <h2 className="font-serif text-lg leading-snug font-semibold">
                                             <Link
                                                 href={jobsShow(vacancy.id)}

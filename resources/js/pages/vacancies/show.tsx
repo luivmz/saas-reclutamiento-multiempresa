@@ -21,6 +21,7 @@ import {
     Section,
 } from '@/components/page';
 import { StatusBadge } from '@/components/status-badge';
+import { DeadlinePassedBadge } from '@/components/vacancies/deadline-passed-badge';
 import { CriteriaTable } from '@/components/vacancies/criteria-table';
 import { OperationalRiskCard } from '@/components/vacancies/operational-risk-card';
 import { ProcessSchedule } from '@/components/vacancies/process-schedule';
@@ -50,6 +51,9 @@ export default function ShowVacancy({ vacancy, validation, can }: Props) {
                                 {vacancy.code}
                             </span>
                             <StatusBadge status={vacancy.status} />
+                            {vacancy.application_deadline_passed && (
+                                <DeadlinePassedBadge />
+                            )}
                         </>
                     }
                     title={vacancy.title}

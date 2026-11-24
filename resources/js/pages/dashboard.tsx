@@ -15,6 +15,9 @@ import { dashboard } from '@/routes';
  */
 export default function Dashboard() {
     const { auth } = usePage().props;
+    // El postulante ve el mismo mensaje sin códigos de requisito; la
+    // trazabilidad queda en `data-rf` y en la documentación (DEF-29).
+    const isCandidate = auth.user.role === 'postulante';
     const links = navigationFor(auth.user.role)
         .flatMap((group) => group.items)
         .filter((item) => item.cy !== 'dashboard');
@@ -42,6 +45,7 @@ export default function Dashboard() {
                             <Link
                                 href={link.href}
                                 className="hover:bg-surface flex items-start gap-4 px-5 py-4 transition-colors"
+                                data-rf={link.rf?.join(' ')}
                             >
                                 {link.icon && (
                                     <span className="bg-surface text-primary mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-md">
@@ -73,7 +77,10 @@ export default function Dashboard() {
                     ))}
                 </ul>
 
-                <aside className="bg-surface text-surface-foreground flex gap-3 rounded-xl border border-dashed px-5 py-4 text-sm leading-relaxed">
+                <aside
+                    className="bg-surface text-surface-foreground flex gap-3 rounded-xl border border-dashed px-5 py-4 text-sm leading-relaxed"
+                    data-rf="RF-23"
+                >
                     <ShieldCheck
                         className="text-primary mt-0.5 size-5 shrink-0"
                         aria-hidden="true"
@@ -83,8 +90,8 @@ export default function Dashboard() {
                         <strong className="font-medium">
                             La decisión final de selección siempre la registra
                             una persona autorizada
-                        </strong>{' '}
-                        (RF-23).
+                        </strong>
+                        {isCandidate ? '.' : ' (RF-23).'}
                     </p>
                 </aside>
             </PageContainer>

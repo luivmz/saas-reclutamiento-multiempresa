@@ -192,7 +192,11 @@ function Sidebar({
           side={side}
         >
           <SheetHeader className="min-h-14 justify-center py-0 pr-14">
-            <SheetTitle>Navegación</SheetTitle>
+            {/* El panel tiene el fondo de la barra lateral: el título usa su
+                color de texto, no el del contenido (1,08:1 en tema claro, DEF-25). */}
+            <SheetTitle className="text-sidebar-foreground">
+              Navegación
+            </SheetTitle>
             <SheetDescription className="sr-only">
               Secciones disponibles para su rol.
             </SheetDescription>

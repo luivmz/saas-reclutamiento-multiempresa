@@ -10,6 +10,7 @@ import {
 import { Section } from '@/components/page';
 import { StatusBadge } from '@/components/status-badge';
 import { CriteriaTable } from '@/components/vacancies/criteria-table';
+import { DeadlinePassedBadge } from '@/components/vacancies/deadline-passed-badge';
 import { WorkflowAlert } from '@/components/workflow-alert';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -32,6 +33,10 @@ export default function JobShow({
     candidate: CandidateContext;
 }) {
     const { auth } = usePage().props;
+    // Por qué no se reciben postulaciones: si es por el plazo, se dice la fecha.
+    const notAccepting = vacancy.application_deadline_passed
+        ? `El plazo de postulación venció el ${formatDate(vacancy.closes_at)}.`
+        : 'La convocatoria no está recibiendo postulaciones.';
 
     const facts = [
         { icon: MapPin, label: 'Ubicación', value: vacancy.location },
@@ -142,7 +147,12 @@ export default function JobShow({
                             data-cy="apply-panel"
                         >
                             <div className="space-y-4 border-b px-5 py-5">
-                                <StatusBadge status={vacancy.status} />
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <StatusBadge status={vacancy.status} />
+                                    {vacancy.application_deadline_passed && (
+                                        <DeadlinePassedBadge />
+                                    )}
+                                </div>
                                 <dl className="space-y-3 text-sm">
                                     {facts.map((fact) => (
                                         <div
@@ -170,7 +180,7 @@ export default function JobShow({
                                         <p className="text-muted-foreground text-sm">
                                             {vacancy.accepts_applications
                                                 ? 'Para postular necesita una cuenta de postulante.'
-                                                : 'La convocatoria no está recibiendo postulaciones.'}
+                                                : notAccepting}
                                         </p>
                                         <Button asChild className="w-full">
                                             <Link
@@ -233,8 +243,7 @@ export default function JobShow({
                                                 className="text-muted-foreground text-sm"
                                                 data-cy="vacancy-not-accepting"
                                             >
-                                                La convocatoria no está
-                                                recibiendo postulaciones.
+                                                {notAccepting}
                                             </p>
                                         ) : !(
                                               candidate.profileComplete &&

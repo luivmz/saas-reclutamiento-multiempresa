@@ -35,6 +35,7 @@ class VacancyResource extends JsonResource
             'closure_type' => $this->closure_type?->present(),
             'closure_notes' => $this->closure_notes,
             'accepts_applications' => $this->acceptsApplications(),
+            'application_deadline_passed' => $this->applicationDeadlinePassed(),
             'organization' => $this->whenLoaded('organization', fn () => ['id' => $this->organization->id, 'name' => $this->organization->name]),
             'job_request' => $this->whenLoaded('jobRequest', fn () => [
                 'id' => $this->jobRequest->id,

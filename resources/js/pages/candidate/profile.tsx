@@ -45,7 +45,7 @@ export default function CandidateProfilePage({
             <PageContainer className="max-w-5xl">
                 <PageHeader
                     title="Mi perfil de postulante"
-                    description="Mantenga actualizada su información y su CV para poder postular a las convocatorias (RF-09)."
+                    description="Mantenga actualizada su información y su CV para poder postular a las convocatorias."
                 />
 
                 {pending.length > 0 ? (

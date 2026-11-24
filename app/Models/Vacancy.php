@@ -93,6 +93,19 @@ class Vacancy extends Model
             && ($this->closes_at === null || $this->closes_at->gte($today));
     }
 
+    /**
+     * Published but past its application deadline: it no longer accepts applications for that reason alone.
+     * Same date rule as acceptsApplications(); the formal status stays "published" until the process is closed.
+     */
+    public function applicationDeadlinePassed(?CarbonInterface $today = null): bool
+    {
+        $today = ($today ?? now())->startOfDay();
+
+        return $this->status === VacancyStatus::Published
+            && $this->closes_at !== null
+            && $this->closes_at->lt($today);
+    }
+
     public function isClosed(): bool
     {
         return $this->status === VacancyStatus::Closed;
