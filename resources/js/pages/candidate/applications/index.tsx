@@ -38,7 +38,9 @@ export default function MyApplications({
                         description="Explore las convocatorias vigentes y postule a las que se ajusten a su perfil."
                         action={
                             <Button asChild>
-                                <Link href={jobsIndex()}>Ver convocatorias</Link>
+                                <Link href={jobsIndex()}>
+                                    Ver convocatorias
+                                </Link>
                             </Button>
                         }
                     />

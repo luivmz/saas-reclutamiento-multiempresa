@@ -8,7 +8,9 @@
  */
 const entrarConFormulario = (email) => {
     cy.dataCy('login-email').type(email);
-    cy.dataCy('login-password').type(Cypress.env('DEMO_PASSWORD'), { log: false });
+    cy.dataCy('login-password').type(Cypress.env('DEMO_PASSWORD'), {
+        log: false,
+    });
     cy.dataCy('login-submit').click();
 };
 
@@ -23,7 +25,10 @@ describe('E2E-27 · Continuidad de la convocatoria y portada para postulantes', 
         const vacancy = this.demo.vacancies.published;
 
         cy.visit(`/empleos/${vacancy.id}`);
-        cy.dataCy('application-requirements').should('contain', 'PDF de hasta 5 MB');
+        cy.dataCy('application-requirements').should(
+            'contain',
+            'PDF de hasta 5 MB',
+        );
         cy.dataCy('apply-login').click();
 
         cy.location('search').should('eq', `?convocatoria=${vacancy.id}`);
@@ -56,7 +61,11 @@ describe('E2E-27 · Continuidad de la convocatoria y portada para postulantes', 
 
         cy.dataCy('apply-button').click();
         cy.idFromPath(/^\/mis-postulaciones\/(\d+)$/);
-        cy.dataCy('tracking-notifications').should('have.attr', 'href', '/notificaciones');
+        cy.dataCy('tracking-notifications').should(
+            'have.attr',
+            'href',
+            '/notificaciones',
+        );
         cy.dataCy('convocations-empty').should('contain', 'No es un error');
 
         // Tras postular, el perfil ya no ofrece volver.
@@ -79,7 +88,9 @@ describe('E2E-27 · Continuidad de la convocatoria y portada para postulantes', 
         cy.dataCy('register-name').type('Postulante Retorno (ficticia)');
         cy.dataCy('register-email').type('retorno.e2e@correo.test');
         cy.dataCy('register-password').type('Contrasena-Ficticia-27');
-        cy.dataCy('register-password-confirmation').type('Contrasena-Ficticia-27');
+        cy.dataCy('register-password-confirmation').type(
+            'Contrasena-Ficticia-27',
+        );
         cy.dataCy('register-submit').click();
 
         cy.location('pathname').should('eq', `/empleos/${vacancy.id}`);
@@ -98,7 +109,10 @@ describe('E2E-27 · Continuidad de la convocatoria y portada para postulantes', 
             cy.visit(`/login?convocatoria=${encodeURIComponent(destino)}`);
             cy.dataCy('return-notice').should('not.exist');
             entrarConFormulario(this.users.candidateNew);
-            cy.location('href').should('eq', `${Cypress.config('baseUrl')}/dashboard`);
+            cy.location('href').should(
+                'eq',
+                `${Cypress.config('baseUrl')}/dashboard`,
+            );
         });
     });
 
@@ -120,13 +134,22 @@ describe('E2E-27 · Continuidad de la convocatoria y portada para postulantes', 
         cy.visit('/');
         cy.dataCy('open-vacancies-count')
             .invoke('text')
-            .should('match', /^Hoy (hay \d+ convocatorias? recibiendo postulaciones|no hay convocatorias recibiendo postulaciones)\.$/);
+            .should(
+                'match',
+                /^Hoy (hay \d+ convocatorias? recibiendo postulaciones|no hay convocatorias recibiendo postulaciones)\.$/,
+            );
         cy.dataCy('cta-jobs').should('contain', 'Ver convocatorias');
-        cy.dataCy('landing-requirements').should('contain', 'PDF de hasta 5 MB');
+        cy.dataCy('landing-requirements').should(
+            'contain',
+            'PDF de hasta 5 MB',
+        );
         // El contenido institucional sigue, después de cómo postular.
         cy.dataCy('landing-apply').then(($apply) => {
             cy.dataCy('landing-roles').then(($roles) => {
-                expect($apply[0].compareDocumentPosition($roles[0]) & Node.DOCUMENT_POSITION_FOLLOWING).to.be.greaterThan(0);
+                expect(
+                    $apply[0].compareDocumentPosition($roles[0]) &
+                        Node.DOCUMENT_POSITION_FOLLOWING,
+                ).to.be.greaterThan(0);
             });
         });
         cy.dataCy('landing-ml-note').should('contain', 'experimental');
@@ -137,15 +160,27 @@ describe('E2E-27 · Continuidad de la convocatoria y portada para postulantes', 
             cy.viewport(ancho, 800);
             cy.visit('/empleos');
 
-            cy.dataCy('nav-public-jobs').should('have.attr', 'aria-current', 'page');
-            cy.dataCy('nav-login').should('be.visible').and('have.text', 'Iniciar sesión');
+            cy.dataCy('nav-public-jobs').should(
+                'have.attr',
+                'aria-current',
+                'page',
+            );
+            cy.dataCy('nav-login')
+                .should('be.visible')
+                .and('have.text', 'Iniciar sesión');
             cy.dataCy('nav-register').should('be.visible');
             cy.document().then((doc) => {
-                expect(doc.documentElement.scrollWidth, 'sin desborde horizontal').to.be.at.most(ancho);
+                expect(
+                    doc.documentElement.scrollWidth,
+                    'sin desborde horizontal',
+                ).to.be.at.most(ancho);
             });
             ['nav-public-jobs', 'nav-login', 'nav-register'].forEach((item) => {
                 cy.dataCy(item).then(($el) => {
-                    expect($el[0].getBoundingClientRect().height, `${item} táctil`).to.be.at.least(44);
+                    expect(
+                        $el[0].getBoundingClientRect().height,
+                        `${item} táctil`,
+                    ).to.be.at.least(44);
                 });
             });
 
@@ -156,7 +191,11 @@ describe('E2E-27 · Continuidad de la convocatoria y portada para postulantes', 
                     .should('have.attr', 'data-cy', item)
                     .then(($a) => {
                         const estilo = getComputedStyle($a[0]);
-                        expect(estilo.outlineStyle !== 'none' || estilo.boxShadow !== 'none', 'foco visible').to.eq(true);
+                        expect(
+                            estilo.outlineStyle !== 'none' ||
+                                estilo.boxShadow !== 'none',
+                            'foco visible',
+                        ).to.eq(true);
                     });
             });
         });
