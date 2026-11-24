@@ -16,6 +16,7 @@ import {
     ScrollVideo,
 } from '@/components/experience-3d/hero-folder-video';
 import { RecruitmentDepth } from '@/components/experience-3d/recruitment-depth';
+import { ApplicationProcess } from '@/components/jobs/application-process';
 import { ApplicationRequirements } from '@/components/jobs/application-requirements';
 import { Reveal } from '@/components/reveal';
 import { Button } from '@/components/ui/button';
@@ -71,26 +72,6 @@ const pillars = [
     { icon: BriefcaseBusiness, text: 'Perfil y criterios de cada puesto' },
     { icon: FileStack, text: 'Postulación y seguimiento en línea' },
     { icon: Signature, text: 'Decisión final de una persona' },
-];
-
-/** Cómo postular, en el orden real del sistema. */
-const applySteps: { title: string; text: string }[] = [
-    {
-        title: 'Elija una convocatoria',
-        text: 'Revise el perfil del puesto, los criterios de evaluación y la fecha de cierre.',
-    },
-    {
-        title: 'Cree su cuenta de postulante',
-        text: 'Con su nombre, un correo y una contraseña. Si ya tiene cuenta, inicie sesión.',
-    },
-    {
-        title: 'Complete su perfil y cargue su CV',
-        text: 'Desde Mi perfil, con los datos que se indican en «Qué tener listo».',
-    },
-    {
-        title: 'Postule y siga su avance',
-        text: 'Postule desde la convocatoria. La etapa se consulta en Mis postulaciones y los cambios llegan a Notificaciones.',
-    },
 ];
 
 /** «Hoy hay 3 convocatorias…»: cuenta solo las que aceptan postulaciones. */
@@ -266,38 +247,14 @@ export default function Welcome({
                 aria-labelledby="landing-apply-title"
                 data-cy="landing-apply"
             >
-                <div className="grid grid-cols-1 gap-10 [overflow-wrap:anywhere] lg:grid-cols-[3fr_2fr]">
-                    <div>
-                        <h2
-                            id="landing-apply-title"
-                            className="font-serif text-3xl font-semibold tracking-tight md:text-4xl"
-                        >
-                            Cómo postular
-                        </h2>
-                        <ol className="mt-7 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-                            {applySteps.map((step, index) => (
-                                <li
-                                    key={step.title}
-                                    className="flex items-start gap-3 border-t pt-4"
-                                >
-                                    <span
-                                        className="bg-tone-primary text-tone-primary-foreground flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
-                                        aria-hidden="true"
-                                    >
-                                        {index + 1}
-                                    </span>
-                                    <div>
-                                        <h3 className="font-serif text-lg font-semibold">
-                                            {step.title}
-                                        </h3>
-                                        <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-                                            {step.text}
-                                        </p>
-                                    </div>
-                                </li>
-                            ))}
-                        </ol>
-                    </div>
+                <div className="space-y-6 [overflow-wrap:anywhere]">
+                    <h2
+                        id="landing-apply-title"
+                        className="font-serif text-3xl font-semibold tracking-tight md:text-4xl"
+                    >
+                        Cómo postular
+                    </h2>
+                    <ApplicationProcess />
                     <div
                         className="bg-card h-fit space-y-4 rounded-xl border p-5"
                         data-cy="landing-requirements"

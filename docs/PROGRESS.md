@@ -8,6 +8,8 @@
 
 **Listado público de convocatorias · lote 3 (23/11/2026).** La rama local `feature/filtros-convocatorias` amplía la consulta de RF-07 por organización, ubicación y contrato. El [registro del lote](v1.1/filtros-convocatorias.md) detalla sus reglas, pruebas y evidencias.
 
+**Prototipo de «Cómo postular» (24/11/2026).** La rama local `feature/proceso-postulacion-3d` prepara la interacción HTML, el respaldo y el contrato de carga. El carrusel elegido se validó y refinó en el editor de Spline. Su export y su conexión esperan la decisión sobre el runtime. El contrato local admite que el cargador notifique cambios de paso. El [registro del prototipo](v1.1/proceso-postulacion-spline.md) incluye la especificación y las mediciones.
+
 > Los cuatro registros siguientes documentan la práctica paralela de macOS de octubre y noviembre de 2026. Sus referencias al árbol sin commit, a las fases vigentes en esa rama y a los pendientes describen cada ejecución histórica. La práctica se publicó posteriormente en el commit 5e2eae37f63c7ac5d35ed2def9b2e843a644cd98.
 
 ## Reauditoría Codex de la práctica individual (09/11/2026)
