@@ -14,6 +14,8 @@ export type NavItem = {
     cy?: string;
     description?: string;
     badge?: number;
+    /** Requisitos que cubre la entrada, para la trazabilidad; no se muestran en pantallas de postulante. */
+    rf?: string[];
 };
 
 export type NavGroup = {

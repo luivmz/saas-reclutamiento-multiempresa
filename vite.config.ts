@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import inertia from '@inertiajs/vite';
 import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 import babel from '@rolldown/plugin-babel';
@@ -6,6 +8,34 @@ import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import laravel from 'laravel-vite-plugin';
 import { bunny } from 'laravel-vite-plugin/fonts';
 import { defineConfig, lazyPlugins } from 'vite-plus';
+import type { Plugin } from 'vite-plus';
+
+/**
+ * Copia al build el único WASM que necesita la escena de «Cómo postular»
+ * (`bevel.wasm`, para el texto y las formas extruidas). Así el runtime de Spline
+ * lo pide al propio dominio, en `/build/spline-runtime/`, y no al CDN de unpkg.
+ * El archivo sale de `node_modules` en cada build y no se versiona.
+ */
+function splineRuntimeWasm(): Plugin {
+    return {
+        name: 'spline-runtime-wasm',
+        apply: 'build',
+        generateBundle() {
+            this.emitFile({
+                type: 'asset',
+                fileName: 'spline-runtime/bevel.wasm',
+                source: readFileSync(
+                    fileURLToPath(
+                        new URL(
+                            './node_modules/@splinetool/runtime/build/bevel.wasm',
+                            import.meta.url,
+                        ),
+                    ),
+                ),
+            });
+        },
+    };
+}
 
 export default defineConfig({
     plugins: lazyPlugins(() => [
@@ -30,6 +60,7 @@ export default defineConfig({
         wayfinder({
             formVariants: true,
         }),
+        splineRuntimeWasm(),
     ]),
     server: {
         watch: {

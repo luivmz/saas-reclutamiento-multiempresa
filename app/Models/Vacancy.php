@@ -84,6 +84,20 @@ class Vacancy extends Model
         $query->where('status', VacancyStatus::Published);
     }
 
+    /**
+     * Same rule as acceptsApplications(), as a query: published and within its application window today.
+     *
+     * @param  Builder<self>  $query
+     */
+    public function scopeAcceptingApplications(Builder $query, ?CarbonInterface $today = null): void
+    {
+        $today = ($today ?? now())->startOfDay();
+
+        $query->where('status', VacancyStatus::Published)
+            ->where(fn (Builder $q) => $q->whereNull('opens_at')->orWhereDate('opens_at', '<=', $today))
+            ->where(fn (Builder $q) => $q->whereNull('closes_at')->orWhereDate('closes_at', '>=', $today));
+    }
+
     public function acceptsApplications(?CarbonInterface $today = null): bool
     {
         $today = ($today ?? now())->startOfDay();
@@ -91,6 +105,19 @@ class Vacancy extends Model
         return $this->status === VacancyStatus::Published
             && ($this->opens_at === null || $this->opens_at->lte($today))
             && ($this->closes_at === null || $this->closes_at->gte($today));
+    }
+
+    /**
+     * Published but past its application deadline: it no longer accepts applications for that reason alone.
+     * Same date rule as acceptsApplications(); the formal status stays "published" until the process is closed.
+     */
+    public function applicationDeadlinePassed(?CarbonInterface $today = null): bool
+    {
+        $today = ($today ?? now())->startOfDay();
+
+        return $this->status === VacancyStatus::Published
+            && $this->closes_at !== null
+            && $this->closes_at->lt($today);
     }
 
     public function isClosed(): bool

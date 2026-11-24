@@ -37,7 +37,7 @@ const portal: NavGroup = {
     label: 'Portal',
     items: [
         {
-            title: 'Empleos publicados',
+            title: 'Convocatorias publicadas',
             href: jobsIndex(),
             icon: Globe,
             cy: 'jobs',
@@ -192,7 +192,8 @@ export function navigationFor(
                             icon: FileUser,
                             cy: 'candidate-profile',
                             description:
-                                'Complete su perfil y cargue su CV (RF-09).',
+                                'Complete su perfil y cargue su CV para poder postular.',
+                            rf: ['RF-09'],
                         },
                         {
                             title: 'Mis postulaciones',
@@ -200,7 +201,8 @@ export function navigationFor(
                             icon: Send,
                             cy: 'my-applications',
                             description:
-                                'Siga la etapa de cada postulación (RF-11, RF-15).',
+                                'Siga la etapa en que está cada postulación.',
+                            rf: ['RF-11', 'RF-15'],
                         },
                     ],
                 },

@@ -17,7 +17,7 @@ class VacancyPublicationController extends Controller
         Gate::authorize('publish', $vacancy);
 
         $published = $vacancies->publish($vacancy, $request->user());
-        Toast::success("Vacante {$published->code} publicada. Ya es visible en el portal de empleos.");
+        Toast::success("Vacante {$published->code} publicada. Ya es visible en las convocatorias públicas.");
 
         return back();
     }

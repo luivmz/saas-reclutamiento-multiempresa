@@ -143,7 +143,12 @@ export type AssessmentSummary = {
     outcome: Presented | null;
     completed_at: string | null;
     evaluator?: string;
-    results?: { criterion: string; score: number; max_score: number; comment: string | null }[];
+    results?: {
+        criterion: string;
+        score: number;
+        max_score: number;
+        comment: string | null;
+    }[];
 };
 
 export type AppNotification = {
@@ -174,6 +179,8 @@ export type Vacancy = {
     closure_type: Presented | null;
     closure_notes: string | null;
     accepts_applications: boolean;
+    /** Publicada, pero con la fecha de cierre de postulaciones ya pasada (regla del servidor). */
+    application_deadline_passed: boolean;
     organization?: { id: number; name: string };
     job_request?: {
         id: number;
@@ -184,4 +191,28 @@ export type Vacancy = {
     profile?: JobProfile | null;
     criteria?: Criterion[];
     applications_count?: number;
+};
+
+/** Lo que exige cualquier postulación, tomado de las reglas de validación del servidor. */
+export type ApplicationRequirements = {
+    perfil: string[];
+    cv: { formato: string; max_kb: number };
+};
+
+/** Convocatoria a la que se volverá tras entrar o registrarse. */
+export type ChosenVacancy = { id: number; title: string };
+
+/** Búsqueda y filtros del listado público, ya validados por el servidor. */
+export type JobCriteria = {
+    q: string;
+    organizacion: number | null;
+    ubicacion: string | null;
+    contrato: string | null;
+};
+
+/** Opciones de los filtros: solo valores presentes en convocatorias publicadas. */
+export type JobFilterOptions = {
+    organizaciones: { value: string; label: string }[];
+    ubicaciones: { value: string; label: string }[];
+    contratos: { value: string; label: string }[];
 };

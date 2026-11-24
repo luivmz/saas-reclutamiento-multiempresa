@@ -1,5 +1,11 @@
-import { Form, Head } from '@inertiajs/react';
-import { AlertTriangle, CheckCircle2, FileText, Upload } from 'lucide-react';
+import { Form, Head, Link } from '@inertiajs/react';
+import {
+    AlertTriangle,
+    ArrowLeft,
+    CheckCircle2,
+    FileText,
+    Upload,
+} from 'lucide-react';
 import CandidateCvController from '@/actions/App/Http/Controllers/Candidates/CandidateCvController';
 import CandidateProfileController from '@/actions/App/Http/Controllers/Candidates/CandidateProfileController';
 import { FormField, NativeSelect } from '@/components/form-controls';
@@ -10,7 +16,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
-import { formatDateTime, formatFileSize } from '@/lib/format';
+import { formatDate, formatDateTime, formatFileSize } from '@/lib/format';
+import { index as jobsIndex, show as jobsShow } from '@/routes/jobs';
 import type { DocumentSummary, Presented } from '@/types';
 
 type ProfileForm = {
@@ -28,7 +35,113 @@ type Props = {
     missingFields: string[];
     educationLevels: Presented[];
     cvMaxKb: number;
+    retorno: Retorno | null;
 };
+
+/** Convocatoria de la que llegó el postulante (ConvocatoriaDeRetorno). */
+type Retorno =
+    | { disponible: false }
+    | {
+          disponible: true;
+          id: number;
+          title: string;
+          accepts_applications: boolean;
+          application_deadline_passed: boolean;
+          closes_at: string | null;
+      };
+
+/**
+ * Camino de vuelta a la convocatoria. Volver solo abre su detalle: ahí la
+ * persona decide si postula. Si la convocatoria cerró o venció, se dice.
+ */
+function ReturnToVacancy({
+    retorno,
+    ready,
+}: {
+    retorno: Retorno;
+    ready: boolean;
+}) {
+    if (!retorno.disponible) {
+        return (
+            <Alert data-cy="profile-return-unavailable">
+                <AlertTriangle />
+                <AlertTitle>
+                    La convocatoria que estaba viendo ya no está disponible
+                </AlertTitle>
+                <AlertDescription>
+                    <p>
+                        Dejó de publicarse. Puede revisar las convocatorias
+                        vigentes.
+                    </p>
+                    <Link
+                        href={jobsIndex()}
+                        className="text-primary font-medium underline underline-offset-4"
+                    >
+                        Ver convocatorias
+                    </Link>
+                </AlertDescription>
+            </Alert>
+        );
+    }
+
+    if (!retorno.accepts_applications) {
+        return (
+            <Alert data-cy="profile-return-closed">
+                <AlertTriangle />
+                <AlertTitle className="[overflow-wrap:anywhere]">
+                    {retorno.title}
+                </AlertTitle>
+                <AlertDescription>
+                    <p>
+                        {retorno.application_deadline_passed
+                            ? `El plazo de postulación venció el ${formatDate(retorno.closes_at)}.`
+                            : 'La convocatoria no está recibiendo postulaciones.'}
+                    </p>
+                    <p className="flex flex-wrap gap-x-4 gap-y-1">
+                        <Link
+                            href={jobsShow(retorno.id)}
+                            className="text-primary font-medium underline underline-offset-4"
+                        >
+                            Ver la convocatoria
+                        </Link>
+                        <Link
+                            href={jobsIndex()}
+                            className="text-primary font-medium underline underline-offset-4"
+                        >
+                            Ver otras convocatorias
+                        </Link>
+                    </p>
+                </AlertDescription>
+            </Alert>
+        );
+    }
+
+    return (
+        <div
+            className="bg-card flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between"
+            data-cy="profile-return"
+        >
+            <p className="text-sm [overflow-wrap:anywhere]">
+                {ready
+                    ? 'Su perfil está listo. Puede volver a la convocatoria '
+                    : 'Cuando complete lo pendiente podrá volver a la convocatoria '}
+                <span className="font-medium">{retorno.title}</span>
+                {ready ? ' y decidir allí si postula.' : '.'}
+            </p>
+            {ready && (
+                <Button asChild className="shrink-0">
+                    <Link
+                        href={jobsShow(retorno.id)}
+                        data-cy="return-to-vacancy"
+                    >
+                        <ArrowLeft aria-hidden="true" />
+                        Volver a la convocatoria
+                    </Link>
+                </Button>
+            )}
+        </div>
+    );
+}
 
 export default function CandidateProfilePage({
     profile,
@@ -36,6 +149,7 @@ export default function CandidateProfilePage({
     missingFields,
     educationLevels,
     cvMaxKb,
+    retorno,
 }: Props) {
     const pending = [...missingFields, ...(cv ? [] : ['CV en PDF'])];
 
@@ -45,7 +159,7 @@ export default function CandidateProfilePage({
             <PageContainer className="max-w-5xl">
                 <PageHeader
                     title="Mi perfil de postulante"
-                    description="Mantenga actualizada su información y su CV para poder postular a las convocatorias (RF-09)."
+                    description="Mantenga actualizada su información y su CV para poder postular a las convocatorias."
                 />
 
                 {pending.length > 0 ? (
@@ -65,6 +179,13 @@ export default function CandidateProfilePage({
                             Su información y su CV están completos.
                         </AlertDescription>
                     </Alert>
+                )}
+
+                {retorno && (
+                    <ReturnToVacancy
+                        retorno={retorno}
+                        ready={pending.length === 0}
+                    />
                 )}
 
                 <div className="grid min-w-0 gap-6 lg:grid-cols-3">

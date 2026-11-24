@@ -11,15 +11,19 @@ import {
     Signature,
     type LucideIcon,
 } from 'lucide-react';
+import { loadApplicationScene } from '@/components/experience-3d/application-scene-loader';
 import {
     SCHOOL_MEDIA,
     ScrollVideo,
 } from '@/components/experience-3d/hero-folder-video';
 import { RecruitmentDepth } from '@/components/experience-3d/recruitment-depth';
+import { ApplicationProcess } from '@/components/jobs/application-process';
+import { ApplicationRequirements } from '@/components/jobs/application-requirements';
 import { Reveal } from '@/components/reveal';
 import { Button } from '@/components/ui/button';
-import { dashboard, login } from '@/routes';
+import { dashboard, login, register } from '@/routes';
 import { index as jobsIndex } from '@/routes/jobs';
+import type { ApplicationRequirements as Requirements } from '@/types';
 
 type RecordEntry = {
     icon: LucideIcon;
@@ -61,12 +65,26 @@ const record: RecordEntry[] = [
     },
 ];
 
-/** Lo mismo que muestran las hojas de la escena, dicho en texto. */
+/**
+ * Lo que encuentra quien postula. Siguen las tres hojas de la escena —vacante,
+ * expediente y decisión—, dichas desde el lado del postulante.
+ */
 const pillars = [
-    { icon: BriefcaseBusiness, text: 'Vacantes con criterios ponderados' },
-    { icon: FileStack, text: 'Evidencias con versión y fuente' },
-    { icon: Signature, text: 'Decisión humana justificada' },
+    { icon: BriefcaseBusiness, text: 'Perfil y criterios de cada puesto' },
+    { icon: FileStack, text: 'Postulación y seguimiento en línea' },
+    { icon: Signature, text: 'Decisión final de una persona' },
 ];
+
+/** «Hoy hay 3 convocatorias…»: cuenta solo las que aceptan postulaciones. */
+function openVacanciesText(count: number): string {
+    if (count === 0) {
+        return 'Hoy no hay convocatorias recibiendo postulaciones.';
+    }
+
+    return count === 1
+        ? 'Hoy hay 1 convocatoria recibiendo postulaciones.'
+        : `Hoy hay ${count} convocatorias recibiendo postulaciones.`;
+}
 
 const steps: { icon: LucideIcon; title: string; text: string }[] = [
     {
@@ -126,7 +144,13 @@ const limits = [
     'No permite borrar ni reescribir el registro de auditoría.',
 ];
 
-export default function Welcome() {
+export default function Welcome({
+    convocatoriasAbiertas,
+    requisitos,
+}: {
+    convocatoriasAbiertas: number;
+    requisitos: Requirements;
+}) {
     const { auth } = usePage().props;
 
     return (
@@ -147,17 +171,26 @@ export default function Welcome() {
                                 datos ficticios
                             </p>
                             <h1 className="font-serif text-[2rem] leading-[1.06] font-semibold tracking-tight min-[360px]:text-4xl md:text-5xl lg:text-[3.35rem]">
-                                Reclutamiento con evidencia,{' '}
+                                Revise las convocatorias{' '}
                                 <span className="text-teal-200">
-                                    decisión con nombre propio
+                                    y postule en línea
                                 </span>
                             </h1>
                             <p className="max-w-xl text-base leading-relaxed text-teal-50/90 sm:text-lg">
-                                Plataforma multiempresa para publicar vacantes,
-                                reunir las evidencias de cada postulación con
-                                sus versiones y llegar a una decisión que firma
-                                una persona. El sistema ordena y explica; nunca
-                                elige por nadie.
+                                Cada convocatoria muestra el perfil del puesto,
+                                sus criterios de evaluación y su fecha de
+                                cierre. Cree su cuenta, complete su perfil con
+                                su CV y siga su postulación desde aquí.
+                            </p>
+                            <p
+                                className="flex items-center gap-2 text-sm font-medium text-teal-50"
+                                data-cy="open-vacancies-count"
+                            >
+                                <BriefcaseBusiness
+                                    className="size-4 shrink-0 text-teal-200"
+                                    aria-hidden="true"
+                                />
+                                {openVacanciesText(convocatoriasAbiertas)}
                             </p>
                             <div className="flex flex-wrap gap-3 max-sm:[&>a]:h-auto max-sm:[&>a]:min-h-11 max-sm:[&>a]:max-w-full max-sm:[&>a]:text-center max-sm:[&>a]:whitespace-normal">
                                 <Button
@@ -166,7 +199,7 @@ export default function Welcome() {
                                     asChild
                                 >
                                     <Link href={jobsIndex()} data-cy="cta-jobs">
-                                        Ver empleos disponibles
+                                        Ver convocatorias
                                         <ArrowRight aria-hidden="true" />
                                     </Link>
                                 </Button>
@@ -212,92 +245,142 @@ export default function Welcome() {
 
             <section
                 className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16"
+                aria-labelledby="landing-apply-title"
+                data-cy="landing-apply"
+            >
+                <div className="space-y-6 [overflow-wrap:anywhere]">
+                    <h2
+                        id="landing-apply-title"
+                        className="font-serif text-3xl font-semibold tracking-tight md:text-4xl"
+                    >
+                        Cómo postular
+                    </h2>
+                    <ApplicationProcess loadScene={loadApplicationScene} />
+                    <div
+                        className="bg-card h-fit space-y-4 rounded-xl border p-5"
+                        data-cy="landing-requirements"
+                    >
+                        <h3 className="font-serif text-xl font-semibold">
+                            Qué tener listo
+                        </h3>
+                        <ApplicationRequirements requirements={requisitos} />
+                        <p className="text-muted-foreground border-t pt-4 text-sm leading-relaxed">
+                            Cada convocatoria indica además su propio perfil del
+                            puesto —formación, experiencia, funciones y
+                            competencias— y los criterios con que se evaluará.
+                        </p>
+                        {!auth?.user && (
+                            <p className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                                <Link
+                                    href={register()}
+                                    className="text-primary font-medium underline underline-offset-4"
+                                    data-cy="landing-register"
+                                >
+                                    Crear cuenta de postulante
+                                </Link>
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </section>
+
+            <section
+                className="bg-surface border-t"
                 aria-labelledby="landing-process-title"
                 data-cy="landing-process"
             >
-                <div className="grid grid-cols-1 items-center gap-10 [overflow-wrap:anywhere] lg:grid-cols-2">
-                    <div>
-                        <h2
-                            id="landing-process-title"
-                            className="font-serif text-3xl font-semibold tracking-tight md:text-4xl"
-                        >
-                            Cómo avanza un proceso
-                        </h2>
-                        <ol className="mt-7 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-                            {steps.map((step) => (
-                                <li key={step.title} className="border-t pt-4">
-                                    <div className="flex items-center gap-3">
-                                        <step.icon
-                                            aria-hidden="true"
-                                            className="text-primary size-4"
-                                        />
-                                        <h3 className="font-serif text-xl font-semibold">
-                                            {step.title}
-                                        </h3>
-                                    </div>
-                                    <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                                        {step.text}
-                                    </p>
-                                </li>
-                            ))}
-                        </ol>
-                    </div>
-                    {/* El expediente queda delante, plano y sólido: su texto
+                <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
+                    <div className="grid grid-cols-1 items-center gap-10 [overflow-wrap:anywhere] lg:grid-cols-2">
+                        <div>
+                            <h2
+                                id="landing-process-title"
+                                className="font-serif text-3xl font-semibold tracking-tight md:text-4xl"
+                            >
+                                Cómo avanza un proceso
+                            </h2>
+                            <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed">
+                                Lo que ocurre del lado de la institución, desde
+                                que se pide un puesto hasta la decisión.
+                            </p>
+                            <ol className="mt-7 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                                {steps.map((step) => (
+                                    <li
+                                        key={step.title}
+                                        className="border-t pt-4"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <step.icon
+                                                aria-hidden="true"
+                                                className="text-primary size-4"
+                                            />
+                                            <h3 className="font-serif text-xl font-semibold">
+                                                {step.title}
+                                            </h3>
+                                        </div>
+                                        <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                                            {step.text}
+                                        </p>
+                                    </li>
+                                ))}
+                            </ol>
+                        </div>
+                        {/* El expediente queda delante, plano y sólido: su texto
                         nunca depende del fondo para leerse. Detrás, la capa de
                         profundidad —decorativa y opcional (ADR-003)—. En
                         escritorio, el margen deja sitio para que asomen las
                         hojas de la escena. */}
-                    <div className="lg:px-14 lg:py-24">
-                        <div className="relative" data-cy="landing-folder">
-                            <RecruitmentDepth />
-                            <div className="bg-card relative z-10 rounded-xl border shadow-[0_24px_48px_-24px_oklch(0.25_0.04_220/0.35)]">
-                                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b px-5 py-4">
-                                    <p className="font-mono text-sm font-medium">
-                                        REQ-2026-0042
-                                    </p>
-                                    <p className="text-muted-foreground text-xs">
-                                        Docente de Matemática, 2 plazas
-                                    </p>
-                                </div>
-                                <ol className="divide-y">
-                                    {record.map((entry) => (
-                                        <li
-                                            key={entry.title}
-                                            className="flex items-start gap-3 px-5 py-4"
-                                        >
-                                            <span
-                                                className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${entry.iconTone}`}
+                        <div className="lg:px-14 lg:py-24">
+                            <div className="relative" data-cy="landing-folder">
+                                <RecruitmentDepth />
+                                <div className="bg-card relative z-10 rounded-xl border shadow-[0_24px_48px_-24px_oklch(0.25_0.04_220/0.35)]">
+                                    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b px-5 py-4">
+                                        <p className="font-mono text-sm font-medium">
+                                            REQ-2026-0042
+                                        </p>
+                                        <p className="text-muted-foreground text-xs">
+                                            Docente de Matemática, 2 plazas
+                                        </p>
+                                    </div>
+                                    <ol className="divide-y">
+                                        {record.map((entry) => (
+                                            <li
+                                                key={entry.title}
+                                                className="flex items-start gap-3 px-5 py-4"
                                             >
-                                                <entry.icon
-                                                    className="size-4"
-                                                    aria-hidden="true"
-                                                />
-                                            </span>
-                                            <div className="min-w-0 flex-1 space-y-1">
-                                                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-                                                    <p className="text-sm font-semibold">
-                                                        {entry.title}
-                                                    </p>
-                                                    <p className="text-muted-foreground font-mono text-xs">
-                                                        {entry.when}
+                                                <span
+                                                    className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${entry.iconTone}`}
+                                                >
+                                                    <entry.icon
+                                                        className="size-4"
+                                                        aria-hidden="true"
+                                                    />
+                                                </span>
+                                                <div className="min-w-0 flex-1 space-y-1">
+                                                    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                                                        <p className="text-sm font-semibold">
+                                                            {entry.title}
+                                                        </p>
+                                                        <p className="text-muted-foreground font-mono text-xs">
+                                                            {entry.when}
+                                                        </p>
+                                                    </div>
+                                                    <span
+                                                        className={`inline-flex rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${entry.tone}`}
+                                                    >
+                                                        {entry.status}
+                                                    </span>
+                                                    <p className="text-muted-foreground text-xs">
+                                                        {entry.detail}
                                                     </p>
                                                 </div>
-                                                <span
-                                                    className={`inline-flex rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${entry.tone}`}
-                                                >
-                                                    {entry.status}
-                                                </span>
-                                                <p className="text-muted-foreground text-xs">
-                                                    {entry.detail}
-                                                </p>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ol>
-                                <p className="text-muted-foreground bg-surface rounded-b-xl px-5 py-3 text-xs">
-                                    Ejemplo ilustrativo. Los expedientes reales
-                                    viven dentro de la plataforma.
-                                </p>
+                                            </li>
+                                        ))}
+                                    </ol>
+                                    <p className="text-muted-foreground bg-surface rounded-b-xl px-5 py-3 text-xs">
+                                        Ejemplo ilustrativo. Los expedientes
+                                        reales viven dentro de la plataforma.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -305,7 +388,7 @@ export default function Welcome() {
             </section>
 
             <section
-                className="bg-surface border-t"
+                className="border-t"
                 aria-labelledby="landing-roles-title"
                 data-cy="landing-roles"
             >
@@ -342,7 +425,7 @@ export default function Welcome() {
                 </div>
             </section>
 
-            <section className="border-t">
+            <section className="bg-surface border-t">
                 <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-4 py-14 [overflow-wrap:anywhere] sm:px-6 lg:grid-cols-2">
                     <Reveal
                         className="flex flex-col gap-4 sm:flex-row sm:items-start"

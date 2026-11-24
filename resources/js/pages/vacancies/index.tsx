@@ -7,6 +7,7 @@ import { FilterChips } from '@/components/filter-chips';
 import { PageContainer, PageHeader } from '@/components/page';
 import { Pagination } from '@/components/pagination';
 import { StatusBadge } from '@/components/status-badge';
+import { DeadlinePassedBadge } from '@/components/vacancies/deadline-passed-badge';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/format';
 import type { Paginated, Presented, Vacancy } from '@/types';
@@ -122,7 +123,12 @@ export default function VacanciesIndex({
                                 key: 'status',
                                 header: 'Estado',
                                 cell: (row) => (
-                                    <StatusBadge status={row.status} />
+                                    <div className="flex flex-col items-start gap-1">
+                                        <StatusBadge status={row.status} />
+                                        {row.application_deadline_passed && (
+                                            <DeadlinePassedBadge />
+                                        )}
+                                    </div>
                                 ),
                             },
                         ]}

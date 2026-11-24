@@ -31,6 +31,8 @@ class AuditLogResource extends JsonResource
         'evaluation' => 'Evaluación',
         'interview' => 'Entrevista',
         'selection_decision' => 'Decisión final',
+        // EXPERIMENTAL (exp/evidencias-ml02): versiones de evidencia auditadas por identificador.
+        'evidence_item' => 'Evidencia',
     ];
 
     private const SAFE_DETAILS = [
@@ -66,11 +68,20 @@ class AuditLogResource extends JsonResource
             'action' => $this->action->present(),
             'entity' => [
                 'type' => $this->auditable_type,
-                'label' => self::ENTITY_LABELS[$this->auditable_type] ?? $this->auditable_type,
+                'label' => self::entityLabel($this->auditable_type),
                 'id' => $this->auditable_id,
             ],
             'details' => $this->safeDetails(),
         ];
+    }
+
+    /**
+     * Readable label for a stored entity type. Presentation only: the record keeps its original type, and an
+     * unmapped type never leaks its internal name to the view.
+     */
+    public static function entityLabel(string $type): string
+    {
+        return self::ENTITY_LABELS[$type] ?? 'Registro';
     }
 
     /**

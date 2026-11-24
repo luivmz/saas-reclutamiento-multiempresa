@@ -6,6 +6,10 @@
 
 **Entrega académica integrada (23/11/2026).** Reúne la base SEG/F37, el módulo candidato RF-28, los vídeos, el anfitrión, las ofertas ficticias y el informe F29H v2. La [guía de entrega](entrega-final/ENTREGA_INTEGRADA.md) registra los orígenes, la reproducción y la verificación. Se preservan la bandera experimental desactivada por omisión, RF-23 y los estados formales.
 
+**Listado público de convocatorias · lote 3 (23/11/2026).** La rama local `feature/filtros-convocatorias` amplía la consulta de RF-07 por organización, ubicación y contrato. El [registro del lote](v1.1/filtros-convocatorias.md) detalla sus reglas, pruebas y evidencias.
+
+**Prototipo de «Cómo postular» (24/11/2026).** La rama local `feature/proceso-postulacion-3d` prepara la interacción HTML, el respaldo y el contrato de carga. El carrusel elegido se validó y refinó en el editor de Spline. Con la opción A del equipo, el export propio (SHA-256 `eaa9e57f…`) quedó integrado con `@splinetool/runtime` 2.0.198, la versión compatible más antigua. Lo hace mediante un adaptador diferido, con fondo transparente y respaldo estático en móvil, con movimiento reducido y ante fallos. Las llamadas de dibujo (99–144) superan el techo de 60 y quedan como pendiente. El contrato local admite que el cargador notifique cambios de paso. El [registro del prototipo](v1.1/proceso-postulacion-spline.md) incluye la especificación y las mediciones.
+
 > Los cuatro registros siguientes documentan la práctica paralela de macOS de octubre y noviembre de 2026. Sus referencias al árbol sin commit, a las fases vigentes en esa rama y a los pendientes describen cada ejecución histórica. La práctica se publicó posteriormente en el commit 5e2eae37f63c7ac5d35ed2def9b2e843a644cd98.
 
 ## Reauditoría Codex de la práctica individual (09/11/2026)

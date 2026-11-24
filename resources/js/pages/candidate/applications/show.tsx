@@ -11,6 +11,7 @@ import { StatusBadge } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/lib/format';
 import { show as jobsShow } from '@/routes/jobs';
+import { index as notificationsIndex } from '@/routes/notifications';
 import type { JobApplication, Presented } from '@/types';
 
 type TimelineEntry = { id: number; to: Presented; created_at: string };
@@ -65,7 +66,21 @@ export default function MyApplicationShow({
                 <div className="grid min-w-0 gap-6 md:grid-cols-2">
                     <Section
                         title="Estado actual"
-                        description="Le avisaremos por notificación en cada cambio de etapa."
+                        description={
+                            <>
+                                Los cambios de etapa, las convocatorias a
+                                evaluaciones o entrevistas y el resultado del
+                                proceso también le llegan a{' '}
+                                <Link
+                                    href={notificationsIndex()}
+                                    className="text-primary font-medium underline underline-offset-4"
+                                    data-cy="tracking-notifications"
+                                >
+                                    Notificaciones
+                                </Link>
+                                .
+                            </>
+                        }
                     >
                         <DetailList
                             className="sm:grid-cols-1"
@@ -116,15 +131,20 @@ export default function MyApplicationShow({
                 </div>
 
                 <Section
-                    title="Convocatorias"
-                    description="Evaluaciones y entrevistas a las que ha sido convocado."
+                    title="Evaluaciones y entrevistas"
+                    description="Las que Recursos Humanos programe para esta postulación, con su fecha, modalidad e indicaciones."
                     data-cy="candidate-convocations"
                 >
                     <div className="space-y-3">
                         {convocations.length === 0 ? (
-                            <p className="text-muted-foreground text-sm">
-                                Todavía no tiene convocatorias para esta
-                                postulación.
+                            <p
+                                className="text-muted-foreground text-sm"
+                                data-cy="convocations-empty"
+                            >
+                                Aún no tiene evaluaciones ni entrevistas
+                                programadas. No es un error: aparecerán aquí
+                                cuando se programen, y también recibirá el aviso
+                                en Notificaciones.
                             </p>
                         ) : (
                             convocations.map((convocation) => (

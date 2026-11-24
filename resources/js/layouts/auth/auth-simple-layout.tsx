@@ -22,7 +22,7 @@ const claims = [
     {
         icon: UserCheck,
         title: 'La decisión la firma una persona',
-        text: 'El sistema calcula y ordena puntajes; seleccionar es un acto humano con justificación (RF-23).',
+        text: 'El sistema calcula y ordena puntajes; seleccionar es un acto humano con justificación.',
     },
     {
         icon: Landmark,

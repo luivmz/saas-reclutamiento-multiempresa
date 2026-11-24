@@ -387,10 +387,17 @@ describe('E2E-23 · Portada: la carpeta en vídeo y la carpeta del proceso', () 
             cy.screenshot(`oferta-${tema}-apertura`, { capture: 'viewport' });
             recorrer(0);
             fotogramaAsentado().should('eq', 0);
-            cy.dataCy('apply-login')
-                .focus()
-                .should('be.focused')
-                .and('have.attr', 'href', '/login');
+            // Lote 2 (DEF-30): el acceso conserva la convocatoria que se está viendo.
+            cy.location('pathname').then((ruta) => {
+                cy.dataCy('apply-login')
+                    .focus()
+                    .should('be.focused')
+                    .and(
+                        'have.attr',
+                        'href',
+                        `/login?convocatoria=${ruta.split('/').pop()}`,
+                    );
+            });
             cy.dataCy('apply-register').should('be.visible');
             cy.window().then((win) => {
                 expect(win.__video.solapadas).to.eq(0);
