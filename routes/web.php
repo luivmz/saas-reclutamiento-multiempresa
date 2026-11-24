@@ -15,6 +15,7 @@ use App\Http\Controllers\Candidates\CandidateProfileController;
 use App\Http\Controllers\Documents\CandidateDocumentDownloadController;
 use App\Http\Controllers\Evidence\ApplicationEvidenceController;
 use App\Http\Controllers\Evidence\EvidenceItemController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobRequests\JobRequestController;
 use App\Http\Controllers\JobRequests\JobRequestTransitionController;
 use App\Http\Controllers\NotificationController;
@@ -29,7 +30,7 @@ use App\Http\Controllers\Vacancies\VacancyOperationalRiskController;
 use App\Http\Controllers\Vacancies\VacancyPublicationController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 Route::get('empleos', [PublicVacancyController::class, 'index'])->name('jobs.index');
 Route::get('empleos/{vacancy}', [PublicVacancyController::class, 'show'])->whereNumber('vacancy')->name('jobs.show');

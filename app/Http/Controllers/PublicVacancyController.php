@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\VacancyResource;
+use App\Http\Support\RequisitosPostulacion;
 use App\Models\Application;
 use App\Models\CandidateProfile;
 use App\Models\Scopes\OrganizationScope;
@@ -44,6 +45,8 @@ class PublicVacancyController extends Controller
         return Inertia::render('jobs/show', [
             'vacancy' => new VacancyResource($model),
             'candidate' => $this->candidateContext($request->user(), $model),
+            // Requisitos comunes a toda postulación (perfil y CV), distintos de los de esta convocatoria.
+            'requisitos' => RequisitosPostulacion::toArray(),
         ]);
     }
 

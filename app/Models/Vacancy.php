@@ -84,6 +84,20 @@ class Vacancy extends Model
         $query->where('status', VacancyStatus::Published);
     }
 
+    /**
+     * Same rule as acceptsApplications(), as a query: published and within its application window today.
+     *
+     * @param  Builder<self>  $query
+     */
+    public function scopeAcceptingApplications(Builder $query, ?CarbonInterface $today = null): void
+    {
+        $today = ($today ?? now())->startOfDay();
+
+        $query->where('status', VacancyStatus::Published)
+            ->where(fn (Builder $q) => $q->whereNull('opens_at')->orWhereDate('opens_at', '<=', $today))
+            ->where(fn (Builder $q) => $q->whereNull('closes_at')->orWhereDate('closes_at', '>=', $today));
+    }
+
     public function acceptsApplications(?CarbonInterface $today = null): bool
     {
         $today = ($today ?? now())->startOfDay();

@@ -1,5 +1,6 @@
 import { Form, Head } from '@inertiajs/react';
 import InputError from '@/components/input-error';
+import { ReturnNotice } from '@/components/jobs/return-notice';
 import PasskeyVerify from '@/components/passkey-verify';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -11,16 +12,27 @@ import { Spinner } from '@/components/ui/spinner';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
+import type { ChosenVacancy } from '@/types';
 
 type Props = {
     status?: string;
     canResetPassword: boolean;
+    convocatoria: ChosenVacancy | null;
 };
 
-export default function Login({ status, canResetPassword }: Props) {
+export default function Login({
+    status,
+    canResetPassword,
+    convocatoria,
+}: Props) {
+    // Pasar al registro conserva la convocatoria elegida.
+    const query = convocatoria ? { convocatoria: convocatoria.id } : undefined;
+
     return (
         <>
             <Head title="Iniciar sesión" />
+
+            {convocatoria && <ReturnNotice vacancy={convocatoria} />}
 
             <PasskeyVerify />
 
@@ -128,7 +140,7 @@ export default function Login({ status, canResetPassword }: Props) {
 
                         <p className="text-muted-foreground text-center text-sm">
                             ¿Busca empleo y aún no tiene cuenta?{' '}
-                            <TextLink href={register()}>
+                            <TextLink href={register({ query })}>
                                 Regístrese como postulante
                             </TextLink>
                         </p>

@@ -1,5 +1,7 @@
 import { Form, Head } from '@inertiajs/react';
 import InputError from '@/components/input-error';
+import { ApplicationRequirements } from '@/components/jobs/application-requirements';
+import { ReturnNotice } from '@/components/jobs/return-notice';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -8,15 +10,29 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
+import type {
+    ApplicationRequirements as Requirements,
+    ChosenVacancy,
+} from '@/types';
 
 type Props = {
     passwordRules: string;
+    convocatoria: ChosenVacancy | null;
+    requisitos: Requirements;
 };
 
-export default function Register({ passwordRules }: Props) {
+export default function Register({
+    passwordRules,
+    convocatoria,
+    requisitos,
+}: Props) {
+    // Pasar al acceso conserva la convocatoria elegida.
+    const query = convocatoria ? { convocatoria: convocatoria.id } : undefined;
+
     return (
         <>
             <Head title="Crear cuenta" />
+            {convocatoria && <ReturnNotice vacancy={convocatoria} />}
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
@@ -105,9 +121,21 @@ export default function Register({ passwordRules }: Props) {
                             </Button>
                         </div>
 
+                        <div className="bg-surface space-y-1.5 rounded-md border px-3 py-3">
+                            <p className="text-sm font-medium">
+                                Después de crear la cuenta
+                            </p>
+                            <ApplicationRequirements
+                                requirements={requisitos}
+                                compact
+                            />
+                        </div>
+
                         <p className="text-muted-foreground text-center text-sm">
                             ¿Ya tiene una cuenta?{' '}
-                            <TextLink href={login()}>Inicie sesión</TextLink>
+                            <TextLink href={login({ query })}>
+                                Inicie sesión
+                            </TextLink>
                         </p>
                     </>
                 )}

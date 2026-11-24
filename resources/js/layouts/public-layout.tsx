@@ -1,4 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
+import { BriefcaseBusiness } from 'lucide-react';
 import type { ReactNode } from 'react';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { AppearanceToggle } from '@/components/appearance-toggle';
@@ -16,15 +17,20 @@ import { index as jobsIndex } from '@/routes/jobs';
  */
 export default function PublicLayout({ children }: { children: ReactNode }) {
     const { auth, name } = usePage().props;
+    // Marca «Convocatorias» como página actual en el listado y en cada detalle.
+    const onJobs = /^\/empleos(\/|\?|$)/.test(usePage().url);
 
     return (
         <div className="bg-background flex min-h-svh flex-col">
             <SkipLink />
             <header className="bg-background/90 z-20 border-b backdrop-blur sm:sticky sm:top-0">
-                <div className="mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2 sm:px-6">
+                {/* En móvil: identidad y tema arriba; debajo, la navegación en
+                    una rejilla de dos columnas con las etiquetas completas.
+                    Desde sm, todo en una fila. */}
+                <div className="mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2 sm:px-6">
                     <Link
                         href={home()}
-                        className="flex min-w-0 items-center gap-2.5 max-sm:min-h-11 max-sm:basis-full"
+                        className="flex min-h-11 min-w-0 flex-1 items-center gap-2.5 sm:flex-none"
                         data-cy="nav-home"
                     >
                         <span className="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-md">
@@ -38,16 +44,31 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                         </span>
                     </Link>
                     <nav
-                        className="flex items-center gap-0.5 max-sm:flex-1 max-sm:flex-wrap max-sm:justify-between sm:gap-2 max-sm:[&>[data-slot=button]]:min-h-11 max-sm:[&>a]:px-2"
+                        className="grid w-full grid-cols-2 gap-2 max-sm:order-last sm:ml-auto sm:flex sm:w-auto sm:items-center"
                         aria-label="Navegación principal"
+                        data-cy="public-nav"
                     >
-                        <Button variant="ghost" size="sm" asChild>
-                            <Link href={jobsIndex()} data-cy="nav-public-jobs">
-                                Empleos
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`max-sm:min-h-11 ${auth?.user ? '' : 'max-sm:col-span-2 max-sm:justify-start'} aria-[current=page]:bg-accent`}
+                            asChild
+                        >
+                            <Link
+                                href={jobsIndex()}
+                                aria-current={onJobs ? 'page' : undefined}
+                                data-cy="nav-public-jobs"
+                            >
+                                <BriefcaseBusiness aria-hidden="true" />
+                                Convocatorias
                             </Link>
                         </Button>
                         {auth?.user ? (
-                            <Button size="sm" asChild>
+                            <Button
+                                size="sm"
+                                className="max-sm:min-h-11"
+                                asChild
+                            >
                                 <Link
                                     href={dashboard()}
                                     data-cy="nav-dashboard"
@@ -57,21 +78,21 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                             </Button>
                         ) : (
                             <>
-                                <Button variant="ghost" size="sm" asChild>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="max-sm:min-h-11"
+                                    asChild
+                                >
                                     <Link href={login()} data-cy="nav-login">
-                                        {/* En pantallas angostas la barra no
-                                            admite las tres acciones completas;
-                                            se acorta la etiqueta antes que
-                                            esconder el acceso. */}
-                                        <span className="sm:hidden">
-                                            Entrar
-                                        </span>
-                                        <span className="hidden sm:inline">
-                                            Iniciar sesión
-                                        </span>
+                                        Iniciar sesión
                                     </Link>
                                 </Button>
-                                <Button size="sm" asChild>
+                                <Button
+                                    size="sm"
+                                    className="max-sm:min-h-11"
+                                    asChild
+                                >
                                     <Link
                                         href={register()}
                                         data-cy="nav-register"
@@ -81,8 +102,8 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                                 </Button>
                             </>
                         )}
-                        <AppearanceToggle className="max-sm:size-11" />
                     </nav>
+                    <AppearanceToggle className="shrink-0 max-sm:size-11" />
                 </div>
             </header>
 

@@ -14,6 +14,15 @@ class CandidateCvRequest extends FormRequest
     /**
      * @return array<string, list<string>>
      */
+    /**
+     * Tamaño máximo efectivo del CV: el menor entre el tope de 5 MB y la configuración (A-12), igual que las
+     * dos reglas `max` de abajo. Lo usan los textos que anuncian el requisito.
+     */
+    public static function maxKilobytes(): int
+    {
+        return min(5120, (int) config('recruitment.cv.max_kb'));
+    }
+
     public function rules(): array
     {
         return [

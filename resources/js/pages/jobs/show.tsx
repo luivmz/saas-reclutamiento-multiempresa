@@ -7,6 +7,7 @@ import {
     FOLDER_MEDIA,
     ScrollVideo,
 } from '@/components/experience-3d/hero-folder-video';
+import { ApplicationRequirements } from '@/components/jobs/application-requirements';
 import { Section } from '@/components/page';
 import { StatusBadge } from '@/components/status-badge';
 import { CriteriaTable } from '@/components/vacancies/criteria-table';
@@ -17,7 +18,11 @@ import { Spinner } from '@/components/ui/spinner';
 import { formatDate } from '@/lib/format';
 import { login, register } from '@/routes';
 import { index as jobsIndex } from '@/routes/jobs';
-import type { Presented, Vacancy } from '@/types';
+import type {
+    ApplicationRequirements as Requirements,
+    Presented,
+    Vacancy,
+} from '@/types';
 
 type CandidateContext = {
     profileComplete: boolean;
@@ -28,11 +33,15 @@ type CandidateContext = {
 export default function JobShow({
     vacancy,
     candidate,
+    requisitos,
 }: {
     vacancy: Vacancy;
     candidate: CandidateContext;
+    requisitos: Requirements;
 }) {
     const { auth } = usePage().props;
+    // Crear la cuenta, entrar o completar el perfil devuelven a esta convocatoria.
+    const back = { query: { convocatoria: vacancy.id } };
     // Por qué no se reciben postulaciones: si es por el plazo, se dice la fecha.
     const notAccepting = vacancy.application_deadline_passed
         ? `El plazo de postulación venció el ${formatDate(vacancy.closes_at)}.`
@@ -179,12 +188,18 @@ export default function JobShow({
                                     <>
                                         <p className="text-muted-foreground text-sm">
                                             {vacancy.accepts_applications
-                                                ? 'Para postular necesita una cuenta de postulante.'
+                                                ? 'Necesita una cuenta de postulante. Al crearla o iniciar sesión, volverá a esta convocatoria.'
                                                 : notAccepting}
                                         </p>
+                                        {vacancy.accepts_applications && (
+                                            <ApplicationRequirements
+                                                requirements={requisitos}
+                                                compact
+                                            />
+                                        )}
                                         <Button asChild className="w-full">
                                             <Link
-                                                href={register()}
+                                                href={register(back)}
                                                 data-cy="apply-register"
                                             >
                                                 Crear cuenta
@@ -196,7 +211,7 @@ export default function JobShow({
                                             className="w-full"
                                         >
                                             <Link
-                                                href={login()}
+                                                href={login(back)}
                                                 data-cy="apply-login"
                                             >
                                                 Ya tengo cuenta
@@ -250,16 +265,23 @@ export default function JobShow({
                                               candidate.hasCv
                                           ) ? (
                                             <>
+                                                <ApplicationRequirements
+                                                    requirements={requisitos}
+                                                    compact
+                                                />
                                                 <p className="text-muted-foreground text-sm">
-                                                    Complete su perfil y cargue
-                                                    su CV para postular.
+                                                    Cuando termine, podrá volver
+                                                    a esta convocatoria desde su
+                                                    perfil.
                                                 </p>
                                                 <Button
                                                     asChild
                                                     className="w-full"
                                                 >
                                                     <Link
-                                                        href={CandidateProfileController.edit()}
+                                                        href={CandidateProfileController.edit(
+                                                            back,
+                                                        )}
                                                         data-cy="complete-profile"
                                                     >
                                                         Completar perfil

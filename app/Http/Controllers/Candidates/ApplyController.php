@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Candidates;
 
 use App\Enums\VacancyStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Support\ConvocatoriaDeRetorno;
 use App\Http\Support\Toast;
 use App\Models\Application;
 use App\Models\Scopes\OrganizationScope;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Gate;
 
 class ApplyController extends Controller
 {
-    public function __invoke(Request $request, int $vacancy, ApplicationService $applications): RedirectResponse
+    public function __invoke(Request $request, int $vacancy, ApplicationService $applications, ConvocatoriaDeRetorno $retorno): RedirectResponse
     {
         Gate::authorize('apply', Application::class);
 
@@ -25,6 +26,8 @@ class ApplyController extends Controller
             ->findOrFail($vacancy);
 
         $application = $applications->apply($request->user(), $model);
+        // La postulación cierra el recorrido: la convocatoria de retorno ya no hace falta.
+        $retorno->olvidar($request);
         Toast::success('Postulación registrada. La confirmación está en sus notificaciones.');
 
         return to_route('candidate.applications.show', $application);

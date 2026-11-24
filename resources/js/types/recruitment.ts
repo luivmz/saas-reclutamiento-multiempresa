@@ -187,3 +187,12 @@ export type Vacancy = {
     criteria?: Criterion[];
     applications_count?: number;
 };
+
+/** Lo que exige cualquier postulación, tomado de las reglas de validación del servidor. */
+export type ApplicationRequirements = {
+    perfil: string[];
+    cv: { formato: string; max_kb: number };
+};
+
+/** Convocatoria a la que se volverá tras entrar o registrarse. */
+export type ChosenVacancy = { id: number; title: string };
