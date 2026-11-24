@@ -36,6 +36,8 @@ describe('Empleos · estados vacíos', () => {
         );
 
         expect(markup).toContain('Esta página no tiene convocatorias');
+        // Solo se sabe que la página no existe; no se supone que la lista cambió.
+        expect(markup).not.toMatch(/cambi/i);
         expect(markup).toMatch(/href="\/empleos\?q=docente"/);
     });
 

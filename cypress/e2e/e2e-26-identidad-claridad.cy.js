@@ -189,7 +189,7 @@ describe('E2E-26 · Identidad y claridad de la interfaz', () => {
         cy.contains('a', 'Iniciar sesión').focus();
         cy.focused().should('have.attr', 'href', '/login');
 
-        // Sin cabecera Sec-Fetch-Site ni token (como un formulario de otro sitio): 419.
+        // Sin cabecera Sec-Fetch-Site ni token (cliente fuera del navegador): 419.
         cy.request({
             method: 'POST',
             url: '/login',
@@ -226,6 +226,60 @@ describe('E2E-26 · Identidad y claridad de la interfaz', () => {
         cy.appRequest('GET', '/auditoria').then((r) => {
             expect(r.status).to.eq(403);
             expect(r.headers['content-type']).to.contain('application/json');
+        });
+    });
+
+    it('el 419 depende del origen: Laravel acepta mismo origen sin token y exige token a mismo sitio y otro sitio', () => {
+        // PreventRequestForgery (Laravel 13) acepta Sec-Fetch-Site: same-origin; same-site solo si se
+        // habilita allowSameSite(), que esta aplicación no usa. Sin token, todo lo demás recibe 419.
+        const enviar = (secFetchSite) =>
+            cy.request({
+                method: 'POST',
+                url: '/login',
+                failOnStatusCode: false,
+                followRedirect: false,
+                headers: secFetchSite ? { 'Sec-Fetch-Site': secFetchSite } : {},
+            });
+
+        enviar('same-origin').its('status').should('not.eq', 419);
+        enviar('same-site').its('status').should('eq', 419);
+        enviar('cross-site').its('status').should('eq', 419);
+        enviar('none').its('status').should('eq', 419);
+        enviar(null).its('status').should('eq', 419);
+    });
+
+    it('una visita interna hacia un 403 o un 404 muestra la página de error sin el modal de Inertia', () => {
+        cy.loginAs('hr');
+
+        [
+            ['/auditoria', 'No tiene permiso para ver esta página'],
+            ['/empleos/999999', 'No encontramos esta página'],
+        ].forEach(([destino, encabezado]) => {
+            // La visita real de Inertia (al pulsar «Notificaciones») se desvía hacia la ruta de error.
+            cy.intercept(
+                {
+                    method: 'GET',
+                    pathname: '/notificaciones',
+                    headers: { 'x-inertia': 'true' },
+                },
+                (req) => {
+                    req.url = req.url.replace('/notificaciones', destino);
+                },
+            ).as('visita');
+            cy.visit('/dashboard');
+            cy.dataCy('quick-links').find('a[href$="/notificaciones"]').click();
+            cy.wait('@visita')
+                .its('response.statusCode')
+                .should('eq', destino === '/auditoria' ? 403 : 404);
+
+            cy.location('pathname').should('eq', destino);
+            cy.dataCy('http-error').find('h1').should('have.text', encabezado);
+            cy.contains('a', 'Ir a mi panel').should(
+                'have.attr',
+                'href',
+                '/dashboard',
+            );
+            cy.get('dialog, iframe').should('not.exist');
         });
     });
 

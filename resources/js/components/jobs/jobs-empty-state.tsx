@@ -10,7 +10,8 @@ import { index as jobsIndex } from '@/routes/jobs';
  * Son tres casos distintos y cada uno pide algo diferente a quien busca:
  * - la búsqueda no coincide con nada: se nombra el término y se ofrece quitarlo;
  * - no hay ninguna convocatoria publicada: no hay filtro que quitar;
- * - la página pedida está fuera de rango (un enlace viejo): se vuelve a la primera.
+ * - la página pedida está fuera de rango: se vuelve a la primera. No se afirma por
+ *   qué (enlace viejo, número escrito a mano…): solo se sabe que no existe.
  *
  * `total` es el total de la consulta (con la búsqueda aplicada), no de la página.
  */
@@ -25,7 +26,7 @@ export function JobsEmptyState({
         return (
             <EmptyState
                 title="Esta página no tiene convocatorias"
-                description="La lista cambió desde que se abrió este enlace."
+                description="La página indicada en la dirección no existe en esta lista. Las convocatorias empiezan en la primera página."
                 action={
                     <Button asChild variant="outline">
                         <Link

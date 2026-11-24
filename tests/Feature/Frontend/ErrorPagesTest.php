@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Frontend;
 
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\Organization;
 use App\Models\User;
 use App\Models\Vacancy;
@@ -116,6 +117,62 @@ class ErrorPagesTest extends TestCase
             ->assertStatus(419)
             ->assertSee('href="/dashboard"', false)
             ->assertDontSee('href="/login"', false);
+    }
+
+    /**
+     * Cabeceras de una visita interna de Inertia con la versión vigente de los assets.
+     *
+     * @return array<string, string>
+     */
+    private function inertiaVisit(): array
+    {
+        return [
+            // La cabecera Accept es la del cliente de Inertia: con */* Laravel respondería JSON.
+            'Accept' => 'text/html, application/xhtml+xml',
+            'X-Inertia' => 'true',
+            'X-Requested-With' => 'XMLHttpRequest',
+            'X-Inertia-Version' => (string) app(HandleInertiaRequests::class)->version(request()),
+        ];
+    }
+
+    public function test_internal_visit_to_a_missing_page_gets_an_inertia_error_page_with_status_404(): void
+    {
+        $this->withHeaders($this->inertiaVisit())
+            ->get('/empleos/999999')
+            ->assertNotFound()
+            ->assertHeader('X-Inertia', 'true')
+            ->assertJsonPath('component', 'errors/http')
+            ->assertJsonPath('url', '/empleos/999999')
+            ->assertJsonPath('props.status', 404);
+    }
+
+    public function test_internal_visit_to_a_forbidden_page_gets_an_inertia_error_page_with_status_403(): void
+    {
+        $hr = User::factory()->hr(Organization::factory()->create())->create();
+
+        $this->actingAs($hr)
+            ->withHeaders($this->inertiaVisit())
+            ->get(route('audit.index'))
+            ->assertForbidden()
+            ->assertHeader('X-Inertia', 'true')
+            ->assertJsonPath('component', 'errors/http')
+            ->assertJsonPath('props.status', 403)
+            ->assertJsonPath('props.auth.user.id', $hr->id)
+            ->assertJsonMissingPath('props.message')
+            ->assertDontSee('This action is unauthorized');
+    }
+
+    public function test_internal_visit_keeps_the_standalone_server_error_page(): void
+    {
+        config(['app.debug' => false]);
+        Route::middleware('web')->get('/__prueba/500-inertia', fn () => throw new \RuntimeException('detalle-interno-secreto'));
+
+        $this->withHeaders($this->inertiaVisit())
+            ->get('/__prueba/500-inertia')
+            ->assertStatus(500)
+            ->assertHeaderMissing('X-Inertia')
+            ->assertSee('Algo falló de nuestro lado')
+            ->assertDontSee('detalle-interno-secreto');
     }
 
     public function test_json_clients_keep_receiving_json_errors_with_the_same_status(): void
